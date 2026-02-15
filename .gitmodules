@@ -1,0 +1,3 @@
+[submodule "docs/godot-docs"]
+	path = docs/godot-docs
+	url = https://github.com/godotengine/godot-docs.git
