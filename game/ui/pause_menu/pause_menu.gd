@@ -129,7 +129,7 @@ func _create_member_info(member: Resource) -> VBoxContainer:
 	box.add_child(header)
 
 	var name_label := Label.new()
-	var display := member.display_name if "display_name" in member else "???"
+	var display: String = member.display_name if "display_name" in member else "???"
 	name_label.text = display
 	name_label.add_theme_font_size_override("font_size", 11)
 	name_label.add_theme_color_override(

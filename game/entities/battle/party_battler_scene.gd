@@ -114,7 +114,7 @@ func _on_status_applied(effect: StringName) -> void:
 
 
 func _on_status_removed(effect: StringName) -> void:
-	var icon := status_icons.get_node_or_null(String(effect))
+	var icon: Node = status_icons.get_node_or_null(String(effect))
 	if icon:
 		icon.queue_free()
 
