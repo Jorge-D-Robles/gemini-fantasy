@@ -14,12 +14,28 @@ enum Facing {
 }
 
 const RAY_LENGTH: float = 24.0
+const ANIM_FPS: float = 8.0
+const WALK_CYCLE: Array[int] = [0, 1, 2, 1]
+const IDLE_FRAMES: Dictionary = {
+	Facing.DOWN: 1,
+	Facing.UP: 10,
+	Facing.LEFT: 4,
+	Facing.RIGHT: 7,
+}
+const ROW_OFFSET: Dictionary = {
+	Facing.DOWN: 0,
+	Facing.UP: 9,
+	Facing.LEFT: 3,
+	Facing.RIGHT: 6,
+}
 
 @export var move_speed: float = 80.0
 @export var run_speed: float = 140.0
 
 var facing: Facing = Facing.DOWN
 var _can_move: bool = true
+var _anim_timer: float = 0.0
+var _anim_step: int = 0
 
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var interaction_ray: RayCast2D = $InteractionRay
@@ -32,9 +48,10 @@ func _ready() -> void:
 	_update_ray_direction()
 
 
-func _physics_process(_delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	if not _can_move:
 		velocity = Vector2.ZERO
+		_set_idle_frame()
 		return
 
 	var input_dir := Input.get_vector(
@@ -45,8 +62,10 @@ func _physics_process(_delta: float) -> void:
 		_update_facing(input_dir)
 		var speed := run_speed if Input.is_action_pressed("run") else move_speed
 		velocity = input_dir.normalized() * speed
+		_advance_walk_animation(delta)
 	else:
 		velocity = Vector2.ZERO
+		_set_idle_frame()
 
 	move_and_slide()
 
@@ -76,6 +95,21 @@ func set_movement_enabled(enabled: bool) -> void:
 	_can_move = enabled
 	if not enabled:
 		velocity = Vector2.ZERO
+
+
+func _advance_walk_animation(delta: float) -> void:
+	_anim_timer += delta
+	var frame_duration := 1.0 / ANIM_FPS
+	if _anim_timer >= frame_duration:
+		_anim_timer -= frame_duration
+		_anim_step = (_anim_step + 1) % WALK_CYCLE.size()
+	sprite.frame = ROW_OFFSET[facing] + WALK_CYCLE[_anim_step]
+
+
+func _set_idle_frame() -> void:
+	_anim_timer = 0.0
+	_anim_step = 0
+	sprite.frame = IDLE_FRAMES[facing]
 
 
 func _update_facing(direction: Vector2) -> void:
