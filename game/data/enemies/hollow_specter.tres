@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3 uid="uid://bhollow_specter"]
+
+[ext_resource type="Script" path="res://resources/enemy_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"hollow_specter"
+display_name = "Hollow Specter"
+description = "A translucent wraith formed from memories of the dead. Drifts silently through the forest, draining warmth from the living."
+max_hp = 35
+attack = 8
+magic = 16
+defense = 4
+resistance = 14
+speed = 12
+exp_reward = 18
+gold_reward = 10
+abilities = []
+weaknesses = [6]
+resistances = [7]
+ai_type = 0
+sprite_path = "res://assets/sprites/enemies/ghost1.png"
+sprite_columns = 3
+sprite_rows = 4
+battle_scale = 2.5
+loot_table = [{"item_id": "spectral_essence", "drop_chance": 0.35}, {"item_id": "faded_memory", "drop_chance": 0.2}, {"item_id": "ghost_lantern", "drop_chance": 0.08}]

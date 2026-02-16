@@ -19,8 +19,29 @@ func _ready() -> void:
 	damage_label.visible = false
 	if enemy_data and not enemy_data.sprite_path.is_empty():
 		var tex := load(enemy_data.sprite_path) as Texture2D
-		if tex:
+		if tex == null:
+			push_error(
+				"Failed to load '%s' — reopen Godot editor to import"
+				% enemy_data.sprite_path
+			)
+			return
+		var cols: int = enemy_data.sprite_columns
+		var rows: int = enemy_data.sprite_rows
+		if cols > 1 or rows > 1:
+			var frame_w: float = tex.get_width() / float(cols)
+			var frame_h: float = tex.get_height() / float(rows)
+			var center_col: int = cols / 2
+			var atlas := AtlasTexture.new()
+			atlas.atlas = tex
+			atlas.region = Rect2(
+				center_col * frame_w, 0,
+				frame_w, frame_h,
+			)
+			atlas.filter_clip = true
+			sprite.texture = atlas
+		else:
 			sprite.texture = tex
+		sprite.scale = Vector2.ONE * enemy_data.battle_scale
 
 
 func bind_battler(target: EnemyBattler) -> void:

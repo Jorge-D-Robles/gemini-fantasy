@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3 uid="uid://bancient_sentinel"]
+
+[ext_resource type="Script" path="res://resources/enemy_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"ancient_sentinel"
+display_name = "Ancient Sentinel"
+description = "A preserved guardian from the old capital, wrapped in decaying bandages woven with Resonance thread. Slow but incredibly durable."
+max_hp = 80
+attack = 18
+magic = 6
+defense = 16
+resistance = 10
+speed = 4
+exp_reward = 30
+gold_reward = 20
+abilities = []
+weaknesses = [1]
+resistances = [5, 7]
+ai_type = 2
+sprite_path = "res://assets/sprites/enemies/mummy_1.png"
+sprite_columns = 3
+sprite_rows = 4
+battle_scale = 2.5
+loot_table = [{"item_id": "ancient_wrapping", "drop_chance": 0.4}, {"item_id": "guardian_seal", "drop_chance": 0.15}, {"item_id": "resonance_thread", "drop_chance": 0.1}]

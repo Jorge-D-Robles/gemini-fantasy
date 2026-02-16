@@ -35,6 +35,9 @@ enum Element {
 
 @export_group("Visuals")
 @export var sprite_path: String = ""
+@export var sprite_columns: int = 1
+@export var sprite_rows: int = 1
+@export var battle_scale: float = 1.0
 
 @export_group("Loot")
 @export var loot_table: Array[Dictionary] = []

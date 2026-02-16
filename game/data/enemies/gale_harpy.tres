@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3 uid="uid://bgale_harpy"]
+
+[ext_resource type="Script" path="res://resources/enemy_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"gale_harpy"
+display_name = "Gale Harpy"
+description = "A wind-touched predator nesting in the forest canopy. Swoops down on travelers with razor talons, retreating before they can retaliate."
+max_hp = 50
+attack = 20
+magic = 10
+defense = 8
+resistance = 8
+speed = 18
+exp_reward = 28
+gold_reward = 18
+abilities = []
+weaknesses = [2]
+resistances = [4]
+ai_type = 1
+sprite_path = "res://assets/sprites/enemies/harpy_a_1.png"
+sprite_columns = 3
+sprite_rows = 4
+battle_scale = 1.5
+loot_table = [{"item_id": "wind_feather", "drop_chance": 0.4}, {"item_id": "harpy_talon", "drop_chance": 0.25}, {"item_id": "sky_crystal", "drop_chance": 0.08}]
