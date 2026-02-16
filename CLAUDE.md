@@ -15,6 +15,10 @@ After completing any task, **automatically commit, push, and merge** without ask
 
 Do not ask for confirmation at any step. This applies to all tasks — bug fixes, features, refactors, doc updates, etc.
 
+### Cross-Agent Synchronization
+
+**MANDATORY:** Any change made to `CLAUDE.md` MUST be mirrored in `gemini.md`, and vice versa. These files are the primary context for Claude and Gemini agents respectively. Keeping them in sync ensures both agents have the same high-level instructions, workflows, and project knowledge.
+
 ## MANDATORY: Research Before Code
 
 **DO NOT write or modify any GDScript, .tscn, or .tres file without first completing BOTH of these steps:**
