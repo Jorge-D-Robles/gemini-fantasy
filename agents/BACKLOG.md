@@ -8,13 +8,13 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0001
 - Title: Add class_name declarations to all autoload scripts
-- Status: done
+- Status: wontfix
 - Assigned: claude
 - Priority: high
 - Milestone: M0
 - Depends: none
 - Refs: game/project.godot, docs/best-practices/03-autoloads-and-singletons.md
-- Notes: Migrated from ISSUES_TRACKER [HIGH]. GameManager, BattleManager, PartyManager, DialogueManager, AudioManager, UILayer lack class_name.
+- Notes: INVALID — Godot autoloads cannot have class_name (conflicts with the autoload singleton name). Reverted. Autoloads are already globally accessible by their registered name.
 - Completed: 2026-02-16
 
 ### T-0002

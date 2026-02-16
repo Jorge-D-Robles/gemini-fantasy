@@ -1,4 +1,3 @@
-class_name GameManager
 extends Node
 
 ## Manages game state and scene transitions with fade effects.
