@@ -177,6 +177,70 @@ if tex == null:
     return
 ```
 
+## Adding Monsters
+
+Reproducible workflow for adding new enemy types to the game.
+
+### Steps
+
+1. **Find a sprite** in the Time Fantasy packs at `/Users/robles/repos/games/assets/`
+   - Walk sheets (78x144 or 156x212): 3 columns x 4 rows, front-facing idle = row 0, center column
+   - Boss sprites may be single-frame or larger sheets
+2. **Copy sprite to both repos**:
+   ```bash
+   cp <source> /Users/robles/repos/games/gemini-fantasy/game/assets/sprites/enemies/<name>.png
+   cp <source> /Users/robles/repos/games/gemini-fantasy/.worktrees/<branch>/game/assets/sprites/enemies/<name>.png
+   ```
+3. **Create a `.tres` file** at `game/data/enemies/<id>.tres` using this template:
+   ```
+   [gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3 uid="uid://b<id>"]
+   [ext_resource type="Script" path="res://resources/enemy_data.gd" id="1_script"]
+   [resource]
+   script = ExtResource("1_script")
+   id = &"<id>"
+   display_name = "<Name>"
+   description = "<lore description>"
+   max_hp = <int>
+   attack = <int>
+   magic = <int>
+   defense = <int>
+   resistance = <int>
+   speed = <int>
+   exp_reward = <int>
+   gold_reward = <int>
+   abilities = []
+   weaknesses = [<Element enum ints>]
+   resistances = [<Element enum ints>]
+   ai_type = <AiType enum int>
+   sprite_path = "res://assets/sprites/enemies/<name>.png"
+   sprite_columns = 3
+   sprite_rows = 4
+   battle_scale = <float: 2.5 for 78x144, 1.5 for 156x212>
+   loot_table = [{"item_id": "<id>", "drop_chance": <float>}]
+   ```
+4. **Add to encounter pool** in the area's scene script (e.g., `verdant_forest.gd`):
+   - Add `const <NAME>_PATH` at top
+   - Load in `_ready()` with null check
+   - Append weighted `EncounterPoolEntry` entries
+5. **Reopen Godot editor** to trigger `.import` generation for new PNGs
+6. **Test**: walk in the area until an encounter triggers, verify sprite displays correctly
+
+### Sprite Sheet Reference
+
+| Size | Columns | Rows | Frame Size | battle_scale | Source |
+|------|---------|------|------------|-------------|--------|
+| 78x144 | 3 | 4 | 26x36 | 2.5 | Small monsters (ghost, mummy) |
+| 156x212 | 3 | 4 | 52x53 | 1.5 | Medium monsters (harpy, cerberus, hydra) |
+| varies | 1 | 1 | full image | 1.0 | Boss/single-frame sprites |
+
+### Element Enum Values
+
+`NONE=0, FIRE=1, ICE=2, WATER=3, WIND=4, EARTH=5, LIGHT=6, DARK=7`
+
+### AiType Enum Values
+
+`BASIC=0, AGGRESSIVE=1, DEFENSIVE=2, SUPPORT=3, BOSS=4`
+
 ## Agentic Development Workflow
 
 This project is designed for fully automated agentic development. Use the skill system to orchestrate work.

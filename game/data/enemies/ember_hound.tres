@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3 uid="uid://bember_hound"]
+
+[ext_resource type="Script" path="res://resources/enemy_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"ember_hound"
+display_name = "Ember Hound"
+description = "A three-headed beast prowling the forest's volcanic vents. Each head breathes a different intensity of flame. Hunts in pairs."
+max_hp = 70
+attack = 22
+magic = 8
+defense = 12
+resistance = 6
+speed = 14
+exp_reward = 32
+gold_reward = 22
+abilities = []
+weaknesses = [3, 2]
+resistances = [1]
+ai_type = 1
+sprite_path = "res://assets/sprites/enemies/cerberus_1.png"
+sprite_columns = 3
+sprite_rows = 4
+battle_scale = 1.5
+loot_table = [{"item_id": "ember_fang", "drop_chance": 0.35}, {"item_id": "hellfire_essence", "drop_chance": 0.2}, {"item_id": "tri_headed_collar", "drop_chance": 0.05}]

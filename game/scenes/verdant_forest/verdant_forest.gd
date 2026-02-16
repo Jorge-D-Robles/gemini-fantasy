@@ -8,6 +8,10 @@ const OVERGROWN_RUINS_PATH: String = "res://scenes/overgrown_ruins/overgrown_rui
 const ROOTHOLLOW_PATH: String = "res://scenes/roothollow/roothollow.tscn"
 const CREEPING_VINE_PATH: String = "res://data/enemies/creeping_vine.tres"
 const ASH_STALKER_PATH: String = "res://data/enemies/ash_stalker.tres"
+const HOLLOW_SPECTER_PATH: String = "res://data/enemies/hollow_specter.tres"
+const ANCIENT_SENTINEL_PATH: String = "res://data/enemies/ancient_sentinel.tres"
+const GALE_HARPY_PATH: String = "res://data/enemies/gale_harpy.tres"
+const EMBER_HOUND_PATH: String = "res://data/enemies/ember_hound.tres"
 
 const GROUND_LEGEND: Dictionary = {
 	"G": Vector2i(0, 0),
@@ -141,15 +145,35 @@ func _ready() -> void:
 	# Setup encounter system
 	var creeping_vine := load(CREEPING_VINE_PATH) as Resource
 	var ash_stalker := load(ASH_STALKER_PATH) as Resource
+	var hollow_specter := load(HOLLOW_SPECTER_PATH) as Resource
+	var ancient_sentinel := load(ANCIENT_SENTINEL_PATH) as Resource
+	var gale_harpy := load(GALE_HARPY_PATH) as Resource
+	var ember_hound := load(EMBER_HOUND_PATH) as Resource
 
 	var pool: Array[EncounterPoolEntry] = []
+	# Common encounters — basic forest enemies
 	if creeping_vine:
 		pool.append(EncounterPoolEntry.create([creeping_vine] as Array[Resource], 2.0))
 		pool.append(EncounterPoolEntry.create([creeping_vine, creeping_vine] as Array[Resource], 1.5))
 	if ash_stalker:
 		pool.append(EncounterPoolEntry.create([ash_stalker] as Array[Resource], 2.0))
+	if hollow_specter:
+		pool.append(EncounterPoolEntry.create([hollow_specter] as Array[Resource], 1.5))
+		pool.append(EncounterPoolEntry.create([hollow_specter, hollow_specter] as Array[Resource], 0.8))
+	if ancient_sentinel:
+		pool.append(EncounterPoolEntry.create([ancient_sentinel] as Array[Resource], 1.0))
+	# Mixed encounters
 	if creeping_vine and ash_stalker:
 		pool.append(EncounterPoolEntry.create([creeping_vine, ash_stalker] as Array[Resource], 1.0))
+	if hollow_specter and creeping_vine:
+		pool.append(EncounterPoolEntry.create([hollow_specter, creeping_vine] as Array[Resource], 1.0))
+	# Uncommon encounters — mid-tier enemies
+	if gale_harpy:
+		pool.append(EncounterPoolEntry.create([gale_harpy] as Array[Resource], 0.8))
+	if ember_hound:
+		pool.append(EncounterPoolEntry.create([ember_hound] as Array[Resource], 0.8))
+	if gale_harpy and ember_hound:
+		pool.append(EncounterPoolEntry.create([gale_harpy, ember_hound] as Array[Resource], 0.4))
 
 	_encounter_system.setup(pool)
 	_encounter_system.encounter_triggered.connect(_on_encounter_triggered)
