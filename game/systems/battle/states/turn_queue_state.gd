@@ -10,7 +10,7 @@ func set_battle_scene(scene: Node) -> void:
 
 
 func enter() -> void:
-	var result := battle_scene.check_battle_end()
+	var result: int = battle_scene.check_battle_end()
 	if result == 1:
 		state_machine.transition_to("Victory")
 		return
