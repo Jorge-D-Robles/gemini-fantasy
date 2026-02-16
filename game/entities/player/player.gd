@@ -38,6 +38,7 @@ var _animations_ready: bool = false
 func _ready() -> void:
 	add_to_group("player")
 	GameManager.game_state_changed.connect(_on_game_state_changed)
+	_can_move = GameManager.current_state == GameManager.GameState.OVERWORLD
 	_update_ray_direction()
 	_setup_animations()
 
