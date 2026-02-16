@@ -338,20 +338,20 @@ static func get_thessa_dialogue(
 ) -> PackedStringArray:
 	if flags.get("garrick_recruited", false):
 		return PackedStringArray([
-			"Garrick Thorne. It's been many years.",
-			"He won't remember me \u2014 we met only once, at a peace"
-			+ " summit between the Shepherds and the free"
-			+ " villages. Before he lost his faith.",
-			"He carries a heavy burden, Kael. The Shepherds did"
-			+ " terrible things in the name of silence, and he"
-			+ " was part of it. But guilt can be transmuted"
-			+ " into purpose.",
-			"The three of you together... an Echo hunter, an"
-			+ " engineer, and a penitent knight. The echoes"
-			+ " brought you together for a reason.",
-			"Go to the ruins. Find what the conscious echo needs."
-			+ " And when the path divides, trust each other"
-			+ " more than you trust the world.",
+			"A conscious Echo, and now Garrick Thorne at your side."
+			+ " The winds of change blow faster than I expected.",
+			"The Council at Prismfall must hear about this."
+			+ " A conscious Echo changes everything we thought"
+			+ " we knew about the Severance.",
+			"The road south is dangerous \u2014 corrupted beasts,"
+			+ " Shepherd patrols, and worse."
+			+ " But you have allies now.",
+			"An Echo hunter, an engineer, and a penitent knight."
+			+ " The echoes brought you together for a reason."
+			+ " Trust that.",
+			"Go, Kael. Prismfall awaits. And when the path"
+			+ " divides, trust each other more than you trust"
+			+ " the world. This is only the beginning.",
 		])
 	if flags.get("iris_recruited", false):
 		return PackedStringArray([

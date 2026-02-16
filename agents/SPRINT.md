@@ -15,17 +15,17 @@ Started: 2026-02-16
 
 ## Queue
 
-### T-0033
-- Title: Add demo conclusion event
-- Priority: medium
-- Depends: T-0031
-- Refs: game/events/, game/autoloads/event_flags.gd
-- Notes: After Garrick is recruited, Elder Rowan NPC gets new flag-reactive dialogue: "The Council at Prismfall must hear about this Conscious Echo. The road south is dangerous, but you have allies now..." Brief 4-5 line conversation that gives narrative closure and hooks the full game.
-- Size: S
+(none)
 
 ---
 
 ## Done This Sprint
+
+### T-0033
+- Title: Add demo conclusion event
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-16
 
 ### T-0032
 - Title: Build basic save/load system

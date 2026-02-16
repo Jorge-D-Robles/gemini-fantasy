@@ -1,3 +1,4 @@
+# gdlint:ignore = max-public-methods
 extends GutTest
 
 ## Tests for Roothollow NPC flag-reactive dialogue selection.
@@ -146,7 +147,29 @@ func test_thessa_garrick_recruited() -> void:
 		])
 	)
 	assert_eq(lines.size(), 5)
-	assert_string_contains(lines[0], "Garrick Thorne")
+	assert_string_contains(lines[0], "conscious Echo")
+
+
+func test_thessa_garrick_mentions_prismfall() -> void:
+	var lines: PackedStringArray = _rh.get_thessa_dialogue(
+		_flags([
+			"opening_lyra_discovered",
+			"iris_recruited",
+			"garrick_recruited",
+		])
+	)
+	assert_string_contains(lines[1], "Prismfall")
+
+
+func test_thessa_garrick_mentions_allies() -> void:
+	var lines: PackedStringArray = _rh.get_thessa_dialogue(
+		_flags([
+			"opening_lyra_discovered",
+			"iris_recruited",
+			"garrick_recruited",
+		])
+	)
+	assert_string_contains(lines[2], "you have allies now")
 
 
 # -- Wren (Scout) --
