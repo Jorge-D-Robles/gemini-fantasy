@@ -556,6 +556,52 @@ Pure narrative content. Viewing these provides lore, worldbuilding, and emotiona
 
 ---
 
+## Paradox & Glitch Echoes
+
+These Echoes are born from the collapse of linear time or the corruption of the Resonance network. They are unpredictable and often "wrong" in a way that provides immense power at a cost.
+
+### Paradox Tier (Black/White Flicker)
+
+**"The Un-Memory"**
+- **Type**: Unique
+- **Effect**: Erases the last 2 turns of combat for both sides. All HP, EE, and status are reverted to their state 2 turns ago.
+- **Memory**: A memory of an event that was prevented from happening.
+- **Found**: Center of the Hollows, only during an Un-Sun.
+
+**"Future Self's Advice"**
+- **Type**: Support
+- **Effect**: Guarantees the next 3 attacks will be Critical Hits. 
+- **Memory**: An older version of the user speaking to their current self.
+- **Found**: Near Spatial Folds in the Ironcoast.
+
+**"The Road Not Taken"**
+- **Type**: Unique
+- **Effect**: Swap the party's current HP and EE percentages.
+- **Memory**: A version of the party that chose a different profession.
+- **Found**: Hidden in the "What-If" archives of Prismfall.
+
+### Glitch Tier (Static Rainbow)
+
+**"No-Clip"**
+- **Type**: Support
+- **Effect**: Party becomes immune to all physical damage for 3 turns, but cannot use physical attacks.
+- **Memory**: A moment when the laws of physics failed during a Static Storm.
+- **Found**: Caught in the middle of a Static Storm.
+
+**"Recursive Punch"**
+- **Type**: Attack
+- **Effect**: Deals moderate damage. If the enemy isn't defeated, the attack repeats itself for 0 cost next turn, increasing in power by 20%. This continues until the loop is broken (enemy dies or user misses).
+- **Memory**: A Recursive Echo of a bar fight.
+- **Found**: Roothollow, near a perpetually slamming door.
+
+**"Corrupted Data"**
+- **Type**: Debuff
+- **Effect**: Randomizes the enemy's elemental weaknesses every turn.
+- **Memory**: A file from a Pre-Severance server that was partially deleted.
+- **Found**: Deep within the ruins of Gearhaven's mainframe.
+
+---
+
 ## Echo Hunting Mini-Game
 
 ### The Hunt
