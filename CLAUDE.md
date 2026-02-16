@@ -41,6 +41,7 @@ This is not optional. Every code change must be grounded in documentation. Do no
 - Creating UI? → `godot-docs` subagent for Control nodes + `08-ui-patterns.md`
 - Implementing save/load? → `09-save-load.md`
 - Building battle/overworld? → `10-jrpg-patterns.md`
+- Adding art/audio assets? → Read the "Asset Workflow" section above + `04-resources-and-data.md`
 
 ## Project Structure
 
@@ -92,6 +93,58 @@ docs/              # All documentation
 - **TileB sheets** (256x256): Object tiles, can contain multi-tile objects
 - Full asset index with detailed descriptions: `/Users/robles/repos/games/assets/CLAUDE.md`
 
+## Asset Workflow
+
+**PNGs and audio files are gitignored** (`game/assets/**/*.png`, `*.wav`, `*.ogg`, `*.mp3`). They must be managed manually outside of git. Follow this workflow whenever adding or using assets.
+
+### Rules
+
+1. **Never generate placeholder art** — always search the Time Fantasy packs first (see table above)
+2. **Source assets live outside the project** at `/Users/robles/repos/games/assets/`
+3. **Copy assets into `game/assets/`** under the appropriate subdirectory (see structure below)
+4. **Assets must exist in the main repo**, not just the worktree — Godot runs from the main repo
+5. **Godot must import new assets** — after adding PNGs, reopen the Godot editor so it generates `.import` files
+6. **Always null-check `load()` results** for any resource that depends on local asset files
+
+### Asset Directory Structure
+
+```
+game/assets/
+  tilesets/          # Tile sheets (TileA5, TileB format PNGs)
+  sprites/
+    characters/      # Player + NPC walk sprites
+    buildings/       # Building/structure sprites
+    enemies/         # Enemy sprites (battle + overworld)
+    effects/         # Battle VFX sprites
+  portraits/         # Face portraits for dialogue
+  icons/             # UI and item icons
+  audio/
+    bgm/             # Background music
+    sfx/             # Sound effects
+```
+
+### Copying Assets
+
+When you need an asset:
+
+1. **Find it** in the Time Fantasy packs at `/Users/robles/repos/games/assets/`
+2. **Copy to the main repo**: `cp <source> /Users/robles/repos/games/gemini-fantasy/game/assets/<subdir>/`
+3. **Copy to the worktree** (if working in one): `cp <source> /Users/robles/repos/games/gemini-fantasy/.worktrees/<branch>/game/assets/<subdir>/`
+4. **Verify Godot can load it** — the user must reopen the Godot editor to trigger import
+
+Or use the `/copy-assets` skill which automates steps 2-3.
+
+### Common Pitfall: `load()` Returns Null
+
+`load()` returns `null` when a PNG exists on disk but Godot hasn't imported it yet (no `.import` file). **Always** guard against this:
+
+```gdscript
+var tex: Texture2D = load(path) as Texture2D
+if tex == null:
+    push_error("Failed to load '%s' — reopen Godot editor to import" % path)
+    return
+```
+
 ## Agentic Development Workflow
 
 This project is designed for fully automated agentic development. Use the skill system to orchestrate work.
@@ -112,6 +165,7 @@ This project is designed for fully automated agentic development. Use the skill 
 - `/add-audio <type>` — Add BGM, SFX, or audio system
 - `/setup-input <actions>` — Configure input actions and handlers
 - `/implement-feature <desc>` — End-to-end feature implementation
+- `/copy-assets <description>` — Copy assets from Time Fantasy packs into the project
 
 **Data** — Populate and tune game data:
 - `/seed-game-data <type>` — Create .tres files from design docs
