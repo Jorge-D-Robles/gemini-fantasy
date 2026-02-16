@@ -17,6 +17,7 @@ var _gold: int = 0
 
 
 func _ready() -> void:
+	visible = false
 	_interaction_prompt.visible = false
 	_location_label.text = location_name
 	_update_gold_display()
@@ -25,6 +26,7 @@ func _ready() -> void:
 	PartyManager.party_changed.connect(_on_party_changed)
 	PartyManager.party_state_changed.connect(_on_party_state_changed)
 	GameManager.game_state_changed.connect(_on_game_state_changed)
+	GameManager.scene_changed.connect(_on_scene_changed)
 	# Sync gold from InventoryManager if available
 	var inv: Node = get_node_or_null("/root/InventoryManager")
 	if inv:
@@ -111,10 +113,17 @@ func _on_party_state_changed() -> void:
 		set_gold(inv.gold)
 
 
-func _on_gold_changed(_amount: int) -> void:
+func _on_gold_changed() -> void:
 	var inv: Node = get_node_or_null("/root/InventoryManager")
 	if inv:
 		set_gold(inv.gold)
+
+
+func _on_scene_changed(scene_path: String) -> void:
+	if "title_screen" in scene_path:
+		visible = false
+	else:
+		visible = true
 
 
 func _on_game_state_changed(
