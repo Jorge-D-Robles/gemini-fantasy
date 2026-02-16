@@ -1,4 +1,3 @@
-class_name PartyManager
 extends Node
 
 ## Manages the player's party roster and active party members.

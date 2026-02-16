@@ -1,4 +1,3 @@
-class_name AudioManager
 extends Node
 
 ## Manages BGM playback with crossfade and SFX via a pool of players.

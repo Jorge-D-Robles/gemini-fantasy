@@ -1,4 +1,3 @@
-class_name EventFlags
 extends Node
 
 ## Global event flag tracker. Prevents story events from replaying.
