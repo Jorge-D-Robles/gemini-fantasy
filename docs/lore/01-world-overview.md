@@ -50,7 +50,19 @@ But the technology had a fatal flaw: it required constant input of genuine human
 
 The Severance tore apart the global consciousness network, fragmenting not just society but reality itself. The Hollows formed where the main Nexus once stood. Billions of memories scattered into the world as "Echo Fragments"—autonomous crystal shards that replay moments from lost lives.
 
+## The Static Frontier
+
+Beyond the known domains lies the **Sea of Static**, a vast, shimmering void of unformed reality. It is not water, but a sensory white-noise where the physical laws of Aethermoor dissolve. Exploration is nearly impossible, as ships that sail too far are often "deleted" or return with their crews replaying their lives in endless loops.
+
 ## Current State of the World
+
+### Atmospheric Anomalies
+
+The world's atmosphere is no longer purely physical; it is a blend of oxygen and Resonance dust. This leads to unique phenomena:
+
+- **Static Storms**: Localized reality collapses where objects lose collision and sound becomes pixelated.
+- **The Un-Sun**: Occasional pulses from the Nexus that turn the sky to a dead-channel white, causing profound emotional numbness and risking mass "Hollowing."
+- **Echo Bleed**: Random memories manifesting in the air like heat shimmers.
 
 ### The Three Factions
 
