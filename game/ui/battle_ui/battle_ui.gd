@@ -2,6 +2,7 @@ extends CanvasLayer
 
 ## Battle UI overlay handling commands, submenus, targeting,
 ## party status, resonance gauge, battle log, and victory/defeat.
+## Features active character portrait and styled JRPG panel layout.
 
 signal command_selected(command: String)
 signal target_selected(target: Battler)
@@ -16,10 +17,18 @@ enum Command {
 	FLEE,
 }
 
+const HP_BAR_COLOR := Color(0.2, 0.8, 0.3)
+const HP_BAR_LOW_COLOR := Color(0.9, 0.3, 0.2)
+const HP_LOW_THRESHOLD: float = 0.25
+const EE_BAR_COLOR := Color(0.3, 0.5, 0.9)
+const PANEL_BG_COLOR := Color(0.08, 0.08, 0.15, 0.9)
+const PANEL_BORDER_COLOR := Color(0.35, 0.35, 0.5, 1.0)
+const ACTIVE_HIGHLIGHT_COLOR := Color(1.0, 0.9, 0.5)
+
 var _active_battler: Battler = null
 var _target_list: Array[Battler] = []
 var _target_index: int = 0
-
+var _party_cache: Array[Battler] = []
 
 @onready var _turn_order_container: HBoxContainer = %TurnOrderContainer
 @onready var _command_menu: PanelContainer = %CommandMenu
@@ -45,6 +54,8 @@ var _target_index: int = 0
 @onready var _defeat_screen: PanelContainer = %DefeatScreen
 @onready var _retry_button: Button = %RetryButton
 @onready var _quit_button: Button = %QuitButton
+@onready var _portrait: TextureRect = %Portrait
+@onready var _active_name_label: Label = %ActiveNameLabel
 
 
 func _ready() -> void:
@@ -56,6 +67,7 @@ func _ready() -> void:
 	_defeat_screen.visible = false
 	_resonance_bar.max_value = Battler.RESONANCE_MAX
 
+	_apply_panel_styles()
 	_connect_command_buttons()
 	_connect_defeat_buttons()
 
@@ -93,6 +105,7 @@ func show_command_menu(battler: Battler) -> void:
 	_item_submenu.visible = false
 	_target_selector.visible = false
 	_attack_button.grab_focus()
+	_update_active_portrait(battler)
 
 
 func hide_command_menu() -> void:
@@ -109,7 +122,7 @@ func show_skill_submenu(abilities: Array[Resource]) -> void:
 		var btn := Button.new()
 		var ee_cost: int = ability.ee_cost if "ee_cost" in ability else 0
 		btn.text = "%s (%d EE)" % [ability.display_name, ee_cost]
-		btn.add_theme_font_size_override("font_size", 10)
+		btn.add_theme_font_size_override("font_size", 9)
 		if _active_battler and _active_battler.current_ee < ee_cost:
 			btn.disabled = true
 		btn.pressed.connect(_on_skill_pressed.bind(ability))
@@ -128,7 +141,7 @@ func show_item_submenu(items: Array[Resource]) -> void:
 	for item in items:
 		var btn := Button.new()
 		btn.text = item.display_name if "display_name" in item else "???"
-		btn.add_theme_font_size_override("font_size", 10)
+		btn.add_theme_font_size_override("font_size", 9)
 		btn.pressed.connect(_on_item_pressed.bind(item))
 		_item_list.add_child(btn)
 
@@ -152,6 +165,7 @@ func show_target_selector(
 
 
 func update_party_status(party: Array[Battler]) -> void:
+	_party_cache = party
 	_clear_children(_party_rows)
 
 	for battler in party:
@@ -164,13 +178,25 @@ func update_turn_order(queue: Array[Battler]) -> void:
 
 	for battler in queue:
 		var icon := Label.new()
-		icon.text = battler.get_display_name().left(3)
-		icon.add_theme_font_size_override("font_size", 9)
-		icon.add_theme_color_override(
-			"font_color",
-			Color(0.7, 0.85, 1.0) if battler is PartyBattler else Color(1.0, 0.5, 0.5),
-		)
+		icon.text = battler.get_display_name().left(4)
+		icon.add_theme_font_size_override("font_size", 8)
+		if battler is PartyBattler:
+			icon.add_theme_color_override("font_color", Color(0.7, 0.85, 1.0))
+		else:
+			icon.add_theme_color_override("font_color", Color(1.0, 0.5, 0.5))
+
+		if battler == _active_battler:
+			icon.add_theme_color_override("font_color", ACTIVE_HIGHLIGHT_COLOR)
+
 		_turn_order_container.add_child(icon)
+
+		# Add separator arrow between entries
+		if battler != queue.back():
+			var sep := Label.new()
+			sep.text = ">"
+			sep.add_theme_font_size_override("font_size", 7)
+			sep.add_theme_color_override("font_color", Color(0.4, 0.4, 0.5))
+			_turn_order_container.add_child(sep)
 
 
 func update_resonance(gauge_value: float, state: Battler.ResonanceState) -> void:
@@ -241,6 +267,81 @@ func clear_battle_log() -> void:
 	_battle_log.clear()
 
 
+func _update_active_portrait(battler: Battler) -> void:
+	_active_name_label.text = battler.get_display_name()
+
+	if battler is PartyBattler:
+		var char_data := battler.data as CharacterData
+		if char_data and not char_data.portrait_path.is_empty():
+			var tex := load(char_data.portrait_path) as Texture2D
+			if tex:
+				# Portrait sheets are 192x96 (2 faces). Extract first face.
+				var atlas := AtlasTexture.new()
+				atlas.atlas = tex
+				atlas.region = Rect2(0, 0, 96, 96)
+				_portrait.texture = atlas
+				return
+
+	_portrait.texture = null
+
+
+func _apply_panel_styles() -> void:
+	var panels: Array[PanelContainer] = [
+		get_node("TopBar") as PanelContainer,
+		get_node("BottomPanel") as PanelContainer,
+		get_node("BattleLogPanel") as PanelContainer,
+	]
+	for panel in panels:
+		if panel:
+			panel.add_theme_stylebox_override("panel", _create_panel_style())
+
+	# Slightly different style for inner panels
+	var inner_style := _create_panel_style()
+	inner_style.bg_color = Color(0.06, 0.06, 0.12, 0.7)
+	inner_style.set_border_width_all(1)
+
+	if _command_menu:
+		_command_menu.add_theme_stylebox_override("panel", inner_style)
+	if _party_status_panel:
+		_party_status_panel.add_theme_stylebox_override("panel", inner_style)
+	if _skill_submenu:
+		_skill_submenu.add_theme_stylebox_override("panel", inner_style)
+	if _item_submenu:
+		_item_submenu.add_theme_stylebox_override("panel", inner_style)
+
+	# Portrait frame style
+	var portrait_frame: PanelContainer = get_node(
+		"BottomPanel/MarginContainer/HBoxContainer/PortraitSection/PortraitFrame"
+	) as PanelContainer
+	if portrait_frame:
+		var portrait_style := _create_panel_style()
+		portrait_style.bg_color = Color(0.05, 0.05, 0.1, 0.9)
+		portrait_style.border_color = Color(0.6, 0.5, 0.3)
+		portrait_frame.add_theme_stylebox_override("panel", portrait_style)
+
+	# Victory/defeat screen styles
+	var overlay_style := _create_panel_style()
+	overlay_style.bg_color = Color(0.05, 0.05, 0.1, 0.95)
+	overlay_style.set_border_width_all(2)
+	overlay_style.border_color = Color(0.5, 0.5, 0.6)
+
+	if _victory_screen:
+		_victory_screen.add_theme_stylebox_override("panel", overlay_style)
+	if _defeat_screen:
+		var defeat_style := overlay_style.duplicate() as StyleBoxFlat
+		defeat_style.border_color = Color(0.6, 0.2, 0.2)
+		_defeat_screen.add_theme_stylebox_override("panel", defeat_style)
+
+
+func _create_panel_style() -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = PANEL_BG_COLOR
+	style.border_color = PANEL_BORDER_COLOR
+	style.set_border_width_all(1)
+	style.set_corner_radius_all(2)
+	return style
+
+
 func _connect_command_buttons() -> void:
 	_attack_button.pressed.connect(
 		func() -> void: command_selected.emit("attack")
@@ -287,36 +388,62 @@ func _create_party_row(battler: Battler) -> HBoxContainer:
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 4)
 
+	# Name label
 	var name_lbl := Label.new()
-	name_lbl.text = battler.get_display_name()
-	name_lbl.add_theme_font_size_override("font_size", 9)
-	name_lbl.custom_minimum_size.x = 50
+	name_lbl.text = battler.get_display_name().left(6)
+	name_lbl.add_theme_font_size_override("font_size", 8)
+	name_lbl.custom_minimum_size.x = 40
+	if battler == _active_battler:
+		name_lbl.add_theme_color_override("font_color", ACTIVE_HIGHLIGHT_COLOR)
 	row.add_child(name_lbl)
 
+	# HP label
+	var hp_label := Label.new()
+	hp_label.text = "HP"
+	hp_label.add_theme_font_size_override("font_size", 7)
+	hp_label.add_theme_color_override("font_color", Color(0.6, 0.8, 0.6))
+	row.add_child(hp_label)
+
+	# HP bar
 	var hp_bar := ProgressBar.new()
-	hp_bar.custom_minimum_size = Vector2(44, 6)
+	hp_bar.custom_minimum_size = Vector2(50, 6)
 	hp_bar.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	hp_bar.show_percentage = false
 	hp_bar.max_value = battler.max_hp
 	hp_bar.value = battler.current_hp
+	var hp_ratio: float = float(battler.current_hp) / float(maxi(battler.max_hp, 1))
+	var hp_color := HP_BAR_LOW_COLOR if hp_ratio <= HP_LOW_THRESHOLD else HP_BAR_COLOR
+	hp_bar.add_theme_stylebox_override("fill", _create_color_stylebox(hp_color))
 	row.add_child(hp_bar)
 
+	# HP numbers
 	var hp_lbl := Label.new()
 	hp_lbl.text = "%d/%d" % [battler.current_hp, battler.max_hp]
-	hp_lbl.add_theme_font_size_override("font_size", 8)
+	hp_lbl.add_theme_font_size_override("font_size", 7)
+	hp_lbl.custom_minimum_size.x = 44
 	row.add_child(hp_lbl)
 
+	# EE label
+	var ee_label := Label.new()
+	ee_label.text = "EE"
+	ee_label.add_theme_font_size_override("font_size", 7)
+	ee_label.add_theme_color_override("font_color", Color(0.5, 0.6, 0.9))
+	row.add_child(ee_label)
+
+	# EE bar
 	var ee_bar := ProgressBar.new()
-	ee_bar.custom_minimum_size = Vector2(30, 6)
+	ee_bar.custom_minimum_size = Vector2(36, 6)
 	ee_bar.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	ee_bar.show_percentage = false
 	ee_bar.max_value = battler.max_ee
 	ee_bar.value = battler.current_ee
+	ee_bar.add_theme_stylebox_override("fill", _create_color_stylebox(EE_BAR_COLOR))
 	row.add_child(ee_bar)
 
+	# EE numbers
 	var ee_lbl := Label.new()
 	ee_lbl.text = "%d" % battler.current_ee
-	ee_lbl.add_theme_font_size_override("font_size", 8)
+	ee_lbl.add_theme_font_size_override("font_size", 7)
 	row.add_child(ee_lbl)
 
 	return row
@@ -371,8 +498,6 @@ func _on_item_pressed(item: Resource) -> void:
 
 func _on_retry_pressed() -> void:
 	_defeat_screen.visible = false
-	# BattleManager handles state cleanup via end_battle() in DefeatState.
-	# Retry reloads the battle scene through the normal scene change path.
 	GameManager.change_scene(
 		get_tree().current_scene.scene_file_path
 	)
