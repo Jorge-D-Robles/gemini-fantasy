@@ -1,0 +1,15 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://autoloads/ui_layer.gd" id="1_uilyr"]
+[ext_resource type="PackedScene" uid="uid://d2h3u4d5s6c7n" path="res://ui/hud/hud.tscn" id="2_hud"]
+[ext_resource type="PackedScene" uid="uid://d4d5i6a7l8o9g" path="res://ui/dialogue/dialogue_box.tscn" id="3_dlg"]
+[ext_resource type="PackedScene" uid="uid://e5p6a7u8s9e0m" path="res://ui/pause_menu/pause_menu.tscn" id="4_pm"]
+
+[node name="UILayer" type="Node"]
+script = ExtResource("1_uilyr")
+
+[node name="HUD" parent="." instance=ExtResource("2_hud")]
+
+[node name="DialogueBox" parent="." instance=ExtResource("3_dlg")]
+
+[node name="PauseMenu" parent="." instance=ExtResource("4_pm")]

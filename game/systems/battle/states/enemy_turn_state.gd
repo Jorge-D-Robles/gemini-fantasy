@@ -28,49 +28,48 @@ func enter() -> void:
 
 	var action := enemy.choose_action(party_battlers, enemy_battlers)
 
-	match action.get("type", "wait"):
-		"attack":
-			var target: Battler = action.get("target", null)
-			if target and target.is_alive:
+	match action.type:
+		BattleAction.Type.ATTACK:
+			if action.target and action.target.is_alive:
 				var damage := enemy.deal_damage(enemy.attack)
-				var actual := target.take_damage(damage)
+				var actual := action.target.take_damage(damage)
 				if _battle_ui:
 					_battle_ui.add_battle_log(
 						"%s attacks %s for %d damage!" % [
 							enemy.get_display_name(),
-							target.get_display_name(),
+							action.target.get_display_name(),
 							actual,
 						]
 					)
-		"ability":
-			var target: Battler = action.get("target", null)
-			var ability: Resource = action.get("ability", null)
-			if ability and target:
-				var ee_cost: int = ability.ee_cost if "ee_cost" in ability else 0
-				enemy.use_ee(ee_cost)
-				var is_magical: bool = true
-				if "damage_stat" in ability:
-					is_magical = ability.damage_stat == 1
-				var base: int = ability.damage_base if "damage_base" in ability else 0
-				if base > 0 and target.is_alive:
+		BattleAction.Type.ABILITY:
+			if action.ability and action.target:
+				enemy.use_ee(action.ability.ee_cost)
+				var is_magical := (
+					action.ability.damage_stat
+					== AbilityData.DamageStat.MAGIC
+				)
+				var base := action.ability.damage_base
+				if base > 0 and action.target.is_alive:
 					var damage := enemy.deal_damage(base, is_magical)
-					var actual := target.take_damage(damage, is_magical)
+					var actual := action.target.take_damage(
+						damage, is_magical
+					)
 					if _battle_ui:
 						_battle_ui.add_battle_log(
 							"%s uses %s on %s for %d damage!" % [
 								enemy.get_display_name(),
-								ability.display_name,
-								target.get_display_name(),
+								action.ability.display_name,
+								action.target.get_display_name(),
 								actual,
 							]
 						)
-		"defend":
+		BattleAction.Type.DEFEND:
 			enemy.defend()
 			if _battle_ui:
 				_battle_ui.add_battle_log(
 					"%s defends." % enemy.get_display_name()
 				)
-		"wait":
+		BattleAction.Type.WAIT:
 			if _battle_ui:
 				_battle_ui.add_battle_log(
 					"%s waits." % enemy.get_display_name()

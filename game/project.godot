@@ -23,6 +23,7 @@ PartyManager="*res://autoloads/party_manager.gd"
 BattleManager="*res://autoloads/battle_manager.gd"
 DialogueManager="*res://autoloads/dialogue_manager.gd"
 EventFlags="*res://events/event_flags.gd"
+UILayer="*res://autoloads/ui_layer.tscn"
 
 [display]
 

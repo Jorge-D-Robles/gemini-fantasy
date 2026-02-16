@@ -116,7 +116,6 @@ const PATH_MAP: Array[String] = [
 @onready var _player: CharacterBody2D = $Entities/Player
 @onready var _spawn_from_ruins: Marker2D = $Entities/SpawnFromRuins
 @onready var _spawn_from_town: Marker2D = $Entities/SpawnFromTown
-@onready var _hud: CanvasLayer = $HUD
 @onready var _encounter_system: EncounterSystem = $EncounterSystem
 @onready var _iris_event: IrisRecruitment = $IrisRecruitment
 @onready var _exit_to_ruins: Area2D = $Triggers/ExitToRuins
@@ -128,7 +127,7 @@ func _ready() -> void:
 	_setup_tilemap()
 
 	# Set HUD location name
-	_hud.location_name = "Verdant Forest"
+	UILayer.hud.location_name = "Verdant Forest"
 
 	# Add spawn points to groups so GameManager.change_scene can find them
 	_spawn_from_ruins.add_to_group("spawn_from_ruins")
