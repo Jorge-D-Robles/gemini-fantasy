@@ -38,11 +38,15 @@ Every session, before writing any code:
 2. If you have a task `Assigned: [your-name]` with `Status: in-progress`, resume it
 3. Otherwise, pick the highest-priority `unassigned` task from Queue whose deps are met
 4. Claim it: set `Assigned: [your-name]`, `Status: in-progress`, `Started: [date]`
-5. Do the work (following all Research Before Code rules below)
-6. When done: move ticket to "Done This Sprint", set `Status: done`, `Completed: [date]`
-7. Append one-line entry to `agents/COMPLETED.md`
-8. If you discover new issues, add tickets to `agents/BACKLOG.md`
-9. Pick the next task (go to step 3)
+5. **Research** — look up docs, read best practices, scan existing code (see below)
+6. **RED** — write failing tests that define the expected behavior
+7. **GREEN** — write the minimum implementation to make tests pass
+8. **REFACTOR** — clean up while keeping tests green
+9. Run `/run-tests` — all tests must pass before committing
+10. When done: move ticket to "Done This Sprint", set `Status: done`, `Completed: [date]`
+11. Append one-line entry to `agents/COMPLETED.md`
+12. If you discover new issues, add tickets to `agents/BACKLOG.md`
+13. Pick the next task (go to step 3)
 
 Agent names: Use `claude` or `gemini` as the assignee value.
 
@@ -58,8 +62,9 @@ Agent names: Use `claude` or `gemini` as the assignee value.
     - **Claude Code**: `Read("docs/best-practices/[file].md")`
     - **Gemini CLI**: `read_file("docs/best-practices/[file].md")`
 4.  **Scan for related issues**: Use the available search tools to find existing implementations of similar logic to ensure consistency and avoid duplicating known bugs.
+5.  **Write tests FIRST** (TDD): For any testable logic, write failing tests that define the expected behavior BEFORE writing the implementation. See the TDD section below for details.
 
-This is not optional. Every code change must be grounded in documentation and the current state of the project. Do not rely on memory or assumptions — look it up and check the tracker.
+This is not optional. Every code change must be grounded in documentation and the current state of the project. Do not rely on memory or assumptions — look it up, check the tracker, and write the tests first.
 
 **Choosing what to look up:**
 - Writing a new scene? → `godot-docs` subagent for root node class + `01-scene-architecture.md`
@@ -74,20 +79,68 @@ This is not optional. Every code change must be grounded in documentation and th
 - Building battle/overworld? → `10-jrpg-patterns.md`
 - Adding art/audio assets? → Read the "Asset Workflow" section above + `04-resources-and-data.md`
 
-## MANDATORY: Test Before Push
+## MANDATORY: Test-Driven Development (TDD)
 
-**DO NOT push code without running the test suite first.**
+**This project follows strict TDD. Tests come FIRST, implementation comes SECOND.**
 
-1. Run `gdlint` on modified `.gd` files to catch style/syntax issues
-2. Run `/run-tests` to execute the full GUT unit test suite headless
-3. All tests must pass (exit code 0) before creating a PR
-4. New testable logic (pure functions, data classes, state machines) must include corresponding unit tests in `game/tests/`
+### The TDD Cycle: Red-Green-Refactor
+
+For every piece of testable logic (functions, data classes, state machines, autoloads, resources):
+
+1. **RED — Write failing tests first.** Before writing any implementation code, create tests that define the expected behavior. These tests MUST fail initially (because the code doesn't exist yet) or MUST define the new behavior you're about to add. This forces you to think about the API, edge cases, and contracts before writing a single line of production code.
+
+2. **GREEN — Write the minimum code to pass.** Implement only what is needed to make the failing tests pass. Do not add extra features, optimizations, or "nice to haves" at this stage. If a behavior isn't tested, don't build it yet.
+
+3. **REFACTOR — Clean up while tests stay green.** Once tests pass, improve the code (remove duplication, rename for clarity, extract helpers) while running tests after each change to ensure nothing breaks.
+
+4. **REPEAT** for the next behavior or requirement.
+
+### When TDD Applies
+
+**Always write tests first for:**
+- New autoload scripts (pure logic, roster management, flag tracking)
+- Custom Resource classes and their methods
+- Battle system logic (damage formulas, status effects, resonance, turn order)
+- State machines and state transitions
+- Inventory, quest, save/load logic
+- Any pure function or method with deterministic inputs/outputs
+- Bug fixes — write a test that reproduces the bug BEFORE fixing it
+
+**TDD is optional (but tests are still required after) for:**
+- Scene tree wiring (`.tscn` files) — hard to unit test, use `/playtest-check` instead
+- UI layout and visual polish — validated visually
+- Asset loading and integration — depends on Godot import cache
+- Signal connection plumbing between scenes — use `/integration-check`
+
+Even when TDD doesn't apply, you must still run `/run-tests` before pushing and ensure existing tests stay green.
+
+### Test Conventions
 
 **Test file naming:** `test_<module_name>.gd` in the matching subdirectory under `game/tests/unit/`.
 
 **Test pattern:** Each test file `extends GutTest`. Create fresh instances in `before_each()` via `load("res://path.gd").new()` + `add_child_autofree()` — never test against global autoload singletons.
 
-**Running tests manually:**
+**Test structure for a new feature:**
+```
+# 1. Create the test file FIRST
+game/tests/unit/<subsystem>/test_<module>.gd
+
+# 2. Write tests that define expected behavior
+#    (these will fail — the code doesn't exist yet)
+
+# 3. Create/modify the implementation file
+game/<subsystem>/<module>.gd
+
+# 4. Run tests — iterate until green
+/run-tests
+
+# 5. Refactor if needed, re-run tests
+```
+
+**Test helpers:** Use `game/tests/helpers/test_helpers.gd` for shared factories (`make_battler()`, `make_ability()`, `make_item()`). Add new factories there as needed.
+
+### Running Tests
+
 ```bash
 # Static analysis
 /Users/robles/Library/Python/3.10/bin/gdlint game/
@@ -98,6 +151,16 @@ This is not optional. Every code change must be grounded in documentation and th
   -d -s res://addons/gut/gut_cmdln.gd \
   -gdir=res://tests/ -ginclude_subdirs -gexit -glog=2
 ```
+
+Or use `/run-tests` which runs both in sequence and reports results.
+
+### Rules
+
+1. **DO NOT push code without all tests passing** (exit code 0)
+2. **DO NOT write implementation before tests** for testable logic
+3. **Bug fixes MUST include a regression test** — prove the bug exists first, then fix it
+4. **Refactors MUST NOT break existing tests** — if tests fail, the refactor is wrong
+5. **New testable code without tests will not be merged** — tests are not optional
 
 ## Project Structure
 
