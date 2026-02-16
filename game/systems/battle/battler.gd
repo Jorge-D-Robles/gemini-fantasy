@@ -279,12 +279,41 @@ func _calculate_turn_delay() -> void:
 func _load_stats_from_data() -> void:
 	if not data:
 		return
-	max_hp = data.max_hp
-	max_ee = data.max_ee
-	attack = data.attack
-	magic = data.magic
-	defense = data.defense
-	resistance = data.resistance
-	speed = data.speed
-	luck = data.luck
+	if data is CharacterData:
+		var char_data := data as CharacterData
+		max_hp = LevelManager.get_stat_at_level(
+			char_data.max_hp, char_data.hp_growth, char_data.level
+		)
+		max_ee = LevelManager.get_stat_at_level(
+			char_data.max_ee, char_data.ee_growth, char_data.level
+		)
+		attack = LevelManager.get_stat_at_level(
+			char_data.attack, char_data.attack_growth, char_data.level
+		)
+		magic = LevelManager.get_stat_at_level(
+			char_data.magic, char_data.magic_growth, char_data.level
+		)
+		defense = LevelManager.get_stat_at_level(
+			char_data.defense, char_data.defense_growth, char_data.level
+		)
+		resistance = LevelManager.get_stat_at_level(
+			char_data.resistance,
+			char_data.resistance_growth,
+			char_data.level,
+		)
+		speed = LevelManager.get_stat_at_level(
+			char_data.speed, char_data.speed_growth, char_data.level
+		)
+		luck = LevelManager.get_stat_at_level(
+			char_data.luck, char_data.luck_growth, char_data.level
+		)
+	else:
+		max_hp = data.max_hp
+		max_ee = data.max_ee
+		attack = data.attack
+		magic = data.magic
+		defense = data.defense
+		resistance = data.resistance
+		speed = data.speed
+		luck = data.luck
 	abilities = data.abilities

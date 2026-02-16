@@ -23,6 +23,13 @@ func enter() -> void:
 				if randf() < chance:
 					items.append(loot_entry.get("item_id", "unknown"))
 
+	# Apply gold rewards
+	var inv: Node = get_node_or_null("/root/InventoryManager")
+	if inv:
+		inv.add_gold(total_gold)
+		for item_id in items:
+			inv.add_item(StringName(item_id), 1)
+
 	var battle_ui: Node = battle_scene.get_node_or_null("BattleUI")
 	if battle_ui:
 		battle_ui.show_victory(total_exp, total_gold, items)

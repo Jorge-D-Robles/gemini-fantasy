@@ -17,23 +17,39 @@ func enter() -> void:
 		state_machine.transition_to("PlayerTurn")
 		return
 
-	# Determine mode from previous state context
-	var battler: Battler = battle_scene.current_battler
-	if battler is PartyBattler:
-		var party_battler := battler as PartyBattler
-		var available := party_battler.get_available_abilities()
-		if available.is_empty():
-			_battle_ui.add_battle_log("No skills available!")
+	_mode = battle_scene.pending_command
+
+	if _mode == "item":
+		var usable: Array[ItemData] = InventoryManager.get_usable_items()
+		if usable.is_empty():
+			_battle_ui.add_battle_log("No items available!")
 			state_machine.transition_to("PlayerTurn")
 			return
-		_mode = "skill"
-		_battle_ui.show_skill_submenu(available)
-		if not _battle_ui.skill_selected.is_connected(_on_skill_selected):
-			_battle_ui.skill_selected.connect(_on_skill_selected)
+		var items_as_resource: Array[Resource] = []
+		for item in usable:
+			items_as_resource.append(item)
+		_battle_ui.show_item_submenu(items_as_resource)
+		if not _battle_ui.item_selected.is_connected(_on_item_selected):
+			_battle_ui.item_selected.connect(_on_item_selected)
 		if not _battle_ui.submenu_cancelled.is_connected(_on_cancelled):
 			_battle_ui.submenu_cancelled.connect(_on_cancelled)
 	else:
-		state_machine.transition_to("PlayerTurn")
+		var battler: Battler = battle_scene.current_battler
+		if battler is PartyBattler:
+			var party_battler := battler as PartyBattler
+			var available := party_battler.get_available_abilities()
+			if available.is_empty():
+				_battle_ui.add_battle_log("No skills available!")
+				state_machine.transition_to("PlayerTurn")
+				return
+			_mode = "skill"
+			_battle_ui.show_skill_submenu(available)
+			if not _battle_ui.skill_selected.is_connected(_on_skill_selected):
+				_battle_ui.skill_selected.connect(_on_skill_selected)
+			if not _battle_ui.submenu_cancelled.is_connected(_on_cancelled):
+				_battle_ui.submenu_cancelled.connect(_on_cancelled)
+		else:
+			state_machine.transition_to("PlayerTurn")
 
 
 func exit() -> void:
@@ -54,6 +70,7 @@ func _on_skill_selected(ability: Resource) -> void:
 
 func _on_item_selected(item: Resource) -> void:
 	var item_data := item as ItemData
+	InventoryManager.remove_item(item_data.id)
 	battle_scene.current_action = BattleAction.create_item(item_data, null)
 	state_machine.transition_to("TargetSelect")
 
