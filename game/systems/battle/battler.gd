@@ -157,7 +157,7 @@ func apply_status_effect(effect: StringName) -> void:
 
 
 func remove_status_effect(effect: StringName) -> void:
-	var idx := status_effects.find(effect)
+	var idx: int = status_effects.find(effect)
 	if idx >= 0:
 		status_effects.remove_at(idx)
 		status_effect_removed.emit(effect)

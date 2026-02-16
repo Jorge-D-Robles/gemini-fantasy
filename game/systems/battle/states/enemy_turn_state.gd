@@ -80,7 +80,7 @@ func enter() -> void:
 	await get_tree().create_timer(0.4).timeout
 
 	# Check battle end
-	var result := battle_scene.check_battle_end()
+	var result: int = battle_scene.check_battle_end()
 	if result == 1:
 		state_machine.transition_to("Victory")
 	elif result == -1:
