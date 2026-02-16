@@ -11,79 +11,71 @@ const CREEPING_VINE_PATH: String = "res://data/enemies/creeping_vine.tres"
 const KAEL_DATA_PATH: String = "res://data/characters/kael.tres"
 
 const GROUND_LEGEND: Dictionary = {
-	"S": Vector2i(0, 0),   # Stone floor 1
-	"s": Vector2i(1, 0),   # Stone floor 2
-	"P": Vector2i(2, 0),   # Stone floor 3
-	"p": Vector2i(3, 0),   # Stone floor 4
-	"D": Vector2i(0, 2),   # Decorated floor 1
-	"d": Vector2i(1, 2),   # Decorated floor 2
-	"A": Vector2i(0, 14),  # Floor variant 1
-	"a": Vector2i(1, 14),  # Floor variant 2
+	"S": Vector2i(0, 0),   # Stone floor left
+	"s": Vector2i(1, 0),   # Stone floor right
+	"D": Vector2i(0, 2),   # Decorated floor left
+	"d": Vector2i(1, 2),   # Decorated floor right
 }
 
 const WALL_LEGEND: Dictionary = {
-	"W": Vector2i(0, 8),   # Dark wall 1
-	"w": Vector2i(1, 8),   # Dark wall 2
-	"X": Vector2i(2, 8),   # Dark wall 3
-	"x": Vector2i(3, 8),   # Dark wall 4
-	"G": Vector2i(0, 4),   # Gold wall 1
-	"g": Vector2i(1, 4),   # Gold wall 2
-	"H": Vector2i(2, 4),   # Gold wall 3
-	"h": Vector2i(3, 4),   # Gold wall 4
+	"W": Vector2i(0, 8),   # Dark wall left
+	"w": Vector2i(1, 8),   # Dark wall right
+	"G": Vector2i(0, 4),   # Gold wall left
+	"g": Vector2i(1, 4),   # Gold wall right
 }
 
 const GROUND_MAP: Array[String] = [
-	"SsPpSsPpSsPpSsPpSsPpSsPpSsPpSsPpSsPpSsPp",
-	"sSPpsSPpsSPpsSPpsSPpsSPpsSPpsSPpsSPpsSPp",
-	"PpSsPpSsPpSsPpSsPpSsPpSsPpSsPpSsPpSsPpSs",
-	"pSSsPpSsPpSsPpSsPpSsPpSsPpSsPpSsPpSsPpSs",
-	"SsPpSsPpSsPpSsPpSsPpSsPpSsPpSsPpSsPpSsPp",
-	"sSPpsSPpsSPpsSPpsSPpsSPpsSPpsSPpsSPpsSPp",
-	"PpSsPpSsPpSsDdDdDdDdDdDdDdDdSsPpSsPpSsSs",
-	"pSSsPpSsPpSsDdDdDdDdDdDdDdDdSsPpSsPpSsSs",
-	"SsPpSsPpSsPpDdDdDdDdDdDdDdSsPpSsPpSsPpSs",
-	"sSPpsSPpsSPpDdDdDdDdDdDdDdSsPpSsPpsSPpSs",
-	"PpSsPpSsPpSsDdDdDdDdDdDdDdDdSsPpSsPpSsSs",
-	"pSSsPpSsPpSsDdDdDdDdDdDdDdDdSsPpSsPpSsSs",
-	"SsPpSsPpSsPpSsPpSsPpSsPpSsPpSsPpSsPpSsPp",
-	"sSPpsSPpsSPpsSPpsSPpsSPpsSPpsSPpsSPpsSPp",
-	"AaSsPpSsPpSsPpSsPpSsPpSsPpSsPpSsPpSsPpSs",
-	"aASsPpSsPpSsPpSsPpSsPpSsPpSsPpSsPpSsPpSs",
-	"SsPpAaSsPpSsPpSsPpSsPpSsPpSsPpSsPpSsPpSs",
-	"sSPpaASsPpSsPpSsPpSsPpSsPpSsPpSsPpsSPpSs",
-	"PpSsPpSsPpSsPpSsPpSsPpSsPpSsPpSsPpSsSsSs",
-	"pSSsPpSsPpSsPpSsPpSsPpSsPpSsPpSsPpSsSsSs",
-	"SsPpSsPpSsPpSsPpSsPpSsPpSsPpSsPpSsPpSsPp",
-	"sSPpsSPpsSPpsSPpsSPpsSPpsSPpsSPpsSPpsSPp",
-	"PpSsPpSsPpSsPpSsPpSsPpSsPpSsPpSsPpSsSsSs",
-	"pSSsPpSsPpSsPpSsPpSsPpSsPpSsPpSsPpSsSsSs",
+	"SsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSs",
+	"SsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSs",
+	"SsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSs",
+	"SsSsSsSsSsSsSsSsSsDdDdDdDdDdDdDdSsSsSsSs",
+	"SsSsSsSsSsSsSsSsSsDdDdDdDdDdDdDdSsSsSsSs",
+	"SsSsSsSsSsSsSsSsSsDdDdDdDdDdDdDdSsSsSsSs",
+	"SsSsSsSsSsSsSsSsSsDdDdDdDdDdDdDdSsSsSsSs",
+	"SsSsSsSsSsSsSsSsSsDdDdDdDdDdDdDdSsSsSsSs",
+	"SsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSs",
+	"SsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSs",
+	"SsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSs",
+	"SsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSs",
+	"SsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSs",
+	"SsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSs",
+	"SsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSs",
+	"SsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSs",
+	"SsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSs",
+	"SsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSs",
+	"SsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSs",
+	"SsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSs",
+	"SsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSs",
+	"SsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSs",
+	"SsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSs",
+	"SsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSs",
 ]
 
 const WALL_MAP: Array[String] = [
-	"WwXxWwXxWwXxWwXxWwXxWwXxWwXxWwXxWwXxWwXx",
-	"WwXxWwXxWwXxWwXxWwXxWwXxWwXxWwXxWwXxWwXx",
-	"WwXx                                WwXx",
-	"WwXx    WwXx       GgHhGgHhGgHh     WwXx",
-	"WwXx    WwXx       Gh        gH     WwXx",
-	"WwXx               Hg        hG     WwXx",
-	"WwXx    WwXx       Gh        gH     WwXx",
-	"WwXx    WwXx       GgHh    HhGg     WwXx",
-	"WwXx                                WwXx",
-	"WwXx                                WwXx",
-	"WwXx                                    ",
-	"WwXx                                    ",
-	"WwXx                                    ",
-	"WwXx                                    ",
-	"WwXx                                WwXx",
-	"WwXx    WwXxWwXxWw    WwXxWwXxWwXxWwWwXx",
-	"WwXx          WwXx              WwXxWwXx",
-	"WwXx          WwXx              WwXxWwXx",
-	"WwXx          WwXx              WwXxWwXx",
-	"WwXx          WwXx              WwXxWwXx",
-	"WwXx                                WwXx",
-	"WwXx                                WwXx",
-	"WwXxWwXxWwXxWwXxWwXxWwXxWwXxWwXxWwXxWwXx",
-	"WwXxWwXxWwXxWwXxWwXxWwXxWwXxWwXxWwXxWwXx",
+	"WwWwWwWwWwWwWwWwWwWwWwWwWwWwWwWwWwWwWwWw",
+	"WwWwWwWwWwWwWwWwWwWwWwWwWwWwWwWwWwWwWwWw",
+	"Ww                                    Ww",
+	"Ww    WwWw        GgGgGgGgGgGgGg      Ww",
+	"Ww    WwWw        Gg          Gg      Ww",
+	"Ww                Gg          Gg      Ww",
+	"Ww    WwWw        Gg          Gg      Ww",
+	"Ww    WwWw        GgGgGg  GgGgGg      Ww",
+	"Ww                                    Ww",
+	"Ww                                    Ww",
+	"Ww                                      ",
+	"Ww                                      ",
+	"Ww                                      ",
+	"Ww                                      ",
+	"Ww                                    Ww",
+	"Ww    WwWwWwWwWw      WwWwWwWwWwWw    Ww",
+	"Ww          WwWw              WwWw    Ww",
+	"Ww          WwWw              WwWw    Ww",
+	"Ww          WwWw              WwWw    Ww",
+	"Ww          WwWw              WwWw    Ww",
+	"Ww                                    Ww",
+	"Ww                                    Ww",
+	"WwWwWwWwWwWwWwWwWwWwWwWwWwWwWwWwWwWwWwWw",
+	"WwWwWwWwWwWwWwWwWwWwWwWwWwWwWwWwWwWwWwWw",
 ]
 
 @onready var _ground_layer: TileMapLayer = $Ground
@@ -183,7 +175,7 @@ func _on_exit_to_forest_entered(body: Node2D) -> void:
 	GameManager.change_scene(
 		VERDANT_FOREST_PATH,
 		GameManager.FADE_DURATION,
-		"spawn_from_ruins",
+		"spawn_from_forest",
 	)
 
 
