@@ -11,7 +11,9 @@ After completing any task, **automatically commit, push, and merge** without ask
 3. Push to remote with `-u`
 4. Create a PR via `gh pr create`
 5. Merge the PR via `gh pr merge --merge`
-6. Switch back to main and pull
+6. **Pull main in the main repo** so Godot has the latest code immediately:
+   `git -C /Users/robles/repos/games/gemini-fantasy pull`
+   (Worktrees cannot checkout main — always pull from the main repo path.)
 
 **MANDATORY:** Always check `ISSUES_TRACKER.md` before starting a task. If your task fixes an issue listed there, remove it. If you identify new issues during development or review, you MUST add them to the tracker.
 
