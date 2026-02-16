@@ -500,9 +500,11 @@ func _on_item_pressed(item: Resource) -> void:
 
 func _on_retry_pressed() -> void:
 	_defeat_screen.visible = false
-	GameManager.change_scene(
-		get_tree().current_scene.scene_file_path
-	)
+	var current := get_tree().current_scene
+	if current:
+		GameManager.change_scene(current.scene_file_path)
+	else:
+		GameManager.change_scene("res://ui/title_screen/title_screen.tscn")
 
 
 func _on_quit_pressed() -> void:

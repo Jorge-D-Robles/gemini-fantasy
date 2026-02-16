@@ -133,7 +133,8 @@ func _ready() -> void:
 
 	# Connect innkeeper special interaction
 	var innkeeper: StaticBody2D = $Entities/InnkeeperNPC
-	innkeeper.interaction_ended.connect(_on_innkeeper_finished)
+	if innkeeper:
+		innkeeper.interaction_ended.connect(_on_innkeeper_finished)
 
 	# Hide Garrick recruitment zone if already recruited
 	if EventFlags.has_flag(GarrickRecruitment.FLAG_NAME):

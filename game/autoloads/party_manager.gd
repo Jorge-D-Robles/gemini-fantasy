@@ -18,6 +18,9 @@ var reserve_party: Array[Resource] = []
 
 
 func add_character(data: Resource) -> void:
+	if data == null:
+		push_warning("PartyManager: cannot add null character.")
+		return
 	if _find_in_roster(data) >= 0:
 		push_warning("PartyManager: character already in roster.")
 		return
@@ -31,6 +34,9 @@ func add_character(data: Resource) -> void:
 
 
 func remove_character(data: Resource) -> void:
+	if data == null:
+		push_warning("PartyManager: cannot remove null character.")
+		return
 	var index := _find_in_roster(data)
 	if index < 0:
 		push_warning("PartyManager: character not in roster.")

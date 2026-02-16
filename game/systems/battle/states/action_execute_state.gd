@@ -78,6 +78,7 @@ func _execute_ability(
 	ability: AbilityData,
 ) -> bool:
 	if not ability:
+		push_warning("ActionExecute: ability is null — falling back to attack.")
 		await _execute_attack(attacker, target)
 		return true
 

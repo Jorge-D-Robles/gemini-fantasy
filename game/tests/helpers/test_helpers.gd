@@ -41,11 +41,49 @@ static func make_party_battler(
 	return b
 
 
+static func make_enemy_data(overrides: Dictionary = {}) -> EnemyData:
+	var d := EnemyData.new()
+	d.id = overrides.get("id", &"test_enemy")
+	d.display_name = overrides.get("display_name", "Test Enemy")
+	d.max_hp = overrides.get("max_hp", 80)
+	d.max_ee = overrides.get("max_ee", 30)
+	d.attack = overrides.get("attack", 15)
+	d.magic = overrides.get("magic", 10)
+	d.defense = overrides.get("defense", 8)
+	d.resistance = overrides.get("resistance", 8)
+	d.speed = overrides.get("speed", 12)
+	d.luck = overrides.get("luck", 5)
+	d.ai_type = overrides.get("ai_type", EnemyData.AiType.BASIC)
+	d.exp_reward = overrides.get("exp_reward", 20)
+	d.gold_reward = overrides.get("gold_reward", 10)
+	var loot_override: Array = overrides.get("loot_table", [])
+	var typed_loot: Array[Dictionary] = []
+	for entry in loot_override:
+		typed_loot.append(entry)
+	d.loot_table = typed_loot
+	var abilities_override: Array = overrides.get("abilities", [])
+	var typed_abilities: Array[Resource] = []
+	for a in abilities_override:
+		typed_abilities.append(a)
+	d.abilities = typed_abilities
+	return d
+
+
+static func make_enemy_battler(
+	overrides: Dictionary = {},
+) -> EnemyBattler:
+	var b := EnemyBattler.new()
+	b.data = make_enemy_data(overrides)
+	b.initialize_from_data()
+	return b
+
+
 static func make_ability(overrides: Dictionary = {}) -> AbilityData:
 	var a := AbilityData.new()
 	a.id = overrides.get("id", &"test_ability")
 	a.display_name = overrides.get("display_name", "Test Ability")
 	a.ee_cost = overrides.get("ee_cost", 10)
+	a.resonance_cost = overrides.get("resonance_cost", 0.0)
 	a.damage_base = overrides.get("damage_base", 30)
 	a.damage_stat = overrides.get(
 		"damage_stat", AbilityData.DamageStat.MAGIC

@@ -14,7 +14,7 @@ func enter() -> void:
 	if result == 1:
 		state_machine.transition_to("Victory")
 		return
-	elif result == -1:
+	if result == -1:
 		state_machine.transition_to("Defeat")
 		return
 

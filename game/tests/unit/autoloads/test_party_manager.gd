@@ -101,3 +101,51 @@ func test_get_party_size() -> void:
 	_pm.add_character(_chars[0])
 	_pm.add_character(_chars[1])
 	assert_eq(_pm.get_party_size(), 2)
+
+
+func test_get_roster_returns_copy() -> void:
+	_pm.add_character(_chars[0])
+	var copy: Array[Resource] = _pm.get_roster()
+	copy.append(_chars[1])
+	assert_eq(_pm.roster.size(), 1)
+
+
+func test_add_null_character_rejected() -> void:
+	_pm.add_character(null)
+	assert_eq(_pm.roster.size(), 0)
+
+
+func test_remove_null_character_no_crash() -> void:
+	_pm.add_character(_chars[0])
+	_pm.remove_character(null)
+	assert_eq(_pm.roster.size(), 1)
+
+
+func test_swap_invalid_active_index_no_crash() -> void:
+	for i in 5:
+		_pm.add_character(_chars[i])
+	var old_active: Resource = _pm.active_party[0]
+	_pm.swap_members(-1, 0)
+	assert_eq(_pm.active_party[0], old_active)
+	_pm.swap_members(99, 0)
+	assert_eq(_pm.active_party[0], old_active)
+
+
+func test_swap_invalid_reserve_index_no_crash() -> void:
+	for i in 5:
+		_pm.add_character(_chars[i])
+	var old_reserve: Resource = _pm.reserve_party[0]
+	_pm.swap_members(0, -1)
+	assert_eq(_pm.reserve_party[0], old_reserve)
+	_pm.swap_members(0, 99)
+	assert_eq(_pm.reserve_party[0], old_reserve)
+
+
+func test_remove_from_reserve() -> void:
+	for i in 5:
+		_pm.add_character(_chars[i])
+	# chars[4] is in reserve
+	_pm.remove_character(_chars[4])
+	assert_eq(_pm.reserve_party.size(), 0)
+	assert_eq(_pm.active_party.size(), 4)
+	assert_eq(_pm.roster.size(), 4)

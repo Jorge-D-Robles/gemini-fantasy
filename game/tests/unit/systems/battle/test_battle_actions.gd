@@ -153,6 +153,14 @@ func test_create_defend_action() -> void:
 	assert_null(action.target)
 
 
+func test_create_wait_action() -> void:
+	var action := BattleAction.create_wait()
+	assert_eq(action.type, BattleAction.Type.WAIT)
+	assert_null(action.target)
+	assert_null(action.ability)
+	assert_null(action.item)
+
+
 # ---- Multiple abilities in sequence ----
 
 func test_multiple_abilities_drain_ee() -> void:

@@ -293,3 +293,89 @@ func test_overload_doubles_incoming_damage() -> void:
 	overloaded.add_resonance(100.0)
 	var overloaded_dmg := overloaded.take_damage(50)
 	assert_gt(overloaded_dmg, normal_dmg)
+
+
+# ---- Resonance gain from combat actions ----
+
+func test_take_damage_gains_resonance() -> void:
+	var b := Helpers.make_battler({"defense": 0})
+	add_child_autofree(b)
+	assert_eq(b.resonance_gauge, 0.0)
+	b.take_damage(50)
+	assert_gt(
+		b.resonance_gauge, 0.0,
+		"Taking damage should gain resonance"
+	)
+
+
+func test_deal_damage_gains_resonance() -> void:
+	assert_eq(_battler.resonance_gauge, 0.0)
+	_battler.deal_damage(30, false)
+	assert_gt(
+		_battler.resonance_gauge, 0.0,
+		"Dealing damage should gain resonance"
+	)
+
+
+func test_hollow_no_resonance_from_take_damage() -> void:
+	# Force HOLLOW state
+	_battler.add_resonance(100.0)
+	_battler.current_hp = 1
+	_battler.take_damage(999)
+	assert_eq(
+		_battler.resonance_state, Battler.ResonanceState.HOLLOW
+	)
+	# Revive so we can take damage again
+	_battler.revive(1.0)
+	_battler.take_damage(10)
+	assert_eq(
+		_battler.resonance_gauge, 0.0,
+		"HOLLOW state should not gain resonance from taking damage"
+	)
+
+
+func test_hollow_no_resonance_from_deal_damage() -> void:
+	# Force HOLLOW state
+	_battler.add_resonance(100.0)
+	_battler.current_hp = 1
+	_battler.take_damage(999)
+	assert_eq(
+		_battler.resonance_state, Battler.ResonanceState.HOLLOW
+	)
+	_battler.revive(1.0)
+	_battler.deal_damage(30, false)
+	assert_eq(
+		_battler.resonance_gauge, 0.0,
+		"HOLLOW state should not gain resonance from dealing damage"
+	)
+
+
+func test_hollow_no_resonance_from_defend() -> void:
+	# Force HOLLOW state
+	_battler.add_resonance(100.0)
+	_battler.current_hp = 1
+	_battler.take_damage(999)
+	assert_eq(
+		_battler.resonance_state, Battler.ResonanceState.HOLLOW
+	)
+	_battler.revive(1.0)
+	_battler.defend()
+	assert_eq(
+		_battler.resonance_gauge, 0.0,
+		"HOLLOW state should not gain resonance from defending"
+	)
+
+
+# ---- Display name ----
+
+func test_get_display_name_from_data() -> void:
+	assert_eq(_battler.get_display_name(), "Test Battler")
+
+
+func test_get_display_name_fallback_to_node_name() -> void:
+	var b := Battler.new()
+	b.name = "FallbackName"
+	add_child_autofree(b)
+	assert_eq(b.get_display_name(), "FallbackName")
+
+
