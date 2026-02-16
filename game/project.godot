@@ -15,6 +15,10 @@ run/main_scene="res://ui/title_screen/title_screen.tscn"
 config/features=PackedStringArray("4.5", "Mobile")
 config/icon="res://icon.svg"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/gut/plugin.cfg")
+
 [autoload]
 
 GameManager="*res://autoloads/game_manager.gd"

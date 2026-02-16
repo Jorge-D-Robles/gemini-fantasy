@@ -74,6 +74,31 @@ This is not optional. Every code change must be grounded in documentation and th
 - Building battle/overworld? → `10-jrpg-patterns.md`
 - Adding art/audio assets? → Read the "Asset Workflow" section above + `04-resources-and-data.md`
 
+## MANDATORY: Test Before Push
+
+**DO NOT push code without running the test suite first.**
+
+1. Run `gdlint` on modified `.gd` files to catch style/syntax issues
+2. Run `/run-tests` to execute the full GUT unit test suite headless
+3. All tests must pass (exit code 0) before creating a PR
+4. New testable logic (pure functions, data classes, state machines) must include corresponding unit tests in `game/tests/`
+
+**Test file naming:** `test_<module_name>.gd` in the matching subdirectory under `game/tests/unit/`.
+
+**Test pattern:** Each test file `extends GutTest`. Create fresh instances in `before_each()` via `load("res://path.gd").new()` + `add_child_autofree()` — never test against global autoload singletons.
+
+**Running tests manually:**
+```bash
+# Static analysis
+/Users/robles/Library/Python/3.10/bin/gdlint game/
+
+# Unit tests (headless)
+/Applications/Godot.app/Contents/MacOS/Godot --headless \
+  --path /Users/robles/repos/games/gemini-fantasy/game/ \
+  -d -s res://addons/gut/gut_cmdln.gd \
+  -gdir=res://tests/ -ginclude_subdirs -gexit -glog=2
+```
+
 ## Project Structure
 
 ```
@@ -268,6 +293,7 @@ This project is designed for fully automated agentic development. Use the skill 
 - `/balance-tuning <area>` — Analyze and adjust game balance
 
 **Quality** — Validate and fix:
+- `/run-tests` — Run gdlint + GUT unit tests (mandatory before pushing)
 - `/gdscript-review [path]` — Code style and best practices review
 - `/scene-audit [path]` — Scene architecture audit
 - `/playtest-check` — Pre-playtest validation scan

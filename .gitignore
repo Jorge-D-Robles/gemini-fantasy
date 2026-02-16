@@ -20,3 +20,6 @@ game/assets/**/*.png
 game/assets/**/*.wav
 game/assets/**/*.ogg
 game/assets/**/*.mp3
+
+# Test results
+game/tests/results.xml
