@@ -59,11 +59,21 @@ static var flags: Dictionary = {}
 
 Use this for **pure data** that doesn't need lifecycle callbacks.
 
+## CRITICAL: No class_name on Autoloads
+
+**NEVER add `class_name` to autoload scripts.** Godot registers autoloads as global singletons by their node name (e.g., `GameManager`, `AudioManager`). Adding a `class_name` with the same identifier causes the error:
+
+> Error: Class "GameManager" hides an autoload singleton.
+
+This breaks script loading for the autoload AND any script that references it, which can cause cascading failures (e.g., the pause menu appearing on startup because its `_ready()` never runs).
+
+Use `class_name` only on non-autoload scripts: Resources, regular nodes, RefCounted data classes.
+
 ## Autoload Script Pattern
 
 ```gdscript
-class_name SaveManager
 extends Node
+## NOTE: No class_name — autoloads are already global singletons.
 
 ## Manages save/load operations globally.
 
@@ -104,6 +114,7 @@ The `*` prefix means it's loaded as a node (not just a script).
 
 ## Anti-Patterns
 
+- **Adding `class_name` to autoload scripts** (hides the singleton — see above)
 - Autoload that references specific scene nodes (tight coupling)
 - Using autoload for scene-local state
 - Autoload with `_process()` that runs when not needed
