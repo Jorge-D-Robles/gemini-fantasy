@@ -17,9 +17,16 @@ Custom Resources in Godot are the standard way to define reusable data container
 - Used as `@export` types on other scripts
 - Saved and loaded as part of the game state
 
-Before creating the resource, read:
-- `docs/godot-docs/tutorials/scripting/resources.rst` — Custom Resources guide
-- `docs/godot-docs/classes/class_resource.rst` — Resource class API
+**MANDATORY — before writing any code, complete BOTH of these:**
+
+1. **Call the `godot-docs` subagent**:
+   ```
+   Task(subagent_type="godot-docs", prompt="Look up Resource class and custom Resources. I need the Resource API, @export patterns, and how to create .tres files for a [RESOURCE_TYPE] data type.")
+   ```
+2. **Read the resources best practices**:
+   ```
+   Read("docs/best-practices/04-resources-and-data.md")
+   ```
 
 ## Step 1 — Determine Resource Properties
 

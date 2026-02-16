@@ -9,14 +9,18 @@ disable-model-invocation: true
 
 Set up audio for: **$ARGUMENTS**
 
-## Step 1 — Research
+## Step 1 — Research (MANDATORY — do not skip)
 
-Before adding audio, consult:
-- `docs/godot-docs/tutorials/audio/audio_buses.rst` — Audio bus system
-- `docs/godot-docs/tutorials/audio/audio_streams.rst` — Stream types (OGG, WAV, MP3)
-- `docs/godot-docs/tutorials/audio/sync_with_audio.rst` — Syncing gameplay to audio
-- `docs/godot-docs/classes/class_audiostreamplayer.rst` — Non-positional audio
-- `docs/godot-docs/classes/class_audiostreamplayer2d.rst` — Positional 2D audio
+**You MUST complete ALL of these before writing any code:**
+
+1. **Call the `godot-docs` subagent** for audio classes:
+   ```
+   Task(subagent_type="godot-docs", prompt="Look up AudioStreamPlayer, AudioStreamPlayer2D, and AudioServer. I need properties, methods, signals, and tutorials for audio buses, audio streams, and syncing audio with gameplay.")
+   ```
+2. **Read the autoload best practices** (audio managers are often autoloads):
+   ```
+   Read("docs/best-practices/03-autoloads-and-singletons.md")
+   ```
 
 ## Step 2 — Determine Audio Type
 

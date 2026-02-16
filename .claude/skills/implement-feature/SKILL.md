@@ -11,14 +11,20 @@ Plan and implement: **$ARGUMENTS**
 
 ultrathink
 
-## Phase 1 — Research
+## Phase 1 — Research (MANDATORY — do not skip)
 
-Before writing any code:
+**You MUST complete ALL of these before writing any code:**
 
-1. **Consult the documentation index** at `docs/godot-docs-index.md` to identify which topics and files are relevant
-2. **Read class references** for every Godot class you plan to use — read the file at `docs/godot-docs/classes/class_<classname>.rst`
-3. **Read tutorials** for the relevant systems — search `docs/godot-docs/tutorials/` using the topic directories listed in CLAUDE.md
-4. **Review existing code** — use Glob to find `game/**/*.gd` and `game/**/*.tscn` to understand what already exists and how it's structured
+1. **Call the `godot-docs` subagent** for every Godot class you will use:
+   ```
+   Task(subagent_type="godot-docs", prompt="Look up [CLASS1], [CLASS2]. I need properties, methods, signals, and code examples for implementing [FEATURE].")
+   ```
+   Do NOT skip this. Do NOT rely on memory. Call the subagent.
+2. **Read the relevant best practices files** from `docs/best-practices/`:
+   - Determine which files apply (scene architecture, signals, resources, UI, state machines, etc.)
+   - Read each relevant file with the Read tool
+3. **Read the relevant design docs** — check `docs/game-design/` and `docs/lore/` for game-specific requirements
+4. **Review existing code** — use Glob to find `game/**/*.gd` and `game/**/*.tscn` to understand what already exists
 
 ## Phase 2 — Plan
 

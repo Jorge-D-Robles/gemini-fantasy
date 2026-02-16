@@ -9,13 +9,18 @@ disable-model-invocation: true
 
 Configure input actions for: **$ARGUMENTS**
 
-## Step 1 — Research
+## Step 1 — Research (MANDATORY — do not skip)
 
-Before modifying input configuration, read:
-- `docs/godot-docs/tutorials/inputs/inputevent.rst` — InputEvent system
-- `docs/godot-docs/tutorials/inputs/input_examples.rst` — Practical patterns
-- `docs/godot-docs/tutorials/inputs/controllers_gamepads_joysticks.rst` — Gamepad support
-- `docs/godot-docs/classes/class_input.rst` — Input singleton API
+**You MUST complete ALL of these before writing any code:**
+
+1. **Call the `godot-docs` subagent** for input classes:
+   ```
+   Task(subagent_type="godot-docs", prompt="Look up Input, InputEvent, and InputMap. I need properties, methods, and tutorials for InputEvent handling, input examples, and gamepad/controller support.")
+   ```
+2. **Read the node lifecycle best practices** (input callbacks have specific ordering):
+   ```
+   Read("docs/best-practices/05-node-lifecycle.md")
+   ```
 
 ## Step 2 — Define Input Actions
 

@@ -28,13 +28,20 @@ Parse arguments to determine which system to create. Common JRPG systems:
 | `scene-transition` | `scene_manager.gd` | — | Yes | change_scenes_manually, scene_tree |
 | `party` | `party_manager.gd` | PartyMember | Yes | resources, autoloads |
 
-## Step 2 — Look Up Documentation
+## Step 2 — Look Up Documentation (MANDATORY — do not skip)
 
-Before writing code, consult the Godot docs:
+**You MUST complete ALL of these before writing any code:**
 
-1. Read `docs/godot-docs-index.md` for the relevant topic section
-2. Read the class reference for key classes used by this system
-3. Read the relevant tutorials for implementation patterns
+1. **Call the `godot-docs` subagent** for the key classes this system uses:
+   ```
+   Task(subagent_type="godot-docs", prompt="Look up [Node type], [Resource type], and [related classes] for building a [SYSTEM] system. I need properties, methods, signals, and patterns.")
+   ```
+2. **Read the relevant best practices files**:
+   - `docs/best-practices/03-autoloads-and-singletons.md` (if autoload system)
+   - `docs/best-practices/02-signals-and-communication.md` (for signal design)
+   - `docs/best-practices/04-resources-and-data.md` (if system uses Resources)
+   - `docs/best-practices/07-state-machines.md` (if state machine based)
+3. **Read the relevant design doc** from `docs/game-design/` for game-specific requirements
 
 ## Step 3 — Create Directory Structure
 
