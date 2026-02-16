@@ -2,6 +2,19 @@
 
 2D JRPG built with Godot 4.5, GDScript, mobile renderer. Licensed GPLv3.
 
+## Git Workflow
+
+After completing any task, **automatically commit, push, and merge** without asking:
+
+1. Stage the changed files and commit with a clear message
+2. Create a new branch if on main, or push to the current branch
+3. Push to remote with `-u`
+4. Create a PR via `gh pr create`
+5. Merge the PR via `gh pr merge --merge`
+6. Switch back to main and pull
+
+Do not ask for confirmation at any step. This applies to all tasks — bug fixes, features, refactors, doc updates, etc.
+
 ## MANDATORY: Research Before Code
 
 **DO NOT write or modify any GDScript, .tscn, or .tres file without first completing BOTH of these steps:**

@@ -76,8 +76,8 @@ func _create_member_row(member: Resource) -> HBoxContainer:
 	row.add_child(hp_bar)
 
 	var hp_label := Label.new()
-	var current := member.max_hp if "max_hp" in member else 100
-	var max_val := member.max_hp if "max_hp" in member else 100
+	var current: int = member.max_hp if "max_hp" in member else 100
+	var max_val: int = member.max_hp if "max_hp" in member else 100
 	hp_label.text = "%d/%d" % [current, max_val]
 	hp_label.add_theme_font_size_override("font_size", 8)
 	row.add_child(hp_label)
