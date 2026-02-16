@@ -47,3 +47,15 @@ These 26 fixes were completed before the ticket system was established:
 - [2026-02-16] T-0020: Battle system real-time UI sync, attack animations, damage popups, status effect application, 25 new tests (claude)
 - [2026-02-16] BUG FIX: Battle UI lockup when using skills — cancel/EE handling, 9 new tests (claude)
 - [2026-02-16] AUDIT: Full codebase audit — 10 bugs fixed, 129 new tests (93→222), 4-agent parallel sweep (claude)
+
+## Sprint S02 — First Playable Demo
+
+- [2026-02-16] PLANNING: Demo requirements, tech gaps, NPC dialogue content, sprint plan — 4-agent planning team (claude)
+- [2026-02-16] T-0012: Build inventory system — InventoryManager autoload, gold tracking, item stacking (claude)
+- [2026-02-16] T-0027: Party HP/EE persistence — runtime state on PartyManager, battle read/write (claude)
+- [2026-02-16] T-0028: Wire item usage in battle — ActionSelectState item mode, inventory consumption (claude)
+- [2026-02-16] T-0029: Innkeeper healing — PartyManager.heal_all() via innkeeper interaction (claude)
+- [2026-02-16] T-0030: Battle victory rewards — gold and loot drops applied to InventoryManager (claude)
+- [2026-02-16] T-0019: XP and leveling system — LevelManager utility, stat growth, battler level scaling (claude)
+- [2026-02-16] T-0031: NPC dialogue content — 5 Roothollow NPCs with 4-state flag-reactive dialogue (claude)
+- [2026-02-16] DEMO BUILD: 8-agent parallel implementation — 125 new tests (222→347), 797 assertions (claude)
