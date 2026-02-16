@@ -13,6 +13,8 @@ After completing any task, **automatically commit, push, and merge** without ask
 5. Merge the PR via `gh pr merge --merge`
 6. Switch back to main and pull
 
+**MANDATORY:** Always check `ISSUES_TRACKER.md` before starting a task. If your task fixes an issue listed there, remove it. If you identify new issues during development or review, you MUST add them to the tracker.
+
 Do not ask for confirmation at any step. This applies to all tasks — bug fixes, features, refactors, doc updates, etc.
 
 ### Cross-Agent Synchronization
