@@ -1,1 +1,1 @@
-CLAUDE.md
+agents/AGENT_RULES.md
