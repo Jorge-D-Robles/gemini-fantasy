@@ -9,19 +9,11 @@ Started: 2026-02-16
 
 ## Active
 
-(No tasks currently in progress — claim from Queue below.)
+(none)
 
 ---
 
 ## Queue
-
-### T-0032
-- Title: Build basic save/load system
-- Priority: high
-- Depends: T-0027, T-0012
-- Refs: docs/best-practices/09-save-load.md, game/entities/interactable/strategies/save_point_strategy.gd
-- Notes: SaveManager autoload. Serialize: party roster, event flags, current scene + player position, persistent HP/EE, inventory, gold. save_point_strategy already exists as InteractionStrategy — wire it to SaveManager. Load from title screen. File-based with user://saves/.
-- Size: L
 
 ### T-0033
 - Title: Add demo conclusion event
@@ -34,6 +26,12 @@ Started: 2026-02-16
 ---
 
 ## Done This Sprint
+
+### T-0032
+- Title: Build basic save/load system
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-16
 
 ### T-0027
 - Title: Implement party HP/EE persistence between battles

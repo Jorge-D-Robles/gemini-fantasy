@@ -59,3 +59,4 @@ These 26 fixes were completed before the ticket system was established:
 - [2026-02-16] T-0019: XP and leveling system — LevelManager utility, stat growth, battler level scaling (claude)
 - [2026-02-16] T-0031: NPC dialogue content — 5 Roothollow NPCs with 4-state flag-reactive dialogue (claude)
 - [2026-02-16] DEMO BUILD: 8-agent parallel implementation — 125 new tests (222→347), 797 assertions (claude)
+- [2026-02-16] T-0032: Build basic save/load system — SaveManager autoload, JSON to user://saves/, wired save points + title screen Continue (claude)
