@@ -1,6 +1,6 @@
 ---
 name: issue-scanner
-description: Thoroughly scan the codebase for bugs, technical debt, and architectural issues, and update the ISSUES_TRACKER.md. Use this skill periodically or after significant changes to ensure the project maintains high quality standards and that all identified issues are documented and tracked.
+description: Thoroughly scan the codebase for bugs, technical debt, and architectural issues, and update agents/BACKLOG.md. Use this skill periodically or after significant changes to ensure the project maintains high quality standards and that all identified issues are documented and tracked.
 ---
 
 # Issue Scanner
@@ -35,15 +35,22 @@ Supplement sub-agent results with targeted grep searches for common anti-pattern
 - **TODO/FIXME/HACK**: `grep -rE "TODO|FIXME|HACK" game`
 
 ### 3. Consolidation and Update
-1. **Read** the current `ISSUES_TRACKER.md`.
-2. **Remove** any issues that have been resolved.
-3. **Add** new issues found during the scan. Categorize them appropriately:
-   - **[CRITICAL]**: System-breaking or major architectural flaws.
-   - **[HIGH]**: Significant technical debt or performance issues.
-   - **[MEDIUM]**: Maintainability concerns or moderate bugs.
-   - **[WARNING]**: Minor issues or anti-patterns.
-   - **[STYLE]**: Naming or formatting inconsistencies.
-4. **Sort** issues within categories by impact.
+1. **Read** the current `agents/BACKLOG.md` and `agents/SPRINT.md`.
+2. **Mark done** any tickets whose issues have been resolved (move to Done This Sprint in SPRINT.md, append to agents/COMPLETED.md).
+3. **Add** new issues as tickets in `agents/BACKLOG.md` using the standard format:
+   ```
+   ### T-XXXX
+   - Title: [description]
+   - Status: todo
+   - Assigned: unassigned
+   - Priority: critical | high | medium | low
+   - Milestone: M0
+   - Depends: none
+   - Refs: [file paths]
+   - Notes: [details]
+   ```
+   Priority mapping: CRITICAL → critical, HIGH → high, MEDIUM → medium, WARNING/STYLE → low.
+4. **Sort** tickets within each milestone by priority.
 
 ### 4. Verification
 After updating the tracker, double-check that all paths and line numbers (if provided) are accurate.

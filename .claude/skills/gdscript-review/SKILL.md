@@ -27,4 +27,4 @@ After the agent returns its report, summarize the key findings for the user:
 - Overall code quality assessment
 
 ## Post-Review Action
-**MANDATORY:** After completing the review, you MUST update `ISSUES_TRACKER.md`. Add any new [CRITICAL] or [WARNING] issues found during the review to the appropriate section, or create a new section if necessary.
+**MANDATORY:** After completing the review, you MUST update `agents/BACKLOG.md`. Add any new [CRITICAL] or [WARNING] issues as tickets using the standard ticket format (T-XXXX, Status, Priority, Milestone, etc.).

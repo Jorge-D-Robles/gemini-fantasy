@@ -1,0 +1,36 @@
+# Completed Tasks
+
+Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[date] Description`.
+
+---
+
+## Pre-Tracker (2026-02-16 Audit)
+
+These 26 fixes were completed before the ticket system was established:
+
+- [2026-02-16] CRITICAL: Defeat state never ended battle — defeat_state.gd now calls battle_scene.end_battle(false) (claude)
+- [2026-02-16] CRITICAL: Double-fire on target confirmation — removed callback pattern, now uses only target_selected signal (claude)
+- [2026-02-16] CRITICAL: Hardcoded enum magic numbers — action_execute_state.gd now uses AbilityData.DamageStat.MAGIC etc. (claude)
+- [2026-02-16] CRITICAL: Invisible battlers in battle — battle_scene.gd now instantiates visual scenes and binds to logic battlers (claude)
+- [2026-02-16] CRITICAL: Iris recruitment post-battle unreachable — rewrote to use static functions and CONNECT_ONE_SHOT (claude)
+- [2026-02-16] CRITICAL: Iris recruitment no victory check — post-battle now checks victory parameter (claude)
+- [2026-02-16] CRITICAL: Duplicate Camera2D in Roothollow — fixed to use property override syntax (claude)
+- [2026-02-16] CRITICAL: Missing icon.svg — created game/icon.svg placeholder (claude)
+- [2026-02-16] CRITICAL: Missing audio bus layout — created default_bus_layout.tres with BGM and SFX buses (claude)
+- [2026-02-16] HIGH: PartyManager array reference leak — get_active_party() and get_roster() now return .duplicate() (claude)
+- [2026-02-16] HIGH: 6 trees missing collision in Roothollow — added StaticBody2D + CollisionShape2D (claude)
+- [2026-02-16] HIGH: Dead code in player_turn_state.gd — removed unused pending variables (claude)
+- [2026-02-16] HIGH: Dead DamageStat enum in CharacterData — removed duplicate from AbilityData (claude)
+- [2026-02-16] HIGH: OVERLOAD_OUTGOING_DAMAGE_MULT type mismatch — changed int to float (claude)
+- [2026-02-16] HIGH: TurnQueueState default to Victory on empty queue — now reinitializes turn order (claude)
+- [2026-02-16] HIGH: Unused delta/event params — prefixed with _ in state.gd base class (claude)
+- [2026-02-16] HIGH: NPC global dialogue signal — changed to CONNECT_ONE_SHOT per interaction (claude)
+- [2026-02-16] HIGH: Duplicate AIType enum — EnemyBattler now uses EnemyData.AiType directly (claude)
+- [2026-02-16] HIGH: Ability target_type ignored — target_select_state.gd now reads ability target_type (claude)
+- [2026-02-16] HIGH: UILayer wrong type annotations — removed incorrect CanvasLayer type annotations (claude)
+- [2026-02-16] MEDIUM: BattleAction parameter shadowing — renamed to p_ability/p_target in static constructors (claude)
+- [2026-02-16] MEDIUM: VerdantForest to OvgrownRuins no spawn point — added spawn_from_forest Marker2D (claude)
+- [2026-02-16] MEDIUM: Misleading sub-resource name — renamed RectangleShape2D_garrick to CircleShape2D_garrick (claude)
+- [2026-02-16] MEDIUM: @onready with .new() — game_manager.gd now initializes in _setup_transition_layer() (claude)
+- [2026-02-16] MEDIUM: HUD duck-typing — hud.gd now casts member to BattlerData (claude)
+- [2026-02-16] MEDIUM: NPC portrait null warning — added push_warning() when portrait fails to load (claude)
