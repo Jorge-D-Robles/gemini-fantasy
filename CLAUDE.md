@@ -2,12 +2,141 @@
 
 2D JRPG built with Godot 4.5, GDScript, mobile renderer. Licensed GPLv3.
 
+## MANDATORY: Research Before Code
+
+**DO NOT write or modify any GDScript, .tscn, or .tres file without first completing BOTH of these steps:**
+
+1. **Call the `godot-docs` subagent** for every Godot class you will use:
+   ```
+   Task(subagent_type="godot-docs", prompt="Look up [CLASS]. I need [properties/methods/signals].")
+   ```
+2. **Read the relevant best practices file** from `docs/best-practices/`:
+   ```
+   Read("docs/best-practices/[relevant-file].md")
+   ```
+
+This is not optional. Every code change must be grounded in documentation. Do not rely on memory or assumptions about the Godot API — look it up. If you are unsure which best practices file applies, read the topic mapping table in the "Best Practices Reference" section below.
+
+**Choosing what to look up:**
+- Writing a new scene? → `godot-docs` subagent for root node class + `01-scene-architecture.md`
+- Adding signals? → `godot-docs` subagent for the class + `02-signals-and-communication.md`
+- Creating an autoload? → `03-autoloads-and-singletons.md`
+- Defining a Resource? → `godot-docs` subagent for Resource class + `04-resources-and-data.md`
+- Using _ready/_process? → `05-node-lifecycle.md`
+- Worried about performance? → `06-performance.md`
+- Building a state machine? → `07-state-machines.md`
+- Creating UI? → `godot-docs` subagent for Control nodes + `08-ui-patterns.md`
+- Implementing save/load? → `09-save-load.md`
+- Building battle/overworld? → `10-jrpg-patterns.md`
+
 ## Project Structure
 
 ```
 game/              # Godot project (scenes, scripts, assets)
-docs/godot-docs/   # Official Godot documentation (git submodule)
+docs/              # All documentation
+  godot-docs/      # Official Godot 4.5 documentation (git submodule)
+  game-design/     # Game design documents (mechanics, enemies, world, quests, dungeons, audio)
+  lore/            # Story, characters, world lore, echo catalog
+  mechanics/       # Character abilities and system mechanics
+  best-practices/  # Godot best practices summaries (quick reference)
+.claude/           # Claude Code configuration
+  skills/          # 20 development skills (creation, data, quality, planning)
+  settings.json    # Hooks and tool permissions
 ```
+
+## Agentic Development Workflow
+
+This project is designed for fully automated agentic development. Use the skill system to orchestrate work.
+
+### Skill Categories
+
+**Orchestration** — Start here for large tasks:
+- `/game-director <goal>` — Breaks down goals into ordered skill invocations
+- `/sprint-planner <phase>` — Plans a development sprint from the implementation guide
+
+**Creation** — Build game content:
+- `/new-system <name>` — Scaffold a game system (combat, inventory, dialogue, etc.)
+- `/new-scene <type> <name>` — Create scene with script and node hierarchy
+- `/new-ui <type> <name>` — Create UI screen with focus navigation
+- `/new-resource <name>` — Create custom Resource class
+- `/build-level <name> <type>` — Create level with layers, transitions, encounters
+- `/add-animation <scene> <type>` — Add animations (sprite, player, tree, tween)
+- `/add-audio <type>` — Add BGM, SFX, or audio system
+- `/setup-input <actions>` — Configure input actions and handlers
+- `/implement-feature <desc>` — End-to-end feature implementation
+
+**Data** — Populate and tune game data:
+- `/seed-game-data <type>` — Create .tres files from design docs
+- `/balance-tuning <area>` — Analyze and adjust game balance
+
+**Quality** — Validate and fix:
+- `/gdscript-review [path]` — Code style and best practices review
+- `/scene-audit [path]` — Scene architecture audit
+- `/playtest-check` — Pre-playtest validation scan
+- `/integration-check [system]` — Cross-system wiring verification
+- `/debug-issue <error>` — Diagnose and fix bugs
+
+**Reference** (auto-loaded, not user-invoked):
+- `gdscript-conventions` — Loaded automatically when writing GDScript
+
+### Godot Documentation Subagent
+
+A custom RAG subagent at `.claude/agents/godot-docs.md` handles all Godot documentation lookups. **Use this instead of looking up docs yourself** — it preserves your context window and returns structured summaries.
+
+```
+# Look up a class API
+Task(subagent_type="godot-docs", prompt="Look up CharacterBody2D — I need the velocity property, move_and_slide() method, and any movement tutorial examples.")
+
+# Look up a how-to topic
+Task(subagent_type="godot-docs", prompt="How to implement save/load in Godot 4.5? Include SaveManager patterns and file format options.")
+
+# Look up multiple classes in one call
+Task(subagent_type="godot-docs", prompt="Look up AnimationPlayer and AnimationTree — I need to understand when to use each, key methods, and how to set up state machine blending.")
+```
+
+The subagent searches local docs at `docs/godot-docs/` (class refs + tutorials) AND project best practices at `docs/best-practices/`. It returns structured summaries with properties, methods, signals, code examples, and best practice notes.
+
+### Agent Team Patterns
+
+When building large features, use parallel subagents:
+
+```
+# Research in parallel while planning
+Task(subagent_type="godot-docs", prompt="Look up [CLASS] API and related tutorials...")
+Task(subagent_type="Explore", prompt="Read design doc at docs/game-design/...")
+
+# Quality checks in parallel after implementation
+Task(subagent_type="general-purpose", prompt="Review game/systems/combat/...")
+Task(subagent_type="general-purpose", prompt="Check integration of combat + UI...")
+```
+
+### Development Order
+
+When building from scratch, follow this order:
+1. Core systems (state machine, scene transitions, input)
+2. Data layer (Resource classes, game data .tres files)
+3. Game systems (combat, inventory, dialogue, quest, save/load)
+4. Scenes (player, enemies, NPCs, levels)
+5. UI (HUD, menus, dialogue box, battle UI)
+6. Audio and animation
+7. Integration and polish
+
+## Best Practices Reference
+
+Quick-reference summaries are in `docs/best-practices/`. Consult BEFORE implementing:
+
+| File | Topic |
+|------|-------|
+| `01-scene-architecture.md` | Loose coupling, dependency injection, composition |
+| `02-signals-and-communication.md` | Signal patterns, when to use signals vs direct calls |
+| `03-autoloads-and-singletons.md` | When to autoload, alternatives, global state risks |
+| `04-resources-and-data.md` | Custom Resources, .tres files, loading patterns |
+| `05-node-lifecycle.md` | _init/_ready/_process order, caching, property timing |
+| `06-performance.md` | Data structures, hot paths, memory, scene vs script |
+| `07-state-machines.md` | Node-based and enum patterns, JRPG state machines |
+| `08-ui-patterns.md` | Container layout, menu pattern, dialogue, focus nav |
+| `09-save-load.md` | Save architecture, saveable interface, file formats |
+| `10-jrpg-patterns.md` | Battle system, turn queue, overworld, encounters |
 
 ## Godot Documentation Search Protocol
 
@@ -56,21 +185,31 @@ Grep across the entire `docs/godot-docs/` directory with `glob: "*.rst"`.
 
 ## When to Look Up Docs
 
-- **ALWAYS** look up the class reference when using a Godot class for the first time in a task
-- **ALWAYS** look up tutorials when implementing a new system (movement, combat, UI, tilemaps, saving, etc.)
-- **SKIP** lookup for basic GDScript syntax (variables, loops, functions, conditionals)
-- For complex questions spanning multiple docs, use `Task` with `subagent_type=Explore`
+**These are hard requirements, not suggestions. Violating them produces incorrect code.**
 
-## Documentation Subagent Pattern
+- **BEFORE writing ANY code**: Call the `godot-docs` subagent for every Godot class you will use. No exceptions.
+- **BEFORE writing ANY code**: Read the relevant `docs/best-practices/*.md` file. No exceptions.
+- **BEFORE implementing a system**: Read the relevant design doc from `docs/game-design/` or `docs/lore/`.
+- **SKIP** lookup only for basic GDScript syntax (variables, loops, functions, conditionals) — NOT for Godot API calls.
+- For complex questions spanning multiple docs, call the `godot-docs` subagent with a detailed prompt.
 
-For complex lookups that need multiple files, spawn an Explore subagent:
+## Documentation Lookup
+
+Use the `godot-docs` subagent for ALL Godot documentation lookups:
+
+```
+Task(subagent_type="godot-docs", prompt=
+  "Look up [TOPIC]. I need [specific information needed].
+   Include code examples and best practice notes if available.")
+```
+
+This subagent searches `docs/godot-docs/` (1071 class refs + tutorials) and `docs/best-practices/` (10 summary guides). It returns structured summaries, preserving your context window.
+
+For non-Godot research (design docs, lore, existing code), use Explore:
 
 ```
 Task(subagent_type="Explore", prompt=
-  "Search the Godot documentation at docs/godot-docs/ for information about [TOPIC].
-   Check class references at docs/godot-docs/classes/ and tutorials at docs/godot-docs/tutorials/.
-   Also consult docs/godot-docs-index.md for topic-to-file mappings.
-   Return: relevant class names, key methods/properties/signals, and any code examples found.")
+  "Read docs/game-design/01-core-mechanics.md and extract the Resonance combat system details.")
 ```
 
 ## JRPG Core Classes
@@ -140,3 +279,25 @@ Based on the official Godot style guide (`docs/godot-docs/tutorials/scripting/gd
 - Lines under 100 characters (prefer 80)
 - Prefer signals over direct method calls for decoupled communication
 - One script per scene node (composition over inheritance)
+
+## Game Design Reference
+
+Design documents in `docs/` define all game mechanics, story, and content:
+
+| Document | Contains |
+|----------|----------|
+| `docs/game-design/01-core-mechanics.md` | Combat (Resonance system), progression, economy |
+| `docs/game-design/02-enemy-design.md` | Enemy types, AI patterns, boss mechanics |
+| `docs/game-design/03-world-map-and-locations.md` | 5 regions, settlements, world layout |
+| `docs/game-design/04-side-quests.md` | 60+ side quests, faction questlines |
+| `docs/game-design/05-dungeon-designs.md` | 8 story + 6 optional dungeons |
+| `docs/game-design/06-audio-design.md` | Music, SFX, adaptive audio |
+| `docs/lore/01-world-overview.md` | World history, factions, The Severance |
+| `docs/lore/02-main-story.md` | 3-act story, 4 endings |
+| `docs/lore/03-characters.md` | 8 party members, NPCs, antagonists |
+| `docs/lore/04-echo-catalog.md` | Echo Fragment system, collectibles |
+| `docs/lore/05-cultural-details.md` | Regional cultures, languages, customs |
+| `docs/mechanics/character-abilities.md` | Skill trees, abilities per character |
+| `docs/IMPLEMENTATION_GUIDE.md` | Development roadmap, 6 phases, priorities |
+
+**ALWAYS** consult design docs before inventing mechanics or story content.

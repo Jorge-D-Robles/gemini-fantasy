@@ -26,14 +26,19 @@ Parse arguments to determine the UI type:
 | `popup` / `confirm` | Control | Panel, Label, Buttons | `game/ui/popups/` |
 | `title-screen` | Control (full rect) | TextureRect (background), VBoxContainer, Buttons | `game/ui/menus/` |
 
-## Step 2 — Look Up Documentation
+## Step 2 — Look Up Documentation (MANDATORY — do not skip)
 
-Before creating UI, consult these docs:
+**You MUST complete ALL of these before writing any code:**
 
-1. Read `docs/godot-docs/tutorials/ui/gui_containers.rst` — container layout patterns
-2. Read `docs/godot-docs/tutorials/ui/size_and_anchors.rst` — anchoring and sizing
-3. Read `docs/godot-docs/tutorials/ui/gui_navigation.rst` — keyboard/gamepad navigation
-4. Read class references for any specific Control nodes being used
+1. **Call the `godot-docs` subagent** for the Control node types you will use:
+   ```
+   Task(subagent_type="godot-docs", prompt="Look up [Control types: e.g. MarginContainer, VBoxContainer, RichTextLabel, Button]. I need properties, methods, signals, and layout patterns for creating a [UI_TYPE] screen. Also include container layout, anchoring, and focus navigation tutorials.")
+   ```
+2. **Read the UI best practices**:
+   ```
+   Read("docs/best-practices/08-ui-patterns.md")
+   ```
+3. If this UI has signals, also read `docs/best-practices/02-signals-and-communication.md`
 
 ## Step 3 — Create the Scene (.tscn)
 

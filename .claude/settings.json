@@ -1,0 +1,28 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "FILE=$(echo \"$CLAUDE_TOOL_INPUT\" | jq -r '.file_path // empty'); if [ -n \"$FILE\" ] && echo \"$FILE\" | grep -qE '\\.(gd|tscn|tres)$'; then echo \"REMINDER: You just modified $FILE. Before this change, you should have: (1) Called the godot-docs subagent for every Godot class used, (2) Read the relevant docs/best-practices/*.md file. If you did not do both, STOP and do them now before making further changes. Run /gdscript-review before committing.\"; fi",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "FILE=$(echo \"$CLAUDE_TOOL_INPUT\" | jq -r '.file_path // empty'); if [ -n \"$FILE\" ] && echo \"$FILE\" | grep -qE '\\.(gd|tscn|tres)$' && echo \"$FILE\" | grep -qv '/game/' && echo \"$FILE\" | grep -qv '/docs/' && echo \"$FILE\" | grep -qv '/.claude/'; then echo \"Warning: GDScript/scene/resource files should be inside game/, docs/, or .claude/ directories\" >&2; exit 2; fi; exit 0",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

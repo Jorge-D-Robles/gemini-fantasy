@@ -13,17 +13,27 @@ ultrathink
 
 **Goal:** $ARGUMENTS
 
-## Phase 1 — Understand the Goal
+## Phase 1 — Understand the Goal (MANDATORY research — do not skip)
+
+**You MUST complete ALL of these before planning or writing any code:**
 
 1. **Parse the request** — What is the user asking for? A system, a feature, a scene, content, a fix?
 2. **Check existing code** — Use Glob to scan `game/**/*.gd` and `game/**/*.tscn` to understand what already exists
 3. **Identify dependencies** — What must exist before this can be built?
-4. **Consult documentation** — Read `docs/godot-docs-index.md` and relevant Godot docs for the systems involved
+4. **Call the `godot-docs` subagent** for every Godot class involved in this goal:
+   ```
+   Task(subagent_type="godot-docs", prompt="Look up [CLASSES]. I need properties, methods, signals, and patterns for [GOAL].")
+   ```
+5. **Read ALL relevant best practices files** from `docs/best-practices/` — determine which of the 10 files apply and read each one
+6. **Read design docs** — Check `docs/game-design/`, `docs/lore/`, and `docs/mechanics/` for game-specific requirements
+
+**Every skill invocation in the task breakdown will also perform its own mandatory doc lookup.** This phase is for high-level architectural research.
 
 ## Phase 2 — Create a Task Breakdown
 
 Decompose the goal into ordered tasks. Each task should map to one of the available skills:
 
+### Creation Skills
 | Skill | When to Use |
 |-------|------------|
 | `/godot-doc-lookup <topic>` | Research a Godot API or concept |
@@ -34,10 +44,28 @@ Decompose the goal into ordered tasks. Each task should map to one of the availa
 | `/add-animation <scene> <type>` | Add animations to a scene |
 | `/setup-input <actions>` | Configure input actions |
 | `/add-audio <type>` | Add audio/music/SFX |
+| `/build-level <name> <type>` | Create a level/map scene with layers and transitions |
 | `/implement-feature <desc>` | Implement a complex multi-part feature |
-| `/gdscript-review [path]` | Review code quality |
-| `/scene-audit [path]` | Audit scene architecture |
-| `/playtest-check` | Pre-playtest validation |
+
+### Data Skills
+| Skill | When to Use |
+|-------|------------|
+| `/seed-game-data <type>` | Create .tres data files from design docs (items, enemies, skills) |
+| `/balance-tuning <area>` | Analyze and adjust game balance for combat, economy, progression |
+
+### Quality Skills
+| Skill | When to Use |
+|-------|------------|
+| `/gdscript-review [path]` | Review code quality and style compliance |
+| `/scene-audit [path]` | Audit scene architecture and composition |
+| `/playtest-check` | Pre-playtest validation for broken refs, missing resources |
+| `/integration-check [system]` | Verify cross-system wiring (signals, autoloads, paths) |
+| `/debug-issue <error>` | Diagnose and fix a bug or runtime issue |
+
+### Planning Skills
+| Skill | When to Use |
+|-------|------------|
+| `/sprint-planner <goal>` | Plan a development sprint with ordered tasks |
 
 Present the task list to the user in this format:
 
@@ -50,11 +78,13 @@ Present the task list to the user in this format:
 ### Implementation Tasks (in order)
 1. [SKILL: new-system] Create <system_name> system
 2. [SKILL: new-resource] Define <resource> data types
-3. [SKILL: new-scene] Create <scene> scene
-4. [SKILL: new-ui] Create <ui_screen> interface
-5. [SKILL: add-animation] Set up animations for <scene>
-6. [SKILL: setup-input] Configure input actions for <feature>
-7. ...
+3. [SKILL: seed-game-data] Populate <data_type> from design docs
+4. [SKILL: new-scene] Create <scene> scene
+5. [SKILL: build-level] Build <level_name> level
+6. [SKILL: new-ui] Create <ui_screen> interface
+7. [SKILL: add-animation] Set up animations for <scene>
+8. [SKILL: setup-input] Configure input actions for <feature>
+9. ...
 
 ### Integration Tasks
 1. Wire <system> signals to <ui>
@@ -63,7 +93,8 @@ Present the task list to the user in this format:
 
 ### Verification
 1. [SKILL: gdscript-review] Review all new code
-2. [SKILL: playtest-check] Run pre-playtest validation
+2. [SKILL: integration-check] Verify system wiring
+3. [SKILL: playtest-check] Run pre-playtest validation
 
 ### Editor Tasks (user must do manually)
 1. Assign sprite frames in <scene>
@@ -79,17 +110,21 @@ After the user approves the task breakdown:
 1. Execute each task in order
 2. Use the appropriate skill for each task
 3. After each task, briefly verify the output is correct
-4. Track progress and report completion of each step
+4. Track progress with `TodoWrite` and report completion of each step
 5. If a task fails or needs user input, stop and ask
+6. Use `Task` with subagents for parallel independent work:
+   - Spawn `Explore` subagents for documentation research
+   - Spawn `general-purpose` subagents for independent code reviews
 
 ## Phase 4 — Final Review
 
 After all tasks are complete:
 
 1. Run `/gdscript-review` on all new code
-2. Run `/scene-audit` on affected directories
-3. Run `/playtest-check` for the full project
-4. Provide a final summary of everything created, what works, and what the user needs to do in the editor
+2. Run `/integration-check` on all modified systems
+3. Run `/scene-audit` on affected directories
+4. Run `/playtest-check` for the full project
+5. Provide a final summary of everything created, what works, and what the user needs to do in the editor
 
 ## Game Development Principles
 
@@ -101,3 +136,5 @@ When making architectural decisions, follow these principles:
 4. **Autoloads for globals** — Only managers that truly need global access
 5. **One responsibility per script** — Each script does one thing well
 6. **Test incrementally** — Build the simplest working version first, then enhance
+7. **Design doc grounding** — Always cross-reference `docs/` before inventing mechanics
+8. **Best practices first** — Consult `docs/best-practices/` before implementing patterns

@@ -25,14 +25,19 @@ Parse the arguments to determine the scene type. Common types:
 
 If the type is ambiguous, ask the user.
 
-## Step 2 — Look Up Documentation
+## Step 2 — Look Up Documentation (MANDATORY — do not skip)
 
-Before writing any code, look up the relevant Godot class references:
+**You MUST complete ALL of these before writing any code:**
 
-```
-Use the godot-doc-lookup skill or read docs/godot-docs/classes/class_<rootnode>.rst directly.
-Also consult docs/godot-docs-index.md for related tutorials.
-```
+1. **Call the `godot-docs` subagent** for the root node type and key child types:
+   ```
+   Task(subagent_type="godot-docs", prompt="Look up [ROOT_NODE_TYPE] and [CHILD_TYPES]. I need properties, methods, signals, and code examples for creating a [SCENE_TYPE] scene.")
+   ```
+2. **Read the scene architecture best practices**:
+   ```
+   Read("docs/best-practices/01-scene-architecture.md")
+   ```
+3. If this scene has signals, also read `docs/best-practices/02-signals-and-communication.md`
 
 ## Step 3 — Create Directory Structure
 

@@ -9,13 +9,18 @@ disable-model-invocation: true
 
 Set up animations for: **$ARGUMENTS**
 
-## Step 1 — Determine Animation Approach
+## Step 1 — Research (MANDATORY — do not skip)
 
-Before writing code, consult the docs:
+**You MUST complete ALL of these before writing any code:**
 
-1. Read `docs/godot-docs/tutorials/2d/2d_sprite_animation.rst` — sprite animation overview
-2. Read `docs/godot-docs/tutorials/animation/introduction.rst` — animation system overview
-3. Read `docs/godot-docs/tutorials/animation/animation_tree.rst` — state machines (if complex)
+1. **Call the `godot-docs` subagent** for the animation classes you will use:
+   ```
+   Task(subagent_type="godot-docs", prompt="Look up AnimatedSprite2D, AnimationPlayer, AnimationTree, and Tween. I need properties, methods, signals, and code examples for adding [ANIMATION_TYPE] animations. Include sprite animation and animation tree tutorials.")
+   ```
+2. **Read the performance best practices** (animations can be expensive):
+   ```
+   Read("docs/best-practices/06-performance.md")
+   ```
 
 Choose the right approach:
 
