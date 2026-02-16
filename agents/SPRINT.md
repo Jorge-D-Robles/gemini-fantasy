@@ -15,26 +15,6 @@ Started: 2026-02-16
 
 ## Queue
 
-### T-0001
-- Title: Add class_name declarations to all autoload scripts
-- Priority: high
-- Depends: none
-
-### T-0002
-- Title: Extract TurnQueue into its own scene
-- Priority: high
-- Depends: none
-
-### T-0003
-- Title: Refactor Interactable into composition pattern
-- Priority: high
-- Depends: none
-
-### T-0004
-- Title: Replace Dictionary-based dialogue/encounter data with custom Resources
-- Priority: high
-- Depends: none
-
 ### T-0012
 - Title: Build inventory system
 - Priority: high
@@ -55,18 +35,42 @@ Started: 2026-02-16
 - Priority: high
 - Depends: none
 
-### T-0005
-- Title: Replace meta-based state communication with typed BattleAction
-- Priority: medium
-- Depends: none
-
-### T-0006
-- Title: Use AnimatedSprite2D for player animation
-- Priority: medium
-- Depends: none
-
 ---
 
 ## Done This Sprint
 
-(No tasks completed yet.)
+### T-0001
+- Title: Add class_name declarations to all autoload scripts
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-16
+
+### T-0002
+- Title: Extract TurnQueue into its own scene
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-16
+
+### T-0003
+- Title: Refactor Interactable into composition pattern
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-16
+
+### T-0004
+- Title: Replace Dictionary-based dialogue/encounter data with custom Resources
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-16
+
+### T-0005
+- Title: Replace meta-based state communication with typed BattleAction
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-16
+
+### T-0006
+- Title: Use AnimatedSprite2D for player animation
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-16

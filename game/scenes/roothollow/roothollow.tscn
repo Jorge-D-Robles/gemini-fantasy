@@ -1,6 +1,8 @@
-[gd_scene load_steps=22 format=3 uid="uid://c4roothlw0001"]
+[gd_scene load_steps=26 format=3 uid="uid://c4roothlw0001"]
 
 [ext_resource type="Script" path="res://scenes/roothollow/roothollow.gd" id="1_roothollow"]
+[ext_resource type="Script" path="res://entities/interactable/strategies/save_point_strategy.gd" id="17_save_strat"]
+[ext_resource type="Script" path="res://entities/interactable/strategies/sign_strategy.gd" id="18_sign_strat"]
 [ext_resource type="PackedScene" uid="uid://c4player00001" path="res://entities/player/player.tscn" id="2_player"]
 [ext_resource type="PackedScene" uid="uid://c4npc0000001" path="res://entities/npc/npc.tscn" id="4_npc"]
 [ext_resource type="PackedScene" uid="uid://c4interact001" path="res://entities/interactable/interactable.tscn" id="5_interact"]
@@ -13,6 +15,14 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/buildings/signpost.png" id="14_signpost"]
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/npc_char1.png" id="15_npc1"]
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/npc_char2.png" id="16_npc2"]
+
+[sub_resource type="Resource" id="save_point_strat"]
+script = ExtResource("17_save_strat")
+text = "Progress saved."
+
+[sub_resource type="Resource" id="sign_strat"]
+script = ExtResource("18_sign_strat")
+text = "Welcome to Roothollow — Last safe haven before the Verdant Reach."
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_exit"]
 size = Vector2(16, 64)
@@ -336,14 +346,12 @@ texture_filter = 0
 
 [node name="SavePoint" parent="Entities" instance=ExtResource("5_interact")]
 position = Vector2(320, 240)
-interactable_type = 2
-interaction_text = "Progress saved."
+strategy = SubResource("save_point_strat")
 one_time = false
 
 [node name="SignPost" parent="Entities" instance=ExtResource("5_interact")]
 position = Vector2(120, 160)
-interactable_type = 1
-interaction_text = "Welcome to Roothollow — Last safe haven before the Verdant Reach."
+strategy = SubResource("sign_strat")
 
 [node name="Sprite2D" type="Sprite2D" parent="Entities/SignPost" index="1"]
 texture = ExtResource("14_signpost")

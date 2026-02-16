@@ -8,63 +8,69 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0001
 - Title: Add class_name declarations to all autoload scripts
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M0
 - Depends: none
 - Refs: game/project.godot, docs/best-practices/03-autoloads-and-singletons.md
 - Notes: Migrated from ISSUES_TRACKER [HIGH]. GameManager, BattleManager, PartyManager, DialogueManager, AudioManager, UILayer lack class_name.
+- Completed: 2026-02-16
 
 ### T-0002
 - Title: Extract TurnQueue into its own scene
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M0
 - Depends: none
 - Refs: game/systems/battle/battle_scene.tscn, docs/best-practices/01-scene-architecture.md
 - Notes: Migrated from ISSUES_TRACKER [HIGH]. TurnQueue is a child node with a script attached directly in the main scene. Violates "one script per scene" rule.
+- Completed: 2026-02-16
 
 ### T-0003
 - Title: Refactor Interactable into composition pattern
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M0
 - Depends: none
 - Refs: game/entities/interactable/interactable.gd, docs/best-practices/01-scene-architecture.md
-- Notes: Migrated from ISSUES_TRACKER [HIGH]. Single script handles all interaction types via match statement. Refactor into base class + specialized children or composition.
+- Notes: Migrated from ISSUES_TRACKER [HIGH]. Single script handles all interaction types via match statement. Refactored to strategy pattern with InteractionStrategy Resource + 5 concrete strategies.
+- Completed: 2026-02-16
 
 ### T-0004
 - Title: Replace Dictionary-based dialogue/encounter data with custom Resources
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M0
 - Depends: none
 - Refs: game/autoloads/dialogue_manager.gd, game/systems/encounter/encounter_system.gd, docs/best-practices/04-resources-and-data.md
-- Notes: Migrated from ISSUES_TRACKER [HIGH]. Uses Array[Dictionary] for dialogue lines and encounter pools. Create DialogueLine and EncounterPoolEntry Resource classes.
+- Notes: Migrated from ISSUES_TRACKER [HIGH]. Created DialogueLine and EncounterPoolEntry Resource classes. Updated all callers.
+- Completed: 2026-02-16
 
 ### T-0005
 - Title: Replace meta-based state communication with typed BattleAction
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: medium
 - Milestone: M0
 - Depends: none
 - Refs: game/systems/battle/states/action_execute_state.gd, game/resources/battle_action.gd
-- Notes: Migrated from ISSUES_TRACKER [MEDIUM]. Uses get_meta/set_meta to pass action data between states. Replace with typed BattleAction object held by BattleScene.
+- Notes: Migrated from ISSUES_TRACKER [MEDIUM]. Added current_action: BattleAction to BattleScene. All states now use typed property instead of meta. Zero get_meta/set_meta remaining.
+- Completed: 2026-02-16
 
 ### T-0006
 - Title: Use AnimatedSprite2D for player animation
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: medium
 - Milestone: M0
 - Depends: none
 - Refs: game/entities/player/player.gd, docs/best-practices/05-node-lifecycle.md
-- Notes: Migrated from ISSUES_TRACKER [MEDIUM]. Player manually calculates animation frames in _physics_process. Switch to AnimationPlayer or AnimatedSprite2D.
+- Notes: Migrated from ISSUES_TRACKER [MEDIUM]. Replaced Sprite2D + manual frame math with AnimatedSprite2D + programmatic SpriteFrames. 8 animations created.
+- Completed: 2026-02-16
 
 ### T-0007
 - Title: Wire unconnected signals to EventBus or QuestManager

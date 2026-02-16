@@ -15,18 +15,12 @@ enum Facing {
 
 const RAY_LENGTH: float = 24.0
 const ANIM_FPS: float = 8.0
-const WALK_CYCLE: Array[int] = [0, 1, 2, 1]
-const IDLE_FRAMES: Dictionary = {
-	Facing.DOWN: 1,
-	Facing.UP: 10,
-	Facing.LEFT: 4,
-	Facing.RIGHT: 7,
-}
-const ROW_OFFSET: Dictionary = {
-	Facing.DOWN: 0,
-	Facing.UP: 9,
-	Facing.LEFT: 3,
-	Facing.RIGHT: 6,
+const SPRITE_PATH: String = "res://assets/sprites/characters/kael_overworld.png"
+const DIRECTION_NAMES: Dictionary = {
+	Facing.DOWN: "down",
+	Facing.UP: "up",
+	Facing.LEFT: "left",
+	Facing.RIGHT: "right",
 }
 
 @export var move_speed: float = 80.0
@@ -34,10 +28,9 @@ const ROW_OFFSET: Dictionary = {
 
 var facing: Facing = Facing.DOWN
 var _can_move: bool = true
-var _anim_timer: float = 0.0
-var _anim_step: int = 0
+var _animations_ready: bool = false
 
-@onready var sprite: Sprite2D = $Sprite2D
+@onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var interaction_ray: RayCast2D = $InteractionRay
 @onready var camera: Camera2D = $Camera2D
 
@@ -46,12 +39,13 @@ func _ready() -> void:
 	add_to_group("player")
 	GameManager.game_state_changed.connect(_on_game_state_changed)
 	_update_ray_direction()
+	_setup_animations()
 
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if not _can_move:
 		velocity = Vector2.ZERO
-		_set_idle_frame()
+		_play_idle()
 		return
 
 	var input_dir := Input.get_vector(
@@ -62,10 +56,10 @@ func _physics_process(delta: float) -> void:
 		_update_facing(input_dir)
 		var speed := run_speed if Input.is_action_pressed("run") else move_speed
 		velocity = input_dir.normalized() * speed
-		_advance_walk_animation(delta)
+		_play_walk()
 	else:
 		velocity = Vector2.ZERO
-		_set_idle_frame()
+		_play_idle()
 
 	move_and_slide()
 
@@ -97,19 +91,69 @@ func set_movement_enabled(enabled: bool) -> void:
 		velocity = Vector2.ZERO
 
 
-func _advance_walk_animation(delta: float) -> void:
-	_anim_timer += delta
-	var frame_duration := 1.0 / ANIM_FPS
-	if _anim_timer >= frame_duration:
-		_anim_timer -= frame_duration
-		_anim_step = (_anim_step + 1) % WALK_CYCLE.size()
-	sprite.frame = ROW_OFFSET[facing] + WALK_CYCLE[_anim_step]
+func _setup_animations() -> void:
+	var texture: Texture2D = load(SPRITE_PATH) as Texture2D
+	if texture == null:
+		push_error("Player: failed to load '%s' — reopen Godot editor to import" % SPRITE_PATH)
+		return
+
+	var frame_w: int = texture.get_width() / 3
+	var frame_h: int = texture.get_height() / 4
+	var frames := SpriteFrames.new()
+	frames.remove_animation("default")
+
+	# Row order: down=0, left=1, right=2, up=3
+	var row_map: Dictionary = {
+		"down": 0,
+		"left": 1,
+		"right": 2,
+		"up": 3,
+	}
+	var walk_cycle: Array[int] = [0, 1, 2, 1]
+
+	for dir_name: String in row_map:
+		var row: int = row_map[dir_name]
+
+		# Walk animation (looping bounce cycle: 0, 1, 2, 1)
+		var walk_name := "walk_%s" % dir_name
+		frames.add_animation(walk_name)
+		frames.set_animation_speed(walk_name, ANIM_FPS)
+		frames.set_animation_loop(walk_name, true)
+		for col: int in walk_cycle:
+			var atlas := AtlasTexture.new()
+			atlas.atlas = texture
+			atlas.region = Rect2(col * frame_w, row * frame_h, frame_w, frame_h)
+			frames.add_frame(walk_name, atlas)
+
+		# Idle animation (single frame — middle column)
+		var idle_name := "idle_%s" % dir_name
+		frames.add_animation(idle_name)
+		frames.set_animation_speed(idle_name, 1.0)
+		frames.set_animation_loop(idle_name, false)
+		var idle_atlas := AtlasTexture.new()
+		idle_atlas.atlas = texture
+		idle_atlas.region = Rect2(frame_w, row * frame_h, frame_w, frame_h)
+		frames.add_frame(idle_name, idle_atlas)
+
+	sprite.sprite_frames = frames
+	sprite.play("idle_down")
+	_animations_ready = true
 
 
-func _set_idle_frame() -> void:
-	_anim_timer = 0.0
-	_anim_step = 0
-	sprite.frame = IDLE_FRAMES[facing]
+func _play_walk() -> void:
+	if not _animations_ready:
+		return
+	var anim_name := "walk_%s" % DIRECTION_NAMES[facing]
+	if sprite.animation != anim_name:
+		sprite.play(anim_name)
+
+
+func _play_idle() -> void:
+	if not _animations_ready:
+		return
+	var anim_name := "idle_%s" % DIRECTION_NAMES[facing]
+	if sprite.animation != anim_name:
+		sprite.play(anim_name)
 
 
 func _update_facing(direction: Vector2) -> void:

@@ -12,9 +12,8 @@ signal encounter_triggered(enemy_group: Array[Resource])
 @export var step_distance: float = 16.0
 @export var enabled: bool = true
 
-## Array of encounter group definitions.
-## Each entry is a Dictionary: { "enemies": Array[Resource], "weight": float }
-var enemy_pool: Array[Dictionary] = []
+## Array of weighted encounter group definitions.
+var enemy_pool: Array[EncounterPoolEntry] = []
 
 var _step_counter: int = 0
 var _distance_accumulator: float = 0.0
@@ -48,7 +47,7 @@ func _physics_process(_delta: float) -> void:
 		_on_step()
 
 
-func setup(pool: Array[Dictionary]) -> void:
+func setup(pool: Array[EncounterPoolEntry]) -> void:
 	enemy_pool = pool
 
 
@@ -74,15 +73,15 @@ func _select_enemy_group() -> Array[Resource]:
 
 	var total_weight: float = 0.0
 	for entry in enemy_pool:
-		total_weight += entry.get("weight", 1.0) as float
+		total_weight += entry.weight
 
 	var roll := randf() * total_weight
 	for entry in enemy_pool:
-		roll -= entry.get("weight", 1.0) as float
+		roll -= entry.weight
 		if roll <= 0.0:
-			return entry.get("enemies", []) as Array[Resource]
+			return entry.enemies
 
-	return enemy_pool[-1].get("enemies", []) as Array[Resource]
+	return enemy_pool[-1].enemies
 
 
 func _find_player() -> void:

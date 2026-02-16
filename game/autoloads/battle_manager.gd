@@ -1,3 +1,4 @@
+class_name BattleManager
 extends Node
 
 ## Autoload that initiates and manages battle transitions.

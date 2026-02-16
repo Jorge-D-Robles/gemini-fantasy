@@ -13,28 +13,21 @@ func set_battle_scene(scene: Node) -> void:
 func enter() -> void:
 	_battle_ui = battle_scene.get_node_or_null("BattleUI")
 	var battler: Battler = battle_scene.current_battler
-	var command: String = battle_scene.get_meta("pending_command", "attack")
-	var target: Battler = battle_scene.get_meta("pending_target", null)
+	var action: BattleAction = battle_scene.current_action
 
-	match command:
-		"attack":
-			_execute_attack(battler, target)
-		"skill":
-			var ability := battle_scene.get_meta("pending_ability", null) as AbilityData
-			_execute_ability(battler, target, ability)
-		"item":
-			var item := battle_scene.get_meta("pending_item", null) as ItemData
-			_execute_item(battler, target, item)
+	if not action:
+		state_machine.transition_to("TurnEnd")
+		return
 
-	# Clear pending meta
-	if battle_scene.has_meta("pending_command"):
-		battle_scene.remove_meta("pending_command")
-	if battle_scene.has_meta("pending_target"):
-		battle_scene.remove_meta("pending_target")
-	if battle_scene.has_meta("pending_ability"):
-		battle_scene.remove_meta("pending_ability")
-	if battle_scene.has_meta("pending_item"):
-		battle_scene.remove_meta("pending_item")
+	match action.type:
+		BattleAction.Type.ATTACK:
+			_execute_attack(battler, action.target)
+		BattleAction.Type.ABILITY:
+			_execute_ability(battler, action.target, action.ability)
+		BattleAction.Type.ITEM:
+			_execute_item(battler, action.target, action.item)
+
+	battle_scene.current_action = null
 
 	# Brief delay for visual feedback
 	await get_tree().create_timer(0.3).timeout

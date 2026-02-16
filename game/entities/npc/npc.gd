@@ -34,19 +34,15 @@ func interact() -> void:
 	_is_talking = true
 	interaction_started.emit()
 
-	var lines: Array[Dictionary] = []
+	var lines: Array[DialogueLine] = []
 	var portrait: Texture2D = null
 	if not portrait_path.is_empty():
 		portrait = load(portrait_path) as Texture2D
 		if portrait == null:
 			push_warning("NPC '%s': portrait failed to load '%s'" % [npc_name, portrait_path])
 
-	for text in dialogue_lines:
-		lines.append({
-			"speaker": npc_name,
-			"text": text,
-			"portrait": portrait,
-		})
+	for line_text in dialogue_lines:
+		lines.append(DialogueLine.create(npc_name, line_text, portrait))
 
 	DialogueManager.dialogue_ended.connect(_on_dialogue_ended, CONNECT_ONE_SHOT)
 	DialogueManager.start_dialogue(lines)

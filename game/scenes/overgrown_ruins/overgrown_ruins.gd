@@ -126,26 +126,14 @@ func _ready() -> void:
 	var memory_bloom := load(MEMORY_BLOOM_PATH) as Resource
 	var creeping_vine := load(CREEPING_VINE_PATH) as Resource
 
-	var pool: Array[Dictionary] = []
+	var pool: Array[EncounterPoolEntry] = []
 	if memory_bloom:
-		pool.append({
-			"enemies": [memory_bloom] as Array[Resource],
-			"weight": 3.0,
-		})
-		pool.append({
-			"enemies": [memory_bloom, memory_bloom] as Array[Resource],
-			"weight": 1.5,
-		})
+		pool.append(EncounterPoolEntry.create([memory_bloom] as Array[Resource], 3.0))
+		pool.append(EncounterPoolEntry.create([memory_bloom, memory_bloom] as Array[Resource], 1.5))
 	if creeping_vine:
-		pool.append({
-			"enemies": [creeping_vine] as Array[Resource],
-			"weight": 1.0,
-		})
+		pool.append(EncounterPoolEntry.create([creeping_vine] as Array[Resource], 1.0))
 		if memory_bloom:
-			pool.append({
-				"enemies": [memory_bloom, creeping_vine] as Array[Resource],
-				"weight": 1.0,
-			})
+			pool.append(EncounterPoolEntry.create([memory_bloom, creeping_vine] as Array[Resource], 1.0))
 
 	_encounter_system.setup(pool)
 	_encounter_system.encounter_triggered.connect(_on_encounter_triggered)
