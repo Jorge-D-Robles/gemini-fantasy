@@ -12,6 +12,9 @@ var current_battler: Battler = null
 var can_escape: bool = true
 var _battle_result: bool = false
 
+const PARTY_BATTLER_SCENE_PATH: String = "res://entities/battle/party_battler_scene.tscn"
+const ENEMY_BATTLER_SCENE_PATH: String = "res://entities/battle/enemy_battler_scene.tscn"
+
 @onready var party_node: Node2D = $Battlers/PartyBattlers
 @onready var enemy_node: Node2D = $Battlers/EnemyBattlers
 @onready var turn_queue: TurnQueue = $TurnQueue
@@ -71,6 +74,7 @@ func end_battle(victory: bool) -> void:
 
 func _spawn_party(party_data: Array[Resource]) -> void:
 	var slots := _get_marker_positions(party_node)
+	var visual_scene := load(PARTY_BATTLER_SCENE_PATH) as PackedScene
 	for i in party_data.size():
 		var battler := PartyBattler.new()
 		battler.data = party_data[i]
@@ -80,19 +84,36 @@ func _spawn_party(party_data: Array[Resource]) -> void:
 		party_node.add_child(battler)
 		party_battlers.append(battler)
 		battler.defeated.connect(_on_battler_defeated.bind(battler))
+		# Instantiate visual scene and bind to logic battler
+		if visual_scene:
+			var visual: PartyBattlerScene = visual_scene.instantiate()
+			var char_data := party_data[i] as CharacterData
+			if char_data:
+				visual.character_data = char_data
+			battler.add_child(visual)
+			visual.bind_battler(battler)
 
 
-func _spawn_enemies(enemy_data: Array[Resource]) -> void:
+func _spawn_enemies(enemy_data_arr: Array[Resource]) -> void:
 	var slots := _get_marker_positions(enemy_node)
-	for i in enemy_data.size():
+	var visual_scene := load(ENEMY_BATTLER_SCENE_PATH) as PackedScene
+	for i in enemy_data_arr.size():
 		var battler := EnemyBattler.new()
-		battler.data = enemy_data[i]
+		battler.data = enemy_data_arr[i]
 		battler.initialize_from_data()
 		if i < slots.size():
 			battler.position = slots[i]
 		enemy_node.add_child(battler)
 		enemy_battlers.append(battler)
 		battler.defeated.connect(_on_battler_defeated.bind(battler))
+		# Instantiate visual scene and bind to logic battler
+		if visual_scene:
+			var visual: EnemyBattlerScene = visual_scene.instantiate()
+			var e_data := enemy_data_arr[i] as EnemyData
+			if e_data:
+				visual.enemy_data = e_data
+			battler.add_child(visual)
+			visual.bind_battler(battler)
 
 
 func _build_battler_list() -> void:

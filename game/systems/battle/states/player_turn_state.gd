@@ -4,9 +4,6 @@ extends State
 
 var battle_scene: Node = null
 var _battle_ui: Node = null
-var _pending_command: String = ""
-var _pending_ability: Resource = null
-var _pending_item: Resource = null
 
 
 func set_battle_scene(scene: Node) -> void:
@@ -19,10 +16,6 @@ func enter() -> void:
 		push_error("PlayerTurnState: BattleUI not found.")
 		state_machine.transition_to("TurnEnd")
 		return
-
-	_pending_command = ""
-	_pending_ability = null
-	_pending_item = null
 
 	_battle_ui.show_command_menu(battle_scene.current_battler)
 	_battle_ui.update_party_status(battle_scene.get_living_party())
@@ -41,7 +34,6 @@ func exit() -> void:
 
 
 func _on_command_selected(command: String) -> void:
-	_pending_command = command
 	match command:
 		"attack":
 			state_machine.transition_to("TargetSelect")

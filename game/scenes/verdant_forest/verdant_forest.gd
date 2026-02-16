@@ -176,7 +176,11 @@ func _on_exit_to_ruins_entered(body: Node2D) -> void:
 		return
 	if GameManager.is_transitioning():
 		return
-	GameManager.change_scene(OVERGROWN_RUINS_PATH)
+	GameManager.change_scene(
+		OVERGROWN_RUINS_PATH,
+		GameManager.FADE_DURATION,
+		"spawn_from_forest",
+	)
 
 
 func _on_exit_to_town_entered(body: Node2D) -> void:

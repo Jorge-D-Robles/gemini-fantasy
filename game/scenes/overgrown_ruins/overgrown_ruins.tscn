@@ -29,6 +29,9 @@ position = Vector2(160, 200)
 [node name="SpawnPoint" type="Marker2D" parent="Entities"]
 position = Vector2(160, 200)
 
+[node name="SpawnFromForest" type="Marker2D" parent="Entities"]
+position = Vector2(460, 180)
+
 [node name="LyraEchoSpot" type="Marker2D" parent="Entities"]
 position = Vector2(400, 80)
 

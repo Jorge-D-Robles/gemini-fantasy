@@ -17,7 +17,7 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_exit"]
 size = Vector2(16, 64)
 
-[sub_resource type="CircleShape2D" id="RectangleShape2D_garrick"]
+[sub_resource type="CircleShape2D" id="CircleShape2D_garrick"]
 radius = 24.0
 
 [sub_resource type="RectangleShape2D" id="inn_collision_rect"]
@@ -110,6 +110,14 @@ texture = ExtResource("12_tree_md")
 centered = false
 texture_filter = 0
 
+[node name="Tree02Body" type="StaticBody2D" parent="Trees"]
+position = Vector2(72, 48)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Shape" type="CollisionShape2D" parent="Trees/Tree02Body"]
+shape = SubResource("tree_tall_collision_rect")
+
 [node name="Tree03" type="Sprite2D" parent="Trees"]
 position = Vector2(288, 8)
 texture = ExtResource("13_tree_tl")
@@ -144,6 +152,14 @@ texture = ExtResource("12_tree_md")
 centered = false
 texture_filter = 0
 
+[node name="Tree05Body" type="StaticBody2D" parent="Trees"]
+position = Vector2(616, 152)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Shape" type="CollisionShape2D" parent="Trees/Tree05Body"]
+shape = SubResource("tree_tall_collision_rect")
+
 [node name="Tree06" type="Sprite2D" parent="Trees"]
 position = Vector2(592, 240)
 texture = ExtResource("13_tree_tl")
@@ -164,11 +180,27 @@ texture = ExtResource("12_tree_md")
 centered = false
 texture_filter = 0
 
+[node name="Tree07Body" type="StaticBody2D" parent="Trees"]
+position = Vector2(592, 392)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Shape" type="CollisionShape2D" parent="Trees/Tree07Body"]
+shape = SubResource("tree_tall_collision_rect")
+
 [node name="Tree08" type="Sprite2D" parent="Trees"]
 position = Vector2(480, 420)
 texture = ExtResource("11_tree_sm")
 centered = false
 texture_filter = 0
+
+[node name="Tree08Body" type="StaticBody2D" parent="Trees"]
+position = Vector2(496, 444)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Shape" type="CollisionShape2D" parent="Trees/Tree08Body"]
+shape = SubResource("tree_tall_collision_rect")
 
 [node name="Tree09" type="Sprite2D" parent="Trees"]
 position = Vector2(320, 440)
@@ -190,6 +222,14 @@ texture = ExtResource("12_tree_md")
 centered = false
 texture_filter = 0
 
+[node name="Tree10Body" type="StaticBody2D" parent="Trees"]
+position = Vector2(176, 452)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Shape" type="CollisionShape2D" parent="Trees/Tree10Body"]
+shape = SubResource("tree_tall_collision_rect")
+
 [node name="Tree11" type="Sprite2D" parent="Trees"]
 position = Vector2(24, 360)
 texture = ExtResource("13_tree_tl")
@@ -210,12 +250,20 @@ texture = ExtResource("11_tree_sm")
 centered = false
 texture_filter = 0
 
+[node name="Tree12Body" type="StaticBody2D" parent="Trees"]
+position = Vector2(64, 304)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Shape" type="CollisionShape2D" parent="Trees/Tree12Body"]
+shape = SubResource("tree_tall_collision_rect")
+
 [node name="Entities" type="Node2D" parent="."]
 
 [node name="Player" parent="Entities" instance=ExtResource("2_player")]
 position = Vector2(320, 300)
 
-[node name="Camera2D" type="Camera2D" parent="Entities/Player"]
+[node name="Camera2D" parent="Entities/Player" index="3"]
 limit_left = -64
 limit_top = -64
 limit_right = 704
@@ -317,7 +365,7 @@ collision_layer = 0
 collision_mask = 1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Triggers/GarrickRecruitZone"]
-shape = SubResource("RectangleShape2D_garrick")
+shape = SubResource("CircleShape2D_garrick")
 
 [node name="GarrickRecruitment" type="Node" parent="."]
 script = ExtResource("6_garrick")

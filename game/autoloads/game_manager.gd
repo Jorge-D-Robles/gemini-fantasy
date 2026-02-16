@@ -22,8 +22,8 @@ var current_state: GameState = GameState.OVERWORLD
 var _state_stack: Array[GameState] = []
 var _is_transitioning: bool = false
 
-@onready var _transition_layer: CanvasLayer = CanvasLayer.new()
-@onready var _fade_rect: ColorRect = ColorRect.new()
+var _transition_layer: CanvasLayer = null
+var _fade_rect: ColorRect = null
 
 
 func _ready() -> void:
@@ -85,6 +85,8 @@ func is_transitioning() -> bool:
 
 
 func _setup_transition_layer() -> void:
+	_transition_layer = CanvasLayer.new()
+	_fade_rect = ColorRect.new()
 	_transition_layer.layer = 100
 	_transition_layer.name = "TransitionLayer"
 	add_child(_transition_layer)

@@ -58,27 +58,29 @@ func _create_member_row(member: Resource) -> HBoxContainer:
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 4)
 
+	var data := member as BattlerData
+
 	var name_label := Label.new()
-	name_label.text = member.display_name if member.display_name else "???"
+	name_label.text = data.display_name if data else "???"
 	name_label.add_theme_font_size_override("font_size", 10)
 	name_label.custom_minimum_size.x = 48
 	row.add_child(name_label)
+
+	var max_val: int = data.max_hp if data else 100
 
 	var hp_bar := ProgressBar.new()
 	hp_bar.custom_minimum_size = Vector2(50, 8)
 	hp_bar.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	hp_bar.show_percentage = false
-	hp_bar.max_value = member.max_hp if "max_hp" in member else 100
-	hp_bar.value = member.max_hp if "max_hp" in member else 100
+	hp_bar.max_value = max_val
+	hp_bar.value = max_val
 	hp_bar.add_theme_color_override(
 		"font_color", Color(0.2, 0.8, 0.2)
 	)
 	row.add_child(hp_bar)
 
 	var hp_label := Label.new()
-	var current: int = member.max_hp if "max_hp" in member else 100
-	var max_val: int = member.max_hp if "max_hp" in member else 100
-	hp_label.text = "%d/%d" % [current, max_val]
+	hp_label.text = "%d/%d" % [max_val, max_val]
 	hp_label.add_theme_font_size_override("font_size", 8)
 	row.add_child(hp_label)
 
