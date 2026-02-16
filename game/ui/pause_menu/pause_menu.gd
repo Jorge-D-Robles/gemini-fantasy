@@ -31,12 +31,24 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("menu"):
 		if _is_open:
 			close()
-		elif GameManager.current_state == GameManager.GameState.OVERWORLD:
+			get_viewport().set_input_as_handled()
+		elif _can_open():
 			open()
-		get_viewport().set_input_as_handled()
+			get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("cancel") and _is_open:
 		close()
 		get_viewport().set_input_as_handled()
+
+
+func _can_open() -> bool:
+	if GameManager.current_state != GameManager.GameState.OVERWORLD:
+		return false
+	if GameManager.is_transitioning():
+		return false
+	var scene := get_tree().current_scene
+	if scene and "title_screen" in scene.scene_file_path:
+		return false
+	return true
 
 
 func open() -> void:
