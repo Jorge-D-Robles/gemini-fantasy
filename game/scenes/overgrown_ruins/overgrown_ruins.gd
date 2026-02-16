@@ -176,6 +176,10 @@ func _on_exit_to_forest_entered(body: Node2D) -> void:
 		return
 	if GameManager.is_transitioning():
 		return
+	if DialogueManager.is_active():
+		return
+	if BattleManager.is_in_battle():
+		return
 	GameManager.change_scene(
 		VERDANT_FOREST_PATH,
 		GameManager.FADE_DURATION,
@@ -188,6 +192,10 @@ func _on_lyra_zone_entered(body: Node2D) -> void:
 		return
 	if EventFlags.has_flag(OpeningSequence.FLAG_NAME):
 		return
+	if BattleManager.is_in_battle():
+		return
+	if DialogueManager.is_active():
+		return
 	_encounter_system.enabled = false
 	_opening_sequence.trigger()
 	await _opening_sequence.sequence_completed
@@ -195,4 +203,8 @@ func _on_lyra_zone_entered(body: Node2D) -> void:
 
 
 func _on_encounter_triggered(enemy_group: Array[Resource]) -> void:
+	if GameManager.current_state != GameManager.GameState.OVERWORLD:
+		return
+	if DialogueManager.is_active():
+		return
 	BattleManager.start_battle(enemy_group)

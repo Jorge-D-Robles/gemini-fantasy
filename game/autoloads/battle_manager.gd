@@ -20,6 +20,15 @@ func start_battle(
 	if _is_in_battle:
 		push_warning("BattleManager: already in battle.")
 		return
+	if DialogueManager.is_active():
+		push_warning("BattleManager: blocked — dialogue is active.")
+		return
+	if GameManager.current_state != GameManager.GameState.OVERWORLD:
+		push_warning("BattleManager: blocked — not in OVERWORLD state.")
+		return
+	if GameManager.is_transitioning():
+		push_warning("BattleManager: blocked — scene transition active.")
+		return
 	_is_in_battle = true
 	battle_started.emit()
 

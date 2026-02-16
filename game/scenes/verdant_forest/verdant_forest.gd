@@ -237,6 +237,10 @@ func _on_exit_to_ruins_entered(body: Node2D) -> void:
 		return
 	if GameManager.is_transitioning():
 		return
+	if DialogueManager.is_active():
+		return
+	if BattleManager.is_in_battle():
+		return
 	GameManager.change_scene(
 		OVERGROWN_RUINS_PATH,
 		GameManager.FADE_DURATION,
@@ -248,6 +252,10 @@ func _on_exit_to_town_entered(body: Node2D) -> void:
 	if not body.is_in_group("player"):
 		return
 	if GameManager.is_transitioning():
+		return
+	if DialogueManager.is_active():
+		return
+	if BattleManager.is_in_battle():
 		return
 	GameManager.change_scene(
 		ROOTHOLLOW_PATH,
@@ -261,6 +269,10 @@ func _on_iris_zone_entered(body: Node2D) -> void:
 		return
 	if EventFlags.has_flag(IrisRecruitment.FLAG_NAME):
 		return
+	if BattleManager.is_in_battle():
+		return
+	if DialogueManager.is_active():
+		return
 	_encounter_system.enabled = false
 	_iris_zone.monitoring = false
 	_iris_event.trigger()
@@ -269,6 +281,10 @@ func _on_iris_zone_entered(body: Node2D) -> void:
 
 
 func _on_encounter_triggered(enemy_group: Array[Resource]) -> void:
+	if GameManager.current_state != GameManager.GameState.OVERWORLD:
+		return
+	if DialogueManager.is_active():
+		return
 	BattleManager.start_battle(enemy_group)
 
 
