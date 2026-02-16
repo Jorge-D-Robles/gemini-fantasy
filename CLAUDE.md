@@ -17,7 +17,8 @@ After completing any task, **automatically commit, push, and merge** without ask
 3. Push to remote with `-u`
 4. Create a PR via `gh pr create`
 5. Merge the PR via `gh pr merge --merge`
-6. **Pull main in the main repo** so Godot has the latest code immediately:
+6. Run `git pull` to sync the merge commit locally
+7. **Pull main in the main repo** so Godot has the latest code immediately:
    `git -C /Users/robles/repos/games/gemini-fantasy pull`
    (Worktrees cannot checkout main — always pull from the main repo path.)
 
