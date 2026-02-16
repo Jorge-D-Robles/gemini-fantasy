@@ -13,12 +13,7 @@ var equipped_echoes: Array[Resource] = []
 func initialize_from_data() -> void:
 	super.initialize_from_data()
 	if data:
-		if "id" in data:
-			character_id = data.id
-		if "abilities" in data:
-			abilities = data.abilities
-		if "equipped_echoes" in data:
-			equipped_echoes = data.equipped_echoes
+		character_id = data.id
 
 
 func request_action() -> void:
@@ -40,11 +35,11 @@ func get_available_abilities() -> Array[Resource]:
 
 
 func _can_use_ability(ability: Resource) -> bool:
-	if "ee_cost" in ability and current_ee < ability.ee_cost:
+	var ability_data := ability as AbilityData
+	if not ability_data:
 		return false
-	if "resonance_cost" in ability and resonance_gauge < ability.resonance_cost:
+	if current_ee < ability_data.ee_cost:
 		return false
-	if "min_resonance_state" in ability:
-		if resonance_state < ability.min_resonance_state:
-			return false
+	if ability_data.resonance_cost > 0.0 and resonance_gauge < ability_data.resonance_cost:
+		return false
 	return true

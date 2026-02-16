@@ -52,7 +52,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _on_dialogue_started() -> void:
 	_panel.visible = true
-	_panel.position.y = 120.0
+	_panel.position.y = _panel.size.y
 	var tween := create_tween()
 	tween.tween_property(_panel, "position:y", 0.0, SLIDE_DURATION)
 
@@ -60,7 +60,7 @@ func _on_dialogue_started() -> void:
 func _on_dialogue_ended() -> void:
 	_stop_tween()
 	var tween := create_tween()
-	tween.tween_property(_panel, "position:y", 120.0, SLIDE_DURATION)
+	tween.tween_property(_panel, "position:y", _panel.size.y, SLIDE_DURATION)
 	tween.tween_callback(func() -> void: _panel.visible = false)
 	dialogue_complete.emit()
 

@@ -10,6 +10,7 @@ const BATTLE_SCENE_PATH: String = "res://systems/battle/battle_scene.tscn"
 var _battle_scene: Node = null
 var _is_in_battle: bool = false
 var _pre_battle_scene_path: String = ""
+var _pre_battle_player_position: Vector2 = Vector2.ZERO
 
 
 func start_battle(
@@ -34,6 +35,10 @@ func start_battle(
 
 	_pre_battle_scene_path = get_tree().current_scene.scene_file_path
 
+	var player := get_tree().get_first_node_in_group("player")
+	if player:
+		_pre_battle_player_position = player.global_position
+
 	await GameManager.change_scene(BATTLE_SCENE_PATH)
 
 	_battle_scene = get_tree().current_scene
@@ -53,6 +58,15 @@ func _on_battle_finished(victory: bool) -> void:
 	battle_ended.emit(victory)
 
 	if not _pre_battle_scene_path.is_empty():
+		GameManager.scene_changed.connect(
+			_restore_player_position, CONNECT_ONE_SHOT,
+		)
 		await GameManager.change_scene(_pre_battle_scene_path)
 	_pre_battle_scene_path = ""
 	_battle_scene = null
+
+
+func _restore_player_position(_scene_path: String) -> void:
+	var player := get_tree().get_first_node_in_group("player")
+	if player:
+		player.global_position = _pre_battle_player_position
