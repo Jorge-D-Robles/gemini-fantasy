@@ -16,7 +16,7 @@ func enter() -> void:
 		state_machine.transition_to("PlayerTurn")
 		return
 
-	var targets := battle_scene.get_living_enemies()
+	var targets: Array = battle_scene.get_living_enemies()
 	if targets.is_empty():
 		state_machine.transition_to("TurnQueueState")
 		return
