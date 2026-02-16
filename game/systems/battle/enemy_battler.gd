@@ -122,4 +122,8 @@ func _get_living(battlers: Array[Battler]) -> Array[Battler]:
 
 
 func _can_use_ability_enemy(ability: AbilityData) -> bool:
-	return current_ee >= ability.ee_cost
+	if current_ee < ability.ee_cost:
+		return false
+	if ability.resonance_cost > 0.0 and resonance_gauge < ability.resonance_cost:
+		return false
+	return true

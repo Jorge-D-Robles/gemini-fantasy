@@ -33,7 +33,11 @@ func start_battle(
 		_is_in_battle = false
 		return
 
-	_pre_battle_scene_path = get_tree().current_scene.scene_file_path
+	var current_scene := get_tree().current_scene
+	if current_scene:
+		_pre_battle_scene_path = current_scene.scene_file_path
+	else:
+		_pre_battle_scene_path = ""
 
 	var player := get_tree().get_first_node_in_group("player")
 	if player:

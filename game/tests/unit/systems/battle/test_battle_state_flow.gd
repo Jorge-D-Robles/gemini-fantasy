@@ -172,3 +172,61 @@ func test_abilities_unavailable_then_restored_via_ee_restore() -> void:
 		b.get_available_abilities().size(), 1,
 		"Ability should be available again after EE restore"
 	)
+
+
+# ---- Resonance cost filtering ----
+
+func test_ability_with_resonance_cost_unavailable_at_zero() -> void:
+	var ability := Helpers.make_ability({
+		"ee_cost": 5,
+		"resonance_cost": 50.0,
+	})
+	var b := Helpers.make_party_battler({
+		"max_ee": 100,
+		"abilities": [ability],
+	})
+	add_child_autofree(b)
+
+	# Resonance is 0 — should not be able to use
+	var available := b.get_available_abilities()
+	assert_eq(
+		available.size(), 0,
+		"Ability with resonance_cost should be unavailable at 0 resonance"
+	)
+
+
+func test_ability_with_resonance_cost_available_when_met() -> void:
+	var ability := Helpers.make_ability({
+		"ee_cost": 5,
+		"resonance_cost": 30.0,
+	})
+	var b := Helpers.make_party_battler({
+		"max_ee": 100,
+		"abilities": [ability],
+	})
+	add_child_autofree(b)
+
+	b.add_resonance(50.0)
+	var available := b.get_available_abilities()
+	assert_eq(
+		available.size(), 1,
+		"Ability should be available when resonance meets cost"
+	)
+
+
+func test_ability_zero_resonance_cost_always_available() -> void:
+	var ability := Helpers.make_ability({
+		"ee_cost": 5,
+		"resonance_cost": 0.0,
+	})
+	var b := Helpers.make_party_battler({
+		"max_ee": 100,
+		"abilities": [ability],
+	})
+	add_child_autofree(b)
+
+	var available := b.get_available_abilities()
+	assert_eq(
+		available.size(), 1,
+		"Ability with zero resonance_cost should always be available"
+	)

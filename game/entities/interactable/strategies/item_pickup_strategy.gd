@@ -8,7 +8,8 @@ extends InteractionStrategy
 
 
 func execute(owner: Node) -> void:
-	owner.has_been_used = true
+	if "has_been_used" in owner:
+		owner.has_been_used = true
 	var message: String = text if not text.is_empty() else "Picked up %s!" % item_id
 	var lines: Array[DialogueLine] = [
 		DialogueLine.create("", message),

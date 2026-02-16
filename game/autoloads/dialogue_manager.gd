@@ -56,6 +56,12 @@ func advance() -> void:
 func select_choice(index: int) -> void:
 	if not _waiting_for_choice:
 		return
+	if _current_index < 0 or _current_index >= _queue.size():
+		return
+	var line := _queue[_current_index]
+	if index < 0 or index >= line.choices.size():
+		push_warning("DialogueManager: choice index %d out of range." % index)
+		return
 	_waiting_for_choice = false
 	choice_selected.emit(index)
 	advance()
