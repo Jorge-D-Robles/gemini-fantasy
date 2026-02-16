@@ -37,7 +37,7 @@ These 26 fixes were completed before the ticket system was established:
 
 ## Sprint S01 — Foundation
 
-- [2026-02-16] T-0001: Add class_name declarations to all autoload scripts (claude)
+- [2026-02-16] T-0001: WONTFIX — class_name on autoloads conflicts with singleton names; reverted (claude)
 - [2026-02-16] T-0002: Extract TurnQueue into its own scene (claude)
 - [2026-02-16] T-0003: Refactor Interactable into composition pattern — strategy pattern with 5 strategies (claude)
 - [2026-02-16] T-0004: Replace Dictionary-based dialogue/encounter data with custom Resources (claude)

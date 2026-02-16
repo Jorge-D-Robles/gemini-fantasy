@@ -41,8 +41,9 @@ Started: 2026-02-16
 
 ### T-0001
 - Title: Add class_name declarations to all autoload scripts
-- Status: done
+- Status: wontfix
 - Assigned: claude
+- Notes: INVALID — Godot autoloads cannot have class_name; causes "hides autoload singleton" error. Reverted.
 - Completed: 2026-02-16
 
 ### T-0002

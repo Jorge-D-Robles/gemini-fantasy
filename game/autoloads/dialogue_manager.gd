@@ -1,4 +1,3 @@
-class_name DialogueManager
 extends Node
 
 ## Manages dialogue flow globally. Emits signals consumed by the DialogueBox UI.
