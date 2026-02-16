@@ -62,6 +62,22 @@ This file tracks technical debt, bugs, and architectural issues identified durin
 - **Issue:** Uses Vector2 arrays for positioning.
 - **Fix:** Use Marker2D nodes in the scene for spawn points.
 
+### [STYLE] Missing Return Type Hints
+- **Files:** 
+    - `game/systems/battle/enemy_battler.gd` (`_support_ai`)
+    - `game/systems/battle/battle_scene.gd` (`setup_battle`)
+    - `game/autoloads/battle_manager.gd` (`start_battle`)
+    - `game/autoloads/game_manager.gd` (`change_scene`)
+    - `game/ui/battle_ui/battle_ui.gd` (`show_target_selector`)
+    - `game/entities/player/player.gd` (`_on_game_state_changed`)
+- **Issue:** Several public and private methods are missing explicit `-> void` or other return type hints.
+- **Fix:** Add appropriate return type hints to all method definitions.
+
+### [TODO] Party Healing in Roothollow
+- **File:** `game/scenes/roothollow/roothollow.gd`
+- **Issue:** Placeholder comment for party healing logic once persistent state is implemented.
+- **Fix:** Implement party HP/EE restoration at appropriate resting points in Roothollow.
+
 ---
 
 ## Documentation & Standards
