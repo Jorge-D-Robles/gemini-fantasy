@@ -45,3 +45,4 @@ These 26 fixes were completed before the ticket system was established:
 - [2026-02-16] T-0006: Use AnimatedSprite2D for player animation (claude)
 - [2026-02-16] Add automated testing infrastructure — GUT 9.x + gdlint, 59 unit tests, /run-tests skill, pre-push hooks (claude)
 - [2026-02-16] T-0020: Battle system real-time UI sync, attack animations, damage popups, status effect application, 25 new tests (claude)
+- [2026-02-16] BUG FIX: Battle UI lockup when using skills — cancel/EE handling, 9 new tests (claude)
