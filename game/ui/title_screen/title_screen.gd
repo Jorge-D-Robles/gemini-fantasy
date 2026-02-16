@@ -45,8 +45,7 @@ func _setup_focus_navigation() -> void:
 
 
 func _check_save_data() -> void:
-	var has_save := FileAccess.file_exists("user://save.dat")
-	continue_button.disabled = not has_save
+	continue_button.disabled = not SaveManager.has_save(0)
 
 
 func _animate_intro() -> void:
@@ -72,6 +71,22 @@ func _on_new_game_pressed() -> void:
 
 func _on_continue_pressed() -> void:
 	continue_pressed.emit()
+	var data: Dictionary = SaveManager.load_save_data(0)
+	if data.is_empty():
+		return
+	SaveManager.apply_save_data(
+		data, PartyManager, InventoryManager, EventFlags,
+	)
+	var pos_data: Dictionary = data.get("player_position", {})
+	var pos := Vector2(
+		pos_data.get("x", 0.0),
+		pos_data.get("y", 0.0),
+	)
+	SaveManager.set_pending_position(pos)
+	var scene_path: String = data.get("scene_path", "")
+	if scene_path.is_empty():
+		return
+	GameManager.change_scene(scene_path)
 
 
 func _on_settings_pressed() -> void:
