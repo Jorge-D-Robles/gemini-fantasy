@@ -43,3 +43,4 @@ These 26 fixes were completed before the ticket system was established:
 - [2026-02-16] T-0004: Replace Dictionary-based dialogue/encounter data with custom Resources (claude)
 - [2026-02-16] T-0005: Replace meta-based state communication with typed BattleAction (claude)
 - [2026-02-16] T-0006: Use AnimatedSprite2D for player animation (claude)
+- [2026-02-16] Add automated testing infrastructure — GUT 9.x + gdlint, 59 unit tests, /run-tests skill, pre-push hooks (claude)
