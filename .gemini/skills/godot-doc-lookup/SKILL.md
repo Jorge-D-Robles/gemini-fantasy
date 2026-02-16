@@ -6,10 +6,14 @@ argument-hint: <class-name, method, or topic>
 
 # Godot Documentation Lookup
 
-Invoke the `godot-docs` agent for documentation lookup.
+Invoke the `godot-docs` subagent for documentation lookup.
 
 **Query:** $ARGUMENTS
 
-Follow the instructions in `.gemini/agents/godot-docs.md`. Return class inheritance, key properties, methods, signals, code examples, and best practice notes.
+Call the `godot-docs` tool:
+
+```
+godot-docs(objective="Look up $ARGUMENTS. Return class inheritance, key properties, methods, signals, code examples, and best practice notes.")
+```
 
 After the agent returns its summary, present the structured results to the user.

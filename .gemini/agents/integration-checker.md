@@ -1,8 +1,11 @@
 ---
 name: integration-checker
 description: Cross-system integration verification agent. Checks autoload registry, signal wiring, cross-system dependencies, resource path integrity, scene-system integration, and data layer consistency. Use proactively after building multiple systems, adding new autoloads, or connecting UI to backend systems. Returns integration score with dependency graph.
-tools: Read, Glob, Grep
-model: sonnet
+tools:
+  - read_file
+  - glob
+  - grep_search
+model: inherit
 ---
 
 # Integration Checker Agent

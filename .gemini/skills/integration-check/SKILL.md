@@ -6,11 +6,15 @@ argument-hint: [system-name or "all"]
 
 # Integration Check
 
-Invoke the `integration-checker` agent to verify system integration.
+Invoke the `integration-checker` subagent to verify system integration.
 
 **Target:** $ARGUMENTS
 
-Follow the instructions in `.gemini/agents/integration-checker.md`. Verify autoloads, signal wiring, cross-system dependencies, resource paths, scene-system integration, and data layer consistency.
+Call the `integration-checker` tool:
+
+```
+integration-checker(objective="Check integration for: $ARGUMENTS. If no target given, check ALL systems. Verify autoloads, signal wiring, cross-system dependencies, resource paths, scene-system integration, and data layer consistency.")
+```
 
 After the agent returns its report, summarize the key findings for the user:
 - Integration score

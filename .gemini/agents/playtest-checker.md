@@ -1,8 +1,11 @@
 ---
 name: playtest-checker
 description: Pre-playtest validation agent. Scans for broken references, missing resources, script compilation issues, signal wiring problems, and performance anti-patterns before running the game. Use proactively before playtesting, after major changes, or as a CI-style check. Returns pass/warn/error summary with specific fixes.
-tools: Read, Glob, Grep
-model: sonnet
+tools:
+  - read_file
+  - glob
+  - grep_search
+model: inherit
 ---
 
 # Pre-Playtest Validation Agent

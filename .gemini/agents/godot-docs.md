@@ -1,8 +1,11 @@
 ---
 name: godot-docs
 description: Godot documentation RAG agent. Searches local Godot 4.5 docs for class APIs, tutorials, and best practices. Use proactively when implementing GDScript code, using Godot classes, or needing API details. Returns structured summaries with properties, methods, signals, and code examples.
-tools: Read, Glob, Grep
-model: haiku
+tools:
+  - read_file
+  - glob
+  - grep_search
+model: gemini-2.0-flash
 ---
 
 # Godot Documentation RAG Agent

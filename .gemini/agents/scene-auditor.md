@@ -1,8 +1,11 @@
 ---
 name: scene-auditor
 description: Scene architecture auditor agent. Audits Godot project scene organization, dependency graphs, signal health, resource usage, and scalability. Use proactively after building new scenes or systems, periodically to catch architectural drift, or before major refactors. Returns health rating with categorized recommendations.
-tools: Read, Glob, Grep
-model: sonnet
+tools:
+  - read_file
+  - glob
+  - grep_search
+model: inherit
 ---
 
 # Scene Architecture Auditor
