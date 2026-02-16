@@ -23,18 +23,20 @@ Do not ask for confirmation at any step. This applies to all tasks — bug fixes
 
 ## MANDATORY: Research Before Code
 
-**DO NOT write or modify any GDScript, .tscn, or .tres file without first completing BOTH of these steps:**
+**DO NOT write or modify any GDScript, .tscn, or .tres file without first completing ALL of these steps:**
 
-1. **Call the `godot-docs` subagent** for every Godot class you will use:
-   ```
-   Task(subagent_type="godot-docs", prompt="Look up [CLASS]. I need [properties/methods/signals].")
-   ```
-2. **Read the relevant best practices file** from `docs/best-practices/`:
-   ```
-   Read("docs/best-practices/[relevant-file].md")
-   ```
+1.  **Check `ISSUES_TRACKER.md`**: Always check `ISSUES_TRACKER.md` before starting a task. If your task fixes an issue listed there, remove it. If you identify new issues during development or review, you MUST add them to the tracker.
+2.  **Call the `godot-docs` subagent** for every Godot class you will use:
+    ```
+    Task(subagent_type="godot-docs", prompt="Look up [CLASS]. I need [properties/methods/signals].")
+    ```
+3.  **Read the relevant best practices file** from `docs/best-practices/`:
+    ```
+    Read("docs/best-practices/[relevant-file].md")
+    ```
+4.  **Scan for related issues**: Use the available search tools to find existing implementations of similar logic to ensure consistency and avoid duplicating known bugs.
 
-This is not optional. Every code change must be grounded in documentation. Do not rely on memory or assumptions about the Godot API — look it up. If you are unsure which best practices file applies, read the topic mapping table in the "Best Practices Reference" section below.
+This is not optional. Every code change must be grounded in documentation and the current state of the project. Do not rely on memory or assumptions — look it up and check the tracker.
 
 **Choosing what to look up:**
 - Writing a new scene? → `godot-docs` subagent for root node class + `01-scene-architecture.md`
