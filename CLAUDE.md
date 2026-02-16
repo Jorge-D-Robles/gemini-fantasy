@@ -26,14 +26,12 @@ Do not ask for confirmation at any step. This applies to all tasks — bug fixes
 **DO NOT write or modify any GDScript, .tscn, or .tres file without first completing ALL of these steps:**
 
 1.  **Check `ISSUES_TRACKER.md`**: Always check `ISSUES_TRACKER.md` before starting a task. If your task fixes an issue listed there, remove it. If you identify new issues during development or review, you MUST add them to the tracker.
-2.  **Call the `godot-docs` subagent** for every Godot class you will use:
-    ```
-    Task(subagent_type="godot-docs", prompt="Look up [CLASS]. I need [properties/methods/signals].")
-    ```
+2.  **Call the `godot-docs` sub-agent** for every Godot class you will use:
+    - **Claude Code**: `Task(subagent_type="godot-docs", prompt="Look up [CLASS]...")`
+    - **Gemini CLI**: `godot-docs(objective="Look up [CLASS]...")`
 3.  **Read the relevant best practices file** from `docs/best-practices/`:
-    ```
-    Read("docs/best-practices/[relevant-file].md")
-    ```
+    - **Claude Code**: `Read("docs/best-practices/[file].md")`
+    - **Gemini CLI**: `read_file("docs/best-practices/[file].md")`
 4.  **Scan for related issues**: Use the available search tools to find existing implementations of similar logic to ensure consistency and avoid duplicating known bugs.
 
 This is not optional. Every code change must be grounded in documentation and the current state of the project. Do not rely on memory or assumptions — look it up and check the tracker.
@@ -61,9 +59,8 @@ docs/              # All documentation
   lore/            # Story, characters, world lore, echo catalog
   mechanics/       # Character abilities and system mechanics
   best-practices/  # Godot best practices summaries (quick reference)
-.claude/           # Claude Code configuration
-  agents/          # 6 specialized agents (docs, review, audit, debug, validation)
-  skills/          # 20 development skills (creation, data, quality, planning)
+.claude/           # Claude Code configuration (agents, skills)
+.gemini/           # Gemini CLI configuration (agents, skills)
   settings.json    # Hooks and tool permissions
 ```
 
