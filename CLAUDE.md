@@ -53,6 +53,7 @@ docs/              # All documentation
   mechanics/       # Character abilities and system mechanics
   best-practices/  # Godot best practices summaries (quick reference)
 .claude/           # Claude Code configuration
+  agents/          # 6 specialized agents (docs, review, audit, debug, validation)
   skills/          # 20 development skills (creation, data, quality, planning)
   settings.json    # Hooks and tool permissions
 ```
@@ -92,26 +93,42 @@ This project is designed for fully automated agentic development. Use the skill 
 **Reference** (auto-loaded, not user-invoked):
 - `gdscript-conventions` — Loaded automatically when writing GDScript
 
-### Godot Documentation Subagent
+### Specialized Agents
 
-A custom RAG subagent at `.claude/agents/godot-docs.md` handles all Godot documentation lookups. **Use this instead of looking up docs yourself** — it preserves your context window and returns structured summaries.
+Six custom agents in `.claude/agents/` handle specialized tasks. **Use these instead of general-purpose agents** — they have domain-specific knowledge and produce structured output.
+
+| Agent | Invocation | Purpose |
+|-------|-----------|---------|
+| `godot-docs` | `Task(subagent_type="godot-docs")` | Godot API lookup, tutorial search, best practices (haiku model) |
+| `gdscript-reviewer` | `Task(subagent_type="gdscript-reviewer")` | Code quality, style guide, best practices review (sonnet model) |
+| `scene-auditor` | `Task(subagent_type="scene-auditor")` | Scene architecture, dependencies, signal health audit (sonnet model) |
+| `playtest-checker` | `Task(subagent_type="playtest-checker")` | Pre-playtest validation, broken refs, missing resources (sonnet model) |
+| `integration-checker` | `Task(subagent_type="integration-checker")` | Cross-system wiring, autoloads, signal connections (sonnet model) |
+| `debugger` | `Task(subagent_type="debugger")` | Bug diagnosis and fix with mandatory doc lookup (inherits model) |
 
 ```
-# Look up a class API
-Task(subagent_type="godot-docs", prompt="Look up CharacterBody2D — I need the velocity property, move_and_slide() method, and any movement tutorial examples.")
+# Look up Godot docs (fast, lightweight)
+Task(subagent_type="godot-docs", prompt="Look up CharacterBody2D — I need velocity, move_and_slide(), movement tutorials.")
 
-# Look up a how-to topic
-Task(subagent_type="godot-docs", prompt="How to implement save/load in Godot 4.5? Include SaveManager patterns and file format options.")
+# Review code quality
+Task(subagent_type="gdscript-reviewer", prompt="Review game/systems/combat/")
 
-# Look up multiple classes in one call
-Task(subagent_type="godot-docs", prompt="Look up AnimationPlayer and AnimationTree — I need to understand when to use each, key methods, and how to set up state machine blending.")
+# Audit architecture
+Task(subagent_type="scene-auditor", prompt="Audit the game/scenes/ directory for composition issues.")
+
+# Pre-playtest validation
+Task(subagent_type="playtest-checker", prompt="Run full pre-playtest check on the project.")
+
+# Check system integration
+Task(subagent_type="integration-checker", prompt="Check integration for the combat system.")
+
+# Debug an issue
+Task(subagent_type="debugger", prompt="Fix: 'Invalid get index on null instance' in battle_manager.gd line 42")
 ```
-
-The subagent searches local docs at `docs/godot-docs/` (class refs + tutorials) AND project best practices at `docs/best-practices/`. It returns structured summaries with properties, methods, signals, code examples, and best practice notes.
 
 ### Agent Team Patterns
 
-When building large features, use parallel subagents:
+When building large features, use parallel agents:
 
 ```
 # Research in parallel while planning
@@ -119,8 +136,14 @@ Task(subagent_type="godot-docs", prompt="Look up [CLASS] API and related tutoria
 Task(subagent_type="Explore", prompt="Read design doc at docs/game-design/...")
 
 # Quality checks in parallel after implementation
-Task(subagent_type="general-purpose", prompt="Review game/systems/combat/...")
-Task(subagent_type="general-purpose", prompt="Check integration of combat + UI...")
+Task(subagent_type="gdscript-reviewer", prompt="Review game/systems/combat/...")
+Task(subagent_type="integration-checker", prompt="Check integration of combat + UI...")
+
+# Full quality sweep (run all review agents in parallel)
+Task(subagent_type="gdscript-reviewer", prompt="Review all .gd files")
+Task(subagent_type="scene-auditor", prompt="Audit all scenes")
+Task(subagent_type="playtest-checker", prompt="Run pre-playtest check")
+Task(subagent_type="integration-checker", prompt="Check all system integration")
 ```
 
 ### Development Order
