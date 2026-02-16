@@ -32,6 +32,15 @@ static func make_battler(
 	return b
 
 
+static func make_party_battler(
+	overrides: Dictionary = {},
+) -> PartyBattler:
+	var b := PartyBattler.new()
+	b.data = make_battler_data(overrides)
+	b.initialize_from_data()
+	return b
+
+
 static func make_ability(overrides: Dictionary = {}) -> AbilityData:
 	var a := AbilityData.new()
 	a.id = overrides.get("id", &"test_ability")
