@@ -11,71 +11,67 @@ const CREEPING_VINE_PATH: String = "res://data/enemies/creeping_vine.tres"
 const KAEL_DATA_PATH: String = "res://data/characters/kael.tres"
 
 const GROUND_LEGEND: Dictionary = {
-	"S": Vector2i(0, 0),   # Stone floor left
-	"s": Vector2i(1, 0),   # Stone floor right
-	"D": Vector2i(0, 2),   # Decorated floor left
-	"d": Vector2i(1, 2),   # Decorated floor right
+	"F": Vector2i(0, 0),   # Mossy stone floor
+	"D": Vector2i(0, 2),   # Vine-covered floor
 }
 
 const WALL_LEGEND: Dictionary = {
-	"W": Vector2i(0, 8),   # Dark wall left
-	"w": Vector2i(1, 8),   # Dark wall right
-	"G": Vector2i(0, 4),   # Gold wall left
-	"g": Vector2i(1, 4),   # Gold wall right
+	"W": Vector2i(0, 8),   # Dark brown wall
+	"G": Vector2i(0, 4),   # Ornamental border
 }
 
 const GROUND_MAP: Array[String] = [
-	"SsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSs",
-	"SsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSs",
-	"SsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSs",
-	"SsSsSsSsSsSsSsSsSsDdDdDdDdDdDdDdSsSsSsSs",
-	"SsSsSsSsSsSsSsSsSsDdDdDdDdDdDdDdSsSsSsSs",
-	"SsSsSsSsSsSsSsSsSsDdDdDdDdDdDdDdSsSsSsSs",
-	"SsSsSsSsSsSsSsSsSsDdDdDdDdDdDdDdSsSsSsSs",
-	"SsSsSsSsSsSsSsSsSsDdDdDdDdDdDdDdSsSsSsSs",
-	"SsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSs",
-	"SsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSs",
-	"SsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSs",
-	"SsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSs",
-	"SsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSs",
-	"SsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSs",
-	"SsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSs",
-	"SsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSs",
-	"SsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSs",
-	"SsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSs",
-	"SsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSs",
-	"SsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSs",
-	"SsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSs",
-	"SsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSs",
-	"SsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSs",
-	"SsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSsSs",
+	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+	"FFFFFFFFFFFFFFFFFFDDDDDDDDDDDDDDFFFFFFFF",
+	"FFFFFFFFFFFFFFFFFFDDDDDDDDDDDDDDFFFFFFFF",
+	"FFFFFFFFFFFFFFFFFFDDDDDDDDDDDDDDFFFFFFFF",
+	"FFFFFFFFFFFFFFFFFFDDDDDDDDDDDDDDFFFFFFFF",
+	"FFFFFFFFFFFFFFFFFFDDDDDDDDDDDDDDFFFFFFFF",
+	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
 ]
 
 const WALL_MAP: Array[String] = [
-	"WwWwWwWwWwWwWwWwWwWwWwWwWwWwWwWwWwWwWwWw",
-	"WwWwWwWwWwWwWwWwWwWwWwWwWwWwWwWwWwWwWwWw",
-	"Ww                                    Ww",
-	"Ww    WwWw        GgGgGgGgGgGgGg      Ww",
-	"Ww    WwWw        Gg          Gg      Ww",
-	"Ww                Gg          Gg      Ww",
-	"Ww    WwWw        Gg          Gg      Ww",
-	"Ww    WwWw        GgGgGg  GgGgGg      Ww",
-	"Ww                                    Ww",
-	"Ww                                    Ww",
-	"Ww                                      ",
-	"Ww                                      ",
-	"Ww                                      ",
-	"Ww                                      ",
-	"Ww                                    Ww",
-	"Ww    WwWwWwWwWw      WwWwWwWwWwWw    Ww",
-	"Ww          WwWw              WwWw    Ww",
-	"Ww          WwWw              WwWw    Ww",
-	"Ww          WwWw              WwWw    Ww",
-	"Ww          WwWw              WwWw    Ww",
-	"Ww                                    Ww",
-	"Ww                                    Ww",
-	"WwWwWwWwWwWwWwWwWwWwWwWwWwWwWwWwWwWwWwWw",
-	"WwWwWwWwWwWwWwWwWwWwWwWwWwWwWwWwWwWwWwWw",
+	"WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+	"WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+	"WW                                    WW",
+	"WW    WWWW        GGGGGGGGGGGGGG      WW",
+	"WW    WWWW        GG          GG      WW",
+	"WW                GG          GG      WW",
+	"WW    WWWW        GG          GG      WW",
+	"WW    WWWW        GGGGGG  GGGGGG      WW",
+	"WW                                    WW",
+	"WW                                    WW",
+	"WW                                      ",
+	"WW                                      ",
+	"WW                                      ",
+	"WW                                      ",
+	"WW                                    WW",
+	"WW    WWWWWWWWWW      WWWWWWWWWWWW    WW",
+	"WW          WWWW              WWWW    WW",
+	"WW          WWWW              WWWW    WW",
+	"WW          WWWW              WWWW    WW",
+	"WW          WWWW              WWWW    WW",
+	"WW                                    WW",
+	"WW                                    WW",
+	"WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+	"WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
 ]
 
 @onready var _ground_layer: TileMapLayer = $Ground
@@ -132,7 +128,7 @@ func _ready() -> void:
 
 
 func _setup_tilemap() -> void:
-	var atlas_paths: Array[String] = [MapBuilder.RUINS_A5]
+	var atlas_paths: Array[String] = [MapBuilder.OVERGROWN_RUINS_A5]
 	var solid: Dictionary = {
 		0: [
 			Vector2i(0, 4), Vector2i(1, 4), Vector2i(2, 4), Vector2i(3, 4),

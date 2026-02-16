@@ -214,6 +214,13 @@ agents/            # Project management (milestones, backlog, sprint, completed 
 - **TileA5 sheets** (128x256): Simple flat grids of 16x16 tiles — easiest for TileSet atlas import
 - **TileB sheets** (256x256): Object tiles, can contain multi-tile objects
 - Full asset index with detailed descriptions: `/Users/robles/repos/games/assets/CLAUDE.md`
+- **DO NOT use RPG Maker tile formats.** Some asset packs include RPG Maker-specific tile layouts (autotile sheets, A1-A4 format). These are designed for RPG Maker's autotile engine and will NOT work correctly in Godot. Always use the plain 16x16 grid sheets (A5 and B format). Do not reference RPG Maker tutorials or tile format documentation when working with tiles in Godot.
+
+### Tile Usage Rules
+
+- **Use single-tile fills for uniform surfaces.** Each column in an A5 tile sheet is a DIFFERENT tile variant — columns 0 and 1 are NOT left/right halves of a pair. Alternating columns creates visible stripe artifacts. Use ONE consistent tile (same atlas coordinate) for large floor/wall areas.
+- **Use large patches for variety.** If you want visual variety, use different tile variants in 4x4+ patches, never alternating every tile.
+- **Match theme to location.** Ruins1 = blue/ancient, Ruins2 = gold/Egyptian, Ruins3 = brown/green overgrown. Choose the tile sheet that matches the area's theme.
 
 ## Asset Workflow
 
