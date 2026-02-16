@@ -15,7 +15,7 @@ After completing any task, **automatically commit, push, and merge** without ask
    `git -C /Users/robles/repos/games/gemini-fantasy pull`
    (Worktrees cannot checkout main — always pull from the main repo path.)
 
-**MANDATORY:** Always check `ISSUES_TRACKER.md` before starting a task. If your task fixes an issue listed there, remove it. If you identify new issues during development or review, you MUST add them to the tracker.
+**MANDATORY:** "The issue tracker" refers specifically to the local `ISSUES_TRACKER.md` file in the repository root. **DO NOT** use GitHub Issues or the `gh issue` command unless explicitly asked. Always check `ISSUES_TRACKER.md` before starting a task. If your task fixes an issue listed there, remove it. If you identify new issues during development or review, you MUST add them to the tracker.
 
 Do not ask for confirmation at any step. This applies to all tasks — bug fixes, features, refactors, doc updates, etc.
 
