@@ -4,10 +4,11 @@
 
 ## Git Workflow
 
-**BEFORE starting any task**, pull the latest changes to ensure you have up-to-date code:
+**BEFORE starting any task**, rebase onto the latest `origin/main` to ensure you have up-to-date code and a clean history:
 
 ```bash
-git pull
+git fetch origin main
+git rebase origin/main
 ```
 
 After completing any task, **automatically commit, push, and merge** without asking:
