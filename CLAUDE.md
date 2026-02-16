@@ -4,6 +4,12 @@
 
 ## Git Workflow
 
+**BEFORE starting any task**, pull the latest changes to ensure you have up-to-date code:
+
+```bash
+git pull
+```
+
 After completing any task, **automatically commit, push, and merge** without asking:
 
 1. Stage the changed files and commit with a clear message
