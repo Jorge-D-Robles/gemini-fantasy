@@ -190,6 +190,11 @@ Quick-reference summaries are in `docs/best-practices/`. Consult BEFORE implemen
 
 The full Godot docs are available at `docs/godot-docs/`. Use this 3-tier lookup system when writing or modifying GDScript code.
 
+**NOTE: If `docs/godot-docs/` is empty or missing, you MUST reinitialize the submodule before proceeding:**
+```bash
+git submodule update --init --recursive docs/godot-docs
+```
+
 ### Tier 1 -- Class Reference (API lookup)
 
 Read the class file directly when you need properties, methods, or signals:
