@@ -19,9 +19,9 @@ After completing any task, **automatically commit, push, and merge** without ask
 
 Do not ask for confirmation at any step. This applies to all tasks — bug fixes, features, refactors, doc updates, etc.
 
-### Cross-Agent Synchronization
+### Agent Configuration (Single Source of Truth)
 
-**MANDATORY:** Any change made to `CLAUDE.md` MUST be mirrored in `gemini.md`, and vice versa. These files are the primary context for Claude and Gemini agents respectively. Keeping them in sync ensures both agents have the same high-level instructions, workflows, and project knowledge.
+**MANDATORY:** `CLAUDE.md` is the single source of truth for all project rules, workflows, and agent instructions. `gemini.md` is a symbolic link to this file. Any change to project norms MUST be made in `CLAUDE.md`. This ensures both Claude and Gemini agents remain perfectly synchronized.
 
 ## MANDATORY: Research Before Code
 
