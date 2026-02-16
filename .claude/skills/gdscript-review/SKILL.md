@@ -11,6 +11,11 @@ allowed-tools: Read, Grep, Glob
 
 Review GDScript code for quality and best practices. Target: **$ARGUMENTS**
 
+## Mandatory Research
+Before performing a review, you MUST:
+1. **Call the `godot-docs` subagent** for all relevant classes in the target code.
+2. **Ground every critique** in official Godot 4.5 documentation or the project's `docs/best-practices/` files. Do not rely on general knowledge.
+
 If no specific target was given, review all `.gd` files by running `Glob("game/**/*.gd")`.
 
 ## Review Checklist
@@ -117,3 +122,6 @@ At the end, provide an overall summary with:
 - Style issues count
 - Top 3 most common issues across all files
 - Overall code quality assessment
+
+## Post-Review Action
+**MANDATORY:** After completing the review, you MUST update `ISSUES_TRACKER.md`. Add any new [CRITICAL] or [WARNING] issues found during the review to the appropriate section, or create a new section if necessary.
