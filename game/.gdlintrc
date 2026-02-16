@@ -1,0 +1,11 @@
+# gdlint configuration for Gemini Fantasy
+# Matches project style: tabs, 100-char lines, double quotes
+
+[master]
+max-line-length=100
+tab-characters=tabs-only
+
+# Disable rules that conflict with Godot conventions:
+# function-name: we use _on_* callbacks and Godot virtuals
+# class-name: autoloads don't use class_name
+disable=function-name,class-name
