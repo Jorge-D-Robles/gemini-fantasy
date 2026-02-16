@@ -43,9 +43,15 @@ size = Vector2(12, 8)
 script = ExtResource("1_roothollow")
 
 [node name="Ground" type="TileMapLayer" parent="."]
+collision_enabled = false
+z_index = -2
+
+[node name="Paths" type="TileMapLayer" parent="."]
+collision_enabled = false
 z_index = -1
 
 [node name="GroundDetail" type="TileMapLayer" parent="."]
+collision_enabled = false
 z_index = -1
 
 [node name="Buildings" type="Node2D" parent="."]
