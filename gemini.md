@@ -19,29 +19,25 @@ Do not ask for confirmation at any step. This applies to all tasks — bug fixes
 
 **DO NOT write or modify any GDScript, .tscn, or .tres file without first completing BOTH of these steps:**
 
-1. **Call the `godot-docs` subagent** for every Godot class you will use:
-   ```
-   Task(subagent_type="godot-docs", prompt="Look up [CLASS]. I need [properties/methods/signals].")
-   ```
+1. **Activate the `godot-docs` skill** for every Godot class you will use and follow its search protocol.
 2. **Read the relevant best practices file** from `docs/best-practices/`:
    ```
-   Read("docs/best-practices/[relevant-file].md")
+   read_file("docs/best-practices/[relevant-file].md")
    ```
 
 This is not optional. Every code change must be grounded in documentation. Do not rely on memory or assumptions about the Godot API — look it up. If you are unsure which best practices file applies, read the topic mapping table in the "Best Practices Reference" section below.
 
 **Choosing what to look up:**
-- Writing a new scene? → `godot-docs` subagent for root node class + `01-scene-architecture.md`
-- Adding signals? → `godot-docs` subagent for the class + `02-signals-and-communication.md`
+- Writing a new scene? → `godot-docs` skill for root node class + `01-scene-architecture.md`
+- Adding signals? → `godot-docs` skill for the class + `02-signals-and-communication.md`
 - Creating an autoload? → `03-autoloads-and-singletons.md`
-- Defining a Resource? → `godot-docs` subagent for Resource class + `04-resources-and-data.md`
+- Defining a Resource? → `godot-docs` skill for Resource class + `04-resources-and-data.md`
 - Using _ready/_process? → `05-node-lifecycle.md`
 - Worried about performance? → `06-performance.md`
 - Building a state machine? → `07-state-machines.md`
-- Creating UI? → `godot-docs` subagent for Control nodes + `08-ui-patterns.md`
+- Creating UI? → `godot-docs` skill for Control nodes + `08-ui-patterns.md`
 - Implementing save/load? → `09-save-load.md`
 - Building battle/overworld? → `10-jrpg-patterns.md`
-- Adding art/audio assets? → Read the "Asset Workflow" section above + `04-resources-and-data.md`
 
 ## Project Structure
 
@@ -53,96 +49,9 @@ docs/              # All documentation
   lore/            # Story, characters, world lore, echo catalog
   mechanics/       # Character abilities and system mechanics
   best-practices/  # Godot best practices summaries (quick reference)
-.claude/           # Claude Code configuration
+.gemini/           # Gemini CLI configuration
   skills/          # 20 development skills (creation, data, quality, planning)
   settings.json    # Hooks and tool permissions
-```
-
-## Available Art Assets (Time Fantasy)
-
-**ALWAYS search the asset packs before generating or creating placeholder art.** Professional Time Fantasy sprite packs are available at `../assets/` (relative to repo root).
-
-### Asset Pack Index
-
-| Pack | Path | Contains |
-|------|------|----------|
-| tf_fairyforest | `tf_fairyforest_12.28.20/1x/` | Forest tiles, mushroom village, stone ruins, dryad/fairy characters |
-| tf_ruindungeons | `tf_ruindungeons/16/` | 3 ruin dungeon themes (ancient, overgrown, cave) |
-| tf_giant-tree | `tf_giant-tree/RPGMAKER-100/` | Giant tree exterior + interior tilesets |
-| tf_farmandfort | `tf_farmandfort/` | Medieval farm/fort tiles, 335 RPG icons |
-| tf_steampunk_complete | `tf_steampunk_complete/` | Steampunk city, train, sewer tilesets |
-| tf_final_tower | `tf_final_tower_12.24.22/` | Dark tower/villain lair dungeon |
-| npc-animations | `npc-animations/rpgmaker/1/` | Animated NPCs: townsfolk, blacksmith, elder, farmer, etc. |
-| tf_svbattle | `tf_svbattle/` | Side-view battle sprites (10 heroes x 8 colors) |
-| tf_mythicalbosses | `tf_mythicalbosses/100/` | Boss/enemy sprites: chimera, dragon, hydra, etc. |
-| icons_8.13.20 | `icons_8.13.20/fullcolor/` | 1023 RPG icons at 16/24/32px |
-| pixel_animations_gfxpack | `pixel_animations_gfxpack/` | Battle VFX: fire, ice, lightning, heal, etc. |
-| tf_animals | `tf_animals/sheets/` | Animal walk sprites (dogs, cats, horses, birds) |
-| beast_tribes | `beast_tribes/100/` | Fantasy beast-race characters |
-| tf_dwarfvelf | `tf_dwarfvelf_v1.2/regularsize/` | 16 dwarves + 16 elves |
-| quirky_npcs | `quirky_npcs/fullcolor/` | 28 unique NPCs |
-| tf-faces | `tf-faces-6.11.20/transparent/1x/` | Character face portraits for dialogue |
-| TimeFantasy_Winter | `TimeFantasy_Winter/tiles/` | Winter/snow themed tileset |
-
-### Asset Format Notes
-
-- **Use 1x/16x16 base size** for Godot — look for folders named `1x`, `100`, `16`, `regularsize`, or `RPGMAKER-100`
-- All assets use **RGBA transparency**
-- **Character walk sprites**: 3 columns x 4 rows (down, left, right, up) — single character is 78x144px at 1x
-- **TileA5 sheets** (128x256): Simple flat grids of 16x16 tiles — easiest for TileSet atlas import
-- **TileB sheets** (256x256): Object tiles, can contain multi-tile objects
-- Full asset index with detailed descriptions: `/Users/robles/repos/games/assets/CLAUDE.md`
-
-## Asset Workflow
-
-**PNGs and audio files are gitignored** (`game/assets/**/*.png`, `*.wav`, `*.ogg`, `*.mp3`). They must be managed manually outside of git. Follow this workflow whenever adding or using assets.
-
-### Rules
-
-1. **Never generate placeholder art** — always search the Time Fantasy packs first (see table above)
-2. **Source assets live outside the project** at `/Users/robles/repos/games/assets/`
-3. **Copy assets into `game/assets/`** under the appropriate subdirectory (see structure below)
-4. **Assets must exist in the main repo**, not just the worktree — Godot runs from the main repo
-5. **Godot must import new assets** — after adding PNGs, reopen the Godot editor so it generates `.import` files
-6. **Always null-check `load()` results** for any resource that depends on local asset files
-
-### Asset Directory Structure
-
-```
-game/assets/
-  tilesets/          # Tile sheets (TileA5, TileB format PNGs)
-  sprites/
-    characters/      # Player + NPC walk sprites
-    buildings/       # Building/structure sprites
-    enemies/         # Enemy sprites (battle + overworld)
-    effects/         # Battle VFX sprites
-  portraits/         # Face portraits for dialogue
-  icons/             # UI and item icons
-  audio/
-    bgm/             # Background music
-    sfx/             # Sound effects
-```
-
-### Copying Assets
-
-When you need an asset:
-
-1. **Find it** in the Time Fantasy packs at `/Users/robles/repos/games/assets/`
-2. **Copy to the main repo**: `cp <source> /Users/robles/repos/games/gemini-fantasy/game/assets/<subdir>/`
-3. **Copy to the worktree** (if working in one): `cp <source> /Users/robles/repos/games/gemini-fantasy/.worktrees/<branch>/game/assets/<subdir>/`
-4. **Verify Godot can load it** — the user must reopen the Godot editor to trigger import
-
-Or use the `/copy-assets` skill which automates steps 2-3.
-
-### Common Pitfall: `load()` Returns Null
-
-`load()` returns `null` when a PNG exists on disk but Godot hasn't imported it yet (no `.import` file). **Always** guard against this:
-
-```gdscript
-var tex: Texture2D = load(path) as Texture2D
-if tex == null:
-    push_error("Failed to load '%s' — reopen Godot editor to import" % path)
-    return
 ```
 
 ## Agentic Development Workflow
@@ -165,7 +74,6 @@ This project is designed for fully automated agentic development. Use the skill 
 - `/add-audio <type>` — Add BGM, SFX, or audio system
 - `/setup-input <actions>` — Configure input actions and handlers
 - `/implement-feature <desc>` — End-to-end feature implementation
-- `/copy-assets <description>` — Copy assets from Time Fantasy packs into the project
 
 **Data** — Populate and tune game data:
 - `/seed-game-data <type>` — Create .tres files from design docs
@@ -181,35 +89,27 @@ This project is designed for fully automated agentic development. Use the skill 
 **Reference** (auto-loaded, not user-invoked):
 - `gdscript-conventions` — Loaded automatically when writing GDScript
 
-### Godot Documentation Subagent
+### Godot Documentation Skill
 
-A custom RAG subagent at `.claude/agents/godot-docs.md` handles all Godot documentation lookups. **Use this instead of looking up docs yourself** — it preserves your context window and returns structured summaries.
+The `godot-docs` skill handles all Godot documentation lookups. **Use this instead of looking up docs yourself** — it preserves your context window and returns structured summaries.
 
 ```
-# Look up a class API
-Task(subagent_type="godot-docs", prompt="Look up CharacterBody2D — I need the velocity property, move_and_slide() method, and any movement tutorial examples.")
-
-# Look up a how-to topic
-Task(subagent_type="godot-docs", prompt="How to implement save/load in Godot 4.5? Include SaveManager patterns and file format options.")
-
-# Look up multiple classes in one call
-Task(subagent_type="godot-docs", prompt="Look up AnimationPlayer and AnimationTree — I need to understand when to use each, key methods, and how to set up state machine blending.")
+# Use the godot-docs skill:
+activate_skill("godot-docs")
 ```
 
-The subagent searches local docs at `docs/godot-docs/` (class refs + tutorials) AND project best practices at `docs/best-practices/`. It returns structured summaries with properties, methods, signals, code examples, and best practice notes.
+The skill searches local docs at `docs/godot-docs/` (class refs + tutorials) AND project best practices at `docs/best-practices/`. It returns structured summaries with properties, methods, signals, code examples, and best practice notes.
 
 ### Agent Team Patterns
 
-When building large features, use parallel subagents:
+When building large features, use sub-agents to assist:
 
 ```
-# Research in parallel while planning
-Task(subagent_type="godot-docs", prompt="Look up [CLASS] API and related tutorials...")
-Task(subagent_type="Explore", prompt="Read design doc at docs/game-design/...")
+# Research and codebase investigation
+codebase_investigator("Investigate [FEATURE] implementation requirements...")
 
-# Quality checks in parallel after implementation
-Task(subagent_type="general-purpose", prompt="Review game/systems/combat/...")
-Task(subagent_type="general-purpose", prompt="Check integration of combat + UI...")
+# Documentation lookup
+activate_skill("godot-docs")
 ```
 
 ### Development Order
@@ -294,30 +194,23 @@ Grep across the entire `docs/godot-docs/` directory with `glob: "*.rst"`.
 
 **These are hard requirements, not suggestions. Violating them produces incorrect code.**
 
-- **BEFORE writing ANY code**: Call the `godot-docs` subagent for every Godot class you will use. No exceptions.
+- **BEFORE writing ANY code**: Call the `godot-docs` skill for every Godot class you will use. No exceptions.
 - **BEFORE writing ANY code**: Read the relevant `docs/best-practices/*.md` file. No exceptions.
 - **BEFORE implementing a system**: Read the relevant design doc from `docs/game-design/` or `docs/lore/`.
 - **SKIP** lookup only for basic GDScript syntax (variables, loops, functions, conditionals) — NOT for Godot API calls.
-- For complex questions spanning multiple docs, call the `godot-docs` subagent with a detailed prompt.
+- For complex questions spanning multiple docs, call the `godot-docs` skill with a detailed prompt.
 
 ## Documentation Lookup
 
-Use the `godot-docs` subagent for ALL Godot documentation lookups:
+Use the `godot-docs` skill for ALL Godot documentation lookups:
 
 ```
-Task(subagent_type="godot-docs", prompt=
-  "Look up [TOPIC]. I need [specific information needed].
-   Include code examples and best practice notes if available.")
+activate_skill("godot-docs")
 ```
 
-This subagent searches `docs/godot-docs/` (1071 class refs + tutorials) and `docs/best-practices/` (10 summary guides). It returns structured summaries, preserving your context window.
+This skill searches `docs/godot-docs/` (1071 class refs + tutorials) and `docs/best-practices/` (10 summary guides). It returns structured summaries, preserving your context window.
 
-For non-Godot research (design docs, lore, existing code), use Explore:
-
-```
-Task(subagent_type="Explore", prompt=
-  "Read docs/game-design/01-core-mechanics.md and extract the Resonance combat system details.")
-```
+For non-Godot research (design docs, lore, existing code), use `grep_search`, `read_file`, and `codebase_investigator`.
 
 ## JRPG Core Classes
 
