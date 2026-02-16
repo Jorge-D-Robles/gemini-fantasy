@@ -14,3 +14,9 @@ export_credentials.cfg
 .mono/
 data_*/
 mono_crash.*.json
+
+# Asset files (images, audio, etc.) - too large for version control
+game/assets/**/*.png
+game/assets/**/*.wav
+game/assets/**/*.ogg
+game/assets/**/*.mp3

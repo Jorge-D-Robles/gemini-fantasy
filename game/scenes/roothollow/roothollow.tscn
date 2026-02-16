@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://c4roothlw0001"]
+[gd_scene load_steps=22 format=3 uid="uid://c4roothlw0001"]
 
 [ext_resource type="Script" path="res://scenes/roothollow/roothollow.gd" id="1_roothollow"]
 [ext_resource type="PackedScene" uid="uid://c4player00001" path="res://entities/player/player.tscn" id="2_player"]
@@ -8,6 +8,14 @@
 [ext_resource type="Script" path="res://events/garrick_recruitment.gd" id="6_garrick"]
 [ext_resource type="PackedScene" uid="uid://d4d5i6a7l8o9g" path="res://ui/dialogue/dialogue_box.tscn" id="7_dlg"]
 [ext_resource type="PackedScene" uid="uid://e5p6a7u8s9e0m" path="res://ui/pause_menu/pause_menu.tscn" id="8_pm"]
+[ext_resource type="Texture2D" path="res://assets/sprites/buildings/lodge_clean.png" id="9_lodge"]
+[ext_resource type="Texture2D" path="res://assets/sprites/buildings/hut.png" id="10_hut"]
+[ext_resource type="Texture2D" path="res://assets/sprites/buildings/tree_small.png" id="11_tree_sm"]
+[ext_resource type="Texture2D" path="res://assets/sprites/buildings/tree_medium.png" id="12_tree_md"]
+[ext_resource type="Texture2D" path="res://assets/sprites/buildings/tree_tall.png" id="13_tree_tl"]
+[ext_resource type="Texture2D" path="res://assets/sprites/buildings/signpost.png" id="14_signpost"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/npc_char1.png" id="15_npc1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/npc_char2.png" id="16_npc2"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_exit"]
 size = Vector2(16, 64)
@@ -15,50 +23,268 @@ size = Vector2(16, 64)
 [sub_resource type="CircleShape2D" id="RectangleShape2D_garrick"]
 radius = 24.0
 
+[sub_resource type="RectangleShape2D" id="inn_collision_rect"]
+size = Vector2(144, 40)
+
+[sub_resource type="RectangleShape2D" id="hut_collision_rect"]
+size = Vector2(112, 40)
+
+[sub_resource type="RectangleShape2D" id="tree_tall_collision_rect"]
+size = Vector2(12, 8)
+
 [node name="Roothollow" type="Node2D"]
 script = ExtResource("1_roothollow")
 
-[node name="Ground" type="TileMapLayer" parent="."]
+[node name="Ground" type="ColorRect" parent="."]
+z_index = -1
+offset_left = -64.0
+offset_top = -64.0
+offset_right = 704.0
+offset_bottom = 544.0
+color = Color(0.28, 0.45, 0.2, 1)
 
-[node name="Buildings" type="TileMapLayer" parent="."]
+[node name="Buildings" type="Node2D" parent="."]
 
-[node name="Paths" type="TileMapLayer" parent="."]
+[node name="InnBuilding" type="Node2D" parent="Buildings"]
+position = Vector2(100, 48)
+
+[node name="Sprite" type="Sprite2D" parent="Buildings/InnBuilding"]
+texture = ExtResource("9_lodge")
+centered = false
+texture_filter = 0
+
+[node name="Collision" type="StaticBody2D" parent="Buildings/InnBuilding"]
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape" type="CollisionShape2D" parent="Buildings/InnBuilding/Collision"]
+position = Vector2(80, 72)
+shape = SubResource("inn_collision_rect")
+
+[node name="ShopBuilding" type="Node2D" parent="Buildings"]
+position = Vector2(400, 32)
+
+[node name="Sprite" type="Sprite2D" parent="Buildings/ShopBuilding"]
+texture = ExtResource("10_hut")
+centered = false
+texture_filter = 0
+
+[node name="Collision" type="StaticBody2D" parent="Buildings/ShopBuilding"]
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape" type="CollisionShape2D" parent="Buildings/ShopBuilding/Collision"]
+position = Vector2(64, 88)
+shape = SubResource("hut_collision_rect")
+
+[node name="ElderHouse" type="Node2D" parent="Buildings"]
+position = Vector2(240, 176)
+
+[node name="Sprite" type="Sprite2D" parent="Buildings/ElderHouse"]
+texture = ExtResource("10_hut")
+centered = false
+texture_filter = 0
+
+[node name="Collision" type="StaticBody2D" parent="Buildings/ElderHouse"]
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape" type="CollisionShape2D" parent="Buildings/ElderHouse/Collision"]
+position = Vector2(64, 88)
+shape = SubResource("hut_collision_rect")
+
+[node name="Trees" type="Node2D" parent="."]
+
+[node name="Tree01" type="Sprite2D" parent="Trees"]
+position = Vector2(16, 24)
+texture = ExtResource("13_tree_tl")
+centered = false
+texture_filter = 0
+
+[node name="Tree01Body" type="StaticBody2D" parent="Trees"]
+position = Vector2(32, 64)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Shape" type="CollisionShape2D" parent="Trees/Tree01Body"]
+shape = SubResource("tree_tall_collision_rect")
+
+[node name="Tree02" type="Sprite2D" parent="Trees"]
+position = Vector2(56, 16)
+texture = ExtResource("12_tree_md")
+centered = false
+texture_filter = 0
+
+[node name="Tree03" type="Sprite2D" parent="Trees"]
+position = Vector2(288, 8)
+texture = ExtResource("13_tree_tl")
+centered = false
+texture_filter = 0
+
+[node name="Tree03Body" type="StaticBody2D" parent="Trees"]
+position = Vector2(304, 48)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Shape" type="CollisionShape2D" parent="Trees/Tree03Body"]
+shape = SubResource("tree_tall_collision_rect")
+
+[node name="Tree04" type="Sprite2D" parent="Trees"]
+position = Vector2(560, 24)
+texture = ExtResource("13_tree_tl")
+centered = false
+texture_filter = 0
+
+[node name="Tree04Body" type="StaticBody2D" parent="Trees"]
+position = Vector2(576, 64)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Shape" type="CollisionShape2D" parent="Trees/Tree04Body"]
+shape = SubResource("tree_tall_collision_rect")
+
+[node name="Tree05" type="Sprite2D" parent="Trees"]
+position = Vector2(600, 120)
+texture = ExtResource("12_tree_md")
+centered = false
+texture_filter = 0
+
+[node name="Tree06" type="Sprite2D" parent="Trees"]
+position = Vector2(592, 240)
+texture = ExtResource("13_tree_tl")
+centered = false
+texture_filter = 0
+
+[node name="Tree06Body" type="StaticBody2D" parent="Trees"]
+position = Vector2(608, 280)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Shape" type="CollisionShape2D" parent="Trees/Tree06Body"]
+shape = SubResource("tree_tall_collision_rect")
+
+[node name="Tree07" type="Sprite2D" parent="Trees"]
+position = Vector2(576, 360)
+texture = ExtResource("12_tree_md")
+centered = false
+texture_filter = 0
+
+[node name="Tree08" type="Sprite2D" parent="Trees"]
+position = Vector2(480, 420)
+texture = ExtResource("11_tree_sm")
+centered = false
+texture_filter = 0
+
+[node name="Tree09" type="Sprite2D" parent="Trees"]
+position = Vector2(320, 440)
+texture = ExtResource("13_tree_tl")
+centered = false
+texture_filter = 0
+
+[node name="Tree09Body" type="StaticBody2D" parent="Trees"]
+position = Vector2(336, 480)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Shape" type="CollisionShape2D" parent="Trees/Tree09Body"]
+shape = SubResource("tree_tall_collision_rect")
+
+[node name="Tree10" type="Sprite2D" parent="Trees"]
+position = Vector2(160, 420)
+texture = ExtResource("12_tree_md")
+centered = false
+texture_filter = 0
+
+[node name="Tree11" type="Sprite2D" parent="Trees"]
+position = Vector2(24, 360)
+texture = ExtResource("13_tree_tl")
+centered = false
+texture_filter = 0
+
+[node name="Tree11Body" type="StaticBody2D" parent="Trees"]
+position = Vector2(40, 400)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Shape" type="CollisionShape2D" parent="Trees/Tree11Body"]
+shape = SubResource("tree_tall_collision_rect")
+
+[node name="Tree12" type="Sprite2D" parent="Trees"]
+position = Vector2(48, 280)
+texture = ExtResource("11_tree_sm")
+centered = false
+texture_filter = 0
 
 [node name="Entities" type="Node2D" parent="."]
 
 [node name="Player" parent="Entities" instance=ExtResource("2_player")]
-position = Vector2(80, 200)
+position = Vector2(320, 300)
 
 [node name="SpawnFromForest" type="Marker2D" parent="Entities"]
 position = Vector2(80, 200)
 
 [node name="InnkeeperNPC" parent="Entities" instance=ExtResource("4_npc")]
-position = Vector2(200, 120)
+position = Vector2(140, 160)
 npc_name = "Innkeeper"
 dialogue_lines = PackedStringArray("Welcome to the Roothollow Inn! You look exhausted. Let me tend to your wounds.")
 
+[node name="Sprite2D" type="Sprite2D" parent="Entities/InnkeeperNPC" index="1"]
+texture = ExtResource("15_npc1")
+hframes = 3
+vframes = 4
+frame = 1
+texture_filter = 0
+
 [node name="ShopkeeperNPC" parent="Entities" instance=ExtResource("4_npc")]
-position = Vector2(320, 120)
+position = Vector2(430, 160)
 npc_name = "Shopkeeper"
 dialogue_lines = PackedStringArray("Supplies are running low with the roads so dangerous. I'm afraid the shop is closed for now.")
 
+[node name="Sprite2D" type="Sprite2D" parent="Entities/ShopkeeperNPC" index="1"]
+texture = ExtResource("16_npc2")
+hframes = 3
+vframes = 4
+frame = 1
+texture_filter = 0
+
 [node name="TownfolkNPC1" parent="Entities" instance=ExtResource("4_npc")]
-position = Vector2(160, 240)
+position = Vector2(280, 280)
 npc_name = "Elder"
 dialogue_lines = PackedStringArray("The Severance changed everything. The echoes... they used to be harmless memories. Now they hunger.", "Some say it started when the Great Resonance Crystal in the old capital shattered. But nobody knows for sure.")
 
+[node name="Sprite2D" type="Sprite2D" parent="Entities/TownfolkNPC1" index="1"]
+texture = ExtResource("15_npc1")
+hframes = 3
+vframes = 4
+frame = 1
+texture_filter = 0
+
 [node name="TownfolkNPC2" parent="Entities" instance=ExtResource("4_npc")]
-position = Vector2(400, 200)
+position = Vector2(480, 280)
 npc_name = "Scout"
 dialogue_lines = PackedStringArray("I've seen strange lights in the ruins to the west. Echo Fragments are appearing more frequently.", "Be careful if you venture beyond the forest. The creatures there are getting bolder.")
 
+[node name="Sprite2D" type="Sprite2D" parent="Entities/TownfolkNPC2" index="1"]
+texture = ExtResource("16_npc2")
+hframes = 3
+vframes = 4
+frame = 1
+texture_filter = 0
+
 [node name="GarrickNPC" parent="Entities" instance=ExtResource("4_npc")]
-position = Vector2(280, 280)
+position = Vector2(320, 360)
 npc_name = "Garrick"
 dialogue_lines = PackedStringArray("Hmm. Another traveler passing through. These roads aren't what they used to be.", "If you're heading toward the ruins, I'd advise caution. The echoes there are... restless.")
 
+[node name="Sprite2D" type="Sprite2D" parent="Entities/GarrickNPC" index="1"]
+texture = ExtResource("15_npc1")
+hframes = 3
+vframes = 4
+frame = 1
+texture_filter = 0
+
 [node name="SavePoint" parent="Entities" instance=ExtResource("5_interact")]
-position = Vector2(240, 200)
+position = Vector2(320, 240)
 interactable_type = 2
 interaction_text = "Progress saved."
 one_time = false
@@ -67,6 +293,10 @@ one_time = false
 position = Vector2(120, 160)
 interactable_type = 1
 interaction_text = "Welcome to Roothollow — Last safe haven before the Verdant Reach."
+
+[node name="Sprite2D" type="Sprite2D" parent="Entities/SignPost" index="1"]
+texture = ExtResource("14_signpost")
+texture_filter = 0
 
 [node name="Triggers" type="Node2D" parent="."]
 
@@ -79,7 +309,7 @@ collision_mask = 1
 shape = SubResource("RectangleShape2D_exit")
 
 [node name="GarrickRecruitZone" type="Area2D" parent="Triggers"]
-position = Vector2(280, 280)
+position = Vector2(320, 360)
 collision_layer = 0
 collision_mask = 1
 

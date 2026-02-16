@@ -11,9 +11,9 @@ config_version=5
 [application]
 
 config/name="Gemini Fantasy"
+run/main_scene="res://ui/title_screen/title_screen.tscn"
 config/features=PackedStringArray("4.5", "Mobile")
 config/icon="res://icon.svg"
-run/main_scene="res://ui/title_screen/title_screen.tscn"
 
 [autoload]
 
@@ -96,5 +96,5 @@ run={
 
 [rendering]
 
-renderer/rendering_method="mobile"
 textures/canvas_textures/default_texture_filter=0
+renderer/rendering_method="mobile"
