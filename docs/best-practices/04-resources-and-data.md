@@ -76,6 +76,32 @@ var item_data: ItemData = load("res://game/data/items/potion.tres")
 - Don't `preload()` `@export` properties (inspector overrides them)
 - Engine caches loaded resources -- subsequent `load()` calls return the same instance
 
+### Null-Check `load()` for Asset Files
+
+`load()` returns `null` when a file exists on disk but Godot hasn't imported it yet
+(no `.import` sidecar file). This commonly happens with PNGs and audio files that are
+gitignored and must be copied manually into the project.
+
+**Always guard `load()` results for asset-dependent resources:**
+
+```gdscript
+# BAD — crashes if texture not imported
+var tex: Texture2D = load(path)
+var size := tex.get_size()  # null access crash
+
+# GOOD — graceful failure with clear error
+var tex: Texture2D = load(path) as Texture2D
+if tex == null:
+    push_error("Failed to load '%s' — ensure file exists and reopen editor to import" % path)
+    return
+var size := tex.get_size()
+```
+
+This applies to any `load()` call for: textures, audio streams, fonts, or other
+binary assets that live in `game/assets/` (which is gitignored for PNGs/audio).
+Script and scene resources (`*.gd`, `*.tscn`, `*.tres`) are tracked in git and
+generally safe to load without null checks.
+
 ## Resource Organization
 
 ```
