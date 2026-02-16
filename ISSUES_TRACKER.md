@@ -80,6 +80,49 @@ This file tracks technical debt, bugs, and architectural issues identified durin
 
 ---
 
+## Architecture & Design Patterns
+
+### [CRITICAL] Meta-based State Communication
+- **File:** `game/systems/battle/states/action_execute_state.gd`, `game/systems/battle/states/action_select_state.gd`
+- **Issue:** Uses `get_meta`/`set_meta` to pass action data between states. This is fragile and lacks type safety.
+- **Fix:** Replace with a typed `BattleAction` object held by the `BattleScene` or the `BattleStateMachine`.
+
+### [HIGH] Violation of SRP in Interactable.gd
+- **File:** `game/entities/interactable/interactable.gd`
+- **Issue:** Single script handles all interaction types (chest, sign, save point, etc.) using a match statement. This is hard to maintain and extend.
+- **Fix:** Refactor into a base `Interactable` class and specialized children, or use composition (Interaction Behaviors).
+
+### [MEDIUM] Manual Animation in Player.gd
+- **File:** `game/entities/player/player.gd`
+- **Issue:** Manually calculates animation frames in `_physics_process`.
+- **Fix:** Use `AnimationPlayer` or `AnimatedSprite2D` for more maintainable animations.
+
+### [WARNING] Unsafe has_method/has_signal in Autoloads
+- **File:** `game/autoloads/battle_manager.gd`, `game/autoloads/dialogue_manager.gd`
+- **Issue:** Uses `has_method` or `has_signal` instead of proper typing or interfaces when interacting with scenes.
+- **Fix:** Use specific class types or defined interfaces to ensure type safety.
+
+---
+
+## Data Structures & Type Safety
+
+### [HIGH] Dictionary-based Data for Core Systems
+- **File:** `game/autoloads/dialogue_manager.gd`, `game/systems/encounter/encounter_system.gd`
+- **Issue:** Uses `Array[Dictionary]` for dialogue lines and encounter pools. Lacks type safety and IDE support.
+- **Fix:** Create custom `Resource` classes for `DialogueLine` and `EncounterPoolEntry`.
+
+### [WARNING] Missing Bus Layout
+- **File:** `game/autoloads/audio_manager.gd`
+- **Issue:** Assumes "BGM" and "SFX" buses exist, but `default_bus_layout.tres` is missing or not configured.
+- **Fix:** Create and configure `game/default_bus_layout.tres` with the appropriate buses.
+
+### [STYLE] Literal Strings for Enum-like State
+- **File:** `game/systems/battle/states/action_execute_state.gd`
+- **Issue:** Uses strings like `"attack"`, `"skill"`, `"item"` to identify action types.
+- **Fix:** Use an `enum` defined in a shared battle constants or base class.
+
+---
+
 ## Documentation & Standards
 
 ### [STYLE] Signal/Method Documentation
