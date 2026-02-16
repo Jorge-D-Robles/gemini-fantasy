@@ -13,6 +13,7 @@ const TILE_SIZE: int = 16
 const FAIRY_FOREST_A5_A: String = "res://assets/tilesets/tf_ff_tileA5_a.png"
 const FAIRY_FOREST_A5_B: String = "res://assets/tilesets/tf_ff_tileA5_b.png"
 const RUINS_A5: String = "res://assets/tilesets/tf_A5_ruins2.png"
+const OVERGROWN_RUINS_A5: String = "res://assets/tilesets/tf_A5_ruins3.png"
 
 # --- Object sheets (B format: 256x256, 16 cols x 16 rows) ---
 const FOREST_OBJECTS: String = "res://assets/tilesets/tf_ff_tileB_forest.png"
@@ -20,6 +21,7 @@ const TREE_OBJECTS: String = "res://assets/tilesets/tf_ff_tileB_trees.png"
 const STONE_OBJECTS: String = "res://assets/tilesets/tf_ff_tileB_stone.png"
 const MUSHROOM_VILLAGE: String = "res://assets/tilesets/tf_ff_tileB_mushroomvillage.png"
 const RUINS_OBJECTS: String = "res://assets/tilesets/tf_B_ruins2.png"
+const OVERGROWN_RUINS_OBJECTS: String = "res://assets/tilesets/tf_B_ruins3.png"
 const GIANT_TREE: String = "res://assets/tilesets/tf_B_gianttree_ext.png"
 
 
