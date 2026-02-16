@@ -19,15 +19,23 @@ func enter() -> void:
 		state_machine.transition_to("TurnEnd")
 		return
 
+	var success := true
 	match action.type:
 		BattleAction.Type.ATTACK:
 			await _execute_attack(battler, action.target)
 		BattleAction.Type.ABILITY:
-			await _execute_ability(battler, action.target, action.ability)
+			success = await _execute_ability(
+				battler, action.target, action.ability
+			)
 		BattleAction.Type.ITEM:
 			await _execute_item(battler, action.target, action.item)
 
 	battle_scene.current_action = null
+
+	if not success:
+		# Action failed (e.g. not enough EE) — return to command menu
+		state_machine.transition_to("PlayerTurn")
+		return
 
 	# Sync UI after every action so HP/EE/resonance are always current
 	battle_scene.refresh_battle_ui()
@@ -68,15 +76,15 @@ func _execute_ability(
 	attacker: Battler,
 	target: Battler,
 	ability: AbilityData,
-) -> void:
+) -> bool:
 	if not ability:
 		await _execute_attack(attacker, target)
-		return
+		return true
 
 	if not attacker.use_ee(ability.ee_cost):
 		if _battle_ui:
 			_battle_ui.add_battle_log("Not enough EE!")
-		return
+		return false
 
 	var is_magical := ability.damage_stat == AbilityData.DamageStat.MAGIC
 
@@ -106,6 +114,7 @@ func _execute_ability(
 
 	# Apply status effect with probability check
 	_try_apply_status(ability, target)
+	return true
 
 
 func _execute_item(

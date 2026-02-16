@@ -19,18 +19,23 @@ func enter() -> void:
 	# Determine targets based on ability target_type
 	var targets: Array[Battler] = _get_valid_targets()
 	if targets.is_empty():
-		state_machine.transition_to("TurnQueueState")
+		state_machine.transition_to("PlayerTurn")
 		return
 
 	_battle_ui.show_target_selector(targets)
 
 	if not _battle_ui.target_selected.is_connected(_on_target_selected):
 		_battle_ui.target_selected.connect(_on_target_selected)
+	if not _battle_ui.target_cancelled.is_connected(_on_cancelled):
+		_battle_ui.target_cancelled.connect(_on_cancelled)
 
 
 func exit() -> void:
-	if _battle_ui and _battle_ui.target_selected.is_connected(_on_target_selected):
-		_battle_ui.target_selected.disconnect(_on_target_selected)
+	if _battle_ui:
+		if _battle_ui.target_selected.is_connected(_on_target_selected):
+			_battle_ui.target_selected.disconnect(_on_target_selected)
+		if _battle_ui.target_cancelled.is_connected(_on_cancelled):
+			_battle_ui.target_cancelled.disconnect(_on_cancelled)
 
 
 func _on_target_selected(target: Battler) -> void:
@@ -39,6 +44,11 @@ func _on_target_selected(target: Battler) -> void:
 	else:
 		battle_scene.current_action = BattleAction.create_attack(target)
 	state_machine.transition_to("ActionExecute")
+
+
+func _on_cancelled() -> void:
+	battle_scene.current_action = null
+	state_machine.transition_to("PlayerTurn")
 
 
 func _get_valid_targets() -> Array[Battler]:

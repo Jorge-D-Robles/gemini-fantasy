@@ -8,6 +8,8 @@ signal command_selected(command: String)
 signal target_selected(target: Battler)
 signal skill_selected(ability: Resource)
 signal item_selected(item: Resource)
+signal submenu_cancelled
+signal target_cancelled
 
 enum Command {
 	ATTACK,
@@ -475,17 +477,17 @@ func _confirm_target() -> void:
 
 func _cancel_target_selection() -> void:
 	_target_selector.visible = false
-	show_command_menu(_active_battler)
+	target_cancelled.emit()
 
 
 func _hide_skill_submenu() -> void:
 	_skill_submenu.visible = false
-	show_command_menu(_active_battler)
+	submenu_cancelled.emit()
 
 
 func _hide_item_submenu() -> void:
 	_item_submenu.visible = false
-	show_command_menu(_active_battler)
+	submenu_cancelled.emit()
 
 
 func _on_skill_pressed(ability: Resource) -> void:
@@ -512,6 +514,7 @@ func _on_quit_pressed() -> void:
 
 func _clear_children(parent: Node) -> void:
 	for child in parent.get_children():
+		parent.remove_child(child)
 		child.queue_free()
 
 

@@ -21,23 +21,29 @@ func enter() -> void:
 	var battler: Battler = battle_scene.current_battler
 	if battler is PartyBattler:
 		var party_battler := battler as PartyBattler
-		# Default to skill submenu; item submenu can be extended later
-		if not battler.abilities.is_empty():
-			_mode = "skill"
-			var available := party_battler.get_available_abilities()
-			_battle_ui.show_skill_submenu(available)
-			if not _battle_ui.skill_selected.is_connected(_on_skill_selected):
-				_battle_ui.skill_selected.connect(_on_skill_selected)
-		else:
-			_battle_ui.add_battle_log("No skills available.")
+		var available := party_battler.get_available_abilities()
+		if available.is_empty():
+			_battle_ui.add_battle_log("No skills available!")
 			state_machine.transition_to("PlayerTurn")
+			return
+		_mode = "skill"
+		_battle_ui.show_skill_submenu(available)
+		if not _battle_ui.skill_selected.is_connected(_on_skill_selected):
+			_battle_ui.skill_selected.connect(_on_skill_selected)
+		if not _battle_ui.submenu_cancelled.is_connected(_on_cancelled):
+			_battle_ui.submenu_cancelled.connect(_on_cancelled)
+	else:
+		state_machine.transition_to("PlayerTurn")
 
 
 func exit() -> void:
-	if _battle_ui and _battle_ui.skill_selected.is_connected(_on_skill_selected):
-		_battle_ui.skill_selected.disconnect(_on_skill_selected)
-	if _battle_ui and _battle_ui.item_selected.is_connected(_on_item_selected):
-		_battle_ui.item_selected.disconnect(_on_item_selected)
+	if _battle_ui:
+		if _battle_ui.skill_selected.is_connected(_on_skill_selected):
+			_battle_ui.skill_selected.disconnect(_on_skill_selected)
+		if _battle_ui.item_selected.is_connected(_on_item_selected):
+			_battle_ui.item_selected.disconnect(_on_item_selected)
+		if _battle_ui.submenu_cancelled.is_connected(_on_cancelled):
+			_battle_ui.submenu_cancelled.disconnect(_on_cancelled)
 
 
 func _on_skill_selected(ability: Resource) -> void:
@@ -50,3 +56,7 @@ func _on_item_selected(item: Resource) -> void:
 	var item_data := item as ItemData
 	battle_scene.current_action = BattleAction.create_item(item_data, null)
 	state_machine.transition_to("TargetSelect")
+
+
+func _on_cancelled() -> void:
+	state_machine.transition_to("PlayerTurn")
