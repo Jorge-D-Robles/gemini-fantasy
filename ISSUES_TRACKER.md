@@ -45,6 +45,25 @@ This file tracks technical debt, bugs, and architectural issues identified durin
 
 ---
 
+## Organization & Composition
+
+### [HIGH] Redundant UI Instantiation
+- **Files:** `game/scenes/**/*.tscn`
+- **Issue:** HUD, DialogueBox, and PauseMenu are manually added to every level.
+- **Fix:** Centralize UI into a global CanvasLayer managed by an autoload. Remove local instances from level scenes.
+
+### [HIGH] Duplicate DialogueBox Implementation
+- **Files:** `game/systems/dialogue/` and `game/ui/dialogue/`
+- **Issue:** Duplicate scene and script for dialogue box.
+- **Fix:** Consolidate into `game/ui/dialogue/` and delete the redundant folder.
+
+### [MEDIUM] Hardcoded Battle Spawn Positions
+- **File:** `game/systems/battle/battle_scene.gd`
+- **Issue:** Uses Vector2 arrays for positioning.
+- **Fix:** Use Marker2D nodes in the scene for spawn points.
+
+---
+
 ## Documentation & Standards
 
 ### [STYLE] Signal/Method Documentation
