@@ -15,21 +15,21 @@ var target: Battler = null
 var ability: AbilityData = null
 
 
-static func create_attack(target: Battler) -> BattleAction:
+static func create_attack(p_target: Battler) -> BattleAction:
 	var action := BattleAction.new()
 	action.type = Type.ATTACK
-	action.target = target
+	action.target = p_target
 	return action
 
 
 static func create_ability(
-	ability: AbilityData,
-	target: Battler,
+	p_ability: AbilityData,
+	p_target: Battler,
 ) -> BattleAction:
 	var action := BattleAction.new()
 	action.type = Type.ABILITY
-	action.ability = ability
-	action.target = target
+	action.ability = p_ability
+	action.target = p_target
 	return action
 
 

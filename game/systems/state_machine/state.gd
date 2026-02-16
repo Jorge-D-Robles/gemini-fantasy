@@ -14,13 +14,13 @@ func exit() -> void:
 	pass
 
 
-func process(delta: float) -> void:
+func process(_delta: float) -> void:
 	pass
 
 
-func physics_process(delta: float) -> void:
+func physics_process(_delta: float) -> void:
 	pass
 
 
-func handle_input(event: InputEvent) -> void:
+func handle_input(_event: InputEvent) -> void:
 	pass

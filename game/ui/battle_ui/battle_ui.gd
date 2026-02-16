@@ -19,7 +19,7 @@ enum Command {
 var _active_battler: Battler = null
 var _target_list: Array[Battler] = []
 var _target_index: int = 0
-var _target_callback: Callable
+
 
 @onready var _turn_order_container: HBoxContainer = %TurnOrderContainer
 @onready var _command_menu: PanelContainer = %CommandMenu
@@ -140,10 +140,9 @@ func show_item_submenu(items: Array[Resource]) -> void:
 
 func show_target_selector(
 	targets: Array[Battler],
-	callback: Callable,
+	_callback: Callable = Callable(),
 ) -> void:
 	_target_list = targets
-	_target_callback = callback
 	_target_index = 0
 	_target_selector.visible = true
 	_command_menu.visible = false
@@ -345,8 +344,6 @@ func _confirm_target() -> void:
 	var target := _target_list[_target_index]
 	_target_selector.visible = false
 	target_selected.emit(target)
-	if _target_callback.is_valid():
-		_target_callback.call(target)
 
 
 func _cancel_target_selection() -> void:
@@ -374,6 +371,8 @@ func _on_item_pressed(item: Resource) -> void:
 
 func _on_retry_pressed() -> void:
 	_defeat_screen.visible = false
+	# BattleManager handles state cleanup via end_battle() in DefeatState.
+	# Retry reloads the battle scene through the normal scene change path.
 	GameManager.change_scene(
 		get_tree().current_scene.scene_file_path
 	)

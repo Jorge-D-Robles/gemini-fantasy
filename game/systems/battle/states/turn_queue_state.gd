@@ -20,8 +20,12 @@ func enter() -> void:
 
 	var next_battler: Battler = battle_scene.turn_queue.advance()
 	if not next_battler:
-		state_machine.transition_to("Victory")
-		return
+		push_error("TurnQueueState: turn queue returned null — reinitializing.")
+		battle_scene.turn_queue.initialize(battle_scene.all_battlers)
+		next_battler = battle_scene.turn_queue.advance()
+		if not next_battler:
+			state_machine.transition_to("Defeat")
+			return
 
 	battle_scene.current_battler = next_battler
 

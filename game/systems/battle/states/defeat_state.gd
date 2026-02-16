@@ -14,3 +14,7 @@ func enter() -> void:
 	if battle_ui:
 		battle_ui.show_defeat()
 		battle_ui.add_battle_log("The party has been defeated...")
+
+	# End battle properly so BattleManager cleans up state
+	await get_tree().create_timer(2.0).timeout
+	battle_scene.end_battle(false)

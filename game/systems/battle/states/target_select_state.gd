@@ -16,15 +16,13 @@ func enter() -> void:
 		state_machine.transition_to("PlayerTurn")
 		return
 
-	var targets: Array = battle_scene.get_living_enemies()
+	# Determine targets based on ability target_type
+	var targets: Array[Battler] = _get_valid_targets()
 	if targets.is_empty():
 		state_machine.transition_to("TurnQueueState")
 		return
 
-	_battle_ui.show_target_selector(
-		targets,
-		_on_target_confirmed,
-	)
+	_battle_ui.show_target_selector(targets)
 
 	if not _battle_ui.target_selected.is_connected(_on_target_selected):
 		_battle_ui.target_selected.connect(_on_target_selected)
@@ -36,11 +34,23 @@ func exit() -> void:
 
 
 func _on_target_selected(target: Battler) -> void:
-	_on_target_confirmed(target)
-
-
-func _on_target_confirmed(target: Battler) -> void:
 	battle_scene.set_meta("pending_target", target)
 	if not battle_scene.has_meta("pending_command"):
 		battle_scene.set_meta("pending_command", "attack")
 	state_machine.transition_to("ActionExecute")
+
+
+func _get_valid_targets() -> Array[Battler]:
+	var pending_ability: Resource = battle_scene.get_meta("pending_ability", null)
+	if pending_ability:
+		var ability := pending_ability as AbilityData
+		if ability:
+			match ability.target_type:
+				AbilityData.TargetType.SINGLE_ALLY, AbilityData.TargetType.ALL_ALLIES:
+					return battle_scene.get_living_party()
+				AbilityData.TargetType.SELF:
+					var self_list: Array[Battler] = []
+					if battle_scene.current_battler and battle_scene.current_battler.is_alive:
+						self_list.append(battle_scene.current_battler)
+					return self_list
+	return battle_scene.get_living_enemies()

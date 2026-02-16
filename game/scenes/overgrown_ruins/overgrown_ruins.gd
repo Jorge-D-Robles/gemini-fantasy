@@ -94,6 +94,7 @@ const WALL_MAP: Array[String] = [
 @onready var _opening_sequence: OpeningSequence = $OpeningSequence
 @onready var _exit_to_forest: Area2D = $Triggers/ExitToForest
 @onready var _lyra_zone: Area2D = $Triggers/LyraDiscoveryZone
+@onready var _spawn_from_forest: Marker2D = $Entities/SpawnFromForest
 
 
 func _ready() -> void:
@@ -113,6 +114,9 @@ func _ready() -> void:
 
 	# HUD setup
 	UILayer.hud.location_name = "Overgrown Ruins"
+
+	# Add spawn points to groups
+	_spawn_from_forest.add_to_group("spawn_from_forest")
 
 	# Connect triggers
 	_exit_to_forest.body_entered.connect(_on_exit_to_forest_entered)

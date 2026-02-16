@@ -3,11 +3,6 @@ extends BattlerData
 
 ## Defines a playable character's growth rates and visual metadata.
 
-enum DamageStat {
-	ATTACK,
-	MAGIC,
-}
-
 @export_group("Growth Rates")
 @export var hp_growth: float = 10.0
 @export var ee_growth: float = 5.0

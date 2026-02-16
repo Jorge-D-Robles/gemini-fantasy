@@ -4,6 +4,6 @@ extends Node
 ## so they persist across scene changes and don't need to be added to
 ## every level scene manually.
 
-@onready var hud: CanvasLayer = $HUD
-@onready var dialogue_box: CanvasLayer = $DialogueBox
-@onready var pause_menu: CanvasLayer = $PauseMenu
+@onready var hud := $HUD
+@onready var dialogue_box := $DialogueBox
+@onready var pause_menu := $PauseMenu

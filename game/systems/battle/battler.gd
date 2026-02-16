@@ -45,7 +45,7 @@ const DEFENSE_MOD_MIN: float = 0.1
 const HOLLOW_DEFENSE_PENALTY: float = 0.5
 const DEFEND_DAMAGE_REDUCTION: float = 0.5
 const OVERLOAD_INCOMING_DAMAGE_MULT: float = 2.0
-const OVERLOAD_OUTGOING_DAMAGE_MULT: int = 2
+const OVERLOAD_OUTGOING_DAMAGE_MULT: float = 2.0
 const STAT_DAMAGE_SCALING: float = 0.5
 
 ## Character or enemy data resource.
@@ -147,7 +147,7 @@ func deal_damage(base_amount: int, is_magical: bool = false) -> int:
 	var total := int(base_amount + stat_bonus)
 
 	if resonance_state == ResonanceState.OVERLOAD:
-		total *= OVERLOAD_OUTGOING_DAMAGE_MULT
+		total = int(total * OVERLOAD_OUTGOING_DAMAGE_MULT)
 
 	if resonance_state != ResonanceState.HOLLOW:
 		add_resonance(

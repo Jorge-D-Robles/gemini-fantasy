@@ -20,7 +20,6 @@ var _is_talking: bool = false
 
 func _ready() -> void:
 	add_to_group("npcs")
-	DialogueManager.dialogue_ended.connect(_on_dialogue_ended)
 
 
 func interact() -> void:
@@ -39,6 +38,8 @@ func interact() -> void:
 	var portrait: Texture2D = null
 	if not portrait_path.is_empty():
 		portrait = load(portrait_path) as Texture2D
+		if portrait == null:
+			push_warning("NPC '%s': portrait failed to load '%s'" % [npc_name, portrait_path])
 
 	for text in dialogue_lines:
 		lines.append({
@@ -47,6 +48,7 @@ func interact() -> void:
 			"portrait": portrait,
 		})
 
+	DialogueManager.dialogue_ended.connect(_on_dialogue_ended, CONNECT_ONE_SHOT)
 	DialogueManager.start_dialogue(lines)
 
 
@@ -62,7 +64,5 @@ func _face_toward_player() -> void:
 
 
 func _on_dialogue_ended() -> void:
-	if not _is_talking:
-		return
 	_is_talking = false
 	interaction_ended.emit()

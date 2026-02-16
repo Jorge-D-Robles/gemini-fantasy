@@ -5,15 +5,7 @@ extends Battler
 
 signal ai_action_chosen(action: BattleAction)
 
-enum AIType {
-	BASIC,
-	AGGRESSIVE,
-	DEFENSIVE,
-	SUPPORT,
-	BOSS,
-}
-
-@export var ai_type: AIType = AIType.BASIC
+@export var ai_type: EnemyData.AiType = EnemyData.AiType.BASIC
 
 var loot_table: Array[Dictionary] = []
 var exp_reward: int = 0
@@ -24,7 +16,7 @@ func initialize_from_data() -> void:
 	super.initialize_from_data()
 	var enemy_data := data as EnemyData
 	if enemy_data:
-		ai_type = enemy_data.ai_type as AIType
+		ai_type = enemy_data.ai_type
 		loot_table = enemy_data.loot_table
 		exp_reward = enemy_data.exp_reward
 		gold_reward = enemy_data.gold_reward
@@ -36,15 +28,15 @@ func choose_action(
 ) -> BattleAction:
 	var action: BattleAction
 	match ai_type:
-		AIType.BASIC:
+		EnemyData.AiType.BASIC:
 			action = _basic_ai(party)
-		AIType.AGGRESSIVE:
+		EnemyData.AiType.AGGRESSIVE:
 			action = _aggressive_ai(party)
-		AIType.DEFENSIVE:
+		EnemyData.AiType.DEFENSIVE:
 			action = _defensive_ai(party)
-		AIType.SUPPORT:
+		EnemyData.AiType.SUPPORT:
 			action = _support_ai(party, allies)
-		AIType.BOSS:
+		EnemyData.AiType.BOSS:
 			action = _aggressive_ai(party)
 		_:
 			action = BattleAction.create_wait()

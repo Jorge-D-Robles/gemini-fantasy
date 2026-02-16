@@ -20,10 +20,10 @@ func enter() -> void:
 		"attack":
 			_execute_attack(battler, target)
 		"skill":
-			var ability: Resource = battle_scene.get_meta("pending_ability", null)
+			var ability := battle_scene.get_meta("pending_ability", null) as AbilityData
 			_execute_ability(battler, target, ability)
 		"item":
-			var item: Resource = battle_scene.get_meta("pending_item", null)
+			var item := battle_scene.get_meta("pending_item", null) as ItemData
 			_execute_item(battler, target, item)
 
 	# Clear pending meta
@@ -67,25 +67,21 @@ func _execute_attack(attacker: Battler, target: Battler) -> void:
 func _execute_ability(
 	attacker: Battler,
 	target: Battler,
-	ability: Resource,
+	ability: AbilityData,
 ) -> void:
 	if not ability:
 		_execute_attack(attacker, target)
 		return
 
-	var ee_cost: int = ability.ee_cost if "ee_cost" in ability else 0
-	if not attacker.use_ee(ee_cost):
+	if not attacker.use_ee(ability.ee_cost):
 		if _battle_ui:
 			_battle_ui.add_battle_log("Not enough EE!")
 		return
 
-	var is_magical: bool = true
-	if "damage_stat" in ability:
-		is_magical = ability.damage_stat == 1
+	var is_magical := ability.damage_stat == AbilityData.DamageStat.MAGIC
 
-	var base_damage: int = ability.damage_base if "damage_base" in ability else 0
-	if base_damage > 0 and target and target.is_alive:
-		var damage := attacker.deal_damage(base_damage, is_magical)
+	if ability.damage_base > 0 and target and target.is_alive:
+		var damage := attacker.deal_damage(ability.damage_base, is_magical)
 		var actual := target.take_damage(damage, is_magical)
 		if _battle_ui:
 			_battle_ui.add_battle_log(
@@ -109,28 +105,26 @@ func _execute_ability(
 func _execute_item(
 	_attacker: Battler,
 	target: Battler,
-	item: Resource,
+	item: ItemData,
 ) -> void:
 	if not item or not target:
 		return
-	var effect_value: int = item.effect_value if "effect_value" in item else 0
-	if "effect_type" in item and item.effect_type == 0:
-		# Heal
-		var healed := target.heal(effect_value)
-		if _battle_ui:
-			_battle_ui.add_battle_log(
-				"%s healed for %d HP!" % [
-					target.get_display_name(),
-					healed,
-				]
-			)
-	elif "effect_type" in item and item.effect_type == 1:
-		# Restore EE
-		var restored := target.restore_ee(effect_value)
-		if _battle_ui:
-			_battle_ui.add_battle_log(
-				"%s restored %d EE!" % [
-					target.get_display_name(),
-					restored,
-				]
-			)
+	match item.effect_type:
+		ItemData.EffectType.HEAL_HP:
+			var healed := target.heal(item.effect_value)
+			if _battle_ui:
+				_battle_ui.add_battle_log(
+					"%s healed for %d HP!" % [
+						target.get_display_name(),
+						healed,
+					]
+				)
+		ItemData.EffectType.HEAL_EE:
+			var restored := target.restore_ee(item.effect_value)
+			if _battle_ui:
+				_battle_ui.add_battle_log(
+					"%s restored %d EE!" % [
+						target.get_display_name(),
+						restored,
+					]
+				)

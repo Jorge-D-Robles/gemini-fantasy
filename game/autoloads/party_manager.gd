@@ -51,11 +51,11 @@ func remove_character(data: Resource) -> void:
 
 
 func get_active_party() -> Array[Resource]:
-	return active_party
+	return active_party.duplicate()
 
 
 func get_roster() -> Array[Resource]:
-	return roster
+	return roster.duplicate()
 
 
 func swap_members(active_index: int, reserve_index: int) -> void:

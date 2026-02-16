@@ -43,14 +43,32 @@ func trigger() -> void:
 
 	GameManager.pop_state()
 
-	# Start forced battle with 2 Ash Stalkers
+	# Start forced battle with 2 Ash Stalkers.
+	# Register a ONE_SHOT callback on BattleManager.battle_ended so that
+	# post-battle dialogue runs even though this node is freed during the
+	# scene change. The callback is a static-like lambda that only
+	# references autoloads (which survive scene changes).
 	var ash_stalker := load(ASH_STALKER_PATH) as Resource
 	if ash_stalker:
 		var enemy_group: Array[Resource] = [ash_stalker, ash_stalker]
+		BattleManager.battle_ended.connect(
+			_on_iris_battle_ended, CONNECT_ONE_SHOT,
+		)
 		BattleManager.start_battle(enemy_group, false)
-		await BattleManager.battle_ended
+	else:
+		# If enemy data failed to load, skip battle and finish
+		_play_post_battle_dialogue()
 
-	# Post-battle dialogue
+
+static func _on_iris_battle_ended(victory: bool) -> void:
+	if not victory:
+		# On defeat, clear the flag so the event can re-trigger
+		EventFlags.clear_flag(FLAG_NAME)
+		return
+	_play_post_battle_dialogue()
+
+
+static func _play_post_battle_dialogue() -> void:
 	GameManager.push_state(GameManager.GameState.CUTSCENE)
 
 	var post_battle_lines: Array[Dictionary] = [
@@ -76,4 +94,3 @@ func trigger() -> void:
 	await DialogueManager.dialogue_ended
 
 	GameManager.pop_state()
-	sequence_completed.emit()
