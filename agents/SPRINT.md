@@ -39,6 +39,12 @@ Started: 2026-02-16
 
 ## Done This Sprint
 
+### T-0020
+- Title: Battle system state persistence, real-time UI sync, and visual feedback
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-16
+
 ### T-0001
 - Title: Add class_name declarations to all autoload scripts
 - Status: wontfix

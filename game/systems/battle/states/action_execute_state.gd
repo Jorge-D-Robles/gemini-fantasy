@@ -21,13 +21,16 @@ func enter() -> void:
 
 	match action.type:
 		BattleAction.Type.ATTACK:
-			_execute_attack(battler, action.target)
+			await _execute_attack(battler, action.target)
 		BattleAction.Type.ABILITY:
-			_execute_ability(battler, action.target, action.ability)
+			await _execute_ability(battler, action.target, action.ability)
 		BattleAction.Type.ITEM:
-			_execute_item(battler, action.target, action.item)
+			await _execute_item(battler, action.target, action.item)
 
 	battle_scene.current_action = null
+
+	# Sync UI after every action so HP/EE/resonance are always current
+	battle_scene.refresh_battle_ui()
 
 	# Brief delay for visual feedback
 	await get_tree().create_timer(0.3).timeout
@@ -45,6 +48,10 @@ func enter() -> void:
 func _execute_attack(attacker: Battler, target: Battler) -> void:
 	if not target or not target.is_alive:
 		return
+
+	# Play attacker's attack animation
+	await _play_attacker_anim(attacker)
+
 	var damage := attacker.deal_damage(attacker.attack)
 	var actual := target.take_damage(damage)
 	if _battle_ui:
@@ -63,7 +70,7 @@ func _execute_ability(
 	ability: AbilityData,
 ) -> void:
 	if not ability:
-		_execute_attack(attacker, target)
+		await _execute_attack(attacker, target)
 		return
 
 	if not attacker.use_ee(ability.ee_cost):
@@ -72,6 +79,9 @@ func _execute_ability(
 		return
 
 	var is_magical := ability.damage_stat == AbilityData.DamageStat.MAGIC
+
+	# Play attacker's attack animation
+	await _play_attacker_anim(attacker)
 
 	if ability.damage_base > 0 and target and target.is_alive:
 		var damage := attacker.deal_damage(ability.damage_base, is_magical)
@@ -94,6 +104,9 @@ func _execute_ability(
 				]
 			)
 
+	# Apply status effect with probability check
+	_try_apply_status(ability, target)
+
 
 func _execute_item(
 	_attacker: Battler,
@@ -105,6 +118,7 @@ func _execute_item(
 	match item.effect_type:
 		ItemData.EffectType.HEAL_HP:
 			var healed := target.heal(item.effect_value)
+			_show_heal_number(target, healed)
 			if _battle_ui:
 				_battle_ui.add_battle_log(
 					"%s healed for %d HP!" % [
@@ -121,3 +135,33 @@ func _execute_item(
 						restored,
 					]
 				)
+
+
+func _play_attacker_anim(attacker: Battler) -> void:
+	var visual: Node2D = battle_scene.get_visual_scene(attacker)
+	if visual and visual.has_method("play_attack_anim"):
+		await visual.play_attack_anim()
+
+
+func _try_apply_status(ability: AbilityData, target: Battler) -> void:
+	if not ability or not target or not target.is_alive:
+		return
+	if ability.status_effect.is_empty() or ability.status_chance <= 0.0:
+		return
+	if randf() < ability.status_chance:
+		target.apply_status_effect(StringName(ability.status_effect))
+		if _battle_ui:
+			_battle_ui.add_battle_log(
+				"%s is affected by %s!" % [
+					target.get_display_name(),
+					ability.status_effect,
+				]
+			)
+
+
+func _show_heal_number(target: Battler, amount: int) -> void:
+	var visual: Node2D = battle_scene.get_visual_scene(target)
+	if visual and visual.has_method("show_heal_number"):
+		visual.show_heal_number(amount)
+	elif visual and visual.has_method("play_heal_anim"):
+		visual.play_heal_anim()

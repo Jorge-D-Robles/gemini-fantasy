@@ -31,6 +31,7 @@ func enter() -> void:
 	match action.type:
 		BattleAction.Type.ATTACK:
 			if action.target and action.target.is_alive:
+				await _play_attacker_anim(enemy)
 				var damage := enemy.deal_damage(enemy.attack)
 				var actual := action.target.take_damage(damage)
 				if _battle_ui:
@@ -44,6 +45,7 @@ func enter() -> void:
 		BattleAction.Type.ABILITY:
 			if action.ability and action.target:
 				enemy.use_ee(action.ability.ee_cost)
+				await _play_attacker_anim(enemy)
 				var is_magical := (
 					action.ability.damage_stat
 					== AbilityData.DamageStat.MAGIC
@@ -63,6 +65,8 @@ func enter() -> void:
 								actual,
 							]
 						)
+				# Apply status effect from ability
+				_try_apply_status(action.ability, action.target)
 		BattleAction.Type.DEFEND:
 			enemy.defend()
 			if _battle_ui:
@@ -75,6 +79,9 @@ func enter() -> void:
 					"%s waits." % enemy.get_display_name()
 				)
 
+	# Sync UI after every action
+	battle_scene.refresh_battle_ui()
+
 	# Brief delay for visual feedback
 	await get_tree().create_timer(0.4).timeout
 
@@ -86,3 +93,25 @@ func enter() -> void:
 		state_machine.transition_to("Defeat")
 	else:
 		state_machine.transition_to("TurnEnd")
+
+
+func _play_attacker_anim(attacker: Battler) -> void:
+	var visual: Node2D = battle_scene.get_visual_scene(attacker)
+	if visual and visual.has_method("play_attack_anim"):
+		await visual.play_attack_anim()
+
+
+func _try_apply_status(ability: AbilityData, target: Battler) -> void:
+	if not ability or not target or not target.is_alive:
+		return
+	if ability.status_effect.is_empty() or ability.status_chance <= 0.0:
+		return
+	if randf() < ability.status_chance:
+		target.apply_status_effect(StringName(ability.status_effect))
+		if _battle_ui:
+			_battle_ui.add_battle_log(
+				"%s is affected by %s!" % [
+					target.get_display_name(),
+					ability.status_effect,
+				]
+			)

@@ -5,6 +5,9 @@ extends Node2D
 ## Emitted when the battle ends. [param victory] is true if party won.
 signal battle_finished(victory: bool)
 
+const PARTY_BATTLER_SCENE_PATH: String = "res://entities/battle/party_battler_scene.tscn"
+const ENEMY_BATTLER_SCENE_PATH: String = "res://entities/battle/enemy_battler_scene.tscn"
+
 var party_battlers: Array[PartyBattler] = []
 var enemy_battlers: Array[EnemyBattler] = []
 var all_battlers: Array[Battler] = []
@@ -12,9 +15,6 @@ var current_battler: Battler = null
 var current_action: BattleAction = null
 var can_escape: bool = true
 var _battle_result: bool = false
-
-const PARTY_BATTLER_SCENE_PATH: String = "res://entities/battle/party_battler_scene.tscn"
-const ENEMY_BATTLER_SCENE_PATH: String = "res://entities/battle/enemy_battler_scene.tscn"
 
 @onready var party_node: Node2D = $Battlers/PartyBattlers
 @onready var enemy_node: Node2D = $Battlers/EnemyBattlers
@@ -71,6 +71,28 @@ func check_battle_end() -> int:
 func end_battle(victory: bool) -> void:
 	_battle_result = victory
 	battle_finished.emit(victory)
+
+
+## Returns the visual scene node for a battler, or null.
+func get_visual_scene(battler: Battler) -> Node2D:
+	for child in battler.get_children():
+		if child is PartyBattlerScene or child is EnemyBattlerScene:
+			return child
+	return null
+
+
+## Updates UI with current party status, resonance, and turn order.
+func refresh_battle_ui() -> void:
+	var battle_ui: Node = get_node_or_null("BattleUI")
+	if not battle_ui:
+		return
+	battle_ui.update_party_status(get_living_party())
+	if current_battler:
+		battle_ui.update_resonance(
+			current_battler.resonance_gauge,
+			current_battler.resonance_state,
+		)
+	battle_ui.update_turn_order(turn_queue.peek_order())
 
 
 func _spawn_party(party_data: Array[Resource]) -> void:
