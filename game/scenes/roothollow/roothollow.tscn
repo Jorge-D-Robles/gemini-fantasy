@@ -35,13 +35,11 @@ size = Vector2(12, 8)
 [node name="Roothollow" type="Node2D"]
 script = ExtResource("1_roothollow")
 
-[node name="Ground" type="ColorRect" parent="."]
+[node name="Ground" type="TileMapLayer" parent="."]
 z_index = -1
-offset_left = -64.0
-offset_top = -64.0
-offset_right = 704.0
-offset_bottom = 544.0
-color = Color(0.28, 0.45, 0.2, 1)
+
+[node name="GroundDetail" type="TileMapLayer" parent="."]
+z_index = -1
 
 [node name="Buildings" type="Node2D" parent="."]
 
@@ -219,6 +217,14 @@ texture_filter = 0
 
 [node name="Player" parent="Entities" instance=ExtResource("2_player")]
 position = Vector2(320, 300)
+
+[node name="Camera2D" type="Camera2D" parent="Entities/Player"]
+limit_left = -64
+limit_top = -64
+limit_right = 704
+limit_bottom = 544
+position_smoothing_enabled = true
+position_smoothing_speed = 8.0
 
 [node name="SpawnFromForest" type="Marker2D" parent="Entities"]
 position = Vector2(80, 200)

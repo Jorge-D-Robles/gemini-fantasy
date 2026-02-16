@@ -9,6 +9,110 @@ const ROOTHOLLOW_PATH: String = "res://scenes/roothollow/roothollow.tscn"
 const CREEPING_VINE_PATH: String = "res://data/enemies/creeping_vine.tres"
 const ASH_STALKER_PATH: String = "res://data/enemies/ash_stalker.tres"
 
+const GROUND_LEGEND: Dictionary = {
+	"G": Vector2i(0, 0),
+	"g": Vector2i(1, 0),
+	"h": Vector2i(2, 0),
+	"j": Vector2i(3, 0),
+}
+
+const TREE_LEGEND: Dictionary = {
+	"T": Vector2i(0, 8),
+	"t": Vector2i(1, 8),
+	"U": Vector2i(2, 8),
+	"u": Vector2i(3, 8),
+}
+
+const PATH_LEGEND: Dictionary = {
+	"D": Vector2i(0, 4),
+	"d": Vector2i(1, 4),
+	"e": Vector2i(2, 4),
+}
+
+const GROUND_MAP: Array[String] = [
+	"GghjGghjGghjGghjGghjGghjGghjGghjGghjGghj",
+	"gGjhgGjhgGjhgGjhgGjhgGjhgGjhgGjhgGjhgGjh",
+	"hjGghjGghjGghjGghjGghjGghjGghjGghjGghjGg",
+	"jghGjghGjghGjghGjghGjghGjghGjghGjghGjghG",
+	"GghjGghjGghjGghjGghjGghjGghjGghjGghjGghj",
+	"gGjhgGjhgGjhgGjhgGjhgGjhgGjhgGjhgGjhgGjh",
+	"hjGghjGghjGghjGghjGghjGghjGghjGghjGghjGg",
+	"jghGjghGjghGjghGjghGjghGjghGjghGjghGjghG",
+	"GghjGghjGghjGghjGghjGghjGghjGghjGghjGghj",
+	"gGjhgGjhgGjhgGjhgGjhgGjhgGjhgGjhgGjhgGjh",
+	"hjGghjGghjGghjGghjGghjGghjGghjGghjGghjGg",
+	"jghGjghGjghGjghGjghGjghGjghGjghGjghGjghG",
+	"GghjGghjGghjGghjGghjGghjGghjGghjGghjGghj",
+	"gGjhgGjhgGjhgGjhgGjhgGjhgGjhgGjhgGjhgGjh",
+	"hjGghjGghjGghjGghjGghjGghjGghjGghjGghjGg",
+	"jghGjghGjghGjghGjghGjghGjghGjghGjghGjghG",
+	"GghjGghjGghjGghjGghjGghjGghjGghjGghjGghj",
+	"gGjhgGjhgGjhgGjhgGjhgGjhgGjhgGjhgGjhgGjh",
+	"hjGghjGghjGghjGghjGghjGghjGghjGghjGghjGg",
+	"jghGjghGjghGjghGjghGjghGjghGjghGjghGjghG",
+	"GghjGghjGghjGghjGghjGghjGghjGghjGghjGghj",
+	"gGjhgGjhgGjhgGjhgGjhgGjhgGjhgGjhgGjhgGjh",
+	"hjGghjGghjGghjGghjGghjGghjGghjGghjGghjGg",
+	"jghGjghGjghGjghGjghGjghGjghGjghGjghGjghG",
+]
+
+const TREE_MAP: Array[String] = [
+	"TtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUu",
+	"uUtTuUtTuUtTuUtTuUtTuUtTuUtTuUtTuUtTuUtT",
+	"TtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUu",
+	"uUtTuUtTuUtTuUtTuUtTuUtTuUtTuUtTuUtTuUtT",
+	"TtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUu",
+	"TtUuTtUuTtUuTtUuT       TtUuTtUuTtUuTtUu",
+	"uUtTuUtTuUtTuUtTu       uUtTuUtTuUtTuUtT",
+	"TtUuTtUuTtUuTtUuT       TtUuTtUuTtUuTtUu",
+	"uUtTuUtTuUtTuUtTu       uUtTuUtTuUtTuUtT",
+	"TtUuTtUuTtUuTtUuT       TtUuTtUuTtUuTtUu",
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"TtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUu",
+	"uUtTuUtTuUtTuUtTuUtTuUtTuUtTuUtTuUtTuUtT",
+	"TtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUu",
+	"uUtTuUtTuUtTuUtTuUtTuUtTuUtTuUtTuUtTuUtT",
+	"TtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUu",
+	"uUtTuUtTuUtTuUtTuUtTuUtTuUtTuUtTuUtTuUtT",
+	"TtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUu",
+	"uUtTuUtTuUtTuUtTuUtTuUtTuUtTuUtTuUtTuUtT",
+	"TtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUu",
+	"uUtTuUtTuUtTuUtTuUtTuUtTuUtTuUtTuUtTuUtT",
+	"TtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUu",
+]
+
+const PATH_MAP: Array[String] = [
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"                   Dde                  ",
+	"                   dDe                  ",
+	"                   DeD                  ",
+	"                   dDe                  ",
+	"                  DdeDd                 ",
+	"    DdeDdeDdeDdeDdeDdeDdeDdeDdeDdeDd    ",
+	"    dDedDedDedDedDedDedDedDedDedDedD    ",
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"                                        ",
+]
+
+@onready var _ground_layer: TileMapLayer = $Ground
+@onready var _trees_layer: TileMapLayer = $Trees
+@onready var _paths_layer: TileMapLayer = $Paths
 @onready var _player: CharacterBody2D = $Entities/Player
 @onready var _spawn_from_ruins: Marker2D = $Entities/SpawnFromRuins
 @onready var _spawn_from_town: Marker2D = $Entities/SpawnFromTown
@@ -21,6 +125,8 @@ const ASH_STALKER_PATH: String = "res://data/enemies/ash_stalker.tres"
 
 
 func _ready() -> void:
+	_setup_tilemap()
+
 	# Set HUD location name
 	_hud.location_name = "Verdant Forest"
 
@@ -100,3 +206,23 @@ func _on_iris_zone_entered(body: Node2D) -> void:
 
 func _on_encounter_triggered(enemy_group: Array[Resource]) -> void:
 	BattleManager.start_battle(enemy_group)
+
+
+func _setup_tilemap() -> void:
+	var atlas_paths: Array[String] = [MapBuilder.FAIRY_FOREST_A5_A]
+	var solid: Dictionary = {
+		0: [
+			Vector2i(0, 8), Vector2i(1, 8), Vector2i(2, 8), Vector2i(3, 8),
+			Vector2i(4, 8), Vector2i(5, 8), Vector2i(6, 8), Vector2i(7, 8),
+			Vector2i(0, 9), Vector2i(1, 9), Vector2i(2, 9), Vector2i(3, 9),
+			Vector2i(4, 9), Vector2i(5, 9), Vector2i(6, 9), Vector2i(7, 9),
+		],
+	}
+	MapBuilder.apply_tileset(
+		[_ground_layer, _trees_layer, _paths_layer] as Array[TileMapLayer],
+		atlas_paths,
+		solid,
+	)
+	MapBuilder.build_layer(_ground_layer, GROUND_MAP, GROUND_LEGEND)
+	MapBuilder.build_layer(_trees_layer, TREE_MAP, TREE_LEGEND)
+	MapBuilder.build_layer(_paths_layer, PATH_MAP, PATH_LEGEND)
