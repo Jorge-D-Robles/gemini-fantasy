@@ -84,7 +84,7 @@ func _promote_from_reserve() -> void:
 		return
 	if active_party.size() >= MAX_ACTIVE:
 		return
-	var promoted := reserve_party.pop_front()
+	var promoted: Resource = reserve_party.pop_front()
 	active_party.append(promoted)
 
 

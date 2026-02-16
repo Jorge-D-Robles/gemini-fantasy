@@ -20,7 +20,7 @@ func advance() -> Battler:
 		_calculate_turn_order()
 	if _turn_order.is_empty():
 		return null
-	var next := _turn_order.pop_front()
+	var next: Battler = _turn_order.pop_front()
 	turn_ready.emit(next)
 	return next
 
