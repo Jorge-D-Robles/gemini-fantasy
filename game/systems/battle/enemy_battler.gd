@@ -101,7 +101,7 @@ func _support_ai(
 	allies: Array[Battler],
 ) -> Dictionary:
 	# Heal injured ally if possible
-	var injured := _get_living(allies).filter(
+	var injured: Array = _get_living(allies).filter(
 		func(b: Battler) -> bool: return b.current_hp < b.max_hp * 0.5
 	)
 	if not injured.is_empty() and not abilities.is_empty():
