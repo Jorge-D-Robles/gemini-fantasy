@@ -4,6 +4,8 @@ extends Node2D
 ## Visual representation of a party member in battle.
 ## Connects to a PartyBattler logic node for stat/signal data.
 
+const BATTLE_SPRITE_SCALE: float = 2.0
+
 @export var character_data: CharacterData
 
 var battler: PartyBattler = null
@@ -21,6 +23,13 @@ func _ready() -> void:
 		var tex := load(character_data.battle_sprite_path) as Texture2D
 		if tex:
 			sprite.texture = tex
+			sprite.scale = Vector2.ONE * BATTLE_SPRITE_SCALE
+			sprite.flip_h = true
+		else:
+			push_error(
+				"Failed to load '%s' — reopen Godot editor to import"
+				% character_data.battle_sprite_path
+			)
 
 
 func bind_battler(target: PartyBattler) -> void:
@@ -74,13 +83,13 @@ func play_idle_anim() -> void:
 func _setup_bars() -> void:
 	hp_bar.min_value = 0
 	hp_bar.show_percentage = false
-	hp_bar.size = Vector2(40, 4)
-	hp_bar.position = Vector2(-20, -24)
+	hp_bar.size = Vector2(48, 4)
+	hp_bar.position = Vector2(-24, -54)
 
 	ee_bar.min_value = 0
 	ee_bar.show_percentage = false
-	ee_bar.size = Vector2(40, 3)
-	ee_bar.position = Vector2(-20, -19)
+	ee_bar.size = Vector2(48, 3)
+	ee_bar.position = Vector2(-24, -49)
 
 
 func _flash_color(color: Color) -> void:
