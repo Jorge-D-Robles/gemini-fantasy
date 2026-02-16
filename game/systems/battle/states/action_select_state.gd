@@ -41,12 +41,12 @@ func exit() -> void:
 
 
 func _on_skill_selected(ability: Resource) -> void:
-	battle_scene.set_meta("pending_ability", ability)
-	battle_scene.set_meta("pending_command", "skill")
+	var ability_data := ability as AbilityData
+	battle_scene.current_action = BattleAction.create_ability(ability_data, null)
 	state_machine.transition_to("TargetSelect")
 
 
 func _on_item_selected(item: Resource) -> void:
-	battle_scene.set_meta("pending_item", item)
-	battle_scene.set_meta("pending_command", "item")
+	var item_data := item as ItemData
+	battle_scene.current_action = BattleAction.create_item(item_data, null)
 	state_machine.transition_to("TargetSelect")

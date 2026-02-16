@@ -8,11 +8,13 @@ enum Type {
 	ABILITY,
 	DEFEND,
 	WAIT,
+	ITEM,
 }
 
 var type: Type = Type.WAIT
 var target: Battler = null
 var ability: AbilityData = null
+var item: ItemData = null
 
 
 static func create_attack(p_target: Battler) -> BattleAction:
@@ -36,6 +38,17 @@ static func create_ability(
 static func create_defend() -> BattleAction:
 	var action := BattleAction.new()
 	action.type = Type.DEFEND
+	return action
+
+
+static func create_item(
+	p_item: ItemData,
+	p_target: Battler,
+) -> BattleAction:
+	var action := BattleAction.new()
+	action.type = Type.ITEM
+	action.item = p_item
+	action.target = p_target
 	return action
 
 

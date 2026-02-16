@@ -1,3 +1,4 @@
+class_name UILayer
 extends Node
 
 ## Global UI autoload. Holds HUD, DialogueBox, and PauseMenu as children

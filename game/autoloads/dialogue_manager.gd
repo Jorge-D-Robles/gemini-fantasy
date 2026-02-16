@@ -1,3 +1,4 @@
+class_name DialogueManager
 extends Node
 
 ## Manages dialogue flow globally. Emits signals consumed by the DialogueBox UI.
@@ -9,14 +10,14 @@ signal line_finished
 signal choice_presented(choices: Array[String])
 signal choice_selected(index: int)
 
-var _queue: Array[Dictionary] = []
+var _queue: Array[DialogueLine] = []
 var _current_index: int = -1
 var _is_active: bool = false
 var _waiting_for_advance: bool = false
 var _waiting_for_choice: bool = false
 
 
-func start_dialogue(lines: Array[Dictionary]) -> void:
+func start_dialogue(lines: Array[DialogueLine]) -> void:
 	if _is_active:
 		push_warning("DialogueManager: dialogue already active.")
 		return
@@ -43,17 +44,14 @@ func advance() -> void:
 		return
 
 	var line := _queue[_current_index]
-	var speaker: String = line.get("speaker", "")
-	var text: String = line.get("text", "")
-	var portrait: Texture2D = line.get("portrait", null)
 
-	if line.has("choices"):
+	if line.has_choices():
 		_waiting_for_choice = true
-		line_displayed.emit(speaker, text, portrait)
-		choice_presented.emit(line.choices as Array[String])
+		line_displayed.emit(line.speaker, line.text, line.portrait)
+		choice_presented.emit(line.choices)
 	else:
 		_waiting_for_advance = true
-		line_displayed.emit(speaker, text, portrait)
+		line_displayed.emit(line.speaker, line.text, line.portrait)
 
 
 func select_choice(index: int) -> void:

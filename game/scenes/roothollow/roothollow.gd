@@ -185,8 +185,7 @@ func _on_garrick_zone_entered(body: Node2D) -> void:
 func _on_innkeeper_finished() -> void:
 	# Heal the entire party to full HP and EE
 	# TODO: Heal party HP/EE once persistent character state is added
-	var heal_lines: Array[Dictionary] = [{
-		"speaker": "Innkeeper",
-		"text": "Rest well. Your party has been fully restored.",
-	}]
+	var heal_lines: Array[DialogueLine] = [
+		DialogueLine.create("Innkeeper", "Rest well. Your party has been fully restored."),
+	]
 	DialogueManager.start_dialogue(heal_lines)

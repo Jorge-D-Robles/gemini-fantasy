@@ -9,6 +9,7 @@ var party_battlers: Array[PartyBattler] = []
 var enemy_battlers: Array[EnemyBattler] = []
 var all_battlers: Array[Battler] = []
 var current_battler: Battler = null
+var current_action: BattleAction = null
 var can_escape: bool = true
 var _battle_result: bool = false
 

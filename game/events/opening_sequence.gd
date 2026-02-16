@@ -16,27 +16,12 @@ func trigger() -> void:
 	EventFlags.set_flag(FLAG_NAME)
 	GameManager.push_state(GameManager.GameState.CUTSCENE)
 
-	var lines: Array[Dictionary] = [
-		{
-			"speaker": "Kael",
-			"text": "What is this...? An Echo Fragment? But it feels... different.",
-		},
-		{
-			"speaker": "Lyra",
-			"text": "Please... can you hear me? I've been trapped here... so long...",
-		},
-		{
-			"speaker": "Kael",
-			"text": "You're... conscious? I've never seen an Echo like you before.",
-		},
-		{
-			"speaker": "Lyra",
-			"text": "My name is Lyra. I need your help. Something terrible is happening to the echoes.",
-		},
-		{
-			"speaker": "Kael",
-			"text": "I'll help you. Let's get out of these ruins first.",
-		},
+	var lines: Array[DialogueLine] = [
+		DialogueLine.create("Kael", "What is this...? An Echo Fragment? But it feels... different."),
+		DialogueLine.create("Lyra", "Please... can you hear me? I've been trapped here... so long..."),
+		DialogueLine.create("Kael", "You're... conscious? I've never seen an Echo like you before."),
+		DialogueLine.create("Lyra", "My name is Lyra. I need your help. Something terrible is happening to the echoes."),
+		DialogueLine.create("Kael", "I'll help you. Let's get out of these ruins first."),
 	]
 
 	DialogueManager.start_dialogue(lines)

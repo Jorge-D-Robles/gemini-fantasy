@@ -17,31 +17,13 @@ func trigger() -> void:
 	EventFlags.set_flag(FLAG_NAME)
 	GameManager.push_state(GameManager.GameState.CUTSCENE)
 
-	var lines: Array[Dictionary] = [
-		{
-			"speaker": "Garrick",
-			"text": "Another traveler? These roads grow more dangerous by the day.",
-		},
-		{
-			"speaker": "Kael",
-			"text": "We found something in the ruins. A conscious Echo Fragment.",
-		},
-		{
-			"speaker": "Garrick",
-			"text": "...Impossible. I've guarded these lands for twenty years and never...",
-		},
-		{
-			"speaker": "Garrick",
-			"text": "If what you say is true, the Council needs to know. And you'll need protection.",
-		},
-		{
-			"speaker": "Kael",
-			"text": "You're offering to help?",
-		},
-		{
-			"speaker": "Garrick",
-			"text": "I'm offering to keep you alive. The path ahead won't be kind.",
-		},
+	var lines: Array[DialogueLine] = [
+		DialogueLine.create("Garrick", "Another traveler? These roads grow more dangerous by the day."),
+		DialogueLine.create("Kael", "We found something in the ruins. A conscious Echo Fragment."),
+		DialogueLine.create("Garrick", "...Impossible. I've guarded these lands for twenty years and never..."),
+		DialogueLine.create("Garrick", "If what you say is true, the Council needs to know. And you'll need protection."),
+		DialogueLine.create("Kael", "You're offering to help?"),
+		DialogueLine.create("Garrick", "I'm offering to keep you alive. The path ahead won't be kind."),
 	]
 
 	DialogueManager.start_dialogue(lines)

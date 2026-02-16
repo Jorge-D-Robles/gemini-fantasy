@@ -34,3 +34,12 @@ These 26 fixes were completed before the ticket system was established:
 - [2026-02-16] MEDIUM: @onready with .new() — game_manager.gd now initializes in _setup_transition_layer() (claude)
 - [2026-02-16] MEDIUM: HUD duck-typing — hud.gd now casts member to BattlerData (claude)
 - [2026-02-16] MEDIUM: NPC portrait null warning — added push_warning() when portrait fails to load (claude)
+
+## Sprint S01 — Foundation
+
+- [2026-02-16] T-0001: Add class_name declarations to all autoload scripts (claude)
+- [2026-02-16] T-0002: Extract TurnQueue into its own scene (claude)
+- [2026-02-16] T-0003: Refactor Interactable into composition pattern — strategy pattern with 5 strategies (claude)
+- [2026-02-16] T-0004: Replace Dictionary-based dialogue/encounter data with custom Resources (claude)
+- [2026-02-16] T-0005: Replace meta-based state communication with typed BattleAction (claude)
+- [2026-02-16] T-0006: Use AnimatedSprite2D for player animation (claude)

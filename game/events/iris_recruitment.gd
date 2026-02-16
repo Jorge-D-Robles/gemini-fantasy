@@ -18,19 +18,10 @@ func trigger() -> void:
 	EventFlags.set_flag(FLAG_NAME)
 	GameManager.push_state(GameManager.GameState.CUTSCENE)
 
-	var pre_battle_lines: Array[Dictionary] = [
-		{
-			"speaker": "Iris",
-			"text": "Hah! These things just keep coming!",
-		},
-		{
-			"speaker": "Kael",
-			"text": "Need a hand?",
-		},
-		{
-			"speaker": "Iris",
-			"text": "I won't turn it down! Watch the flanks!",
-		},
+	var pre_battle_lines: Array[DialogueLine] = [
+		DialogueLine.create("Iris", "Hah! These things just keep coming!"),
+		DialogueLine.create("Kael", "Need a hand?"),
+		DialogueLine.create("Iris", "I won't turn it down! Watch the flanks!"),
 	]
 
 	DialogueManager.start_dialogue(pre_battle_lines)
@@ -71,23 +62,11 @@ static func _on_iris_battle_ended(victory: bool) -> void:
 static func _play_post_battle_dialogue() -> void:
 	GameManager.push_state(GameManager.GameState.CUTSCENE)
 
-	var post_battle_lines: Array[Dictionary] = [
-		{
-			"speaker": "Iris",
-			"text": "Not bad! Name's Iris. I'm an engineer from the eastern settlements.",
-		},
-		{
-			"speaker": "Kael",
-			"text": "Kael. I found something strange in the ruins... a conscious Echo.",
-		},
-		{
-			"speaker": "Iris",
-			"text": "A conscious Echo? That shouldn't be possible. I need to see this.",
-		},
-		{
-			"speaker": "Iris",
-			"text": "Mind if I tag along? I've got some theories about the Echo interference.",
-		},
+	var post_battle_lines: Array[DialogueLine] = [
+		DialogueLine.create("Iris", "Not bad! Name's Iris. I'm an engineer from the eastern settlements."),
+		DialogueLine.create("Kael", "Kael. I found something strange in the ruins... a conscious Echo."),
+		DialogueLine.create("Iris", "A conscious Echo? That shouldn't be possible. I need to see this."),
+		DialogueLine.create("Iris", "Mind if I tag along? I've got some theories about the Echo interference."),
 	]
 
 	DialogueManager.start_dialogue(post_battle_lines)

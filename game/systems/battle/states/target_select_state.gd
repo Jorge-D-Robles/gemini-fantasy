@@ -34,23 +34,26 @@ func exit() -> void:
 
 
 func _on_target_selected(target: Battler) -> void:
-	battle_scene.set_meta("pending_target", target)
-	if not battle_scene.has_meta("pending_command"):
-		battle_scene.set_meta("pending_command", "attack")
+	if battle_scene.current_action:
+		battle_scene.current_action.target = target
+	else:
+		battle_scene.current_action = BattleAction.create_attack(target)
 	state_machine.transition_to("ActionExecute")
 
 
 func _get_valid_targets() -> Array[Battler]:
-	var pending_ability: Resource = battle_scene.get_meta("pending_ability", null)
-	if pending_ability:
-		var ability := pending_ability as AbilityData
-		if ability:
-			match ability.target_type:
-				AbilityData.TargetType.SINGLE_ALLY, AbilityData.TargetType.ALL_ALLIES:
-					return battle_scene.get_living_party()
-				AbilityData.TargetType.SELF:
-					var self_list: Array[Battler] = []
-					if battle_scene.current_battler and battle_scene.current_battler.is_alive:
-						self_list.append(battle_scene.current_battler)
-					return self_list
+	var action: BattleAction = battle_scene.current_action
+	if action and action.ability:
+		match action.ability.target_type:
+			AbilityData.TargetType.SINGLE_ALLY, AbilityData.TargetType.ALL_ALLIES:
+				return battle_scene.get_living_party()
+			AbilityData.TargetType.SELF:
+				var self_list: Array[Battler] = []
+				if battle_scene.current_battler and battle_scene.current_battler.is_alive:
+					self_list.append(battle_scene.current_battler)
+				return self_list
+	if action and action.item:
+		match action.item.target_type:
+			ItemData.TargetType.SINGLE_ALLY, ItemData.TargetType.ALL_ALLIES:
+				return battle_scene.get_living_party()
 	return battle_scene.get_living_enemies()

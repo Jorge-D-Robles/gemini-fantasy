@@ -142,26 +142,14 @@ func _ready() -> void:
 	var creeping_vine := load(CREEPING_VINE_PATH) as Resource
 	var ash_stalker := load(ASH_STALKER_PATH) as Resource
 
-	var pool: Array[Dictionary] = []
+	var pool: Array[EncounterPoolEntry] = []
 	if creeping_vine:
-		pool.append({
-			"enemies": [creeping_vine] as Array[Resource],
-			"weight": 2.0,
-		})
-		pool.append({
-			"enemies": [creeping_vine, creeping_vine] as Array[Resource],
-			"weight": 1.5,
-		})
+		pool.append(EncounterPoolEntry.create([creeping_vine] as Array[Resource], 2.0))
+		pool.append(EncounterPoolEntry.create([creeping_vine, creeping_vine] as Array[Resource], 1.5))
 	if ash_stalker:
-		pool.append({
-			"enemies": [ash_stalker] as Array[Resource],
-			"weight": 2.0,
-		})
+		pool.append(EncounterPoolEntry.create([ash_stalker] as Array[Resource], 2.0))
 	if creeping_vine and ash_stalker:
-		pool.append({
-			"enemies": [creeping_vine, ash_stalker] as Array[Resource],
-			"weight": 1.0,
-		})
+		pool.append(EncounterPoolEntry.create([creeping_vine, ash_stalker] as Array[Resource], 1.0))
 
 	_encounter_system.setup(pool)
 	_encounter_system.encounter_triggered.connect(_on_encounter_triggered)
