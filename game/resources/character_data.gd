@@ -3,6 +3,10 @@ extends BattlerData
 
 ## Defines a playable character's growth rates and visual metadata.
 
+@export_group("Progression")
+@export var level: int = 1
+@export var current_xp: int = 0
+
 @export_group("Growth Rates")
 @export var hp_growth: float = 10.0
 @export var ee_growth: float = 5.0

@@ -23,7 +23,14 @@ func _ready() -> void:
 	update_party_display()
 
 	PartyManager.party_changed.connect(_on_party_changed)
+	PartyManager.party_state_changed.connect(_on_party_state_changed)
 	GameManager.game_state_changed.connect(_on_game_state_changed)
+	# Sync gold from InventoryManager if available
+	var inv: Node = get_node_or_null("/root/InventoryManager")
+	if inv:
+		_gold = inv.gold
+		_update_gold_display()
+		inv.gold_changed.connect(_on_gold_changed)
 
 
 func show_interaction_prompt(text: String) -> void:
@@ -67,20 +74,25 @@ func _create_member_row(member: Resource) -> HBoxContainer:
 	row.add_child(name_label)
 
 	var max_val: int = data.max_hp if data else 100
+	var current_val: int = max_val
+	if data and data.id != &"":
+		var state := PartyManager.get_runtime_state(data.id)
+		if not state.is_empty():
+			current_val = state["current_hp"]
 
 	var hp_bar := ProgressBar.new()
 	hp_bar.custom_minimum_size = Vector2(50, 8)
 	hp_bar.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	hp_bar.show_percentage = false
 	hp_bar.max_value = max_val
-	hp_bar.value = max_val
+	hp_bar.value = current_val
 	hp_bar.add_theme_color_override(
 		"font_color", Color(0.2, 0.8, 0.2)
 	)
 	row.add_child(hp_bar)
 
 	var hp_label := Label.new()
-	hp_label.text = "%d/%d" % [max_val, max_val]
+	hp_label.text = "%d/%d" % [current_val, max_val]
 	hp_label.add_theme_font_size_override("font_size", 8)
 	row.add_child(hp_label)
 
@@ -89,6 +101,20 @@ func _create_member_row(member: Resource) -> HBoxContainer:
 
 func _on_party_changed() -> void:
 	update_party_display()
+
+
+func _on_party_state_changed() -> void:
+	update_party_display()
+	# Re-sync gold from InventoryManager
+	var inv: Node = get_node_or_null("/root/InventoryManager")
+	if inv:
+		set_gold(inv.gold)
+
+
+func _on_gold_changed(_amount: int) -> void:
+	var inv: Node = get_node_or_null("/root/InventoryManager")
+	if inv:
+		set_gold(inv.gold)
 
 
 func _on_game_state_changed(

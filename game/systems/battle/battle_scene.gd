@@ -13,6 +13,7 @@ var enemy_battlers: Array[EnemyBattler] = []
 var all_battlers: Array[Battler] = []
 var current_battler: Battler = null
 var current_action: BattleAction = null
+var pending_command: String = ""
 var can_escape: bool = true
 var _battle_result: bool = false
 
@@ -69,6 +70,7 @@ func check_battle_end() -> int:
 
 ## Ends the battle and emits [signal battle_finished].
 func end_battle(victory: bool) -> void:
+	_persist_party_state()
 	_battle_result = victory
 	battle_finished.emit(victory)
 
@@ -102,6 +104,7 @@ func _spawn_party(party_data: Array[Resource]) -> void:
 		var battler := PartyBattler.new()
 		battler.data = party_data[i]
 		battler.initialize_from_data()
+		_apply_persistent_state(battler)
 		if i < slots.size():
 			battler.position = slots[i]
 		party_node.add_child(battler)
@@ -153,6 +156,35 @@ func _get_marker_positions(parent: Node2D) -> Array[Vector2]:
 		if child is Marker2D:
 			positions.append(child.position)
 	return positions
+
+
+func _apply_persistent_state(battler: PartyBattler) -> void:
+	if battler.character_id == &"":
+		return
+	var pm: Node = get_node_or_null("/root/PartyManager")
+	if not pm:
+		return
+	var state: Dictionary = pm.get_runtime_state(battler.character_id)
+	if state.is_empty():
+		return
+	battler.current_hp = clampi(
+		state["current_hp"], 0, battler.max_hp
+	)
+	battler.current_ee = clampi(
+		state["current_ee"], 0, battler.max_ee
+	)
+	if battler.current_hp <= 0:
+		battler.is_alive = false
+
+
+func _persist_party_state() -> void:
+	var pm: Node = get_node_or_null("/root/PartyManager")
+	if not pm:
+		return
+	for battler in party_battlers:
+		if battler.character_id != &"":
+			pm.set_hp(battler.character_id, battler.current_hp)
+			pm.set_ee(battler.character_id, battler.current_ee)
 
 
 func _on_battler_defeated(battler: Battler) -> void:

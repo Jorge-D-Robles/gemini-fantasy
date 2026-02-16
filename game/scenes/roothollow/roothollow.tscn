@@ -344,6 +344,18 @@ vframes = 4
 frame = 1
 texture_filter = 0
 
+[node name="LinaNPC" parent="Entities" instance=ExtResource("4_npc")]
+position = Vector2(360, 250)
+npc_name = "Lina"
+dialogue_lines = PackedStringArray("Kael! Kael! Look what I found by the river!")
+
+[node name="Sprite2D" type="Sprite2D" parent="Entities/LinaNPC" index="1"]
+texture = ExtResource("16_npc2")
+hframes = 3
+vframes = 4
+frame = 1
+texture_filter = 0
+
 [node name="SavePoint" parent="Entities" instance=ExtResource("5_interact")]
 position = Vector2(320, 240)
 strategy = SubResource("save_point_strat")

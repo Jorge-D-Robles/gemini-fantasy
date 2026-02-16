@@ -38,8 +38,10 @@ func _on_command_selected(command: String) -> void:
 		"attack":
 			state_machine.transition_to("TargetSelect")
 		"skill":
+			battle_scene.pending_command = "skill"
 			state_machine.transition_to("ActionSelect")
 		"item":
+			battle_scene.pending_command = "item"
 			state_machine.transition_to("ActionSelect")
 		"defend":
 			battle_scene.current_battler.defend()

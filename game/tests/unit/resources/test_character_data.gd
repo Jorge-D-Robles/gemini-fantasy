@@ -48,3 +48,17 @@ func test_set_custom_growth_rates() -> void:
 	assert_almost_eq(c.hp_growth, 15.0, 0.001)
 	assert_almost_eq(c.attack_growth, 3.0, 0.001)
 	assert_almost_eq(c.magic_growth, 0.5, 0.001)
+
+
+func test_default_level_and_xp() -> void:
+	var c := CharacterData.new()
+	assert_eq(c.level, 1)
+	assert_eq(c.current_xp, 0)
+
+
+func test_set_level_and_xp() -> void:
+	var c := CharacterData.new()
+	c.level = 5
+	c.current_xp = 1000
+	assert_eq(c.level, 5)
+	assert_eq(c.current_xp, 1000)

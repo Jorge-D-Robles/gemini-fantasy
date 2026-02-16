@@ -272,6 +272,76 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 - Refs: docs/IMPLEMENTATION_GUIDE.md
 - Notes: Toggle with ~ key. Commands: add_item, set_level, heal_all, unlock_echo, teleport, start_battle. Overlay UI.
 
+### T-0027
+- Title: Implement party HP/EE persistence between battles
+- Status: todo
+- Assigned: unassigned
+- Priority: critical
+- Milestone: M0
+- Depends: none
+- Refs: game/autoloads/party_manager.gd, game/systems/battle/battle_scene.gd
+- Notes: Track runtime HP/EE state on PartyManager. Battle start reads persistent state, battle end writes back. Required for demo — without this, combat has zero stakes.
+
+### T-0028
+- Title: Wire item usage in battle
+- Status: todo
+- Assigned: unassigned
+- Priority: critical
+- Milestone: M0
+- Depends: T-0012
+- Refs: game/systems/battle/states/action_select_state.gd, game/ui/battle_ui/battle_ui.gd
+- Notes: Item button opens inventory submenu. Select item → select target → consume and apply effect. action_execute_state.gd has _execute_item() but ActionSelect never routes to it.
+
+### T-0029
+- Title: Implement innkeeper healing with persistent HP/EE
+- Status: todo
+- Assigned: unassigned
+- Priority: critical
+- Milestone: M0
+- Depends: T-0027
+- Refs: game/scenes/roothollow/roothollow.gd
+- Notes: Innkeeper interaction restores all party members to full HP/EE via persistent state.
+
+### T-0030
+- Title: Build battle victory rewards screen
+- Status: todo
+- Assigned: unassigned
+- Priority: critical
+- Milestone: M0
+- Depends: T-0012
+- Refs: game/systems/battle/states/victory_state.gd, game/resources/enemy_data.gd
+- Notes: Display gold earned, items dropped (loot table rolls), XP earned (display only). Add gold and items to InventoryManager.
+
+### T-0031
+- Title: Add NPC entities and dialogue content to Roothollow
+- Status: todo
+- Assigned: unassigned
+- Priority: critical
+- Milestone: M0
+- Depends: none
+- Refs: docs/game-design/demo-npc-content.md, game/scenes/roothollow/roothollow.gd
+- Notes: Add 4-6 NPC StaticBody2D nodes. Flag-reactive dialogue based on story progress. Each NPC needs 3-8 lines of lore-appropriate dialogue.
+
+### T-0032
+- Title: Build basic save/load system
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Milestone: M0
+- Depends: T-0027, T-0012
+- Refs: docs/best-practices/09-save-load.md, game/entities/interactable/strategies/save_point_strategy.gd
+- Notes: SaveManager autoload. Serialize party, flags, scene, HP/EE, inventory, gold. Wire save_point_strategy. Load from title screen.
+
+### T-0033
+- Title: Add demo conclusion event
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M0
+- Depends: T-0031
+- Refs: game/events/, game/autoloads/event_flags.gd
+- Notes: After Garrick recruited, Elder Rowan NPC triggers conclusion dialogue hinting at Prismfall and the full game.
+
 ---
 
 ## M1 — Act I: The Echo Thief
