@@ -1,0 +1,65 @@
+[gd_scene load_steps=15 format=3 uid="uid://bvk8q3lmcd7j0"]
+
+[ext_resource type="Script" path="res://systems/battle/battle_scene.gd" id="1_battle"]
+[ext_resource type="Script" path="res://systems/battle/battle_state_machine.gd" id="2_bsm"]
+[ext_resource type="Script" path="res://systems/battle/turn_queue.gd" id="3_tq"]
+[ext_resource type="Script" path="res://systems/battle/states/battle_start_state.gd" id="4_bs"]
+[ext_resource type="Script" path="res://systems/battle/states/turn_queue_state.gd" id="5_tqs"]
+[ext_resource type="Script" path="res://systems/battle/states/player_turn_state.gd" id="6_pt"]
+[ext_resource type="Script" path="res://systems/battle/states/action_select_state.gd" id="7_as"]
+[ext_resource type="Script" path="res://systems/battle/states/target_select_state.gd" id="8_ts"]
+[ext_resource type="Script" path="res://systems/battle/states/action_execute_state.gd" id="9_ae"]
+[ext_resource type="Script" path="res://systems/battle/states/enemy_turn_state.gd" id="10_et"]
+[ext_resource type="Script" path="res://systems/battle/states/turn_end_state.gd" id="11_te"]
+[ext_resource type="Script" path="res://systems/battle/states/victory_state.gd" id="12_vs"]
+[ext_resource type="Script" path="res://systems/battle/states/defeat_state.gd" id="13_ds"]
+[ext_resource type="PackedScene" uid="uid://c3b4a5t6l7e8u" path="res://ui/battle_ui/battle_ui.tscn" id="14_bui"]
+
+[node name="BattleScene" type="Node2D"]
+script = ExtResource("1_battle")
+
+[node name="BattleBackground" type="Sprite2D" parent="."]
+
+[node name="Battlers" type="Node2D" parent="."]
+
+[node name="PartyBattlers" type="Node2D" parent="Battlers"]
+
+[node name="EnemyBattlers" type="Node2D" parent="Battlers"]
+
+[node name="TurnQueue" type="Node" parent="."]
+script = ExtResource("3_tq")
+
+[node name="BattleStateMachine" type="Node" parent="."]
+script = ExtResource("2_bsm")
+
+[node name="BattleStart" type="Node" parent="BattleStateMachine"]
+script = ExtResource("4_bs")
+
+[node name="TurnQueueState" type="Node" parent="BattleStateMachine"]
+script = ExtResource("5_tqs")
+
+[node name="PlayerTurn" type="Node" parent="BattleStateMachine"]
+script = ExtResource("6_pt")
+
+[node name="ActionSelect" type="Node" parent="BattleStateMachine"]
+script = ExtResource("7_as")
+
+[node name="TargetSelect" type="Node" parent="BattleStateMachine"]
+script = ExtResource("8_ts")
+
+[node name="ActionExecute" type="Node" parent="BattleStateMachine"]
+script = ExtResource("9_ae")
+
+[node name="EnemyTurn" type="Node" parent="BattleStateMachine"]
+script = ExtResource("10_et")
+
+[node name="TurnEnd" type="Node" parent="BattleStateMachine"]
+script = ExtResource("11_te")
+
+[node name="Victory" type="Node" parent="BattleStateMachine"]
+script = ExtResource("12_vs")
+
+[node name="Defeat" type="Node" parent="BattleStateMachine"]
+script = ExtResource("13_ds")
+
+[node name="BattleUI" parent="." instance=ExtResource("14_bui")]

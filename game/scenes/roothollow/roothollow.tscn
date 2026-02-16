@@ -1,0 +1,96 @@
+[gd_scene load_steps=11 format=3 uid="uid://c4roothlw0001"]
+
+[ext_resource type="Script" path="res://scenes/roothollow/roothollow.gd" id="1_roothollow"]
+[ext_resource type="PackedScene" uid="uid://c4player00001" path="res://entities/player/player.tscn" id="2_player"]
+[ext_resource type="PackedScene" uid="uid://d2h3u4d5s6c7n" path="res://ui/hud/hud.tscn" id="3_hud"]
+[ext_resource type="PackedScene" uid="uid://c4npc0000001" path="res://entities/npc/npc.tscn" id="4_npc"]
+[ext_resource type="PackedScene" uid="uid://c4interact001" path="res://entities/interactable/interactable.tscn" id="5_interact"]
+[ext_resource type="Script" path="res://events/garrick_recruitment.gd" id="6_garrick"]
+[ext_resource type="PackedScene" uid="uid://d4d5i6a7l8o9g" path="res://ui/dialogue/dialogue_box.tscn" id="7_dlg"]
+[ext_resource type="PackedScene" uid="uid://e5p6a7u8s9e0m" path="res://ui/pause_menu/pause_menu.tscn" id="8_pm"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_exit"]
+size = Vector2(16, 64)
+
+[sub_resource type="CircleShape2D" id="RectangleShape2D_garrick"]
+radius = 24.0
+
+[node name="Roothollow" type="Node2D"]
+script = ExtResource("1_roothollow")
+
+[node name="Ground" type="TileMapLayer" parent="."]
+
+[node name="Buildings" type="TileMapLayer" parent="."]
+
+[node name="Paths" type="TileMapLayer" parent="."]
+
+[node name="Entities" type="Node2D" parent="."]
+
+[node name="Player" parent="Entities" instance=ExtResource("2_player")]
+position = Vector2(80, 200)
+
+[node name="SpawnFromForest" type="Marker2D" parent="Entities"]
+position = Vector2(80, 200)
+
+[node name="InnkeeperNPC" parent="Entities" instance=ExtResource("4_npc")]
+position = Vector2(200, 120)
+npc_name = "Innkeeper"
+dialogue_lines = PackedStringArray("Welcome to the Roothollow Inn! You look exhausted. Let me tend to your wounds.")
+
+[node name="ShopkeeperNPC" parent="Entities" instance=ExtResource("4_npc")]
+position = Vector2(320, 120)
+npc_name = "Shopkeeper"
+dialogue_lines = PackedStringArray("Supplies are running low with the roads so dangerous. I'm afraid the shop is closed for now.")
+
+[node name="TownfolkNPC1" parent="Entities" instance=ExtResource("4_npc")]
+position = Vector2(160, 240)
+npc_name = "Elder"
+dialogue_lines = PackedStringArray("The Severance changed everything. The echoes... they used to be harmless memories. Now they hunger.", "Some say it started when the Great Resonance Crystal in the old capital shattered. But nobody knows for sure.")
+
+[node name="TownfolkNPC2" parent="Entities" instance=ExtResource("4_npc")]
+position = Vector2(400, 200)
+npc_name = "Scout"
+dialogue_lines = PackedStringArray("I've seen strange lights in the ruins to the west. Echo Fragments are appearing more frequently.", "Be careful if you venture beyond the forest. The creatures there are getting bolder.")
+
+[node name="GarrickNPC" parent="Entities" instance=ExtResource("4_npc")]
+position = Vector2(280, 280)
+npc_name = "Garrick"
+dialogue_lines = PackedStringArray("Hmm. Another traveler passing through. These roads aren't what they used to be.", "If you're heading toward the ruins, I'd advise caution. The echoes there are... restless.")
+
+[node name="SavePoint" parent="Entities" instance=ExtResource("5_interact")]
+position = Vector2(240, 200)
+interactable_type = 2
+interaction_text = "Progress saved."
+one_time = false
+
+[node name="SignPost" parent="Entities" instance=ExtResource("5_interact")]
+position = Vector2(120, 160)
+interactable_type = 1
+interaction_text = "Welcome to Roothollow — Last safe haven before the Verdant Reach."
+
+[node name="Triggers" type="Node2D" parent="."]
+
+[node name="ExitToForest" type="Area2D" parent="Triggers"]
+position = Vector2(16, 200)
+collision_layer = 0
+collision_mask = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Triggers/ExitToForest"]
+shape = SubResource("RectangleShape2D_exit")
+
+[node name="GarrickRecruitZone" type="Area2D" parent="Triggers"]
+position = Vector2(280, 280)
+collision_layer = 0
+collision_mask = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Triggers/GarrickRecruitZone"]
+shape = SubResource("RectangleShape2D_garrick")
+
+[node name="GarrickRecruitment" type="Node" parent="."]
+script = ExtResource("6_garrick")
+
+[node name="HUD" parent="." instance=ExtResource("3_hud")]
+
+[node name="DialogueBox" parent="." instance=ExtResource("7_dlg")]
+
+[node name="PauseMenu" parent="." instance=ExtResource("8_pm")]

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3 uid="uid://bpotion"]
+
+[ext_resource type="Script" path="res://resources/item_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"potion"
+display_name = "Potion"
+description = "A basic healing draught that restores 50 HP to a single ally."
+item_type = 0
+effect_type = 0
+effect_value = 50
+target_type = 0
+buy_price = 25
+sell_price = 12
+max_stack = 99
+icon_path = ""
+usable_in_battle = true

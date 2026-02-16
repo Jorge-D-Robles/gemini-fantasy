@@ -1,0 +1,63 @@
+[gd_scene load_steps=10 format=3 uid="uid://c4ruins000001"]
+
+[ext_resource type="Script" path="res://scenes/overgrown_ruins/overgrown_ruins.gd" id="1_ruins"]
+[ext_resource type="PackedScene" uid="uid://c4player00001" path="res://entities/player/player.tscn" id="2_player"]
+[ext_resource type="PackedScene" uid="uid://d2h3u4d5s6c7n" path="res://ui/hud/hud.tscn" id="3_hud"]
+[ext_resource type="Script" path="res://systems/encounter/encounter_system.gd" id="4_encounter"]
+[ext_resource type="Script" path="res://events/opening_sequence.gd" id="5_opening"]
+[ext_resource type="PackedScene" uid="uid://d4d5i6a7l8o9g" path="res://ui/dialogue/dialogue_box.tscn" id="6_dlg"]
+[ext_resource type="PackedScene" uid="uid://e5p6a7u8s9e0m" path="res://ui/pause_menu/pause_menu.tscn" id="7_pm"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_exit"]
+size = Vector2(16, 64)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lyra"]
+size = Vector2(48, 48)
+
+[node name="OvergrownRuins" type="Node2D"]
+script = ExtResource("1_ruins")
+
+[node name="Ground" type="TileMapLayer" parent="."]
+
+[node name="Walls" type="TileMapLayer" parent="."]
+
+[node name="Entities" type="Node2D" parent="."]
+
+[node name="Player" parent="Entities" instance=ExtResource("2_player")]
+position = Vector2(160, 200)
+
+[node name="SpawnPoint" type="Marker2D" parent="Entities"]
+position = Vector2(160, 200)
+
+[node name="LyraEchoSpot" type="Marker2D" parent="Entities"]
+position = Vector2(400, 80)
+
+[node name="Triggers" type="Node2D" parent="."]
+
+[node name="ExitToForest" type="Area2D" parent="Triggers"]
+position = Vector2(480, 180)
+collision_layer = 0
+collision_mask = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Triggers/ExitToForest"]
+shape = SubResource("RectangleShape2D_exit")
+
+[node name="LyraDiscoveryZone" type="Area2D" parent="Triggers"]
+position = Vector2(400, 80)
+collision_layer = 0
+collision_mask = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Triggers/LyraDiscoveryZone"]
+shape = SubResource("RectangleShape2D_lyra")
+
+[node name="EncounterSystem" type="Node" parent="."]
+script = ExtResource("4_encounter")
+
+[node name="OpeningSequence" type="Node" parent="."]
+script = ExtResource("5_opening")
+
+[node name="HUD" parent="." instance=ExtResource("3_hud")]
+
+[node name="DialogueBox" parent="." instance=ExtResource("6_dlg")]
+
+[node name="PauseMenu" parent="." instance=ExtResource("7_pm")]

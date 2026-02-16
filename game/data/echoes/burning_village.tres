@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="EchoData" load_steps=2 format=3 uid="uid://bburning_village"]
+
+[ext_resource type="Script" path="res://resources/echo_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"burning_village"
+display_name = "Burning Village"
+description = "Fire damage to all enemies. A crystallized memory of destruction."
+lore_text = "The flames came at dawn. No one expected the reactor to fail. The screams of the villagers echo through this fragment, trapped forever in crystal."
+rarity = 1
+echo_type = 0
+effect_type = 0
+effect_value = 80
+element = 1
+target_type = 1
+uses_per_battle = 1
+icon_path = ""

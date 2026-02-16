@@ -1,0 +1,121 @@
+[gd_scene load_steps=2 format=3 uid="uid://e5p6a7u8s9e0m"]
+
+[ext_resource type="Script" path="res://ui/pause_menu/pause_menu.gd" id="1_pm"]
+
+[node name="PauseMenu" type="CanvasLayer"]
+layer = 20
+process_mode = 3
+script = ExtResource("1_pm")
+
+[node name="DimOverlay" type="ColorRect" parent="."]
+unique_name_in_owner = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.6)
+
+[node name="PauseLabel" type="Label" parent="."]
+unique_name_in_owner = true
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -60.0
+offset_top = 16.0
+offset_right = 60.0
+offset_bottom = 40.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.9, 0.85, 0.7, 1)
+theme_override_font_sizes/font_size = 18
+text = "PAUSED"
+horizontal_alignment = 1
+
+[node name="MenuPanel" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -260.0
+offset_top = -110.0
+offset_right = 260.0
+offset_bottom = 110.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="MenuPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MenuPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="MenuButtons" type="VBoxContainer" parent="MenuPanel/MarginContainer/HBoxContainer"]
+layout_mode = 2
+custom_minimum_size = Vector2(90, 0)
+theme_override_constants/separation = 6
+
+[node name="PartyButton" type="Button" parent="MenuPanel/MarginContainer/HBoxContainer/MenuButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Party"
+
+[node name="ItemsButton" type="Button" parent="MenuPanel/MarginContainer/HBoxContainer/MenuButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Items"
+
+[node name="StatusButton" type="Button" parent="MenuPanel/MarginContainer/HBoxContainer/MenuButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Status"
+
+[node name="QuitButton" type="Button" parent="MenuPanel/MarginContainer/HBoxContainer/MenuButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Quit to Title"
+
+[node name="ContentPanel" type="PanelContainer" parent="MenuPanel/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MenuPanel/MarginContainer/HBoxContainer/ContentPanel"]
+layout_mode = 2
+
+[node name="ContentMargin" type="MarginContainer" parent="MenuPanel/MarginContainer/HBoxContainer/ContentPanel/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 4
+
+[node name="PartyPanel" type="VBoxContainer" parent="MenuPanel/MarginContainer/HBoxContainer/ContentPanel/ScrollContainer/ContentMargin"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="ItemPanel" type="VBoxContainer" parent="MenuPanel/MarginContainer/HBoxContainer/ContentPanel/ScrollContainer/ContentMargin"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="StatusPanel" type="VBoxContainer" parent="MenuPanel/MarginContainer/HBoxContainer/ContentPanel/ScrollContainer/ContentMargin"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4

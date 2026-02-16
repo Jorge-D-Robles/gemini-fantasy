@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://bemp_burst"]
+
+[ext_resource type="Script" path="res://resources/ability_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"emp_burst"
+display_name = "EMP Burst"
+description = "Disables mechanical enemies and heavily damages constructs. Removes all buffs from affected targets."
+ee_cost = 25
+resonance_cost = 0.0
+damage_base = 70
+damage_stat = 1
+target_type = 1
+element = 0
+status_effect = "dispel"
+status_chance = 1.0
+animation_name = "emp_burst"

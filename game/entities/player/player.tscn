@@ -1,0 +1,26 @@
+[gd_scene load_steps=3 format=3 uid="uid://c4player00001"]
+
+[ext_resource type="Script" path="res://entities/player/player.gd" id="1_player"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+size = Vector2(12, 16)
+
+[node name="Player" type="CharacterBody2D"]
+collision_layer = 1
+collision_mask = 6
+script = ExtResource("1_player")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 4)
+shape = SubResource("RectangleShape2D_body")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+
+[node name="InteractionRay" type="RayCast2D" parent="."]
+target_position = Vector2(0, 24)
+collision_mask = 6
+collide_with_areas = true
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position_smoothing_enabled = true
+position_smoothing_speed = 8.0

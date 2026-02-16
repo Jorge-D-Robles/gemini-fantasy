@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="EchoData" load_steps=2 format=3 uid="uid://bchilds_laughter"]
+
+[ext_resource type="Script" path="res://resources/echo_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"childs_laughter"
+display_name = "Child's Laughter"
+description = "Boosts party speed by 20% for 3 turns."
+lore_text = "Pure, unbridled joy. A child chasing fireflies through a summer field, before The Severance, before everything changed. This memory reminds you what you are fighting for."
+rarity = 0
+echo_type = 1
+effect_type = 2
+effect_value = 20
+element = 0
+target_type = 3
+uses_per_battle = 1
+icon_path = ""

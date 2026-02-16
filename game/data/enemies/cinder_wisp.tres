@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3 uid="uid://bcinder_wisp"]
+
+[ext_resource type="Script" path="res://resources/enemy_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"cinder_wisp"
+display_name = "Cinder Wisp"
+description = "A floating ember with a vaguely humanoid silhouette. Echo of someone who died in a reactor meltdown, endlessly reliving their burning. Erratic and dangerous."
+max_hp = 30
+attack = 6
+magic = 14
+defense = 2
+resistance = 12
+speed = 18
+exp_reward = 18
+gold_reward = 10
+abilities = []
+weaknesses = [4]
+resistances = [1]
+ai_type = 0
+sprite_path = ""
+loot_table = [{"item_id": "memory_of_flame", "drop_chance": 0.3}, {"item_id": "ember_essence", "drop_chance": 0.25}, {"item_id": "resonance_dust", "drop_chance": 0.15}]

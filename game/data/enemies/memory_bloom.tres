@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3 uid="uid://bmemory_bloom"]
+
+[ext_resource type="Script" path="res://resources/enemy_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"memory_bloom"
+display_name = "Memory Bloom"
+description = "A beautiful flower made of light and crystal. Passive until attacked, then swarms appear. Manifestation of happy memories from the old capital, now hollow and predatory."
+max_hp = 45
+attack = 8
+magic = 12
+defense = 4
+resistance = 8
+speed = 6
+exp_reward = 15
+gold_reward = 8
+abilities = []
+weaknesses = [7]
+resistances = []
+ai_type = 0
+sprite_path = ""
+loot_table = [{"item_id": "illusory_petal", "drop_chance": 0.4}, {"item_id": "dream_nectar", "drop_chance": 0.2}, {"item_id": "echo_seed", "drop_chance": 0.1}]

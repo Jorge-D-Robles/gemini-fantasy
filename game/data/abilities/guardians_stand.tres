@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://bguardians_stand"]
+
+[ext_resource type="Script" path="res://resources/ability_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"guardians_stand"
+display_name = "Guardian's Stand"
+description = "Taunts all enemies to target Garrick for 2 turns. Garrick takes 30% less damage during this time."
+ee_cost = 20
+resonance_cost = 0.0
+damage_base = 0
+damage_stat = 0
+target_type = 4
+element = 0
+status_effect = "taunt"
+status_chance = 1.0
+animation_name = "guardians_stand"

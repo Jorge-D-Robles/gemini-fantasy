@@ -1,0 +1,30 @@
+[gd_scene load_steps=2 format=3 uid="uid://c4pbattler001"]
+
+[ext_resource type="Script" path="res://entities/battle/party_battler_scene.gd" id="1_pbs"]
+
+[node name="PartyBattlerScene" type="Node2D"]
+script = ExtResource("1_pbs")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+[node name="HPBar" type="ProgressBar" parent="."]
+offset_left = -20.0
+offset_top = -24.0
+offset_right = 20.0
+offset_bottom = -20.0
+show_percentage = false
+
+[node name="EEBar" type="ProgressBar" parent="."]
+offset_left = -20.0
+offset_top = -19.0
+offset_right = 20.0
+offset_bottom = -16.0
+show_percentage = false
+
+[node name="StatusIcons" type="HBoxContainer" parent="."]
+offset_left = -20.0
+offset_top = -32.0
+offset_right = 20.0
+offset_bottom = -24.0
