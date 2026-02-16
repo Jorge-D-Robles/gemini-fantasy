@@ -2,6 +2,7 @@ extends Node2D
 
 ## Main battle scene. Orchestrates battlers, turn queue, and state machine.
 
+## Emitted when the battle ends. [param victory] is true if party won.
 signal battle_finished(victory: bool)
 
 var party_battlers: Array[PartyBattler] = []
@@ -21,6 +22,7 @@ func _ready() -> void:
 	state_machine.setup(self)
 
 
+## Initializes the battle with the given party and enemy data resources.
 func setup_battle(
 	party_data: Array[Resource],
 	enemy_data: Array[Resource],
@@ -34,6 +36,7 @@ func setup_battle(
 	state_machine.transition_to("BattleStart")
 
 
+## Returns all party battlers that are still alive.
 func get_living_party() -> Array[Battler]:
 	var living: Array[Battler] = []
 	for b in party_battlers:
@@ -42,6 +45,7 @@ func get_living_party() -> Array[Battler]:
 	return living
 
 
+## Returns all enemy battlers that are still alive.
 func get_living_enemies() -> Array[Battler]:
 	var living: Array[Battler] = []
 	for b in enemy_battlers:
@@ -50,8 +54,8 @@ func get_living_enemies() -> Array[Battler]:
 	return living
 
 
+## Checks if the battle is over. Returns 0 (ongoing), 1 (victory), or -1 (defeat).
 func check_battle_end() -> int:
-	## Returns: 0 = ongoing, 1 = victory, -1 = defeat
 	if get_living_enemies().is_empty():
 		return 1
 	if get_living_party().is_empty():
@@ -59,42 +63,33 @@ func check_battle_end() -> int:
 	return 0
 
 
+## Ends the battle and emits [signal battle_finished].
 func end_battle(victory: bool) -> void:
 	_battle_result = victory
 	battle_finished.emit(victory)
 
 
 func _spawn_party(party_data: Array[Resource]) -> void:
-	var positions: Array[Vector2] = [
-		Vector2(450, 100),
-		Vector2(470, 150),
-		Vector2(450, 200),
-		Vector2(470, 250),
-	]
+	var slots := _get_marker_positions(party_node)
 	for i in party_data.size():
 		var battler := PartyBattler.new()
 		battler.data = party_data[i]
 		battler.initialize_from_data()
-		if i < positions.size():
-			battler.position = positions[i]
+		if i < slots.size():
+			battler.position = slots[i]
 		party_node.add_child(battler)
 		party_battlers.append(battler)
 		battler.defeated.connect(_on_battler_defeated.bind(battler))
 
 
 func _spawn_enemies(enemy_data: Array[Resource]) -> void:
-	var positions: Array[Vector2] = [
-		Vector2(150, 100),
-		Vector2(130, 150),
-		Vector2(150, 200),
-		Vector2(130, 250),
-	]
+	var slots := _get_marker_positions(enemy_node)
 	for i in enemy_data.size():
 		var battler := EnemyBattler.new()
 		battler.data = enemy_data[i]
 		battler.initialize_from_data()
-		if i < positions.size():
-			battler.position = positions[i]
+		if i < slots.size():
+			battler.position = slots[i]
 		enemy_node.add_child(battler)
 		enemy_battlers.append(battler)
 		battler.defeated.connect(_on_battler_defeated.bind(battler))
@@ -106,6 +101,14 @@ func _build_battler_list() -> void:
 		all_battlers.append(b)
 	for b in enemy_battlers:
 		all_battlers.append(b)
+
+
+func _get_marker_positions(parent: Node2D) -> Array[Vector2]:
+	var positions: Array[Vector2] = []
+	for child: Node in parent.get_children():
+		if child is Marker2D:
+			positions.append(child.position)
+	return positions
 
 
 func _on_battler_defeated(battler: Battler) -> void:

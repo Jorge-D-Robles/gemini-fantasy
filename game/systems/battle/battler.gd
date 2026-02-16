@@ -4,14 +4,23 @@ extends Node2D
 ## Base class for all combatants in battle. Holds stats, status effects,
 ## and the Resonance gauge. Extended by PartyBattler and EnemyBattler.
 
+## Emitted when HP changes. Provides current and maximum values.
 signal hp_changed(new_hp: int, max_hp: int)
+## Emitted when Echo Energy changes. Provides current and maximum values.
 signal ee_changed(new_ee: int, max_ee: int)
+## Emitted when this battler's HP reaches zero.
 signal defeated
+## Emitted when the resonance gauge value changes.
 signal resonance_changed(new_value: float)
+## Emitted when the resonance state transitions between phases.
 signal resonance_state_changed(old_state: ResonanceState, new_state: ResonanceState)
+## Emitted when a status effect is added to this battler.
 signal status_effect_applied(effect: StringName)
+## Emitted when a status effect is removed from this battler.
 signal status_effect_removed(effect: StringName)
+## Emitted when this battler finishes executing an action.
 signal action_finished
+## Emitted when this battler receives damage after defense calculation.
 signal damage_taken(amount: int)
 
 enum ResonanceState {
@@ -27,9 +36,20 @@ const RESONANCE_OVERLOAD_THRESHOLD: float = 100.0
 const RESONANCE_GAIN_DAMAGE_TAKEN: float = 1.0
 const RESONANCE_GAIN_DAMAGE_DEALT: float = 0.6
 const RESONANCE_GAIN_DEFENDING: float = 1.5
+const RESONANCE_GAIN_SCALING: float = 0.1
+const DEFEND_RESONANCE_BASE: float = 10.0
+
+# Damage formula constants
+const DEFENSE_SCALING_DIVISOR: float = 200.0
+const DEFENSE_MOD_MIN: float = 0.1
+const HOLLOW_DEFENSE_PENALTY: float = 0.5
+const DEFEND_DAMAGE_REDUCTION: float = 0.5
+const OVERLOAD_INCOMING_DAMAGE_MULT: float = 2.0
+const OVERLOAD_OUTGOING_DAMAGE_MULT: int = 2
+const STAT_DAMAGE_SCALING: float = 0.5
 
 ## Character or enemy data resource.
-@export var data: Resource
+@export var data: BattlerData
 
 var current_hp: int = 0
 var max_hp: int = 0
@@ -53,6 +73,7 @@ var is_alive: bool = true
 var turn_delay: float = 0.0
 
 
+## Loads stats from [member data] and resets HP, EE, resonance to full.
 func initialize_from_data() -> void:
 	if not data:
 		push_error("Battler: no data resource assigned.")
@@ -67,6 +88,7 @@ func initialize_from_data() -> void:
 	_calculate_turn_delay()
 
 
+## Applies damage after defense calculation. Returns actual damage dealt.
 func take_damage(amount: int, is_magical: bool = false) -> int:
 	if not is_alive:
 		return 0
@@ -76,7 +98,9 @@ func take_damage(amount: int, is_magical: bool = false) -> int:
 	damage_taken.emit(final_damage)
 
 	if resonance_state != ResonanceState.HOLLOW:
-		add_resonance(final_damage * RESONANCE_GAIN_DAMAGE_TAKEN * 0.1)
+		add_resonance(
+			final_damage * RESONANCE_GAIN_DAMAGE_TAKEN * RESONANCE_GAIN_SCALING
+		)
 
 	if current_hp <= 0:
 		_on_defeated()
@@ -84,6 +108,7 @@ func take_damage(amount: int, is_magical: bool = false) -> int:
 	return final_damage
 
 
+## Restores HP up to max. Returns actual amount healed.
 func heal(amount: int) -> int:
 	if not is_alive:
 		return 0
@@ -94,6 +119,7 @@ func heal(amount: int) -> int:
 	return healed
 
 
+## Spends Echo Energy. Returns false if insufficient EE.
 func use_ee(cost: int) -> bool:
 	if current_ee < cost:
 		return false
@@ -102,6 +128,7 @@ func use_ee(cost: int) -> bool:
 	return true
 
 
+## Restores Echo Energy up to max. Returns actual amount restored.
 func restore_ee(amount: int) -> int:
 	var old_ee := current_ee
 	current_ee = mini(current_ee + amount, max_ee)
@@ -110,34 +137,40 @@ func restore_ee(amount: int) -> int:
 	return restored
 
 
+## Calculates outgoing damage with stat bonus and resonance modifiers.
 func deal_damage(base_amount: int, is_magical: bool = false) -> int:
 	var stat_bonus: float
 	if is_magical:
-		stat_bonus = magic * 0.5
+		stat_bonus = magic * STAT_DAMAGE_SCALING
 	else:
-		stat_bonus = attack * 0.5
+		stat_bonus = attack * STAT_DAMAGE_SCALING
 	var total := int(base_amount + stat_bonus)
 
 	if resonance_state == ResonanceState.OVERLOAD:
-		total *= 2
+		total *= OVERLOAD_OUTGOING_DAMAGE_MULT
 
 	if resonance_state != ResonanceState.HOLLOW:
-		add_resonance(total * RESONANCE_GAIN_DAMAGE_DEALT * 0.1)
+		add_resonance(
+			total * RESONANCE_GAIN_DAMAGE_DEALT * RESONANCE_GAIN_SCALING
+		)
 
 	return total
 
 
+## Enters defend stance, halving incoming damage and gaining resonance.
 func defend() -> void:
 	is_defending = true
 	if resonance_state != ResonanceState.HOLLOW:
-		add_resonance(10.0 * RESONANCE_GAIN_DEFENDING)
+		add_resonance(DEFEND_RESONANCE_BASE * RESONANCE_GAIN_DEFENDING)
 
 
+## Clears defend stance and recalculates turn delay for the next round.
 func end_turn() -> void:
 	is_defending = false
 	_calculate_turn_delay()
 
 
+## Adds to the resonance gauge and updates state. Ignored in HOLLOW state.
 func add_resonance(amount: float) -> void:
 	if resonance_state == ResonanceState.HOLLOW:
 		return
@@ -146,16 +179,19 @@ func add_resonance(amount: float) -> void:
 	_update_resonance_state()
 
 
+## Returns the current resonance state.
 func check_resonance_state() -> ResonanceState:
 	return resonance_state
 
 
+## Applies a status effect if not already present.
 func apply_status_effect(effect: StringName) -> void:
 	if effect not in status_effects:
 		status_effects.append(effect)
 		status_effect_applied.emit(effect)
 
 
+## Removes a status effect by name.
 func remove_status_effect(effect: StringName) -> void:
 	var idx: int = status_effects.find(effect)
 	if idx >= 0:
@@ -163,10 +199,12 @@ func remove_status_effect(effect: StringName) -> void:
 		status_effect_removed.emit(effect)
 
 
+## Returns true if this battler has the given status effect.
 func has_status_effect(effect: StringName) -> bool:
 	return effect in status_effects
 
 
+## Revives a defeated battler with a percentage of max HP.
 func revive(hp_percent: float = 0.25) -> void:
 	if is_alive:
 		return
@@ -175,8 +213,9 @@ func revive(hp_percent: float = 0.25) -> void:
 	hp_changed.emit(current_hp, max_hp)
 
 
+## Returns the display name from data, or the node name as fallback.
 func get_display_name() -> String:
-	if data and "display_name" in data:
+	if data:
 		return data.display_name
 	return name
 
@@ -189,16 +228,16 @@ func _calculate_incoming_damage(base: int, is_magical: bool) -> int:
 		def_stat = defense
 
 	if resonance_state == ResonanceState.HOLLOW:
-		def_stat = int(def_stat * 0.5)
+		def_stat = int(def_stat * HOLLOW_DEFENSE_PENALTY)
 
-	var defense_mod := 1.0 - (def_stat / 200.0)
-	defense_mod = clampf(defense_mod, 0.1, 1.0)
+	var defense_mod := 1.0 - (def_stat / DEFENSE_SCALING_DIVISOR)
+	defense_mod = clampf(defense_mod, DEFENSE_MOD_MIN, 1.0)
 
 	if is_defending:
-		defense_mod *= 0.5
+		defense_mod *= DEFEND_DAMAGE_REDUCTION
 
 	if resonance_state == ResonanceState.OVERLOAD:
-		defense_mod *= 2.0
+		defense_mod *= OVERLOAD_INCOMING_DAMAGE_MULT
 
 	return maxi(int(base * defense_mod), 1)
 
@@ -240,21 +279,12 @@ func _calculate_turn_delay() -> void:
 func _load_stats_from_data() -> void:
 	if not data:
 		return
-	if "max_hp" in data:
-		max_hp = data.max_hp
-	if "max_ee" in data:
-		max_ee = data.max_ee
-	if "attack" in data:
-		attack = data.attack
-	if "magic" in data:
-		magic = data.magic
-	if "defense" in data:
-		defense = data.defense
-	if "resistance" in data:
-		resistance = data.resistance
-	if "speed" in data:
-		speed = data.speed
-	if "luck" in data:
-		luck = data.luck
-	if "abilities" in data:
-		abilities = data.abilities
+	max_hp = data.max_hp
+	max_ee = data.max_ee
+	attack = data.attack
+	magic = data.magic
+	defense = data.defense
+	resistance = data.resistance
+	speed = data.speed
+	luck = data.luck
+	abilities = data.abilities

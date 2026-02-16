@@ -114,7 +114,6 @@ const DETAIL_MAP: Array[String] = [
 @onready var _ground_detail: TileMapLayer = $GroundDetail
 @onready var _player: CharacterBody2D = $Entities/Player
 @onready var _spawn_from_forest: Marker2D = $Entities/SpawnFromForest
-@onready var _hud: CanvasLayer = $HUD
 @onready var _exit_to_forest: Area2D = $Triggers/ExitToForest
 @onready var _garrick_zone: Area2D = $Triggers/GarrickRecruitZone
 @onready var _garrick_event: GarrickRecruitment = $GarrickRecruitment
@@ -123,7 +122,7 @@ const DETAIL_MAP: Array[String] = [
 
 func _ready() -> void:
 	_setup_tilemap()
-	_hud.location_name = "Roothollow"
+	UILayer.hud.location_name = "Roothollow"
 
 	# Add spawn point to group for GameManager lookup
 	_spawn_from_forest.add_to_group("spawn_from_forest")
