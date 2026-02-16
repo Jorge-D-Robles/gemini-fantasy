@@ -90,7 +90,6 @@ const WALL_MAP: Array[String] = [
 @onready var _walls_layer: TileMapLayer = $Walls
 @onready var _player: CharacterBody2D = $Entities/Player
 @onready var _spawn_point: Marker2D = $Entities/SpawnPoint
-@onready var _hud: CanvasLayer = $HUD
 @onready var _encounter_system: EncounterSystem = $EncounterSystem
 @onready var _opening_sequence: OpeningSequence = $OpeningSequence
 @onready var _exit_to_forest: Area2D = $Triggers/ExitToForest
@@ -113,7 +112,7 @@ func _ready() -> void:
 		player_node.global_position = _spawn_point.global_position
 
 	# HUD setup
-	_hud.location_name = "Overgrown Ruins"
+	UILayer.hud.location_name = "Overgrown Ruins"
 
 	# Connect triggers
 	_exit_to_forest.body_entered.connect(_on_exit_to_forest_entered)

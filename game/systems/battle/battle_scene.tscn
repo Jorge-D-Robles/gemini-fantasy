@@ -24,7 +24,31 @@ script = ExtResource("1_battle")
 
 [node name="PartyBattlers" type="Node2D" parent="Battlers"]
 
+[node name="Slot0" type="Marker2D" parent="Battlers/PartyBattlers"]
+position = Vector2(450, 100)
+
+[node name="Slot1" type="Marker2D" parent="Battlers/PartyBattlers"]
+position = Vector2(470, 150)
+
+[node name="Slot2" type="Marker2D" parent="Battlers/PartyBattlers"]
+position = Vector2(450, 200)
+
+[node name="Slot3" type="Marker2D" parent="Battlers/PartyBattlers"]
+position = Vector2(470, 250)
+
 [node name="EnemyBattlers" type="Node2D" parent="Battlers"]
+
+[node name="Slot0" type="Marker2D" parent="Battlers/EnemyBattlers"]
+position = Vector2(150, 100)
+
+[node name="Slot1" type="Marker2D" parent="Battlers/EnemyBattlers"]
+position = Vector2(130, 150)
+
+[node name="Slot2" type="Marker2D" parent="Battlers/EnemyBattlers"]
+position = Vector2(150, 200)
+
+[node name="Slot3" type="Marker2D" parent="Battlers/EnemyBattlers"]
+position = Vector2(130, 250)
 
 [node name="TurnQueue" type="Node" parent="."]
 script = ExtResource("3_tq")

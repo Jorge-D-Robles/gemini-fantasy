@@ -2,11 +2,8 @@
 
 [ext_resource type="Script" path="res://scenes/overgrown_ruins/overgrown_ruins.gd" id="1_ruins"]
 [ext_resource type="PackedScene" uid="uid://c4player00001" path="res://entities/player/player.tscn" id="2_player"]
-[ext_resource type="PackedScene" uid="uid://d2h3u4d5s6c7n" path="res://ui/hud/hud.tscn" id="3_hud"]
 [ext_resource type="Script" path="res://systems/encounter/encounter_system.gd" id="4_encounter"]
 [ext_resource type="Script" path="res://events/opening_sequence.gd" id="5_opening"]
-[ext_resource type="PackedScene" uid="uid://d4d5i6a7l8o9g" path="res://ui/dialogue/dialogue_box.tscn" id="6_dlg"]
-[ext_resource type="PackedScene" uid="uid://e5p6a7u8s9e0m" path="res://ui/pause_menu/pause_menu.tscn" id="7_pm"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_exit"]
 size = Vector2(16, 64)
@@ -59,8 +56,3 @@ script = ExtResource("4_encounter")
 [node name="OpeningSequence" type="Node" parent="."]
 script = ExtResource("5_opening")
 
-[node name="HUD" parent="." instance=ExtResource("3_hud")]
-
-[node name="DialogueBox" parent="." instance=ExtResource("6_dlg")]
-
-[node name="PauseMenu" parent="." instance=ExtResource("7_pm")]
