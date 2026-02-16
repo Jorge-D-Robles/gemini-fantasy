@@ -31,10 +31,19 @@ static func create_atlas_source(
 	texture_path: String,
 ) -> TileSetAtlasSource:
 	var source := TileSetAtlasSource.new()
-	source.texture = load(texture_path)
+	var tex: Texture2D = load(texture_path) as Texture2D
+	if tex == null:
+		push_error(
+			"MapBuilder: Failed to load texture '%s'. "
+			% texture_path
+			+ "Ensure the PNG exists in the project and Godot "
+			+ "has imported it (reopen the editor if needed)."
+		)
+		return source
+	source.texture = tex
 	source.texture_region_size = Vector2i(TILE_SIZE, TILE_SIZE)
 
-	var tex_size := Vector2i(source.texture.get_size())
+	var tex_size := Vector2i(tex.get_size())
 	var cols: int = tex_size.x / TILE_SIZE
 	var rows: int = tex_size.y / TILE_SIZE
 
@@ -77,16 +86,19 @@ static func create_tileset(
 		var source := create_atlas_source(atlas_paths[i])
 		tileset.add_source(source, i)
 
-		if solid_tiles.has(i):
-			var coords_list: Array = solid_tiles[i]
-			for coords: Vector2i in coords_list:
-				var tile_data: TileData = source.get_tile_data(
-					coords, 0
-				)
-				tile_data.add_collision_polygon(0)
-				tile_data.set_collision_polygon_points(
-					0, 0, full_rect
-				)
+		if not solid_tiles.has(i) or source.texture == null:
+			continue
+		var coords_list: Array = solid_tiles[i]
+		for coords: Vector2i in coords_list:
+			if not source.has_tile(coords):
+				continue
+			var tile_data: TileData = source.get_tile_data(
+				coords, 0
+			)
+			tile_data.add_collision_polygon(0)
+			tile_data.set_collision_polygon_points(
+				0, 0, full_rect
+			)
 
 	return tileset
 
