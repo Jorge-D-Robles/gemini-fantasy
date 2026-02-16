@@ -58,9 +58,15 @@ func _on_battle_finished(victory: bool) -> void:
 	battle_ended.emit(victory)
 
 	if not _pre_battle_scene_path.is_empty():
+		GameManager.scene_changed.connect(
+			_restore_player_position, CONNECT_ONE_SHOT,
+		)
 		await GameManager.change_scene(_pre_battle_scene_path)
-		var player := get_tree().get_first_node_in_group("player")
-		if player:
-			player.global_position = _pre_battle_player_position
 	_pre_battle_scene_path = ""
 	_battle_scene = null
+
+
+func _restore_player_position(_scene_path: String) -> void:
+	var player := get_tree().get_first_node_in_group("player")
+	if player:
+		player.global_position = _pre_battle_player_position
