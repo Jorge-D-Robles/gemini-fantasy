@@ -19,35 +19,32 @@ Do not ask for confirmation at any step. This applies to all tasks — bug fixes
 
 ### Cross-Agent Synchronization
 
-**MANDATORY:** Any change made to `CLAUDE.md` MUST be mirrored in `gemini.md`, and vice versa. These files are the primary context for Claude and Gemini agents respectively. Keeping them in sync ensures both agents have the same high-level instructions, workflows, and project knowledge.
+**MANDATORY:** Any change made to `gemini.md` MUST be mirrored in `CLAUDE.md`, and vice versa. These files are the primary context for Gemini and Claude agents respectively. Keeping them in sync ensures both agents have the same high-level instructions, workflows, and project knowledge.
 
 ## MANDATORY: Research Before Code
 
 **DO NOT write or modify any GDScript, .tscn, or .tres file without first completing BOTH of these steps:**
 
-1. **Call the `godot-docs` subagent** for every Godot class you will use:
-   ```
-   Task(subagent_type="godot-docs", prompt="Look up [CLASS]. I need [properties/methods/signals].")
-   ```
+1. **Activate the `godot-docs` skill** for every Godot class you will use and follow its search protocol.
 2. **Read the relevant best practices file** from `docs/best-practices/`:
    ```
-   Read("docs/best-practices/[relevant-file].md")
+   read_file("docs/best-practices/[relevant-file].md")
    ```
 
 This is not optional. Every code change must be grounded in documentation. Do not rely on memory or assumptions about the Godot API — look it up. If you are unsure which best practices file applies, read the topic mapping table in the "Best Practices Reference" section below.
 
 **Choosing what to look up:**
-- Writing a new scene? → `godot-docs` subagent for root node class + `01-scene-architecture.md`
-- Adding signals? → `godot-docs` subagent for the class + `02-signals-and-communication.md`
+- Writing a new scene? → `godot-docs` skill for root node class + `01-scene-architecture.md`
+- Adding signals? → `godot-docs` skill for the class + `02-signals-and-communication.md`
 - Creating an autoload? → `03-autoloads-and-singletons.md`
-- Defining a Resource? → `godot-docs` subagent for Resource class + `04-resources-and-data.md`
+- Defining a Resource? → `godot-docs` skill for Resource class + `04-resources-and-data.md`
 - Using _ready/_process? → `05-node-lifecycle.md`
 - Worried about performance? → `06-performance.md`
 - Building a state machine? → `07-state-machines.md`
-- Creating UI? → `godot-docs` subagent for Control nodes + `08-ui-patterns.md`
+- Creating UI? → `godot-docs` skill for Control nodes + `08-ui-patterns.md`
 - Implementing save/load? → `09-save-load.md`
 - Building battle/overworld? → `10-jrpg-patterns.md`
-- Adding art/audio assets? → Read the "Asset Workflow" section above + `04-resources-and-data.md`
+- Adding art/audio assets? → Read the "Asset Workflow" section below + `04-resources-and-data.md`
 
 ## Project Structure
 
@@ -59,8 +56,7 @@ docs/              # All documentation
   lore/            # Story, characters, world lore, echo catalog
   mechanics/       # Character abilities and system mechanics
   best-practices/  # Godot best practices summaries (quick reference)
-.claude/           # Claude Code configuration
-  agents/          # 6 specialized agents (docs, review, audit, debug, validation)
+.gemini/           # Gemini CLI configuration
   skills/          # 20 development skills (creation, data, quality, planning)
   settings.json    # Hooks and tool permissions
 ```
@@ -188,57 +184,35 @@ This project is designed for fully automated agentic development. Use the skill 
 **Reference** (auto-loaded, not user-invoked):
 - `gdscript-conventions` — Loaded automatically when writing GDScript
 
-### Specialized Agents
+### Godot Documentation Skill
 
-Six custom agents in `.claude/agents/` handle specialized tasks. **Use these instead of general-purpose agents** — they have domain-specific knowledge and produce structured output.
-
-| Agent | Invocation | Purpose |
-|-------|-----------|---------|
-| `godot-docs` | `Task(subagent_type="godot-docs")` | Godot API lookup, tutorial search, best practices (haiku model) |
-| `gdscript-reviewer` | `Task(subagent_type="gdscript-reviewer")` | Code quality, style guide, best practices review (sonnet model) |
-| `scene-auditor` | `Task(subagent_type="scene-auditor")` | Scene architecture, dependencies, signal health audit (sonnet model) |
-| `playtest-checker` | `Task(subagent_type="playtest-checker")` | Pre-playtest validation, broken refs, missing resources (sonnet model) |
-| `integration-checker` | `Task(subagent_type="integration-checker")` | Cross-system wiring, autoloads, signal connections (sonnet model) |
-| `debugger` | `Task(subagent_type="debugger")` | Bug diagnosis and fix with mandatory doc lookup (inherits model) |
+The `godot-docs` skill handles all Godot documentation lookups. **Use this instead of looking up docs yourself** — it preserves your context window and returns structured summaries.
 
 ```
-# Look up Godot docs (fast, lightweight)
-Task(subagent_type="godot-docs", prompt="Look up CharacterBody2D — I need velocity, move_and_slide(), movement tutorials.")
+# Look up a class API
+activate_skill("godot-docs")
+# Then use the skill's protocol to find:
+# "Look up CharacterBody2D — I need the velocity property, move_and_slide() method, and any movement tutorial examples."
 
-# Review code quality
-Task(subagent_type="gdscript-reviewer", prompt="Review game/systems/combat/")
+# Look up a how-to topic
+# "How to implement save/load in Godot 4.5? Include SaveManager patterns and file format options."
 
-# Audit architecture
-Task(subagent_type="scene-auditor", prompt="Audit the game/scenes/ directory for composition issues.")
-
-# Pre-playtest validation
-Task(subagent_type="playtest-checker", prompt="Run full pre-playtest check on the project.")
-
-# Check system integration
-Task(subagent_type="integration-checker", prompt="Check integration for the combat system.")
-
-# Debug an issue
-Task(subagent_type="debugger", prompt="Fix: 'Invalid get index on null instance' in battle_manager.gd line 42")
+# Look up multiple classes in one call
+# "Look up AnimationPlayer and AnimationTree — I need to understand when to use each, key methods, and how to set up state machine blending."
 ```
+
+The skill searches local docs at `docs/godot-docs/` (class refs + tutorials) AND project best practices at `docs/best-practices/`. It returns structured summaries with properties, methods, signals, code examples, and best practice notes.
 
 ### Agent Team Patterns
 
-When building large features, use parallel agents:
+When building large features, use sub-agents to assist:
 
 ```
-# Research in parallel while planning
-Task(subagent_type="godot-docs", prompt="Look up [CLASS] API and related tutorials...")
-Task(subagent_type="Explore", prompt="Read design doc at docs/game-design/...")
+# Research and codebase investigation
+codebase_investigator("Investigate [FEATURE] implementation requirements...")
 
-# Quality checks in parallel after implementation
-Task(subagent_type="gdscript-reviewer", prompt="Review game/systems/combat/...")
-Task(subagent_type="integration-checker", prompt="Check integration of combat + UI...")
-
-# Full quality sweep (run all review agents in parallel)
-Task(subagent_type="gdscript-reviewer", prompt="Review all .gd files")
-Task(subagent_type="scene-auditor", prompt="Audit all scenes")
-Task(subagent_type="playtest-checker", prompt="Run pre-playtest check")
-Task(subagent_type="integration-checker", prompt="Check all system integration")
+# Documentation lookup
+activate_skill("godot-docs")
 ```
 
 ### Development Order
@@ -323,30 +297,26 @@ Grep across the entire `docs/godot-docs/` directory with `glob: "*.rst"`.
 
 **These are hard requirements, not suggestions. Violating them produces incorrect code.**
 
-- **BEFORE writing ANY code**: Call the `godot-docs` subagent for every Godot class you will use. No exceptions.
+- **BEFORE writing ANY code**: Call the `godot-docs` skill for every Godot class you will use. No exceptions.
 - **BEFORE writing ANY code**: Read the relevant `docs/best-practices/*.md` file. No exceptions.
 - **BEFORE implementing a system**: Read the relevant design doc from `docs/game-design/` or `docs/lore/`.
 - **SKIP** lookup only for basic GDScript syntax (variables, loops, functions, conditionals) — NOT for Godot API calls.
-- For complex questions spanning multiple docs, call the `godot-docs` subagent with a detailed prompt.
+- For complex questions spanning multiple docs, call the `godot-docs` skill with a detailed prompt.
 
 ## Documentation Lookup
 
-Use the `godot-docs` subagent for ALL Godot documentation lookups:
+Use the `godot-docs` skill for ALL Godot documentation lookups:
 
 ```
-Task(subagent_type="godot-docs", prompt=
-  "Look up [TOPIC]. I need [specific information needed].
-   Include code examples and best practice notes if available.")
+activate_skill("godot-docs")
+# Search for: "Look up [TOPIC]. I need [specific information needed]. Include code examples and best practice notes if available."
 ```
 
-This subagent searches `docs/godot-docs/` (1071 class refs + tutorials) and `docs/best-practices/` (10 summary guides). It returns structured summaries, preserving your context window.
+This skill searches `docs/godot-docs/` (1071 class refs + tutorials) and `docs/best-practices/` (10 summary guides). It returns structured summaries, preserving your context window.
 
-For non-Godot research (design docs, lore, existing code), use Explore:
+For non-Godot research (design docs, lore, existing code), use `grep_search`, `read_file`, and `codebase_investigator`. For deep research into mechanics, use a descriptive prompt:
 
-```
-Task(subagent_type="Explore", prompt=
-  "Read docs/game-design/01-core-mechanics.md and extract the Resonance combat system details.")
-```
+"Read docs/game-design/01-core-mechanics.md and extract the Resonance combat system details."
 
 ## JRPG Core Classes
 

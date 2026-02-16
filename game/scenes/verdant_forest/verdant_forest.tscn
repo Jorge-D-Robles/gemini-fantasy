@@ -21,15 +21,27 @@ size = Vector2(48, 48)
 script = ExtResource("1_forest")
 
 [node name="Ground" type="TileMapLayer" parent="."]
+collision_enabled = false
+z_index = -2
 
 [node name="Trees" type="TileMapLayer" parent="."]
+collision_enabled = true
+z_index = 1
 
 [node name="Paths" type="TileMapLayer" parent="."]
+collision_enabled = false
+z_index = -1
 
 [node name="Entities" type="Node2D" parent="."]
 
 [node name="Player" parent="Entities" instance=ExtResource("2_player")]
 position = Vector2(80, 180)
+
+[node name="Camera2D" parent="Entities/Player" index="3"]
+limit_left = 0
+limit_top = 0
+limit_right = 640
+limit_bottom = 384
 
 [node name="SpawnFromRuins" type="Marker2D" parent="Entities"]
 position = Vector2(80, 180)

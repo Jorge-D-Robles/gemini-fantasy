@@ -6,6 +6,112 @@ extends Node2D
 
 const VERDANT_FOREST_PATH: String = "res://scenes/verdant_forest/verdant_forest.tscn"
 
+const GROUND_LEGEND: Dictionary = {
+	"G": Vector2i(0, 0),
+	"g": Vector2i(1, 0),
+	"h": Vector2i(2, 0),
+	"j": Vector2i(3, 0),
+	"W": Vector2i(4, 0),
+	"E": Vector2i(5, 0),
+	"S": Vector2i(0, 10),
+	"s": Vector2i(1, 10),
+	"D": Vector2i(0, 4),
+	"d": Vector2i(1, 4),
+	"F": Vector2i(0, 8),
+	"f": Vector2i(1, 8),
+}
+
+const DETAIL_LEGEND: Dictionary = {
+	"f": Vector2i(4, 14),
+	"v": Vector2i(5, 14),
+}
+
+# 48 cols x 38 rows — covers the town pixel area
+const GROUND_MAP: Array[String] = [
+	"fFffFffFfFffFFfFfFFFFFffFffFfFFFFfFfFFfFfFFFfFFf",
+	"fFFFfFFFffFffFFFfFfFFfFFfFFfffFfFFFfFfFFFFfFFFFF",
+	"fFFffFffFFFFffFfFFFfffFFfFFFFffFFffFfFFFfFffffff",
+	"FfhEjjGhjGghgGEESSssgjjghhghEhSSsshGjggGghghjgfF",
+	"FfGhjhGgGjgWghWWSSssGGGWgWWEjWSSssWhWgjjjGhEGjfF",
+	"FfWGhjDdDdjhgjWWSSssGGWgGDdDdGSSssjgghEgjWWgEjfF",
+	"FfWEggDdDdEgGGWGSSssghgjhDdDdjSSssWGWGWWEhgjjEfF",
+	"FfhgjhDdDdgEWjhWSSssWEEhGDdDdgSSssjhgWhgGghWGGfF",
+	"FfhggWWhWhGgjjEWSSssEjWWhWhWGESSssgjGEGEGhEhjEfF",
+	"FfEEGEjgWGjgEGhgSSssghhEWhjGhgSSsshEjjgWhEWhWgfF",
+	"FfjhgjjgWWhjhWgjSSssWGEEGjghGgSSsshhWgEWWhWWhhfF",
+	"FfGWjjEhghGgEhEGSSssgEhghhGGEgSSssgGGgjjWjGggEfF",
+	"FfGhEGEgGGhghhghSSssGhghjWgWEgSSsshgEgWEWhEhhEfF",
+	"FfEjWgjGGEWgjWgGSSssjgEGjEGjhhSSssEgEGjghgGEhEfF",
+	"FfhghjhGhEEWjjjjSSssWGhgWggGWWSSssEGGgGGhGWhGjfF",
+	"FfEGGGEjGhjGGjgjSSssgEWjgjgjEhSSssjhGEjhGWhGWgfF",
+	"FfhWjEggEhjGgGgjSSssjEGgWjjWhWSSssGgEEEGhjGhGjfF",
+	"FfWjjgGGggjWjGhjSSssWjhEhjGggjSSssGhhWhjhWhEWhfF",
+	"sSSssssSsSSsssssSSssSSSSsSSSssSSssssSSsSSSSsSSsS",
+	"SssSsSSSSSSssssSsSsSsSSSSsSSsSsSsSssssSsSsSSSSSs",
+	"FfjjGGEWGWWGhgWjSSssGWgWEhggjWSSssgjhghgjEjEjEfF",
+	"FfGgjgWWEWGWhEhjSSsshjGhhgWEGGSSssggEhjWEGjWGhfF",
+	"FfWjGEGEWgGEghGgSSssWEgEEWGEEjSSssjEhEGGhhjGhGfF",
+	"FfGhhEGjjEWjGWDdSSssDdEhEjGWhjSSssGWWhGgjWEGhWfF",
+	"FfGjgGjhEgWEEGDdSSssDdjWjhGGGGSSssgGEggEghEhGgfF",
+	"FfjghWjEgjGgjjDdSSssDdEWjjWEGGSSssWhEgWEEjjEhGfF",
+	"FfGWWWhjhghWggDdSSssDdghGjEWhESSssjEEjGghWgEEEfF",
+	"FfgWjgGhGGgWgGGESSssEEWhGGGEhjSSssjhjggGEjWjhjfF",
+	"FfEhWhhGgjjjgGGESSssjggWhWjWEESSssEGhWGWgEjEGhfF",
+	"FfGWGhhgjEEWEGhhSSsshWjghWWEhgSSssjGGWGgEhjEhhfF",
+	"FfggghGWEEghjEEjSSssgGWWWWhjWGSSssGWWGgEGjGEEhfF",
+	"FfGgGGWjEjEgGWGWSSssjhWhWgEEGjSSssjEEGWWWWhgEhfF",
+	"FfgGEjhhjWjhhgGgSSssGgEghWEjEgSSssWWEGGGEjhEGjfF",
+	"FfEEgEWWEGEWWEjWSSssGggEEhEgEjSSssWghEWGgWjEggfF",
+	"FfWWGjEgjggGGjWhSSssgEjjhjhjGESSsshghjgjGghggEfF",
+	"FfFFfFfffFfffFfffFFFFfFFfFfFFFFFfFFffFFFfFfffFFF",
+	"ffFfffFFffffFfFfFFFffFFFFfffFfFFfFffFfffFfFfFffF",
+	"FfFfFfFfFfFffffFfFFffFFFfffFfFffFffFfFFffFFFfFFf",
+]
+
+# Sparse detail layer — foliage accents on open grass
+const DETAIL_MAP: Array[String] = [
+	"                                                ",
+	"                                                ",
+	"                                                ",
+	"     f                v              f          ",
+	"                                                ",
+	"          v                    f                ",
+	"                                                ",
+	"                                                ",
+	"                                                ",
+	"   f                                    v       ",
+	"                                                ",
+	"                v                               ",
+	"                                                ",
+	"                                                ",
+	"  v                                  f          ",
+	"                                                ",
+	"                                                ",
+	"       f                     v                  ",
+	"                                                ",
+	"                                                ",
+	"                                                ",
+	"                                                ",
+	"   v                               f            ",
+	"                                                ",
+	"                                                ",
+	"          f                                     ",
+	"                                                ",
+	"                         v                      ",
+	"                                                ",
+	"                                                ",
+	"                                           v    ",
+	"   f                                            ",
+	"                                                ",
+	"                v                  f            ",
+	"                                                ",
+	"                                                ",
+	"                                                ",
+	"                                                ",
+]
+
+@onready var _ground: TileMapLayer = $Ground
+@onready var _ground_detail: TileMapLayer = $GroundDetail
 @onready var _player: CharacterBody2D = $Entities/Player
 @onready var _spawn_from_forest: Marker2D = $Entities/SpawnFromForest
 @onready var _hud: CanvasLayer = $HUD
@@ -16,6 +122,7 @@ const VERDANT_FOREST_PATH: String = "res://scenes/verdant_forest/verdant_forest.
 
 
 func _ready() -> void:
+	_setup_tilemap()
 	_hud.location_name = "Roothollow"
 
 	# Add spawn point to group for GameManager lookup
@@ -34,6 +141,16 @@ func _ready() -> void:
 		_garrick_zone.monitoring = false
 		_garrick_npc.visible = false
 		_garrick_npc.process_mode = Node.PROCESS_MODE_DISABLED
+
+
+func _setup_tilemap() -> void:
+	var atlas_paths: Array[String] = [MapBuilder.FAIRY_FOREST_A5_A]
+	MapBuilder.apply_tileset(
+		[_ground, _ground_detail] as Array[TileMapLayer],
+		atlas_paths,
+	)
+	MapBuilder.build_layer(_ground, GROUND_MAP, GROUND_LEGEND)
+	MapBuilder.build_layer(_ground_detail, DETAIL_MAP, DETAIL_LEGEND)
 
 
 func _on_exit_to_forest_entered(body: Node2D) -> void:

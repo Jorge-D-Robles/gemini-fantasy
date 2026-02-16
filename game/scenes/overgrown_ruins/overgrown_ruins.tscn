@@ -18,8 +18,11 @@ size = Vector2(48, 48)
 script = ExtResource("1_ruins")
 
 [node name="Ground" type="TileMapLayer" parent="."]
+collision_enabled = false
+z_index = -1
 
 [node name="Walls" type="TileMapLayer" parent="."]
+z_index = 0
 
 [node name="Entities" type="Node2D" parent="."]
 

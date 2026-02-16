@@ -10,13 +10,21 @@ Invoke the `gdscript-reviewer` agent to perform a comprehensive code review.
 
 **Target:** $ARGUMENTS
 
+If no specific target was given, review all `.gd` files by running `Glob("game/**/*.gd")`.
+
 Run this command:
 
 ```
-Task(subagent_type="gdscript-reviewer", prompt="Review GDScript code at: $ARGUMENTS. If no target given, review all .gd files via Glob('game/**/*.gd').")
+Task(subagent_type="gdscript-reviewer", prompt="Review GDScript code at: $ARGUMENTS. If no target given, review all .gd files via Glob('game/**/*.gd'). Ground every critique in official Godot 4.5 documentation or the project's docs/best-practices/ files.")
 ```
 
 After the agent returns its report, summarize the key findings for the user:
 - Total files reviewed and overall score
-- Any CRITICAL issues that need immediate attention
-- Top recurring patterns to fix
+- Critical issues count
+- Warning count
+- Style issues count
+- Top 3 most common issues across all files
+- Overall code quality assessment
+
+## Post-Review Action
+**MANDATORY:** After completing the review, you MUST update `ISSUES_TRACKER.md`. Add any new [CRITICAL] or [WARNING] issues found during the review to the appropriate section, or create a new section if necessary.
