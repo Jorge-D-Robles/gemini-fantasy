@@ -61,9 +61,12 @@ func play_attack_anim() -> void:
 		anim_player.play("attack")
 		await anim_player.animation_finished
 	else:
+		# Lunge forward toward party (right), then snap back
+		var origin_x := position.x
 		var tween := create_tween()
-		tween.tween_property(self, "position:x", position.x + 12.0, 0.08)
-		tween.tween_property(self, "position:x", position.x, 0.08)
+		tween.tween_property(self, "position:x", origin_x + 20.0, 0.1)
+		tween.tween_interval(0.06)
+		tween.tween_property(self, "position:x", origin_x, 0.08)
 		await tween.finished
 
 
@@ -72,10 +75,15 @@ func play_damage_anim() -> void:
 		anim_player.play("damage")
 		await anim_player.animation_finished
 	else:
-		var original_mod := sprite.modulate
+		# Flash white then red with recoil
+		var origin_x := position.x
 		var tween := create_tween()
+		tween.tween_property(sprite, "modulate", Color(1.5, 1.5, 1.5), 0.04)
+		tween.tween_property(self, "position:x", origin_x - 4.0, 0.03)
 		tween.tween_property(sprite, "modulate", Color.RED, 0.06)
-		tween.tween_property(sprite, "modulate", original_mod, 0.12)
+		tween.tween_property(self, "position:x", origin_x + 3.0, 0.03)
+		tween.tween_property(self, "position:x", origin_x, 0.04)
+		tween.tween_property(sprite, "modulate", Color.WHITE, 0.12)
 		await tween.finished
 
 

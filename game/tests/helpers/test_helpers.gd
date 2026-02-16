@@ -45,6 +45,8 @@ static func make_ability(overrides: Dictionary = {}) -> AbilityData:
 		"target_type", AbilityData.TargetType.SINGLE_ENEMY
 	)
 	a.element = overrides.get("element", AbilityData.Element.FIRE)
+	a.status_effect = overrides.get("status_effect", "")
+	a.status_chance = overrides.get("status_chance", 0.0)
 	return a
 
 

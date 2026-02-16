@@ -15,10 +15,12 @@ var battler: PartyBattler = null
 @onready var hp_bar: ProgressBar = $HPBar
 @onready var ee_bar: ProgressBar = $EEBar
 @onready var status_icons: HBoxContainer = $StatusIcons
+@onready var damage_label: Label = $DamageLabel
 
 
 func _ready() -> void:
 	_setup_bars()
+	damage_label.visible = false
 	if character_data and not character_data.battle_sprite_path.is_empty():
 		var tex := load(character_data.battle_sprite_path) as Texture2D
 		if tex:
@@ -57,9 +59,12 @@ func play_attack_anim() -> void:
 		anim_player.play("attack")
 		await anim_player.animation_finished
 	else:
+		# Step forward toward enemies (left), then snap back
+		var origin_x := position.x
 		var tween := create_tween()
-		tween.tween_property(self, "position:x", position.x - 16.0, 0.1)
-		tween.tween_property(self, "position:x", position.x, 0.1)
+		tween.tween_property(self, "position:x", origin_x - 24.0, 0.12)
+		tween.tween_interval(0.06)
+		tween.tween_property(self, "position:x", origin_x, 0.08)
 		await tween.finished
 
 
@@ -68,7 +73,16 @@ func play_damage_anim() -> void:
 		anim_player.play("damage")
 		await anim_player.animation_finished
 	else:
-		await _flash_color(Color.RED)
+		# Flash white then red, with a small recoil shake
+		var origin_x := position.x
+		var tween := create_tween()
+		tween.tween_property(sprite, "modulate", Color(1.5, 1.5, 1.5), 0.04)
+		tween.tween_property(self, "position:x", origin_x + 4.0, 0.03)
+		tween.tween_property(sprite, "modulate", Color.RED, 0.06)
+		tween.tween_property(self, "position:x", origin_x - 3.0, 0.03)
+		tween.tween_property(self, "position:x", origin_x, 0.04)
+		tween.tween_property(sprite, "modulate", Color.WHITE, 0.12)
+		await tween.finished
 
 
 func play_heal_anim() -> void:
@@ -78,6 +92,46 @@ func play_heal_anim() -> void:
 func play_idle_anim() -> void:
 	if anim_player.has_animation("idle"):
 		anim_player.play("idle")
+
+
+func show_damage_number(amount: int) -> void:
+	damage_label.text = str(amount)
+	damage_label.add_theme_color_override("font_color", Color(1.0, 0.3, 0.3))
+	damage_label.visible = true
+	damage_label.modulate.a = 1.0
+	damage_label.position = Vector2(0, -20)
+
+	var tween := create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(
+		damage_label, "position:y",
+		damage_label.position.y - 24.0, 0.6,
+	)
+	tween.tween_property(
+		damage_label, "modulate:a", 0.0, 0.6,
+	).set_delay(0.3)
+	await tween.finished
+	damage_label.visible = false
+
+
+func show_heal_number(amount: int) -> void:
+	damage_label.text = "+%d" % amount
+	damage_label.add_theme_color_override("font_color", Color(0.3, 1.0, 0.3))
+	damage_label.visible = true
+	damage_label.modulate.a = 1.0
+	damage_label.position = Vector2(0, -20)
+
+	var tween := create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(
+		damage_label, "position:y",
+		damage_label.position.y - 20.0, 0.5,
+	)
+	tween.tween_property(
+		damage_label, "modulate:a", 0.0, 0.5,
+	).set_delay(0.3)
+	await tween.finished
+	damage_label.visible = false
 
 
 func _setup_bars() -> void:
@@ -110,7 +164,8 @@ func _on_ee_changed(new_ee: int, max_ee_val: int) -> void:
 	ee_bar.value = new_ee
 
 
-func _on_damage_taken(_amount: int) -> void:
+func _on_damage_taken(amount: int) -> void:
+	show_damage_number(amount)
 	play_damage_anim()
 
 
