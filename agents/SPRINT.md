@@ -21,6 +21,12 @@ Started: 2026-02-16
 
 ## Done This Sprint
 
+### T-0034
+- Title: BUG — Dialogue and encounter can overlap in same frame
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-16
+
 ### T-0033
 - Title: Add demo conclusion event
 - Status: done

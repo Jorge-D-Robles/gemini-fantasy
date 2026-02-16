@@ -342,6 +342,18 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 - Refs: game/events/, game/autoloads/event_flags.gd
 - Notes: After Garrick recruited, Elder Rowan NPC triggers conclusion dialogue hinting at Prismfall and the full game.
 
+### T-0034
+- Title: BUG — Dialogue and encounter can overlap in same frame
+- Status: done
+- Assigned: claude
+- Priority: critical
+- Milestone: M0
+- Depends: none
+- Refs: game/autoloads/battle_manager.gd, game/autoloads/dialogue_manager.gd, game/scenes/overgrown_ruins/overgrown_ruins.gd
+- Notes: When player enters Lyra discovery zone and an encounter triggers in the same physics frame, both dialogue and battle start simultaneously. Fix: guard BattleManager.start_battle() against active dialogue/non-OVERWORLD state, and guard scene encounter handlers.
+- Started: 2026-02-16
+- Completed: 2026-02-16
+
 ---
 
 ## M1 — Act I: The Echo Thief
