@@ -23,28 +23,27 @@ Do not ask for confirmation at any step. This applies to all tasks — bug fixes
 
 ## MANDATORY: Research Before Code
 
-**DO NOT write or modify any GDScript, .tscn, or .tres file without first completing BOTH of these steps:**
+**DO NOT write or modify any GDScript, .tscn, or .tres file without first completing ALL of these steps:**
 
-1. **Call the `godot-docs` subagent** for every Godot class you will use:
-   ```
-   godot-docs(objective="Look up [CLASS]. I need [properties/methods/signals].")
-   ```
-2. **Read the relevant best practices file** from `docs/best-practices/`:
-   ```
-   read_file("docs/best-practices/[relevant-file].md")
-   ```
+1.  **Check `ISSUES_TRACKER.md`**: Always check `ISSUES_TRACKER.md` before starting a task. If your task fixes an issue listed there, remove it. If you identify new issues during development or review, you MUST add them to the tracker.
+2.  **Activate the `godot-docs` skill** for every Godot class you will use and follow its search protocol.
+3.  **Read the relevant best practices file** from `docs/best-practices/`:
+    ```
+    read_file("docs/best-practices/[relevant-file].md")
+    ```
+4.  **Scan for related issues**: Use `grep_search` to find existing implementations of similar logic to ensure consistency and avoid duplicating known bugs.
 
-This is not optional. Every code change must be grounded in documentation. Do not rely on memory or assumptions about the Godot API — look it up. If you are unsure which best practices file applies, read the topic mapping table in the "Best Practices Reference" section below.
+This is not optional. Every code change must be grounded in documentation and the current state of the project. Do not rely on memory or assumptions — look it up and check the tracker.
 
 **Choosing what to look up:**
-- Writing a new scene? → `godot-docs` agent for root node class + `01-scene-architecture.md`
-- Adding signals? → `godot-docs` agent for the class + `02-signals-and-communication.md`
+- Writing a new scene? → `godot-docs` skill for root node class + `01-scene-architecture.md`
+- Adding signals? → `godot-docs` skill for the class + `02-signals-and-communication.md`
 - Creating an autoload? → `03-autoloads-and-singletons.md`
-- Defining a Resource? → `godot-docs` agent for Resource class + `04-resources-and-data.md`
+- Defining a Resource? → `godot-docs` skill for Resource class + `04-resources-and-data.md`
 - Using _ready/_process? → `05-node-lifecycle.md`
 - Worried about performance? → `06-performance.md`
 - Building a state machine? → `07-state-machines.md`
-- Creating UI? → `godot-docs` agent for Control nodes + `08-ui-patterns.md`
+- Creating UI? → `godot-docs` skill for Control nodes + `08-ui-patterns.md`
 - Implementing save/load? → `09-save-load.md`
 - Building battle/overworld? → `10-jrpg-patterns.md`
 - Adding art/audio assets? → Read the "Asset Workflow" section below + `04-resources-and-data.md`
