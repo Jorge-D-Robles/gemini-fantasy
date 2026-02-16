@@ -21,13 +21,24 @@ script = ExtResource("1_forest")
 collision_enabled = false
 z_index = -2
 
-[node name="Trees" type="TileMapLayer" parent="."]
-collision_enabled = true
-z_index = 1
+[node name="GroundDetail" type="TileMapLayer" parent="."]
+collision_enabled = false
+z_index = -1
 
 [node name="Paths" type="TileMapLayer" parent="."]
 collision_enabled = false
 z_index = -1
+
+[node name="Trees" type="TileMapLayer" parent="."]
+collision_enabled = true
+z_index = 1
+
+[node name="Objects" type="TileMapLayer" parent="."]
+z_index = 0
+
+[node name="AbovePlayer" type="TileMapLayer" parent="."]
+collision_enabled = false
+z_index = 2
 
 [node name="Entities" type="Node2D" parent="."]
 
