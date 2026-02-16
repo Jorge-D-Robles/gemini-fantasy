@@ -13,95 +13,141 @@ const ANCIENT_SENTINEL_PATH: String = "res://data/enemies/ancient_sentinel.tres"
 const GALE_HARPY_PATH: String = "res://data/enemies/gale_harpy.tres"
 const EMBER_HOUND_PATH: String = "res://data/enemies/ember_hound.tres"
 
+# Ground layer — 8 grass variants from A5_A row 0
 const GROUND_LEGEND: Dictionary = {
-	"G": Vector2i(0, 0),
-	"g": Vector2i(1, 0),
-	"h": Vector2i(2, 0),
-	"j": Vector2i(3, 0),
+	"G": Vector2i(0, 0), "g": Vector2i(1, 0),
+	"H": Vector2i(2, 0), "h": Vector2i(3, 0),
+	"I": Vector2i(4, 0), "i": Vector2i(5, 0),
+	"J": Vector2i(6, 0), "j": Vector2i(7, 0),
 }
 
+# Tree layer — 8 dense vegetation variants from A5_A rows 8-9
 const TREE_LEGEND: Dictionary = {
-	"T": Vector2i(0, 8),
-	"t": Vector2i(1, 8),
-	"U": Vector2i(2, 8),
-	"u": Vector2i(3, 8),
+	"T": Vector2i(0, 8), "t": Vector2i(1, 8),
+	"U": Vector2i(2, 8), "u": Vector2i(3, 8),
+	"V": Vector2i(4, 8), "v": Vector2i(5, 8),
+	"W": Vector2i(6, 8), "w": Vector2i(7, 8),
 }
 
+# Path layer — 6 path/stone variants from A5_A rows 4-5
 const PATH_LEGEND: Dictionary = {
-	"D": Vector2i(0, 4),
-	"d": Vector2i(1, 4),
-	"e": Vector2i(2, 4),
+	"P": Vector2i(0, 4), "p": Vector2i(1, 4),
+	"Q": Vector2i(2, 4), "q": Vector2i(3, 4),
+	"R": Vector2i(4, 4), "r": Vector2i(5, 4),
 }
 
+# Detail layer — flower/foliage accents from A5_A row 14
+const DETAIL_LEGEND: Dictionary = {
+	"f": Vector2i(0, 14), "F": Vector2i(1, 14),
+	"b": Vector2i(2, 14), "B": Vector2i(3, 14),
+}
+
+# 40 cols x 24 rows — 8 tile variants, block-rotated for variety
 const GROUND_MAP: Array[String] = [
-	"GghjGghjGghjGghjGghjGghjGghjGghjGghjGghj",
-	"gGjhgGjhgGjhgGjhgGjhgGjhgGjhgGjhgGjhgGjh",
-	"hjGghjGghjGghjGghjGghjGghjGghjGghjGghjGg",
-	"jghGjghGjghGjghGjghGjghGjghGjghGjghGjghG",
-	"GghjGghjGghjGghjGghjGghjGghjGghjGghjGghj",
-	"gGjhgGjhgGjhgGjhgGjhgGjhgGjhgGjhgGjhgGjh",
-	"hjGghjGghjGghjGghjGghjGghjGghjGghjGghjGg",
-	"jghGjghGjghGjghGjghGjghGjghGjghGjghGjghG",
-	"GghjGghjGghjGghjGghjGghjGghjGghjGghjGghj",
-	"gGjhgGjhgGjhgGjhgGjhgGjhgGjhgGjhgGjhgGjh",
-	"hjGghjGghjGghjGghjGghjGghjGghjGghjGghjGg",
-	"jghGjghGjghGjghGjghGjghGjghGjghGjghGjghG",
-	"GghjGghjGghjGghjGghjGghjGghjGghjGghjGghj",
-	"gGjhgGjhgGjhgGjhgGjhgGjhgGjhgGjhgGjhgGjh",
-	"hjGghjGghjGghjGghjGghjGghjGghjGghjGghjGg",
-	"jghGjghGjghGjghGjghGjghGjghGjghGjghGjghG",
-	"GghjGghjGghjGghjGghjGghjGghjGghjGghjGghj",
-	"gGjhgGjhgGjhgGjhgGjhgGjhgGjhgGjhgGjhgGjh",
-	"hjGghjGghjGghjGghjGghjGghjGghjGghjGghjGg",
-	"jghGjghGjghGjghGjghGjghGjghGjghGjghGjghG",
-	"GghjGghjGghjGghjGghjGghjGghjGghjGghjGghj",
-	"gGjhgGjhgGjhgGjhgGjhgGjhgGjhgGjhgGjhgGjh",
-	"hjGghjGghjGghjGghjGghjGghjGghjGghjGghjGg",
-	"jghGjghGjghGjghGjghGjghGjghGjghGjghGjghG",
+	"GhIjgHiJjIgHhJGiHigjGIhJgJhIiGjHIjGhHgiJ",
+	"hGjIJiHgiHgJjGhIGhIjgHiJJihGgIjHgJhIiGjH",
+	"gJhIiGjHIjGhHgiJhGjIJiHgGhIjgHiJjIgHhJGi",
+	"jIgHhJGiJihGgIjHiHgJjGhIIjGhHgiJHigjGIhJ",
+	"HigjGIhJGhIjgHiJgJhIiGjHhGjIJiHgJihGgIjH",
+	"IjGhHgiJgJhIiGjHJihGgIjHjIgHhJGiGhIjgHiJ",
+	"JihGgIjHHigjGIhJjIgHhJGiiHgJjGhIhGjIJiHg",
+	"iHgJjGhIhGjIJiHgIjGhHgiJHigjGIhJgJhIiGjH",
+	"GhIjgHiJgJhIiGjHJihGgIjHhGjIJiHgjIgHhJGi",
+	"gJhIiGjHiHgJjGhIHigjGIhJGhIjgHiJIjGhHgiJ",
+	"IjGhHgiJjIgHhJGiGhIjgHiJJihGgIjHiHgJjGhI",
+	"HigjGIhJhGjIJiHggJhIiGjHjIgHhJGiGhIjgHiJ",
+	"hGjIJiHgGhIjgHiJiHgJjGhIgJhIiGjHHigjGIhJ",
+	"jIgHhJGiIjGhHgiJhGjIJiHgiHgJjGhIJihGgIjH",
+	"iHgJjGhIJihGgIjHGhIjgHiJIjGhHgiJgJhIiGjH",
+	"JihGgIjHgJhIiGjHjIgHhJGiHigjGIhJhGjIJiHg",
+	"GhIjgHiJHigjGIhJIjGhHgiJJihGgIjHjIgHhJGi",
+	"gJhIiGjHhGjIJiHgJihGgIjHGhIjgHiJiHgJjGhI",
+	"IjGhHgiJGhIjgHiJgJhIiGjHjIgHhJGiHigjGIhJ",
+	"iHgJjGhIjIgHhJGihGjIJiHggJhIiGjHGhIjgHiJ",
+	"HigjGIhJiHgJjGhIJihGgIjHIjGhHgiJhGjIJiHg",
+	"JihGgIjHIjGhHgiJHigjGIhJhGjIJiHggJhIiGjH",
+	"hGjIJiHgJihGgIjHjIgHhJGiGhIjgHiJIjGhHgiJ",
+	"jIgHhJGiHigjGIhJiHgJjGhIJihGgIjHGhIjgHiJ",
 ]
 
+# Organic forest borders — dense edges with irregular clearing
+# Rows 0-2: solid forest
+# Rows 3-5: forest thins with gaps
+# Rows 6-9: large clearing for Iris zone
+# Rows 10-12: main east-west path (fully open)
+# Rows 13-16: forest returns with scattered clusters
+# Rows 17-23: solid forest
 const TREE_MAP: Array[String] = [
-	"TtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUu",
-	"uUtTuUtTuUtTuUtTuUtTuUtTuUtTuUtTuUtTuUtT",
-	"TtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUu",
-	"uUtTuUtTuUtTuUtTuUtTuUtTuUtTuUtTuUtTuUtT",
-	"TtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUu",
-	"TtUuTtUuTtUuTtUuT       TtUuTtUuTtUuTtUu",
-	"uUtTuUtTuUtTuUtTu       uUtTuUtTuUtTuUtT",
-	"TtUuTtUuTtUuTtUuT       TtUuTtUuTtUuTtUu",
-	"uUtTuUtTuUtTuUtTu       uUtTuUtTuUtTuUtT",
-	"TtUuTtUuTtUuTtUuT       TtUuTtUuTtUuTtUu",
+	"TtUvWuVwTtUvWuVwTtUvWuVwTtUvWuVwTtUvWuVw",
+	"wVuWvUtTwVuWvUtTwVuWvUtTwVuWvUtTwVuWvUtT",
+	"UvTwUvTwUvTwUvTwUvTwUvTwUvTwUvTwUvTwUvTw",
+	"tWuVtWuVtW  uVtW       uVtWuVtWuVtWuVtWu",
+	"TtUvWuVwTt    WuV          wTtUvWuVwTtUv",
+	"wVuW  Vw      Wu            uWvUtTwVuWvU",
+	"UvTw                                UvTw",
+	"tW                                    Wu",
+	"Uv                                    Tw",
+	"wV                                    Ut",
 	"                                        ",
 	"                                        ",
 	"                                        ",
-	"TtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUu",
-	"uUtTuUtTuUtTuUtTuUtTuUtTuUtTuUtTuUtTuUtT",
-	"TtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUu",
-	"uUtTuUtTuUtTuUtTuUtTuUtTuUtTuUtTuUtTuUtT",
-	"TtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUu",
-	"uUtTuUtTuUtTuUtTuUtTuUtTuUtTuUtTuUtTuUtT",
-	"TtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUu",
-	"uUtTuUtTuUtTuUtTuUtTuUtTuUtTuUtTuUtTuUtT",
-	"TtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUu",
-	"uUtTuUtTuUtTuUtTuUtTuUtTuUtTuUtTuUtTuUtT",
-	"TtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUuTtUu",
+	"wVuW        vU              Uw      WvUt",
+	"UvTwUv        TwUv     UvTw     UvTwUvTw",
+	"tWuVtWuVtW      VtWuVtWuVtWuVtW  VtWuVtW",
+	"TtUvWuVwTtUv      TtUvWuVwTtUvWuVwTtUvWu",
+	"wVuWvUtTwVuWvUtTwVuWvUtTwVuWvUtTwVuWvUtT",
+	"UvTwUvTwUvTwUvTwUvTwUvTwUvTwUvTwUvTwUvTw",
+	"tWuVtWuVtWuVtWuVtWuVtWuVtWuVtWuVtWuVtWuV",
+	"TtUvWuVwTtUvWuVwTtUvWuVwTtUvWuVwTtUvWuVw",
+	"wVuWvUtTwVuWvUtTwVuWvUtTwVuWvUtTwVuWvUtT",
+	"UvTwUvTwUvTwUvTwUvTwUvTwUvTwUvTwUvTwUvTw",
+	"tWuVtWuVtWuVtWuVtWuVtWuVtWuVtWuVtWuVtWuV",
 ]
 
+# Meandering path — stub up to Iris zone, main east-west route
 const PATH_MAP: Array[String] = [
 	"                                        ",
 	"                                        ",
 	"                                        ",
 	"                                        ",
 	"                                        ",
-	"                   Dde                  ",
-	"                   dDe                  ",
-	"                   DeD                  ",
-	"                   dDe                  ",
-	"                  DdeDd                 ",
-	"    DdeDdeDdeDdeDdeDdeDdeDdeDdeDdeDd    ",
-	"    dDedDedDedDedDedDedDedDedDedDedD    ",
+	"                                        ",
+	"                   Pq                   ",
+	"                   pR                   ",
+	"                  QpRq                  ",
+	"                 PqRpQr                 ",
+	"    PqRpQrPqRpQrPqRpQrPqRpQrPqRpQrPqRp  ",
+	"    qRpQrPqRpQrPqRpQrPqRpQrPqRpQrPqRpQ  ",
 	"                                        ",
 	"                                        ",
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"                                        ",
+]
+
+# Sparse flower accents in open areas (~5% coverage)
+const DETAIL_MAP: Array[String] = [
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"            f         B                 ",
+	"                                        ",
+	"        f                          F    ",
+	"                    b                   ",
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"        F                          b    ",
+	"              f            b            ",
 	"                                        ",
 	"                                        ",
 	"                                        ",
@@ -115,8 +161,11 @@ const PATH_MAP: Array[String] = [
 ]
 
 @onready var _ground_layer: TileMapLayer = $Ground
+@onready var _ground_detail_layer: TileMapLayer = $GroundDetail
 @onready var _trees_layer: TileMapLayer = $Trees
 @onready var _paths_layer: TileMapLayer = $Paths
+@onready var _objects_layer: TileMapLayer = $Objects
+@onready var _above_player_layer: TileMapLayer = $AbovePlayer
 @onready var _player: CharacterBody2D = $Entities/Player
 @onready var _spawn_from_ruins: Marker2D = $Entities/SpawnFromRuins
 @onready var _spawn_from_town: Marker2D = $Entities/SpawnFromTown
@@ -234,10 +283,15 @@ func _setup_tilemap() -> void:
 		],
 	}
 	MapBuilder.apply_tileset(
-		[_ground_layer, _trees_layer, _paths_layer] as Array[TileMapLayer],
+		[_ground_layer, _ground_detail_layer, _trees_layer,
+		_paths_layer, _objects_layer, _above_player_layer,
+		] as Array[TileMapLayer],
 		atlas_paths,
 		solid,
 	)
 	MapBuilder.build_layer(_ground_layer, GROUND_MAP, GROUND_LEGEND)
+	MapBuilder.build_layer(
+		_ground_detail_layer, DETAIL_MAP, DETAIL_LEGEND
+	)
 	MapBuilder.build_layer(_trees_layer, TREE_MAP, TREE_LEGEND)
 	MapBuilder.build_layer(_paths_layer, PATH_MAP, PATH_LEGEND)

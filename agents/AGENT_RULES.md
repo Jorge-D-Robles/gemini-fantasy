@@ -79,6 +79,7 @@ This is not optional. Every code change must be grounded in documentation and th
 - Implementing save/load? → `09-save-load.md`
 - Building battle/overworld? → `10-jrpg-patterns.md`
 - Adding art/audio assets? → Read the "Asset Workflow" section above + `04-resources-and-data.md`
+- Building tilemaps? → `11-tilemaps-and-level-design.md` + `tilemap-builder` agent
 
 ## MANDATORY: Test-Driven Development (TDD)
 
@@ -351,6 +352,7 @@ This project is designed for fully automated agentic development. Use the skill 
 - `/setup-input <actions>` — Configure input actions and handlers
 - `/implement-feature <desc>` — End-to-end feature implementation
 - `/copy-assets <description>` — Copy assets from Time Fantasy packs into the project
+- `/build-tilemap <scene> [goals]` — Design and build multi-layer tilemaps with visual variety
 
 **Data** — Populate and tune game data:
 - `/seed-game-data <type>` — Create .tres files from design docs
@@ -379,6 +381,7 @@ Six custom agents in `.claude/agents/` handle specialized tasks. **Use these ins
 | `playtest-checker` | `Task(subagent_type="playtest-checker")` | Pre-playtest validation, broken refs, missing resources (sonnet model) |
 | `integration-checker` | `Task(subagent_type="integration-checker")` | Cross-system wiring, autoloads, signal connections (sonnet model) |
 | `debugger` | `Task(subagent_type="debugger")` | Bug diagnosis and fix with mandatory doc lookup (inherits model) |
+| `tilemap-builder` | `Task(subagent_type="tilemap-builder")` | Tilemap design — multi-layer maps with Time Fantasy assets (opus model) |
 
 ```
 # Look up Godot docs (fast, lightweight)
@@ -398,6 +401,9 @@ Task(subagent_type="integration-checker", prompt="Check integration for the comb
 
 # Debug an issue
 Task(subagent_type="debugger", prompt="Fix: 'Invalid get index on null instance' in battle_manager.gd line 42")
+
+# Design/redesign a tilemap
+Task(subagent_type="tilemap-builder", prompt="Redesign the Verdant Forest tilemap — add B-sheet trees, more ground variety, organic clearings, and an AbovePlayer canopy layer.")
 ```
 
 ### Agent Team Patterns
@@ -447,6 +453,7 @@ Quick-reference summaries are in `docs/best-practices/`. Consult BEFORE implemen
 | `08-ui-patterns.md` | Container layout, menu pattern, dialogue, focus nav |
 | `09-save-load.md` | Save architecture, saveable interface, file formats |
 | `10-jrpg-patterns.md` | Battle system, turn queue, overworld, encounters |
+| `11-tilemaps-and-level-design.md` | Multi-layer tilemaps, tile sheets, MapBuilder, level design |
 
 ## Godot Documentation Search Protocol
 
