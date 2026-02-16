@@ -6,11 +6,15 @@ argument-hint: [directory-or-file]
 
 # Scene Architecture Audit
 
-Invoke the `scene-auditor` agent to perform a comprehensive architecture audit.
+Invoke the `scene-auditor` subagent to perform a comprehensive architecture audit.
 
 **Target:** $ARGUMENTS
 
-Follow the instructions in `.gemini/agents/scene-auditor.md`. If no target given, audit the entire game/ directory.
+Call the `scene-auditor` tool:
+
+```
+scene-auditor(objective="Audit scene architecture at: $ARGUMENTS. If no target given, audit the entire game/ directory.")
+```
 
 After the agent returns its report, summarize the key findings for the user:
 - Overall health rating

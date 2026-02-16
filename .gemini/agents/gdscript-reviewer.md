@@ -1,8 +1,12 @@
 ---
 name: gdscript-reviewer
 description: GDScript code reviewer agent. Performs comprehensive code quality, style guide, and Godot best practices review. Use proactively after writing or modifying GDScript code, before commits, or when code quality assessment is needed. Returns per-file scores with categorized issues and fix suggestions.
-tools: Read, Glob, Grep
-model: sonnet
+tools:
+  - read_file
+  - glob
+  - grep_search
+  - godot-docs
+model: inherit
 ---
 
 # GDScript Code Reviewer

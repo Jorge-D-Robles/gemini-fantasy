@@ -6,17 +6,15 @@ argument-hint: <error-message or behavior-description>
 
 # Debug Issue
 
-Invoke the `debugger` agent to diagnose and fix this issue.
+Invoke the `debugger` subagent to diagnose and fix this issue.
 
 **Issue:** $ARGUMENTS
 
-Follow the instructions in `.gemini/agents/debugger.md` to:
-- Understand the problem
-- Gather context
-- Diagnose root cause
-- Look up Godot docs (MANDATORY)
-- Apply minimal fix
-- Verify and report
+Call the `debugger` tool:
+
+```
+debugger(objective="Debug this issue: $ARGUMENTS. Follow the full 7-step debug process: understand the problem, gather context, diagnose root cause, look up Godot docs (MANDATORY), apply minimal fix, verify, and report.")
+```
 
 After the agent returns its report, summarize for the user:
 - Root cause identified

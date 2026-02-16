@@ -6,13 +6,17 @@ argument-hint: [file-path or directory]
 
 # GDScript Code Review
 
-Invoke the `gdscript-reviewer` agent to perform a comprehensive code review.
+Invoke the `gdscript-reviewer` subagent to perform a comprehensive code review.
 
 **Target:** $ARGUMENTS
 
 If no specific target was given, review all `.gd` files by running `Glob("game/**/*.gd")`.
 
-Follow the instructions in `.gemini/agents/gdscript-reviewer.md`. Ground every critique in official Godot 4.5 documentation or the project's docs/best-practices/ files.
+Call the `gdscript-reviewer` tool:
+
+```
+gdscript-reviewer(objective="Review GDScript code at: $ARGUMENTS. If no target given, review all .gd files via glob('game/**/*.gd'). Ground every critique in official Godot 4.5 documentation or the project's docs/best-practices/ files.")
+```
 
 After the agent returns its report, summarize the key findings for the user:
 - Total files reviewed and overall score

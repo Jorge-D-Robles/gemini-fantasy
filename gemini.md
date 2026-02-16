@@ -25,9 +25,9 @@ Do not ask for confirmation at any step. This applies to all tasks — bug fixes
 
 **DO NOT write or modify any GDScript, .tscn, or .tres file without first completing BOTH of these steps:**
 
-1. **Call the `godot-docs` agent** for every Godot class you will use:
+1. **Call the `godot-docs` subagent** for every Godot class you will use:
    ```
-   activate_skill("godot-doc-lookup") # or "godot-docs"
+   godot-docs(objective="Look up [CLASS]. I need [properties/methods/signals].")
    ```
 2. **Read the relevant best practices file** from `docs/best-practices/`:
    ```
@@ -194,31 +194,31 @@ Six custom agents in `.gemini/agents/` handle specialized tasks. **Use these ins
 
 | Agent | Invocation | Purpose |
 |-------|-----------|---------|
-| `godot-docs` | `activate_skill("godot-docs")` | Godot API lookup, tutorial search, best practices |
-| `gdscript-reviewer` | `activate_skill("gdscript-review")` | Code quality, style guide, best practices review |
-| `scene-auditor` | `activate_skill("scene-audit")` | Scene architecture, dependencies, signal health audit |
-| `playtest-checker` | `activate_skill("playtest-check")` | Pre-playtest validation, broken refs, missing resources |
-| `integration-checker` | `activate_skill("integration-check")` | Cross-system wiring, autoloads, signal connections |
-| `debugger` | `activate_skill("debug-issue")` | Bug diagnosis and fix with mandatory doc lookup |
+| `godot-docs` | `godot-docs(objective="...")` | Godot API lookup, tutorial search, best practices |
+| `gdscript-reviewer` | `gdscript-reviewer(objective="...")` | Code quality, style guide, best practices review |
+| `scene-auditor` | `scene-auditor(objective="...")` | Scene architecture, dependencies, signal health audit |
+| `playtest-checker` | `playtest-checker(objective="...")` | Pre-playtest validation, broken refs, missing resources |
+| `integration-checker` | `integration-checker(objective="...")` | Cross-system wiring, autoloads, signal connections |
+| `debugger` | `debugger(objective="...")` | Bug diagnosis and fix with mandatory doc lookup |
 
 ```
 # Look up Godot docs (fast, lightweight)
-activate_skill("godot-doc-lookup") # Query: "CharacterBody2D — I need velocity, move_and_slide()."
+godot-docs(objective="Look up CharacterBody2D — I need velocity, move_and_slide().")
 
 # Review code quality
-activate_skill("gdscript-review") # Target: "game/systems/combat/"
+gdscript-reviewer(objective="Review game/systems/combat/")
 
 # Audit architecture
-activate_skill("scene-audit") # Target: "game/scenes/"
+scene-auditor(objective="Audit the game/scenes/ directory for composition issues.")
 
 # Pre-playtest validation
-activate_skill("playtest-check")
+playtest-checker(objective="Run full pre-playtest validation check.")
 
 # Check system integration
-activate_skill("integration-check") # Target: "combat"
+integration-checker(objective="Check integration for the combat system.")
 
 # Debug an issue
-activate_skill("debug-issue") # Issue: "Invalid get index on null instance in battle_manager.gd line 42"
+debugger(objective="Fix: 'Invalid get index on null instance' in battle_manager.gd line 42")
 ```
 
 ### Agent Team Patterns
@@ -331,11 +331,10 @@ Grep across the entire `docs/godot-docs/` directory with `glob: "*.rst"`.
 
 ## Documentation Lookup
 
-Use the `godot-docs` agent for ALL Godot documentation lookups:
+Use the `godot-docs` subagent for ALL Godot documentation lookups:
 
 ```
-activate_skill("godot-doc-lookup")
-# Search for: "Look up [TOPIC]. I need [specific information needed]. Include code examples and best practice notes if available."
+godot-docs(objective="Look up [TOPIC]. I need [specific information needed]. Include code examples and best practice notes if available.")
 ```
 
 This agent searches `docs/godot-docs/` (1071 class refs + tutorials) and `docs/best-practices/` (10 summary guides). It returns structured summaries, preserving your context window.

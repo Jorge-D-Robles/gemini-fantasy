@@ -1,7 +1,15 @@
 ---
 name: debugger
 description: Bug diagnosis and fix agent. Analyzes error messages, traces code paths, checks Godot documentation, and applies minimal targeted fixes. Use when something doesn't work as expected — crashes, null references, logic bugs, visual issues, or performance problems. Looks up docs before every fix.
-tools: Read, Glob, Grep, Edit, Write, Bash, Task
+tools:
+  - read_file
+  - glob
+  - grep_search
+  - replace
+  - write_file
+  - run_shell_command
+  - godot-docs
+model: inherit
 ---
 
 # Debugger Agent
