@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="CharacterData" load_steps=4 format=3 uid="uid://bkael"]
+
+[ext_resource type="Script" path="res://resources/character_data.gd" id="1_script"]
+[ext_resource type="Resource" uid="uid://becho_strike" path="res://data/abilities/echo_strike.tres" id="2_echo_strike"]
+[ext_resource type="Resource" uid="uid://bresonance_pulse" path="res://data/abilities/resonance_pulse.tres" id="3_resonance_pulse"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"kael"
+display_name = "Kael Voss"
+description = "A balanced all-rounder and Echo Hunter from The Hollows. Driven by curiosity and empathy, Kael bridges the gap between humans and Echoes."
+max_hp = 120
+max_ee = 80
+attack = 14
+magic = 12
+defense = 10
+resistance = 10
+speed = 12
+luck = 10
+hp_growth = 15.0
+ee_growth = 8.0
+attack_growth = 2.0
+magic_growth = 1.8
+defense_growth = 1.5
+resistance_growth = 1.5
+speed_growth = 1.5
+luck_growth = 1.2
+abilities = [ExtResource("2_echo_strike"), ExtResource("3_resonance_pulse")]
+portrait_path = ""
+sprite_path = ""
+battle_sprite_path = ""

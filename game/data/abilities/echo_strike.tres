@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://becho_strike"]
+
+[ext_resource type="Script" path="res://resources/ability_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"echo_strike"
+display_name = "Echo Strike"
+description = "Physical attack that captures the enemy's essence. Slightly stronger against Echo-type enemies and can steal buffs."
+ee_cost = 15
+resonance_cost = 0.0
+damage_base = 120
+damage_stat = 0
+target_type = 0
+element = 0
+status_effect = ""
+status_chance = 0.0
+animation_name = "echo_strike"

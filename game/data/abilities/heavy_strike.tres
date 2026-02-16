@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://bheavy_strike"]
+
+[ext_resource type="Script" path="res://resources/ability_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"heavy_strike"
+display_name = "Heavy Strike"
+description = "Powerful single-target physical attack with a 30% chance to stun the target."
+ee_cost = 18
+resonance_cost = 0.0
+damage_base = 150
+damage_stat = 0
+target_type = 0
+element = 0
+status_effect = "stun"
+status_chance = 0.3
+animation_name = "heavy_strike"

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="EchoData" load_steps=2 format=3 uid="uid://bmothers_comfort"]
+
+[ext_resource type="Script" path="res://resources/echo_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"mothers_comfort"
+display_name = "Mother's Comfort"
+description = "Heals the entire party for 40 HP and cures all status effects."
+lore_text = "A warm embrace, the smell of bread baking, a soft voice humming a lullaby. This memory carries the unconditional love of a mother who never stopped waiting."
+rarity = 0
+echo_type = 1
+effect_type = 1
+effect_value = 40
+element = 6
+target_type = 3
+uses_per_battle = 1
+icon_path = ""

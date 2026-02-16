@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="CharacterData" load_steps=4 format=3 uid="uid://bgarrick"]
+
+[ext_resource type="Script" path="res://resources/character_data.gd" id="1_script"]
+[ext_resource type="Resource" uid="uid://bguardians_stand" path="res://data/abilities/guardians_stand.tres" id="2_guardians_stand"]
+[ext_resource type="Resource" uid="uid://bpurifying_light" path="res://data/abilities/purifying_light.tres" id="3_purifying_light"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"garrick"
+display_name = "Garrick Thorne"
+description = "A tank and support from the Cindral Wastes. This disillusioned ex-Shepherd seeks redemption through protecting others with his massive shield."
+max_hp = 160
+max_ee = 50
+attack = 12
+magic = 8
+defense = 18
+resistance = 14
+speed = 6
+luck = 8
+hp_growth = 20.0
+ee_growth = 4.0
+attack_growth = 1.5
+magic_growth = 1.0
+defense_growth = 2.5
+resistance_growth = 2.0
+speed_growth = 0.8
+luck_growth = 0.8
+abilities = [ExtResource("2_guardians_stand"), ExtResource("3_purifying_light")]
+portrait_path = ""
+sprite_path = ""
+battle_sprite_path = ""

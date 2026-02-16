@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3 uid="uid://bcreeping_vine"]
+
+[ext_resource type="Script" path="res://resources/enemy_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"creeping_vine"
+display_name = "Creeping Vine"
+description = "Animated vines with pulsing Resonance nodes. An ambush predator that strangles targets. Plants that gained sentience from absorbing buried Echoes."
+max_hp = 60
+attack = 14
+magic = 6
+defense = 10
+resistance = 4
+speed = 4
+exp_reward = 20
+gold_reward = 12
+abilities = []
+weaknesses = [1]
+resistances = []
+ai_type = 1
+sprite_path = ""
+loot_table = [{"item_id": "living_vine", "drop_chance": 0.4}, {"item_id": "toxin_sac", "drop_chance": 0.25}, {"item_id": "growth_accelerant", "drop_chance": 0.1}]

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://bpurifying_light"]
+
+[ext_resource type="Script" path="res://resources/ability_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"purifying_light"
+display_name = "Purifying Light"
+description = "Removes negative status effects from the entire party and provides a small heal to affected targets."
+ee_cost = 25
+resonance_cost = 0.0
+damage_base = 30
+damage_stat = 1
+target_type = 3
+element = 6
+status_effect = "cure_all"
+status_chance = 1.0
+animation_name = "purifying_light"

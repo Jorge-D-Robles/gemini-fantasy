@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="EchoData" load_steps=2 format=3 uid="uid://bsoldiers_fear"]
+
+[ext_resource type="Script" path="res://resources/echo_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"soldiers_fear"
+display_name = "Soldier's Fear"
+description = "Lowers all enemy defense by 25% for 3 turns."
+lore_text = "The night before the final charge. A young soldier clutches a letter home they will never send. Their fear was not of death, but of being forgotten."
+rarity = 1
+echo_type = 2
+effect_type = 3
+effect_value = 25
+element = 0
+target_type = 1
+uses_per_battle = 1
+icon_path = ""

@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="CharacterData" load_steps=4 format=3 uid="uid://biris"]
+
+[ext_resource type="Script" path="res://resources/character_data.gd" id="1_script"]
+[ext_resource type="Resource" uid="uid://bheavy_strike" path="res://data/abilities/heavy_strike.tres" id="2_heavy_strike"]
+[ext_resource type="Resource" uid="uid://bemp_burst" path="res://data/abilities/emp_burst.tres" id="3_emp_burst"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"iris"
+display_name = "Iris Mantle"
+description = "A physical DPS and debuffer from Gearhaven. Former Initiative soldier turned deserter, she wields hammers and rifles with her cybernetic arm."
+max_hp = 100
+max_ee = 60
+attack = 18
+magic = 8
+defense = 12
+resistance = 6
+speed = 10
+luck = 8
+hp_growth = 12.0
+ee_growth = 5.0
+attack_growth = 2.5
+magic_growth = 1.0
+defense_growth = 1.8
+resistance_growth = 0.8
+speed_growth = 1.2
+luck_growth = 1.0
+abilities = [ExtResource("2_heavy_strike"), ExtResource("3_emp_burst")]
+portrait_path = ""
+sprite_path = ""
+battle_sprite_path = ""
