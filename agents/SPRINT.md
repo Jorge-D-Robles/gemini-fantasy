@@ -15,62 +15,6 @@ Started: 2026-02-16
 
 ## Queue
 
-### T-0027
-- Title: Implement party HP/EE persistence between battles
-- Priority: critical
-- Depends: none
-- Refs: game/autoloads/party_manager.gd, game/systems/battle/battle_scene.gd, game/resources/character_data.gd
-- Notes: Currently party members always start battles at full HP/EE. Must track runtime HP/EE state on PartyManager (not CharacterData, which is the template). Battle start reads from persistent state, battle end writes back. Innkeeper healing (T-0029) depends on this. Without this, combat has zero stakes.
-- Size: M
-
-### T-0012
-- Title: Build inventory system
-- Priority: critical
-- Depends: none
-- Refs: game/resources/item_data.gd, docs/best-practices/03-autoloads-and-singletons.md, agents/DEMO_REQUIREMENTS.md
-- Notes: InventoryManager autoload. Add/remove/query/use items. Stack management. Starting inventory (3x Potion, 1x Ether). Gold tracking. Required for battle items (T-0028) and loot drops (T-0030).
-- Size: M
-
-### T-0028
-- Title: Wire item usage in battle
-- Priority: critical
-- Depends: T-0012
-- Refs: game/systems/battle/states/action_select_state.gd, game/systems/battle/states/action_execute_state.gd, game/ui/battle_ui/battle_ui.gd
-- Notes: Item button in battle UI opens inventory submenu. Player selects item → selects target → item is consumed and effect applied. ItemData already has EffectType (HEAL_HP, HEAL_EE). action_execute_state.gd already has _execute_item() but ActionSelect never routes to it. Must wire the full flow.
-- Size: M
-
-### T-0029
-- Title: Implement innkeeper healing with persistent HP/EE
-- Priority: critical
-- Depends: T-0027
-- Refs: game/scenes/roothollow/roothollow.gd, game/autoloads/party_manager.gd
-- Notes: Innkeeper interaction restores all party members to full HP/EE using the persistent state from T-0027. Currently shows placeholder dialogue. Needs to actually modify the runtime HP/EE state so subsequent battles reflect the heal.
-- Size: S
-
-### T-0030
-- Title: Build battle victory rewards screen
-- Priority: critical
-- Depends: T-0012
-- Refs: game/systems/battle/states/victory_state.gd, game/ui/battle_ui/battle_ui.gd, game/resources/enemy_data.gd
-- Notes: After battle victory, display: gold earned (sum of enemy gold_reward), items dropped (roll against enemy loot_table), XP earned (sum of exp_reward, display only for now). Add gold to InventoryManager. Add dropped items to InventoryManager. Brief 2-3 second display before transition.
-- Size: M
-
-### T-0031
-- Title: Add NPC entities and dialogue content to Roothollow
-- Priority: critical
-- Depends: none
-- Refs: docs/game-design/demo-npc-content.md, game/scenes/roothollow/roothollow.tscn, game/scenes/roothollow/roothollow.gd, game/entities/npc/npc.gd
-- Notes: Add 4-6 NPC StaticBody2D nodes to Roothollow scene. Each needs dialogue lines from the content doc. Flag-reactive dialogue: NPCs say different things based on story flags (opening_lyra_discovered, iris_recruited, garrick_recruited). Must use DialogueLine resource and DialogueManager.
-- Size: M
-
-### T-0019
-- Title: Implement leveling and XP system
-- Priority: high
-- Depends: none
-- Refs: docs/game-design/01-core-mechanics.md, game/resources/character_data.gd, game/autoloads/party_manager.gd
-- Notes: XP gain from battles. Level-up stat growth using CharacterData.growth_rates. Skill points awarded. XP curve. Victory screen XP integration. Level-up notification in battle victory.
-- Size: M
-
 ### T-0032
 - Title: Build basic save/load system
 - Priority: high
@@ -90,6 +34,48 @@ Started: 2026-02-16
 ---
 
 ## Done This Sprint
+
+### T-0027
+- Title: Implement party HP/EE persistence between battles
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-16
+
+### T-0012
+- Title: Build inventory system
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-16
+
+### T-0028
+- Title: Wire item usage in battle
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-16
+
+### T-0029
+- Title: Implement innkeeper healing with persistent HP/EE
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-16
+
+### T-0030
+- Title: Build battle victory rewards screen
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-16
+
+### T-0031
+- Title: Add NPC entities and dialogue content to Roothollow
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-16
+
+### T-0019
+- Title: Implement leveling and XP system
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-16
 
 (Carried over from S01)
 
