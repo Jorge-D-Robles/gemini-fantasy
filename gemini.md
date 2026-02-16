@@ -25,7 +25,10 @@ Do not ask for confirmation at any step. This applies to all tasks — bug fixes
 
 **DO NOT write or modify any GDScript, .tscn, or .tres file without first completing BOTH of these steps:**
 
-1. **Activate the `godot-docs` skill** for every Godot class you will use and follow its search protocol.
+1. **Call the `godot-docs` agent** for every Godot class you will use:
+   ```
+   activate_skill("godot-doc-lookup") # or "godot-docs"
+   ```
 2. **Read the relevant best practices file** from `docs/best-practices/`:
    ```
    read_file("docs/best-practices/[relevant-file].md")
@@ -34,14 +37,14 @@ Do not ask for confirmation at any step. This applies to all tasks — bug fixes
 This is not optional. Every code change must be grounded in documentation. Do not rely on memory or assumptions about the Godot API — look it up. If you are unsure which best practices file applies, read the topic mapping table in the "Best Practices Reference" section below.
 
 **Choosing what to look up:**
-- Writing a new scene? → `godot-docs` skill for root node class + `01-scene-architecture.md`
-- Adding signals? → `godot-docs` skill for the class + `02-signals-and-communication.md`
+- Writing a new scene? → `godot-docs` agent for root node class + `01-scene-architecture.md`
+- Adding signals? → `godot-docs` agent for the class + `02-signals-and-communication.md`
 - Creating an autoload? → `03-autoloads-and-singletons.md`
-- Defining a Resource? → `godot-docs` skill for Resource class + `04-resources-and-data.md`
+- Defining a Resource? → `godot-docs` agent for Resource class + `04-resources-and-data.md`
 - Using _ready/_process? → `05-node-lifecycle.md`
 - Worried about performance? → `06-performance.md`
 - Building a state machine? → `07-state-machines.md`
-- Creating UI? → `godot-docs` skill for Control nodes + `08-ui-patterns.md`
+- Creating UI? → `godot-docs` agent for Control nodes + `08-ui-patterns.md`
 - Implementing save/load? → `09-save-load.md`
 - Building battle/overworld? → `10-jrpg-patterns.md`
 - Adding art/audio assets? → Read the "Asset Workflow" section below + `04-resources-and-data.md`
@@ -57,6 +60,7 @@ docs/              # All documentation
   mechanics/       # Character abilities and system mechanics
   best-practices/  # Godot best practices summaries (quick reference)
 .gemini/           # Gemini CLI configuration
+  agents/          # 6 specialized agents (docs, review, audit, debug, validation)
   skills/          # 20 development skills (creation, data, quality, planning)
   settings.json    # Hooks and tool permissions
 ```
@@ -184,35 +188,57 @@ This project is designed for fully automated agentic development. Use the skill 
 **Reference** (auto-loaded, not user-invoked):
 - `gdscript-conventions` — Loaded automatically when writing GDScript
 
-### Godot Documentation Skill
+### Specialized Agents
 
-The `godot-docs` skill handles all Godot documentation lookups. **Use this instead of looking up docs yourself** — it preserves your context window and returns structured summaries.
+Six custom agents in `.gemini/agents/` handle specialized tasks. **Use these instead of general-purpose investigation** — they have domain-specific knowledge and produce structured output.
+
+| Agent | Invocation | Purpose |
+|-------|-----------|---------|
+| `godot-docs` | `activate_skill("godot-docs")` | Godot API lookup, tutorial search, best practices |
+| `gdscript-reviewer` | `activate_skill("gdscript-review")` | Code quality, style guide, best practices review |
+| `scene-auditor` | `activate_skill("scene-audit")` | Scene architecture, dependencies, signal health audit |
+| `playtest-checker` | `activate_skill("playtest-check")` | Pre-playtest validation, broken refs, missing resources |
+| `integration-checker` | `activate_skill("integration-check")` | Cross-system wiring, autoloads, signal connections |
+| `debugger` | `activate_skill("debug-issue")` | Bug diagnosis and fix with mandatory doc lookup |
 
 ```
-# Look up a class API
-activate_skill("godot-docs")
-# Then use the skill's protocol to find:
-# "Look up CharacterBody2D — I need the velocity property, move_and_slide() method, and any movement tutorial examples."
+# Look up Godot docs (fast, lightweight)
+activate_skill("godot-doc-lookup") # Query: "CharacterBody2D — I need velocity, move_and_slide()."
 
-# Look up a how-to topic
-# "How to implement save/load in Godot 4.5? Include SaveManager patterns and file format options."
+# Review code quality
+activate_skill("gdscript-review") # Target: "game/systems/combat/"
 
-# Look up multiple classes in one call
-# "Look up AnimationPlayer and AnimationTree — I need to understand when to use each, key methods, and how to set up state machine blending."
+# Audit architecture
+activate_skill("scene-audit") # Target: "game/scenes/"
+
+# Pre-playtest validation
+activate_skill("playtest-check")
+
+# Check system integration
+activate_skill("integration-check") # Target: "combat"
+
+# Debug an issue
+activate_skill("debug-issue") # Issue: "Invalid get index on null instance in battle_manager.gd line 42"
 ```
-
-The skill searches local docs at `docs/godot-docs/` (class refs + tutorials) AND project best practices at `docs/best-practices/`. It returns structured summaries with properties, methods, signals, code examples, and best practice notes.
 
 ### Agent Team Patterns
 
-When building large features, use sub-agents to assist:
+When building large features, use parallel agents:
 
 ```
-# Research and codebase investigation
-codebase_investigator("Investigate [FEATURE] implementation requirements...")
+# Research in parallel while planning
+activate_skill("godot-doc-lookup") # Query: "Look up [CLASS] API..."
+codebase_investigator("Read design doc at docs/game-design/...")
 
-# Documentation lookup
-activate_skill("godot-docs")
+# Quality checks in parallel after implementation
+activate_skill("gdscript-review") # Target: "game/systems/combat/"
+activate_skill("integration-check") # Target: "combat"
+
+# Full quality sweep (run all review skills in parallel)
+activate_skill("gdscript-review")
+activate_skill("scene-audit")
+activate_skill("playtest-check")
+activate_skill("integration-check")
 ```
 
 ### Development Order
@@ -297,7 +323,7 @@ Grep across the entire `docs/godot-docs/` directory with `glob: "*.rst"`.
 
 **These are hard requirements, not suggestions. Violating them produces incorrect code.**
 
-- **BEFORE writing ANY code**: Call the `godot-docs` skill for every Godot class you will use. No exceptions.
+- **BEFORE writing ANY code**: Call the `godot-docs` agent for every Godot class you will use. No exceptions.
 - **BEFORE writing ANY code**: Read the relevant `docs/best-practices/*.md` file. No exceptions.
 - **BEFORE implementing a system**: Read the relevant design doc from `docs/game-design/` or `docs/lore/`.
 - **SKIP** lookup only for basic GDScript syntax (variables, loops, functions, conditionals) — NOT for Godot API calls.
@@ -305,14 +331,14 @@ Grep across the entire `docs/godot-docs/` directory with `glob: "*.rst"`.
 
 ## Documentation Lookup
 
-Use the `godot-docs` skill for ALL Godot documentation lookups:
+Use the `godot-docs` agent for ALL Godot documentation lookups:
 
 ```
-activate_skill("godot-docs")
+activate_skill("godot-doc-lookup")
 # Search for: "Look up [TOPIC]. I need [specific information needed]. Include code examples and best practice notes if available."
 ```
 
-This skill searches `docs/godot-docs/` (1071 class refs + tutorials) and `docs/best-practices/` (10 summary guides). It returns structured summaries, preserving your context window.
+This agent searches `docs/godot-docs/` (1071 class refs + tutorials) and `docs/best-practices/` (10 summary guides). It returns structured summaries, preserving your context window.
 
 For non-Godot research (design docs, lore, existing code), use `grep_search`, `read_file`, and `codebase_investigator`. For deep research into mechanics, use a descriptive prompt:
 
