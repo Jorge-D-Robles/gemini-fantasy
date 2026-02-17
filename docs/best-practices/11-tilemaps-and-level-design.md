@@ -1,6 +1,6 @@
 # Tilemaps and Level Design Best Practices
 
-Distilled from Godot 4.5 docs (`using_tilemaps.rst`, `using_tilesets.rst`), RPG Maker tile format specifications, direct visual analysis of Time Fantasy tile sheets, and JRPG level design patterns.
+Distilled from Godot 4.5 docs (`using_tilemaps.rst`, `using_tilesets.rst`), direct visual analysis of Time Fantasy tile sheets, and JRPG level design patterns.
 
 ## Core Architecture: Multi-Layer TileMapLayers
 
@@ -36,20 +36,14 @@ All TileMapLayer nodes in a level reference the **same TileSet resource** create
 
 ## Understanding Time Fantasy Tile Formats
 
-### RPG Maker Tile Categories — What Works in Godot
+### Available Tile Sheet Types
 
-Time Fantasy assets ship in RPG Maker format. Understanding which sheets are usable in Godot is critical:
+Time Fantasy provides two types of tile sheets that work in Godot:
 
-| Category | RPG Maker Purpose | Godot Usability | Why |
-|----------|------------------|-----------------|-----|
-| **A1** | Animated water autotiles | **DO NOT USE** | Contains 3x4 blocks of sub-tiles for RPG Maker's autotile engine. Not a flat grid. |
-| **A2** | Ground autotiles with transitions | **DO NOT USE** | Contains 2x3 blocks of sub-tiles (center + edges + corners). Requires RPG Maker's assembly logic. |
-| **A3** | Building wall autotiles | **DO NOT USE** | RPG Maker-specific wall autotile format. |
-| **A4** | Wall autotiles | **DO NOT USE** | RPG Maker-specific wall autotile format. |
-| **A5** | Plain floor/ceiling tiles | **USE** | Simple flat 8x16 grid of independent 16x16 tiles. Direct import. |
-| **B-E** | Object layer tiles | **USE** | Simple flat 16x16 grid of independent 16x16 tiles. Direct import. |
-
-**Rule: Only use A5 and B/C/D/E sheets.** A1-A4 are RPG Maker autotile formats that require specialized conversion tooling.
+| Type | Dimensions (1x) | Grid | Contents |
+|------|-----------------|------|----------|
+| **A5** | 128x256 px | 8 cols x 16 rows | Flat terrain tiles (grass, dirt, stone, paths, accents) |
+| **B** | 256x256 px | 16 cols x 16 rows | Object tiles (trees, rocks, buildings, decorations) |
 
 ### A5 Sheets (Terrain) — 128x256 px, 8 cols x 16 rows
 
@@ -132,7 +126,7 @@ Each column in an A5 row has a distinct visual pattern. When agents alternate co
 
 ### Solution: Single-Tile Fill + B-Sheet Objects
 
-The correct approach for Godot (without RPG Maker's autotile engine):
+The correct approach:
 
 1. **Ground layer: ONE tile for the entire fill.** Pick a single `Vector2i(col, row)` and fill the whole map with it. The tile was designed to seamlessly tile with copies of itself.
 
@@ -361,10 +355,9 @@ var solid: Dictionary = {
 |-------------|---------|-----|
 | Alternating A5 columns in ground fill | Checkerboard/stripe artifacts | Use ONE tile for entire ground fill |
 | Using A5 row 8 tiles as "trees" | Flat grid pattern, not tree-like | Use B-sheet canopy objects for trees |
-| Using A1/A2/A4 sheets in Godot | RPG Maker autotile format, not usable | Only use A5 and B sheets |
+| Forgetting `source_id` parameter | B-sheet tiles placed from wrong atlas | Pass `source_id=1` for B-sheet layers |
 | No Objects/AbovePlayer layer | Map looks flat, no depth | Add B-sheet trees/buildings with above-player canopy |
 | Ground fill with A5 row 0 col 0 | Renders dark gray in fairy forest theme | Use row 8 col 0 (bright green) for forest ground |
 | Rectangular clearings | Artificial, game-y look | Offset edges 1-2 tiles per row for organic shapes |
 | Path 1 tile wide | Hard to see, player clips edges | Minimum 2-3 tiles wide |
 | 8-variant block rotation for ground | Creates subtle but visible patterning | Single tile fill is simpler and cleaner |
-| Forgetting `source_id` parameter | B-sheet tiles placed from wrong atlas | Pass `source_id=1` for B-sheet layers |
