@@ -157,7 +157,7 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0015
 - Title: Implement Resonance gauge UI and overload/hollow mechanics
-- Status: in-progress
+- Status: done
 - Assigned: claude
 - Priority: high
 - Milestone: M0

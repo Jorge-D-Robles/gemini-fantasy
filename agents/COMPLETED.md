@@ -65,3 +65,4 @@ These 26 fixes were completed before the ticket system was established:
 - [2026-02-16] INFRA: Scene preview tool — screenshot capture for agent visual verification, 3 camera modes, /scene-preview skill (claude)
 - [2026-02-16] T-0013: Build equipment system — EquipmentData resource, EquipmentManager autoload, 5 slots, 16 weapon types, battler stat integration, save/load, 30 new tests (claude)
 - [2026-02-16] T-0017: Implement status effect system — StatusEffectData resource, duration tracking, DoT/HoT, stat modifiers, stun/action prevention, backward-compatible API, battle state integration, 40 new tests (claude)
+- [2026-02-16] T-0015: Resonance gauge UI and overload/hollow mechanics — Hollow penalizes all stats at 50%, Resonant +20% ability bonus, cure_hollow, battle log transitions, tween animations, per-member indicators, 17 new tests (claude)
