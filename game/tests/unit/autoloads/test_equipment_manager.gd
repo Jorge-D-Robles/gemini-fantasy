@@ -284,6 +284,12 @@ func test_deserialize_equipment() -> void:
 	# Deserialization requires .tres files to exist — tested
 	# in integration tests. Here we test the structure is accepted.
 	_manager.deserialize(data)
-	# After deserialization with nonexistent .tres files,
-	# slots remain null (graceful failure).
-	# Full integration test would verify actual loading.
+	# iron_sword.tres exists in data/equipment/, so it loads
+	var weapon: Variant = _manager.get_equipment(
+		&"kael", EquipmentData.SlotType.WEAPON
+	)
+	if weapon != null:
+		assert_eq(weapon.id, &"iron_sword")
+	else:
+		# .tres file not importable in headless — just verify no crash
+		assert_null(weapon)

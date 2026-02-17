@@ -34,7 +34,7 @@ func test_factory_creates_weapon() -> void:
 	assert_eq(_equipment.id, &"test_sword")
 	assert_eq(_equipment.display_name, "Test Sword")
 	assert_eq(_equipment.slot_type, EquipmentData.SlotType.WEAPON)
-	assert_eq(_equipment.attack_bonus, 5)
+	assert_eq(_equipment.attack_bonus, 0)
 
 
 func test_factory_with_overrides() -> void:

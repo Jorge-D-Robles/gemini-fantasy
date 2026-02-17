@@ -123,7 +123,7 @@ static func make_equipment(
 	e.weapon_type = overrides.get(
 		"weapon_type", EquipmentData.WeaponType.SWORD
 	)
-	e.attack_bonus = overrides.get("attack_bonus", 5)
+	e.attack_bonus = overrides.get("attack_bonus", 0)
 	e.magic_bonus = overrides.get("magic_bonus", 0)
 	e.defense_bonus = overrides.get("defense_bonus", 0)
 	e.resistance_bonus = overrides.get("resistance_bonus", 0)
