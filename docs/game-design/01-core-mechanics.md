@@ -103,8 +103,14 @@ Characters have emotional states that affect combat:
 - If KO'd while in Overload state
 - Revived as "Hollow" - no emotions, 50% stats
 - Cannot use Resonance abilities
-- Must be "grounded" by allies using special support actions
+- Must be "grounded" by allies using the **Ground** command (see below)
 - Thematic representation of losing yourself to power
+
+**THE GROUND COMMAND**
+- Special command available to all non-Hollowed party members when an ally is Hollow.
+- **Cost:** User's turn + 25% of User's Resonance Gauge.
+- **Effect:** Anchors the Hollowed ally back to their identity. Removes Hollow state and restores 25% HP.
+- **Thematic:** An ally literally shares their "self" to remind the Hollowed one who they are.
 
 ### Emotional Energy (EE)
 
@@ -192,10 +198,10 @@ Traditional MP equivalent, but tied to emotions:
 - Set bonuses for wearing matching armor pieces
 
 **Customization**:
-- Weapons and armor can be **Resonance Tuned** at crafters
-- Tuning adds properties using collected Echo Fragments
-- Want your sword to deal fire damage? Tune it with a "burning memory" Echo
-- Want armor that boosts Magic? Tune it with a "scholar's dedication" Echo
+- Weapons and armor can be **Resonance Tuned** at crafters.
+- Tuning adds properties using collected Echo Fragments.
+- **Tuning Slots:** Items have 1-3 slots based on rarity (Common: 1, Rare: 2, Legendary: 3).
+- **Permanence:** Tuning is semi-permanent. Replacing an Echo in a slot destroys the previously equipped Echo and requires a significant RC fee.
 - Creates deep customization without overwhelming complexity
 
 ---
