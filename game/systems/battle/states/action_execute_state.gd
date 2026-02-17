@@ -93,7 +93,9 @@ func _execute_ability(
 	await _play_attacker_anim(attacker)
 
 	if ability.damage_base > 0 and target and target.is_alive:
-		var damage := attacker.deal_damage(ability.damage_base, is_magical)
+		var damage := attacker.deal_damage(
+			ability.damage_base, is_magical, true
+		)
 		var actual := target.take_damage(damage, is_magical)
 		if _battle_ui:
 			_battle_ui.add_battle_log(
@@ -143,6 +145,14 @@ func _execute_item(
 					"%s restored %d EE!" % [
 						target.get_display_name(),
 						restored,
+					]
+				)
+		ItemData.EffectType.CURE_HOLLOW:
+			target.cure_hollow()
+			if _battle_ui:
+				_battle_ui.add_battle_log(
+					"%s is grounded!" % [
+						target.get_display_name(),
 					]
 				)
 
