@@ -9,11 +9,7 @@ Started: 2026-02-16
 
 ## Active
 
-### T-0015
-- Title: Implement Resonance gauge UI and overload/hollow mechanics
-- Status: in-progress
-- Assigned: claude
-- Started: 2026-02-16
+(none)
 
 ---
 
@@ -24,6 +20,13 @@ Started: 2026-02-16
 ---
 
 ## Done This Sprint
+
+### T-0015
+- Title: Implement Resonance gauge UI and overload/hollow mechanics
+- Status: done
+- Assigned: claude
+- Started: 2026-02-16
+- Completed: 2026-02-16
 
 ### T-0017
 - Title: Implement status effect system
