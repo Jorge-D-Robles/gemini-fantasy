@@ -157,8 +157,8 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0015
 - Title: Implement Resonance gauge UI and overload/hollow mechanics
-- Status: todo
-- Assigned: unassigned
+- Status: in-progress
+- Assigned: claude
 - Priority: high
 - Milestone: M0
 - Depends: none
@@ -177,8 +177,8 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0017
 - Title: Implement status effect system
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M0
 - Depends: none

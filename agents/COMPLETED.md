@@ -64,3 +64,4 @@ These 26 fixes were completed before the ticket system was established:
 - [2026-02-16] T-0034: BUG FIX — Dialogue/encounter overlap — BattleManager guards against dialogue/cutscene/transition, scene handlers check state, 6 new tests (claude)
 - [2026-02-16] INFRA: Scene preview tool — screenshot capture for agent visual verification, 3 camera modes, /scene-preview skill (claude)
 - [2026-02-16] T-0013: Build equipment system — EquipmentData resource, EquipmentManager autoload, 5 slots, 16 weapon types, battler stat integration, save/load, 30 new tests (claude)
+- [2026-02-16] T-0017: Implement status effect system — StatusEffectData resource, duration tracking, DoT/HoT, stat modifiers, stun/action prevention, backward-compatible API, battle state integration, 40 new tests (claude)
