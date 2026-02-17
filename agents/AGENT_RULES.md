@@ -276,6 +276,47 @@ if tex == null:
     return
 ```
 
+## Scene Preview (Visual Verification)
+
+Agents can capture screenshots of any Godot scene to visually verify tilemaps, entity placement, UI layout, etc. This enables a visual edit-preview-iterate loop without requiring the user to open the Godot editor.
+
+### How It Works
+
+The `/scene-preview` skill runs a scene briefly in windowed mode (not headless — headless does not render), captures a screenshot, and displays it. The agent can then describe what it sees and make corrections.
+
+### Usage
+
+```
+/scene-preview res://scenes/verdant_forest/verdant_forest.tscn --full-map
+```
+
+### Camera Modes
+
+| Mode | Flags | Use When |
+|------|-------|----------|
+| Default | (none) | Scene has its own Camera2D (e.g., player camera) |
+| Full-map | `--full-map` | View entire tilemap zoomed to fit viewport |
+| Positioned | `--camera-x=N --camera-y=N` | Focus on a specific area |
+| Custom zoom | `--zoom=N` | Override auto-zoom (0.5 = zoom out 2x) |
+
+### When to Use
+
+- After building or modifying a tilemap (`/build-tilemap`)
+- After placing entities (NPCs, enemies, transitions)
+- After building UI screens
+- To verify visual quality before pushing
+
+### Manual Invocation
+
+```bash
+/Applications/Godot.app/Contents/MacOS/Godot \
+  --path /Users/robles/repos/games/gemini-fantasy/game/ \
+  --rendering-driver opengl3 \
+  res://tools/scene_preview.tscn \
+  -- --preview-scene=res://scenes/<name>/<name>.tscn \
+     --output=/tmp/scene_preview.png --full-map
+```
+
 ## Adding Monsters
 
 Reproducible workflow for adding new enemy types to the game.
@@ -362,6 +403,7 @@ This project is designed for fully automated agentic development. Use the skill 
 - `/implement-feature <desc>` — End-to-end feature implementation
 - `/copy-assets <description>` — Copy assets from Time Fantasy packs into the project
 - `/build-tilemap <scene> [goals]` — Design and build multi-layer tilemaps with visual variety
+- `/scene-preview <scene> [flags]` — Capture a screenshot of a scene for visual verification
 
 **Data** — Populate and tune game data:
 - `/seed-game-data <type>` — Create .tres files from design docs
