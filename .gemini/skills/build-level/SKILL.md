@@ -1,6 +1,6 @@
 ---
 name: build-level
-description: Create a new levelmap scene with proper layer structure, entity placement, transitions, and encounter zones. Use when building overworld areas, dungeons, towns, or interior maps.
+description: Create a new level/map scene with proper layer structure, entity placement, transitions, and encounter zones. Use when building overworld areas, dungeons, towns, or interior maps.
 argument-hint: <level-name> <level-type> [details...]
 disable-model-invocation: true
 ---
@@ -9,28 +9,29 @@ disable-model-invocation: true
 
 Create a level scene for: **$ARGUMENTS**
 
+ultrathink
 
 ## Step 1 — Identify Level Type
 
 | Type | Root Node | Layers | Design Source |
 |------|-----------|--------|---------------|
-| `overworld` | Node2D | Ground, Deco, Collision, Entities | `docs/game-design/03-world-map-and-locations.md` |
-| `town` / `settlement` | Node2D | Ground, Buildings, Deco, Entities, Interiors | `docs/game-design/03-world-map-and-locations.md` |
-| `dungeon` | Node2D | Ground, Walls, Deco, Collision, Entities, Triggers | `docs/game-design/05-dungeon-designs.md` |
-| `interior` | Node2D | Floor, Walls, Furniture, Entities | N/A (simple) |
+| `overworld` | Node2D | Ground, GroundDetail, Trees, Paths, Objects, AbovePlayer, Entities | `docs/game-design/03-world-map-and-locations.md` |
+| `town` / `settlement` | Node2D | Ground, GroundDetail, Paths, Objects, AbovePlayer, Entities | `docs/game-design/03-world-map-and-locations.md` |
+| `dungeon` | Node2D | Ground, Walls, GroundDetail, Objects, Entities, Triggers | `docs/game-design/05-dungeon-designs.md` |
+| `interior` | Node2D | Ground, Walls, Objects, Entities | N/A (simple) |
 | `battle-arena` | Node2D | Background, Platforms, Effects | `docs/game-design/01-core-mechanics.md` |
 
 ## Step 2 — Research (MANDATORY — do not skip)
 
 **You MUST complete ALL of these before writing any code:**
 
-1. **Call the `godot-docs` skill** for level-related classes:
+1. **Call the `godot-docs` subagent** for level-related classes:
    ```
-   activate_skill("godot-docs") # Look up TileMapLayer, Camera2D, Area2D, and Marker2D. I need properties, methods, signals for building a [LEVEL_TYPE] level scene. Include tilemap tutorials.
+   Task(subagent_type="godot-docs", prompt="Look up TileMapLayer, Camera2D, Area2D, and Marker2D. I need properties, methods, signals for building a [LEVEL_TYPE] level scene. Include tilemap tutorials.")
    ```
 2. **Read scene architecture best practices**:
    ```
-   Read("docsbest-practices/01-scene-architecture.md")
+   Read("docs/best-practices/01-scene-architecture.md")
    ```
 3. **Read the relevant design document** for this location's description, NPCs, events, and encounters
 4. **Read `docs/lore/01-world-overview.md`** for region context
@@ -41,9 +42,12 @@ Create a level scene for: **$ARGUMENTS**
 
 ```
 <LevelName> (Node2D) -- level_name.gd
-  ├── GroundLayer (TileMapLayer)        # Base terrain
-  ├── DecorationLayer (TileMapLayer)    # Trees, rocks, flowers
-  ├── CollisionLayer (TileMapLayer)     # Invisible collision tiles
+  ├── Ground (TileMapLayer)             # Base terrain (single-tile fill)
+  ├── GroundDetail (TileMapLayer)       # Sparse accents (flowers, bushes)
+  ├── Trees (TileMapLayer)              # Forest borders (B-sheet, collision)
+  ├── Paths (TileMapLayer)              # Walkway overlay
+  ├── Objects (TileMapLayer)            # Rocks, buildings (B-sheet, collision)
+  ├── AbovePlayer (TileMapLayer)        # Tree canopy, rooftops (no collision)
   ├── Entities (Node2D)                 # Y-sorted container
   │     ├── Player (spawn point marker)
   │     ├── NPCs (Node2D)
@@ -69,10 +73,10 @@ Create a level scene for: **$ARGUMENTS**
 
 ```
 <DungeonName> (Node2D) -- dungeon_name.gd
-  ├── GroundLayer (TileMapLayer)
-  ├── WallLayer (TileMapLayer)
-  ├── DecorationLayer (TileMapLayer)
-  ├── CollisionLayer (TileMapLayer)
+  ├── Ground (TileMapLayer)
+  ├── Walls (TileMapLayer)
+  ├── GroundDetail (TileMapLayer)
+  ├── Objects (TileMapLayer)
   ├── Entities (Node2D)
   │     ├── SpawnPoint (Marker2D)
   │     ├── Enemies (Node2D)
@@ -136,7 +140,7 @@ func _setup_encounters() -> void:
 
 ## Step 5 — Create Scene Transition Areas
 
-For each exitentrance, create an `Area2D` trigger:
+For each exit/entrance, create an `Area2D` trigger:
 
 ```gdscript
 class_name SceneTransitionTrigger

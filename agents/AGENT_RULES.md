@@ -218,9 +218,13 @@ agents/            # Project management (milestones, backlog, sprint, completed 
 
 ### Tile Usage Rules
 
-- **Use single-tile fills for uniform surfaces.** Each column in an A5 tile sheet is a DIFFERENT tile variant — columns 0 and 1 are NOT left/right halves of a pair. Alternating columns creates visible stripe artifacts. Use ONE consistent tile (same atlas coordinate) for large floor/wall areas.
-- **Use large patches for variety.** If you want visual variety, use different tile variants in 4x4+ patches, never alternating every tile.
-- **Match theme to location.** Ruins1 = blue/ancient, Ruins2 = gold/Egyptian, Ruins3 = brown/green overgrown. Choose the tile sheet that matches the area's theme.
+- **Only use A5 and B/C/D/E tile sheets.** A1-A4 are RPG Maker autotile formats (animated water, ground transitions, wall autotiles) that use sub-tile assembly by RPG Maker's engine. They are NOT flat grids and will produce garbled visuals in Godot. Never reference any file with `tileA1`, `tileA2`, `tileA3`, or `tileA4` in the filename.
+- **Use single-tile fills for ground layers.** Each column in an A5 tile sheet is a DIFFERENT tile variant — columns 0 and 1 are NOT left/right halves of a pair. Alternating columns creates visible checkerboard/stripe artifacts. Use ONE consistent tile (same `Vector2i(col, row)`) for the entire ground fill.
+- **Use B-sheet objects for visual variety.** Trees, rocks, buildings, and decorative objects from B-format sheets provide all the visual interest. Do not try to create variety by mixing A5 columns.
+- **Use large patches for terrain changes.** If you need different terrain types (grass + dirt), use tiles from different A5 ROWS in 8x8+ contiguous patches, never from different columns of the same row.
+- **Pass `source_id` for B-sheet layers.** When calling `MapBuilder.build_layer()` for layers using B-sheet tiles, pass the correct source_id parameter (e.g., `1` if the B sheet is the second atlas path).
+- **Match theme to location.** Ruins1 = blue/ancient, Ruins2 = gold/Egyptian, Ruins3 = brown/green overgrown. Fairy Forest A5_A row 8 = bright green (use for forests). Row 0 = dark green grass. Row 10 = gray stone (use for towns).
+- **Read `docs/best-practices/11-tilemaps-and-level-design.md`** before any tilemap work. It contains the verified tile sheet reference, the single-tile fill rule, collision setup, and the theme-to-tileset mapping table.
 
 ## Asset Workflow
 

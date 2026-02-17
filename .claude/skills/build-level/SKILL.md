@@ -15,10 +15,10 @@ ultrathink
 
 | Type | Root Node | Layers | Design Source |
 |------|-----------|--------|---------------|
-| `overworld` | Node2D | Ground, Deco, Collision, Entities | `docs/game-design/03-world-map-and-locations.md` |
-| `town` / `settlement` | Node2D | Ground, Buildings, Deco, Entities, Interiors | `docs/game-design/03-world-map-and-locations.md` |
-| `dungeon` | Node2D | Ground, Walls, Deco, Collision, Entities, Triggers | `docs/game-design/05-dungeon-designs.md` |
-| `interior` | Node2D | Floor, Walls, Furniture, Entities | N/A (simple) |
+| `overworld` | Node2D | Ground, GroundDetail, Trees, Paths, Objects, AbovePlayer, Entities | `docs/game-design/03-world-map-and-locations.md` |
+| `town` / `settlement` | Node2D | Ground, GroundDetail, Paths, Objects, AbovePlayer, Entities | `docs/game-design/03-world-map-and-locations.md` |
+| `dungeon` | Node2D | Ground, Walls, GroundDetail, Objects, Entities, Triggers | `docs/game-design/05-dungeon-designs.md` |
+| `interior` | Node2D | Ground, Walls, Objects, Entities | N/A (simple) |
 | `battle-arena` | Node2D | Background, Platforms, Effects | `docs/game-design/01-core-mechanics.md` |
 
 ## Step 2 — Research (MANDATORY — do not skip)
@@ -42,9 +42,12 @@ ultrathink
 
 ```
 <LevelName> (Node2D) -- level_name.gd
-  ├── GroundLayer (TileMapLayer)        # Base terrain
-  ├── DecorationLayer (TileMapLayer)    # Trees, rocks, flowers
-  ├── CollisionLayer (TileMapLayer)     # Invisible collision tiles
+  ├── Ground (TileMapLayer)             # Base terrain (single-tile fill)
+  ├── GroundDetail (TileMapLayer)       # Sparse accents (flowers, bushes)
+  ├── Trees (TileMapLayer)              # Forest borders (B-sheet, collision)
+  ├── Paths (TileMapLayer)              # Walkway overlay
+  ├── Objects (TileMapLayer)            # Rocks, buildings (B-sheet, collision)
+  ├── AbovePlayer (TileMapLayer)        # Tree canopy, rooftops (no collision)
   ├── Entities (Node2D)                 # Y-sorted container
   │     ├── Player (spawn point marker)
   │     ├── NPCs (Node2D)
@@ -70,10 +73,10 @@ ultrathink
 
 ```
 <DungeonName> (Node2D) -- dungeon_name.gd
-  ├── GroundLayer (TileMapLayer)
-  ├── WallLayer (TileMapLayer)
-  ├── DecorationLayer (TileMapLayer)
-  ├── CollisionLayer (TileMapLayer)
+  ├── Ground (TileMapLayer)
+  ├── Walls (TileMapLayer)
+  ├── GroundDetail (TileMapLayer)
+  ├── Objects (TileMapLayer)
   ├── Entities (Node2D)
   │     ├── SpawnPoint (Marker2D)
   │     ├── Enemies (Node2D)
