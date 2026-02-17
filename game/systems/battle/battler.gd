@@ -42,10 +42,11 @@ const DEFEND_RESONANCE_BASE: float = 10.0
 # Damage formula constants
 const DEFENSE_SCALING_DIVISOR: float = 200.0
 const DEFENSE_MOD_MIN: float = 0.1
-const HOLLOW_DEFENSE_PENALTY: float = 0.5
+const HOLLOW_STAT_PENALTY: float = 0.5
 const DEFEND_DAMAGE_REDUCTION: float = 0.5
 const OVERLOAD_INCOMING_DAMAGE_MULT: float = 2.0
 const OVERLOAD_OUTGOING_DAMAGE_MULT: float = 2.0
+const RESONANT_ABILITY_BONUS: float = 1.2
 const STAT_DAMAGE_SCALING: float = 0.5
 
 ## Character or enemy data resource.
@@ -142,16 +143,29 @@ func restore_ee(amount: int) -> int:
 
 
 ## Calculates outgoing damage with stat bonus and resonance modifiers.
-func deal_damage(base_amount: int, is_magical: bool = false) -> int:
-	var stat_bonus: float
+## Set [param is_ability] to true for Resonance ability attacks (gets
+## Resonant state bonus).
+func deal_damage(
+	base_amount: int,
+	is_magical: bool = false,
+	is_ability: bool = false,
+) -> int:
+	var stat_value: int
 	if is_magical:
-		stat_bonus = magic * STAT_DAMAGE_SCALING
+		stat_value = magic
 	else:
-		stat_bonus = attack * STAT_DAMAGE_SCALING
+		stat_value = attack
+
+	if resonance_state == ResonanceState.HOLLOW:
+		stat_value = int(stat_value * HOLLOW_STAT_PENALTY)
+
+	var stat_bonus := stat_value * STAT_DAMAGE_SCALING
 	var total := int(base_amount + stat_bonus)
 
 	if resonance_state == ResonanceState.OVERLOAD:
 		total = int(total * OVERLOAD_OUTGOING_DAMAGE_MULT)
+	elif resonance_state == ResonanceState.RESONANT and is_ability:
+		total = int(total * RESONANT_ABILITY_BONUS)
 
 	if resonance_state != ResonanceState.HOLLOW:
 		add_resonance(
@@ -186,6 +200,19 @@ func add_resonance(amount: float) -> void:
 ## Returns the current resonance state.
 func check_resonance_state() -> ResonanceState:
 	return resonance_state
+
+
+## Cures the HOLLOW state, resetting to FOCUSED with gauge at 0.
+## No-op if not in HOLLOW state.
+func cure_hollow() -> void:
+	if resonance_state != ResonanceState.HOLLOW:
+		return
+	var old_state := resonance_state
+	resonance_state = ResonanceState.FOCUSED
+	resonance_gauge = 0.0
+	resonance_changed.emit(resonance_gauge)
+	resonance_state_changed.emit(old_state, resonance_state)
+	_calculate_turn_delay()
 
 
 ## Applies a status effect from data. If already present, refreshes duration.
@@ -267,7 +294,7 @@ func is_action_prevented() -> bool:
 	return false
 
 
-## Returns base stat + sum of all active effect modifiers, floored at 0.
+## Returns base stat + modifiers, with Hollow penalty applied, floored at 0.
 func get_modified_stat(stat_name: String) -> int:
 	var base: int = 0
 	match stat_name:
@@ -286,6 +313,8 @@ func get_modified_stat(stat_name: String) -> int:
 		_:
 			push_warning("Unknown stat: %s" % stat_name)
 			return 0
+	if resonance_state == ResonanceState.HOLLOW:
+		base = int(base * HOLLOW_STAT_PENALTY)
 	var modifier := _get_total_modifier(stat_name)
 	return maxi(base + modifier, 0)
 
@@ -353,7 +382,7 @@ func _calculate_incoming_damage(base: int, is_magical: bool) -> int:
 		def_stat = defense
 
 	if resonance_state == ResonanceState.HOLLOW:
-		def_stat = int(def_stat * HOLLOW_DEFENSE_PENALTY)
+		def_stat = int(def_stat * HOLLOW_STAT_PENALTY)
 
 	var defense_mod := 1.0 - (def_stat / DEFENSE_SCALING_DIVISOR)
 	defense_mod = clampf(defense_mod, DEFENSE_MOD_MIN, 1.0)
@@ -391,6 +420,7 @@ func _on_defeated() -> void:
 		resonance_gauge = 0.0
 		resonance_changed.emit(resonance_gauge)
 		resonance_state_changed.emit(old_state, resonance_state)
+		_calculate_turn_delay()
 	defeated.emit()
 
 
@@ -415,8 +445,11 @@ func _get_total_modifier(stat_name: String) -> int:
 
 
 func _calculate_turn_delay() -> void:
-	if speed > 0:
-		turn_delay = 100.0 / float(speed)
+	var effective_speed := speed
+	if resonance_state == ResonanceState.HOLLOW:
+		effective_speed = int(speed * HOLLOW_STAT_PENALTY)
+	if effective_speed > 0:
+		turn_delay = 100.0 / float(effective_speed)
 	else:
 		turn_delay = 100.0
 

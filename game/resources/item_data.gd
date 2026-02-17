@@ -16,6 +16,7 @@ enum EffectType {
 	REVIVE,
 	BUFF,
 	DAMAGE,
+	CURE_HOLLOW,
 }
 
 enum TargetType {

@@ -111,6 +111,9 @@ func _spawn_party(party_data: Array[Resource]) -> void:
 		party_node.add_child(battler)
 		party_battlers.append(battler)
 		battler.defeated.connect(_on_battler_defeated.bind(battler))
+		battler.resonance_state_changed.connect(
+			_on_resonance_state_changed.bind(battler)
+		)
 		# Instantiate visual scene and bind to logic battler
 		if visual_scene:
 			var visual: PartyBattlerScene = visual_scene.instantiate()
@@ -133,6 +136,9 @@ func _spawn_enemies(enemy_data_arr: Array[Resource]) -> void:
 		enemy_node.add_child(battler)
 		enemy_battlers.append(battler)
 		battler.defeated.connect(_on_battler_defeated.bind(battler))
+		battler.resonance_state_changed.connect(
+			_on_resonance_state_changed.bind(battler)
+		)
 		# Instantiate visual scene and bind to logic battler
 		if visual_scene:
 			var visual: EnemyBattlerScene = visual_scene.instantiate()
@@ -190,3 +196,31 @@ func _persist_party_state() -> void:
 
 func _on_battler_defeated(battler: Battler) -> void:
 	turn_queue.remove_battler(battler)
+
+
+func _on_resonance_state_changed(
+	_old: Battler.ResonanceState,
+	new: Battler.ResonanceState,
+	battler: Battler,
+) -> void:
+	var battle_ui: Node = get_node_or_null("BattleUI")
+	if not battle_ui:
+		return
+	var name_str := battler.get_display_name()
+	match new:
+		Battler.ResonanceState.RESONANT:
+			battle_ui.add_battle_log(
+				"%s is Resonant!" % name_str
+			)
+		Battler.ResonanceState.OVERLOAD:
+			battle_ui.add_battle_log(
+				"%s enters Overload!" % name_str
+			)
+		Battler.ResonanceState.HOLLOW:
+			battle_ui.add_battle_log(
+				"%s has become Hollow..." % name_str
+			)
+		Battler.ResonanceState.FOCUSED:
+			battle_ui.add_battle_log(
+				"%s is grounded." % name_str
+			)

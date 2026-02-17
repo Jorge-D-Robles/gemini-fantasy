@@ -31,6 +31,7 @@ var _active_battler: Battler = null
 var _target_list: Array[Battler] = []
 var _target_index: int = 0
 var _party_cache: Array[Battler] = []
+var _resonance_tween: Tween = null
 
 @onready var _turn_order_container: HBoxContainer = %TurnOrderContainer
 @onready var _command_menu: PanelContainer = %CommandMenu
@@ -202,7 +203,12 @@ func update_turn_order(queue: Array[Battler]) -> void:
 
 
 func update_resonance(gauge_value: float, state: Battler.ResonanceState) -> void:
-	_resonance_bar.value = gauge_value
+	if _resonance_tween:
+		_resonance_tween.kill()
+	_resonance_tween = create_tween()
+	_resonance_tween.tween_property(
+		_resonance_bar, "value", gauge_value, 0.3
+	).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 
 	match state:
 		Battler.ResonanceState.FOCUSED:
@@ -447,6 +453,29 @@ func _create_party_row(battler: Battler) -> HBoxContainer:
 	ee_lbl.text = "%d" % battler.current_ee
 	ee_lbl.add_theme_font_size_override("font_size", 7)
 	row.add_child(ee_lbl)
+
+	# Resonance state indicator
+	var res_lbl := Label.new()
+	res_lbl.add_theme_font_size_override("font_size", 6)
+	match battler.resonance_state:
+		Battler.ResonanceState.FOCUSED:
+			res_lbl.text = ""
+		Battler.ResonanceState.RESONANT:
+			res_lbl.text = "RES"
+			res_lbl.add_theme_color_override(
+				"font_color", Color(1.0, 0.9, 0.3)
+			)
+		Battler.ResonanceState.OVERLOAD:
+			res_lbl.text = "OVL"
+			res_lbl.add_theme_color_override(
+				"font_color", Color(1.0, 0.3, 0.3)
+			)
+		Battler.ResonanceState.HOLLOW:
+			res_lbl.text = "HLW"
+			res_lbl.add_theme_color_override(
+				"font_color", Color(0.5, 0.5, 0.5)
+			)
+	row.add_child(res_lbl)
 
 	return row
 
