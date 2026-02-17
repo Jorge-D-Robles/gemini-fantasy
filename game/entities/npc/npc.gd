@@ -33,6 +33,9 @@ func interact() -> void:
 
 	_is_talking = true
 	interaction_started.emit()
+	var bus := get_node_or_null("/root/EventBus")
+	if bus:
+		bus.emit_npc_talked_to(npc_name)
 
 	var lines: Array[DialogueLine] = []
 	var portrait: Texture2D = null
@@ -62,3 +65,6 @@ func _face_toward_player() -> void:
 func _on_dialogue_ended() -> void:
 	_is_talking = false
 	interaction_ended.emit()
+	var bus := get_node_or_null("/root/EventBus")
+	if bus:
+		bus.emit_npc_interaction_ended(npc_name)

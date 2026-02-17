@@ -74,8 +74,8 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0007
 - Title: Wire unconnected signals to EventBus or QuestManager
-- Status: todo
-- Assigned: unassigned
+- Status: in-progress
+- Assigned: claude
 - Priority: medium
 - Milestone: M0
 - Depends: T-0016

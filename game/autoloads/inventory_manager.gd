@@ -18,6 +18,9 @@ func add_item(id: StringName, count: int = 1) -> void:
 	else:
 		_items[id] = count
 	inventory_changed.emit()
+	var bus := get_node_or_null("/root/EventBus")
+	if bus:
+		bus.emit_item_acquired(id, count)
 
 
 func remove_item(id: StringName, count: int = 1) -> bool:

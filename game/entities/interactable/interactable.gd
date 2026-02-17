@@ -29,3 +29,6 @@ func interact() -> void:
 
 	strategy.execute(self)
 	interacted.emit()
+	var bus := get_node_or_null("/root/EventBus")
+	if bus:
+		bus.emit_interactable_used(name)

@@ -9,7 +9,11 @@ Started: 2026-02-16
 
 ## Active
 
-(none)
+### T-0007
+- Title: Wire unconnected signals to EventBus or QuestManager
+- Status: in-progress
+- Assigned: claude
+- Started: 2026-02-16
 
 ---
 

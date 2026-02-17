@@ -17,12 +17,19 @@ enum State {
 
 ## Stored QuestData resources keyed by id.
 var _quest_data: Dictionary = {}
+
 ## Objective completion arrays keyed by quest id.
 var _objectives: Dictionary = {}
 ## Quest state keyed by quest id.
 var _states: Dictionary = {}
 ## Optional callback to check event flags for prerequisites.
 var _flag_checker: Callable = Callable()
+
+
+func _ready() -> void:
+	var flags := get_node_or_null("/root/EventFlags")
+	if flags:
+		_flag_checker = flags.has_flag
 
 
 ## Accepts a quest and starts tracking its objectives.
