@@ -2,7 +2,7 @@
 name: tilemap-builder
 description: Tilemap design and building agent. Creates visually rich, multi-layer tilemaps for game levels using MapBuilder and Time Fantasy assets. Takes a scene name and design goals, then produces complete tilemap code with ground, detail, object, and above-player layers. Use when creating new maps, redesigning existing ones, or improving visual quality of levels.
 tools: Read, Glob, Grep, Write, Edit, Bash
-model: opus
+model: gemini-3-pro-preview
 ---
 
 # Tilemap Builder Agent

@@ -5,7 +5,7 @@ tools:
   - read_file
   - grep_search
   - glob
-model: gemini-2.0-flash
+model: gemini-3-pro-preview
 ---
 
 # Lore Architect Agent
