@@ -194,6 +194,9 @@ func _try_interact() -> void:
 	if collider and collider.has_method("interact"):
 		collider.interact()
 		interacted_with.emit(collider)
+		var bus := get_node_or_null("/root/EventBus")
+		if bus:
+			bus.emit_player_interacted(collider)
 
 
 func _on_game_state_changed(

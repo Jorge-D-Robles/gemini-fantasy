@@ -14,10 +14,13 @@ func enter() -> void:
 	var total_gold: int = 0
 	var items: Array[String] = []
 
+	var bus: Node = get_node_or_null("/root/EventBus")
 	for b in battle_scene.enemy_battlers:
 		if b is EnemyBattler:
 			total_exp += b.exp_reward
 			total_gold += b.gold_reward
+			if bus and b.data:
+				bus.emit_enemy_defeated(b.data.id)
 			for loot_entry in b.loot_table:
 				var chance: float = loot_entry.get("drop_chance", 0.0)
 				if randf() < chance:
