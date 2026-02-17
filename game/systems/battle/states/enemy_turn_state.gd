@@ -107,7 +107,11 @@ func _try_apply_status(ability: AbilityData, target: Battler) -> void:
 	if ability.status_effect.is_empty() or ability.status_chance <= 0.0:
 		return
 	if randf() < ability.status_chance:
-		target.apply_status_effect(StringName(ability.status_effect))
+		var effect := StatusEffectData.new()
+		effect.id = StringName(ability.status_effect)
+		effect.display_name = ability.status_effect
+		effect.duration = ability.status_effect_duration
+		target.apply_status(effect)
 		if _battle_ui:
 			_battle_ui.add_battle_log(
 				"%s is affected by %s!" % [

@@ -181,7 +181,7 @@ func test_apply_status_effect() -> void:
 func test_apply_duplicate_status_no_stack() -> void:
 	_battler.apply_status_effect(&"poison")
 	_battler.apply_status_effect(&"poison")
-	assert_eq(_battler.status_effects.size(), 1)
+	assert_eq(_battler.get_active_effect_count(), 1)
 
 
 func test_remove_status_effect() -> void:

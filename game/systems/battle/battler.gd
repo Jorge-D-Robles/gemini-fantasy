@@ -64,7 +64,8 @@ var luck: int = 0
 
 var resonance_gauge: float = 0.0
 var resonance_state: ResonanceState = ResonanceState.FOCUSED
-var status_effects: Array[StringName] = []
+## Active status effects: Array of { "data": StatusEffectData, "remaining": int }
+var _active_effects: Array[Dictionary] = []
 var abilities: Array[Resource] = []
 var is_defending: bool = false
 var is_alive: bool = true
@@ -186,24 +187,145 @@ func check_resonance_state() -> ResonanceState:
 	return resonance_state
 
 
-## Applies a status effect if not already present.
+## Applies a status effect from data. If already present, refreshes duration.
+func apply_status(effect_data: StatusEffectData) -> void:
+	if effect_data == null:
+		return
+	# Check if already present — refresh duration instead of stacking
+	for entry: Dictionary in _active_effects:
+		var existing: StatusEffectData = entry["data"]
+		if existing.id == effect_data.id:
+			entry["remaining"] = effect_data.duration
+			return
+	_active_effects.append({
+		"data": effect_data,
+		"remaining": effect_data.duration,
+	})
+	status_effect_applied.emit(effect_data.id)
+
+
+## Legacy wrapper — applies a basic debuff with the given name.
 func apply_status_effect(effect: StringName) -> void:
-	if effect not in status_effects:
-		status_effects.append(effect)
-		status_effect_applied.emit(effect)
+	var data_obj := StatusEffectData.new()
+	data_obj.id = effect
+	data_obj.display_name = String(effect)
+	data_obj.duration = 0  # permanent until removed
+	apply_status(data_obj)
 
 
-## Removes a status effect by name.
+## Removes a status effect by id.
+func remove_status(effect_id: StringName) -> void:
+	for i in range(_active_effects.size() - 1, -1, -1):
+		var entry: Dictionary = _active_effects[i]
+		var eff: StatusEffectData = entry["data"]
+		if eff.id == effect_id:
+			_active_effects.remove_at(i)
+			status_effect_removed.emit(effect_id)
+			return
+
+
+## Legacy wrapper — removes a status effect by name.
 func remove_status_effect(effect: StringName) -> void:
-	var idx: int = status_effects.find(effect)
-	if idx >= 0:
-		status_effects.remove_at(idx)
-		status_effect_removed.emit(effect)
+	remove_status(effect)
 
 
-## Returns true if this battler has the given status effect.
+## Returns true if this battler has an active status effect with the given id.
+func has_status(effect_id: StringName) -> bool:
+	for entry: Dictionary in _active_effects:
+		var eff: StatusEffectData = entry["data"]
+		if eff.id == effect_id:
+			return true
+	return false
+
+
+## Legacy wrapper.
 func has_status_effect(effect: StringName) -> bool:
-	return effect in status_effects
+	return has_status(effect)
+
+
+## Returns remaining turns for an effect, or -1 if not found.
+func get_effect_remaining_turns(effect_id: StringName) -> int:
+	for entry: Dictionary in _active_effects:
+		var eff: StatusEffectData = entry["data"]
+		if eff.id == effect_id:
+			return entry["remaining"] as int
+	return -1
+
+
+## Returns the number of active status effects.
+func get_active_effect_count() -> int:
+	return _active_effects.size()
+
+
+## Returns true if any active effect prevents acting.
+func is_action_prevented() -> bool:
+	for entry: Dictionary in _active_effects:
+		var eff: StatusEffectData = entry["data"]
+		if eff.prevents_action:
+			return true
+	return false
+
+
+## Returns base stat + sum of all active effect modifiers, floored at 0.
+func get_modified_stat(stat_name: String) -> int:
+	var base: int = 0
+	match stat_name:
+		"attack":
+			base = attack
+		"magic":
+			base = magic
+		"defense":
+			base = defense
+		"resistance":
+			base = resistance
+		"speed":
+			base = speed
+		"luck":
+			base = luck
+		_:
+			push_warning("Unknown stat: %s" % stat_name)
+			return 0
+	var modifier := _get_total_modifier(stat_name)
+	return maxi(base + modifier, 0)
+
+
+## Removes all active status effects.
+func clear_all_effects() -> void:
+	_active_effects.clear()
+
+
+## Ticks all active effects: applies DoT/HoT, decrements duration, expires.
+func tick_effects() -> void:
+	if not is_alive:
+		return
+	# Process ticks and collect expired indices
+	var expired: Array[int] = []
+	for i in _active_effects.size():
+		var entry: Dictionary = _active_effects[i]
+		var eff: StatusEffectData = entry["data"]
+		# Apply tick damage
+		if eff.tick_damage > 0:
+			var dmg := eff.tick_damage
+			# DoT cannot kill — leave at least 1 HP
+			current_hp = maxi(current_hp - dmg, 1)
+			hp_changed.emit(current_hp, max_hp)
+		# Apply tick healing
+		if eff.tick_heal > 0:
+			current_hp = mini(current_hp + eff.tick_heal, max_hp)
+			hp_changed.emit(current_hp, max_hp)
+		# Decrement duration (0 = permanent)
+		var remaining: int = entry["remaining"]
+		if remaining > 0:
+			remaining -= 1
+			entry["remaining"] = remaining
+			if remaining <= 0:
+				expired.append(i)
+	# Remove expired effects in reverse order
+	for i in range(expired.size() - 1, -1, -1):
+		var idx: int = expired[i]
+		var eff: StatusEffectData = _active_effects[idx]["data"]
+		_active_effects.remove_at(idx)
+		status_effect_removed.emit(eff.id)
 
 
 ## Revives a defeated battler with a percentage of max HP.
@@ -269,6 +391,26 @@ func _on_defeated() -> void:
 		resonance_changed.emit(resonance_gauge)
 		resonance_state_changed.emit(old_state, resonance_state)
 	defeated.emit()
+
+
+func _get_total_modifier(stat_name: String) -> int:
+	var total: int = 0
+	for entry: Dictionary in _active_effects:
+		var eff: StatusEffectData = entry["data"]
+		match stat_name:
+			"attack":
+				total += eff.attack_modifier
+			"magic":
+				total += eff.magic_modifier
+			"defense":
+				total += eff.defense_modifier
+			"resistance":
+				total += eff.resistance_modifier
+			"speed":
+				total += eff.speed_modifier
+			"luck":
+				total += eff.luck_modifier
+	return total
 
 
 func _calculate_turn_delay() -> void:

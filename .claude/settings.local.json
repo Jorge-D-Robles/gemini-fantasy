@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:rpgmakerofficial.com)",
+      "WebFetch(domain:robotsweater.medium.com)",
+      "WebFetch(domain:finalbossblues.itch.io)",
+      "WebFetch(domain:timefantasy.net)",
+      "WebFetch(domain:www.slynyrd.com)",
+      "WebFetch(domain:www.gdquest.com)"
+    ]
+  }
+}

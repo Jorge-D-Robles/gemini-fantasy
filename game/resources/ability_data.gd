@@ -47,6 +47,8 @@ enum Element {
 @export_group("Status Effect")
 @export var status_effect: String = ""
 @export var status_chance: float = 0.0
+## Duration in turns for the status effect. 0 = permanent.
+@export var status_effect_duration: int = 3
 
 @export_group("Visuals")
 @export var animation_name: String = ""

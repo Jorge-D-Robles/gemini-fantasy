@@ -29,6 +29,18 @@ func enter() -> void:
 
 	battle_scene.current_battler = next_battler
 
+	# Stunned battlers skip their turn
+	if next_battler.is_action_prevented():
+		var battle_ui: Node = battle_scene.get_node_or_null(
+			"BattleUI"
+		)
+		if battle_ui:
+			battle_ui.add_battle_log(
+				"%s is stunned!" % next_battler.get_display_name()
+			)
+		state_machine.transition_to("TurnEnd")
+		return
+
 	if next_battler is PartyBattler:
 		state_machine.transition_to("PlayerTurn")
 	elif next_battler is EnemyBattler:
