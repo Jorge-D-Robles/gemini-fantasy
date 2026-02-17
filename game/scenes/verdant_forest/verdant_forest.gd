@@ -13,14 +13,14 @@ const ANCIENT_SENTINEL_PATH: String = "res://data/enemies/ancient_sentinel.tres"
 const GALE_HARPY_PATH: String = "res://data/enemies/gale_harpy.tres"
 const EMBER_HOUND_PATH: String = "res://data/enemies/ember_hound.tres"
 
-# Ground layer — single grass tile for uniform floor
+# Ground layer — green vegetation tile for lush forest floor
 const GROUND_LEGEND: Dictionary = {
-	"G": Vector2i(0, 0),   # Green grass
+	"G": Vector2i(0, 8),   # Green vegetation (A5_A row 8)
 }
 
-# Tree layer — single dense vegetation tile
+# Tree layer — B-sheet canopy center tile for solid tree borders
 const TREE_LEGEND: Dictionary = {
-	"T": Vector2i(0, 8),   # Dense forest
+	"T": Vector2i(1, 1),   # Canopy center (B_forest, source 1)
 }
 
 # Path layer — single dirt path tile
@@ -105,12 +105,12 @@ const PATH_MAP: Array[String] = [
 	"                                        ",
 	"                                        ",
 	"                   PP                   ",
-	"                   PP                   ",
 	"                  PPPP                  ",
 	"                 PPPPPP                 ",
-	"    PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP  ",
-	"    PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP  ",
-	"                                        ",
+	"                PPPPPPPP                ",
+	"   PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP  ",
+	"   PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP  ",
+	"   PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP  ",
 	"                                        ",
 	"                                        ",
 	"                                        ",
@@ -281,14 +281,12 @@ func _on_encounter_triggered(enemy_group: Array[Resource]) -> void:
 
 
 func _setup_tilemap() -> void:
-	var atlas_paths: Array[String] = [MapBuilder.FAIRY_FOREST_A5_A]
+	var atlas_paths: Array[String] = [
+		MapBuilder.FAIRY_FOREST_A5_A,   # source 0 — ground, path, detail
+		MapBuilder.FOREST_OBJECTS,       # source 1 — tree canopy objects
+	]
 	var solid: Dictionary = {
-		0: [
-			Vector2i(0, 8), Vector2i(1, 8), Vector2i(2, 8), Vector2i(3, 8),
-			Vector2i(4, 8), Vector2i(5, 8), Vector2i(6, 8), Vector2i(7, 8),
-			Vector2i(0, 9), Vector2i(1, 9), Vector2i(2, 9), Vector2i(3, 9),
-			Vector2i(4, 9), Vector2i(5, 9), Vector2i(6, 9), Vector2i(7, 9),
-		],
+		1: [Vector2i(1, 1)],   # B_forest canopy center — blocking
 	}
 	MapBuilder.apply_tileset(
 		[_ground_layer, _ground_detail_layer, _trees_layer,
@@ -301,5 +299,5 @@ func _setup_tilemap() -> void:
 	MapBuilder.build_layer(
 		_ground_detail_layer, DETAIL_MAP, DETAIL_LEGEND
 	)
-	MapBuilder.build_layer(_trees_layer, TREE_MAP, TREE_LEGEND)
+	MapBuilder.build_layer(_trees_layer, TREE_MAP, TREE_LEGEND, 1)
 	MapBuilder.build_layer(_paths_layer, PATH_MAP, PATH_LEGEND)
