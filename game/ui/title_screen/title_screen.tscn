@@ -1,6 +1,86 @@
-[gd_scene load_steps=2 format=3 uid="uid://b1t2l3s4c5r6n"]
+[gd_scene load_steps=7 format=3 uid="uid://b1t2l3s4c5r6n"]
 
 [ext_resource type="Script" path="res://ui/title_screen/title_screen.gd" id="1_ts"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_n"]
+bg_color = Color(0.12, 0.07, 0.22, 0.85)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.45, 0.35, 0.65, 0.6)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+content_margin_left = 16.0
+content_margin_top = 4.0
+content_margin_right = 16.0
+content_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_h"]
+bg_color = Color(0.18, 0.12, 0.32, 0.9)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.85, 0.75, 0.45, 0.8)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+content_margin_left = 16.0
+content_margin_top = 4.0
+content_margin_right = 16.0
+content_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_f"]
+bg_color = Color(0.18, 0.12, 0.32, 0.9)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.85, 0.75, 0.45, 0.8)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+content_margin_left = 16.0
+content_margin_top = 4.0
+content_margin_right = 16.0
+content_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_p"]
+bg_color = Color(0.06, 0.03, 0.12, 0.95)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.55, 0.45, 0.75, 0.5)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+content_margin_left = 16.0
+content_margin_top = 5.0
+content_margin_right = 16.0
+content_margin_bottom = 3.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_d"]
+bg_color = Color(0.08, 0.05, 0.15, 0.5)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.3, 0.25, 0.4, 0.3)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+content_margin_left = 16.0
+content_margin_top = 4.0
+content_margin_right = 16.0
+content_margin_bottom = 4.0
 
 [node name="TitleScreen" type="Control"]
 layout_mode = 3
@@ -13,31 +93,34 @@ script = ExtResource("1_ts")
 
 [node name="Background" type="ColorRect" parent="."]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+offset_right = 640.0
+offset_bottom = 360.0
 mouse_filter = 2
 color = Color(0.05, 0.03, 0.1, 1)
 
+[node name="TopAccent" type="ColorRect" parent="."]
+layout_mode = 1
+offset_left = 240.0
+offset_top = 60.0
+offset_right = 400.0
+offset_bottom = 61.0
+mouse_filter = 2
+color = Color(0.75, 0.65, 0.4, 0.35)
+
 [node name="TitleContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -200.0
-offset_top = 60.0
-offset_right = 200.0
-offset_bottom = 140.0
-grow_horizontal = 2
+offset_left = 80.0
+offset_top = 72.0
+offset_right = 560.0
+offset_bottom = 130.0
+theme_override_constants/separation = 4
 alignment = 1
 
 [node name="TitleLabel" type="Label" parent="TitleContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.75, 1.0, 1)
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 36
 text = "Gemini Fantasy"
 horizontal_alignment = 1
 
@@ -45,53 +128,83 @@ horizontal_alignment = 1
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.6, 0.55, 0.7, 1)
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 11
 text = "A Tale of Shattered Echoes"
 horizontal_alignment = 1
+
+[node name="BottomAccent" type="ColorRect" parent="."]
+layout_mode = 1
+offset_left = 240.0
+offset_top = 140.0
+offset_right = 400.0
+offset_bottom = 141.0
+mouse_filter = 2
+color = Color(0.75, 0.65, 0.4, 0.35)
 
 [node name="MenuContainer" type="VBoxContainer" parent="."]
 unique_name_in_owner = true
 layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -80.0
-offset_top = 180.0
-offset_right = 80.0
-offset_bottom = 300.0
-grow_horizontal = 2
+offset_left = 220.0
+offset_top = 152.0
+offset_right = 420.0
+offset_bottom = 290.0
 theme_override_constants/separation = 8
 
 [node name="NewGameButton" type="Button" parent="MenuContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.72, 0.95, 1)
+theme_override_colors/font_hover_color = Color(1.0, 0.95, 0.85, 1)
+theme_override_colors/font_focus_color = Color(1.0, 0.95, 0.85, 1)
+theme_override_colors/font_pressed_color = Color(0.65, 0.58, 0.8, 1)
+theme_override_colors/font_disabled_color = Color(0.4, 0.38, 0.5, 0.5)
 theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_n")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_h")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_f")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_p")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_btn_d")
 text = "New Game"
 
 [node name="ContinueButton" type="Button" parent="MenuContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.72, 0.95, 1)
+theme_override_colors/font_hover_color = Color(1.0, 0.95, 0.85, 1)
+theme_override_colors/font_focus_color = Color(1.0, 0.95, 0.85, 1)
+theme_override_colors/font_pressed_color = Color(0.65, 0.58, 0.8, 1)
+theme_override_colors/font_disabled_color = Color(0.4, 0.38, 0.5, 0.5)
 theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_n")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_h")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_f")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_p")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_btn_d")
 text = "Continue"
 
 [node name="SettingsButton" type="Button" parent="MenuContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.72, 0.95, 1)
+theme_override_colors/font_hover_color = Color(1.0, 0.95, 0.85, 1)
+theme_override_colors/font_focus_color = Color(1.0, 0.95, 0.85, 1)
+theme_override_colors/font_pressed_color = Color(0.65, 0.58, 0.8, 1)
+theme_override_colors/font_disabled_color = Color(0.4, 0.38, 0.5, 0.5)
 theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_n")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_h")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_f")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_p")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_btn_d")
 text = "Settings"
 
 [node name="VersionLabel" type="Label" parent="."]
 unique_name_in_owner = true
 layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -120.0
-offset_top = -24.0
-grow_horizontal = 0
-grow_vertical = 0
+offset_left = 520.0
+offset_top = 336.0
+offset_right = 640.0
+offset_bottom = 360.0
 theme_override_colors/font_color = Color(0.4, 0.4, 0.5, 1)
 theme_override_font_sizes/font_size = 10
 text = "Demo v0.1"
