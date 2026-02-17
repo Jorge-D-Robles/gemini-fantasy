@@ -74,13 +74,14 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0007
 - Title: Wire unconnected signals to EventBus or QuestManager
-- Status: in-progress
+- Status: done
 - Assigned: claude
 - Priority: medium
 - Milestone: M0
 - Depends: T-0016
 - Refs: game/entities/player/player.gd, game/entities/interactable/interactable.gd, game/entities/npc/npc.gd
-- Notes: Migrated from ISSUES_TRACKER [MEDIUM]. Signals like interacted_with are emitted but never connected.
+- Notes: Created EventBus autoload. Player, NPC, Interactable relay signals through EventBus. Also wired enemy_defeated, item_acquired, area_entered. QuestManager auto-connects flag_checker to EventFlags. 22 new tests.
+- Completed: 2026-02-16
 
 ### T-0008
 - Title: Replace has_method/has_signal with proper typing in autoloads

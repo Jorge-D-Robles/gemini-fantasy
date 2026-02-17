@@ -9,11 +9,7 @@ Started: 2026-02-16
 
 ## Active
 
-### T-0007
-- Title: Wire unconnected signals to EventBus or QuestManager
-- Status: in-progress
-- Assigned: claude
-- Started: 2026-02-16
+(none)
 
 ---
 
@@ -24,6 +20,13 @@ Started: 2026-02-16
 ---
 
 ## Done This Sprint
+
+### T-0007
+- Title: Wire unconnected signals to EventBus or QuestManager
+- Status: done
+- Assigned: claude
+- Started: 2026-02-16
+- Completed: 2026-02-16
 
 ### T-0016
 - Title: Build quest tracking system

@@ -67,3 +67,4 @@ These 26 fixes were completed before the ticket system was established:
 - [2026-02-16] T-0017: Implement status effect system — StatusEffectData resource, duration tracking, DoT/HoT, stat modifiers, stun/action prevention, backward-compatible API, battle state integration, 40 new tests (claude)
 - [2026-02-16] T-0015: Resonance gauge UI and overload/hollow mechanics — Hollow penalizes all stats at 50%, Resonant +20% ability bonus, cure_hollow, battle log transitions, tween animations, per-member indicators, 17 new tests (claude)
 - [2026-02-16] T-0016: Build quest tracking system — QuestData Resource, QuestManager autoload, objective tracking, prerequisite checking, save/load integration, 32 new tests (claude)
+- [2026-02-16] T-0007: Wire unconnected signals to EventBus — EventBus autoload, entity signal relay, enemy_defeated/item_acquired/area_entered wiring, QuestManager flag_checker auto-connect, 22 new tests (claude)
