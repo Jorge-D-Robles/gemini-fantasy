@@ -167,8 +167,8 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0016
 - Title: Build quest tracking system
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M0
 - Depends: none
