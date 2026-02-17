@@ -35,7 +35,21 @@ func _ready() -> void:
 		return
 
 	var scene_instance: Node = packed.instantiate()
-	add_child(scene_instance)
+
+	if scene_instance is Control:
+		var ctrl: Control = scene_instance as Control
+		var vp: Viewport = get_viewport()
+		var design_size: Vector2 = Vector2(vp.content_scale_size)
+		if design_size == Vector2.ZERO:
+			design_size = vp.get_visible_rect().size
+		var wrapper := Control.new()
+		wrapper.name = "UIWrapper"
+		wrapper.position = Vector2.ZERO
+		wrapper.size = design_size
+		add_child(wrapper)
+		wrapper.add_child(ctrl)
+	else:
+		add_child(scene_instance)
 
 	if not _show_ui:
 		_hide_ui_layer()

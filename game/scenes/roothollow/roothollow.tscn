@@ -54,6 +54,13 @@ z_index = -1
 collision_enabled = false
 z_index = -1
 
+[node name="TreesBorder" type="TileMapLayer" parent="."]
+z_index = 0
+
+[node name="Decorations" type="TileMapLayer" parent="."]
+collision_enabled = false
+z_index = 0
+
 [node name="Buildings" type="Node2D" parent="."]
 
 [node name="InnBuilding" type="Node2D" parent="Buildings"]

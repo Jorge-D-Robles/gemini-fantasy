@@ -13,9 +13,9 @@ const ANCIENT_SENTINEL_PATH: String = "res://data/enemies/ancient_sentinel.tres"
 const GALE_HARPY_PATH: String = "res://data/enemies/gale_harpy.tres"
 const EMBER_HOUND_PATH: String = "res://data/enemies/ember_hound.tres"
 
-# Ground layer — green vegetation tile for lush forest floor
+# Ground layer — bright green vegetation for lush forest floor
 const GROUND_LEGEND: Dictionary = {
-	"G": Vector2i(0, 8),   # Green vegetation (A5_A row 8)
+	"G": Vector2i(0, 8),   # Bright green (A5_A row 8)
 }
 
 # Tree layer — B-sheet canopy center tile for solid tree borders
@@ -28,10 +28,24 @@ const PATH_LEGEND: Dictionary = {
 	"P": Vector2i(0, 4),   # Dirt path
 }
 
-# Detail layer — sparse flower/foliage accents
+# Detail layer — small foliage from FOREST_OBJECTS (source 1)
 const DETAIL_LEGEND: Dictionary = {
-	"f": Vector2i(0, 14),  # Flower accent
-	"b": Vector2i(2, 14),  # Bush accent
+	"g": Vector2i(0, 8),   # Small ground foliage
+	"h": Vector2i(2, 8),   # Foliage variant
+}
+
+# Objects from STONE_OBJECTS — rocks and flowers in clearing
+const ROCK_LEGEND: Dictionary = {
+	"r": Vector2i(0, 0),   # Small rock
+	"R": Vector2i(1, 0),   # Rock variant
+	"q": Vector2i(2, 0),   # Pebble cluster
+	"F": Vector2i(0, 1),   # Orange flower
+	"L": Vector2i(2, 1),   # Flower variant
+}
+
+# Above player canopy from FOREST_OBJECTS — solid green overhang
+const ABOVE_LEGEND: Dictionary = {
+	"A": Vector2i(1, 1),   # Solid green canopy (same tile as tree)
 }
 
 # 40 cols x 25 rows — uniform grass fill
@@ -104,7 +118,7 @@ const PATH_MAP: Array[String] = [
 	"                                        ",
 	"                                        ",
 	"                                        ",
-	"                   PP                   ",
+	"                  PPP                   ",
 	"                  PPPP                  ",
 	"                 PPPPPP                 ",
 	"                PPPPPPPP                ",
@@ -124,22 +138,79 @@ const PATH_MAP: Array[String] = [
 	"                                        ",
 ]
 
-# Sparse flower accents in open areas
+# Ground detail — sparse small foliage from FOREST_OBJECTS (source 1)
 const DETAIL_MAP: Array[String] = [
 	"                                        ",
 	"                                        ",
 	"                                        ",
 	"                                        ",
 	"                                        ",
-	"            f         b                 ",
+	"            g                           ",
 	"                                        ",
-	"        f                          f    ",
-	"                    b                   ",
+	"                         h              ",
+	"                                        ",
+	"        h                               ",
+	"                                        ",
+	"                                        ",
+	"                    g                   ",
 	"                                        ",
 	"                                        ",
 	"                                        ",
-	"        f                          b    ",
-	"              f            b            ",
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"                                        ",
+]
+
+# Rocks and flowers scattered in clearing (STONE_OBJECTS, source 2)
+const ROCK_MAP: Array[String] = [
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"        r           F                   ",
+	"     F      R               r     L     ",
+	"               q       F       R        ",
+	"        r        L      R          F    ",
+	"       F      q              L          ",
+	" r                                    R ",
+	"R          F                   L        ",
+	"  q                  F                 r",
+	"       r        L          R            ",
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"                                        ",
+]
+
+# Tree canopy overhang — solid green tiles one row inside tree border
+# Creates depth: player walks UNDER these on the AbovePlayer layer
+const ABOVE_MAP: Array[String] = [
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"          AA    AAA A                   ",
+	"          AA A     AA                   ",
+	"    AA         AA                       ",
+	"    A                              A    ",
+	"  A                                  A  ",
+	"  A                                  A  ",
+	"  A                                  A  ",
+	"                                        ",
+	"                                        ",
+	"AAAA        AA              AA      AAAA",
+	"                                        ",
 	"                                        ",
 	"                                        ",
 	"                                        ",
@@ -283,7 +354,9 @@ func _on_encounter_triggered(enemy_group: Array[Resource]) -> void:
 func _setup_tilemap() -> void:
 	var atlas_paths: Array[String] = [
 		MapBuilder.FAIRY_FOREST_A5_A,   # source 0 — ground, path, detail
-		MapBuilder.FOREST_OBJECTS,       # source 1 — tree canopy objects
+		MapBuilder.FOREST_OBJECTS,       # source 1 — tree canopy, bushes
+		MapBuilder.STONE_OBJECTS,        # source 2 — rocks, flowers
+		MapBuilder.TREE_OBJECTS,         # source 3 — pine trees, dead trees
 	]
 	var solid: Dictionary = {
 		1: [Vector2i(1, 1)],   # B_forest canopy center — blocking
@@ -297,7 +370,11 @@ func _setup_tilemap() -> void:
 	)
 	MapBuilder.build_layer(_ground_layer, GROUND_MAP, GROUND_LEGEND)
 	MapBuilder.build_layer(
-		_ground_detail_layer, DETAIL_MAP, DETAIL_LEGEND
+		_ground_detail_layer, DETAIL_MAP, DETAIL_LEGEND, 1
 	)
 	MapBuilder.build_layer(_trees_layer, TREE_MAP, TREE_LEGEND, 1)
 	MapBuilder.build_layer(_paths_layer, PATH_MAP, PATH_LEGEND)
+	MapBuilder.build_layer(_objects_layer, ROCK_MAP, ROCK_LEGEND, 2)
+	MapBuilder.build_layer(
+		_above_player_layer, ABOVE_MAP, ABOVE_LEGEND, 1
+	)

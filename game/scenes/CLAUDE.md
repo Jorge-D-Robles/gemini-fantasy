@@ -1,6 +1,7 @@
-# Scene Asset Usage Guide
+# Scene Asset Reference
 
-Reference for which Time Fantasy assets each scene uses and why. Consult this before modifying any scene's tilemap or visual content to maintain consistency.
+Reference for which Time Fantasy assets each scene uses and why.
+Consult this before modifying any scene to maintain visual consistency.
 
 ## Overgrown Ruins (`overgrown_ruins/`)
 
@@ -8,117 +9,125 @@ Reference for which Time Fantasy assets each scene uses and why. Consult this be
 
 **Atlas Sources (3):**
 
-| Source ID | MapBuilder Constant | Asset | Purpose |
-|-----------|-------------------|-------|---------|
-| 0 | `FAIRY_FOREST_A5_A` | `tf_ff_tileA5_a.png` | Opaque ground tiles |
-| 1 | `RUINS_A5` | `tf_A5_ruins2.png` | Golden Egyptian walls and ornamental borders |
-| 2 | `OVERGROWN_RUINS_OBJECTS` | `tf_B_ruins3.png` | Ruins objects (statues, rubble, bushes) |
+| Source ID | MapBuilder Constant | Asset | Pack Origin | Purpose |
+|-----------|-------------------|-------|-------------|---------|
+| 0 | `FAIRY_FOREST_A5_A` | `tf_ff_tileA5_a.png` | `tf_fairyforest_12.28.20/1x/` | Opaque ground tiles (row 10 gray stone) |
+| 1 | `RUINS_A5` | `tf_A5_ruins2.png` | `tf_ruindungeons/16/` | Golden Egyptian walls (rows 4-5), dark borders (rows 8-9), ornate floor (row 2) |
+| 2 | `OVERGROWN_RUINS_OBJECTS` | `tf_B_ruins3.png` | `tf_ruindungeons/16/` | B-sheet objects: face statues, stone blocks, bushes, rubble |
 
-**Tile Usage:**
+**Key Tile Choices:**
 
-| Layer | Source | Tiles | Notes |
-|-------|--------|-------|-------|
-| Ground (z=-2) | 0 (fairy forest) | Row 10, col 0 — gray-green stone | Fully opaque. Ruins3 A5 tiles are semi-transparent overlays and cannot be used as ground fill. |
-| GroundDetail (z=-1) | 1 (ruins2) | Row 2 — ornate golden floor | Decorative accent in sacred chamber and corridor edges |
-| GroundDetail (z=-1) | 2 (B-sheet) | (0,2) pebbles, (1,2) rocks | Scattered debris across walkable floor |
-| Walls (z=0) | 1 (ruins2) | Row 4 — golden Egyptian wall (W), Row 8 — dark ornamental border (G) | Both rows fully opaque. Rows 0-3 are semi-transparent. |
-| Objects (z=0) | 2 (B-sheet) | Face statues, bushes, stone blocks, rubble | See OBJECTS_LEGEND in script for full mapping |
+| Layer | Source | Tile | Notes |
+|-------|--------|------|-------|
+| Ground (z=-2) | 0 | `(0, 10)` gray stone | Fairy Forest A5_A — fully opaque. Ruins3 A5 tiles are semi-transparent and CANNOT be used as ground. |
+| GroundDetail (z=-1) | 1 | `(0, 2)` ornate gold | Ruins2 decorative floor in sacred chamber and corridors |
+| GroundDetail (z=-1) | 2 | `(0,2)` pebbles, `(1,2)` rocks | B-sheet debris scattered on floor |
+| Walls (z=0) | 1 | `(0, 4)` golden wall, `(0, 8)` dark border | Ruins2 rows 4-5 and 8-9 are fully opaque |
+| Objects (z=0) | 2 | Face statues, bushes, stones | See OBJECTS_LEGEND in script |
 
-**Key Objects (B-sheet source 2):**
-- Teal face statue: 3x2 tiles at (4-6, 2-3) — placed in sacred chamber
-- Gold face statue: 2x2 tiles at (8-9, 2-3) — placed in south gallery
-- Green bushes: (0,4) and (1,4) — two variants for organic variety
-- Stone rubble/blocks: (0,0), (2,0), (3,0), (4,0) — scattered in corridors
+**B-Sheet Objects (source 2):**
+- Teal face statue: 3x2 tiles at `(4-6, 2-3)` — sacred chamber
+- Gold face statue: 2x2 tiles at `(8-9, 2-3)` — south gallery
+- Green bushes: `(0,4)` and `(1,4)` — two variants
+- Stone rubble: `(0,0)`, `(2,0)`, `(3,0)`, `(4,0)` — corridors
 
-**Important Notes:**
-- Ruins3 A5 (`tf_A5_ruins3.png`) tiles are mostly TRANSPARENT overlays designed to layer on top of a base sheet. Only row 2 (vine-covered) is opaque. Do not use other rows as ground fill.
-- Ruins2 A5 (`tf_A5_ruins2.png`) rows 0-3 are also semi-transparent. Only rows 4-5 (walls) and 8-9 (ornamental borders) are fully opaque.
-- The fairy forest A5_A sheet provides reliable opaque ground tiles for any scene.
+**Critical:** Ruins3 A5 tiles are TRANSPARENT overlays. Ruins2 rows 0-3 are also semi-transparent. Only Fairy Forest A5_A provides reliable opaque ground for all scenes.
 
-**Map Dimensions:** 40 cols x 24 rows (640x384 pixels)
+**Map:** 40 cols x 24 rows (640x384 px)
 
 ---
 
 ## Verdant Forest (`verdant_forest/`)
 
-**Theme:** Lush green forest with winding paths and clearings. Overworld area.
+**Theme:** Lush enchanted forest with clearings, dirt path, dense tree borders.
 
-**Atlas Sources (2):**
+**Atlas Sources (4):**
 
-| Source ID | MapBuilder Constant | Asset | Purpose |
-|-----------|-------------------|-------|---------|
-| 0 | `FAIRY_FOREST_A5_A` | `tf_ff_tileA5_a.png` | Ground, paths, detail accents |
-| 1 | `FOREST_OBJECTS` | `tf_ff_tileB_forest.png` | Tree canopy border tiles |
+| Source ID | MapBuilder Constant | Asset | Pack Origin | Purpose |
+|-----------|-------------------|-------|-------------|---------|
+| 0 | `FAIRY_FOREST_A5_A` | `tf_ff_tileA5_a.png` | `tf_fairyforest_12.28.20/1x/` | Ground (row 8), paths (row 4) |
+| 1 | `FOREST_OBJECTS` | `tf_ff_tileB_forest.png` | `tf_fairyforest_12.28.20/1x/` | Tree canopy fill, canopy overhang, foliage details |
+| 2 | `STONE_OBJECTS` | `tf_ff_tileB_stone.png` | `tf_fairyforest_12.28.20/1x/` | Rocks, pebbles, orange flowers in clearing |
+| 3 | `TREE_OBJECTS` | `tf_ff_tileB_trees.png` | `tf_fairyforest_12.28.20/1x/` | Reserved for individual tree objects |
 
-**Tile Usage:**
+**Key Tile Choices:**
 
-| Layer | Source | Tiles | Notes |
-|-------|--------|-------|-------|
-| Ground (z=-3) | 0 | Row 8, col 0 — bright green vegetation | Single-tile fill, fully opaque |
-| GroundDetail (z=-2) | 0 | Row 14 — flower (0,14) and bush (2,14) accents | Sparse placement for variety |
-| Trees (z=-1) | 1 (B-sheet) | (1,1) — canopy center | Used as solid blocking tree borders |
-| Paths (z=0) | 0 | Row 4, col 0 — dirt path | Single-tile path through forest |
-| Objects (z=1) | — | Not currently populated | Available for future detail |
-| AbovePlayer (z=5) | — | Not currently populated | Available for canopy overlay |
+| Layer | Source | Tile | Notes |
+|-------|--------|------|-------|
+| Ground | 0 | `(0, 8)` bright green | Row 8 = dense vegetation. Single-tile fill. |
+| Trees | 1 | `(1, 1)` canopy center | B_forest solid green — blocks movement |
+| Paths | 0 | `(0, 4)` amber cobble | Row 4 = golden path. Single-tile fill. |
+| Detail | 1 | `(0, 8)`, `(2, 8)` foliage | B_forest small ground plants |
+| Objects | 2 | Rows 0-1: rocks, flowers | B_stone scattered in clearing |
+| AbovePlayer | 1 | `(1, 1)` canopy | Same canopy tile, 1 row inside tree border for depth overhang |
 
-**Important Notes:**
-- Row 8 = bright green (forest floor). Row 0 = dark green (used by Roothollow for grass).
-- Tree borders use B-sheet canopy tiles as solid walls to bound the map.
-- The forest has 6 layers defined in the scene even though not all are actively populated.
-
-**Map Dimensions:** 40 cols x 25 rows (640x400 pixels)
+**Map:** 40 cols x 24 rows (640x384 px)
 
 ---
 
 ## Roothollow (`roothollow/`)
 
-**Theme:** Cozy fairy forest village with stone paths. Safe town hub.
+**Theme:** Cozy fairy forest village — safe town hub with natural forest border.
 
-**Atlas Sources (1):**
+**Atlas Sources (4):**
 
-| Source ID | MapBuilder Constant | Asset | Purpose |
-|-----------|-------------------|-------|---------|
-| 0 | `FAIRY_FOREST_A5_A` | `tf_ff_tileA5_a.png` | Ground, paths, detail |
+| Source ID | MapBuilder Constant | Asset | Pack Origin | Purpose |
+|-----------|-------------------|-------|-------------|---------|
+| 0 | `FAIRY_FOREST_A5_A` | `tf_ff_tileA5_a.png` | `tf_fairyforest_12.28.20/1x/` | Ground (row 8), paths (row 10), details (row 14) |
+| 1 | `MUSHROOM_VILLAGE` | `tf_ff_tileB_mushroomvillage.png` | `tf_fairyforest_12.28.20/1x/` | Small mushroom decorations near buildings |
+| 2 | `FOREST_OBJECTS` | `tf_ff_tileB_forest.png` | `tf_fairyforest_12.28.20/1x/` | Forest canopy border around town perimeter |
+| 3 | `STONE_OBJECTS` | `tf_ff_tileB_stone.png` | `tf_fairyforest_12.28.20/1x/` | Small rocks and flowers in grass |
 
-**Tile Usage:**
+**Key Tile Choices:**
 
-| Layer | Source | Tiles | Notes |
-|-------|--------|-------|-------|
-| Ground | 0 | Row 0, all 8 columns — dark green grass variants | Uses block-rotation pattern with 6 permuted 8-char blocks for pseudo-random variety |
-| Paths | 0 | Row 10, cols 0-5 — gray stone walkway variants | 6 variants for visual variety |
-| GroundDetail | 0 | Row 14, cols 0-3 — flower/foliage accents | 4 variants scattered around buildings and paths |
+| Layer | Source | Tile | Notes |
+|-------|--------|------|-------|
+| Ground | 0 | `(0, 8)` bright green | Row 8 = dense vegetation. Single-tile fill. |
+| Paths | 0 | `(0, 10)` gray stone | Row 10 = stone walkway. Single-tile fill. |
+| Detail | 0 | Row 14 flowers/bushes | 4 variants `(0-3, 14)` sparse at 10-12% coverage |
+| TreesBorder | 2 | `(1, 1)` canopy center | Irregular-thickness forest border from `_BORDER_SPEC`, gap on west for exit |
+| Decorations | 1, 3 | Mushrooms + rocks | Small accents near buildings and in grass |
 
-**Important Notes:**
-- Roothollow uses only A5_A tiles (no B-sheet objects yet). Visual variety comes from cycling all 8 column variants of row 0 in randomized blocks.
-- Row 10 = gray stone (same as Overgrown Ruins ground) — provides consistent stone palette for town paths.
-- Row 14 = decorative flower/foliage tiles — lightweight ground accents.
-- No B-sheet buildings or structures are placed yet. Future work should add mushroom village objects from `tf_ff_tileB_mushroomvillage.png`.
+**Building Sprites (Sprite2D, NOT tilemap):**
 
-**Map Dimensions:** 48 cols x 38 rows (768x608 pixels)
+| Building | Sprite | Pack Origin |
+|----------|--------|-------------|
+| Inn | `lodge_clean.png` | `tf_farmandfort/` (medieval farm/fort) |
+| Shop, Elder House | `hut.png` | `tf_fairyforest_12.28.20/1x/` (mushroom village) |
+| Trees (decorative) | `tree_small/medium/tall.png` | `tf_fairyforest_12.28.20/1x/` |
+| Signpost | `signpost.png` | `tf_fairyforest_12.28.20/1x/` |
+
+**NPC Sprites:** `npc_char1.png`, `npc_char2.png` from `npc-animations/rpgmaker/1/`
+
+**Map:** 48 cols x 38 rows (768x608 px)
 
 ---
 
 ## Cross-Scene Consistency Rules
 
-1. **Fairy Forest A5_A is the universal ground sheet.** All three scenes use it for ground or detail. It has fully opaque tiles at every row.
-2. **Row 0 = dark green grass** (Roothollow). **Row 8 = bright green vegetation** (Verdant Forest). **Row 10 = gray stone** (Overgrown Ruins ground, Roothollow paths).
-3. **Ruins tiles should not appear in forest/town scenes.** Golden Egyptian walls and overgrown rubble break the fairy forest aesthetic.
-4. **Forest B-sheet objects should not appear in ruins.** Tree canopies and forest objects don't fit the indoor ruins theme. Use ruins3 B-sheet objects instead.
-5. **Single-tile fills for ground.** Never alternate A5 columns — they are different tile variants, not left/right halves. Use one `Vector2i(col, row)` per fill.
-6. **B-sheet objects for visual variety.** Ground variety comes from detail layers and B-sheet objects, not from mixing A5 columns.
+1. **Fairy Forest A5_A is the universal ground sheet.** All scenes use it. It has fully opaque tiles at every row.
+2. **Row 8 = bright green** (forest/town ground). **Row 10 = gray stone** (ruins ground, town paths). **Row 4 = amber cobble** (forest paths).
+3. **Ruins tiles stay in ruins scenes.** Golden Egyptian walls/objects break the fairy forest aesthetic.
+4. **Forest B-sheets stay in forest/town scenes.** Tree canopies don't fit indoor ruins.
+5. **Single-tile fills for ground and paths.** Never alternate A5 columns. One `Vector2i(col, row)` per fill.
+6. **B-sheet objects provide visual variety**, not A5 column mixing.
+7. **Mixing packs is OK** for different purposes — e.g., Inn uses `tf_farmandfort` lodge while the rest uses fairy forest.
 
-## Available MapBuilder Constants
+## MapBuilder Constants Reference
 
 ```
-FAIRY_FOREST_A5_A   = tf_ff_tileA5_a.png     (128x256 A5 — universal ground)
-FAIRY_FOREST_A5_B   = tf_ff_tileA5_b.png     (128x256 A5 — fairy forest variant)
-RUINS_A5            = tf_A5_ruins2.png        (128x256 A5 — golden/Egyptian ruins)
-OVERGROWN_RUINS_A5  = tf_A5_ruins3.png        (128x256 A5 — overgrown ruins overlays)
-FOREST_OBJECTS      = tf_ff_tileB_forest.png  (256x256 B — forest canopy/objects)
-TREE_OBJECTS        = tf_ff_tileB_trees.png   (256x256 B — individual trees)
-STONE_OBJECTS       = tf_ff_tileB_stone.png   (256x256 B — stone structures)
-MUSHROOM_VILLAGE    = tf_ff_tileB_mushroomvillage.png (256x256 B — village buildings)
-RUINS_OBJECTS       = tf_B_ruins2.png         (256x256 B — golden ruins objects)
-OVERGROWN_RUINS_OBJECTS = tf_B_ruins3.png     (256x256 B — overgrown ruins objects)
-GIANT_TREE          = tf_B_gianttree_ext.png  (256x256 B — giant tree exterior)
+# A5 terrain sheets (128x256, 8 cols x 16 rows)
+FAIRY_FOREST_A5_A   = tf_ff_tileA5_a.png         # Universal opaque ground
+FAIRY_FOREST_A5_B   = tf_ff_tileA5_b.png         # Fairy forest variant B
+RUINS_A5            = tf_A5_ruins2.png            # Golden/Egyptian ruins
+OVERGROWN_RUINS_A5  = tf_A5_ruins3.png            # Semi-transparent overlays!
+
+# B object sheets (256x256, 16 cols x 16 rows)
+FOREST_OBJECTS      = tf_ff_tileB_forest.png      # Tree canopy, bushes, trunks
+TREE_OBJECTS        = tf_ff_tileB_trees.png       # Individual trees, dead trees
+STONE_OBJECTS       = tf_ff_tileB_stone.png       # Rocks, flowers, gravestones
+MUSHROOM_VILLAGE    = tf_ff_tileB_mushroomvillage.png  # Village decorations
+RUINS_OBJECTS       = tf_B_ruins2.png             # Golden ruins objects
+OVERGROWN_RUINS_OBJECTS = tf_B_ruins3.png         # Overgrown ruins objects
+GIANT_TREE          = tf_B_gianttree_ext.png      # Giant tree exterior
 ```
