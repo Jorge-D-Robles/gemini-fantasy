@@ -54,8 +54,6 @@ Read("docs/best-practices/11-tilemaps-and-level-design.md")
    cp /Users/robles/repos/games/assets/<pack>/<file> <current-worktree>/game/assets/tilesets/<filename>
    ```
 
-**CRITICAL: Only use A5 and B/C/D/E tile sheets.** A1-A4 are RPG Maker autotile formats that do NOT work as flat grids in Godot. They will produce garbled visuals.
-
 ## Step 4 — Look Up Godot Docs
 
 Call the `godot-docs` subagent for tilemap-related classes:
@@ -115,7 +113,7 @@ Modify the scene script's `_setup_tilemap()` function and related constants:
 3. **Check collision setup** — all solid tiles are listed
 4. **Check z_index settings** on TileMapLayer nodes
 5. **Check that functional code still works** — scene transitions, encounter system, event triggers
-6. **Check that NO A1/A2/A3/A4 sheets are referenced** — only A5 and B sheets
+6. **Check that only A5 and B sheets are used**
 
 ## Step 8 — Report
 

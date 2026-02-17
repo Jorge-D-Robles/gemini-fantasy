@@ -37,20 +37,12 @@ You will receive:
 
 Before designing, you MUST visually understand the tile sheets. Read the tile atlas reference below and identify which tiles to use.
 
-**CRITICAL: RPG Maker Tile Format Warning**
+Time Fantasy provides two types of tile sheets:
 
-Time Fantasy assets ship in RPG Maker format. Only A5 and B/C/D/E sheets work in Godot:
-
-| Category | Usable in Godot? | Why |
-|----------|-----------------|-----|
-| **A1** | **NO** — animated water autotiles | Contains 3x4 blocks of sub-tiles assembled by RPG Maker's autotile engine. NOT a flat grid. |
-| **A2** | **NO** — ground autotiles | Contains 2x3 blocks of sub-tiles (center + edges + corners). Requires RPG Maker's assembly logic. |
-| **A3** | **NO** — building wall autotiles | RPG Maker-specific wall autotile format. |
-| **A4** | **NO** — wall autotiles | RPG Maker-specific wall autotile format. |
-| **A5** | **YES** — plain floor/ceiling tiles | Simple flat 8x16 grid of independent 16x16 tiles. Direct import. |
-| **B-E** | **YES** — object layer tiles | Simple flat 16x16 grid of independent 16x16 tiles. Direct import. |
-
-**Never reference A1, A2, A3, or A4 tile sheets.** They will produce garbled/incorrect visuals.
+| Type | Dimensions (1x) | Grid | Contents |
+|------|-----------------|------|----------|
+| **A5** | 128x256 px | 8 cols x 16 rows | Flat terrain tiles (grass, dirt, stone, paths, accents) |
+| **B** | 256x256 px | 16 cols x 16 rows | Object tiles (trees, rocks, buildings, decorations) |
 
 #### Available Tile Sheets (already in project)
 
@@ -93,7 +85,7 @@ cp /Users/robles/repos/games/assets/<pack>/<file> <worktree>/game/assets/tileset
 
 Each A5 sheet is a flat grid of 16x16 tiles. Each tile is referenced as `Vector2i(col, row)`.
 
-**CRITICAL — A5 Column Rule:** Each column in a row is a DIFFERENT visual variant. The variants do NOT tile seamlessly with each other. **Use ONE column per terrain type** (single-tile fill). See "The Single-Tile Fill Rule" below.
+**A5 Column Rule:** Each column in a row is a DIFFERENT visual variant. The variants do NOT tile seamlessly with each other. **Use ONE column per terrain type** (single-tile fill). See "The Single-Tile Fill Rule" below.
 
 **Fairy Forest A5_A (`tf_ff_tileA5_a.png`):**
 
@@ -293,8 +285,7 @@ After completing the tilemap redesign, provide:
 4. **Use multiple atlas sources** — A5 for terrain (source 0), B for objects (source 1+)
 5. **Pass `source_id` parameter** when building B-sheet layers: `MapBuilder.build_layer(layer, map, legend, 1)`
 6. **Never alternate A5 columns** — this is the #1 source of ugly maps
-7. **Never use A1/A2/A3/A4 sheets** — they are RPG Maker autotile formats, not flat grids
-8. **Objects layer is mandatory** for outdoor scenes — trees, rocks, etc.
+7. **Objects layer is mandatory** for outdoor scenes — trees, rocks, etc.
 9. **AbovePlayer layer is mandatory** for forest/town scenes — depth via canopy/roofs
 10. **Maintain gameplay clearances** — Don't block spawn points, exits, NPC positions, event zones
 11. **Preserve all functional code** — Scene transitions, encounters, events must keep working

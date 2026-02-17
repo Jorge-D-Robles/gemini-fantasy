@@ -214,11 +214,9 @@ agents/            # Project management (milestones, backlog, sprint, completed 
 - **TileA5 sheets** (128x256): Simple flat grids of 16x16 tiles — easiest for TileSet atlas import
 - **TileB sheets** (256x256): Object tiles, can contain multi-tile objects
 - Full asset index with detailed descriptions: `/Users/robles/repos/games/assets/CLAUDE.md`
-- **DO NOT use RPG Maker tile formats.** Some asset packs include RPG Maker-specific tile layouts (autotile sheets, A1-A4 format). These are designed for RPG Maker's autotile engine and will NOT work correctly in Godot. Always use the plain 16x16 grid sheets (A5 and B format). Do not reference RPG Maker tutorials or tile format documentation when working with tiles in Godot.
-
 ### Tile Usage Rules
 
-- **Only use A5 and B/C/D/E tile sheets.** A1-A4 are RPG Maker autotile formats (animated water, ground transitions, wall autotiles) that use sub-tile assembly by RPG Maker's engine. They are NOT flat grids and will produce garbled visuals in Godot. Never reference any file with `tileA1`, `tileA2`, `tileA3`, or `tileA4` in the filename.
+- **Only use A5 and B tile sheets.** A5 sheets (128x256) contain flat 16x16 terrain grids. B sheets (256x256) contain 16x16 object tiles. These are the only tile formats available in the project.
 - **Use single-tile fills for ground layers.** Each column in an A5 tile sheet is a DIFFERENT tile variant — columns 0 and 1 are NOT left/right halves of a pair. Alternating columns creates visible checkerboard/stripe artifacts. Use ONE consistent tile (same `Vector2i(col, row)`) for the entire ground fill.
 - **Use B-sheet objects for visual variety.** Trees, rocks, buildings, and decorative objects from B-format sheets provide all the visual interest. Do not try to create variety by mixing A5 columns.
 - **Use large patches for terrain changes.** If you need different terrain types (grass + dirt), use tiles from different A5 ROWS in 8x8+ contiguous patches, never from different columns of the same row.
