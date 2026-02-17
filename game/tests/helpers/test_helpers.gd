@@ -163,3 +163,33 @@ static func make_equipment(
 	e.buy_price = overrides.get("buy_price", 0)
 	e.sell_price = overrides.get("sell_price", 0)
 	return e
+
+
+static func make_quest(overrides: Dictionary = {}) -> QuestData:
+	var q := QuestData.new()
+	q.id = overrides.get("id", &"test_quest")
+	q.title = overrides.get("title", "Test Quest")
+	q.description = overrides.get("description", "A test quest.")
+	var raw_obj: Array = overrides.get(
+		"objectives", ["Objective A", "Objective B"]
+	)
+	var obj: Array[String] = []
+	for s in raw_obj:
+		obj.append(s)
+	q.objectives = obj
+	q.reward_gold = overrides.get("reward_gold", 100)
+	q.reward_exp = overrides.get("reward_exp", 50)
+	var raw_items: Array = overrides.get("reward_item_ids", [])
+	var items: Array[StringName] = []
+	for item in raw_items:
+		items.append(item)
+	q.reward_item_ids = items
+	q.quest_type = overrides.get(
+		"quest_type", QuestData.QuestType.MAIN
+	)
+	var raw_prereqs: Array = overrides.get("prerequisites", [])
+	var prereqs: Array[String] = []
+	for p in raw_prereqs:
+		prereqs.append(p)
+	q.prerequisites = prereqs
+	return q

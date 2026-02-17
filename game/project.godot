@@ -30,6 +30,7 @@ EventFlags="*res://events/event_flags.gd"
 InventoryManager="*res://autoloads/inventory_manager.gd"
 EquipmentManager="*res://autoloads/equipment_manager.gd"
 SaveManager="*res://autoloads/save_manager.gd"
+QuestManager="*res://autoloads/quest_manager.gd"
 UILayer="*res://autoloads/ui_layer.tscn"
 
 [display]
