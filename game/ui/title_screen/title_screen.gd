@@ -77,9 +77,12 @@ func _on_continue_pressed() -> void:
 	var equip_mgr: Node = get_node_or_null(
 		"/root/EquipmentManager"
 	)
+	var quest_mgr: Node = get_node_or_null(
+		"/root/QuestManager"
+	)
 	SaveManager.apply_save_data(
 		data, PartyManager, InventoryManager, EventFlags,
-		equip_mgr,
+		equip_mgr, quest_mgr,
 	)
 	var pos_data: Dictionary = data.get("player_position", {})
 	var pos := Vector2(

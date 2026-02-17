@@ -38,10 +38,11 @@ func save_game(
 	scene_path: String,
 	player_position: Vector2,
 	equipment: Node = null,
+	quests: Node = null,
 ) -> bool:
 	var data := gather_save_data(
 		party, inventory, flags,
-		scene_path, player_position, equipment,
+		scene_path, player_position, equipment, quests,
 	)
 	return _write_save_file(slot, data)
 
@@ -76,12 +77,15 @@ func apply_save_data(
 	inventory: Node,
 	flags: Node,
 	equipment: Node = null,
+	quests: Node = null,
 ) -> void:
 	_apply_inventory(data.get("inventory", {}), inventory)
 	_apply_flags(data.get("event_flags", {}), flags)
 	_apply_character_state(data.get("character_state", {}), party)
 	if equipment and equipment.has_method("deserialize"):
 		equipment.deserialize(data.get("equipment", {}))
+	if quests and quests.has_method("deserialize"):
+		quests.deserialize(data.get("quests", {}), [])
 
 
 func delete_save(slot: int) -> void:
@@ -97,6 +101,7 @@ func gather_save_data(
 	scene_path: String,
 	player_position: Vector2,
 	equipment: Node = null,
+	quests: Node = null,
 ) -> Dictionary:
 	var data := {
 		"version": SAVE_VERSION,
@@ -112,6 +117,8 @@ func gather_save_data(
 	}
 	if equipment and equipment.has_method("serialize"):
 		data["equipment"] = equipment.serialize()
+	if quests and quests.has_method("serialize"):
+		data["quests"] = quests.serialize()
 	return data
 
 
