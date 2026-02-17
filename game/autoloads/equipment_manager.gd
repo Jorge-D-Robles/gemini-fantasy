@@ -116,17 +116,17 @@ func get_stat_bonuses(character_id: StringName) -> Dictionary:
 	}
 	var slots := _get_or_create_slots(character_id)
 	for key: String in slots:
-		var equip: EquipmentData = slots[key]
-		if equip == null:
+		var item: EquipmentData = slots[key]
+		if item == null:
 			continue
-		bonuses["attack"] += equip.attack_bonus
-		bonuses["magic"] += equip.magic_bonus
-		bonuses["defense"] += equip.defense_bonus
-		bonuses["resistance"] += equip.resistance_bonus
-		bonuses["speed"] += equip.speed_bonus
-		bonuses["luck"] += equip.luck_bonus
-		bonuses["max_hp"] += equip.max_hp_bonus
-		bonuses["max_ee"] += equip.max_ee_bonus
+		bonuses["attack"] += item.attack_bonus
+		bonuses["magic"] += item.magic_bonus
+		bonuses["defense"] += item.defense_bonus
+		bonuses["resistance"] += item.resistance_bonus
+		bonuses["speed"] += item.speed_bonus
+		bonuses["luck"] += item.luck_bonus
+		bonuses["max_hp"] += item.max_hp_bonus
+		bonuses["max_ee"] += item.max_ee_bonus
 	return bonuses
 
 
@@ -149,9 +149,9 @@ func clear_equipment(
 	var removed: Array[EquipmentData] = []
 	var slots := _get_or_create_slots(character_id)
 	for key: String in slots:
-		var equip: EquipmentData = slots[key]
-		if equip:
-			removed.append(equip)
+		var item: EquipmentData = slots[key]
+		if item:
+			removed.append(item)
 			slots[key] = null
 	if not removed.is_empty():
 		equipment_changed.emit(character_id, "all")
@@ -165,8 +165,8 @@ func serialize() -> Dictionary:
 		var entry := {}
 		for key: String in ["weapon", "helmet", "chest",
 				"accessory_0", "accessory_1"]:
-			var equip: EquipmentData = slots.get(key)
-			entry[key] = String(equip.id) if equip else ""
+			var item: EquipmentData = slots.get(key)
+			entry[key] = String(item.id) if item else ""
 		data[String(character_id)] = entry
 	return data
 
@@ -189,9 +189,9 @@ func deserialize(data: Dictionary) -> void:
 					+ "'%s'" % path
 				)
 				continue
-			var equip := load(path) as EquipmentData
-			if equip:
-				slots[key] = equip
+			var loaded := load(path) as EquipmentData
+			if loaded:
+				slots[key] = loaded
 
 
 func _get_or_create_slots(character_id: StringName) -> Dictionary:

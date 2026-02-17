@@ -55,7 +55,7 @@ func before_each() -> void:
 
 
 func test_equip_weapon() -> void:
-	var old := _manager.equip(&"kael", _sword)
+	var old: Variant = _manager.equip(&"kael", _sword)
 	assert_null(old)
 	assert_eq(
 		_manager.get_equipment(&"kael", EquipmentData.SlotType.WEAPON),
@@ -71,7 +71,7 @@ func test_equip_replaces_existing() -> void:
 		"weapon_type": EquipmentData.WeaponType.SWORD,
 		"attack_bonus": 15,
 	})
-	var old := _manager.equip(&"kael", better_sword)
+	var old: Variant = _manager.equip(&"kael", better_sword)
 	assert_eq(old, _sword)
 	assert_eq(
 		_manager.get_equipment(&"kael", EquipmentData.SlotType.WEAPON),
@@ -104,7 +104,7 @@ func test_equip_all_slots() -> void:
 
 func test_unequip_weapon() -> void:
 	_manager.equip(&"kael", _sword)
-	var removed := _manager.unequip(
+	var removed: Variant = _manager.unequip(
 		&"kael", EquipmentData.SlotType.WEAPON
 	)
 	assert_eq(removed, _sword)
@@ -114,7 +114,7 @@ func test_unequip_weapon() -> void:
 
 
 func test_unequip_empty_slot_returns_null() -> void:
-	var removed := _manager.unequip(
+	var removed: Variant = _manager.unequip(
 		&"kael", EquipmentData.SlotType.WEAPON
 	)
 	assert_null(removed)
@@ -122,14 +122,14 @@ func test_unequip_empty_slot_returns_null() -> void:
 
 func test_unequip_accessory() -> void:
 	_manager.equip_accessory(&"kael", _ring, 0)
-	var removed := _manager.unequip_accessory(&"kael", 0)
+	var removed: Variant = _manager.unequip_accessory(&"kael", 0)
 	assert_eq(removed, _ring)
 	assert_null(_manager.get_accessory(&"kael", 0))
 
 
 func test_equip_accessory_replaces_existing() -> void:
 	_manager.equip_accessory(&"kael", _ring, 0)
-	var old := _manager.equip_accessory(&"kael", _necklace, 0)
+	var old: Variant = _manager.equip_accessory(&"kael", _necklace, 0)
 	assert_eq(old, _ring)
 	assert_eq(_manager.get_accessory(&"kael", 0), _necklace)
 
@@ -138,7 +138,7 @@ func test_equip_accessory_replaces_existing() -> void:
 
 
 func test_stat_bonuses_empty() -> void:
-	var bonuses := _manager.get_stat_bonuses(&"kael")
+	var bonuses: Dictionary = _manager.get_stat_bonuses(&"kael")
 	assert_eq(bonuses["attack"], 0)
 	assert_eq(bonuses["magic"], 0)
 	assert_eq(bonuses["defense"], 0)
@@ -151,7 +151,7 @@ func test_stat_bonuses_empty() -> void:
 
 func test_stat_bonuses_single_item() -> void:
 	_manager.equip(&"kael", _sword)
-	var bonuses := _manager.get_stat_bonuses(&"kael")
+	var bonuses: Dictionary = _manager.get_stat_bonuses(&"kael")
 	assert_eq(bonuses["attack"], 10)
 	assert_eq(bonuses["defense"], 0)
 
@@ -163,7 +163,7 @@ func test_stat_bonuses_all_slots_combined() -> void:
 	_manager.equip_accessory(&"kael", _ring, 0)
 	_manager.equip_accessory(&"kael", _necklace, 1)
 
-	var bonuses := _manager.get_stat_bonuses(&"kael")
+	var bonuses: Dictionary = _manager.get_stat_bonuses(&"kael")
 	assert_eq(bonuses["attack"], 10)  # sword
 	assert_eq(bonuses["magic"], 7)  # necklace
 	assert_eq(bonuses["defense"], 13)  # helmet(5) + chest(8)
@@ -217,7 +217,7 @@ func test_separate_equipment_per_character() -> void:
 func test_get_all_equipment() -> void:
 	_manager.equip(&"kael", _sword)
 	_manager.equip(&"kael", _helmet)
-	var all_equip := _manager.get_all_equipment(&"kael")
+	var all_equip: Dictionary = _manager.get_all_equipment(&"kael")
 	assert_eq(all_equip["weapon"], _sword)
 	assert_eq(all_equip["helmet"], _helmet)
 	assert_null(all_equip["chest"])
@@ -226,7 +226,7 @@ func test_get_all_equipment() -> void:
 
 
 func test_get_all_equipment_empty_character() -> void:
-	var all_equip := _manager.get_all_equipment(&"nobody")
+	var all_equip: Dictionary = _manager.get_all_equipment(&"nobody")
 	assert_null(all_equip["weapon"])
 	assert_null(all_equip["helmet"])
 	assert_null(all_equip["chest"])
@@ -242,7 +242,7 @@ func test_clear_character_equipment() -> void:
 	_manager.equip(&"kael", _helmet)
 	_manager.equip_accessory(&"kael", _ring, 0)
 
-	var removed := _manager.clear_equipment(&"kael")
+	var removed: Variant = _manager.clear_equipment(&"kael")
 	assert_eq(removed.size(), 3)
 	assert_null(
 		_manager.get_equipment(&"kael", EquipmentData.SlotType.WEAPON)
@@ -261,7 +261,7 @@ func test_serialize_equipment() -> void:
 	_manager.equip(&"kael", _helmet)
 	_manager.equip_accessory(&"kael", _ring, 0)
 
-	var data := _manager.serialize()
+	var data: Dictionary = _manager.serialize()
 	assert_has(data, "kael")
 	var kael_data: Dictionary = data["kael"]
 	assert_eq(kael_data["weapon"], "iron_sword")
