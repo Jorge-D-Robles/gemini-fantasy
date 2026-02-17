@@ -10,8 +10,8 @@ var character_id: StringName = &""
 var equipped_echoes: Array[Resource] = []
 
 
-func initialize_from_data() -> void:
-	super.initialize_from_data()
+func initialize_from_data(equip_manager: Node = null) -> void:
+	super.initialize_from_data(equip_manager)
 	if data:
 		character_id = data.id
 

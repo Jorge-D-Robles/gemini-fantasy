@@ -25,6 +25,7 @@ defense_growth = 1.8
 resistance_growth = 0.8
 speed_growth = 1.2
 luck_growth = 1.0
+allowed_weapon_types = [3, 4]
 abilities = [ExtResource("2_heavy_strike"), ExtResource("3_emp_burst")]
 portrait_path = "res://assets/portraits/iris_portrait.png"
 sprite_path = ""

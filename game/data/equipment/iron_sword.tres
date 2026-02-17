@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="EquipmentData" load_steps=2 format=3 uid="uid://biron_sword"]
+
+[ext_resource type="Script" path="res://resources/equipment_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"iron_sword"
+display_name = "Iron Sword"
+description = "A sturdy iron blade. Standard-issue for Echo Hunters."
+slot_type = 0
+weapon_type = 1
+attack_bonus = 8
+buy_price = 120
+sell_price = 60

@@ -10,10 +10,13 @@ extends InteractionStrategy
 func execute(owner: Node) -> void:
 	var scene_path := _get_current_scene_path(owner)
 	var player_pos := _get_player_position(owner)
+	var equip_mgr: Node = owner.get_node_or_null(
+		"/root/EquipmentManager"
+	)
 	var ok: bool = SaveManager.save_game(
 		0,
 		PartyManager, InventoryManager, EventFlags,
-		scene_path, player_pos,
+		scene_path, player_pos, equip_mgr,
 	)
 	var msg: String = text if ok else fail_text
 	var lines: Array[DialogueLine] = [

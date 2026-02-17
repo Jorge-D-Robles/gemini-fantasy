@@ -25,6 +25,7 @@ defense_growth = 2.5
 resistance_growth = 2.0
 speed_growth = 0.8
 luck_growth = 0.8
+allowed_weapon_types = [5, 6]
 abilities = [ExtResource("2_guardians_stand"), ExtResource("3_purifying_light")]
 portrait_path = "res://assets/portraits/garrick_portrait.png"
 sprite_path = ""

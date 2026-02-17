@@ -12,8 +12,8 @@ var exp_reward: int = 0
 var gold_reward: int = 0
 
 
-func initialize_from_data() -> void:
-	super.initialize_from_data()
+func initialize_from_data(equip_manager: Node = null) -> void:
+	super.initialize_from_data(equip_manager)
 	var enemy_data := data as EnemyData
 	if enemy_data:
 		ai_type = enemy_data.ai_type

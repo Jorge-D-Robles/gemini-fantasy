@@ -9,7 +9,11 @@ Started: 2026-02-16
 
 ## Active
 
-(none)
+### T-0013
+- Title: Build equipment system
+- Status: in-progress
+- Assigned: claude
+- Started: 2026-02-16
 
 ---
 

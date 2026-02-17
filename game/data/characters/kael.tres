@@ -25,6 +25,7 @@ defense_growth = 1.5
 resistance_growth = 1.5
 speed_growth = 1.5
 luck_growth = 1.2
+allowed_weapon_types = [1, 2]
 abilities = [ExtResource("2_echo_strike"), ExtResource("3_resonance_pulse")]
 portrait_path = "res://assets/portraits/kael_portrait.png"
 sprite_path = ""

@@ -109,3 +109,31 @@ static func make_item(overrides: Dictionary = {}) -> ItemData:
 	)
 	i.effect_value = overrides.get("effect_value", 50)
 	return i
+
+
+static func make_equipment(
+	overrides: Dictionary = {},
+) -> EquipmentData:
+	var e := EquipmentData.new()
+	e.id = overrides.get("id", &"test_sword")
+	e.display_name = overrides.get("display_name", "Test Sword")
+	e.slot_type = overrides.get(
+		"slot_type", EquipmentData.SlotType.WEAPON
+	)
+	e.weapon_type = overrides.get(
+		"weapon_type", EquipmentData.WeaponType.SWORD
+	)
+	e.attack_bonus = overrides.get("attack_bonus", 5)
+	e.magic_bonus = overrides.get("magic_bonus", 0)
+	e.defense_bonus = overrides.get("defense_bonus", 0)
+	e.resistance_bonus = overrides.get("resistance_bonus", 0)
+	e.speed_bonus = overrides.get("speed_bonus", 0)
+	e.luck_bonus = overrides.get("luck_bonus", 0)
+	e.max_hp_bonus = overrides.get("max_hp_bonus", 0)
+	e.max_ee_bonus = overrides.get("max_ee_bonus", 0)
+	e.element = overrides.get(
+		"element", AbilityData.Element.NONE
+	)
+	e.buy_price = overrides.get("buy_price", 0)
+	e.sell_price = overrides.get("sell_price", 0)
+	return e

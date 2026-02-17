@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EquipmentData" load_steps=2 format=3 uid="uid://biron_hammer"]
+
+[ext_resource type="Script" path="res://resources/equipment_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"iron_hammer"
+display_name = "Iron Hammer"
+description = "A heavy war hammer favored by Iris. Slow but devastating."
+slot_type = 0
+weapon_type = 3
+attack_bonus = 12
+speed_bonus = -2
+buy_price = 150
+sell_price = 75

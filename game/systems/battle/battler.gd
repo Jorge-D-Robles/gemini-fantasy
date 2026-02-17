@@ -74,11 +74,13 @@ var turn_delay: float = 0.0
 
 
 ## Loads stats from [member data] and resets HP, EE, resonance to full.
-func initialize_from_data() -> void:
+## Pass an equipment manager to apply equipment stat bonuses.
+func initialize_from_data(equip_manager: Node = null) -> void:
 	if not data:
 		push_error("Battler: no data resource assigned.")
 		return
 	_load_stats_from_data()
+	_apply_equipment_bonuses(equip_manager)
 	current_hp = max_hp
 	current_ee = max_ee
 	resonance_gauge = 0.0
@@ -274,6 +276,27 @@ func _calculate_turn_delay() -> void:
 		turn_delay = 100.0 / float(speed)
 	else:
 		turn_delay = 100.0
+
+
+func _apply_equipment_bonuses(equip_manager: Node) -> void:
+	if equip_manager == null:
+		return
+	if not (data is CharacterData):
+		return
+	var char_data := data as CharacterData
+	if char_data.id == &"":
+		return
+	var bonuses: Dictionary = equip_manager.get_stat_bonuses(
+		char_data.id
+	)
+	max_hp += bonuses.get("max_hp", 0)
+	max_ee += bonuses.get("max_ee", 0)
+	attack += bonuses.get("attack", 0)
+	magic += bonuses.get("magic", 0)
+	defense += bonuses.get("defense", 0)
+	resistance += bonuses.get("resistance", 0)
+	speed += bonuses.get("speed", 0)
+	luck += bonuses.get("luck", 0)
 
 
 func _load_stats_from_data() -> void:

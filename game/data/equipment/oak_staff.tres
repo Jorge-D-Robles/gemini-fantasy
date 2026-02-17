@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EquipmentData" load_steps=2 format=3 uid="uid://boak_staff"]
+
+[ext_resource type="Script" path="res://resources/equipment_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"oak_staff"
+display_name = "Oak Staff"
+description = "A gnarled staff that amplifies magical energy."
+slot_type = 0
+weapon_type = 7
+magic_bonus = 10
+max_ee_bonus = 5
+buy_price = 100
+sell_price = 50
