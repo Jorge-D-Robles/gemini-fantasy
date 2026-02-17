@@ -124,33 +124,36 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0012
 - Title: Build inventory system
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M0
 - Depends: none
 - Refs: docs/game-design/01-core-mechanics.md, game/resources/item_data.gd, docs/best-practices/03-autoloads-and-singletons.md
 - Notes: InventoryManager autoload. Add/remove/use items. Stack management. ItemData already exists as Resource class.
+- Completed: 2026-02-16
 
 ### T-0013
 - Title: Build equipment system
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M0
 - Depends: T-0012
 - Refs: docs/game-design/01-core-mechanics.md, game/resources/character_data.gd
 - Notes: EquipmentData Resource class. Equip/unequip with stat modifiers. Weapon, armor, accessory slots per character.
+- Completed: 2026-02-16
 
 ### T-0014
 - Title: Build save/load system
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M0
 - Depends: T-0012
 - Refs: docs/best-practices/09-save-load.md, docs/IMPLEMENTATION_GUIDE.md
-- Notes: SaveManager autoload. Serialize party, inventory, story flags, echoes, world state. Multiple save slots.
+- Notes: Done as T-0032. SaveManager autoload with JSON serialization.
+- Completed: 2026-02-16
 
 ### T-0015
 - Title: Implement Resonance gauge UI and overload/hollow mechanics
@@ -194,13 +197,14 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0019
 - Title: Implement leveling and XP system
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M0
 - Depends: none
 - Refs: docs/game-design/01-core-mechanics.md, game/resources/character_data.gd
 - Notes: XP gain from battles. Level-up stat growth. Skill points awarded. XP curve balancing. Victory screen XP display.
+- Completed: 2026-02-16
 
 ### T-0020
 - Title: Build party management UI

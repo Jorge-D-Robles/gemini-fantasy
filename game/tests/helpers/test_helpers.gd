@@ -94,6 +94,9 @@ static func make_ability(overrides: Dictionary = {}) -> AbilityData:
 	a.element = overrides.get("element", AbilityData.Element.FIRE)
 	a.status_effect = overrides.get("status_effect", "")
 	a.status_chance = overrides.get("status_chance", 0.0)
+	a.status_effect_duration = overrides.get(
+		"status_effect_duration", 3
+	)
 	return a
 
 
@@ -109,6 +112,29 @@ static func make_item(overrides: Dictionary = {}) -> ItemData:
 	)
 	i.effect_value = overrides.get("effect_value", 50)
 	return i
+
+
+static func make_status_effect(
+	overrides: Dictionary = {},
+) -> StatusEffectData:
+	var s := StatusEffectData.new()
+	s.id = overrides.get("id", &"test_effect")
+	s.display_name = overrides.get("display_name", "Test Effect")
+	s.effect_type = overrides.get(
+		"effect_type", StatusEffectData.EffectType.DEBUFF
+	)
+	s.duration = overrides.get("duration", 3)
+	s.tick_damage = overrides.get("tick_damage", 0)
+	s.tick_heal = overrides.get("tick_heal", 0)
+	s.is_magical = overrides.get("is_magical", false)
+	s.prevents_action = overrides.get("prevents_action", false)
+	s.attack_modifier = overrides.get("attack_modifier", 0)
+	s.magic_modifier = overrides.get("magic_modifier", 0)
+	s.defense_modifier = overrides.get("defense_modifier", 0)
+	s.resistance_modifier = overrides.get("resistance_modifier", 0)
+	s.speed_modifier = overrides.get("speed_modifier", 0)
+	s.luck_modifier = overrides.get("luck_modifier", 0)
+	return s
 
 
 static func make_equipment(

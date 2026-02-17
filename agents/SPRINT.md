@@ -9,8 +9,8 @@ Started: 2026-02-16
 
 ## Active
 
-### T-0013
-- Title: Build equipment system
+### T-0017
+- Title: Implement status effect system
 - Status: in-progress
 - Assigned: claude
 - Started: 2026-02-16
@@ -24,6 +24,13 @@ Started: 2026-02-16
 ---
 
 ## Done This Sprint
+
+### T-0013
+- Title: Build equipment system
+- Status: done
+- Assigned: claude
+- Started: 2026-02-16
+- Completed: 2026-02-16
 
 ### T-0034
 - Title: BUG — Dialogue and encounter can overlap in same frame

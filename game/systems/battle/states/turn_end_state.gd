@@ -12,6 +12,7 @@ func set_battle_scene(scene: Node) -> void:
 func enter() -> void:
 	var battler: Battler = battle_scene.current_battler
 	if battler:
+		battler.tick_effects()
 		battler.end_turn()
 
 	var battle_ui: Node = battle_scene.get_node_or_null("BattleUI")
