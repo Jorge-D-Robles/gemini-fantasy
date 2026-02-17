@@ -44,10 +44,11 @@ Every session, before writing any code:
 7. **GREEN** — write the minimum implementation to make tests pass
 8. **REFACTOR** — clean up while keeping tests green
 9. Run `/run-tests` — all tests must pass before committing
-10. When done: move ticket to "Done This Sprint", set `Status: done`, `Completed: [date]`
-11. Append one-line entry to `agents/COMPLETED.md`
-12. If you discover new issues, add tickets to `agents/BACKLOG.md`
-13. Pick the next task (go to step 3)
+10. **VERIFY VISUALLY** — if the task touched any visual content (tilemaps, UI, entity placement, scenes), run `/scene-preview` on every affected scene and fix issues before committing. See "MANDATORY: Visual Verification" below.
+11. When done: move ticket to "Done This Sprint", set `Status: done`, `Completed: [date]`
+12. Append one-line entry to `agents/COMPLETED.md`
+13. If you discover new issues, add tickets to `agents/BACKLOG.md`
+14. Pick the next task (go to step 3)
 
 Agent names: Use `claude` or `gemini` as the assignee value.
 
@@ -223,6 +224,11 @@ agents/            # Project management (milestones, backlog, sprint, completed 
 - **Pass `source_id` for B-sheet layers.** When calling `MapBuilder.build_layer()` for layers using B-sheet tiles, pass the correct source_id parameter (e.g., `1` if the B sheet is the second atlas path).
 - **Match theme to location.** Ruins1 = blue/ancient, Ruins2 = gold/Egyptian, Ruins3 = brown/green overgrown. Fairy Forest A5_A row 8 = bright green (use for forests). Row 0 = dark green grass. Row 10 = gray stone (use for towns).
 - **Read `docs/best-practices/11-tilemaps-and-level-design.md`** before any tilemap work. It contains the verified tile sheet reference, the single-tile fill rule, collision setup, and the theme-to-tileset mapping table.
+- **Build complete multi-tile objects.** B-sheets contain multi-tile sprites — houses, fences, bridges, wells, signs. Use ALL tiles that form the object, not just one piece. A house needs walls, roof, door, and windows assembled from adjacent B-sheet tiles. Study the tile sheet to identify which tiles form a complete object before placing any of them.
+- **Roads and paths need edge variation.** Paths should use distinct tiles for left edge, center, right edge, and corners. Do not fill an entire path with one tile — the center and borders should differ. Check the B-sheet or A5 rows for path edge/center tile variants.
+- **Never repeat the same decorative object in a grid pattern.** Trees, rocks, flowers, and other decorative objects must be placed organically — vary spacing, mix different object types, leave irregular gaps. A row of identical trees evenly spaced looks artificial. Cluster 2-3 trees, leave a gap, place a rock, then another tree group.
+- **Mix object variants.** If the B-sheet has multiple tree types (e.g., different canopy shapes, sizes), use several variants in the same area. Same for rocks, bushes, flowers. Repetition of a single asset is the biggest visual quality killer.
+- **Create depth with layering.** Use the AbovePlayer layer for tree canopies, rooftop overhangs, and archways that the player walks behind. Use GroundDetail for small ground accents (pebbles, grass tufts, fallen leaves). Every scene should have at least 4 layers: Ground, Objects, AbovePlayer, and one detail layer.
 
 ## Asset Workflow
 
@@ -276,35 +282,85 @@ if tex == null:
     return
 ```
 
-## Scene Preview (Visual Verification)
+## MANDATORY: Visual Verification
 
-Agents can capture screenshots of any Godot scene to visually verify tilemaps, entity placement, UI layout, etc. This enables a visual edit-preview-iterate loop without requiring the user to open the Godot editor.
+**Every change to visual content MUST be verified with `/scene-preview` before committing.** This is not optional. Agents cannot see what they build — the screenshot is the only way to catch visual bugs, repetitive patterns, and broken layouts.
 
-### How It Works
+### What Triggers Visual Verification
 
-The `/scene-preview` skill runs a scene briefly in windowed mode (not headless — headless does not render), captures a screenshot, and displays it. The agent can then describe what it sees and make corrections.
+Run `/scene-preview` on every affected scene after ANY of these changes:
+- Tilemap creation or modification (`/build-tilemap`, legend changes, map arrays)
+- Entity placement or repositioning (NPCs, enemies, transitions, markers)
+- UI screen creation or layout changes (menus, HUD, dialogue)
+- Scene composition changes (adding/removing nodes, z-index changes)
+- Asset swaps (changing tile sheets, sprites, textures)
 
-### Usage
+### The Edit-Preview-Iterate Loop
 
-```
-/scene-preview res://scenes/verdant_forest/verdant_forest.tscn --full-map
-```
+This is the required workflow for all visual work:
+
+1. **Make changes** to the scene/script
+2. **Run `/scene-preview`** on the affected scene (use `--full-map` for tilemaps)
+3. **Inspect the screenshot** — check every item on the Visual Quality Checklist below
+4. **Fix issues** found in the screenshot
+5. **Run `/scene-preview` again** to confirm fixes
+6. **Repeat** until the scene passes all checklist items
+7. Only THEN proceed to `/run-tests` and committing
+
+### Visual Quality Checklist
+
+When reviewing a screenshot, check for ALL of these:
+
+**Anti-repetition:**
+- [ ] No grid patterns — decorative objects (trees, rocks, flowers) are spaced irregularly
+- [ ] Multiple object variants used — not the same tree/rock sprite repeated everywhere
+- [ ] Clusters and gaps — objects grouped in natural-looking clusters with empty space between
+- [ ] No visible tiling artifacts — ground textures don't show obvious seams or checkerboard patterns
+
+**Complete objects:**
+- [ ] Multi-tile structures are fully assembled — houses have walls + roof + door + windows
+- [ ] Fences, bridges, and paths have proper start/middle/end tiles
+- [ ] Roads use edge tiles on the sides and center tiles in the middle, not one tile for everything
+- [ ] No orphaned partial objects (half a house, one fence post floating alone)
+
+**Depth and layering:**
+- [ ] AbovePlayer layer exists for canopies, rooftops, and archways
+- [ ] Ground detail layer adds small accents (pebbles, grass tufts, moss)
+- [ ] At least 4 active layers visible in the scene
+- [ ] Z-ordering looks correct (player would walk behind trees, under roofs)
+
+**Composition:**
+- [ ] Clear paths/walkways for player navigation
+- [ ] Visual landmarks or focal points (a large tree, a building, a statue)
+- [ ] Terrain transitions look natural (grass-to-dirt uses soft borders, not hard grid lines)
+- [ ] Map edges are bounded (dense trees, walls, water — not abrupt tile cutoff)
+
+**Consistency:**
+- [ ] Art style is cohesive — all assets are from the same Time Fantasy pack/theme
+- [ ] Scale is consistent — objects are proportional to each other and the player
+- [ ] Color palette matches the location theme (forest = greens, ruins = stone grays, town = warm earth tones)
 
 ### Camera Modes
 
 | Mode | Flags | Use When |
 |------|-------|----------|
 | Default | (none) | Scene has its own Camera2D (e.g., player camera) |
-| Full-map | `--full-map` | View entire tilemap zoomed to fit viewport |
-| Positioned | `--camera-x=N --camera-y=N` | Focus on a specific area |
+| Full-map | `--full-map` | View entire tilemap — **use this first for any tilemap work** |
+| Positioned | `--camera-x=N --camera-y=N` | Zoom into a specific area for detail check |
 | Custom zoom | `--zoom=N` | Override auto-zoom (0.5 = zoom out 2x) |
 
-### When to Use
+### Usage Examples
 
-- After building or modifying a tilemap (`/build-tilemap`)
-- After placing entities (NPCs, enemies, transitions)
-- After building UI screens
-- To verify visual quality before pushing
+```
+# Always start with full-map to see the whole picture
+/scene-preview res://scenes/verdant_forest/verdant_forest.tscn --full-map
+
+# Then zoom into areas that need detail inspection
+/scene-preview res://scenes/roothollow/roothollow.tscn --camera-x=384 --camera-y=304 --zoom=1.5
+
+# Check UI with HUD visible
+/scene-preview res://scenes/roothollow/roothollow.tscn --show-ui
+```
 
 ### Manual Invocation
 

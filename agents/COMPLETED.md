@@ -62,3 +62,4 @@ These 26 fixes were completed before the ticket system was established:
 - [2026-02-16] T-0032: Build basic save/load system — SaveManager autoload, JSON to user://saves/, wired save points + title screen Continue (claude)
 - [2026-02-16] T-0033: Add demo conclusion event — Elder Thessa's garrick-recruited dialogue now hooks Prismfall and gives narrative closure (claude)
 - [2026-02-16] T-0034: BUG FIX — Dialogue/encounter overlap — BattleManager guards against dialogue/cutscene/transition, scene handlers check state, 6 new tests (claude)
+- [2026-02-16] INFRA: Scene preview tool — screenshot capture for agent visual verification, 3 camera modes, /scene-preview skill (claude)
