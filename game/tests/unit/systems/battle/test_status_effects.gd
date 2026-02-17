@@ -392,8 +392,9 @@ func test_tick_effects_on_dead_battler_is_safe() -> void:
 	_battler.apply_status(_poison)
 	_battler.current_hp = 0
 	_battler.is_alive = false
-	# Should not crash
+	# Should not crash — effects are not ticked on dead battlers
 	_battler.tick_effects()
+	assert_eq(_battler.current_hp, 0)
 
 
 func test_get_effect_remaining_turns_absent() -> void:

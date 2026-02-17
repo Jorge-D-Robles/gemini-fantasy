@@ -64,14 +64,15 @@ var luck: int = 0
 
 var resonance_gauge: float = 0.0
 var resonance_state: ResonanceState = ResonanceState.FOCUSED
-## Active status effects: Array of { "data": StatusEffectData, "remaining": int }
-var _active_effects: Array[Dictionary] = []
 var abilities: Array[Resource] = []
 var is_defending: bool = false
 var is_alive: bool = true
 
 ## Turn delay used by TurnQueue. Lower = acts sooner.
 var turn_delay: float = 0.0
+
+## Active status effects: Array of { "data": StatusEffectData, "remaining": int }
+var _active_effects: Array[Dictionary] = []
 
 
 ## Loads stats from [member data] and resets HP, EE, resonance to full.
