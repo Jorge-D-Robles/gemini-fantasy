@@ -37,21 +37,38 @@ You will receive:
 
 Before designing, you MUST visually understand the tile sheets. Read the tile atlas reference below and identify which tiles to use.
 
+**CRITICAL: RPG Maker Tile Format Warning**
+
+Time Fantasy assets ship in RPG Maker format. Only A5 and B/C/D/E sheets work in Godot:
+
+| Category | Usable in Godot? | Why |
+|----------|-----------------|-----|
+| **A1** | **NO** — animated water autotiles | Contains 3x4 blocks of sub-tiles assembled by RPG Maker's autotile engine. NOT a flat grid. |
+| **A2** | **NO** — ground autotiles | Contains 2x3 blocks of sub-tiles (center + edges + corners). Requires RPG Maker's assembly logic. |
+| **A3** | **NO** — building wall autotiles | RPG Maker-specific wall autotile format. |
+| **A4** | **NO** — wall autotiles | RPG Maker-specific wall autotile format. |
+| **A5** | **YES** — plain floor/ceiling tiles | Simple flat 8x16 grid of independent 16x16 tiles. Direct import. |
+| **B-E** | **YES** — object layer tiles | Simple flat 16x16 grid of independent 16x16 tiles. Direct import. |
+
+**Never reference A1, A2, A3, or A4 tile sheets.** They will produce garbled/incorrect visuals.
+
 #### Available Tile Sheets (already in project)
 
 These are registered as constants in `game/systems/map_builder.gd`:
 
-| Constant | Path | Format | Size | Contents |
+| Constant | Path | Format | Grid | Contents |
 |----------|------|--------|------|----------|
-| `FAIRY_FOREST_A5_A` | `res://assets/tilesets/tf_ff_tileA5_a.png` | A5 | 128x256 (8x16) | Fairy forest terrain A |
-| `FAIRY_FOREST_A5_B` | `res://assets/tilesets/tf_ff_tileA5_b.png` | A5 | 128x256 (8x16) | Fairy forest terrain B |
-| `RUINS_A5` | `res://assets/tilesets/tf_A5_ruins2.png` | A5 | 128x256 (8x16) | Ruins terrain |
-| `FOREST_OBJECTS` | `res://assets/tilesets/tf_ff_tileB_forest.png` | B | 256x256 (16x16) | Forest objects |
-| `TREE_OBJECTS` | `res://assets/tilesets/tf_ff_tileB_trees.png` | B | 256x256 (16x16) | Large tree objects |
-| `STONE_OBJECTS` | `res://assets/tilesets/tf_ff_tileB_stone.png` | B | 256x256 (16x16) | Stone/ruin objects |
-| `MUSHROOM_VILLAGE` | `res://assets/tilesets/tf_ff_tileB_mushroomvillage.png` | B | 256x256 (16x16) | Mushroom village |
-| `RUINS_OBJECTS` | `res://assets/tilesets/tf_B_ruins2.png` | B | 256x256 (16x16) | Ruins objects |
-| `GIANT_TREE` | `res://assets/tilesets/tf_B_gianttree_ext.png` | B | 256x256 (16x16) | Giant tree objects |
+| `FAIRY_FOREST_A5_A` | `tf_ff_tileA5_a.png` | A5 | 8x16 | Fairy forest terrain (grass, dirt, path, vegetation, stone, accents) |
+| `FAIRY_FOREST_A5_B` | `tf_ff_tileA5_b.png` | A5 | 8x16 | Very similar to A5_A — alternative terrain set |
+| `RUINS_A5` | `tf_A5_ruins2.png` | A5 | 8x16 | Gold/Egyptian ruins terrain |
+| `OVERGROWN_RUINS_A5` | `tf_A5_ruins3.png` | A5 | 8x16 | Brown/green overgrown ruins terrain |
+| `FOREST_OBJECTS` | `tf_ff_tileB_forest.png` | B | 16x16 | Round tree canopies, trunks, bushes, foliage |
+| `TREE_OBJECTS` | `tf_ff_tileB_trees.png` | B | 16x16 | Pine trees, dead trees, tree houses, vine structures |
+| `STONE_OBJECTS` | `tf_ff_tileB_stone.png` | B | 16x16 | Small rocks, flowers, pumpkins, gravestones, stone archways |
+| `MUSHROOM_VILLAGE` | `tf_ff_tileB_mushroomvillage.png` | B | 16x16 | Mushroom houses, fences, decorations, log structures |
+| `RUINS_OBJECTS` | `tf_B_ruins2.png` | B | 16x16 | Egyptian-style objects, sarcophagi, pyramids |
+| `OVERGROWN_RUINS_OBJECTS` | `tf_B_ruins3.png` | B | 16x16 | Overgrown ruin objects, teal faces, wooden structures |
+| `GIANT_TREE` | `tf_B_gianttree_ext.png` | B | 16x16 | Giant tree trunk, branches, ladders |
 
 #### Additional Assets (available but not yet in project)
 
@@ -59,15 +76,10 @@ These exist at `/Users/robles/repos/games/assets/` and can be copied in:
 
 | Source Pack | File | Contents |
 |-------------|------|----------|
-| `tf_fairyforest_12.28.20/1x/` | `tf_ff_tileA1.png` | Animated water auto-tiles |
-| `tf_fairyforest_12.28.20/1x/` | `tf_ff_tileA2.png` | Ground auto-tiles |
-| `tf_ruindungeons/16/` | `tf_A5_ruins1.png` | Ruins terrain variant 1 |
-| `tf_ruindungeons/16/` | `tf_A5_ruins3.png` | Ruins terrain variant 3 |
-| `tf_ruindungeons/16/` | `tf_B_ruins1.png` | Ruins objects variant 1 |
-| `tf_ruindungeons/16/` | `tf_B_ruins3.png` | Ruins objects variant 3 |
-| `tf_giant-tree/RPGMAKER-100/` | `tf_A5_gianttree_ext.png` | Giant tree terrain |
+| `tf_ruindungeons/16/` | `tf_A5_ruins1.png` | Blue/ancient ruins terrain (A5 flat grid) |
+| `tf_ruindungeons/16/` | `tf_B_ruins1.png` | Blue/ancient ruins objects (B flat grid) |
+| `tf_giant-tree/RPGMAKER-100/` | `tf_A5_gianttree_ext.png` | Giant tree terrain (A5 flat grid) |
 | `TimeFantasy_Winter/tiles/` | `tf_winter_terrain.png` | Winter terrain |
-| `tf_farmandfort/rpgmaker_VXa/` | `tileB_farmA.png` | Farm objects (32px — needs 1x) |
 
 To copy an asset into the project, use the `/copy-assets` skill or:
 ```bash
@@ -75,146 +87,170 @@ cp /Users/robles/repos/games/assets/<pack>/<file> /Users/robles/repos/games/gemi
 cp /Users/robles/repos/games/assets/<pack>/<file> <worktree>/game/assets/tilesets/<file>
 ```
 
-### Step 3 — Tile Atlas Reference
+### Step 3 — Tile Atlas Reference (Verified by Visual Inspection)
 
 #### A5 Sheet Layout (8 cols x 16 rows)
 
-Each A5 sheet is a flat grid of 16x16 tiles. Tiles are referenced as `Vector2i(col, row)`.
+Each A5 sheet is a flat grid of 16x16 tiles. Each tile is referenced as `Vector2i(col, row)`.
+
+**CRITICAL — A5 Column Rule:** Each column in a row is a DIFFERENT visual variant. The variants do NOT tile seamlessly with each other. **Use ONE column per terrain type** (single-tile fill). See "The Single-Tile Fill Rule" below.
 
 **Fairy Forest A5_A (`tf_ff_tileA5_a.png`):**
-```
-Row 0:  (0,0)-(7,0)  Ground / grass variants (8 types)
-Row 1:  (0,1)-(7,1)  Ground variants continued
-Row 2:  (0,2)-(7,2)  Dirt / earth ground
-Row 3:  (0,3)-(7,3)  Dirt variants
-Row 4:  (0,4)-(7,4)  Path / light stone
-Row 5:  (0,5)-(7,5)  Path variants
-Row 6:  (0,6)-(7,6)  Darker ground / roots
-Row 7:  (0,7)-(7,7)  Dark ground variants
-Row 8:  (0,8)-(7,8)  Dense vegetation / hedges (SOLID)
-Row 9:  (0,9)-(7,9)  Dense vegetation continued (SOLID)
-Row 10: (0,10)-(7,10) Stone / cobblestone
-Row 11: (0,11)-(7,11) Stone variants
-Row 12: (0,12)-(7,12) Water / shallow pool
-Row 13: (0,13)-(7,13) Water variants
-Row 14: (0,14)-(7,14) Flower / foliage accents
-Row 15: (0,15)-(7,15) Special accents
-```
 
-**Fairy Forest A5_B (`tf_ff_tileA5_b.png`):**
-```
-Rows 0-1:   Alternative grass/ground
-Rows 2-3:   Alternative dirt/earth
-Rows 4-5:   Alternative path/stone
-Rows 6-7:   Mushroom ground / special terrain
-Rows 8-9:   Vine/moss covered surfaces (SOLID variants)
-Rows 10-11: Dark stone / cave floor
-Rows 12-13: Glowing/magical ground
-Rows 14-15: Decorative accents
-```
+| Rows | Content | In-Game Appearance | Use For |
+|------|---------|-------------------|---------|
+| 0-1 | Grass variants (16 tiles) | Dark green, varied grass patterns | Ground fill (pick ONE column, e.g., (0,0)) |
+| 2-3 | Dirt/earth variants (16 tiles) | Brown earth/soil | Dirt areas (pick ONE, e.g., (0,2)) |
+| 4-5 | Stone path variants (16 tiles) | Golden/amber cobblestone | Path overlay (pick ONE, e.g., (0,4)) |
+| 6-7 | Dark earth/roots (16 tiles) | Dark brown forest floor | Dark forest ground |
+| 8-9 | Dense vegetation (16 tiles) | **Bright green** dense foliage | Green forest ground fill — recommended for forests |
+| 10-11 | Gray stone (16 tiles) | Gray cobblestone | Town roads, stone floors |
+| 12-13 | Waterfall/dark texture (16 tiles) | Dark gray, water-like | Water features, cliff faces |
+| 14-15 | Foliage accents (16 tiles) | Flowers, small bushes | Sparse ground decoration (5-15% coverage) |
 
-**Ruins A5 (`tf_A5_ruins2.png`):**
-```
-Rows 0-1:   Stone floor variants (8 types)
-Rows 2-3:   Decorated / ornamental floor
-Rows 4-5:   Gold/ornate walls (SOLID)
-Rows 6-7:   Cracked / damaged floor
-Rows 8-9:   Dark stone walls (SOLID)
-Rows 10-11: Mossy stone
-Rows 12-13: Water/flooded areas
-Rows 14-15: Special floor variants
-```
+**Overgrown Ruins A5 (`tf_A5_ruins3.png`):**
+
+| Rows | Content | Use For |
+|------|---------|---------|
+| 0-1 | Green mossy stone floor | Ground fill |
+| 2-3 | Vine-covered decorated floor | Decorated areas |
+| 4-5 | Orange/ornamental border | Ornamental walls (collision) |
+| 6-7 | Brown stone with green accents | Wall variants |
+| 8-9 | Dark brown stone walls | Walls (collision) |
+| 10-11 | Mixed stone/moss | Transition areas |
+| 12-13 | Dark slated stone | Dark floor areas |
+| 14-15 | Geometric/special tiles | Decorative accents |
 
 #### B Sheet Layout (16 cols x 16 rows)
 
-B sheets contain multi-tile objects. Objects span multiple tiles — you must place ALL tiles of an object.
+B sheets contain multi-tile objects. Objects span multiple tiles that must all be placed together. Each tile is independently referenced as `Vector2i(col, row)`.
 
 **Forest Objects (`tf_ff_tileB_forest.png`):**
-```
-Rows 0-3:   Tree tops and canopy pieces (2x2 and 2x3 trees)
-Rows 4-7:   Tree trunks, fallen logs, stumps
-Rows 8-11:  Bushes, flowers, mushrooms, small vegetation
-Rows 12-15: Rocks, boulders, ground decorations, paths
-```
+
+| Region | Content | Notes |
+|--------|---------|-------|
+| Cols 0-7, Rows 0-3 | Round tree canopies (2x2 and 3x3 formations) | Green leaf clusters with shading. AbovePlayer layer. |
+| Cols 0-7, Rows 4-7 | More canopy pieces, bushes, broad trees | Mix of canopy fills and standalone bushes. |
+| Cols 8-15, Rows 0-7 | Large tree trunks (tall bark textures) | Brown trunk columns. Objects layer with collision. |
+| Cols 0-7, Rows 8-15 | Additional foliage, shrubs | Ground-level vegetation. |
+| Cols 8-15, Rows 8-15 | Trunk bases, small decorative items | Tree roots, stumps. Collision on trunks. |
 
 **Tree Objects (`tf_ff_tileB_trees.png`):**
-```
-Rows 0-5:   Large trees (3x4 and 4x5 tile trees)
-Rows 6-9:   Medium trees (2x3 tile trees)
-Rows 10-13: Small trees and saplings
-Rows 14-15: Leaf piles, branches, bark
-```
+
+| Region | Content |
+|--------|---------|
+| Top rows | Pine trees (narrow, tall), dead/bare branching trees |
+| Middle | Large deciduous tree with round canopy, tree houses with windows |
+| Bottom | Dead trees, vine-covered structures, large bare oak |
 
 **Stone Objects (`tf_ff_tileB_stone.png`):**
-```
-Rows 0-3:   Stone archways and pillars (multi-tile)
-Rows 4-7:   Ruined walls and broken columns
-Rows 8-11:  Standing stones, gravestones
-Rows 12-15: Small rocks, pebbles, debris
-```
+
+| Region | Content |
+|--------|---------|
+| Row 0 | Small gray rocks, pebbles |
+| Rows 1-3 | Orange flowers, green leaf clusters, pumpkins |
+| Rows 4-7 | Gravestones, stone pillars, standing stones |
+| Rows 8-15 | Large stone archways, mossy ruins, stone walls |
 
 **Mushroom Village (`tf_ff_tileB_mushroomvillage.png`):**
-```
-Rows 0-5:   Mushroom houses (3x4 multi-tile buildings)
-Rows 6-9:   Smaller mushroom structures, furniture
-Rows 10-13: Lanterns, fences, signs, market stalls
-Rows 14-15: Ground decorations, paths
+
+| Region | Content |
+|--------|---------|
+| Top | Small mushroom decorations, tiny caps |
+| Rows 2-8 | Large mushroom houses (red/brown caps, 4-6 tile objects) |
+| Bottom | Mushroom fences, paths, ring decorations, log fences |
+
+### Step 4 — The Single-Tile Fill Rule
+
+**This is the most important rule. Violating it produces ugly maps.**
+
+Each column in an A5 row has a distinct visual pattern. When columns are alternated (col 0, col 1, col 0, col 1...), the different patterns create a visible checkerboard or stripe effect because tile edges don't match.
+
+**The correct approach:**
+
+1. **Ground layer: ONE tile for the entire fill.** Pick a single `Vector2i(col, row)` and fill the whole map with it. The tile tiles seamlessly with copies of itself.
+
+2. **Visual variety comes from B-sheet objects**, not from mixing A5 columns. Trees, rocks, buildings, and decorative objects from B sheets provide all the visual interest.
+
+3. **Accent layer: Sparse A5 decorations** from different rows (not columns). Flowers from row 14, dirt from row 2 — but only 5-15% coverage, never adjacent.
+
+4. **Path layer: ONE path tile** from a single column of the path row.
+
+5. **If you need terrain variety** (e.g., town with grass AND dirt areas), use tiles from **different rows** in **large contiguous patches** (8x8+ tiles), never alternating.
+
+```gdscript
+# CORRECT: Single-tile fill per terrain type
+const GROUND_LEGEND: Dictionary = {
+    "G": Vector2i(0, 8),   # ONE green vegetation tile for entire map
+}
+
+# WRONG: Multiple columns create visible artifacts
+const GROUND_LEGEND: Dictionary = {
+    "G": Vector2i(0, 0), "g": Vector2i(1, 0),  # STRIPE ARTIFACTS
+    "H": Vector2i(2, 0), "h": Vector2i(3, 0),
+}
 ```
 
-### Step 4 — Design the Map
+### Step 5 — Design the Map
 
 Follow these design principles:
 
-1. **Start with ground layer** — Fill the entire map area with varied ground tiles. Use ALL 8 columns of the ground rows, alternating patterns row by row. Never repeat a 4-tile pattern more than 3 times.
+1. **Start with ground layer** — Fill the entire map with ONE tile (same Vector2i).
 
-2. **Add ground detail layer** — Sparse decorations: flowers, small rocks, grass tufts. Only 5-15% coverage.
+2. **Add ground detail layer** — Sparse decorations: flowers, small rocks, grass tufts. Only 5-15% coverage. Use tiles from different rows (not columns of the same row).
 
-3. **Add object layer** — Place trees, rocks, buildings from B sheets. Objects should:
+3. **Add trees/object layer** — Place forest borders and objects from B sheets. Use single canopy-center tile for dense forest fill:
    - Frame walkable areas naturally (not in perfect rectangles)
-   - Create visual landmarks (a particularly large tree, a stone formation)
-   - Leave clear paths between areas
-   - Use collision on base tiles
+   - Offset tree lines by 1-2 tiles per row for organic edges
+   - Leave clear paths between areas (3+ tiles wide)
+   - Use collision on forest fill tiles
 
 4. **Add above-player layer** — Tree canopy that the player walks under. This creates depth.
 
 5. **Create visual zones** — Different areas within the map should feel distinct:
    - Dense forest vs. clearing
    - Rocky area vs. grassy meadow
-   - Path between two locations
+   - Path connecting locations
 
-### Step 5 — Implement
+### Step 6 — Implement
 
 When modifying an existing scene:
 
 1. **Add new MapBuilder constants** for any additional tile sheets needed
-2. **Expand the legend** to use more tile variants
+2. **Write legends following single-tile fill rule** — ONE tile per terrain type
 3. **Redesign the text maps** following design principles
 4. **Add new TileMapLayer nodes** if the scene is missing layers (Objects, AbovePlayer)
-5. **Update `_setup_tilemap()`** to use multiple atlas sources
+5. **Update `_setup_tilemap()`** to use multiple atlas sources with correct `source_id`
 6. **Add collision data** for solid tiles from B sheets
 
 When creating a new scene:
 - Follow the template in `docs/best-practices/11-tilemaps-and-level-design.md`
 
-### Step 6 — Map Writing Guidelines
+### Step 7 — Map Writing Guidelines
 
 When writing the text map arrays:
 
 ```gdscript
-# WRONG: Monotonous repeating pattern
+# Ground: uniform single-tile fill
 const GROUND_MAP: Array[String] = [
-    "GghjGghjGghjGghj",  # Same 4-tile pattern repeating
-    "gGjhgGjhgGjhgGjh",
+    "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+    "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
 ]
 
-# RIGHT: Varied patterns using all 8 columns
-const GROUND_MAP: Array[String] = [
-    "GhIgjHiGhgJIHgjhG",  # 8 tile variants, no obvious repeat
-    "jIHgGhiJgGIhHjiGg",  # Different pattern per row
+# Trees: organic borders with irregular clearing edges
+const TREE_MAP: Array[String] = [
+    "TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",
+    "TTTTTTTTTT  TTTT       TTTTTTTTTTTTTTTTT",
+    "TTTTTTTTTT    TTT          TTTTTTTTTTTTT",
+    "TTTT  TT      TT            TTTTTTTTTTTT",
+    "TTTT                                TTTT",
+    "TT                                    TT",
 ]
 ```
 
-**Ground rule:** Each row should look different from adjacent rows. Stagger tile choices so patterns don't align vertically.
+**Ground rule:** Uniform fill — one character, entire map.
+
+**Tree/border rule:** Organic edges. Offset clearing boundaries 1-3 tiles per row. No perfect rectangles.
 
 **Object placement rule:** Multi-tile objects must have all their tiles placed:
 ```gdscript
@@ -227,15 +263,15 @@ const GROUND_MAP: Array[String] = [
 **Path design:** Paths should meander, not run in straight lines:
 ```gdscript
 # BAD: Perfectly straight horizontal path
-"    PPppPPppPPppPPpp    "
-"    ppPPppPPppPPppPP    "
+"    PPPPPPPPPPPPPPPPPPPP    "
+"    PPPPPPPPPPPPPPPPPPPP    "
 
 # GOOD: Path that curves and varies in width
-"        PPpp            "
-"       ppPPPp           "
-"      PPppPPpp          "
-"       pPPPpp           "
-"        PPpp            "
+"        PP                 "
+"       PPPP                "
+"      PPPPPP               "
+"       PPPP                "
+"        PP                 "
 ```
 
 ## Output Format
@@ -251,13 +287,17 @@ After completing the tilemap redesign, provide:
 
 ## Rules
 
-1. **ALWAYS read the tile sheet files** (or reference this atlas guide) before designing
-2. **Use multiple atlas sources** — Don't limit to a single A5 sheet
-3. **Minimum 6 tile variants** for ground layers
-4. **Objects layer is mandatory** for outdoor scenes — trees, rocks, etc.
-5. **AbovePlayer layer is mandatory** for forest/town scenes — depth via canopy/roofs
-6. **Maintain gameplay clearances** — Don't block spawn points, exits, NPC positions, event zones
-7. **Preserve all functional code** — Scene transitions, encounters, events must keep working
-8. **Use MapBuilder API** — All tilemap setup goes through `MapBuilder.create_tileset()`, `apply_tileset()`, `build_layer()`
-9. **Add collision data** for all solid tiles (walls, tree trunks, rocks, buildings)
-10. **Don't invent tile coordinates** — Only use positions that exist in the tile sheets (A5: 0-7 cols, 0-15 rows; B: 0-15 cols, 0-15 rows)
+1. **ALWAYS read the tile sheet reference** (above) and the best practices doc before designing
+2. **Use single-tile fill** for ground layers — ONE Vector2i for the entire ground map
+3. **Use B-sheet objects** for visual variety — trees, rocks, buildings from B format sheets
+4. **Use multiple atlas sources** — A5 for terrain (source 0), B for objects (source 1+)
+5. **Pass `source_id` parameter** when building B-sheet layers: `MapBuilder.build_layer(layer, map, legend, 1)`
+6. **Never alternate A5 columns** — this is the #1 source of ugly maps
+7. **Never use A1/A2/A3/A4 sheets** — they are RPG Maker autotile formats, not flat grids
+8. **Objects layer is mandatory** for outdoor scenes — trees, rocks, etc.
+9. **AbovePlayer layer is mandatory** for forest/town scenes — depth via canopy/roofs
+10. **Maintain gameplay clearances** — Don't block spawn points, exits, NPC positions, event zones
+11. **Preserve all functional code** — Scene transitions, encounters, events must keep working
+12. **Use MapBuilder API** — All tilemap setup goes through `MapBuilder.apply_tileset()` and `build_layer()`
+13. **Add collision data** for all solid tiles (walls, tree trunks/fill, rocks, buildings)
+14. **Don't invent tile coordinates** — Only use positions that exist (A5: cols 0-7, rows 0-15; B: cols 0-15, rows 0-15)

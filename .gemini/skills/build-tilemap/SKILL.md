@@ -54,6 +54,8 @@ Read("docs/best-practices/11-tilemaps-and-level-design.md")
    cp /Users/robles/repos/games/assets/<pack>/<file> <current-worktree>/game/assets/tilesets/<filename>
    ```
 
+**CRITICAL: Only use A5 and B/C/D/E tile sheets.** A1-A4 are RPG Maker autotile formats that do NOT work as flat grids in Godot. They will produce garbled visuals.
+
 ## Step 4 — Look Up Godot Docs
 
 Call the `godot-docs` subagent for tilemap-related classes:
@@ -66,10 +68,10 @@ Task(subagent_type="godot-docs", prompt="Look up TileMapLayer. I need set_cell, 
 Plan the map layout before writing code:
 
 1. **Map dimensions**: Calculate from current map size or design requirements
-2. **Layer stack**: Ground, GroundDetail, Objects (collision), AbovePlayer
-3. **Atlas sources**: Which tile sheets for each layer
-4. **Tile selection**: Which specific tiles from each sheet
-5. **Collision tiles**: Which tiles need physics collision
+2. **Layer stack**: Ground, GroundDetail, Paths, Trees, Objects (collision), AbovePlayer
+3. **Atlas sources**: A5 sheet for terrain (source 0), B sheet(s) for objects (source 1+)
+4. **Tile selection**: Pick ONE tile per terrain type (single-tile fill rule)
+5. **Collision tiles**: Which B-sheet tiles need physics collision
 6. **Gameplay clearances**: Ensure spawn points, exits, NPC positions, and event zones remain accessible
 
 ## Step 6 — Implement
@@ -77,28 +79,34 @@ Plan the map layout before writing code:
 Modify the scene script's `_setup_tilemap()` function and related constants:
 
 1. **Add new MapBuilder constants** if using new tile sheets (edit `map_builder.gd`)
-2. **Expand/redesign legends** — Use more tile variants for visual variety
-3. **Redesign text map arrays** — Follow the variety principles:
-   - 6+ ground variants minimum
-   - No obvious repeating 4-tile patterns
-   - Organic shapes for clearings and borders
-   - Multi-tile objects from B sheets
+2. **Write legends following single-tile fill rule:**
+   - ONE Vector2i per ground terrain type
+   - ONE Vector2i per path type
+   - B-sheet objects for trees, buildings, rocks
+   - Sparse accents from different A5 rows (not columns)
+3. **Redesign text map arrays:**
+   - Ground: uniform single-character fill (e.g., all "G")
+   - Trees: organic borders with irregular clearing edges
+   - Paths: meandering, 2-3 tiles wide
+   - Detail: sparse (5-15% coverage), never adjacent accents
 4. **Add missing TileMapLayer nodes** to the `.tscn` file if needed
 5. **Add collision data** for solid tiles from all atlas sources
-6. **Preserve all functional code** — transitions, encounters, events, spawn points
+6. **Pass `source_id` parameter** for B-sheet layers: `MapBuilder.build_layer(layer, map, legend, 1)`
+7. **Preserve all functional code** — transitions, encounters, events, spawn points
 
 ### Design Principles Checklist
 
-- [ ] Ground layer uses 6+ tile variants with staggered patterns
-- [ ] Ground detail layer adds sparse (5-15%) decorative accents
-- [ ] Objects layer has trees/rocks/buildings from B-format sheets
+- [ ] Ground layer uses ONE tile for entire fill (single-tile fill rule)
+- [ ] Visual variety comes from B-sheet objects, not A5 column mixing
+- [ ] Ground detail layer adds sparse (5-15%) accents from different A5 rows
+- [ ] Trees/Objects layer uses B-format sheets with collision
 - [ ] AbovePlayer layer creates depth (canopy, rooftops)
-- [ ] Paths meander naturally, not in straight lines
+- [ ] Paths meander naturally, 2-3 tiles wide minimum
 - [ ] Clearings have organic (non-rectangular) shapes
 - [ ] Map has visual landmarks/focal points
-- [ ] Terrain transitions are gradual (1-2 tile zones)
 - [ ] All spawn points and exits remain accessible
-- [ ] Collision is set on walls, tree trunks, rocks, buildings
+- [ ] Collision is set on forest fill, tree trunks, rocks, buildings, walls
+- [ ] `source_id` parameter passed correctly for B-sheet layers
 
 ## Step 7 — Verify
 
@@ -107,6 +115,7 @@ Modify the scene script's `_setup_tilemap()` function and related constants:
 3. **Check collision setup** — all solid tiles are listed
 4. **Check z_index settings** on TileMapLayer nodes
 5. **Check that functional code still works** — scene transitions, encounter system, event triggers
+6. **Check that NO A1/A2/A3/A4 sheets are referenced** — only A5 and B sheets
 
 ## Step 8 — Report
 
