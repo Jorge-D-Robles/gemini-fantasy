@@ -3,6 +3,9 @@ extends BattlerData
 
 ## Defines a playable character's growth rates and visual metadata.
 
+@export_group("Equipment")
+@export var allowed_weapon_types: Array[int] = []
+
 @export_group("Progression")
 @export var level: int = 1
 @export var current_xp: int = 0

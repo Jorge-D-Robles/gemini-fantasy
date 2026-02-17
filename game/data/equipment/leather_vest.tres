@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EquipmentData" load_steps=2 format=3 uid="uid://bleather_vest"]
+
+[ext_resource type="Script" path="res://resources/equipment_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"leather_vest"
+display_name = "Leather Vest"
+description = "Flexible leather armor that doesn't hinder movement."
+slot_type = 2
+weapon_type = 0
+defense_bonus = 5
+max_hp_bonus = 10
+buy_price = 80
+sell_price = 40

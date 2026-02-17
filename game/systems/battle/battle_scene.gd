@@ -100,10 +100,11 @@ func refresh_battle_ui() -> void:
 func _spawn_party(party_data: Array[Resource]) -> void:
 	var slots := _get_marker_positions(party_node)
 	var visual_scene := load(PARTY_BATTLER_SCENE_PATH) as PackedScene
+	var equip_mgr: Node = get_node_or_null("/root/EquipmentManager")
 	for i in party_data.size():
 		var battler := PartyBattler.new()
 		battler.data = party_data[i]
-		battler.initialize_from_data()
+		battler.initialize_from_data(equip_mgr)
 		_apply_persistent_state(battler)
 		if i < slots.size():
 			battler.position = slots[i]

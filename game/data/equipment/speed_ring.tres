@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EquipmentData" load_steps=2 format=3 uid="uid://bspeed_ring"]
+
+[ext_resource type="Script" path="res://resources/equipment_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"speed_ring"
+display_name = "Speed Ring"
+description = "A lightweight ring that quickens the wearer's reflexes."
+slot_type = 3
+weapon_type = 0
+speed_bonus = 4
+luck_bonus = 2
+buy_price = 200
+sell_price = 100

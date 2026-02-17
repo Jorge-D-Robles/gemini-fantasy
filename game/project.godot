@@ -28,6 +28,7 @@ BattleManager="*res://autoloads/battle_manager.gd"
 DialogueManager="*res://autoloads/dialogue_manager.gd"
 EventFlags="*res://events/event_flags.gd"
 InventoryManager="*res://autoloads/inventory_manager.gd"
+EquipmentManager="*res://autoloads/equipment_manager.gd"
 SaveManager="*res://autoloads/save_manager.gd"
 UILayer="*res://autoloads/ui_layer.tscn"
 

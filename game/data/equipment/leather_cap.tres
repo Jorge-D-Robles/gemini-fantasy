@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EquipmentData" load_steps=2 format=3 uid="uid://bleather_cap"]
+
+[ext_resource type="Script" path="res://resources/equipment_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"leather_cap"
+display_name = "Leather Cap"
+description = "A simple cap offering light head protection."
+slot_type = 1
+weapon_type = 0
+defense_bonus = 3
+resistance_bonus = 1
+buy_price = 60
+sell_price = 30
