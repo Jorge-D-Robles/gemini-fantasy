@@ -5,7 +5,7 @@ tools:
   - read_file
   - glob
   - grep_search
-model: gemini-2.0-flash
+model: gemini-3-pro-preview
 ---
 
 # Godot Documentation RAG Agent
