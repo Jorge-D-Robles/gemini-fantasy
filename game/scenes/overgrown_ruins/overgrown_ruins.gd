@@ -10,25 +10,62 @@ const MEMORY_BLOOM_PATH: String = "res://data/enemies/memory_bloom.tres"
 const CREEPING_VINE_PATH: String = "res://data/enemies/creeping_vine.tres"
 const KAEL_DATA_PATH: String = "res://data/characters/kael.tres"
 
+# Source 0: FAIRY_FOREST_A5_A (opaque ground tiles)
+# Source 1: RUINS_A5 (ruins2 — opaque golden walls)
+# Source 2: OVERGROWN_RUINS_OBJECTS (B-sheet — objects)
+
+# Ground layer — gray stone fill (fairy forest source 0, row 10 = opaque)
 const GROUND_LEGEND: Dictionary = {
-	"F": Vector2i(0, 0),   # Mossy stone floor
-	"D": Vector2i(0, 2),   # Vine-covered floor
+	"F": Vector2i(0, 10),  # Gray stone floor (confirmed opaque)
 }
 
+# Ground detail — ornate golden floor (ruins2 source 1)
+const DETAIL_LEGEND: Dictionary = {
+	"O": Vector2i(0, 2),   # Ornate golden floor tile
+}
+
+# Ground debris — small rubble from B-sheet (source 2, on GroundDetail)
+const DEBRIS_LEGEND: Dictionary = {
+	"p": Vector2i(0, 2),   # Small pebbles
+	"r": Vector2i(1, 2),   # Scattered rocks
+}
+
+# Wall layer — structural walls (ruins2 source 1)
 const WALL_LEGEND: Dictionary = {
-	"W": Vector2i(0, 8),   # Dark brown wall
-	"G": Vector2i(0, 4),   # Ornamental border
+	"W": Vector2i(0, 4),   # Golden Egyptian wall (opaque)
+	"G": Vector2i(0, 8),   # Dark ornamental border (opaque)
 }
 
+# Objects layer — B-sheet ruins objects (source 2)
+const OBJECTS_LEGEND: Dictionary = {
+	"a": Vector2i(2, 0),   # Carved stone block
+	"b": Vector2i(0, 4),   # Green bush
+	"c": Vector2i(4, 0),   # Dark carved ornament
+	"d": Vector2i(0, 0),   # Stone rubble
+	"e": Vector2i(1, 4),   # Green bush variant
+	"f": Vector2i(3, 0),   # Small rubble piece
+	"1": Vector2i(4, 2),   # Teal face top-left
+	"2": Vector2i(5, 2),   # Teal face top-center
+	"3": Vector2i(6, 2),   # Teal face top-right
+	"4": Vector2i(4, 3),   # Teal face bottom-left
+	"5": Vector2i(5, 3),   # Teal face bottom-center
+	"6": Vector2i(6, 3),   # Teal face bottom-right
+	"7": Vector2i(8, 2),   # Gold face top-left
+	"8": Vector2i(9, 2),   # Gold face top-right
+	"9": Vector2i(8, 3),   # Gold face bottom-left
+	"0": Vector2i(9, 3),   # Gold face bottom-right
+}
+
+# 40 cols x 24 rows — uniform mossy stone fill (no empty tiles)
 const GROUND_MAP: Array[String] = [
 	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
 	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
 	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-	"FFFFFFFFFFFFFFFFFFDDDDDDDDDDDDDDFFFFFFFF",
-	"FFFFFFFFFFFFFFFFFFDDDDDDDDDDDDDDFFFFFFFF",
-	"FFFFFFFFFFFFFFFFFFDDDDDDDDDDDDDDFFFFFFFF",
-	"FFFFFFFFFFFFFFFFFFDDDDDDDDDDDDDDFFFFFFFF",
-	"FFFFFFFFFFFFFFFFFFDDDDDDDDDDDDDDFFFFFFFF",
+	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
 	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
 	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
 	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
@@ -47,35 +84,122 @@ const GROUND_MAP: Array[String] = [
 	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
 ]
 
+# Ornate golden floor accents — ruins2 decorative tiles in key areas
+const DETAIL_MAP: Array[String] = [
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"                 OOOOOOOOOOOO           ",
+	"                 OOOOOOOOOOOO           ",
+	"                 OOOOOOOOOOOO           ",
+	"                 OOOOOOOOOOOO           ",
+	"                                        ",
+	"                                        ",
+	"   OOO                          OOO     ",
+	"   OO                            OO     ",
+	"                                        ",
+	"                                        ",
+	"   OO                            OO     ",
+	"   OOO                          OOO     ",
+	"                                        ",
+	"  OOO                            OOO    ",
+	"  OO                              OO    ",
+	"                                        ",
+	"                                        ",
+	"  OO                              OO    ",
+	"  OOO                            OOO    ",
+	"                                        ",
+	"                                        ",
+]
+
+# Small scattered debris from B-sheet (on GroundDetail layer)
+const DEBRIS_MAP: Array[String] = [
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"                  r        p            ",
+	"                      p        r        ",
+	"                                        ",
+	"                  p        r            ",
+	"                                        ",
+	"                                        ",
+	"       p                           r    ",
+	"               r           p            ",
+	"         p                       r      ",
+	"     r                 p                ",
+	"               p           r            ",
+	"       r                           p    ",
+	"                                        ",
+	"     p                           r      ",
+	"                                        ",
+	"             p                r         ",
+	"                                        ",
+	"     r                           p      ",
+	"          p                r            ",
+	"                                        ",
+	"                                        ",
+]
+
+# Sacred Chamber (north), Main Corridor (center), South Gallery
 const WALL_MAP: Array[String] = [
 	"WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
 	"WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
-	"WW                                    WW",
-	"WW    WWWW        GGGGGGGGGGGGGG      WW",
-	"WW    WWWW        GG          GG      WW",
-	"WW                GG          GG      WW",
-	"WW    WWWW        GG          GG      WW",
-	"WW    WWWW        GGGGGG  GGGGGG      WW",
-	"WW                                    WW",
+	"WWWWWWWWWWWWWWWWGG            GGWWWWWWWW",
+	"WWWWWWWWWWWWWWWWG              GWWWWWWWW",
+	"WWWWWWWWWWWWWWWWG              GWWWWWWWW",
+	"WWWWWWWWWWWWWWWWG              GWWWWWWWW",
+	"WWWWWWWWWWWWWWWWG              GWWWWWWWW",
+	"WWWWWWWWWWWWWWWWGG            GGWWWWWWWW",
+	"WWWWWWWWWWWWWWWWWWWW      WWWWWWWWWWWWWW",
+	"WW        WWWWWWWWWW      WWWWWWWW    WW",
 	"WW                                    WW",
 	"WW                                      ",
 	"WW                                      ",
-	"WW                                      ",
-	"WW                                      ",
 	"WW                                    WW",
-	"WW    WWWWWWWWWW      WWWWWWWWWWWW    WW",
-	"WW          WWWW              WWWW    WW",
-	"WW          WWWW              WWWW    WW",
-	"WW          WWWW              WWWW    WW",
-	"WW          WWWW              WWWW    WW",
+	"WW        WWWWWWWWWW      WWWWWWWW    WW",
+	"WWWW    WWWWWWWWWWWWWW  WWWWWWWWWW  WWWW",
+	"WW                                    WW",
+	"WW          WW              WW        WW",
+	"WW                                    WW",
+	"WW          WW              WW        WW",
 	"WW                                    WW",
 	"WW                                    WW",
 	"WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
 	"WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
 ]
 
+# B-sheet objects: face statues, stone blocks, bushes, vegetation (source 1)
+const OBJECTS_MAP: Array[String] = [
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"                  d    123    f         ",
+	"                       456              ",
+	"                  f              d      ",
+	"                       a                ",
+	"                                        ",
+	"                                        ",
+	"     d  f                         f d   ",
+	"   b       e                  e    b    ",
+	"      f                          f      ",
+	"                   f                    ",
+	"   e       b                  b    e    ",
+	"     d  f                         f d   ",
+	"                                        ",
+	"   b  f                          f  b   ",
+	"         a    e            a         e  ",
+	"      d          78              f      ",
+	"         c    f  90    b      c      d  ",
+	"   e                            e       ",
+	"   b  f    d                  d  f  b   ",
+	"                                        ",
+	"                                        ",
+]
+
 @onready var _ground_layer: TileMapLayer = $Ground
+@onready var _ground_detail_layer: TileMapLayer = $GroundDetail
 @onready var _walls_layer: TileMapLayer = $Walls
+@onready var _objects_layer: TileMapLayer = $Objects
 @onready var _player: CharacterBody2D = $Entities/Player
 @onready var _spawn_point: Marker2D = $Entities/SpawnPoint
 @onready var _encounter_system: EncounterSystem = $EncounterSystem
@@ -128,9 +252,13 @@ func _ready() -> void:
 
 
 func _setup_tilemap() -> void:
-	var atlas_paths: Array[String] = [MapBuilder.OVERGROWN_RUINS_A5]
+	var atlas_paths: Array[String] = [
+		MapBuilder.FAIRY_FOREST_A5_A,
+		MapBuilder.RUINS_A5,
+		MapBuilder.OVERGROWN_RUINS_OBJECTS,
+	]
 	var solid: Dictionary = {
-		0: [
+		1: [
 			Vector2i(0, 4), Vector2i(1, 4), Vector2i(2, 4), Vector2i(3, 4),
 			Vector2i(4, 4), Vector2i(5, 4), Vector2i(6, 4), Vector2i(7, 4),
 			Vector2i(0, 5), Vector2i(1, 5), Vector2i(2, 5), Vector2i(3, 5),
@@ -140,14 +268,32 @@ func _setup_tilemap() -> void:
 			Vector2i(0, 9), Vector2i(1, 9), Vector2i(2, 9), Vector2i(3, 9),
 			Vector2i(4, 9), Vector2i(5, 9), Vector2i(6, 9), Vector2i(7, 9),
 		],
+		2: [
+			Vector2i(0, 0), Vector2i(2, 0), Vector2i(4, 0),
+			Vector2i(0, 4), Vector2i(1, 4),
+			Vector2i(4, 2), Vector2i(5, 2), Vector2i(6, 2),
+			Vector2i(4, 3), Vector2i(5, 3), Vector2i(6, 3),
+			Vector2i(8, 2), Vector2i(9, 2),
+			Vector2i(8, 3), Vector2i(9, 3),
+		],
 	}
 	MapBuilder.apply_tileset(
-		[_ground_layer, _walls_layer] as Array[TileMapLayer],
+		[_ground_layer, _ground_detail_layer, _walls_layer,
+		_objects_layer] as Array[TileMapLayer],
 		atlas_paths,
 		solid,
 	)
-	MapBuilder.build_layer(_ground_layer, GROUND_MAP, GROUND_LEGEND)
-	MapBuilder.build_layer(_walls_layer, WALL_MAP, WALL_LEGEND)
+	MapBuilder.build_layer(_ground_layer, GROUND_MAP, GROUND_LEGEND, 0)
+	MapBuilder.build_layer(
+		_ground_detail_layer, DETAIL_MAP, DETAIL_LEGEND, 1
+	)
+	MapBuilder.build_layer(
+		_ground_detail_layer, DEBRIS_MAP, DEBRIS_LEGEND, 2
+	)
+	MapBuilder.build_layer(_walls_layer, WALL_MAP, WALL_LEGEND, 1)
+	MapBuilder.build_layer(
+		_objects_layer, OBJECTS_MAP, OBJECTS_LEGEND, 2
+	)
 
 
 func _setup_camera_limits() -> void:
