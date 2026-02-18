@@ -1,117 +1,145 @@
-# Scene Asset Reference
+# game/scenes/
 
-Reference for which Time Fantasy assets each scene uses and why.
-Consult this before modifying any scene to maintain visual consistency.
+Overworld area scenes — each is a self-contained playable location.
+See root `CLAUDE.md` for project-wide conventions and tilemap rules.
 
-## Overgrown Ruins (`overgrown_ruins/`)
+## Scene Index
+
+| Directory | Scene | Type | Description |
+|-----------|-------|------|-------------|
+| `overgrown_ruins/` | `overgrown_ruins.tscn` | Dungeon/ruins | Game start — Lyra discovery, Memory Bloom encounters |
+| `verdant_forest/` | `verdant_forest.tscn` | Overworld forest | Connects ruins <-> town, Iris recruitment, 6-enemy pool |
+| `roothollow/` | `roothollow.tscn` | Town hub | Safe zone, NPCs, Garrick recruitment, no encounters |
+
+## Standard Scene Pattern
+
+**Script:** `extends Node2D` (no `class_name`)
+
+**Node tree layout:**
+```
+AreaName (Node2D)
+  Ground (TileMapLayer)
+  [GroundDetail] (TileMapLayer)
+  [Paths / Walls / Trees / Objects / AbovePlayer] (TileMapLayer)
+  EncounterSystem          # random encounters (combat areas only)
+  [EventNode]              # recruitment/sequence node
+  Entities (Node2D)
+    Player (CharacterBody2D)   # instance of entities/player/player.tscn
+    SpawnFrom* (Marker2D)      # one per entry point; added to named group in _ready()
+    [NPCName] (StaticBody2D)   # NPC instances
+  Triggers (Node2D)
+    ExitTo* (Area2D)           # scene transition triggers
+    [EventZone] (Area2D)       # story event activation zones
+```
+
+**`_ready()` responsibilities:**
+1. Call `_setup_tilemap()` — applies atlas and fills layers via `MapBuilder`
+2. Set `UILayer.hud.location_name = "Scene Name"`
+3. Add spawn `Marker2D` nodes to groups
+4. Connect `body_entered` on trigger `Area2D` nodes
+5. Build encounter pool and call `_encounter_system.setup(pool)` (combat areas)
+6. Gate story events via `EventFlags.has_flag()`
+
+## Tilemap Setup Pattern
+
+```gdscript
+const GROUND_LEGEND: Dictionary = { "G": Vector2i(col, row), ... }
+const GROUND_MAP: Array[String] = [ "GGGG...", ... ]
+
+func _setup_tilemap() -> void:
+    var atlas_paths: Array[String] = [MapBuilder.FAIRY_FOREST_A5_A]
+    MapBuilder.apply_tileset(layers, atlas_paths, solid)
+    MapBuilder.build_layer(_ground, GROUND_MAP, GROUND_LEGEND)
+    MapBuilder.build_layer(_trees, TREE_MAP, TREE_LEGEND, 1)  # source_id=1 for B-sheet
+```
+
+- Source 0 = A5 sheet (terrain), Source 1+ = B sheets (objects — pass `source_id`)
+- Solid tiles declared in `solid: Dictionary = { source_id: [Vector2i, ...] }`
+
+## Scene Details
+
+### overgrown_ruins/
 
 **Theme:** Ancient golden ruins overgrown with vegetation. Starting area.
-
-**Atlas Sources (3):**
-
-| Source ID | MapBuilder Constant | Asset | Pack Origin | Purpose |
-|-----------|-------------------|-------|-------------|---------|
-| 0 | `FAIRY_FOREST_A5_A` | `tf_ff_tileA5_a.png` | `tf_fairyforest_12.28.20/1x/` | Opaque ground tiles (row 10 gray stone) |
-| 1 | `RUINS_A5` | `tf_A5_ruins2.png` | `tf_ruindungeons/16/` | Golden Egyptian walls (rows 4-5), dark borders (rows 8-9), ornate floor (row 2) |
-| 2 | `OVERGROWN_RUINS_OBJECTS` | `tf_B_ruins3.png` | `tf_ruindungeons/16/` | B-sheet objects: face statues, stone blocks, bushes, rubble |
-
-**Key Tile Choices:**
-
-| Layer | Source | Tile | Notes |
-|-------|--------|------|-------|
-| Ground (z=-2) | 0 | `(0, 10)` gray stone | Fairy Forest A5_A — fully opaque. Ruins3 A5 tiles are semi-transparent and CANNOT be used as ground. |
-| GroundDetail (z=-1) | 1 | `(0, 2)` ornate gold | Ruins2 decorative floor in sacred chamber and corridors |
-| GroundDetail (z=-1) | 2 | `(0,2)` pebbles, `(1,2)` rocks | B-sheet debris scattered on floor |
-| Walls (z=0) | 1 | `(0, 4)` golden wall, `(0, 8)` dark border | Ruins2 rows 4-5 and 8-9 are fully opaque |
-| Objects (z=0) | 2 | Face statues, bushes, stones | See OBJECTS_LEGEND in script |
-
-**B-Sheet Objects (source 2):**
-- Teal face statue: 3x2 tiles at `(4-6, 2-3)` — sacred chamber
-- Gold face statue: 2x2 tiles at `(8-9, 2-3)` — south gallery
-- Green bushes: `(0,4)` and `(1,4)` — two variants
-- Stone rubble: `(0,0)`, `(2,0)`, `(3,0)`, `(4,0)` — corridors
-
-**Critical:** Ruins3 A5 tiles are TRANSPARENT overlays. Ruins2 rows 0-3 are also semi-transparent. Only Fairy Forest A5_A provides reliable opaque ground for all scenes.
-
 **Map:** 40 cols x 24 rows (640x384 px)
 
----
+**Atlas Sources:**
 
-## Verdant Forest (`verdant_forest/`)
+| Source | Constant | Asset | Purpose |
+|--------|----------|-------|---------|
+| 0 | `FAIRY_FOREST_A5_A` | `tf_ff_tileA5_a.png` | Opaque ground (row 10 gray stone) |
+| 1 | `RUINS_A5` | `tf_A5_ruins2.png` | Golden walls (rows 4-5), dark borders (rows 8-9), ornate floor (row 2) |
+| 2 | `OVERGROWN_RUINS_OBJECTS` | `tf_B_ruins3.png` | B-sheet: face statues, stone blocks, bushes, rubble |
+
+**Critical:** Ruins3 A5 tiles are TRANSPARENT overlays. Only Fairy Forest A5_A provides opaque ground.
+
+**Encounters:** Memory Bloom (common), Creeping Vine (uncommon), mixed
+**Story:** `OpeningSequence` triggered by `LyraDiscoveryZone` — guarded by `EventFlags`
+**Init:** Adds Kael to `PartyManager` if roster is empty (game start)
+**Autoloads:** GameManager, BattleManager, DialogueManager, EventFlags, UILayer, PartyManager, MapBuilder
+
+### verdant_forest/
 
 **Theme:** Lush enchanted forest with clearings, dirt path, dense tree borders.
-
-**Atlas Sources (4):**
-
-| Source ID | MapBuilder Constant | Asset | Pack Origin | Purpose |
-|-----------|-------------------|-------|-------------|---------|
-| 0 | `FAIRY_FOREST_A5_A` | `tf_ff_tileA5_a.png` | `tf_fairyforest_12.28.20/1x/` | Ground (row 8), paths (row 4) |
-| 1 | `FOREST_OBJECTS` | `tf_ff_tileB_forest.png` | `tf_fairyforest_12.28.20/1x/` | Tree canopy fill, canopy overhang, foliage details |
-| 2 | `STONE_OBJECTS` | `tf_ff_tileB_stone.png` | `tf_fairyforest_12.28.20/1x/` | Rocks, pebbles, orange flowers in clearing |
-| 3 | `TREE_OBJECTS` | `tf_ff_tileB_trees.png` | `tf_fairyforest_12.28.20/1x/` | Reserved for individual tree objects |
-
-**Key Tile Choices:**
-
-| Layer | Source | Tile | Notes |
-|-------|--------|------|-------|
-| Ground | 0 | `(0, 8)` bright green | Row 8 = dense vegetation. Single-tile fill. |
-| Trees | 1 | `(1, 1)` canopy center | B_forest solid green — blocks movement |
-| Paths | 0 | `(0, 4)` amber cobble | Row 4 = golden path. Single-tile fill. |
-| Detail | 1 | `(0, 8)`, `(2, 8)` foliage | B_forest small ground plants |
-| Objects | 2 | Rows 0-1: rocks, flowers | B_stone scattered in clearing |
-| AbovePlayer | 1 | `(1, 1)` canopy | Same canopy tile, 1 row inside tree border for depth overhang |
-
 **Map:** 40 cols x 24 rows (640x384 px)
 
----
+**Atlas Sources:**
 
-## Roothollow (`roothollow/`)
+| Source | Constant | Asset | Purpose |
+|--------|----------|-------|---------|
+| 0 | `FAIRY_FOREST_A5_A` | `tf_ff_tileA5_a.png` | Ground (row 8), paths (row 4) |
+| 1 | `FOREST_OBJECTS` | `tf_ff_tileB_forest.png` | Tree canopy, foliage details |
+| 2 | `STONE_OBJECTS` | `tf_ff_tileB_stone.png` | Rocks, flowers in clearing |
+| 3 | `TREE_OBJECTS` | `tf_ff_tileB_trees.png` | Individual tree objects |
 
-**Theme:** Cozy fairy forest village — safe town hub with natural forest border.
+**Layers:** Ground, GroundDetail, Trees, Paths, Objects, AbovePlayer
+**Encounters:** 10 entries — creeping_vine, ash_stalker, hollow_specter, ancient_sentinel, gale_harpy, ember_hound + mixed
+**Story:** `IrisRecruitment` triggered by `IrisEventZone` — disables encounters during sequence
+**Transitions:** ExitToRuins -> overgrown_ruins (`spawn_from_forest`); ExitToTown -> roothollow (`spawn_from_forest`)
 
-**Atlas Sources (4):**
+### roothollow/
 
-| Source ID | MapBuilder Constant | Asset | Pack Origin | Purpose |
-|-----------|-------------------|-------|-------------|---------|
-| 0 | `FAIRY_FOREST_A5_A` | `tf_ff_tileA5_a.png` | `tf_fairyforest_12.28.20/1x/` | Ground (row 8), paths (row 10), details (row 14) |
-| 1 | `MUSHROOM_VILLAGE` | `tf_ff_tileB_mushroomvillage.png` | `tf_fairyforest_12.28.20/1x/` | Small mushroom decorations near buildings |
-| 2 | `FOREST_OBJECTS` | `tf_ff_tileB_forest.png` | `tf_fairyforest_12.28.20/1x/` | Forest canopy border around town perimeter |
-| 3 | `STONE_OBJECTS` | `tf_ff_tileB_stone.png` | `tf_fairyforest_12.28.20/1x/` | Small rocks and flowers in grass |
-
-**Key Tile Choices:**
-
-| Layer | Source | Tile | Notes |
-|-------|--------|------|-------|
-| Ground | 0 | `(0, 8)` bright green | Row 8 = dense vegetation. Single-tile fill. |
-| Paths | 0 | `(0, 10)` gray stone | Row 10 = stone walkway. Single-tile fill. |
-| Detail | 0 | Row 14 flowers/bushes | 4 variants `(0-3, 14)` sparse at 10-12% coverage |
-| TreesBorder | 2 | `(1, 1)` canopy center | Irregular-thickness forest border from `_BORDER_SPEC`, gap on west for exit |
-| Decorations | 1, 3 | Mushrooms + rocks | Small accents near buildings and in grass |
-
-**Building Sprites (Sprite2D, NOT tilemap):**
-
-| Building | Sprite | Pack Origin |
-|----------|--------|-------------|
-| Inn | `lodge_clean.png` | `tf_farmandfort/` (medieval farm/fort) |
-| Shop, Elder House | `hut.png` | `tf_fairyforest_12.28.20/1x/` (mushroom village) |
-| Trees (decorative) | `tree_small/medium/tall.png` | `tf_fairyforest_12.28.20/1x/` |
-| Signpost | `signpost.png` | `tf_fairyforest_12.28.20/1x/` |
-
-**NPC Sprites:** `npc_char1.png`, `npc_char2.png` from `npc-animations/rpgmaker/1/`
-
+**Theme:** Cozy fairy forest village — safe town hub.
 **Map:** 48 cols x 38 rows (768x608 px)
 
----
+**Atlas Sources:**
+
+| Source | Constant | Asset | Purpose |
+|--------|----------|-------|---------|
+| 0 | `FAIRY_FOREST_A5_A` | `tf_ff_tileA5_a.png` | Ground (row 8), paths (row 10), flowers (row 14) |
+| 1 | `MUSHROOM_VILLAGE` | `tf_ff_tileB_mushroomvillage.png` | Mushroom decorations |
+| 2 | `FOREST_OBJECTS` | `tf_ff_tileB_forest.png` | Forest canopy border |
+| 3 | `STONE_OBJECTS` | `tf_ff_tileB_stone.png` | Rocks, flowers |
+
+**Building Sprites (Sprite2D, NOT tilemap):** Inn=`lodge_clean.png`, Shop/Elder=`hut.png`
+**NPC Sprites:** `npc_char1.png`, `npc_char2.png` from `npc-animations/rpgmaker/1/`
+
+**No encounters** — safe town hub
+**NPCs:** Maren (innkeeper, heals party), Bram (shop), Elder Thessa, Wren, Garrick (pre-recruit), Lina
+**Flag-reactive dialogue:** 4 states based on EventFlags — `default` -> `opening_lyra_discovered` -> `iris_recruited` -> `garrick_recruited`
+**Story:** `GarrickRecruitment` — requires `opening_lyra_discovered` AND `iris_recruited` flags
+
+## Scene Transition Protocol
+
+All trigger handlers check three guards:
+
+```gdscript
+func _on_exit_entered(body: Node2D) -> void:
+    if not body.is_in_group("player"):    return
+    if GameManager.is_transitioning():    return
+    if DialogueManager.is_active():       return
+    if BattleManager.is_in_battle():      return  # combat areas only
+    GameManager.change_scene(TARGET_PATH, GameManager.FADE_DURATION, "spawn_group")
+```
 
 ## Cross-Scene Consistency Rules
 
-1. **Fairy Forest A5_A is the universal ground sheet.** All scenes use it. It has fully opaque tiles at every row.
-2. **Row 8 = bright green** (forest/town ground). **Row 10 = gray stone** (ruins ground, town paths). **Row 4 = amber cobble** (forest paths).
-3. **Ruins tiles stay in ruins scenes.** Golden Egyptian walls/objects break the fairy forest aesthetic.
-4. **Forest B-sheets stay in forest/town scenes.** Tree canopies don't fit indoor ruins.
-5. **Single-tile fills for ground and paths.** Never alternate A5 columns. One `Vector2i(col, row)` per fill.
-6. **B-sheet objects provide visual variety**, not A5 column mixing.
-7. **Mixing packs is OK** for different purposes — e.g., Inn uses `tf_farmandfort` lodge while the rest uses fairy forest.
+1. **Fairy Forest A5_A is the universal ground sheet** — fully opaque at every row
+2. **Row 8** = bright green (forest/town). **Row 10** = gray stone (ruins/paths). **Row 4** = amber cobble (forest paths)
+3. **Ruins tiles stay in ruins scenes** — golden walls break fairy forest aesthetic
+4. **Single-tile fills** — never alternate A5 columns
+5. **B-sheet objects provide visual variety**, not A5 column mixing
+6. **Mixing packs is OK** for different purposes (e.g., Inn uses `tf_farmandfort`)
 
 ## MapBuilder Constants Reference
 
@@ -131,3 +159,14 @@ RUINS_OBJECTS       = tf_B_ruins2.png             # Golden ruins objects
 OVERGROWN_RUINS_OBJECTS = tf_B_ruins3.png         # Overgrown ruins objects
 GIANT_TREE          = tf_B_gianttree_ext.png      # Giant tree exterior
 ```
+
+## Adding a New Scene
+
+1. Create `game/scenes/<name>/` with `<name>.tscn` + `<name>.gd`
+2. Root node: `Node2D`, script `extends Node2D`
+3. Add standard layers, `Entities/` subtree, `Triggers/` subtree
+4. Add spawn `Marker2D` nodes + register groups in `_ready()`
+5. Call `MapBuilder.apply_tileset()` + `MapBuilder.build_layer()` per layer
+6. Set `UILayer.hud.location_name`
+7. Wire triggers with the 3-guard pattern above
+8. Register in `GameManager` or link from existing scenes
