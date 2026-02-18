@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EquipmentData" load_steps=2 format=3 uid="uid://bcrystal_staff"]
+
+[ext_resource type="Script" path="res://resources/equipment_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"crystal_staff"
+display_name = "Crystal Staff"
+description = "A staff crowned with a Resonance crystal that amplifies magical energy and protects the mind."
+slot_type = 0
+weapon_type = 7
+magic_bonus = 6
+resistance_bonus = 3
+buy_price = 250
+sell_price = 125

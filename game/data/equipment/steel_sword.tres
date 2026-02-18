@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="EquipmentData" load_steps=2 format=3 uid="uid://bsteel_sword"]
+
+[ext_resource type="Script" path="res://resources/equipment_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"steel_sword"
+display_name = "Steel Sword"
+description = "A well-forged steel blade, sharper and sturdier than iron."
+slot_type = 0
+weapon_type = 1
+attack_bonus = 8
+buy_price = 200
+sell_price = 100

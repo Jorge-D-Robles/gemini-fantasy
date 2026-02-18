@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="EquipmentData" load_steps=2 format=3 uid="uid://biron_shield"]
+
+[ext_resource type="Script" path="res://resources/equipment_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"iron_shield"
+display_name = "Iron Shield"
+description = "A sturdy iron shield that blocks incoming blows."
+slot_type = 0
+weapon_type = 5
+defense_bonus = 4
+buy_price = 120
+sell_price = 60

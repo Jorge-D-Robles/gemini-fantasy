@@ -8,6 +8,7 @@ extends Node2D
 const VERDANT_FOREST_PATH: String = "res://scenes/verdant_forest/verdant_forest.tscn"
 const MEMORY_BLOOM_PATH: String = "res://data/enemies/memory_bloom.tres"
 const CREEPING_VINE_PATH: String = "res://data/enemies/creeping_vine.tres"
+const LAST_GARDENER_PATH: String = "res://data/enemies/last_gardener.tres"
 const KAEL_DATA_PATH: String = "res://data/characters/kael.tres"
 
 # Source 0: FAIRY_FOREST_A5_A (opaque ground tiles)
@@ -207,6 +208,8 @@ const OBJECTS_MAP: Array[String] = [
 @onready var _exit_to_forest: Area2D = $Triggers/ExitToForest
 @onready var _lyra_zone: Area2D = $Triggers/LyraDiscoveryZone
 @onready var _spawn_from_forest: Marker2D = $Entities/SpawnFromForest
+@onready var _boss_zone: Area2D = $Triggers/BossZone
+@onready var _boss_encounter: BossEncounter = $BossEncounter
 
 
 func _ready() -> void:
@@ -233,6 +236,15 @@ func _ready() -> void:
 	# Connect triggers
 	_exit_to_forest.body_entered.connect(_on_exit_to_forest_entered)
 	_lyra_zone.body_entered.connect(_on_lyra_zone_entered)
+	_boss_zone.body_entered.connect(_on_boss_zone_entered)
+
+	# Hide Lyra discovery zone if already triggered
+	if EventFlags.has_flag(OpeningSequence.FLAG_NAME):
+		_lyra_zone.monitoring = false
+
+	# Hide boss zone if already defeated
+	if EventFlags.has_flag(BossEncounter.FLAG_NAME):
+		_boss_zone.monitoring = false
 
 	# Setup encounter system with ruins enemy pool
 	var memory_bloom := load(MEMORY_BLOOM_PATH) as Resource
@@ -330,10 +342,31 @@ func _on_lyra_zone_entered(body: Node2D) -> void:
 		return
 	if DialogueManager.is_active():
 		return
+	if GameManager.is_transitioning():
+		return
 	_encounter_system.enabled = false
+	_lyra_zone.monitoring = false
 	_opening_sequence.trigger()
 	await _opening_sequence.sequence_completed
 	_encounter_system.enabled = true
+
+
+func _on_boss_zone_entered(body: Node2D) -> void:
+	if not body.is_in_group("player"):
+		return
+	if EventFlags.has_flag(BossEncounter.FLAG_NAME):
+		return
+	if not EventFlags.has_flag(OpeningSequence.FLAG_NAME):
+		return
+	if BattleManager.is_in_battle():
+		return
+	if DialogueManager.is_active():
+		return
+	if GameManager.is_transitioning():
+		return
+	_encounter_system.enabled = false
+	_boss_zone.monitoring = false
+	_boss_encounter.trigger()
 
 
 func _on_encounter_triggered(enemy_group: Array[Resource]) -> void:

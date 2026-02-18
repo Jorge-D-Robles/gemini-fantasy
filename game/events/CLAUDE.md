@@ -10,6 +10,7 @@ Story event scripts — one-shot cutscenes, recruitments, and story triggers. Ea
 | `opening_sequence.gd` | `OpeningSequence` | Overgrown Ruins / LyraDiscoveryZone | `opening_lyra_discovered` |
 | `garrick_recruitment.gd` | `GarrickRecruitment` | Roothollow / Garrick NPC | `garrick_recruited` |
 | `iris_recruitment.gd` | `IrisRecruitment` | Verdant Forest | `iris_recruited` |
+| `boss_encounter.gd` | `BossEncounter` | Overgrown Ruins / BossZone | `boss_defeated` |
 
 > **Note:** `event_flags.gd` lives here but is registered as the `EventFlags` autoload in `project.godot`. See `game/autoloads/CLAUDE.md` for the autoload inventory.
 
@@ -59,8 +60,10 @@ func trigger() -> void:
 
 ### OpeningSequence
 - Kael discovers Lyra in the Overgrown Ruins
-- Pure dialogue only — no party changes, no battle
-- Scene should listen to `sequence_completed` to dismiss the trigger zone
+- 6-line dialogue introducing Lyra as a conscious Echo
+- After dialogue, Lyra joins the party via `PartyManager.add_character()`
+- Loads `res://data/characters/lyra.tres` — null-check in script
+- Scene disables `LyraDiscoveryZone.monitoring` after trigger and on revisit
 
 ### GarrickRecruitment
 - Garrick joins the party after the dialogue ends
@@ -74,6 +77,15 @@ func trigger() -> void:
 - Callback is `static` to survive scene changes (references only autoloads)
 - On defeat: `EventFlags.clear_flag(FLAG_NAME)` so the event re-triggers next visit
 - Loads `res://data/enemies/ash_stalker.tres` — falls back to skipping battle if null
+
+### BossEncounter
+- Scripted one-time boss fight against The Last Gardener
+- Requires `opening_lyra_discovered` flag (Lyra must be discovered first)
+- Pre-battle dialogue (4 lines), then forced battle with no escape
+- Uses `CONNECT_ONE_SHOT` on `BattleManager.battle_ended` (same pattern as Iris)
+- On victory: sets `boss_defeated` flag, awards 200 bonus gold, shows post-battle dialogue
+- On defeat: flag is NOT set — player can retry on next visit
+- Scene disables `BossZone.monitoring` on trigger and on revisit if flag is set
 
 ## Adding New Events
 

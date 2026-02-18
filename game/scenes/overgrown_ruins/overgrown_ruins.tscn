@@ -1,15 +1,19 @@
-[gd_scene load_steps=10 format=3 uid="uid://c4ruins000001"]
+[gd_scene load_steps=12 format=3 uid="uid://c4ruins000001"]
 
 [ext_resource type="Script" path="res://scenes/overgrown_ruins/overgrown_ruins.gd" id="1_ruins"]
 [ext_resource type="PackedScene" uid="uid://c4player00001" path="res://entities/player/player.tscn" id="2_player"]
 [ext_resource type="Script" path="res://systems/encounter/encounter_system.gd" id="4_encounter"]
 [ext_resource type="Script" path="res://events/opening_sequence.gd" id="5_opening"]
+[ext_resource type="Script" path="res://events/boss_encounter.gd" id="6_boss"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_exit"]
 size = Vector2(16, 64)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lyra"]
 size = Vector2(48, 48)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_boss"]
+size = Vector2(64, 48)
 
 [node name="OvergrownRuins" type="Node2D"]
 script = ExtResource("1_ruins")
@@ -65,4 +69,15 @@ script = ExtResource("4_encounter")
 
 [node name="OpeningSequence" type="Node" parent="."]
 script = ExtResource("5_opening")
+
+[node name="BossEncounter" type="Node" parent="."]
+script = ExtResource("6_boss")
+
+[node name="BossZone" type="Area2D" parent="Triggers"]
+position = Vector2(384, 64)
+collision_layer = 0
+collision_mask = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Triggers/BossZone"]
+shape = SubResource("RectangleShape2D_boss")
 

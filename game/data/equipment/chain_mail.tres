@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="EquipmentData" load_steps=2 format=3 uid="uid://bchain_mail"]
+
+[ext_resource type="Script" path="res://resources/equipment_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"chain_mail"
+display_name = "Chain Mail"
+description = "Interlocking metal rings provide solid protection without excessive weight."
+slot_type = 2
+weapon_type = 0
+defense_bonus = 6
+buy_price = 180
+sell_price = 90
