@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://bprecision_shot"]
+
+[ext_resource type="Script" path="res://resources/ability_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"precision_shot"
+display_name = "Precision Shot"
+description = "A carefully aimed shot that strikes a single enemy's weak point for high damage with increased critical chance."
+ee_cost = 14
+resonance_cost = 0.0
+damage_base = 160
+damage_stat = 0
+target_type = 0
+element = 0
+status_effect = ""
+status_chance = 0.0
+animation_name = "precision_shot"

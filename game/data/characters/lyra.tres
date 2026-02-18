@@ -1,0 +1,33 @@
+[gd_resource type="Resource" script_class="CharacterData" load_steps=5 format=3 uid="uid://blyra"]
+
+[ext_resource type="Script" path="res://resources/character_data.gd" id="1_script"]
+[ext_resource type="Resource" uid="uid://bmemory_strike" path="res://data/abilities/memory_strike.tres" id="2_memory_strike"]
+[ext_resource type="Resource" uid="uid://becho_mend" path="res://data/abilities/echo_mend.tres" id="3_echo_mend"]
+[ext_resource type="Resource" uid="uid://bresonance_shield" path="res://data/abilities/resonance_shield.tres" id="4_resonance_shield"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"lyra"
+display_name = "Lyra"
+description = "A conscious Echo — a pre-Severance scientist who exists as a fragmented entity. She channels ancient memories into powerful magic and healing."
+max_hp = 80
+max_ee = 60
+attack = 6
+magic = 14
+defense = 5
+resistance = 10
+speed = 8
+luck = 12
+hp_growth = 8.0
+ee_growth = 8.0
+attack_growth = 0.8
+magic_growth = 2.5
+defense_growth = 1.0
+resistance_growth = 2.0
+speed_growth = 1.2
+luck_growth = 1.5
+allowed_weapon_types = [7, 8]
+abilities = [ExtResource("2_memory_strike"), ExtResource("3_echo_mend"), ExtResource("4_resonance_shield")]
+portrait_path = "res://assets/portraits/lyra_portrait.png"
+sprite_path = ""
+battle_sprite_path = "res://assets/sprites/characters/battle/lyra_battle.png"

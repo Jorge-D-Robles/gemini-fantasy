@@ -295,6 +295,7 @@ func _ready() -> void:
 		_iris_zone.monitoring = false
 
 
+
 func _on_exit_to_ruins_entered(body: Node2D) -> void:
 	if not body.is_in_group("player"):
 		return
