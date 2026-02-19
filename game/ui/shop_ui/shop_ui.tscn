@@ -1,0 +1,186 @@
+[gd_scene load_steps=2 format=3 uid="uid://csh0pu1s2h3o4p"]
+
+[ext_resource type="Script" path="res://ui/shop_ui/shop_ui.gd" id="1_shop"]
+
+[node name="ShopUI" type="CanvasLayer"]
+layer = 25
+process_mode = 3
+script = ExtResource("1_shop")
+
+;; ========== DIM OVERLAY ==========
+[node name="DimOverlay" type="ColorRect" parent="."]
+unique_name_in_owner = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.6)
+
+;; ========== MAIN PANEL (centered) ==========
+[node name="MainPanel" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -280.0
+offset_top = -140.0
+offset_right = 280.0
+offset_bottom = 140.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="MainPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+;; ----- HEADER ROW -----
+[node name="HeaderRow" type="HBoxContainer" parent="MainPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="ShopNameLabel" type="Label" parent="MainPanel/MarginContainer/VBoxContainer/HeaderRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.75, 1, 1)
+theme_override_font_sizes/font_size = 14
+text = "Shop"
+
+[node name="Spacer" type="Control" parent="MainPanel/MarginContainer/VBoxContainer/HeaderRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="GoldLabel" type="Label" parent="MainPanel/MarginContainer/VBoxContainer/HeaderRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.75, 0.45, 1)
+theme_override_font_sizes/font_size = 12
+text = "0 G"
+horizontal_alignment = 2
+
+;; ----- HEADER SEPARATOR -----
+[node name="HSeparator1" type="HSeparator" parent="MainPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+;; ----- TAB ROW -----
+[node name="TabRow" type="HBoxContainer" parent="MainPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="BuyTab" type="Button" parent="MainPanel/MarginContainer/VBoxContainer/TabRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "Buy"
+
+[node name="SellTab" type="Button" parent="MainPanel/MarginContainer/VBoxContainer/TabRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "Sell"
+
+;; ----- CONTENT ROW -----
+[node name="ContentRow" type="HBoxContainer" parent="MainPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+;; --- LEFT: Item List ---
+[node name="LeftPanel" type="VBoxContainer" parent="MainPanel/MarginContainer/VBoxContainer/ContentRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.2
+
+[node name="ItemScroll" type="ScrollContainer" parent="MainPanel/MarginContainer/VBoxContainer/ContentRow/LeftPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ItemList" type="VBoxContainer" parent="MainPanel/MarginContainer/VBoxContainer/ContentRow/LeftPanel/ItemScroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 2
+
+;; --- SEPARATOR ---
+[node name="VSeparator" type="VSeparator" parent="MainPanel/MarginContainer/VBoxContainer/ContentRow"]
+layout_mode = 2
+
+;; --- RIGHT: Detail Panel ---
+[node name="DetailPanel" type="PanelContainer" parent="MainPanel/MarginContainer/VBoxContainer/ContentRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(180, 0)
+
+[node name="DetailMargin" type="MarginContainer" parent="MainPanel/MarginContainer/VBoxContainer/ContentRow/DetailPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 6
+
+[node name="DetailVBox" type="VBoxContainer" parent="MainPanel/MarginContainer/VBoxContainer/ContentRow/DetailPanel/DetailMargin"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="ItemNameLabel" type="Label" parent="MainPanel/MarginContainer/VBoxContainer/ContentRow/DetailPanel/DetailMargin/DetailVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.55, 0.7, 1)
+theme_override_font_sizes/font_size = 12
+text = "Select an item"
+
+[node name="HSeparator" type="HSeparator" parent="MainPanel/MarginContainer/VBoxContainer/ContentRow/DetailPanel/DetailMargin/DetailVBox"]
+layout_mode = 2
+
+[node name="ItemDescLabel" type="RichTextLabel" parent="MainPanel/MarginContainer/VBoxContainer/ContentRow/DetailPanel/DetailMargin/DetailVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 40)
+theme_override_colors/default_color = Color(0.6, 0.55, 0.7, 1)
+theme_override_font_sizes/normal_font_size = 9
+fit_content = true
+
+[node name="StatsList" type="VBoxContainer" parent="MainPanel/MarginContainer/VBoxContainer/ContentRow/DetailPanel/DetailMargin/DetailVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="PriceLabel" type="Label" parent="MainPanel/MarginContainer/VBoxContainer/ContentRow/DetailPanel/DetailMargin/DetailVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.75, 0.45, 1)
+theme_override_font_sizes/font_size = 11
+
+;; ----- BOTTOM SEPARATOR -----
+[node name="HSeparator2" type="HSeparator" parent="MainPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+;; ----- BOTTOM ROW -----
+[node name="BottomRow" type="HBoxContainer" parent="MainPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 2
+
+[node name="ActionButton" type="Button" parent="MainPanel/MarginContainer/VBoxContainer/BottomRow"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "Buy"
+
+[node name="CloseButton" type="Button" parent="MainPanel/MarginContainer/VBoxContainer/BottomRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "Close"

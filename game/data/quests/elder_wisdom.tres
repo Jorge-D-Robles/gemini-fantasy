@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="QuestData" load_steps=2 format=3 uid="uid://belder_wisdom"]
+
+[ext_resource type="Script" path="res://resources/quest_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"elder_wisdom"
+title = "Echoes of the Past"
+description = "Elder Thessa believes an Echo Fragment at the old village memorial holds memories of Roothollow's founding. She wants Kael to retrieve it."
+objectives = ["Find the memorial Echo in the Verdant Forest", "Bring the Echo to Elder Thessa"]
+reward_gold = 100
+reward_exp = 50
+reward_item_ids = [&"speed_ring"]
+quest_type = 1
+prerequisites = []

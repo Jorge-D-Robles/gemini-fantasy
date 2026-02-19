@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ShopData" load_steps=2 format=3 uid="uid://broothollow_general"]
+
+[ext_resource type="Script" path="res://resources/shop_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+shop_id = &"roothollow_general"
+shop_name = "Bram's General Store"
+item_paths = Array[String](["res://data/items/potion.tres", "res://data/items/ether.tres", "res://data/items/antidote.tres", "res://data/equipment/iron_sword.tres", "res://data/equipment/leather_vest.tres", "res://data/equipment/leather_cap.tres"])
+buy_price_modifier = 1.0
+sell_price_modifier = 0.5

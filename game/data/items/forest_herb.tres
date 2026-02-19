@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3 uid="uid://bforest_herb"]
+
+[ext_resource type="Script" path="res://resources/item_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"forest_herb"
+display_name = "Forest Herb"
+description = "A yellow-petaled herb that grows near forest streams. Maren uses these to brew healing salves."
+item_type = 2
+effect_type = 0
+effect_value = 0
+target_type = 0
+buy_price = 10
+sell_price = 5
+max_stack = 99
+icon_path = ""
+usable_in_battle = false

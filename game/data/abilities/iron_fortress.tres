@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://biron_fortress"]
+
+[ext_resource type="Script" path="res://resources/ability_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"iron_fortress"
+display_name = "Iron Fortress"
+description = "Raises a shield wall that boosts the entire party's defense for 3 turns."
+ee_cost = 18
+resonance_cost = 0.0
+damage_base = 0
+damage_stat = 0
+target_type = 3
+element = 0
+status_effect = "defense_up"
+status_chance = 1.0
+status_effect_duration = 3
+animation_name = "iron_fortress"

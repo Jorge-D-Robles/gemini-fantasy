@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=5 format=3 uid="uid://blast_gardener"]
+
+[ext_resource type="Script" path="res://resources/enemy_data.gd" id="1_script"]
+[ext_resource type="Resource" uid="uid://bvine_lash" path="res://data/abilities/vine_lash.tres" id="2_vine_lash"]
+[ext_resource type="Resource" uid="uid://bcrystal_bloom" path="res://data/abilities/crystal_bloom.tres" id="3_crystal_bloom"]
+[ext_resource type="Resource" uid="uid://bphotosynthesis" path="res://data/abilities/photosynthesis.tres" id="4_photosynthesis"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"last_gardener"
+display_name = "The Last Gardener"
+description = "An Echo of the city's former caretaker, now monstrous and corrupted by crystal growth. Vines and crystalline blooms erupt from its twisted form."
+max_hp = 350
+max_ee = 100
+attack = 18
+magic = 22
+defense = 12
+resistance = 14
+speed = 8
+luck = 10
+abilities = [ExtResource("2_vine_lash"), ExtResource("3_crystal_bloom"), ExtResource("4_photosynthesis")]
+ai_type = 4
+exp_reward = 150
+gold_reward = 100
+weaknesses = [1]
+resistances = [5, 3]
+sprite_path = "res://assets/sprites/enemies/last_gardener.png"
+sprite_columns = 1
+sprite_rows = 1
+battle_scale = 1.0
+loot_table = [{"item_id": "resonance_tonic", "drop_chance": 0.5}]

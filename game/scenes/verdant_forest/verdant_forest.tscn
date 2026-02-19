@@ -1,9 +1,12 @@
-[gd_scene load_steps=11 format=3 uid="uid://c4forest00001"]
+[gd_scene load_steps=15 format=3 uid="uid://c4forest00001"]
 
 [ext_resource type="Script" path="res://scenes/verdant_forest/verdant_forest.gd" id="1_forest"]
 [ext_resource type="PackedScene" uid="uid://c4player00001" path="res://entities/player/player.tscn" id="2_player"]
 [ext_resource type="Script" path="res://systems/encounter/encounter_system.gd" id="4_encounter"]
 [ext_resource type="Script" path="res://events/iris_recruitment.gd" id="5_iris"]
+[ext_resource type="PackedScene" uid="uid://c4interact001" path="res://entities/interactable/interactable.tscn" id="6_interact"]
+[ext_resource type="Script" path="res://entities/interactable/strategies/memorial_echo_strategy.gd" id="7_memorial"]
+[ext_resource type="Texture2D" path="res://assets/sprites/buildings/signpost.png" id="8_signpost"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_exit_ruins"]
 size = Vector2(16, 64)
@@ -13,6 +16,10 @@ size = Vector2(16, 64)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_iris"]
 size = Vector2(48, 48)
+
+[sub_resource type="Resource" id="memorial_echo_strat"]
+script = ExtResource("7_memorial")
+text = "A weathered memorial stone, etched with the names of Roothollow's founders."
 
 [node name="VerdantForest" type="Node2D"]
 script = ExtResource("1_forest")
@@ -43,27 +50,36 @@ z_index = 2
 [node name="Entities" type="Node2D" parent="."]
 
 [node name="Player" parent="Entities" instance=ExtResource("2_player")]
-position = Vector2(80, 180)
+position = Vector2(48, 176)
 
 [node name="Camera2D" parent="Entities/Player" index="3"]
 limit_left = 0
 limit_top = 0
 limit_right = 640
-limit_bottom = 384
+limit_bottom = 400
 
 [node name="SpawnFromRuins" type="Marker2D" parent="Entities"]
-position = Vector2(80, 180)
+position = Vector2(48, 176)
 
 [node name="SpawnFromTown" type="Marker2D" parent="Entities"]
-position = Vector2(560, 180)
+position = Vector2(592, 176)
 
 [node name="IrisEventMarker" type="Marker2D" parent="Entities"]
 position = Vector2(320, 120)
 
+[node name="MemorialMarker" parent="Entities" instance=ExtResource("6_interact")]
+position = Vector2(176, 176)
+strategy = SubResource("memorial_echo_strat")
+one_time = false
+
+[node name="Sprite2D" type="Sprite2D" parent="Entities/MemorialMarker" index="1"]
+texture = ExtResource("8_signpost")
+texture_filter = 0
+
 [node name="Triggers" type="Node2D" parent="."]
 
 [node name="ExitToRuins" type="Area2D" parent="Triggers"]
-position = Vector2(16, 180)
+position = Vector2(24, 176)
 collision_layer = 0
 collision_mask = 1
 
@@ -71,7 +87,7 @@ collision_mask = 1
 shape = SubResource("RectangleShape2D_exit_ruins")
 
 [node name="ExitToTown" type="Area2D" parent="Triggers"]
-position = Vector2(624, 180)
+position = Vector2(616, 176)
 collision_layer = 0
 collision_mask = 1
 
@@ -91,4 +107,3 @@ script = ExtResource("4_encounter")
 
 [node name="IrisRecruitment" type="Node" parent="."]
 script = ExtResource("5_iris")
-
