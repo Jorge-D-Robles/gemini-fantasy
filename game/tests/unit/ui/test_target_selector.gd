@@ -1,9 +1,9 @@
 extends GutTest
 
-## Tests for BattleUI.compute_target_info() static method.
+## Tests for BattleUIStatus.compute_target_info() static method.
 ## Validates name extraction, color selection, and null safety.
 
-const BattleUI = preload("res://ui/battle_ui/battle_ui.gd")
+const BattleUI = preload("res://ui/battle_ui/battle_ui_status.gd")
 const UITheme = preload("res://ui/ui_theme.gd")
 const Helpers = preload("res://tests/helpers/test_helpers.gd")
 

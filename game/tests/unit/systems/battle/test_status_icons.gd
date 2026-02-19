@@ -5,7 +5,9 @@ extends GutTest
 
 const BattlerScript := preload("res://systems/battle/battler.gd")
 const UITheme := preload("res://ui/ui_theme.gd")
-const BattleUIScript := preload("res://ui/battle_ui/battle_ui.gd")
+const BattleUIScript := preload(
+	"res://ui/battle_ui/battle_ui_status.gd"
+)
 const Helpers := preload("res://tests/helpers/test_helpers.gd")
 
 var _battler: Node2D
