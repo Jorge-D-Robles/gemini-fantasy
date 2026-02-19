@@ -10,132 +10,142 @@ Design and build a tilemap for: **$ARGUMENTS**
 
 ultrathink
 
-## Step 1 — Search for JRPG Reference Images
+## CRITICAL: Visual-First Workflow
 
-**Before anything else**, search for visual reference from published JRPGs. This prevents the common trap of building a "tile grid" instead of a believable place.
+**You MUST see your work at every step.** Tilemap design without visual feedback produces garbage. The workflow is:
 
 ```
-WebSearch("JRPG pixel art <location-type> screenshot RPG Maker Time Fantasy")
+For EACH layer:
+  Write data → commit/push → /scene-preview --full-map → Read screenshot
+  → evaluate → fix if needed → repeat until it looks correct
+  → THEN move to next layer
 ```
 
-Search 2-3 queries for the type of scene you're building (town, forest, dungeon). Study how professional maps handle:
-- Building placement (staggered along roads, not in grid rows)
-- Tree clustering (natural groups with varied spacing)
-- Path flow (winding, varying width)
-- Ground terrain variety (grass, dirt, stone in organic patches)
-- Environmental storytelling details (barrels, signs, gardens, fences)
+**Never commit a final tilemap without capturing and evaluating a screenshot.**
 
-## Step 2 — Read Tilemap Best Practices
+## Step 1 — Search for Pixel Art Reference Images
 
-Read the tilemap and level design best practices:
+**Before anything else**, ground yourself in what good pixel art looks like. Do at least 3 web searches:
+
+**Scene reference:**
+```
+WebSearch("JRPG pixel art <location-type> screenshot RPG Maker")
+WebSearch("<location-type> tilemap pixel art top-down 16x16")
+```
+
+**Object reference (for each major object you'll place):**
+```
+WebSearch("pixel art tree top-down 16x16 RPG sprite")
+WebSearch("pixel art rock boulder tileset JRPG")
+WebSearch("pixel art <object-type> sprite top-down")
+```
+
+**Published game reference:**
+```
+WebSearch("Chrono Trigger <location> map screenshot")
+WebSearch("Final Fantasy 6 <location> pixel art")
+```
+
+Study the results. Note how trees, rocks, buildings, and terrain look in professional pixel art. You will compare your work against these references.
+
+## Step 2 — View the Tile Sheet PNGs (MANDATORY)
+
+**Read the actual PNG image files** before using any atlas coordinate. You can see images — use that ability.
+
+```
+Read("game/assets/tilesets/<tileset>.png")
+```
+
+For EACH tile sheet you plan to use:
+1. Read the PNG file
+2. Identify exactly what is at each coordinate you'll reference
+3. Write down what you actually see (not what the docs claim)
+4. If the docs say "pebbles" but you see a golden chest — trust your eyes
+
+**Never use an atlas coordinate you haven't visually confirmed.**
+
+## Step 3 — Read Tilemap Best Practices
 
 ```
 Read("docs/best-practices/11-tilemaps-and-level-design.md")
 ```
 
-## Step 3 — Research the Target Scene
+## Step 4 — Research the Target Scene
 
-1. **Read the scene script** to understand current tilemap setup, legends, map arrays, and functional code (transitions, encounters, events):
-   ```
-   Read("game/scenes/<scene_name>/<scene_name>.gd")
-   ```
-2. **Read the scene file** (`.tscn`) to understand node structure and TileMapLayer nodes:
-   ```
-   Read("game/scenes/<scene_name>/<scene_name>.tscn")
-   ```
-3. **Read the MapBuilder utility** to understand the API:
-   ```
-   Read("game/systems/map_builder.gd")
-   ```
-4. **Read the design doc** for the location:
-   ```
-   Read("docs/game-design/03-world-map-and-locations.md")
-   ```
+1. Read the scene script: `game/scenes/<scene_name>/<scene_name>.gd`
+2. Read the `.tscn` file for node structure
+3. Read `game/systems/map_builder.gd` for API
+4. Read `docs/game-design/03-world-map-and-locations.md` for location design
 
-## Step 4 — Check Available Tile Sheets
+## Step 5 — Design the Map as a Real Place
 
-1. **Read what's already in the project**:
-   ```
-   Glob("game/assets/tilesets/*.png")
-   ```
-2. **Check MapBuilder constants** for registered tile sheets
-3. **If more tile sheets are needed**, copy the ENTIRE pack from the asset directory (not just one file):
+**Describe the location in 5+ sentences before writing any code.** Then plan:
+
+1. **Ground:** 2-3 terrain types in organic irregular patches
+2. **Detail:** Sparse, intentional decorations (NOT percentage-based spam)
+3. **Paths:** Meandering, 2-3 tiles wide, with terrain transitions
+4. **Objects:** Multi-tile objects with 3-4 variants per type
+5. **Above-player:** Canopies/roofs for depth
+
+## Step 6 — Implement with Visual Verification After Each Layer
+
+**For EACH layer** (ground, detail, paths, trees, objects, above-player):
+
+1. Write the legend and map data
+2. Save the file
+3. Commit, push, and sync main repo:
    ```bash
-   cp /Users/robles/repos/games/assets/<pack>/tile*.png /Users/robles/repos/games/gemini-fantasy/game/assets/tilesets/
-   cp /Users/robles/repos/games/assets/<pack>/tile*.png <current-worktree>/game/assets/tilesets/
+   git add <file> && git commit -m "WIP: <layer> for <scene>"
+   git push -u origin <branch>
+   git -C /Users/robles/repos/games/gemini-fantasy pull
    ```
-   Or use `/copy-assets`. Always import all tile sheets from a pack so the full palette is available.
+4. Capture screenshot:
+   ```bash
+   timeout 30 /Applications/Godot.app/Contents/MacOS/Godot \
+     --path /Users/robles/repos/games/gemini-fantasy/game/ \
+     --rendering-driver opengl3 \
+     res://tools/scene_preview.tscn \
+     -- --preview-scene=res://scenes/<name>/<name>.tscn \
+        --output=/tmp/scene_preview.png --full-map 2>&1
+   ```
+5. Read and evaluate the screenshot:
+   ```
+   Read("/tmp/scene_preview.png")
+   ```
+6. Ask yourself:
+   - Does this layer look correct?
+   - Do the tiles look like what I expected from the PNG?
+   - Is there any repeating grid pattern?
+   - Does it approach the quality of my reference images?
+7. **Fix and re-screenshot if anything is wrong.** Do NOT proceed blind.
 
-## Step 5 — Look Up Godot Docs
+## Step 7 — Final Visual Quality Check
 
-Call the `godot-docs` subagent for tilemap-related classes:
-```
-Task(subagent_type="godot-docs", prompt="Look up TileMapLayer. I need set_cell, local_to_map, z_index, collision_enabled properties. Also look up TileSetAtlasSource for creating atlas sources programmatically.")
-```
+After all layers:
+1. Run `/scene-preview --full-map` one final time
+2. Read the screenshot
+3. Compare against reference images from Step 1
+4. Verify:
+   - [ ] Ground has visible terrain variety
+   - [ ] Decorations are sparse and intentional (no repeating patterns)
+   - [ ] Multi-tile objects are complete
+   - [ ] No wrong/unexpected tile sprites
+   - [ ] Scene looks hand-crafted, not procedural
+5. Fix any issues before final commit
 
-## Step 6 — Design the Map as a Real Place
+## Decoration Placement Rules
 
-**Before writing any code, describe the location in words.** What would you see if you were standing here? Write 3-5 sentences, then translate that vision into a map layout.
+**NEVER target a coverage percentage.** Place decorations individually:
+- Each one serves a purpose (path marker, age indicator, visual break)
+- Vary types — never 3+ identical sprites in a row
+- Leave open ground — empty space is fine
+- If you see a repeating pattern in the screenshot, delete most of them
+- 10 well-placed varied decorations > 100 identical scattered ones
 
-Plan:
+## Wrong Tile Detection
 
-1. **Map dimensions**: Calculate from current map size or design requirements
-2. **Layer stack**: Ground, GroundDetail, Paths, Trees, Objects (collision), AbovePlayer
-3. **Atlas sources**: A5 sheet for terrain (source 0), B sheet(s) for objects (source 1+)
-4. **Terrain zones**: Where does grass meet dirt? Where is stone paving? Design natural terrain transitions in organic, irregular patches — not a uniform fill
-5. **Collision tiles**: Which B-sheet tiles need physics collision
-6. **Environmental details**: What small objects make this place feel lived-in? (Barrels, fences, gardens, signs, logs, benches)
-7. **Gameplay clearances**: Ensure spawn points, exits, NPC positions, and event zones remain accessible
-
-## Step 7 — Implement
-
-Modify the scene script's `_setup_tilemap()` function and related constants:
-
-1. **Add new MapBuilder constants** if using new tile sheets (edit `map_builder.gd`)
-2. **Write legends using multiple terrain types** for organic ground:
-   - 2-3 terrain rows (grass, dirt, stone) in natural patches
-   - ONE column per terrain patch (different columns of the same row create seam artifacts)
-   - B-sheet objects for trees, buildings, rocks, environmental details
-   - B-sheet ground decorations at 15-30% coverage (pebbles, flowers, moss)
-3. **Redesign text map arrays:**
-   - Ground: organic terrain patches — grass, dirt, stone in natural transitions
-   - Trees: varied clusters with multiple types, not uniform walls
-   - Paths: meandering, 2-3 tiles wide
-   - Detail: liberal ground decoration coverage (15-30%)
-4. **Add missing TileMapLayer nodes** to the `.tscn` file if needed
-5. **Add collision data** for solid tiles from all atlas sources
-6. **Pass `source_id` parameter** for B-sheet layers: `MapBuilder.build_layer(layer, map, legend, 1)`
-7. **Preserve all functional code** — transitions, encounters, events, spawn points
-
-### Design Quality Checklist
-
-- [ ] Ground uses multiple terrain types in organic patches (NOT uniform single-tile fill)
-- [ ] Ground detail layer adds 15-30% coverage (pebbles, flowers, moss, grass tufts)
-- [ ] Trees/Objects layer uses multiple B-sheet object variants (not one repeated sprite)
-- [ ] AbovePlayer layer creates depth (canopy, rooftops the player walks behind)
-- [ ] Paths meander naturally, 2-3 tiles wide minimum, with terrain transitions along edges
-- [ ] Clearings and open spaces have organic (non-rectangular) shapes
-- [ ] Map has visual landmarks/focal points (large tree, well, fountain, archway)
-- [ ] Environmental storytelling details present (barrels by shop, garden by house, etc.)
-- [ ] All spawn points and exits remain accessible
-- [ ] Collision is set on tree trunks, rocks, buildings, walls
-- [ ] `source_id` parameter passed correctly for B-sheet layers
-- [ ] Scene looks like it was designed by a human artist, not procedurally generated
-
-## Step 7 — Verify
-
-1. **Check that all referenced tile coordinates exist** in the tile sheets (A5: cols 0-7, rows 0-15; B: cols 0-15, rows 0-15)
-2. **Check map dimensions match** — all rows in a map array must be the same length
-3. **Check collision setup** — all solid tiles are listed
-4. **Check z_index settings** on TileMapLayer nodes
-5. **Check that functional code still works** — scene transitions, encounter system, event triggers
-6. **Check that only A5 and B sheets are used**
-
-## Step 8 — Report
-
-Summarize:
-1. What changed (layers added, legends expanded, maps redesigned)
-2. New tile sheets used
-3. Map dimensions
-4. Visual description of the result
-5. Any editor tasks for the user (reopen Godot, etc.)
+If a tile renders differently than expected:
+1. STOP — your atlas coordinate is wrong
+2. Re-read the tile sheet PNG
+3. Fix the legend coordinate
+4. Re-screenshot to verify

@@ -130,7 +130,9 @@ Filling the entire ground with one repeated tile creates an artificial, flat loo
 
 2. **Within each terrain patch, use ONE A5 column consistently.** Different columns of the same row have mismatched edge patterns that create visible seams when adjacent. Use `(0, 8)` for all grass tiles, `(0, 2)` for all dirt tiles — never mix `(0, 8)` with `(1, 8)`.
 
-3. **Add B-sheet ground decorations at 15-30% coverage.** Pebbles, grass tufts, moss patches, fallen leaves, small flowers scattered organically across the terrain. These break up any remaining flatness.
+3. **Add B-sheet ground decorations sparingly and intentionally.** Place each decoration for a reason — a flower to mark a path edge, moss on old stone to show age, pebbles near a cliff base. **Do NOT use percentage-based coverage targets** (e.g., "15-30% coverage") — this leads to carpet-bombing identical tiles everywhere. 10 well-placed varied decorations beat 100 randomly scattered identical ones. If a screenshot shows a repeating grid of the same sprite, remove most of them.
+
+   **CRITICAL: Verify every decoration coordinate against the actual tile sheet PNG before placing it.** Read the PNG image file (Claude is multimodal). Documentation descriptions like "pebbles at (0,2)" may be wrong — always trust what you SEE in the PNG over what the docs SAY.
 
 4. **Paths transition naturally** — stone road → dirt border → grass. Not an abrupt hard edge.
 
@@ -329,7 +331,13 @@ var solid: Dictionary = {
 
 **Every scene should look like it was hand-crafted for a published JRPG, not procedurally generated.**
 
-Before placing any tiles, search for JRPG reference screenshots (towns, forests, dungeons from Final Fantasy, Chrono Trigger, Secret of Mana, Octopath Traveler, RPG Maker showcases). Study how professional level designers create organic, lived-in environments. Then:
+**MANDATORY before placing any tiles:**
+
+1. **Search the web for JRPG pixel art reference images** (`WebSearch`) — study towns, forests, and dungeons from Final Fantasy, Chrono Trigger, Secret of Mana, RPG Maker showcases. Also search for individual pixel art objects ("pixel art tree top-down 16x16", "pixel art rock JRPG") to understand what good trees/rocks/buildings look like.
+2. **View the actual tile sheet PNGs** (`Read` the PNG files) — you are multimodal, use that ability. Verify what every atlas coordinate looks like BEFORE placing it. Doc descriptions may be wrong.
+3. **Build one layer at a time with `/scene-preview --full-map` after each** — evaluate each layer visually before proceeding. Fix wrong tiles immediately.
+
+Then:
 
 1. **Design a place, not a tile grid.** Imagine the location as a real place before writing any code. What would it look like? Where would paths wind? Where would buildings sit? Write 3-5 sentences describing the scene, then translate that into tiles.
 2. **Organic ground.** Multiple terrain types in natural patches — grass, dirt, stone with irregular borders and natural transitions. NOT a uniform single-tile fill.
@@ -338,7 +346,7 @@ Before placing any tiles, search for JRPG reference screenshots (towns, forests,
 5. **Breathing room.** Leave open spaces (3+ tiles) around interactive elements (NPCs, chests, exits, event zones).
 6. **Path clarity.** Paths should be 2-3 tiles wide minimum and meander naturally. They should transition between terrain types (stone → dirt → grass).
 7. **Edge density.** Map borders should be dense (varied forest/walls) to contain the playable area naturally.
-8. **Liberal ground detail.** Detail layer covers 15-30% of open ground — pebbles, flowers, grass tufts, moss patches, fallen leaves. This is what makes terrain feel alive.
+8. **Intentional ground detail.** Place decorations sparingly with purpose — a flower to mark a path, moss on old stone, pebbles near a cliff. Do NOT carpet-bomb with identical tiles. If a screenshot shows a repeating pattern, you have too many.
 9. **Environmental storytelling.** Add small details that make the place feel lived-in — barrels near shops, gardens behind houses, firewood by the inn, benches under trees.
 10. **Mix object variants.** Never use the same tree/rock/bush sprite more than 3 times in a cluster. Mix 3-4 variants in every area.
 
@@ -373,6 +381,9 @@ Before placing any tiles, search for JRPG reference screenshots (towns, forests,
 | Rectangular clearings | Artificial, game-y look | Offset edges 1-2 tiles per row for organic shapes |
 | Path 1 tile wide | Hard to see, player clips edges | Minimum 2-3 tiles wide |
 | One tree type repeated uniformly | Looks like a green wall, not a forest | Mix 3-4 tree variants in organic clusters |
-| Sparse ground detail (5% coverage) | Ground still looks flat | Increase to 15-30% coverage with varied decorations |
+| Carpet-bombing identical decorations | Repeating grid pattern, looks worse than no detail | Place decorations sparingly and intentionally, mix 3-4 types |
+| Using atlas coordinates from docs without verifying | Wrong tiles rendered (e.g., "pebbles" renders as golden chests) | Always Read the tile sheet PNG and visually verify coordinates |
 | Importing only one tileset file | Missing tiles when building the scene | Import ALL tile sheets from the asset pack |
-| Designing without reference images | Results look procedural, not hand-crafted | Search for JRPG screenshots before designing |
+| Designing without reference images | Results look procedural, not hand-crafted | WebSearch for JRPG pixel art reference before designing |
+| Skipping `/scene-preview` after changes | Wrong tiles, bad patterns never caught | Screenshot after EVERY layer, evaluate before proceeding |
+| Parallelizing tilemap work across agents | Blind agents produce garbage — no visual feedback loop | Do tilemap work serially, one scene at a time, with screenshots |
