@@ -5,6 +5,8 @@ extends Battler
 
 signal ai_action_chosen(action: BattleAction)
 
+const GB = preload("res://systems/game_balance.gd")
+
 @export var ai_type: EnemyData.AiType = EnemyData.AiType.BASIC
 
 var loot_table: Array[Dictionary] = []
@@ -76,7 +78,7 @@ func _aggressive_ai(party: Array[Battler]) -> BattleAction:
 
 func _defensive_ai(party: Array[Battler]) -> BattleAction:
 	# Defend if HP low
-	if current_hp < max_hp * 0.3:
+	if current_hp < max_hp * GB.AI_DEFENSIVE_HP_THRESHOLD:
 		return BattleAction.create_defend()
 
 	var living_targets := _get_living(party)
@@ -93,7 +95,8 @@ func _support_ai(
 ) -> BattleAction:
 	# Heal injured ally if possible
 	var injured: Array = _get_living(allies).filter(
-		func(b: Battler) -> bool: return b.current_hp < b.max_hp * 0.5
+		func(b: Battler) -> bool:
+			return b.current_hp < b.max_hp * GB.AI_SUPPORT_HEAL_THRESHOLD
 	)
 	if not injured.is_empty() and not abilities.is_empty():
 		for ability_res in abilities:

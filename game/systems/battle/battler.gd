@@ -30,24 +30,7 @@ enum ResonanceState {
 	HOLLOW,
 }
 
-const RESONANCE_MAX: float = 150.0
-const RESONANCE_RESONANT_THRESHOLD: float = 75.0
-const RESONANCE_OVERLOAD_THRESHOLD: float = 100.0
-const RESONANCE_GAIN_DAMAGE_TAKEN: float = 1.0
-const RESONANCE_GAIN_DAMAGE_DEALT: float = 0.6
-const RESONANCE_GAIN_DEFENDING: float = 1.5
-const RESONANCE_GAIN_SCALING: float = 0.1
-const DEFEND_RESONANCE_BASE: float = 10.0
-
-# Damage formula constants
-const DEFENSE_SCALING_DIVISOR: float = 200.0
-const DEFENSE_MOD_MIN: float = 0.1
-const HOLLOW_STAT_PENALTY: float = 0.5
-const DEFEND_DAMAGE_REDUCTION: float = 0.5
-const OVERLOAD_INCOMING_DAMAGE_MULT: float = 2.0
-const OVERLOAD_OUTGOING_DAMAGE_MULT: float = 2.0
-const RESONANT_ABILITY_BONUS: float = 1.2
-const STAT_DAMAGE_SCALING: float = 0.5
+const GB = preload("res://systems/game_balance.gd")
 
 ## Character or enemy data resource.
 @export var data: BattlerData
@@ -104,7 +87,7 @@ func take_damage(amount: int, is_magical: bool = false) -> int:
 
 	if resonance_state != ResonanceState.HOLLOW:
 		add_resonance(
-			final_damage * RESONANCE_GAIN_DAMAGE_TAKEN * RESONANCE_GAIN_SCALING
+			final_damage * GB.RESONANCE_GAIN_DAMAGE_TAKEN * GB.RESONANCE_GAIN_SCALING
 		)
 
 	if current_hp <= 0:
@@ -157,19 +140,19 @@ func deal_damage(
 		stat_value = attack
 
 	if resonance_state == ResonanceState.HOLLOW:
-		stat_value = int(stat_value * HOLLOW_STAT_PENALTY)
+		stat_value = int(stat_value * GB.HOLLOW_STAT_PENALTY)
 
-	var stat_bonus := stat_value * STAT_DAMAGE_SCALING
+	var stat_bonus := stat_value * GB.STAT_DAMAGE_SCALING
 	var total := int(base_amount + stat_bonus)
 
 	if resonance_state == ResonanceState.OVERLOAD:
-		total = int(total * OVERLOAD_OUTGOING_DAMAGE_MULT)
+		total = int(total * GB.OVERLOAD_OUTGOING_DAMAGE_MULT)
 	elif resonance_state == ResonanceState.RESONANT and is_ability:
-		total = int(total * RESONANT_ABILITY_BONUS)
+		total = int(total * GB.RESONANT_ABILITY_BONUS)
 
 	if resonance_state != ResonanceState.HOLLOW:
 		add_resonance(
-			total * RESONANCE_GAIN_DAMAGE_DEALT * RESONANCE_GAIN_SCALING
+			total * GB.RESONANCE_GAIN_DAMAGE_DEALT * GB.RESONANCE_GAIN_SCALING
 		)
 
 	return total
@@ -179,7 +162,7 @@ func deal_damage(
 func defend() -> void:
 	is_defending = true
 	if resonance_state != ResonanceState.HOLLOW:
-		add_resonance(DEFEND_RESONANCE_BASE * RESONANCE_GAIN_DEFENDING)
+		add_resonance(GB.DEFEND_RESONANCE_BASE * GB.RESONANCE_GAIN_DEFENDING)
 
 
 ## Clears defend stance and recalculates turn delay for the next round.
@@ -192,7 +175,7 @@ func end_turn() -> void:
 func add_resonance(amount: float) -> void:
 	if resonance_state == ResonanceState.HOLLOW:
 		return
-	resonance_gauge = clampf(resonance_gauge + amount, 0.0, RESONANCE_MAX)
+	resonance_gauge = clampf(resonance_gauge + amount, 0.0, GB.RESONANCE_MAX)
 	resonance_changed.emit(resonance_gauge)
 	_update_resonance_state()
 
@@ -314,7 +297,7 @@ func get_modified_stat(stat_name: String) -> int:
 			push_warning("Unknown stat: %s" % stat_name)
 			return 0
 	if resonance_state == ResonanceState.HOLLOW:
-		base = int(base * HOLLOW_STAT_PENALTY)
+		base = int(base * GB.HOLLOW_STAT_PENALTY)
 	var modifier := _get_total_modifier(stat_name)
 	return maxi(base + modifier, 0)
 
@@ -359,7 +342,7 @@ func tick_effects() -> void:
 
 
 ## Revives a defeated battler with a percentage of max HP.
-func revive(hp_percent: float = 0.25) -> void:
+func revive(hp_percent: float = GB.REVIVE_HP_PERCENT) -> void:
 	if is_alive:
 		return
 	is_alive = true
@@ -382,16 +365,16 @@ func _calculate_incoming_damage(base: int, is_magical: bool) -> int:
 		def_stat = defense
 
 	if resonance_state == ResonanceState.HOLLOW:
-		def_stat = int(def_stat * HOLLOW_STAT_PENALTY)
+		def_stat = int(def_stat * GB.HOLLOW_STAT_PENALTY)
 
-	var defense_mod := 1.0 - (def_stat / DEFENSE_SCALING_DIVISOR)
-	defense_mod = clampf(defense_mod, DEFENSE_MOD_MIN, 1.0)
+	var defense_mod := 1.0 - (def_stat / GB.DEFENSE_SCALING_DIVISOR)
+	defense_mod = clampf(defense_mod, GB.DEFENSE_MOD_MIN, 1.0)
 
 	if is_defending:
-		defense_mod *= DEFEND_DAMAGE_REDUCTION
+		defense_mod *= GB.DEFEND_DAMAGE_REDUCTION
 
 	if resonance_state == ResonanceState.OVERLOAD:
-		defense_mod *= OVERLOAD_INCOMING_DAMAGE_MULT
+		defense_mod *= GB.OVERLOAD_INCOMING_DAMAGE_MULT
 
 	return maxi(int(base * defense_mod), 1)
 
@@ -401,9 +384,9 @@ func _update_resonance_state() -> void:
 		return
 
 	var old_state := resonance_state
-	if resonance_gauge >= RESONANCE_OVERLOAD_THRESHOLD:
+	if resonance_gauge >= GB.RESONANCE_OVERLOAD_THRESHOLD:
 		resonance_state = ResonanceState.OVERLOAD
-	elif resonance_gauge >= RESONANCE_RESONANT_THRESHOLD:
+	elif resonance_gauge >= GB.RESONANCE_RESONANT_THRESHOLD:
 		resonance_state = ResonanceState.RESONANT
 	else:
 		resonance_state = ResonanceState.FOCUSED
@@ -447,11 +430,11 @@ func _get_total_modifier(stat_name: String) -> int:
 func _calculate_turn_delay() -> void:
 	var effective_speed := speed
 	if resonance_state == ResonanceState.HOLLOW:
-		effective_speed = int(speed * HOLLOW_STAT_PENALTY)
+		effective_speed = int(speed * GB.HOLLOW_STAT_PENALTY)
 	if effective_speed > 0:
-		turn_delay = 100.0 / float(effective_speed)
+		turn_delay = GB.TURN_DELAY_BASE / float(effective_speed)
 	else:
-		turn_delay = 100.0
+		turn_delay = GB.TURN_DELAY_BASE
 
 
 func _apply_equipment_bonuses(equip_manager: Node) -> void:

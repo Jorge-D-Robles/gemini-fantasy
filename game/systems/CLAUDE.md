@@ -12,6 +12,23 @@ Core game systems: state machine framework, battle logic, encounter management, 
 | `encounter/` | Step-based random encounter trigger |
 | `progression/` | XP and leveling calculation utilities |
 | `map_builder.gd` | Static utility for building TileMapLayers from Time Fantasy tiles |
+| `game_balance.gd` | Centralized game balance constants (resonance, damage, XP, AI, party limits) |
+
+---
+
+## game_balance.gd
+
+Centralized balance constants. Import via `const GameBalance = preload("res://systems/game_balance.gd")`.
+
+| Category | Constants |
+|----------|-----------|
+| Resonance | `RESONANCE_MAX`, `RESONANCE_RESONANT_THRESHOLD`, `RESONANCE_OVERLOAD_THRESHOLD`, `RESONANCE_GAIN_*`, `DEFEND_RESONANCE_BASE` |
+| Damage | `DEFENSE_SCALING_DIVISOR`, `DEFENSE_MOD_MIN`, `HOLLOW_STAT_PENALTY`, `DEFEND_DAMAGE_REDUCTION`, `OVERLOAD_*_DAMAGE_MULT`, `RESONANT_ABILITY_BONUS`, `STAT_DAMAGE_SCALING` |
+| Turn order | `TURN_DELAY_BASE` |
+| Revive | `REVIVE_HP_PERCENT` |
+| XP / Leveling | `XP_CURVE_BASE` |
+| Party limits | `MAX_ACTIVE_PARTY`, `MAX_RESERVE_PARTY` |
+| Enemy AI | `AI_DEFENSIVE_HP_THRESHOLD`, `AI_SUPPORT_HEAL_THRESHOLD` |
 
 ---
 

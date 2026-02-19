@@ -7,8 +7,9 @@ signal character_added(data: Resource)
 signal character_removed(data: Resource)
 signal party_state_changed
 
-const MAX_ACTIVE: int = 4
-const MAX_RESERVE: int = 4
+const GB = preload("res://systems/game_balance.gd")
+const MAX_ACTIVE: int = GB.MAX_ACTIVE_PARTY
+const MAX_RESERVE: int = GB.MAX_RESERVE_PARTY
 
 ## All recruited party members (active + reserve).
 var roster: Array[Resource] = []

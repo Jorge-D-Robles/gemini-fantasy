@@ -4,11 +4,13 @@ extends RefCounted
 ## Static utility class for XP and leveling calculations.
 ## Not an autoload — use static methods directly: LevelManager.add_xp(...)
 
+const GB = preload("res://systems/game_balance.gd")
+
 
 ## Returns the total XP required to reach the given level.
-## Formula: 100 * level * level (L2=400, L3=900, L4=1600, etc.)
+## Formula: XP_CURVE_BASE * level * level (L2=400, L3=900, L4=1600, etc.)
 static func xp_for_level(level: int) -> int:
-	return 100 * level * level
+	return GB.XP_CURVE_BASE * level * level
 
 
 ## Returns XP remaining until the character's next level.
