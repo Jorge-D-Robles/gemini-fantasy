@@ -15,9 +15,14 @@ const EMBER_HOUND_PATH: String = "res://data/enemies/ember_hound.tres"
 
 # ---------- TILE LEGENDS ----------
 
-# Ground layer — bright green vegetation fill (A5_A row 8, source 0)
+# Ground layer — organic multi-terrain patches (A5_A, source 0)
+# G = bright green vegetation (dominant ~65%), open clearings and paths
+# D = dirt/earth (20%), flanking paths, around tree trunk bases
+# E = dark earth/roots (15%), under dense forest canopy, transition zones
 const GROUND_LEGEND: Dictionary = {
 	"G": Vector2i(0, 8),
+	"D": Vector2i(0, 2),
+	"E": Vector2i(0, 6),
 }
 
 # Path layer — single dirt path tile (A5_A row 4, source 0)
@@ -73,37 +78,43 @@ const DETAIL_LEGEND: Dictionary = {
 	"f": Vector2i(0, 1),   # Orange flower
 	"F": Vector2i(2, 1),   # Flower variant
 	"l": Vector2i(0, 2),   # Green leaf
+	"L": Vector2i(1, 2),   # Green leaf variant
+	"p": Vector2i(3, 0),   # Pebble variant
+	"o": Vector2i(1, 1),   # Flower cluster
 }
 
 # ---------- MAP DATA (40 cols x 25 rows) ----------
 
-# Ground: uniform bright green fill
+# Ground: organic multi-terrain patches
+# G = bright green vegetation, D = dirt/earth, E = dark earth/roots
+# E under dense forest (rows 0-2, 15-24), D flanking paths and near trunks
+# G dominant in clearings (rows 5-8), D in corridor (rows 10-11)
 const GROUND_MAP: Array[String] = [
-	"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-	"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-	"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-	"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-	"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-	"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-	"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-	"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-	"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-	"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-	"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-	"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-	"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-	"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-	"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-	"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-	"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-	"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-	"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-	"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-	"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-	"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-	"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-	"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-	"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
+	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
+	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
+	"EEEEEEEEEGGEEEEEEEEGGGGGGGEEEGGEEEEEEEEE",
+	"EEEEEEEGGGDGGGEEEGGGGGDGGGGGGGGGGEEEEEEE",
+	"EEEEEEDGGGGGGGGDGGGGGGGGGGGDGGGGGDEEEEEE",
+	"EEEEEGGGGGGGGGGGDDDDDDGGGGGGGGGGGGGGEEEE",
+	"EEEEGGGGGGGGGGGGDDDDDDGGGGGGGGGGGGGGEEEE",
+	"EEEEGDGGGGGGGGGGDDDDDDGGGGGGGGGGGDGGEEEE",
+	"EEEEEGGDGGGEEEGDDDDDDGGGEEEEDGGGGGEEEEEE",
+	"GDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDG",
+	"GDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDG",
+	"EEEEEGGDGGGEEEGGGGGGGGGGGGEEDGGGGGEEEEEE",
+	"EEEEEEEGGGEEEEEGGEEEEGGEEEEEGGGEEEEEEEEE",
+	"EEEEEEEEEDDEEEEEEEEEEEEEEEEEEDDEEEEEEEEE",
+	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
+	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
+	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
+	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
+	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
+	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
+	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
+	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
+	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
+	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
 ]
 
 # Dense forest borders with organic clearing and chokepoint exits
@@ -235,23 +246,23 @@ const PATH_MAP: Array[String] = [
 ]
 
 # Ground detail — scattered rocks, flowers, leaves (STONE_OBJECTS, source 2)
-# ~26 tiles for 5-10% coverage in open areas
+# ~72 tiles for ~23% coverage in open areas — dense in clearings, sparse near edges
 const DETAIL_MAP: Array[String] = [
 	"                                        ",
 	"                                        ",
 	"                                        ",
-	"                        r               ",
-	"            r               R           ",
-	"       F                    f     r     ",
-	"         r     l     f                  ",
-	"      f       R        l          F     ",
-	"          F      r      s     R         ",
-	"       r                   f       s    ",
+	"                    l  r     l          ",
+	"        F   r     l  f   R  l F         ",
+	"       f R  l F   r  f  p l   o r       ",
+	"      l f R  p l      F r  f l o R      ",
+	"     r F  l s f         L r F  p l      ",
+	"        f R l o        s F  l r f       ",
+	"      r   l           F pl     r f      ",
 	"                                        ",
 	"                                        ",
-	"         s              r        F      ",
-	"      F            r                    ",
-	"                     f                  ",
+	"      l   F    r f  p l Ro     f s      ",
+	"        r      l      f      R          ",
+	"         l                              ",
 	"                                        ",
 	"                                        ",
 	"                                        ",
@@ -418,7 +429,7 @@ func _setup_tilemap() -> void:
 		atlas_paths,
 		solid,
 	)
-	# Ground: uniform bright green fill (source 0)
+	# Ground: organic multi-terrain patches (source 0)
 	MapBuilder.build_layer(_ground_layer, GROUND_MAP, GROUND_LEGEND)
 	# Paths: dirt path overlay (source 0)
 	MapBuilder.build_layer(_paths_layer, PATH_MAP, PATH_LEGEND)
