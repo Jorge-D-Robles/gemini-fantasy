@@ -20,6 +20,7 @@ enum Command {
 }
 
 const GameBalance = preload("res://systems/game_balance.gd")
+const SP = preload("res://systems/scene_paths.gd")
 const UIHelpers = preload("res://ui/ui_helpers.gd")
 const UITheme = preload("res://ui/ui_theme.gd")
 
@@ -521,14 +522,12 @@ func _on_retry_pressed() -> void:
 	if current:
 		GameManager.change_scene(current.scene_file_path)
 	else:
-		GameManager.change_scene("res://ui/title_screen/title_screen.tscn")
+		GameManager.change_scene(SP.TITLE_SCREEN)
 
 
 func _on_quit_pressed() -> void:
 	_defeat_screen.visible = false
-	GameManager.change_scene(
-		"res://ui/title_screen/title_screen.tscn"
-	)
+	GameManager.change_scene(SP.TITLE_SCREEN)
 
 
 func _setup_button_focus_wrap(container: Container) -> void:

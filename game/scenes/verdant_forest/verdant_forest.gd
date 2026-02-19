@@ -4,8 +4,7 @@ extends Node2D
 ## Features random encounters, the Iris recruitment event, and
 ## scene transitions to both adjacent areas.
 
-const OVERGROWN_RUINS_PATH: String = "res://scenes/overgrown_ruins/overgrown_ruins.tscn"
-const ROOTHOLLOW_PATH: String = "res://scenes/roothollow/roothollow.tscn"
+const SP = preload("res://systems/scene_paths.gd")
 const CREEPING_VINE_PATH: String = "res://data/enemies/creeping_vine.tres"
 const ASH_STALKER_PATH: String = "res://data/enemies/ash_stalker.tres"
 const HOLLOW_SPECTER_PATH: String = "res://data/enemies/hollow_specter.tres"
@@ -384,7 +383,7 @@ func _on_exit_to_ruins_entered(body: Node2D) -> void:
 	if BattleManager.is_in_battle():
 		return
 	GameManager.change_scene(
-		OVERGROWN_RUINS_PATH,
+		SP.OVERGROWN_RUINS,
 		GameManager.FADE_DURATION,
 		"spawn_from_forest",
 	)
@@ -400,7 +399,7 @@ func _on_exit_to_town_entered(body: Node2D) -> void:
 	if BattleManager.is_in_battle():
 		return
 	GameManager.change_scene(
-		ROOTHOLLOW_PATH,
+		SP.ROOTHOLLOW,
 		GameManager.FADE_DURATION,
 		"spawn_from_forest",
 	)

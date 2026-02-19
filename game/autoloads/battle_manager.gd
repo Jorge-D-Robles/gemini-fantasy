@@ -5,7 +5,7 @@ extends Node
 signal battle_started
 signal battle_ended(victory: bool)
 
-const BATTLE_SCENE_PATH: String = "res://systems/battle/battle_scene.tscn"
+const SP = preload("res://systems/scene_paths.gd")
 const BATTLE_BGM_PATH: String = "res://assets/music/Battle Theme Organ.ogg"
 const BOSS_BGM_PATH: String = (
 	"res://assets/music/Epic Boss Battle 1st section.ogg"
@@ -50,7 +50,7 @@ func start_battle(
 
 	var party_data: Array[Resource] = PartyManager.get_active_party()
 
-	var battle_packed := load(BATTLE_SCENE_PATH) as PackedScene
+	var battle_packed := load(SP.BATTLE_SCENE) as PackedScene
 	if not battle_packed:
 		push_error("BattleManager: failed to load battle scene.")
 		_is_in_battle = false
@@ -66,7 +66,7 @@ func start_battle(
 	if player:
 		_pre_battle_player_position = player.global_position
 
-	await GameManager.change_scene(BATTLE_SCENE_PATH)
+	await GameManager.change_scene(SP.BATTLE_SCENE)
 
 	_battle_scene = get_tree().current_scene
 	if "area_scene_path" in _battle_scene:

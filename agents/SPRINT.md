@@ -13,13 +13,6 @@ Started: 2026-02-18
 
 ## Queue
 
-### T-0072
-- Title: Create scene_paths.gd for centralized scene path constants
-- Status: todo
-- Assigned: unassigned
-- Priority: medium
-- Depends: none
-
 ### T-0060
 - Title: Roothollow — reduce ground detail density from 50% to 15%
 - Status: todo
@@ -373,6 +366,13 @@ Started: 2026-02-18
 - Assigned: claude
 - Completed: 2026-02-19
 - Notes: Scene-owned BGM via SCENE_BGM_PATH constants and _start_scene_music() in _ready(). BattleManager plays battle/boss BGM with boss detection via EnemyData.AiType.BOSS. Victory fanfare. AudioManager.get_current_bgm_path() accessor. Null-safe OGG loading. 8 new tests (787 total).
+
+### T-0072
+- Title: Create scene_paths.gd for centralized scene path constants
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: ScenePaths class with 5 constants (ROOTHOLLOW, VERDANT_FOREST, OVERGROWN_RUINS, TITLE_SCREEN, BATTLE_SCENE). Refactored 8 consumer files. 7 new tests (803 total).
 
 ### T-0124
 - Title: BUG — XP computed and displayed in victory screen but never applied to party members
