@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EquipmentData" load_steps=2 format=3 uid="uid://bmystic_ring"]
+
+[ext_resource type="Script" path="res://resources/equipment_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"mystic_ring"
+display_name = "Mystic Ring"
+description = "An ancient ring inscribed with Echo runes that enhances magical ability."
+slot_type = 3
+weapon_type = 0
+magic_bonus = 4
+resistance_bonus = 2
+buy_price = 150
+sell_price = 75

@@ -116,43 +116,48 @@ Flat grid of 16x16 tiles containing **multi-tile objects**. Objects span multipl
 | Rows 2-8 | Large mushroom houses (red/brown caps, 4-6 tile objects) |
 | Bottom | Mushroom fences, paths, ring decorations, log fences |
 
-## The Single-Tile Fill Rule
+## Organic Ground Design
 
-**This is the most important rule for avoiding ugly maps with Time Fantasy assets.**
+**The ground should look like real terrain, not a solid-colored rectangle.**
 
-### Problem: Checkerboard/Stripe Artifacts
+### The Problem: Flat Uniform Fill
 
-Each column in an A5 row has a distinct visual pattern. When agents alternate columns (e.g., col 0, col 1, col 0, col 1...), the different patterns create a visible checkerboard or stripe effect because the tile edges don't match.
+Filling the entire ground with one repeated tile creates an artificial, flat look — the map feels like a solid-colored background with objects dropped on top. Real landscapes have terrain variation: grass transitions to dirt near paths, stone paving under buildings, patches of earth and moss.
 
-### Solution: Single-Tile Fill + B-Sheet Objects
+### The Solution: Multi-Terrain Patches + Ground Decorations
 
-The correct approach:
+1. **Use 2-3 different terrain rows** in large, irregular patches. Grass (row 8) as dominant terrain, dirt (row 2) near paths and buildings, stone (row 10) under structures and plazas. Each patch should be 6x6+ tiles with organic, non-rectangular edges.
 
-1. **Ground layer: ONE tile for the entire fill.** Pick a single `Vector2i(col, row)` and fill the whole map with it. The tile was designed to seamlessly tile with copies of itself.
+2. **Within each terrain patch, use ONE A5 column consistently.** Different columns of the same row have mismatched edge patterns that create visible seams when adjacent. Use `(0, 8)` for all grass tiles, `(0, 2)` for all dirt tiles — never mix `(0, 8)` with `(1, 8)`.
 
-2. **Visual interest comes from B-sheet objects**, not from mixing A5 columns. Trees, rocks, buildings, and decorative objects from B sheets provide all the visual variety.
+3. **Add B-sheet ground decorations at 15-30% coverage.** Pebbles, grass tufts, moss patches, fallen leaves, small flowers scattered organically across the terrain. These break up any remaining flatness.
 
-3. **Accent layer: Sparse A5 decorations** from different rows (not columns). Flowers from row 14, a dirt patch from row 2 — but only 5-15% coverage, never adjacent.
-
-4. **Path layer: ONE path tile** from a single column of the path row.
+4. **Paths transition naturally** — stone road → dirt border → grass. Not an abrupt hard edge.
 
 ### Correct Pattern
 
 ```gdscript
-# CORRECT: Single-tile fill for each terrain type
+# CORRECT: Multiple terrain types in organic patches
 const GROUND_LEGEND: Dictionary = {
-    "G": Vector2i(0, 8),   # ONE green vegetation tile for entire map
-}
-const PATH_LEGEND: Dictionary = {
-    "P": Vector2i(0, 4),   # ONE path tile
-}
-const TREE_LEGEND: Dictionary = {
-    "T": Vector2i(1, 1),   # B-sheet canopy center (source 1)
+    "G": Vector2i(0, 8),   # Bright green — dominant terrain
+    "D": Vector2i(0, 2),   # Dirt — around buildings, path edges
+    "S": Vector2i(0, 10),  # Stone — plazas, under structures
 }
 const DETAIL_LEGEND: Dictionary = {
-    "f": Vector2i(0, 14),  # Flower accent (different ROW, sparse use)
+    "f": Vector2i(0, 14),  # Flower accent
     "b": Vector2i(2, 14),  # Bush accent
+    "p": Vector2i(0, 0),   # Pebbles (from B stone sheet)
 }
+```
+
+### Anti-Pattern: Uniform Single-Tile Fill
+
+```gdscript
+# WRONG: One tile for the entire map — flat and artificial
+const GROUND_MAP: Array[String] = [
+    "GGGGGGGGGGGGGGGGGGGG",
+    "GGGGGGGGGGGGGGGGGGGG",
+]
 ```
 
 ### Anti-Pattern: Column Alternation
@@ -160,37 +165,26 @@ const DETAIL_LEGEND: Dictionary = {
 ```gdscript
 # WRONG: Mixing columns from the same row creates visible stripes
 const GROUND_LEGEND: Dictionary = {
-    "G": Vector2i(0, 0), "g": Vector2i(1, 0),
+    "G": Vector2i(0, 0), "g": Vector2i(1, 0),  # SEAM ARTIFACTS
     "H": Vector2i(2, 0), "h": Vector2i(3, 0),
-    "I": Vector2i(4, 0), "i": Vector2i(5, 0),
-    "J": Vector2i(6, 0), "j": Vector2i(7, 0),
-}
-# Then filling the map with "GhIgjHiG" creates checkerboard artifacts
-```
-
-### When Multiple Ground Variants ARE Appropriate
-
-If you genuinely need terrain variety (e.g., a town with grass and dirt areas), use tiles from **different rows**, not different columns of the same row. And use them in **large contiguous patches** (8x8+ tiles), never alternating:
-
-```gdscript
-const GROUND_LEGEND: Dictionary = {
-    "G": Vector2i(0, 8),   # Green vegetation (row 8) — main fill
-    "D": Vector2i(0, 2),   # Dirt (row 2) — large dirt patches
 }
 ```
 
 ## MapBuilder Usage Patterns
 
-### Recommended: A5 Ground + B-Sheet Objects
+### Recommended: Organic A5 Ground + B-Sheet Objects
 
 ```gdscript
 func _setup_tilemap() -> void:
     var atlas_paths: Array[String] = [
         MapBuilder.FAIRY_FOREST_A5_A,   # Source 0: terrain
         MapBuilder.FOREST_OBJECTS,       # Source 1: tree objects
+        MapBuilder.STONE_OBJECTS,        # Source 2: ground decorations
     ]
     var solid: Dictionary = {
-        1: [Vector2i(1, 1)],   # B_forest canopy center — blocking
+        1: [
+            Vector2i(8, 7), Vector2i(10, 7),  # Tree trunks
+        ],
     }
     MapBuilder.apply_tileset(
         [_ground_layer, _ground_detail_layer, _trees_layer,
@@ -199,14 +193,19 @@ func _setup_tilemap() -> void:
         atlas_paths,
         solid,
     )
-    # Ground, paths, detail use source 0 (A5 terrain)
+    # Ground uses multiple terrain types in organic patches (source 0)
     MapBuilder.build_layer(_ground_layer, GROUND_MAP, GROUND_LEGEND, 0)
     MapBuilder.build_layer(_paths_layer, PATH_MAP, PATH_LEGEND, 0)
+    # Detail uses A5 accents (source 0) + B-sheet decorations (source 2)
     MapBuilder.build_layer(
         _ground_detail_layer, DETAIL_MAP, DETAIL_LEGEND, 0
     )
-    # Trees use source 1 (B forest objects)
-    MapBuilder.build_layer(_trees_layer, TREE_MAP, TREE_LEGEND, 1)
+    MapBuilder.build_layer(
+        _ground_detail_layer, DECOR_MAP, DECOR_LEGEND, 2
+    )
+    # Trees use source 1 — objects for trunks, above-player for canopy
+    MapBuilder.build_layer(_objects_layer, TRUNK_MAP, TRUNK_LEGEND, 1)
+    MapBuilder.build_layer(_above_player_layer, CANOPY_MAP, CANOPY_LEGEND, 1)
 ```
 
 ### For Indoor/Dungeon Scenes (A5 Only)
@@ -275,20 +274,25 @@ The object map and above-player map must be spatially aligned:
 # X positions MUST match across maps
 ```
 
-### Simplified Forest Fill (Current Approach)
+### Forest Design: Clusters, Not Walls
 
-For dense forest borders where individual trees aren't needed, use a single B-sheet canopy center tile as a fill:
+Dense forest borders should use **multiple tree types** in organic clusters, not a single tile repeated as a uniform wall. Mix 3-4 canopy variants and trunk types to create natural-looking forest edges:
 
 ```gdscript
-# Use ONE canopy center tile to fill forest border areas
-const TREE_LEGEND: Dictionary = {
-    "T": Vector2i(1, 1),   # Canopy center from B_forest (source 1)
+# Use multiple canopy types for variety
+const CANOPY_LEGEND: Dictionary = {
+    "1": Vector2i(0, 0), "2": Vector2i(1, 0),   # Tree type A canopy (2x2)
+    "3": Vector2i(0, 1), "4": Vector2i(1, 1),
+    "5": Vector2i(2, 0), "6": Vector2i(3, 0),   # Tree type B canopy (2x2)
+    "7": Vector2i(2, 1), "8": Vector2i(3, 1),
 }
-# Build trees layer using source 1 (B objects)
-MapBuilder.build_layer(_trees_layer, TREE_MAP, TREE_LEGEND, 1)
+const TRUNK_LEGEND: Dictionary = {
+    "A": Vector2i(8, 7),   # Tree type A trunk
+    "B": Vector2i(10, 7),  # Tree type B trunk
+}
 ```
 
-This approach uses a solid green canopy tile that tiles seamlessly, creating a dense forest wall effect. Add individual multi-tile tree objects at the forest edges for visual interest.
+Place trees in natural clusters of 2-5 with varied spacing. Mix tree types within each cluster. Leave irregular gaps. The forest edge should be ragged and organic — thicker in some places, thinner in others.
 
 ## Collision Setup
 
@@ -323,13 +327,20 @@ var solid: Dictionary = {
 
 ## Map Design Principles
 
-1. **Ground: uniform fill.** One tile, entire map. Visual interest comes from objects, not ground variation.
-2. **Organic shapes.** Forest borders, clearings, and paths should have irregular edges. Offset tree lines by 1-2 tiles per row.
-3. **Focal points.** Every map needs visual landmarks — a large tree, a ruin, a water feature.
-4. **Breathing room.** Leave open spaces (3+ tiles) around interactive elements (NPCs, chests, exits, event zones).
-5. **Path clarity.** Paths should be 2-3 tiles wide minimum so the player can clearly see them.
-6. **Edge density.** Map borders should be dense (solid forest/walls) to contain the playable area naturally.
-7. **Sparse accents.** Detail layer covers only 5-15% of open ground — flowers, small bushes, NOT wall-to-wall decoration.
+**Every scene should look like it was hand-crafted for a published JRPG, not procedurally generated.**
+
+Before placing any tiles, search for JRPG reference screenshots (towns, forests, dungeons from Final Fantasy, Chrono Trigger, Secret of Mana, Octopath Traveler, RPG Maker showcases). Study how professional level designers create organic, lived-in environments. Then:
+
+1. **Design a place, not a tile grid.** Imagine the location as a real place before writing any code. What would it look like? Where would paths wind? Where would buildings sit? Write 3-5 sentences describing the scene, then translate that into tiles.
+2. **Organic ground.** Multiple terrain types in natural patches — grass, dirt, stone with irregular borders and natural transitions. NOT a uniform single-tile fill.
+3. **Organic shapes.** Forest borders, clearings, and paths should have irregular edges. Offset tree lines by 1-2 tiles per row.
+4. **Focal points.** Every map needs visual landmarks — a large tree, a ruin, a well, an archway.
+5. **Breathing room.** Leave open spaces (3+ tiles) around interactive elements (NPCs, chests, exits, event zones).
+6. **Path clarity.** Paths should be 2-3 tiles wide minimum and meander naturally. They should transition between terrain types (stone → dirt → grass).
+7. **Edge density.** Map borders should be dense (varied forest/walls) to contain the playable area naturally.
+8. **Liberal ground detail.** Detail layer covers 15-30% of open ground — pebbles, flowers, grass tufts, moss patches, fallen leaves. This is what makes terrain feel alive.
+9. **Environmental storytelling.** Add small details that make the place feel lived-in — barrels near shops, gardens behind houses, firewood by the inn, benches under trees.
+10. **Mix object variants.** Never use the same tree/rock/bush sprite more than 3 times in a cluster. Mix 3-4 variants in every area.
 
 ## Theme-to-Tileset Mapping
 
@@ -353,11 +364,15 @@ var solid: Dictionary = {
 
 | Anti-Pattern | Problem | Fix |
 |-------------|---------|-----|
-| Alternating A5 columns in ground fill | Checkerboard/stripe artifacts | Use ONE tile for entire ground fill |
+| Uniform single-tile ground fill | Flat, artificial, like a solid-color background | Use 2-3 terrain types in organic patches with ground decorations |
+| Alternating A5 columns in same row | Checkerboard/stripe seam artifacts | Within each patch, use ONE column consistently |
 | Using A5 row 8 tiles as "trees" | Flat grid pattern, not tree-like | Use B-sheet canopy objects for trees |
 | Forgetting `source_id` parameter | B-sheet tiles placed from wrong atlas | Pass `source_id=1` for B-sheet layers |
 | No Objects/AbovePlayer layer | Map looks flat, no depth | Add B-sheet trees/buildings with above-player canopy |
 | Ground fill with A5 row 0 col 0 | Renders dark gray in fairy forest theme | Use row 8 col 0 (bright green) for forest ground |
 | Rectangular clearings | Artificial, game-y look | Offset edges 1-2 tiles per row for organic shapes |
 | Path 1 tile wide | Hard to see, player clips edges | Minimum 2-3 tiles wide |
-| 8-variant block rotation for ground | Creates subtle but visible patterning | Single tile fill is simpler and cleaner |
+| One tree type repeated uniformly | Looks like a green wall, not a forest | Mix 3-4 tree variants in organic clusters |
+| Sparse ground detail (5% coverage) | Ground still looks flat | Increase to 15-30% coverage with varied decorations |
+| Importing only one tileset file | Missing tiles when building the scene | Import ALL tile sheets from the asset pack |
+| Designing without reference images | Results look procedural, not hand-crafted | Search for JRPG screenshots before designing |

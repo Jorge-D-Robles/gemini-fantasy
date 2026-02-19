@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://c4roothlw0001"]
+[gd_scene load_steps=19 format=3 uid="uid://c4roothlw0001"]
 
 [ext_resource type="Script" path="res://scenes/roothollow/roothollow.gd" id="1_roothollow"]
 [ext_resource type="Script" path="res://entities/interactable/strategies/save_point_strategy.gd" id="17_save_strat"]
@@ -7,14 +7,13 @@
 [ext_resource type="PackedScene" uid="uid://c4npc0000001" path="res://entities/npc/npc.tscn" id="4_npc"]
 [ext_resource type="PackedScene" uid="uid://c4interact001" path="res://entities/interactable/interactable.tscn" id="5_interact"]
 [ext_resource type="Script" path="res://events/garrick_recruitment.gd" id="6_garrick"]
-[ext_resource type="Texture2D" path="res://assets/sprites/buildings/lodge_clean.png" id="9_lodge"]
-[ext_resource type="Texture2D" path="res://assets/sprites/buildings/hut.png" id="10_hut"]
-[ext_resource type="Texture2D" path="res://assets/sprites/buildings/tree_small.png" id="11_tree_sm"]
-[ext_resource type="Texture2D" path="res://assets/sprites/buildings/tree_medium.png" id="12_tree_md"]
-[ext_resource type="Texture2D" path="res://assets/sprites/buildings/tree_tall.png" id="13_tree_tl"]
 [ext_resource type="Texture2D" path="res://assets/sprites/buildings/signpost.png" id="14_signpost"]
-[ext_resource type="Texture2D" path="res://assets/sprites/characters/npc_char1.png" id="15_npc1"]
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/npc_char2.png" id="16_npc2"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/elder.png" id="20_elder"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/knights.png" id="21_knights"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/farmer.png" id="22_farmer"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/children.png" id="23_children"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/household.png" id="24_household"]
 
 [sub_resource type="Resource" id="save_point_strat"]
 script = ExtResource("17_save_strat")
@@ -29,15 +28,6 @@ size = Vector2(16, 64)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_garrick"]
 radius = 24.0
-
-[sub_resource type="RectangleShape2D" id="inn_collision_rect"]
-size = Vector2(144, 40)
-
-[sub_resource type="RectangleShape2D" id="hut_collision_rect"]
-size = Vector2(112, 40)
-
-[sub_resource type="RectangleShape2D" id="tree_tall_collision_rect"]
-size = Vector2(12, 8)
 
 [node name="Roothollow" type="Node2D"]
 script = ExtResource("1_roothollow")
@@ -54,280 +44,74 @@ z_index = -1
 collision_enabled = false
 z_index = -1
 
-[node name="Buildings" type="Node2D" parent="."]
+[node name="Decorations" type="TileMapLayer" parent="."]
+collision_enabled = false
+z_index = 0
 
-[node name="InnBuilding" type="Node2D" parent="Buildings"]
-position = Vector2(100, 48)
+[node name="Objects" type="TileMapLayer" parent="."]
+z_index = 0
 
-[node name="Sprite" type="Sprite2D" parent="Buildings/InnBuilding"]
-texture = ExtResource("9_lodge")
-centered = false
-texture_filter = 0
+[node name="TreesBorder" type="TileMapLayer" parent="."]
+z_index = 1
 
-[node name="Collision" type="StaticBody2D" parent="Buildings/InnBuilding"]
-collision_layer = 2
-collision_mask = 0
-
-[node name="CollisionShape" type="CollisionShape2D" parent="Buildings/InnBuilding/Collision"]
-position = Vector2(80, 72)
-shape = SubResource("inn_collision_rect")
-
-[node name="ShopBuilding" type="Node2D" parent="Buildings"]
-position = Vector2(400, 32)
-
-[node name="Sprite" type="Sprite2D" parent="Buildings/ShopBuilding"]
-texture = ExtResource("10_hut")
-centered = false
-texture_filter = 0
-
-[node name="Collision" type="StaticBody2D" parent="Buildings/ShopBuilding"]
-collision_layer = 2
-collision_mask = 0
-
-[node name="CollisionShape" type="CollisionShape2D" parent="Buildings/ShopBuilding/Collision"]
-position = Vector2(64, 88)
-shape = SubResource("hut_collision_rect")
-
-[node name="ElderHouse" type="Node2D" parent="Buildings"]
-position = Vector2(240, 176)
-
-[node name="Sprite" type="Sprite2D" parent="Buildings/ElderHouse"]
-texture = ExtResource("10_hut")
-centered = false
-texture_filter = 0
-
-[node name="Collision" type="StaticBody2D" parent="Buildings/ElderHouse"]
-collision_layer = 2
-collision_mask = 0
-
-[node name="CollisionShape" type="CollisionShape2D" parent="Buildings/ElderHouse/Collision"]
-position = Vector2(64, 88)
-shape = SubResource("hut_collision_rect")
-
-[node name="Trees" type="Node2D" parent="."]
-
-[node name="Tree01" type="Sprite2D" parent="Trees"]
-position = Vector2(16, 24)
-texture = ExtResource("13_tree_tl")
-centered = false
-texture_filter = 0
-
-[node name="Tree01Body" type="StaticBody2D" parent="Trees"]
-position = Vector2(32, 64)
-collision_layer = 2
-collision_mask = 0
-
-[node name="Shape" type="CollisionShape2D" parent="Trees/Tree01Body"]
-shape = SubResource("tree_tall_collision_rect")
-
-[node name="Tree02" type="Sprite2D" parent="Trees"]
-position = Vector2(56, 16)
-texture = ExtResource("12_tree_md")
-centered = false
-texture_filter = 0
-
-[node name="Tree02Body" type="StaticBody2D" parent="Trees"]
-position = Vector2(72, 48)
-collision_layer = 2
-collision_mask = 0
-
-[node name="Shape" type="CollisionShape2D" parent="Trees/Tree02Body"]
-shape = SubResource("tree_tall_collision_rect")
-
-[node name="Tree03" type="Sprite2D" parent="Trees"]
-position = Vector2(288, 8)
-texture = ExtResource("13_tree_tl")
-centered = false
-texture_filter = 0
-
-[node name="Tree03Body" type="StaticBody2D" parent="Trees"]
-position = Vector2(304, 48)
-collision_layer = 2
-collision_mask = 0
-
-[node name="Shape" type="CollisionShape2D" parent="Trees/Tree03Body"]
-shape = SubResource("tree_tall_collision_rect")
-
-[node name="Tree04" type="Sprite2D" parent="Trees"]
-position = Vector2(560, 24)
-texture = ExtResource("13_tree_tl")
-centered = false
-texture_filter = 0
-
-[node name="Tree04Body" type="StaticBody2D" parent="Trees"]
-position = Vector2(576, 64)
-collision_layer = 2
-collision_mask = 0
-
-[node name="Shape" type="CollisionShape2D" parent="Trees/Tree04Body"]
-shape = SubResource("tree_tall_collision_rect")
-
-[node name="Tree05" type="Sprite2D" parent="Trees"]
-position = Vector2(600, 120)
-texture = ExtResource("12_tree_md")
-centered = false
-texture_filter = 0
-
-[node name="Tree05Body" type="StaticBody2D" parent="Trees"]
-position = Vector2(616, 152)
-collision_layer = 2
-collision_mask = 0
-
-[node name="Shape" type="CollisionShape2D" parent="Trees/Tree05Body"]
-shape = SubResource("tree_tall_collision_rect")
-
-[node name="Tree06" type="Sprite2D" parent="Trees"]
-position = Vector2(592, 240)
-texture = ExtResource("13_tree_tl")
-centered = false
-texture_filter = 0
-
-[node name="Tree06Body" type="StaticBody2D" parent="Trees"]
-position = Vector2(608, 280)
-collision_layer = 2
-collision_mask = 0
-
-[node name="Shape" type="CollisionShape2D" parent="Trees/Tree06Body"]
-shape = SubResource("tree_tall_collision_rect")
-
-[node name="Tree07" type="Sprite2D" parent="Trees"]
-position = Vector2(576, 360)
-texture = ExtResource("12_tree_md")
-centered = false
-texture_filter = 0
-
-[node name="Tree07Body" type="StaticBody2D" parent="Trees"]
-position = Vector2(592, 392)
-collision_layer = 2
-collision_mask = 0
-
-[node name="Shape" type="CollisionShape2D" parent="Trees/Tree07Body"]
-shape = SubResource("tree_tall_collision_rect")
-
-[node name="Tree08" type="Sprite2D" parent="Trees"]
-position = Vector2(480, 420)
-texture = ExtResource("11_tree_sm")
-centered = false
-texture_filter = 0
-
-[node name="Tree08Body" type="StaticBody2D" parent="Trees"]
-position = Vector2(496, 444)
-collision_layer = 2
-collision_mask = 0
-
-[node name="Shape" type="CollisionShape2D" parent="Trees/Tree08Body"]
-shape = SubResource("tree_tall_collision_rect")
-
-[node name="Tree09" type="Sprite2D" parent="Trees"]
-position = Vector2(320, 440)
-texture = ExtResource("13_tree_tl")
-centered = false
-texture_filter = 0
-
-[node name="Tree09Body" type="StaticBody2D" parent="Trees"]
-position = Vector2(336, 480)
-collision_layer = 2
-collision_mask = 0
-
-[node name="Shape" type="CollisionShape2D" parent="Trees/Tree09Body"]
-shape = SubResource("tree_tall_collision_rect")
-
-[node name="Tree10" type="Sprite2D" parent="Trees"]
-position = Vector2(160, 420)
-texture = ExtResource("12_tree_md")
-centered = false
-texture_filter = 0
-
-[node name="Tree10Body" type="StaticBody2D" parent="Trees"]
-position = Vector2(176, 452)
-collision_layer = 2
-collision_mask = 0
-
-[node name="Shape" type="CollisionShape2D" parent="Trees/Tree10Body"]
-shape = SubResource("tree_tall_collision_rect")
-
-[node name="Tree11" type="Sprite2D" parent="Trees"]
-position = Vector2(24, 360)
-texture = ExtResource("13_tree_tl")
-centered = false
-texture_filter = 0
-
-[node name="Tree11Body" type="StaticBody2D" parent="Trees"]
-position = Vector2(40, 400)
-collision_layer = 2
-collision_mask = 0
-
-[node name="Shape" type="CollisionShape2D" parent="Trees/Tree11Body"]
-shape = SubResource("tree_tall_collision_rect")
-
-[node name="Tree12" type="Sprite2D" parent="Trees"]
-position = Vector2(48, 280)
-texture = ExtResource("11_tree_sm")
-centered = false
-texture_filter = 0
-
-[node name="Tree12Body" type="StaticBody2D" parent="Trees"]
-position = Vector2(64, 304)
-collision_layer = 2
-collision_mask = 0
-
-[node name="Shape" type="CollisionShape2D" parent="Trees/Tree12Body"]
-shape = SubResource("tree_tall_collision_rect")
+[node name="AbovePlayer" type="TileMapLayer" parent="."]
+collision_enabled = false
+z_index = 2
 
 [node name="Entities" type="Node2D" parent="."]
 
 [node name="Player" parent="Entities" instance=ExtResource("2_player")]
-position = Vector2(320, 300)
+position = Vector2(304, 208)
 
 [node name="Camera2D" parent="Entities/Player" index="3"]
-limit_left = -64
-limit_top = -64
-limit_right = 704
-limit_bottom = 544
+limit_left = 0
+limit_top = 0
+limit_right = 640
+limit_bottom = 448
 position_smoothing_enabled = true
 position_smoothing_speed = 8.0
 
 [node name="SpawnFromForest" type="Marker2D" parent="Entities"]
-position = Vector2(80, 200)
+position = Vector2(80, 168)
 
 [node name="InnkeeperNPC" parent="Entities" instance=ExtResource("4_npc")]
-position = Vector2(140, 160)
+position = Vector2(176, 144)
 npc_name = "Innkeeper"
 dialogue_lines = PackedStringArray("Welcome to the Roothollow Inn! You look exhausted. Let me tend to your wounds.")
 
 [node name="Sprite2D" type="Sprite2D" parent="Entities/InnkeeperNPC" index="1"]
-texture = ExtResource("15_npc1")
+texture = ExtResource("24_household")
 hframes = 3
 vframes = 4
 frame = 1
 texture_filter = 0
 
 [node name="ShopkeeperNPC" parent="Entities" instance=ExtResource("4_npc")]
-position = Vector2(430, 160)
+position = Vector2(464, 320)
 npc_name = "Shopkeeper"
 dialogue_lines = PackedStringArray("Supplies are running low with the roads so dangerous. I'm afraid the shop is closed for now.")
 
 [node name="Sprite2D" type="Sprite2D" parent="Entities/ShopkeeperNPC" index="1"]
-texture = ExtResource("16_npc2")
+texture = ExtResource("22_farmer")
 hframes = 3
 vframes = 4
 frame = 1
 texture_filter = 0
 
 [node name="TownfolkNPC1" parent="Entities" instance=ExtResource("4_npc")]
-position = Vector2(280, 280)
+position = Vector2(232, 384)
 npc_name = "Elder"
 dialogue_lines = PackedStringArray("The Severance changed everything. The echoes... they used to be harmless memories. Now they hunger.", "Some say it started when the Great Resonance Crystal in the old capital shattered. But nobody knows for sure.")
 
 [node name="Sprite2D" type="Sprite2D" parent="Entities/TownfolkNPC1" index="1"]
-texture = ExtResource("15_npc1")
+texture = ExtResource("20_elder")
 hframes = 3
 vframes = 4
 frame = 1
 texture_filter = 0
 
 [node name="TownfolkNPC2" parent="Entities" instance=ExtResource("4_npc")]
-position = Vector2(480, 280)
+position = Vector2(112, 168)
 npc_name = "Scout"
 dialogue_lines = PackedStringArray("I've seen strange lights in the ruins to the west. Echo Fragments are appearing more frequently.", "Be careful if you venture beyond the forest. The creatures there are getting bolder.")
 
@@ -339,36 +123,36 @@ frame = 1
 texture_filter = 0
 
 [node name="GarrickNPC" parent="Entities" instance=ExtResource("4_npc")]
-position = Vector2(320, 360)
+position = Vector2(304, 240)
 npc_name = "Garrick"
 dialogue_lines = PackedStringArray("Hmm. Another traveler passing through. These roads aren't what they used to be.", "If you're heading toward the ruins, I'd advise caution. The echoes there are... restless.")
 
 [node name="Sprite2D" type="Sprite2D" parent="Entities/GarrickNPC" index="1"]
-texture = ExtResource("15_npc1")
+texture = ExtResource("21_knights")
 hframes = 3
 vframes = 4
 frame = 1
 texture_filter = 0
 
 [node name="LinaNPC" parent="Entities" instance=ExtResource("4_npc")]
-position = Vector2(360, 250)
+position = Vector2(352, 200)
 npc_name = "Lina"
 dialogue_lines = PackedStringArray("Kael! Kael! Look what I found by the river!")
 
 [node name="Sprite2D" type="Sprite2D" parent="Entities/LinaNPC" index="1"]
-texture = ExtResource("16_npc2")
+texture = ExtResource("23_children")
 hframes = 3
 vframes = 4
 frame = 1
 texture_filter = 0
 
 [node name="SavePoint" parent="Entities" instance=ExtResource("5_interact")]
-position = Vector2(320, 240)
+position = Vector2(304, 208)
 strategy = SubResource("save_point_strat")
 one_time = false
 
 [node name="SignPost" parent="Entities" instance=ExtResource("5_interact")]
-position = Vector2(120, 160)
+position = Vector2(112, 144)
 strategy = SubResource("sign_strat")
 
 [node name="Sprite2D" type="Sprite2D" parent="Entities/SignPost" index="1"]
@@ -378,7 +162,7 @@ texture_filter = 0
 [node name="Triggers" type="Node2D" parent="."]
 
 [node name="ExitToForest" type="Area2D" parent="Triggers"]
-position = Vector2(16, 200)
+position = Vector2(16, 168)
 collision_layer = 0
 collision_mask = 1
 
@@ -386,7 +170,7 @@ collision_mask = 1
 shape = SubResource("RectangleShape2D_exit")
 
 [node name="GarrickRecruitZone" type="Area2D" parent="Triggers"]
-position = Vector2(320, 360)
+position = Vector2(304, 240)
 collision_layer = 0
 collision_mask = 1
 
@@ -395,4 +179,3 @@ shape = SubResource("CircleShape2D_garrick")
 
 [node name="GarrickRecruitment" type="Node" parent="."]
 script = ExtResource("6_garrick")
-
