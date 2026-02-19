@@ -134,26 +134,12 @@ Started: 2026-02-18
 - Priority: high
 - Depends: none
 
-### T-0063
-- Title: Source and import BGM tracks for demo areas
+### T-0064
+- Title: Integrate BGM playback into all scenes and battle system
 - Status: todo
 - Assigned: unassigned
 - Priority: high
 - Depends: none
-
-### T-0064
-- Title: Integrate BGM playback into scene _ready() methods
-- Status: todo
-- Assigned: unassigned
-- Priority: high
-- Depends: T-0063
-
-### T-0065
-- Title: Add battle music (standard encounters and boss)
-- Status: todo
-- Assigned: unassigned
-- Priority: high
-- Depends: T-0063
 
 ### T-0072
 - Title: Create scene_paths.gd for centralized scene path constants
@@ -230,14 +216,14 @@ Started: 2026-02-18
 - Status: todo
 - Assigned: unassigned
 - Priority: medium
-- Depends: T-0063
+- Depends: none
 
 ### T-0067
 - Title: Add combat sound effects (attack, magic, heal, death)
 - Status: todo
 - Assigned: unassigned
 - Priority: medium
-- Depends: T-0063
+- Depends: none
 
 ### T-0068
 - Title: Build settings/options menu with volume sliders

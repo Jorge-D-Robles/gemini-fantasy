@@ -16,9 +16,8 @@ assets/
     misc/                      # Ships, mini-chars, dungeon props, effects (34 files)
   portraits/                   # Character face portraits for dialogue (16 files)
   icons/                       # Item/ability icon sheets — 24px, 32px, halloween (3 files)
+  music/                       # Background music OGG tracks (12 files) — see music/CLAUDE.md
 ```
-
-> **Note:** `audio/` (bgm/, sfx/) is not yet present but belongs here when added.
 
 ## Source Assets
 
