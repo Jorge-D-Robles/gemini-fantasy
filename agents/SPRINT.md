@@ -13,13 +13,6 @@ Started: 2026-02-18
 
 ## Queue
 
-### T-0083
-- Title: Update Roothollow NPC dialogue to match story scripts and style guide
-- Status: todo
-- Assigned: unassigned
-- Priority: medium
-- Depends: none
-
 ### T-0092
 - Title: Add tutorial hints for controls on first playthrough
 - Status: todo
@@ -135,6 +128,13 @@ Started: 2026-02-18
 ---
 
 ## Done This Sprint
+
+### T-0083
+- Title: Update Roothollow NPC dialogue to match story scripts and style guide
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: Added Verdant Tangle regional slang ("root deep", "overgrown") to all 5 native NPCs across 4 flag states. Garrick uses Cindral Wastes fire/ash metaphors (no Tangle slang). Fixed 4 cliché/banned-pattern lines in Thessa. Trimmed Thessa garrick_recruited from 5 to 4 lines. Shortened Garrick's sentences with more pauses. 6 new slang verification tests (970 total).
 
 ### T-0067
 - Title: Add combat sound effects (attack, magic, heal, death)

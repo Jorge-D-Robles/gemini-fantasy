@@ -1058,6 +1058,16 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 - Refs: game/ui/settings_menu/settings_menu.gd, docs/game-design/06-audio-design.md
 - Notes: Add tooltip text on each slider explaining what it controls, keyboard left/right arrow hint label, and reset-to-default button per slider. 3+ tests for compute_slider_tooltip() static function.
 
+### T-0143
+- Title: Implement critical hit mechanic and wire CRITICAL_HIT SFX and popup
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M0
+- Depends: T-0067
+- Refs: game/systems/battle/battler_damage.gd, game/systems/battle/states/action_execute_state.gd, game/entities/battle/damage_popup.gd, game/systems/sfx_library.gd
+- Notes: luck stat exists on all battlers but is unused. Add crit chance formula to BattlerDamage: base 5% + (luck * 0.5)%. Return crit flag from deal_damage(). In action_execute_state: if crit, multiply damage by 1.5, play COMBAT_CRITICAL_HIT SFX, show DamagePopup.CRITICAL type. 5+ tests.
+
 ---
 
 ## M2 — Act II: The Weight of Echoes
