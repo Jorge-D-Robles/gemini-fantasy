@@ -137,8 +137,9 @@ func _on_exit_entered(body: Node2D) -> void:
 1. **Fairy Forest A5_A is the universal ground sheet** — fully opaque at every row
 2. **Row 8** = bright green (forest/town). **Row 10** = gray stone (ruins/paths). **Row 4** = amber cobble (forest paths)
 3. **Ruins tiles stay in ruins scenes** — golden walls break fairy forest aesthetic
-4. **Single-tile fills** — never alternate A5 columns
-5. **B-sheet objects provide visual variety**, not A5 column mixing
+4. **Organic ground** — use 2-3 terrain types in natural patches (grass, dirt, stone). Within each patch, use one A5 column consistently (different columns create seam artifacts). Never fill the entire map with one repeated tile.
+5. **B-sheet objects and ground decorations provide visual variety** — trees, rocks, flowers, barrels, fences. Ground detail coverage should be 15-30%, not sparse.
+6. **Search for JRPG reference images** before designing any tilemap — study how professional level designers create organic environments
 6. **Mixing packs is OK** for different purposes (e.g., Inn uses `tf_farmandfort`)
 
 ## MapBuilder Constants Reference
