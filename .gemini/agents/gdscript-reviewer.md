@@ -5,7 +5,6 @@ tools:
   - read_file
   - glob
   - grep_search
-  - godot-docs
 model: inherit
 ---
 
