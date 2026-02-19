@@ -17,7 +17,7 @@ All UI screens should import these instead of defining local color constants or 
 |-----------|-----------|-------|---------|
 | `battle_ui/` | `CanvasLayer` | — | In-battle overlay: commands, targeting, party status, resonance, log |
 | `dialogue/` | `CanvasLayer` | 15 | Typewriter dialogue box with portraits and branching choices |
-| `hud/` | `CanvasLayer` | 10 | Overworld HUD: location name, gold, party HP bars |
+| `hud/` | `CanvasLayer` | 10 | Overworld HUD: location name, gold, party HP bars, objective tracker |
 | `pause_menu/` | `CanvasLayer` | 20 | In-game pause menu: party, items, status panels |
 | `title_screen/` | `Control` | — | Title screen with animated intro and main menu buttons |
 
@@ -92,12 +92,15 @@ func show_interaction_prompt(text: String) -> void
 func hide_interaction_prompt() -> void
 func update_party_display() -> void
 func set_gold(amount: int) -> void
+func update_objective_tracker() -> void
+static func compute_tracker_state(qm: Node) -> Dictionary  # pure logic, testable
 ```
 
 ### Auto-connects to
 - `PartyManager.party_changed` / `party_state_changed` -> refreshes party HP
 - `GameManager.game_state_changed` / `scene_changed` -> show/hide
 - `InventoryManager.gold_changed` -> syncs gold label
+- `QuestManager.quest_accepted` / `quest_progressed` / `quest_completed` / `quest_failed` -> updates objective tracker
 
 ## pause_menu/pause_menu.gd
 
