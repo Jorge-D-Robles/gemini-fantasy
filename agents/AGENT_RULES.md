@@ -59,34 +59,35 @@ When running in autonomous mode (long unattended sessions), follow this loop for
 ### Loop Overview
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│  1. PICK TASK (from SPRINT.md queue)                    │
-│  2. COMPACT context window (clean slate)                │
-│  3. RESEARCH (godot-docs, best-practices, design docs)  │
-│  4. CREATE PLAN (files, architecture, approach)         │
-│  5. REVIEW PLAN (adversarial + neutral reviewers)       │
-│  6. UPDATE PLAN (incorporate reviewer feedback)         │
-│  7. IMPLEMENT (parallel agents where possible)          │
-│  8. RUN TESTS (/run-tests, /scene-preview if visual)   │
-│  9. PR CODE REVIEW (pr-code-reviewer safety gate)      │
-│ 10. MERGE (commit, push, PR, merge, pull)              │
-│ 11. PLAN NEXT (task-planner updates backlog/sprint)    │
-│ 12. GOTO 1                                             │
-└─────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────┐
+│  1. CLEAR CONTEXT (/clear — full reset)                  │
+│  2. PICK TASK (from SPRINT.md queue)                     │
+│  3. RESEARCH (godot-docs, best-practices, design docs)   │
+│  4. CREATE PLAN (files, architecture, approach)          │
+│  5. REVIEW PLAN (adversarial + neutral reviewers)        │
+│  6. FINALIZE PLAN (incorporate feedback, save to file)   │
+│  7. COMPACT & RELOAD (compact context, re-read plan)     │
+│  8. IMPLEMENT (parallel agents where possible)           │
+│  9. RUN TESTS (/run-tests, /scene-preview if visual)    │
+│ 10. PR CODE REVIEW (pr-code-reviewer safety gate)       │
+│ 11. MERGE (commit, push, PR, merge, pull)               │
+│ 12. PLAN NEXT (task-planner updates backlog/sprint)     │
+│ 13. GOTO 1                                              │
+└──────────────────────────────────────────────────────────┘
 ```
 
 ### Step-by-Step
 
-#### 1. Pick Task
+#### 1. Clear Context
+- Run `/clear` to fully reset the conversation history
+- This gives every task cycle a completely fresh context window — no stale state, no accumulated noise
+- The CLAUDE.md project instructions reload automatically after clear, so all rules and conventions are preserved
+
+#### 2. Pick Task
 - Read `agents/SPRINT.md`
 - Resume any `in-progress` task assigned to you
 - Otherwise pick the highest-priority unassigned task whose dependencies are met
 - Claim it: set `Assigned: [your-name]`, `Status: in-progress`, `Started: [date]`
-
-#### 2. Compact Context
-- Before starting significant new work, use `/compact` to compress the conversation history
-- This ensures a clean context window for each task cycle, preventing confusion from stale state
-- The task description from SPRINT.md provides all needed context for the new cycle
 
 #### 3. Research
 - Call `godot-docs` subagent for every Godot class involved
@@ -110,7 +111,7 @@ Task(subagent_type="plan-reviewer-neutral", prompt="Review this plan for task T-
 ```
 
 **Consensus rules:**
-- **Both APPROVE** → proceed to implementation
+- **Both APPROVE** → proceed to finalization
 - **Both REJECT** → rethink the approach fundamentally
 - **One APPROVE, one REVISE** → apply the revision suggestions and proceed
 - **Both REVISE** → apply all revision suggestions, then re-review if changes were significant
@@ -118,12 +119,55 @@ Task(subagent_type="plan-reviewer-neutral", prompt="Review this plan for task T-
 
 If re-review is needed, spawn reviewers again with the updated plan AND the previous review for context.
 
-#### 6. Update Plan
-- Incorporate all accepted reviewer feedback
-- Document which suggestions were applied and which were intentionally declined (with reasoning)
-- The updated plan becomes the implementation spec
+#### 6. Finalize Plan & Save to File
+After reviewer consensus is reached:
+1. Incorporate all accepted reviewer feedback
+2. Document which suggestions were applied and which were intentionally declined (with reasoning)
+3. **Save the finalized plan to `agents/plans/T-XXXX-plan.md`** using this format:
 
-#### 7. Implement
+```markdown
+# Plan: T-XXXX — <Task Title>
+
+## Task
+<Full task description from SPRINT.md>
+
+## Reviewer Consensus
+- Adversarial: <APPROVE/REVISE score and key points>
+- Neutral: <APPROVE/REVISE score and key points>
+- Applied feedback: <list of changes made based on reviews>
+
+## Architecture
+<Node hierarchy, signal connections, resource types>
+
+## Files to Create/Modify
+| File | Action | Purpose |
+|------|--------|---------|
+| `path/to/file.gd` | create/modify | <what and why> |
+
+## Public APIs
+<Signals, exported vars, public methods for each new script>
+
+## Integration Points
+<How this connects to existing systems>
+
+## TDD Test Plan
+<Tests to write first, expected behaviors>
+
+## Implementation Order
+1. <First thing to build>
+2. <Second thing to build>
+...
+```
+
+This file is the **single source of truth** for implementation. It survives context compaction.
+
+#### 7. Compact & Reload
+- Run `/compact` to compress the conversation history, shedding the research and review chatter
+- Immediately re-read the saved plan: `Read("agents/plans/T-XXXX-plan.md")`
+- Re-read `agents/SPRINT.md` to confirm task status
+- The agent now has a clean context with only the finalized plan and project rules — ideal for focused implementation
+
+#### 8. Implement
 Follow TDD:
 1. **RED** — Write failing tests first
 2. **GREEN** — Write minimum code to pass tests
@@ -140,12 +184,12 @@ Follow TDD:
 - Code that depends on other code being written first
 - Integration wiring (must happen after all pieces exist)
 
-#### 8. Run Tests & Verify
+#### 9. Run Tests & Verify
 - Run `/run-tests` (gdlint + GUT) — all must pass
 - If the task touched visual content, run `/scene-preview` on every affected scene
 - Fix any failures before proceeding
 
-#### 9. PR Code Review
+#### 10. PR Code Review
 Before merging, spawn the safety gate reviewer:
 
 ```
@@ -159,7 +203,7 @@ Task(subagent_type="pr-code-reviewer", prompt="Review PR for task T-XXXX: <task 
 
 **Never bypass the code reviewer.** If the reviewer rejects, fix the issues and submit for review again.
 
-#### 10. Merge
+#### 11. Merge
 Follow the standard git workflow:
 1. Stage changed files and commit
 2. Push to the current branch
@@ -170,7 +214,7 @@ Follow the standard git workflow:
 7. Update SPRINT.md: move ticket to "Done This Sprint", set `Status: done`, `Completed: [date]`
 8. Append to `agents/COMPLETED.md`
 
-#### 11. Plan Next — Task Pipeline
+#### 12. Plan Next — Task Pipeline
 Spawn the task planner to keep the backlog healthy:
 
 ```
@@ -182,8 +226,8 @@ Apply the task planner's recommendations:
 - Move ready tasks to the sprint queue in `agents/SPRINT.md`
 - Update dependency chains for newly unblocked tasks
 
-#### 12. Loop
-Return to Step 1. Pick the next task from the sprint queue and repeat.
+#### 13. Loop
+Return to Step 1. `/clear` and start the next task with a fully fresh context.
 
 ### Safety Rails
 
