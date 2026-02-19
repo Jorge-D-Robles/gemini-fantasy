@@ -1,0 +1,26 @@
+{
+	"scene": "res://scenes/overgrown_ruins/overgrown_ruins.tscn",
+	"state": {
+		"party": ["kael"]
+	},
+	"actions": [
+		{"type": "wait", "seconds": 2.0},
+		{"type": "screenshot", "label": "ruins_start"},
+		{"type": "move", "direction": "up", "seconds": 2.0},
+		{"type": "move", "direction": "right", "seconds": 2.0},
+		{"type": "screenshot", "label": "ruins_exploring"},
+		{"type": "wait_dialogue", "timeout": 20.0},
+		{"type": "screenshot", "label": "lyra_discovered"},
+		{"type": "log", "message": "Act 1 opening — Lyra discovered"},
+		{"type": "wait", "seconds": 2.0},
+		{"type": "screenshot", "label": "post_opening_ruins"},
+		{"type": "log", "message": "Full walkthrough demo complete"}
+	],
+	"options": {
+		"timeout_seconds": 120.0,
+		"capture_interval_seconds": 10.0,
+		"disable_encounters": true,
+		"disable_bgm": false,
+		"output_dir": "/tmp/playtest/"
+	}
+}

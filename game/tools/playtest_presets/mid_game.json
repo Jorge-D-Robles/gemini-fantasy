@@ -1,0 +1,34 @@
+{
+	"scene": "res://scenes/roothollow/roothollow.tscn",
+	"spawn_point": "spawn_from_forest",
+	"state": {
+		"party": ["kael", "lyra", "iris"],
+		"party_levels": {"kael": 5, "lyra": 4, "iris": 3},
+		"flags": [
+			"opening_lyra_discovered",
+			"iris_recruited"
+		],
+		"inventory": {
+			"potion": 5,
+			"hi_potion": 2,
+			"ether": 3
+		},
+		"gold": 500,
+		"equipment": {
+			"kael": {"weapon": "iron_sword"},
+			"lyra": {"weapon": "oak_staff"}
+		}
+	},
+	"actions": [
+		{"type": "wait", "seconds": 2.0},
+		{"type": "screenshot", "label": "mid_game_spawn"},
+		{"type": "screenshot", "label": "mid_game_hud"},
+		{"type": "log", "message": "Mid-game state verified — party of 3, Roothollow"}
+	],
+	"options": {
+		"timeout_seconds": 30.0,
+		"disable_encounters": true,
+		"disable_bgm": true,
+		"output_dir": "/tmp/playtest/"
+	}
+}

@@ -14,15 +14,6 @@ Started: 2026-02-18
 ## Queue
 
 
-### T-0146
-- Title: Create /playtest skill and preset configs for common test scenarios
-- Status: todo
-- Assigned: unassigned
-- Priority: high
-- Depends: T-0145
-- Refs: docs/game-design/09-playtest-runner.md
-- **RESERVED: This ticket is part of the playtest runner feature (T-0144..T-0147). Skip this and pick another task unless you were specifically assigned to implement the playtest runner.**
-- Notes: Phase 3. Create /playtest skill wrapping CLI invocation. Preset configs in game/tools/playtest_presets/ (new_game, mid_game, battle_test, boss_test, dialogue_test, full_walkthrough). Inline CLI args support. Update CLAUDE.md with usage docs.
 
 ### T-0147
 - Title: Add battle auto-play mode to playtest runner for combat balance testing
@@ -135,6 +126,13 @@ Started: 2026-02-18
 ---
 
 ## Done This Sprint
+
+### T-0146
+- Title: Create /playtest skill and preset configs for common test scenarios
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: /playtest skill (SKILL.md) wrapping CLI invocation with preset support. 7 preset configs: new_game, mid_game, late_game, battle_test, boss_test, dialogue_test, full_walkthrough. Fixed runner scene loading — uses root.add_child.call_deferred() instead of GameManager.change_scene() (which would free the runner). Verified end-to-end: runner exits 0 with success=true, screenshot+report written, HUD shows injected party state. No new tests (all test coverage in T-0144/T-0145).
 
 ### T-0145
 - Title: Add full action set to playtest runner (dialogue, battle, input simulation)
