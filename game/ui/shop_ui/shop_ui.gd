@@ -9,6 +9,8 @@ enum Mode { BUY, SELL }
 
 const UIHelpers = preload("res://ui/ui_helpers.gd")
 const UITheme = preload("res://ui/ui_theme.gd")
+const ShopUIDetail = preload("res://ui/shop_ui/shop_ui_detail.gd")
+const ShopUIList = preload("res://ui/shop_ui/shop_ui_list.gd")
 
 var _is_open: bool = false
 var _mode: Mode = Mode.BUY
@@ -146,19 +148,26 @@ func _refresh_buy_list() -> void:
 	var items: Array[Resource] = _shop_data.get_items()
 	var inv: Node = get_node_or_null("/root/InventoryManager")
 	var player_gold: int = inv.gold if inv else 0
+	var price_fn := _shop_data.get_buy_price
+	var entries := ShopUIList.compute_buy_entries(
+		items, player_gold, price_fn,
+	)
 
-	for item in items:
-		var price: int = _shop_data.get_buy_price(item)
-		var can_afford: bool = player_gold >= price
-		var btn := _create_item_button(item, price, can_afford, true)
+	for entry: Dictionary in entries:
+		var btn := _create_item_button(
+			entry["item"], entry["price"],
+			entry["can_afford"], true,
+		)
 		_item_list.add_child(btn)
 		_item_buttons.append(btn)
 
-	if items.is_empty():
+	if entries.is_empty():
 		var empty := Label.new()
 		empty.text = "No items for sale"
 		empty.add_theme_font_size_override("font_size", 10)
-		empty.add_theme_color_override("font_color", UITheme.TEXT_SECONDARY)
+		empty.add_theme_color_override(
+			"font_color", UITheme.TEXT_SECONDARY,
+		)
 		_item_list.add_child(empty)
 
 
@@ -167,30 +176,27 @@ func _refresh_sell_list() -> void:
 	if inv == null:
 		return
 	var all_items: Dictionary = inv.get_all_items()
+	var sell_price_fn := func(item: Resource) -> int:
+		return _shop_data.get_sell_price(item) if _shop_data else 0
+	var entries := ShopUIList.compute_sell_entries(
+		all_items, _load_item_data, sell_price_fn,
+	)
 
-	for id: StringName in all_items:
-		var count: int = all_items[id]
-		if count <= 0:
-			continue
-		var data: Resource = _load_item_data(id)
-		if data == null:
-			continue
-		# Skip key items — cannot sell
-		if data is ItemData and data.item_type == ItemData.ItemType.KEY_ITEM:
-			continue
-		var price: int = 0
-		if _shop_data:
-			price = _shop_data.get_sell_price(data)
-		var btn := _create_item_button(data, price, true, false)
-		btn.text += " x%d" % count
+	for entry: Dictionary in entries:
+		var btn := _create_item_button(
+			entry["item"], entry["price"], true, false,
+		)
+		btn.text += " x%d" % entry["count"]
 		_item_list.add_child(btn)
 		_item_buttons.append(btn)
 
-	if _item_buttons.is_empty():
+	if entries.is_empty():
 		var empty := Label.new()
 		empty.text = "No items to sell"
 		empty.add_theme_font_size_override("font_size", 10)
-		empty.add_theme_color_override("font_color", UITheme.TEXT_SECONDARY)
+		empty.add_theme_color_override(
+			"font_color", UITheme.TEXT_SECONDARY,
+		)
 		_item_list.add_child(empty)
 
 
@@ -258,13 +264,24 @@ func _on_item_selected(item: Resource) -> void:
 
 
 func _update_detail_panel(item: Resource) -> void:
-	_item_name_label.text = item.display_name if "display_name" in item else "???"
-	_item_name_label.add_theme_color_override("font_color", UITheme.TEXT_GOLD)
+	var buy_price: int = 0
+	var sell_price: int = 0
+	if _shop_data:
+		buy_price = _shop_data.get_buy_price(item)
+		sell_price = _shop_data.get_sell_price(item)
+	var mode_int: int = (
+		ShopUIDetail.MODE_SELL if _mode == Mode.SELL
+		else ShopUIDetail.MODE_BUY
+	)
+	var info := ShopUIDetail.compute_detail_info(
+		item, mode_int, buy_price, sell_price,
+	)
 
-	if "description" in item:
-		_item_desc_label.text = item.description
-	else:
-		_item_desc_label.text = ""
+	_item_name_label.text = info["name"]
+	_item_name_label.add_theme_color_override(
+		"font_color", UITheme.TEXT_GOLD,
+	)
+	_item_desc_label.text = info["description"]
 
 	UIHelpers.clear_children(_stats_list)
 
@@ -273,86 +290,43 @@ func _update_detail_panel(item: Resource) -> void:
 	elif item is ItemData:
 		_add_item_info(item)
 
-	if _shop_data:
-		if _mode == Mode.BUY:
-			var price: int = _shop_data.get_buy_price(item)
-			_price_label.text = "Buy: %d G" % price
-			_price_label.add_theme_color_override(
-				"font_color", UITheme.TEXT_GOLD
-			)
-		else:
-			var price: int = _shop_data.get_sell_price(item)
-			_price_label.text = "Sell: +%d G" % price
-			_price_label.add_theme_color_override(
-				"font_color", UITheme.TEXT_POSITIVE
-			)
+	_price_label.text = info["price_text"]
+	var price_color: Color = (
+		UITheme.TEXT_GOLD if info["is_buy"]
+		else UITheme.TEXT_POSITIVE
+	)
+	_price_label.add_theme_color_override("font_color", price_color)
 
-	_action_button.text = "Buy" if _mode == Mode.BUY else "Sell"
+	_action_button.text = info["action_text"]
 	_action_button.visible = true
 
 
 func _add_equip_stats(equip: EquipmentData) -> void:
-	var stats: Array[Array] = [
-		["ATK", equip.attack_bonus],
-		["MAG", equip.magic_bonus],
-		["DEF", equip.defense_bonus],
-		["RES", equip.resistance_bonus],
-		["SPD", equip.speed_bonus],
-		["LCK", equip.luck_bonus],
-		["HP", equip.max_hp_bonus],
-		["EE", equip.max_ee_bonus],
-	]
-	for stat_pair in stats:
-		var val: int = stat_pair[1]
-		if val == 0:
-			continue
+	var lines := ShopUIDetail.compute_equip_stat_lines(equip)
+	for line: String in lines:
 		var lbl := Label.new()
-		lbl.text = "%s: +%d" % [stat_pair[0], val]
+		lbl.text = line
 		lbl.add_theme_font_size_override("font_size", 9)
-		lbl.add_theme_color_override("font_color", UITheme.TEXT_POSITIVE)
+		if line.begins_with("Slot:"):
+			lbl.add_theme_color_override(
+				"font_color", UITheme.TEXT_SECONDARY,
+			)
+		else:
+			lbl.add_theme_color_override(
+				"font_color", UITheme.TEXT_POSITIVE,
+			)
 		_stats_list.add_child(lbl)
-
-	var slot_name: String = ""
-	match equip.slot_type:
-		EquipmentData.SlotType.WEAPON:
-			slot_name = "Weapon"
-		EquipmentData.SlotType.HELMET:
-			slot_name = "Helmet"
-		EquipmentData.SlotType.CHEST:
-			slot_name = "Chest"
-		EquipmentData.SlotType.ACCESSORY:
-			slot_name = "Accessory"
-	if not slot_name.is_empty():
-		var slot_lbl := Label.new()
-		slot_lbl.text = "Slot: %s" % slot_name
-		slot_lbl.add_theme_font_size_override("font_size", 9)
-		slot_lbl.add_theme_color_override("font_color", UITheme.TEXT_SECONDARY)
-		_stats_list.add_child(slot_lbl)
 
 
 func _add_item_info(item: ItemData) -> void:
-	var effect_text: String = ""
-	match item.effect_type:
-		ItemData.EffectType.HEAL_HP:
-			effect_text = "Restores %d HP" % item.effect_value
-		ItemData.EffectType.HEAL_EE:
-			effect_text = "Restores %d EE" % item.effect_value
-		ItemData.EffectType.CURE_STATUS:
-			effect_text = "Cures status ailments"
-		ItemData.EffectType.REVIVE:
-			effect_text = "Revives fallen ally"
-		ItemData.EffectType.BUFF:
-			effect_text = "Grants a buff"
-		ItemData.EffectType.DAMAGE:
-			effect_text = "Deals %d damage" % item.effect_value
-		ItemData.EffectType.CURE_HOLLOW:
-			effect_text = "Cures Hollow status"
-
+	var effect_text := ShopUIDetail.compute_item_effect_text(item)
 	if not effect_text.is_empty():
 		var lbl := Label.new()
 		lbl.text = effect_text
 		lbl.add_theme_font_size_override("font_size", 9)
-		lbl.add_theme_color_override("font_color", UITheme.TEXT_POSITIVE)
+		lbl.add_theme_color_override(
+			"font_color", UITheme.TEXT_POSITIVE,
+		)
 		_stats_list.add_child(lbl)
 
 	var inv: Node = get_node_or_null("/root/InventoryManager")
@@ -363,7 +337,7 @@ func _add_item_info(item: ItemData) -> void:
 			owned_lbl.text = "Owned: %d" % owned
 			owned_lbl.add_theme_font_size_override("font_size", 9)
 			owned_lbl.add_theme_color_override(
-				"font_color", UITheme.TEXT_SECONDARY
+				"font_color", UITheme.TEXT_SECONDARY,
 			)
 			_stats_list.add_child(owned_lbl)
 
