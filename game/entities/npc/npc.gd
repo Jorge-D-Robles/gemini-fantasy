@@ -30,7 +30,7 @@ const _BOB_HALF_DURATION: float = 0.6
 const UITheme = preload("res://ui/ui_theme.gd")
 
 @export var npc_name: String = ""
-@export var dialogue_lines: Array[String] = []
+@export var dialogue_lines: PackedStringArray = []
 @export var portrait_path: String = ""
 @export var face_player: bool = true
 @export var indicator_type: IndicatorType = IndicatorType.NONE:
