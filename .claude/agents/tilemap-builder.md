@@ -165,7 +165,43 @@ After all layers are complete:
    - [ ] No wrong/unexpected tile sprites visible
    - [ ] The map could pass for a hand-crafted published JRPG scene
 
-4. If any check fails, fix it before committing the final version.
+4. If any check fails, fix it before moving to the review step.
+
+### Step 7 — Tilemap Review Loop
+
+After completing all layers and passing your own visual check, submit the tilemap for independent review. **Do not skip this step.**
+
+1. **Commit, push, and sync to main repo:**
+   ```bash
+   git add game/scenes/<scene_name>/ && git commit -m "feat: complete tilemap for <scene_name>"
+   git push -u origin <branch>
+   git -C /Users/robles/repos/games/gemini-fantasy pull
+   ```
+
+2. **Spawn BOTH tilemap reviewers in parallel:**
+   ```
+   Task(subagent_type="tilemap-reviewer-adversarial",
+        prompt="Review tilemap for scene: <scene_name>\n\nTask: <task description>\n\nBranch: <branch>")
+   Task(subagent_type="tilemap-reviewer-neutral",
+        prompt="Review tilemap for scene: <scene_name>\n\nTask: <task description>\n\nBranch: <branch>")
+   ```
+
+3. **Apply consensus rules:**
+   - **Both APPROVE** → done, proceed to final commit
+   - **Both REJECT** → major rework needed, redesign the problem areas
+   - **One APPROVE, one REVISE** → apply the revision suggestions, proceed
+   - **Both REVISE** → apply all revision suggestions, then re-submit for review
+   - **Any REJECT + other REVISE** → major rework needed, re-submit after changes
+
+4. **If revisions needed:**
+   - Fix the specific issues identified by the reviewers
+   - Run `/scene-preview --full-map` to verify each fix visually
+   - Commit, push, and sync to main repo again
+   - Re-submit for review (spawn both reviewers again with the previous review for context)
+
+5. **Repeat until both reviewers approve.** Never merge a tilemap that hasn't passed dual review.
+
+**The reviewers' verdict is binding.** If they identify carpet-bombed decorations, wrong tiles, or procedural patterns, you must fix them — even if you think the map looks fine. You are blind to your own patterns.
 
 ## Tile Atlas Reference
 

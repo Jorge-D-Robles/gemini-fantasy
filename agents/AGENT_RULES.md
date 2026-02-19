@@ -370,6 +370,8 @@ See `game/data/CLAUDE.md` for the .tres template and `game/resources/CLAUDE.md` 
 | `integration-checker` | `Task(subagent_type="integration-checker")` | Cross-system wiring check (sonnet) |
 | `debugger` | `Task(subagent_type="debugger")` | Bug diagnosis and fix |
 | `tilemap-builder` | `Task(subagent_type="tilemap-builder")` | Tilemap design (opus) |
+| `tilemap-reviewer-adversarial` | `Task(subagent_type="tilemap-reviewer-adversarial")` | Adversarial tilemap visual review (sonnet) |
+| `tilemap-reviewer-neutral` | `Task(subagent_type="tilemap-reviewer-neutral")` | Neutral tilemap visual review (sonnet) |
 | `plan-reviewer-adversarial` | `Task(subagent_type="plan-reviewer-adversarial")` | Adversarial plan review (sonnet) |
 | `plan-reviewer-neutral` | `Task(subagent_type="plan-reviewer-neutral")` | Neutral plan review (sonnet) |
 | `pr-code-reviewer` | `Task(subagent_type="pr-code-reviewer")` | PR merge safety gate (sonnet) |
