@@ -1066,6 +1066,7 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 - Milestone: M0
 - Depends: none
 - Refs: docs/game-design/09-playtest-runner.md, game/tools/scene_preview.gd
+- **RESERVED: This ticket is part of the playtest runner feature (T-0144..T-0147). Skip this and pick another task unless you were specifically assigned to implement the playtest runner.**
 - Notes: Phase 1 of playtest runner. Create playtest_runner.tscn/gd in game/tools/. JSON config parsing (--config=) + inline CLI arg fallback. State injection: party (PartyManager.add_character), flags (EventFlags.set_flag), inventory (InventoryManager.add_item), gold. Scene navigation via GameManager.change_scene(). Basic actions: wait, screenshot, move (via InputEventAction). Report JSON output (screenshots, errors, final state). Timeout safety exit. Update game/tools/CLAUDE.md.
 
 ### T-0145
@@ -1076,6 +1077,7 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 - Milestone: M0
 - Depends: T-0144
 - Refs: docs/game-design/09-playtest-runner.md
+- **RESERVED: This ticket is part of the playtest runner feature (T-0144..T-0147). Skip this and pick another task unless you were specifically assigned to implement the playtest runner.**
 - Notes: Phase 2 of playtest runner. Input simulation via Input.parse_input_event(): interact, cancel, menu. Dialogue actions: advance_dialogue, wait_dialogue (await DialogueManager.is_active() == false), select_choice. Battle actions: trigger_battle (BattleManager.start_battle), wait_battle. State actions: wait_state, set_flag, log. Equipment injection (EquipmentManager.equip). Quest injection (QuestManager.accept_quest). Error collection via push_error monitoring. Periodic screenshot capture (capture_interval_seconds). Auto-screenshot on error (capture_on_error).
 
 ### T-0146
@@ -1086,6 +1088,7 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 - Milestone: M0
 - Depends: T-0145
 - Refs: docs/game-design/09-playtest-runner.md
+- **RESERVED: This ticket is part of the playtest runner feature (T-0144..T-0147). Skip this and pick another task unless you were specifically assigned to implement the playtest runner.**
 - Notes: Phase 3 of playtest runner. Create /playtest Claude Code skill wrapping Godot CLI invocation. Preset configs in game/tools/playtest_presets/ as JSON files: new_game (empty state, title screen), early_game (kael only, ruins), mid_game (3 party, roothollow), late_game (full party, all flags), battle_test (immediate battle), boss_test (boss encounter), dialogue_test (NPC interaction), full_walkthrough (automated demo playthrough). Inline CLI args: --scene, --party, --flags, --gold, --screenshot-after. Update root CLAUDE.md with /playtest usage and preset docs.
 
 ### T-0147
@@ -1096,6 +1099,7 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 - Milestone: M0
 - Depends: T-0145
 - Refs: docs/game-design/09-playtest-runner.md
+- **RESERVED: This ticket is part of the playtest runner feature (T-0144..T-0147). Skip this and pick another task unless you were specifically assigned to implement the playtest runner.**
 - Notes: Phase 4 of playtest runner (optional). AI-driven party actions during playtested battles — auto-select attack on random enemy. Battle outcome logging: victory/defeat, total turns, per-character HP remaining, abilities used, items consumed. Balance data CSV export for tuning. Configurable party AI strategy (aggressive/balanced/defensive). Multiple battle runs for statistical analysis.
 
 ### T-0143
