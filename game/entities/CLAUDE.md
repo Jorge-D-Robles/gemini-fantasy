@@ -95,7 +95,7 @@ NPC (StaticBody2D) — class_name NPC
 ```
 
 **Key behavior:**
-- Exports: `npc_name`, `dialogue_lines: Array[String]`, `portrait_path`, `face_player: bool`, `indicator_type: IndicatorType`
+- Exports: `npc_name`, `dialogue_lines: PackedStringArray`, `portrait_path`, `face_player: bool`, `indicator_type: IndicatorType`
 - `interact()` — called by player raycast; starts `DialogueManager.start_dialogue()`
 - `_face_toward_player()` — flips `sprite.flip_h` based on player X position
 - Emits `interaction_started` / `interaction_ended` signals
