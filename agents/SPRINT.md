@@ -374,6 +374,13 @@ Started: 2026-02-18
 - Completed: 2026-02-19
 - Notes: Scene-owned BGM via SCENE_BGM_PATH constants and _start_scene_music() in _ready(). BattleManager plays battle/boss BGM with boss detection via EnemyData.AiType.BOSS. Victory fanfare. AudioManager.get_current_bgm_path() accessor. Null-safe OGG loading. 8 new tests (787 total).
 
+### T-0124
+- Title: BUG — XP computed and displayed in victory screen but never applied to party members
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: Extracted static apply_xp_rewards() in victory_state.gd. Calls LevelManager.add_xp() for each CharacterData in party, logs level-ups in battle log. Added make_character_data() to test_helpers.gd. 9 new tests (796 total).
+
 ### T-0088
 - Title: Add visual markers for zone transitions (sparkle/arrow effects)
 - Status: done

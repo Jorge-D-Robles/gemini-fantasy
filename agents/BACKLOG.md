@@ -858,6 +858,56 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 - Refs: docs/story/act1/04-old-iron.md (Scene 1), game/scenes/roothollow/roothollow.gd
 - Notes: Chapter 4 Scene 1 defines updated NPC dialogue when iris_recruited flag is set. Maeve greets Iris and offers repair kits. Old Wick sizes her up and accepts "deserter" label. Tomas mentions stranger at shrine. Yara asks if Garrick has a horse. Petra notes Garrick refused food. All lines behind iris_recruited=true flag gate. 5 NPCs with Iris-aware dialogue variants, 6+ tests.
 
+### T-0122
+- Title: Add AudioBus volume persistence — save/restore BGM+SFX volumes across sessions
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M0
+- Depends: T-0068
+- Refs: game/autoloads/audio_manager.gd
+- Notes: Write bgm_volume and sfx_volume to user://settings.json. Load on AudioManager._ready(). Save whenever sliders change. Acceptance: volume preferences survive game restart.
+
+### T-0123
+- Title: BUG — Overworld BGM restore timing after battle may produce audio glitch
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Milestone: M0
+- Depends: none
+- Refs: game/autoloads/battle_manager.gd, game/autoloads/audio_manager.gd
+- Notes: Victory fanfare crossfades to area BGM on scene reload. Implement T-0117 push_bgm()/pop_bgm() stack for clean save/restore. Acceptance: returning from any battle restores correct area BGM with no audio artifacts.
+
+### T-0124
+- Title: BUG — XP computed and displayed in victory screen but never applied to party members
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Milestone: M0
+- Depends: none
+- Refs: game/systems/battle/states/victory_state.gd, game/systems/progression/level_manager.gd
+- Notes: victory_state.gd computes total_exp and passes to show_victory() for display only. No call to LevelManager.add_xp() exists. Characters never level up. Fix: iterate party data, call add_xp(), log level-ups.
+
+### T-0125
+- Title: Improve game over / defeat screen with recovery options
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M0
+- Depends: none
+- Refs: game/systems/battle/states/defeat_state.gd, game/ui/battle_ui/battle_ui.gd
+- Notes: Add styled "Game Over" panel with "Load Last Save" and "Return to Title" buttons.
+
+### T-0126
+- Title: Show level-up callouts and stat gains in victory screen
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M0
+- Depends: T-0124
+- Refs: game/ui/battle_ui/battle_ui.gd, game/systems/battle/states/victory_state.gd
+- Notes: After T-0124 applies XP, show "Kael reached Level 3!" callouts with stat changes.
+
 ---
 
 ## M2 — Act II: The Weight of Echoes
