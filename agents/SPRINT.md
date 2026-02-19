@@ -13,13 +13,6 @@ Started: 2026-02-18
 
 ## Queue
 
-### T-0060
-- Title: Roothollow — reduce ground detail density from 50% to 15%
-- Status: todo
-- Assigned: unassigned
-- Priority: medium
-- Depends: none
-
 
 ### T-0074
 - Title: Split battle_ui.gd into composable panel components
@@ -199,6 +192,13 @@ Started: 2026-02-18
 ---
 
 ## Done This Sprint
+
+### T-0060
+- Title: Roothollow — reduce ground detail density from 50% to 15%
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: Thinned DECOR_MAP from 18.5% to ~13% density (89 decorations on 672 open tiles). Kept intentional placements near buildings/paths. 7 new tests covering map dimensions and density bounds (868 total).
 
 ### T-0085
 - Title: Implement Chapter 4 content — Garrick's deeper story at the shrine
