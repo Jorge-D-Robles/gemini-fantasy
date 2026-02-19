@@ -848,6 +848,16 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 - Refs: game/ui/hud/hud.gd, game/autoloads/quest_manager.gd
 - Notes: 2-3s slide-in toast for "New Quest: [name]" / "Quest Complete: [name]". Queue-based for multiple simultaneous triggers.
 
+### T-0121
+- Title: Add Roothollow Chapter 4 NPC dialogue updates (Iris arrival reactions)
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M0
+- Depends: T-0082
+- Refs: docs/story/act1/04-old-iron.md (Scene 1), game/scenes/roothollow/roothollow.gd
+- Notes: Chapter 4 Scene 1 defines updated NPC dialogue when iris_recruited flag is set. Maeve greets Iris and offers repair kits. Old Wick sizes her up and accepts "deserter" label. Tomas mentions stranger at shrine. Yara asks if Garrick has a horse. Petra notes Garrick refused food. All lines behind iris_recruited=true flag gate. 5 NPCs with Iris-aware dialogue variants, 6+ tests.
+
 ---
 
 ## M2 — Act II: The Weight of Echoes

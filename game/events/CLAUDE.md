@@ -60,7 +60,7 @@ func trigger() -> void:
 
 ### OpeningSequence
 - Kael discovers Lyra in the Overgrown Ruins
-- 6-line dialogue introducing Lyra as a conscious Echo
+- 48-line dialogue compressing Chapter 1 Scene 5 + Chapter 2 Scene 2 (discovery, identity, structured fragmentation, sealed truth, fading urgency, emotional connection, fragment quest hook, resolve)
 - After dialogue, Lyra joins the party via `PartyManager.add_character()`
 - Loads `res://data/characters/lyra.tres` — null-check in script
 - Scene disables `LyraDiscoveryZone.monitoring` after trigger and on revisit

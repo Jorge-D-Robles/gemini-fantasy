@@ -37,7 +37,7 @@ func test_build_dialogue_returns_array() -> void:
 
 func test_build_dialogue_has_expected_line_count() -> void:
 	var lines: Array[DialogueLine] = _sequence._build_dialogue()
-	assert_eq(lines.size(), 23, "Should have 23 dialogue lines")
+	assert_eq(lines.size(), 48, "Should have 48 dialogue lines")
 
 
 func test_build_dialogue_first_speaker_is_kael() -> void:
@@ -74,3 +74,88 @@ func test_build_dialogue_lyra_introduces_herself() -> void:
 			found = true
 			break
 	assert_true(found, "Lyra should introduce herself by name")
+
+
+func test_build_dialogue_lyra_explains_fragmentation() -> void:
+	var lines: Array[DialogueLine] = _sequence._build_dialogue()
+	var found: bool = false
+	for line: DialogueLine in lines:
+		if line.speaker == "Lyra" and (
+			"pathways" in line.text or "structured" in line.text
+		):
+			found = true
+			break
+	assert_true(
+		found,
+		"Lyra should explain structured fragmentation",
+	)
+
+
+func test_build_dialogue_mentions_sealed_truth() -> void:
+	var lines: Array[DialogueLine] = _sequence._build_dialogue()
+	var found: bool = false
+	for line: DialogueLine in lines:
+		if line.speaker == "Lyra" and "sealed" in line.text:
+			found = true
+			break
+	assert_true(
+		found,
+		"Lyra should mention sealing herself to protect a truth",
+	)
+
+
+func test_build_dialogue_fragment_quest_hook() -> void:
+	var lines: Array[DialogueLine] = _sequence._build_dialogue()
+	var found: bool = false
+	for line: DialogueLine in lines:
+		if line.speaker == "Lyra" and "deeper" in line.text:
+			found = true
+			break
+	assert_true(
+		found,
+		"Lyra should give vague fragment direction (deeper)",
+	)
+
+
+func test_build_dialogue_lyra_mentions_emotional_energy() -> void:
+	var lines: Array[DialogueLine] = _sequence._build_dialogue()
+	var found: bool = false
+	for line: DialogueLine in lines:
+		if line.speaker == "Lyra" and (
+			"emotional" in line.text or "fumes" in line.text
+		):
+			found = true
+			break
+	assert_true(
+		found,
+		"Lyra should mention emotional energy or running on fumes",
+	)
+
+
+func test_build_dialogue_lyra_sensed_kael_listening() -> void:
+	var lines: Array[DialogueLine] = _sequence._build_dialogue()
+	var found: bool = false
+	for line: DialogueLine in lines:
+		if line.speaker == "Lyra" and "listening" in line.text:
+			found = true
+			break
+	assert_true(
+		found,
+		"Lyra should reference sensing Kael listening",
+	)
+
+
+func test_build_dialogue_fading_urgency() -> void:
+	var lines: Array[DialogueLine] = _sequence._build_dialogue()
+	var found: bool = false
+	for line: DialogueLine in lines:
+		if line.speaker == "Lyra" and (
+			"coherence" in line.text or "sustain" in line.text
+			or "fading" in line.text
+		):
+			found = true
+			break
+	assert_true(
+		found,
+		"Lyra should express fading urgency (coherence/sustain)",
+	)

@@ -13,13 +13,6 @@ Started: 2026-02-18
 
 ## Queue
 
-### T-0080
-- Title: Expand Lyra discovery dialogue to match story script (~50 lines)
-- Status: todo
-- Assigned: unassigned
-- Priority: high
-- Depends: T-0079
-
 ### T-0070
 - Title: Split battler.gd into damage calculator, resonance controller, and status manager
 - Status: todo
@@ -275,6 +268,13 @@ Started: 2026-02-18
 ---
 
 ## Done This Sprint
+
+### T-0080
+- Title: Expand Lyra discovery dialogue to match story script (~50 lines)
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: Expanded from 23 to 48 lines compressing Chapter 1 Scene 5 + Chapter 2 Scene 2. Added structured fragmentation, sealed truth, Resonance energy/fading, emotional connection (Lyra sensing Kael listening), vague fragment quest hook, closing beat. 6 new content tests (16 total). Updated events/CLAUDE.md.
 
 ### T-0082
 - Title: Expand Garrick recruitment to match story script
