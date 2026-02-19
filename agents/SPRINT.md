@@ -21,14 +21,6 @@ Started: 2026-02-18
 - Depends: none
 
 
-### T-0073
-- Title: Split roothollow.gd into tilemap, dialogue, and quest handler modules
-- Status: in-progress
-- Assigned: claude
-- Priority: medium
-- Depends: none
-- Started: 2026-02-19
-
 ### T-0074
 - Title: Split battle_ui.gd into composable panel components
 - Status: todo
@@ -214,6 +206,13 @@ Started: 2026-02-18
 ---
 
 ## Done This Sprint
+
+### T-0073
+- Title: Split roothollow.gd into tilemap, dialogue, and quest handler modules
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: Extracted roothollow_dialogue.gd (6 static NPC dialogue functions) and roothollow_quests.gd (quest text + condition helpers). Coordinator reduced from 803 to 389 lines. All 849 tests pass.
 
 ### T-0091
 - Title: Add area name display on zone transitions
