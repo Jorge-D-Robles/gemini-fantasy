@@ -6,6 +6,7 @@ extends CanvasLayer
 signal menu_opened
 signal menu_closed
 
+const UIHelpers = preload("res://ui/ui_helpers.gd")
 const INVENTORY_UI_SCENE := preload(
 	"res://ui/inventory_ui/inventory_ui.tscn"
 )
@@ -90,19 +91,9 @@ func _connect_buttons() -> void:
 
 
 func _setup_focus_navigation() -> void:
-	var buttons: Array[Button] = [
-		_party_button,
-		_items_button,
-		_status_button,
-		_quit_button,
-	]
-	for i in buttons.size():
-		if i > 0:
-			buttons[i].focus_neighbor_top = buttons[i - 1].get_path()
-		if i < buttons.size() - 1:
-			buttons[i].focus_neighbor_bottom = buttons[i + 1].get_path()
-	buttons[0].focus_neighbor_top = buttons[-1].get_path()
-	buttons[-1].focus_neighbor_bottom = buttons[0].get_path()
+	UIHelpers.setup_focus_wrap([
+		_party_button, _items_button, _status_button, _quit_button,
+	])
 
 
 func _show_panel(panel_name: String) -> void:
@@ -112,7 +103,7 @@ func _show_panel(panel_name: String) -> void:
 
 
 func _refresh_party_panel() -> void:
-	_clear_children(_party_panel)
+	UIHelpers.clear_children(_party_panel)
 	var party := PartyManager.get_active_party()
 
 	if party.is_empty():
@@ -211,6 +202,3 @@ func _on_quit_pressed() -> void:
 	)
 
 
-func _clear_children(parent: Node) -> void:
-	for child in parent.get_children():
-		child.queue_free()

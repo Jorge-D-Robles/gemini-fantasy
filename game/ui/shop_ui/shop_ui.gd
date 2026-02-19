@@ -7,17 +7,8 @@ signal shop_ui_closed
 
 enum Mode { BUY, SELL }
 
-const PANEL_BG := Color(0.12, 0.07, 0.22, 0.85)
-const PANEL_HOVER := Color(0.18, 0.12, 0.32, 0.9)
-const BORDER_NORMAL := Color(0.45, 0.35, 0.65, 0.6)
-const BORDER_GOLD := Color(0.85, 0.75, 0.45, 0.8)
-const TEXT_PRIMARY := Color(0.85, 0.75, 1.0)
-const TEXT_SECONDARY := Color(0.6, 0.55, 0.7)
-const TEXT_GOLD := Color(0.85, 0.75, 0.45)
-const TEXT_DISABLED := Color(0.4, 0.35, 0.5)
-const TEXT_POSITIVE := Color(0.4, 0.85, 0.4)
-const TEXT_NEGATIVE := Color(0.85, 0.4, 0.4)
-const DIM_COLOR := Color(0, 0, 0, 0.6)
+const UIHelpers = preload("res://ui/ui_helpers.gd")
+const UITheme = preload("res://ui/ui_theme.gd")
 
 var _is_open: bool = false
 var _mode: Mode = Mode.BUY
@@ -129,16 +120,16 @@ func _update_tab_styles() -> void:
 	)
 	_buy_tab.add_theme_color_override(
 		"font_color",
-		TEXT_GOLD if _mode == Mode.BUY else TEXT_SECONDARY,
+		UITheme.TEXT_GOLD if _mode == Mode.BUY else UITheme.TEXT_SECONDARY,
 	)
 	_sell_tab.add_theme_color_override(
 		"font_color",
-		TEXT_GOLD if _mode == Mode.SELL else TEXT_SECONDARY,
+		UITheme.TEXT_GOLD if _mode == Mode.SELL else UITheme.TEXT_SECONDARY,
 	)
 
 
 func _refresh_item_list() -> void:
-	_clear_children(_item_list)
+	UIHelpers.clear_children(_item_list)
 	_item_buttons.clear()
 
 	if _mode == Mode.BUY:
@@ -167,7 +158,7 @@ func _refresh_buy_list() -> void:
 		var empty := Label.new()
 		empty.text = "No items for sale"
 		empty.add_theme_font_size_override("font_size", 10)
-		empty.add_theme_color_override("font_color", TEXT_SECONDARY)
+		empty.add_theme_color_override("font_color", UITheme.TEXT_SECONDARY)
 		_item_list.add_child(empty)
 
 
@@ -199,7 +190,7 @@ func _refresh_sell_list() -> void:
 		var empty := Label.new()
 		empty.text = "No items to sell"
 		empty.add_theme_font_size_override("font_size", 10)
-		empty.add_theme_color_override("font_color", TEXT_SECONDARY)
+		empty.add_theme_color_override("font_color", UITheme.TEXT_SECONDARY)
 		_item_list.add_child(empty)
 
 
@@ -221,8 +212,8 @@ func _create_item_button(
 
 	var normal_style := _create_button_style()
 	var hover_style := _create_button_style()
-	hover_style.bg_color = PANEL_HOVER
-	hover_style.border_color = BORDER_GOLD
+	hover_style.bg_color = UITheme.PANEL_HOVER
+	hover_style.border_color = UITheme.ACCENT_GOLD
 	var focus_style := hover_style.duplicate() as StyleBoxFlat
 	var pressed_style := hover_style.duplicate() as StyleBoxFlat
 
@@ -232,18 +223,18 @@ func _create_item_button(
 	btn.add_theme_stylebox_override("pressed", pressed_style)
 
 	if enabled:
-		btn.add_theme_color_override("font_color", TEXT_PRIMARY)
+		btn.add_theme_color_override("font_color", UITheme.TEXT_PRIMARY)
 		btn.add_theme_color_override(
-			"font_hover_color", TEXT_GOLD
+			"font_hover_color", UITheme.TEXT_GOLD
 		)
 		btn.add_theme_color_override(
-			"font_focus_color", TEXT_GOLD
+			"font_focus_color", UITheme.TEXT_GOLD
 		)
 	else:
 		btn.disabled = true
-		btn.add_theme_color_override("font_color", TEXT_DISABLED)
+		btn.add_theme_color_override("font_color", UITheme.TEXT_DISABLED)
 		btn.add_theme_color_override(
-			"font_disabled_color", TEXT_DISABLED
+			"font_disabled_color", UITheme.TEXT_DISABLED
 		)
 		var disabled_style := _create_button_style()
 		disabled_style.bg_color = Color(0.08, 0.05, 0.15, 0.6)
@@ -268,14 +259,14 @@ func _on_item_selected(item: Resource) -> void:
 
 func _update_detail_panel(item: Resource) -> void:
 	_item_name_label.text = item.display_name if "display_name" in item else "???"
-	_item_name_label.add_theme_color_override("font_color", TEXT_GOLD)
+	_item_name_label.add_theme_color_override("font_color", UITheme.TEXT_GOLD)
 
 	if "description" in item:
 		_item_desc_label.text = item.description
 	else:
 		_item_desc_label.text = ""
 
-	_clear_children(_stats_list)
+	UIHelpers.clear_children(_stats_list)
 
 	if item is EquipmentData:
 		_add_equip_stats(item)
@@ -287,13 +278,13 @@ func _update_detail_panel(item: Resource) -> void:
 			var price: int = _shop_data.get_buy_price(item)
 			_price_label.text = "Buy: %d G" % price
 			_price_label.add_theme_color_override(
-				"font_color", TEXT_GOLD
+				"font_color", UITheme.TEXT_GOLD
 			)
 		else:
 			var price: int = _shop_data.get_sell_price(item)
 			_price_label.text = "Sell: +%d G" % price
 			_price_label.add_theme_color_override(
-				"font_color", TEXT_POSITIVE
+				"font_color", UITheme.TEXT_POSITIVE
 			)
 
 	_action_button.text = "Buy" if _mode == Mode.BUY else "Sell"
@@ -318,7 +309,7 @@ func _add_equip_stats(equip: EquipmentData) -> void:
 		var lbl := Label.new()
 		lbl.text = "%s: +%d" % [stat_pair[0], val]
 		lbl.add_theme_font_size_override("font_size", 9)
-		lbl.add_theme_color_override("font_color", TEXT_POSITIVE)
+		lbl.add_theme_color_override("font_color", UITheme.TEXT_POSITIVE)
 		_stats_list.add_child(lbl)
 
 	var slot_name: String = ""
@@ -335,7 +326,7 @@ func _add_equip_stats(equip: EquipmentData) -> void:
 		var slot_lbl := Label.new()
 		slot_lbl.text = "Slot: %s" % slot_name
 		slot_lbl.add_theme_font_size_override("font_size", 9)
-		slot_lbl.add_theme_color_override("font_color", TEXT_SECONDARY)
+		slot_lbl.add_theme_color_override("font_color", UITheme.TEXT_SECONDARY)
 		_stats_list.add_child(slot_lbl)
 
 
@@ -361,7 +352,7 @@ func _add_item_info(item: ItemData) -> void:
 		var lbl := Label.new()
 		lbl.text = effect_text
 		lbl.add_theme_font_size_override("font_size", 9)
-		lbl.add_theme_color_override("font_color", TEXT_POSITIVE)
+		lbl.add_theme_color_override("font_color", UITheme.TEXT_POSITIVE)
 		_stats_list.add_child(lbl)
 
 	var inv: Node = get_node_or_null("/root/InventoryManager")
@@ -372,7 +363,7 @@ func _add_item_info(item: ItemData) -> void:
 			owned_lbl.text = "Owned: %d" % owned
 			owned_lbl.add_theme_font_size_override("font_size", 9)
 			owned_lbl.add_theme_color_override(
-				"font_color", TEXT_SECONDARY
+				"font_color", UITheme.TEXT_SECONDARY
 			)
 			_stats_list.add_child(owned_lbl)
 
@@ -380,10 +371,10 @@ func _add_item_info(item: ItemData) -> void:
 func _clear_detail_panel() -> void:
 	_item_name_label.text = "Select an item"
 	_item_name_label.add_theme_color_override(
-		"font_color", TEXT_SECONDARY
+		"font_color", UITheme.TEXT_SECONDARY
 	)
 	_item_desc_label.text = ""
-	_clear_children(_stats_list)
+	UIHelpers.clear_children(_stats_list)
 	_price_label.text = ""
 	_action_button.visible = false
 	_selected_item = null
@@ -422,22 +413,7 @@ func _grab_initial_focus() -> void:
 
 
 func _setup_item_focus() -> void:
-	for i in _item_buttons.size():
-		if i > 0:
-			_item_buttons[i].focus_neighbor_top = (
-				_item_buttons[i - 1].get_path()
-			)
-		if i < _item_buttons.size() - 1:
-			_item_buttons[i].focus_neighbor_bottom = (
-				_item_buttons[i + 1].get_path()
-			)
-	if _item_buttons.size() > 1:
-		_item_buttons[0].focus_neighbor_top = (
-			_item_buttons[-1].get_path()
-		)
-		_item_buttons[-1].focus_neighbor_bottom = (
-			_item_buttons[0].get_path()
-		)
+	UIHelpers.setup_focus_wrap(_item_buttons)
 	# Wire right from item list to action/close buttons
 	for btn in _item_buttons:
 		btn.focus_neighbor_right = _action_button.get_path()
@@ -450,10 +426,7 @@ func _setup_item_focus() -> void:
 			_item_buttons[0].get_path()
 		)
 	# Wire action <-> close vertical navigation
-	_action_button.focus_neighbor_bottom = _close_button.get_path()
-	_close_button.focus_neighbor_top = _action_button.get_path()
-	_action_button.focus_neighbor_top = _close_button.get_path()
-	_close_button.focus_neighbor_bottom = _action_button.get_path()
+	UIHelpers.setup_focus_wrap([_action_button, _close_button])
 
 
 func _load_item_data(id: StringName) -> Resource:
@@ -469,32 +442,23 @@ func _load_item_data(id: StringName) -> Resource:
 func _apply_panel_styles() -> void:
 	if _main_panel:
 		_main_panel.add_theme_stylebox_override(
-			"panel", _create_panel_style()
+			"panel", UIHelpers.create_panel_style()
 		)
 	if _detail_panel:
-		var inner := _create_panel_style()
-		inner.bg_color = Color(0.08, 0.05, 0.15, 0.7)
-		inner.set_border_width_all(1)
+		var inner := UIHelpers.create_panel_style(
+			UITheme.PANEL_INNER_BG, UITheme.PANEL_BORDER, 1,
+		)
 		_detail_panel.add_theme_stylebox_override("panel", inner)
-
-
-func _create_panel_style() -> StyleBoxFlat:
-	var style := StyleBoxFlat.new()
-	style.bg_color = PANEL_BG
-	style.border_color = BORDER_NORMAL
-	style.set_border_width_all(2)
-	style.set_corner_radius_all(3)
-	return style
 
 
 func _create_tab_style(active: bool) -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
 	if active:
-		style.bg_color = PANEL_HOVER
-		style.border_color = BORDER_GOLD
+		style.bg_color = UITheme.PANEL_HOVER
+		style.border_color = UITheme.ACCENT_GOLD
 	else:
 		style.bg_color = Color(0.08, 0.05, 0.15, 0.6)
-		style.border_color = BORDER_NORMAL
+		style.border_color = UITheme.PANEL_BORDER
 	style.set_border_width_all(1)
 	style.set_corner_radius_all(2)
 	style.content_margin_left = 12.0
@@ -506,8 +470,8 @@ func _create_tab_style(active: bool) -> StyleBoxFlat:
 
 func _create_button_style() -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
-	style.bg_color = PANEL_BG
-	style.border_color = BORDER_NORMAL
+	style.bg_color = UITheme.PANEL_BG
+	style.border_color = UITheme.PANEL_BORDER
 	style.set_border_width_all(1)
 	style.set_corner_radius_all(2)
 	style.content_margin_left = 8.0
@@ -517,6 +481,3 @@ func _create_button_style() -> StyleBoxFlat:
 	return style
 
 
-func _clear_children(parent: Node) -> void:
-	for child in parent.get_children():
-		child.queue_free()

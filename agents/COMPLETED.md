@@ -82,3 +82,9 @@ These 26 fixes were completed before the ticket system was established:
 - [2026-02-18] T-0046: Integration — lint fixes, test fixes, file sync, 582/582 tests passing (claude)
 - [2026-02-18] T-0047: Visual overhaul — multi-tile mushroom buildings, distinct NPC sprites, forest tree objects, sealed boundaries, broken symmetry (claude)
 - [2026-02-18] T-0048: Organic tilemap overhaul — multi-terrain ground patches (3 types per scene), detail coverage 20-25%, all 3 scenes (claude)
+
+## Sprint S03 — Demo Polish
+
+- [2026-02-19] T-0049: BUG — Verdant Forest camera limit already fixed in codebase (claude)
+- [2026-02-19] T-0051: Battle backgrounds — programmatic gradient backgrounds per area type (forest/ruins/town/cave), 10 tests (claude)
+- [2026-02-19] T-0069: Extract shared UI helpers — ui_theme.gd (19 color constants), ui_helpers.gd (clear_children, setup_focus_wrap, create_panel_style), refactored 6 UI files, 19 tests (claude)
