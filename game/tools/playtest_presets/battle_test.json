@@ -1,0 +1,34 @@
+{
+	"scene": "res://scenes/verdant_forest/verdant_forest.tscn",
+	"state": {
+		"party": ["kael", "lyra", "iris"],
+		"party_levels": {"kael": 5, "lyra": 4, "iris": 3},
+		"flags": [
+			"opening_lyra_discovered",
+			"iris_recruited"
+		],
+		"inventory": {
+			"potion": 5,
+			"ether": 3
+		},
+		"gold": 300
+	},
+	"actions": [
+		{"type": "wait", "seconds": 1.5},
+		{"type": "screenshot", "label": "overworld_before_battle"},
+		{"type": "trigger_battle", "enemies": ["memory_bloom", "creeping_vine"]},
+		{"type": "wait", "seconds": 2.0},
+		{"type": "screenshot", "label": "battle_started"},
+		{"type": "wait", "seconds": 5.0},
+		{"type": "screenshot", "label": "battle_midway"},
+		{"type": "wait_battle", "timeout": 60.0},
+		{"type": "screenshot", "label": "battle_ended"},
+		{"type": "log", "message": "Battle test complete"}
+	],
+	"options": {
+		"timeout_seconds": 90.0,
+		"disable_encounters": true,
+		"disable_bgm": true,
+		"output_dir": "/tmp/playtest/"
+	}
+}

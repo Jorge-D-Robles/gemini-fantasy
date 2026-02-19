@@ -1,0 +1,20 @@
+{
+	"scene": "res://scenes/overgrown_ruins/overgrown_ruins.tscn",
+	"state": {
+		"party": ["kael"]
+	},
+	"actions": [
+		{"type": "wait", "seconds": 2.0},
+		{"type": "screenshot", "label": "new_game_spawn"},
+		{"type": "move", "direction": "up", "seconds": 1.0},
+		{"type": "move", "direction": "right", "seconds": 1.0},
+		{"type": "screenshot", "label": "new_game_movement"},
+		{"type": "log", "message": "New game state verified"}
+	],
+	"options": {
+		"timeout_seconds": 30.0,
+		"disable_encounters": true,
+		"disable_bgm": true,
+		"output_dir": "/tmp/playtest/"
+	}
+}

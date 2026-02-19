@@ -1,0 +1,43 @@
+{
+	"scene": "res://scenes/roothollow/roothollow.tscn",
+	"spawn_point": "spawn_from_forest",
+	"state": {
+		"party": ["kael", "lyra", "iris", "garrick"],
+		"party_levels": {"kael": 8, "lyra": 7, "iris": 7, "garrick": 8},
+		"flags": [
+			"opening_lyra_discovered",
+			"iris_recruited",
+			"garrick_recruited",
+			"garrick_met_lyra"
+		],
+		"inventory": {
+			"potion": 10,
+			"hi_potion": 5,
+			"ether": 5,
+			"elixir": 2,
+			"phoenix_down": 3
+		},
+		"gold": 2000,
+		"equipment": {
+			"kael": {"weapon": "iron_sword", "chest": "chain_mail"},
+			"lyra": {"weapon": "crystal_staff"},
+			"iris": {"weapon": "iron_hammer"},
+			"garrick": {"weapon": "iron_sword", "chest": "leather_vest"}
+		}
+	},
+	"actions": [
+		{"type": "wait", "seconds": 2.0},
+		{"type": "screenshot", "label": "late_game_spawn"},
+		{"type": "menu"},
+		{"type": "wait", "seconds": 0.5},
+		{"type": "screenshot", "label": "late_game_pause_menu"},
+		{"type": "cancel"},
+		{"type": "log", "message": "Late-game state verified — full party, Roothollow"}
+	],
+	"options": {
+		"timeout_seconds": 30.0,
+		"disable_encounters": true,
+		"disable_bgm": true,
+		"output_dir": "/tmp/playtest/"
+	}
+}

@@ -1,0 +1,40 @@
+{
+	"scene": "res://scenes/overgrown_ruins/overgrown_ruins.tscn",
+	"state": {
+		"party": ["kael", "lyra", "iris", "garrick"],
+		"party_levels": {"kael": 8, "lyra": 7, "iris": 7, "garrick": 8},
+		"flags": [
+			"opening_lyra_discovered",
+			"iris_recruited",
+			"garrick_recruited"
+		],
+		"inventory": {
+			"hi_potion": 5,
+			"ether": 5,
+			"elixir": 2
+		},
+		"gold": 2000,
+		"equipment": {
+			"kael": {"weapon": "iron_sword", "chest": "chain_mail"},
+			"lyra": {"weapon": "crystal_staff"}
+		}
+	},
+	"actions": [
+		{"type": "wait", "seconds": 1.5},
+		{"type": "screenshot", "label": "overworld_before_boss"},
+		{"type": "trigger_battle", "enemies": ["last_gardener"], "can_escape": false},
+		{"type": "wait", "seconds": 2.0},
+		{"type": "screenshot", "label": "boss_battle_started"},
+		{"type": "wait", "seconds": 5.0},
+		{"type": "screenshot", "label": "boss_battle_midway"},
+		{"type": "wait_battle", "timeout": 120.0},
+		{"type": "screenshot", "label": "boss_battle_ended"},
+		{"type": "log", "message": "Boss test complete"}
+	],
+	"options": {
+		"timeout_seconds": 150.0,
+		"disable_encounters": true,
+		"disable_bgm": true,
+		"output_dir": "/tmp/playtest/"
+	}
+}

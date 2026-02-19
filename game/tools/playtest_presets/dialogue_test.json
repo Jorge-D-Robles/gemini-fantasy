@@ -1,0 +1,36 @@
+{
+	"scene": "res://scenes/roothollow/roothollow.tscn",
+	"spawn_point": "spawn_from_forest",
+	"state": {
+		"party": ["kael", "lyra"],
+		"flags": [
+			"opening_lyra_discovered"
+		],
+		"gold": 200
+	},
+	"actions": [
+		{"type": "wait", "seconds": 1.5},
+		{"type": "screenshot", "label": "dialogue_test_spawn"},
+		{"type": "move", "direction": "up", "seconds": 1.0},
+		{"type": "move", "direction": "right", "seconds": 1.5},
+		{"type": "screenshot", "label": "dialogue_test_positioned"},
+		{"type": "interact"},
+		{"type": "wait", "seconds": 0.5},
+		{"type": "screenshot", "label": "dialogue_box_shown"},
+		{"type": "advance_dialogue"},
+		{"type": "wait", "seconds": 0.3},
+		{"type": "screenshot", "label": "dialogue_line_2"},
+		{"type": "advance_dialogue"},
+		{"type": "wait", "seconds": 0.3},
+		{"type": "screenshot", "label": "dialogue_line_3"},
+		{"type": "wait_dialogue", "timeout": 15.0},
+		{"type": "screenshot", "label": "dialogue_ended"},
+		{"type": "log", "message": "Dialogue test complete"}
+	],
+	"options": {
+		"timeout_seconds": 45.0,
+		"disable_encounters": true,
+		"disable_bgm": true,
+		"output_dir": "/tmp/playtest/"
+	}
+}

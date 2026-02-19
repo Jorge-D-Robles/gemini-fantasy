@@ -3,18 +3,17 @@ extends Node2D
 ## Automated playtest runner for full-state integration testing.
 ##
 ## Boots the game with all autoloads initialized, injects configurable game
-## state (party, flags, inventory, gold), loads a target scene via
-## GameManager.change_scene(), then executes a scripted action sequence,
+## state (party, flags, inventory, gold), loads a target scene alongside the
+## runner (without replacing it), then executes a scripted action sequence,
 ## capturing screenshots and collecting errors throughout.
+##
+## IMPORTANT: The runner persists alongside the loaded scene. It is never freed
+## by scene changes because it directly adds the target scene to root via
+## root.add_child() rather than using get_tree().change_scene_to_file().
 ##
 ## Invocation:
 ##   godot --path game/ res://tools/playtest_runner.tscn \
 ##          -- --config=/tmp/playtest_config.json
-##
-## Or inline args:
-##   godot --path game/ res://tools/playtest_runner.tscn \
-##          -- --scene=res://scenes/roothollow/roothollow.tscn \
-##             --party=kael,lyra --gold=500 --output=/tmp/playtest/
 
 const PlaytestConfig := preload("res://tools/playtest_config.gd")
 const PlaytestCapture := preload("res://tools/playtest_capture.gd")
@@ -66,19 +65,26 @@ func _ready() -> void:
 	if _options.get("disable_bgm", true):
 		AudioManager.stop_bgm()
 
+	# Inject state BEFORE scene loads so scene's _ready() sees it.
 	_inject_state(_config.get("state", {}))
 
+	# Load target scene by adding it to root alongside the runner.
+	# We MUST NOT use change_scene_to_file() because that would free
+	# the runner (it's the current_scene). Instead, we directly add
+	# the target scene as a sibling child of root.
 	var scene_path: String = _config.get("scene", "")
 	var spawn_point: String = _config.get("spawn_point", "")
-	GameManager.change_scene(scene_path, 0.0, spawn_point)
-	await GameManager.transition_finished
+	var scene_ok := await _load_scene_direct(scene_path, spawn_point)
+	if not scene_ok:
+		_finish(false)
+		return
+
+	# Wait several frames for all deferred setup to complete.
+	for _i in range(8):
+		await get_tree().process_frame
 
 	_scene_loaded = true
 	_log("Scene loaded: %s" % scene_path)
-
-	# Brief wait for scene _ready() and rendering to settle.
-	for _i in range(3):
-		await get_tree().process_frame
 
 	await _execute_actions(_config.get("actions", []))
 
@@ -105,6 +111,42 @@ func _process(delta: float) -> void:
 		_capture_interval_elapsed += delta
 		if _capture_interval_elapsed >= interval:
 			_capture_interval_elapsed = 0.0
+
+
+# --- Scene Loading ---
+
+func _load_scene_direct(scene_path: String, spawn_point: String) -> bool:
+	var packed := load(scene_path) as PackedScene
+	if packed == null:
+		push_error("PlaytestRunner: failed to load scene '%s'" % scene_path)
+		_errors.append("Failed to load scene: %s" % scene_path)
+		return false
+
+	# Instantiate and add the scene to root without replacing the runner.
+	# Use call_deferred so add_child runs after _ready() finishes (avoids
+	# "parent node busy setting up children" error).
+	var scene_instance: Node = packed.instantiate()
+	get_tree().root.add_child.call_deferred(scene_instance)
+
+	# Wait for the deferred add_child to execute.
+	await get_tree().process_frame
+	await get_tree().process_frame
+
+	# Register as current_scene only if successfully parented to root.
+	if scene_instance.get_parent() == get_tree().root:
+		get_tree().current_scene = scene_instance
+
+	# Notify autoloads that the scene changed.
+	GameManager.scene_changed.emit(scene_path)
+
+	# Apply spawn point if specified.
+	if not spawn_point.is_empty():
+		var player := get_tree().get_first_node_in_group("player")
+		var marker := get_tree().get_first_node_in_group(spawn_point)
+		if player and marker:
+			player.global_position = marker.global_position
+
+	return true
 
 
 # --- State Injection ---
@@ -192,7 +234,10 @@ func _execute_actions(actions: Array) -> void:
 		var action: Dictionary = actions[i]
 		await _execute_action(action)
 		_actions_done += 1
-		_log("action %d/%d done — %s" % [i + 1, total, action.get("type", "?")])
+		_log(
+			"action %d/%d done — %s"
+			% [i + 1, total, action.get("type", "?")]
+		)
 
 
 func _execute_action(action: Dictionary) -> void:
@@ -407,10 +452,13 @@ func _finish(success: bool) -> void:
 
 	_write_log_file(output_dir.path_join("playtest.log"))
 
-	print("PlaytestRunner: report written to %s" % report_path)
-	print("PlaytestRunner: finished — success=%s duration=%.1fs" % [
-		report.get("success"), duration
-	])
+	print(
+		"PlaytestRunner: report → %s" % report_path
+	)
+	print(
+		"PlaytestRunner: done — success=%s duration=%.1fs"
+		% [report.get("success"), duration]
+	)
 
 	get_tree().quit(0 if report.get("success", false) else 1)
 
@@ -418,7 +466,10 @@ func _finish(success: bool) -> void:
 # --- Helpers ---
 
 func _log(message: String) -> void:
-	var line := "[%.2f] %s" % [Time.get_unix_time_from_system() - _start_time, message]
+	var line := "[%.2f] %s" % [
+		Time.get_unix_time_from_system() - _start_time,
+		message,
+	]
 	_log_lines.append(line)
 	print("PlaytestRunner: " + line)
 
