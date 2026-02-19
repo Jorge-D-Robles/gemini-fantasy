@@ -18,7 +18,8 @@ All UI screens should import these instead of defining local color constants or 
 | `battle_ui/` | `CanvasLayer` | — | In-battle overlay: commands, targeting, party status, resonance, log |
 | `dialogue/` | `CanvasLayer` | 15 | Typewriter dialogue box with portraits and branching choices |
 | `hud/` | `CanvasLayer` | 10 | Overworld HUD: location name, gold, party HP bars, objective tracker |
-| `pause_menu/` | `CanvasLayer` | 20 | In-game pause menu: party, items, status panels |
+| `pause_menu/` | `CanvasLayer` | 20 | In-game pause menu: party, items, quests, status panels |
+| `quest_log/` | `Control` (script-only) | — | Quest log sub-screen: active/completed quests with objectives and rewards |
 | `title_screen/` | `Control` | — | Title screen with animated intro and main menu buttons |
 
 ## Color Palette
@@ -112,8 +113,31 @@ signal menu_opened
 signal menu_closed
 ```
 
-**Panels:** Party (stats), Items (placeholder), Status (reserved)
+**Buttons:** Party, Items, Quests, Status, Quit to Title
+**Sub-screens:** Items opens inventory_ui, Quests opens quest_log (both hide menu panel + pause label, restore on close with focus)
 **Rules:** Only opens during `OVERWORLD` and not during transitions. `process_mode = PROCESS_MODE_ALWAYS`.
+
+## quest_log/quest_log.gd
+
+Script-only Control opened from pause menu as a sub-screen. No `.tscn` file.
+
+### Signals
+```gdscript
+signal quest_log_closed
+```
+
+### Public API
+```gdscript
+func open() -> void
+func close() -> void
+static func compute_quest_list(qm: Node, show_completed: bool) -> Array[Dictionary]
+# Returns: [{id, title, quest_type, description, objectives: [{text, completed}], rewards: {gold, exp, items}}]
+```
+
+**Tabs:** Active / Completed — switches which quests are displayed
+**Detail panel:** Quest name (gold), type tag, description, objectives with checkmarks, reward summary
+**Empty state:** Shows "No active quests" / "No completed quests" when list is empty
+**Close:** `cancel` input action emits `quest_log_closed`
 
 ## title_screen/title_screen.gd
 

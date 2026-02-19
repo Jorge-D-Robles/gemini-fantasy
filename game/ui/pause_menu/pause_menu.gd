@@ -1,7 +1,8 @@
 extends CanvasLayer
 
-## Pause menu with party, items, and status panels.
+## Pause menu with party, items, quests, and status panels.
 ## Pauses scene tree while open. Items button opens inventory UI.
+## Quests button opens quest log UI.
 
 signal menu_opened
 signal menu_closed
@@ -10,14 +11,17 @@ const UIHelpers = preload("res://ui/ui_helpers.gd")
 const INVENTORY_UI_SCENE := preload(
 	"res://ui/inventory_ui/inventory_ui.tscn"
 )
+const QuestLogScript = preload("res://ui/quest_log/quest_log.gd")
 
 var _is_open: bool = false
 var _inventory_ui: Control = null
+var _quest_log: Control = null
 
 @onready var _dim_overlay: ColorRect = %DimOverlay
 @onready var _menu_panel: PanelContainer = %MenuPanel
 @onready var _party_button: Button = %PartyButton
 @onready var _items_button: Button = %ItemsButton
+@onready var _quests_button: Button = %QuestsButton
 @onready var _status_button: Button = %StatusButton
 @onready var _quit_button: Button = %QuitButton
 @onready var _party_panel: VBoxContainer = %PartyPanel
@@ -76,6 +80,9 @@ func close() -> void:
 	if _inventory_ui != null:
 		_inventory_ui.queue_free()
 		_inventory_ui = null
+	if _quest_log != null:
+		_quest_log.queue_free()
+		_quest_log = null
 	_is_open = false
 	visible = false
 	get_tree().paused = false
@@ -86,13 +93,18 @@ func close() -> void:
 func _connect_buttons() -> void:
 	_party_button.pressed.connect(_show_panel.bind("party"))
 	_items_button.pressed.connect(_open_inventory)
+	_quests_button.pressed.connect(_open_quest_log)
 	_status_button.pressed.connect(_show_panel.bind("status"))
 	_quit_button.pressed.connect(_on_quit_pressed)
 
 
 func _setup_focus_navigation() -> void:
 	UIHelpers.setup_focus_wrap([
-		_party_button, _items_button, _status_button, _quit_button,
+		_party_button,
+		_items_button,
+		_quests_button,
+		_status_button,
+		_quit_button,
 	])
 
 
@@ -139,6 +151,29 @@ func _on_inventory_closed() -> void:
 	_menu_panel.visible = true
 	_pause_label.visible = true
 	_items_button.grab_focus()
+
+
+func _open_quest_log() -> void:
+	if _quest_log != null:
+		return
+	_menu_panel.visible = false
+	_pause_label.visible = false
+	_quest_log = QuestLogScript.new()
+	_quest_log.process_mode = Node.PROCESS_MODE_ALWAYS
+	add_child(_quest_log)
+	_quest_log.quest_log_closed.connect(
+		_on_quest_log_closed
+	)
+	_quest_log.open()
+
+
+func _on_quest_log_closed() -> void:
+	if _quest_log != null:
+		_quest_log.queue_free()
+		_quest_log = null
+	_menu_panel.visible = true
+	_pause_label.visible = true
+	_quests_button.grab_focus()
 
 
 func _create_member_info(member: Resource) -> VBoxContainer:
@@ -200,5 +235,3 @@ func _on_quit_pressed() -> void:
 	GameManager.change_scene(
 		"res://ui/title_screen/title_screen.tscn"
 	)
-
-
