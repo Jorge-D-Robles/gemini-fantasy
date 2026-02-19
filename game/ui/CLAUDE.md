@@ -12,6 +12,8 @@ All UI screens and overlays. Each subdirectory contains a `.tscn` scene and a `.
 | `battle_ui/battle_ui_victory.gd` | Static utilities: `compute_victory_display()`, `stat_abbreviation()` | `const BattleUIVictory = preload("res://ui/battle_ui/battle_ui_victory.gd")` |
 | `inventory_ui/inventory_ui_filter.gd` | Static utilities: `matches_category()`, `compute_item_entries()` | `const InventoryUIFilter = preload("res://ui/inventory_ui/inventory_ui_filter.gd")` |
 | `inventory_ui/inventory_ui_detail.gd` | Static utilities: `compute_equipment_stats()`, `compute_item_detail()` | `const InventoryUIDetail = preload("res://ui/inventory_ui/inventory_ui_detail.gd")` |
+| `shop_ui/shop_ui_detail.gd` | Static utilities: `compute_equip_stat_lines()`, `compute_item_effect_text()`, `compute_detail_info()` | `const ShopUIDetail = preload("res://ui/shop_ui/shop_ui_detail.gd")` |
+| `shop_ui/shop_ui_list.gd` | Static utilities: `compute_buy_entries()`, `compute_sell_entries()` | `const ShopUIList = preload("res://ui/shop_ui/shop_ui_list.gd")` |
 
 All UI screens should import these instead of defining local color constants or utility functions.
 
@@ -25,6 +27,7 @@ All UI screens should import these instead of defining local color constants or 
 | `pause_menu/` | `CanvasLayer` | 20 | In-game pause menu: party, items, quests, status panels |
 | `quest_log/` | `Control` (script-only) | — | Quest log sub-screen: active/completed quests with objectives and rewards |
 | `title_screen/` | `Control` | — | Title screen with animated intro and main menu buttons |
+| `shop_ui/` | `CanvasLayer` | — | Shop overlay: buy/sell tabs, item list, detail panel, price display |
 | `demo_end_screen/` | `Control` | — | Demo ending: "Thanks for Playing!" with party lineup and return-to-title button |
 
 ## Color Palette
