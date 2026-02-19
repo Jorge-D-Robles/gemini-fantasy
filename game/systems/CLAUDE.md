@@ -67,7 +67,10 @@ The battle subsystem is the most complex system. It uses a `BattleStateMachine` 
 
 | Class | File | Role |
 |-------|------|------|
-| `Battler` | `battler.gd` | Base class for all combatants. Holds HP, EE, Resonance gauge, status effects, damage formulas. |
+| `Battler` | `battler.gd` | Base class for all combatants. Holds HP, EE, Resonance gauge, status effects. Delegates pure logic to static helpers. |
+| `BattlerDamage` | `battler_damage.gd` | Static utility: outgoing/incoming damage formulas with resonance modifiers. |
+| `BattlerResonance` | `battler_resonance.gd` | Static utility: gauge transitions, state evaluation, turn delay calculation. |
+| `BattlerStatus` | `battler_status.gd` | Static utility: status effect apply/remove/query/modifier helpers. |
 | `PartyBattler` | `party_battler.gd` | Player-controlled battler. Emits `action_requested` / `target_requested`. |
 | `EnemyBattler` | `enemy_battler.gd` | AI-controlled battler. Implements BASIC/AGGRESSIVE/DEFENSIVE/SUPPORT/BOSS AI. |
 | `TurnQueue` | `turn_queue.gd` | Sorts alive battlers by `turn_delay` (100/speed). Emits `turn_ready(battler)`. |

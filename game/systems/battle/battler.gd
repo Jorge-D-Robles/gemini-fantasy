@@ -3,6 +3,11 @@ extends Node2D
 
 ## Base class for all combatants in battle. Holds stats, status effects,
 ## and the Resonance gauge. Extended by PartyBattler and EnemyBattler.
+##
+## Pure calculation logic is delegated to static utility classes:
+##   BattlerDamage — outgoing/incoming damage formulas
+##   BattlerResonance — gauge transitions, turn delay
+##   BattlerStatus — status effect queries and mutations
 
 ## Emitted when HP changes. Provides current and maximum values.
 signal hp_changed(new_hp: int, max_hp: int)
@@ -73,14 +78,17 @@ func initialize_from_data(equip_manager: Node = null) -> void:
 	resonance_state = ResonanceState.FOCUSED
 	is_alive = true
 	is_defending = false
-	_calculate_turn_delay()
+	turn_delay = BattlerResonance.calculate_turn_delay(speed, resonance_state)
 
 
 ## Applies damage after defense calculation. Returns actual damage dealt.
 func take_damage(amount: int, is_magical: bool = false) -> int:
 	if not is_alive:
 		return 0
-	var final_damage := _calculate_incoming_damage(amount, is_magical)
+	var def_stat: int = resistance if is_magical else defense
+	var final_damage := BattlerDamage.calculate_incoming(
+		amount, def_stat, resonance_state, is_defending,
+	)
 	current_hp = maxi(current_hp - final_damage, 0)
 	hp_changed.emit(current_hp, max_hp)
 	damage_taken.emit(final_damage)
@@ -133,23 +141,12 @@ func deal_damage(
 	is_magical: bool = false,
 	is_ability: bool = false,
 ) -> int:
-	var stat_value: int
-	if is_magical:
-		stat_value = magic
-	else:
-		stat_value = attack
+	var stat_value: int = magic if is_magical else attack
+	var total := BattlerDamage.calculate_outgoing(
+		base_amount, stat_value, resonance_state, is_ability,
+	)
 
-	if resonance_state == ResonanceState.HOLLOW:
-		stat_value = int(stat_value * GB.HOLLOW_STAT_PENALTY)
-
-	var stat_bonus := stat_value * GB.STAT_DAMAGE_SCALING
-	var total := int(base_amount + stat_bonus)
-
-	if resonance_state == ResonanceState.OVERLOAD:
-		total = int(total * GB.OVERLOAD_OUTGOING_DAMAGE_MULT)
-	elif resonance_state == ResonanceState.RESONANT and is_ability:
-		total = int(total * GB.RESONANT_ABILITY_BONUS)
-
+	# Resonance gain stays here — coupled to battler state and signals
 	if resonance_state != ResonanceState.HOLLOW:
 		add_resonance(
 			total * GB.RESONANCE_GAIN_DAMAGE_DEALT * GB.RESONANCE_GAIN_SCALING
@@ -168,16 +165,23 @@ func defend() -> void:
 ## Clears defend stance and recalculates turn delay for the next round.
 func end_turn() -> void:
 	is_defending = false
-	_calculate_turn_delay()
+	turn_delay = BattlerResonance.calculate_turn_delay(speed, resonance_state)
 
 
 ## Adds to the resonance gauge and updates state. Ignored in HOLLOW state.
 func add_resonance(amount: float) -> void:
 	if resonance_state == ResonanceState.HOLLOW:
 		return
-	resonance_gauge = clampf(resonance_gauge + amount, 0.0, GB.RESONANCE_MAX)
+	resonance_gauge = BattlerResonance.add_to_gauge(resonance_gauge, amount)
 	resonance_changed.emit(resonance_gauge)
-	_update_resonance_state()
+
+	var old_state := resonance_state
+	var new_state_int := BattlerResonance.evaluate_state(
+		resonance_gauge, resonance_state,
+	)
+	resonance_state = new_state_int as ResonanceState
+	if old_state != resonance_state:
+		resonance_state_changed.emit(old_state, resonance_state)
 
 
 ## Returns the current resonance state.
@@ -195,24 +199,16 @@ func cure_hollow() -> void:
 	resonance_gauge = 0.0
 	resonance_changed.emit(resonance_gauge)
 	resonance_state_changed.emit(old_state, resonance_state)
-	_calculate_turn_delay()
+	turn_delay = BattlerResonance.calculate_turn_delay(speed, resonance_state)
 
 
 ## Applies a status effect from data. If already present, refreshes duration.
 func apply_status(effect_data: StatusEffectData) -> void:
 	if effect_data == null:
 		return
-	# Check if already present — refresh duration instead of stacking
-	for entry: Dictionary in _active_effects:
-		var existing: StatusEffectData = entry["data"]
-		if existing.id == effect_data.id:
-			entry["remaining"] = effect_data.duration
-			return
-	_active_effects.append({
-		"data": effect_data,
-		"remaining": effect_data.duration,
-	})
-	status_effect_applied.emit(effect_data.id)
+	var new_id := BattlerStatus.apply(_active_effects, effect_data)
+	if new_id != &"":
+		status_effect_applied.emit(new_id)
 
 
 ## Legacy wrapper — applies a basic debuff with the given name.
@@ -226,13 +222,9 @@ func apply_status_effect(effect: StringName) -> void:
 
 ## Removes a status effect by id.
 func remove_status(effect_id: StringName) -> void:
-	for i in range(_active_effects.size() - 1, -1, -1):
-		var entry: Dictionary = _active_effects[i]
-		var eff: StatusEffectData = entry["data"]
-		if eff.id == effect_id:
-			_active_effects.remove_at(i)
-			status_effect_removed.emit(effect_id)
-			return
+	var removed := BattlerStatus.remove(_active_effects, effect_id)
+	if removed:
+		status_effect_removed.emit(effect_id)
 
 
 ## Legacy wrapper — removes a status effect by name.
@@ -242,11 +234,7 @@ func remove_status_effect(effect: StringName) -> void:
 
 ## Returns true if this battler has an active status effect with the given id.
 func has_status(effect_id: StringName) -> bool:
-	for entry: Dictionary in _active_effects:
-		var eff: StatusEffectData = entry["data"]
-		if eff.id == effect_id:
-			return true
-	return false
+	return BattlerStatus.has(_active_effects, effect_id)
 
 
 ## Legacy wrapper.
@@ -256,11 +244,7 @@ func has_status_effect(effect: StringName) -> bool:
 
 ## Returns remaining turns for an effect, or -1 if not found.
 func get_effect_remaining_turns(effect_id: StringName) -> int:
-	for entry: Dictionary in _active_effects:
-		var eff: StatusEffectData = entry["data"]
-		if eff.id == effect_id:
-			return entry["remaining"] as int
-	return -1
+	return BattlerStatus.get_remaining_turns(_active_effects, effect_id)
 
 
 ## Returns the number of active status effects.
@@ -270,11 +254,7 @@ func get_active_effect_count() -> int:
 
 ## Returns true if any active effect prevents acting.
 func is_action_prevented() -> bool:
-	for entry: Dictionary in _active_effects:
-		var eff: StatusEffectData = entry["data"]
-		if eff.prevents_action:
-			return true
-	return false
+	return BattlerStatus.is_action_prevented(_active_effects)
 
 
 ## Returns base stat + modifiers, with Hollow penalty applied, floored at 0.
@@ -298,7 +278,7 @@ func get_modified_stat(stat_name: String) -> int:
 			return 0
 	if resonance_state == ResonanceState.HOLLOW:
 		base = int(base * GB.HOLLOW_STAT_PENALTY)
-	var modifier := _get_total_modifier(stat_name)
+	var modifier := BattlerStatus.get_total_modifier(_active_effects, stat_name)
 	return maxi(base + modifier, 0)
 
 
@@ -308,6 +288,7 @@ func clear_all_effects() -> void:
 
 
 ## Ticks all active effects: applies DoT/HoT, decrements duration, expires.
+## This loop stays in Battler because it mutates HP and emits signals directly.
 func tick_effects() -> void:
 	if not is_alive:
 		return
@@ -357,84 +338,19 @@ func get_display_name() -> String:
 	return name
 
 
-func _calculate_incoming_damage(base: int, is_magical: bool) -> int:
-	var def_stat: int
-	if is_magical:
-		def_stat = resistance
-	else:
-		def_stat = defense
-
-	if resonance_state == ResonanceState.HOLLOW:
-		def_stat = int(def_stat * GB.HOLLOW_STAT_PENALTY)
-
-	var defense_mod := 1.0 - (def_stat / GB.DEFENSE_SCALING_DIVISOR)
-	defense_mod = clampf(defense_mod, GB.DEFENSE_MOD_MIN, 1.0)
-
-	if is_defending:
-		defense_mod *= GB.DEFEND_DAMAGE_REDUCTION
-
-	if resonance_state == ResonanceState.OVERLOAD:
-		defense_mod *= GB.OVERLOAD_INCOMING_DAMAGE_MULT
-
-	return maxi(int(base * defense_mod), 1)
-
-
-func _update_resonance_state() -> void:
-	if resonance_state == ResonanceState.HOLLOW:
-		return
-
-	var old_state := resonance_state
-	if resonance_gauge >= GB.RESONANCE_OVERLOAD_THRESHOLD:
-		resonance_state = ResonanceState.OVERLOAD
-	elif resonance_gauge >= GB.RESONANCE_RESONANT_THRESHOLD:
-		resonance_state = ResonanceState.RESONANT
-	else:
-		resonance_state = ResonanceState.FOCUSED
-
-	if old_state != resonance_state:
-		resonance_state_changed.emit(old_state, resonance_state)
-
-
 func _on_defeated() -> void:
 	is_alive = false
-	if resonance_state == ResonanceState.OVERLOAD:
+	var result := BattlerResonance.on_defeated(resonance_state)
+	if result["changed"]:
 		var old_state := resonance_state
-		resonance_state = ResonanceState.HOLLOW
-		resonance_gauge = 0.0
+		resonance_state = (result["state"] as int) as ResonanceState
+		resonance_gauge = result["gauge"]
 		resonance_changed.emit(resonance_gauge)
 		resonance_state_changed.emit(old_state, resonance_state)
-		_calculate_turn_delay()
+		turn_delay = BattlerResonance.calculate_turn_delay(
+			speed, resonance_state,
+		)
 	defeated.emit()
-
-
-func _get_total_modifier(stat_name: String) -> int:
-	var total: int = 0
-	for entry: Dictionary in _active_effects:
-		var eff: StatusEffectData = entry["data"]
-		match stat_name:
-			"attack":
-				total += eff.attack_modifier
-			"magic":
-				total += eff.magic_modifier
-			"defense":
-				total += eff.defense_modifier
-			"resistance":
-				total += eff.resistance_modifier
-			"speed":
-				total += eff.speed_modifier
-			"luck":
-				total += eff.luck_modifier
-	return total
-
-
-func _calculate_turn_delay() -> void:
-	var effective_speed := speed
-	if resonance_state == ResonanceState.HOLLOW:
-		effective_speed = int(speed * GB.HOLLOW_STAT_PENALTY)
-	if effective_speed > 0:
-		turn_delay = GB.TURN_DELAY_BASE / float(effective_speed)
-	else:
-		turn_delay = GB.TURN_DELAY_BASE
 
 
 func _apply_equipment_bonuses(equip_manager: Node) -> void:
