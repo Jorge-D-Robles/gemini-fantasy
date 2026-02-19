@@ -9,11 +9,7 @@ Started: 2026-02-16
 
 ## Active
 
-### T-0048
-- Title: Organic tilemap overhaul — multi-terrain ground, dense detail for all 3 scenes
-- Status: in-progress
-- Assigned: claude
-- Started: 2026-02-18
+(none)
 
 ---
 
@@ -24,6 +20,13 @@ Started: 2026-02-16
 ---
 
 ## Done This Sprint
+
+### T-0048
+- Title: Organic tilemap overhaul — multi-terrain ground, dense detail for all 3 scenes
+- Status: done
+- Assigned: claude
+- Started: 2026-02-18
+- Completed: 2026-02-18
 
 ### T-0047
 - Title: Visual overhaul — multi-tile objects, NPC sprites, boundary fixes for all 3 scenes

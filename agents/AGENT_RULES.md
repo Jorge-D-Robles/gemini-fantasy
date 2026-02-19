@@ -131,13 +131,15 @@ When importing tilesets, **copy ALL tile sheets from the pack** (not just the on
 
 ## Tilemap Design
 
-Read `docs/best-practices/11-tilemaps-and-level-design.md` before any tilemap work. Scene-specific tilemap details are in `game/scenes/CLAUDE.md`.
+Read `docs/best-practices/11-tilemaps-and-level-design.md` before any tilemap work. Scene-specific tilemap details are in `game/scenes/CLAUDE.md`. Detailed visual-first workflow is in `.claude/agents/tilemap-builder.md`.
+
+**Key rules:** View tile sheet PNGs before using coordinates. Search for pixel art reference images. Build one layer at a time with `/scene-preview` after each. Never parallelize tilemap work across agents. Place decorations sparingly and intentionally (no percentage-based spam).
 
 ## Visual Verification
 
 **Every change to visual content MUST be verified with `/scene-preview` before committing.** Details in `game/tools/CLAUDE.md`.
 
-Required workflow: make changes -> `/scene-preview` (use `--full-map` for tilemaps) -> inspect screenshot -> fix issues -> repeat until clean -> `/run-tests` -> commit.
+Required workflow: make changes -> `/scene-preview` (use `--full-map` for tilemaps) -> Read screenshot -> evaluate -> fix issues -> repeat until clean -> `/run-tests` -> commit.
 
 **Triggers:** tilemap changes, entity placement, UI layout, scene composition, asset swaps.
 
