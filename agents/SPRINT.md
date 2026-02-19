@@ -13,15 +13,6 @@ Started: 2026-02-18
 
 ## Queue
 
-### T-0145
-- Title: Add full action set to playtest runner (dialogue, battle, input simulation)
-- Status: todo
-- Assigned: unassigned
-- Priority: critical
-- Depends: T-0144
-- Refs: docs/game-design/09-playtest-runner.md
-- **RESERVED: This ticket is part of the playtest runner feature (T-0144..T-0147). Skip this and pick another task unless you were specifically assigned to implement the playtest runner.**
-- Notes: Phase 2. Input simulation: interact, cancel, menu. Dialogue actions: advance_dialogue, wait_dialogue, select_choice. Battle actions: trigger_battle, wait_battle. State actions: wait_state, set_flag, log. Equipment/quest injection. Error collection. Periodic screenshot capture.
 
 ### T-0146
 - Title: Create /playtest skill and preset configs for common test scenarios
@@ -144,6 +135,13 @@ Started: 2026-02-18
 ---
 
 ## Done This Sprint
+
+### T-0145
+- Title: Add full action set to playtest runner (dialogue, battle, input simulation)
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: PlaytestActions static registry (14 action types, validate_action, get_action_input_name). Full action set in runner: interact/cancel/menu, advance_dialogue, wait_dialogue (timeout), select_choice, trigger_battle (loads enemies), wait_battle (timeout), wait_state (GameState parse), set_flag, log. Structured log file output (playtest.log). _warnings array distinct from _errors. _finishing guard against double-quit. 36 new tests (1061 total).
 
 ### T-0144
 - Title: Build playtest runner — core scene with state injection and screenshot capture
