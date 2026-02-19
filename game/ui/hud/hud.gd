@@ -1,6 +1,7 @@
 extends CanvasLayer
 
-## Overworld HUD showing location, gold, party status, interaction prompts.
+## Overworld HUD showing location, gold, party status, interaction prompts,
+## and active quest objective tracker.
 
 @export var location_name: String = "" :
 	set(value):
@@ -14,11 +15,15 @@ var _gold: int = 0
 @onready var _gold_label: Label = %GoldLabel
 @onready var _party_status: VBoxContainer = %PartyStatus
 @onready var _interaction_prompt: Label = %InteractionPrompt
+@onready var _objective_tracker: PanelContainer = %ObjectiveTracker
+@onready var _quest_title: Label = %QuestTitle
+@onready var _objective_label: Label = %ObjectiveLabel
 
 
 func _ready() -> void:
 	visible = false
 	_interaction_prompt.visible = false
+	_objective_tracker.visible = false
 	_location_label.text = location_name
 	_update_gold_display()
 	update_party_display()
@@ -33,6 +38,14 @@ func _ready() -> void:
 		_gold = inv.gold
 		_update_gold_display()
 		inv.gold_changed.connect(_on_gold_changed)
+	# Connect QuestManager signals for objective tracker
+	var qm: Node = get_node_or_null("/root/QuestManager")
+	if qm:
+		qm.quest_accepted.connect(_on_quest_changed)
+		qm.quest_progressed.connect(_on_quest_progressed)
+		qm.quest_completed.connect(_on_quest_changed)
+		qm.quest_failed.connect(_on_quest_changed)
+		update_objective_tracker()
 
 
 func show_interaction_prompt(text: String) -> void:
@@ -57,6 +70,38 @@ func update_party_display() -> void:
 func set_gold(amount: int) -> void:
 	_gold = amount
 	_update_gold_display()
+
+
+func update_objective_tracker() -> void:
+	var qm: Node = get_node_or_null("/root/QuestManager")
+	if not qm:
+		_objective_tracker.visible = false
+		return
+	var state := compute_tracker_state(qm)
+	_objective_tracker.visible = state["visible"]
+	if state["visible"]:
+		_quest_title.text = state["title"]
+		_objective_label.text = state["objective"]
+
+
+## Returns tracker display state from quest manager data.
+## Shows first active quest (insertion order = acceptance order).
+static func compute_tracker_state(qm: Node) -> Dictionary:
+	var active: Array = qm.get_active_quests()
+	if active.is_empty():
+		return {"visible": false, "title": "", "objective": ""}
+	var quest_id: StringName = active[0]
+	var quest: Resource = qm.get_quest_data(quest_id)
+	if not quest:
+		return {"visible": false, "title": "", "objective": ""}
+	var title: String = quest.title
+	var objective := ""
+	var obj_status: Array = qm.get_objective_status(quest_id)
+	for i in obj_status.size():
+		if not obj_status[i]:
+			objective = "- %s" % quest.objectives[i]
+			break
+	return {"visible": true, "title": title, "objective": objective}
 
 
 func _update_gold_display() -> void:
@@ -117,6 +162,17 @@ func _on_gold_changed() -> void:
 	var inv: Node = get_node_or_null("/root/InventoryManager")
 	if inv:
 		set_gold(inv.gold)
+
+
+func _on_quest_changed(_quest_id: StringName) -> void:
+	update_objective_tracker()
+
+
+func _on_quest_progressed(
+	_quest_id: StringName,
+	_objective_index: int,
+) -> void:
+	update_objective_tracker()
 
 
 func _on_scene_changed(scene_path: String) -> void:

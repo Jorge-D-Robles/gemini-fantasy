@@ -13,13 +13,6 @@ Started: 2026-02-18
 
 ## Queue
 
-### T-0087
-- Title: Add on-screen objective tracker UI
-- Status: todo
-- Assigned: unassigned
-- Priority: high
-- Depends: none
-
 ### T-0088
 - Title: Add visual markers for zone transitions (sparkle/arrow effects)
 - Status: todo
@@ -380,3 +373,10 @@ Started: 2026-02-18
 - Assigned: claude
 - Completed: 2026-02-19
 - Notes: Created reusable DamagePopup component (script-only Node2D). Supports DAMAGE/HEAL/CRITICAL types with colored text, 0.8s float-up animation. Replaced inline single-label in both battler scenes. Added missing show_heal_number() to EnemyBattlerScene. 11 tests.
+
+### T-0087
+- Title: Add on-screen objective tracker UI
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: PanelContainer in HUD (top-right, below PartyStatus). QuestTitle (gold) + ObjectiveLabel (lavender). Static compute_tracker_state() for testability. Connected to 4 QuestManager signals. 7 tests.
