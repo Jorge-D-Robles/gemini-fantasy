@@ -53,6 +53,12 @@ func play_sfx(stream: AudioStream, volume_db: float = 0.0) -> void:
 	_sfx_index = (_sfx_index + 1) % SFX_POOL_SIZE
 
 
+func get_current_bgm_path() -> String:
+	if _bgm_player.stream:
+		return _bgm_player.stream.resource_path
+	return ""
+
+
 func set_bgm_volume(volume_db: float) -> void:
 	_bgm_player.volume_db = volume_db
 

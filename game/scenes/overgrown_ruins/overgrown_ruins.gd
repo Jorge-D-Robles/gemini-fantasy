@@ -10,6 +10,7 @@ const MEMORY_BLOOM_PATH: String = "res://data/enemies/memory_bloom.tres"
 const CREEPING_VINE_PATH: String = "res://data/enemies/creeping_vine.tres"
 const LAST_GARDENER_PATH: String = "res://data/enemies/last_gardener.tres"
 const KAEL_DATA_PATH: String = "res://data/characters/kael.tres"
+const SCENE_BGM_PATH: String = "res://assets/music/Castle.ogg"
 
 # Source 0: FAIRY_FOREST_A5_A (opaque ground tiles)
 # Source 1: RUINS_A5 (ruins2 — opaque golden walls)
@@ -230,6 +231,7 @@ const OBJECTS_MAP: Array[String] = [
 func _ready() -> void:
 	_setup_tilemap()
 	MapBuilder.create_boundary_walls(self, 640, 384)
+	_start_scene_music()
 	_setup_camera_limits()
 
 	# Initialize Kael in party if not already there
@@ -290,6 +292,14 @@ func _spawn_zone_marker() -> void:
 		_exit_to_forest.position + Vector2(-12, 0)
 	)
 	add_child(marker)
+
+
+func _start_scene_music() -> void:
+	var bgm := load(SCENE_BGM_PATH) as AudioStream
+	if bgm:
+		AudioManager.play_bgm(bgm, 1.5)
+	else:
+		push_warning("Scene BGM not found: " + SCENE_BGM_PATH)
 
 
 func _setup_tilemap() -> void:

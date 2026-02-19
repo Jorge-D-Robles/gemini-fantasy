@@ -12,6 +12,7 @@ const HOLLOW_SPECTER_PATH: String = "res://data/enemies/hollow_specter.tres"
 const ANCIENT_SENTINEL_PATH: String = "res://data/enemies/ancient_sentinel.tres"
 const GALE_HARPY_PATH: String = "res://data/enemies/gale_harpy.tres"
 const EMBER_HOUND_PATH: String = "res://data/enemies/ember_hound.tres"
+const SCENE_BGM_PATH: String = "res://assets/music/Peaceful Days.ogg"
 
 # ---------- TILE LEGENDS ----------
 
@@ -296,6 +297,7 @@ const DETAIL_MAP: Array[String] = [
 func _ready() -> void:
 	_setup_tilemap()
 	MapBuilder.create_boundary_walls(self, 640, 400)
+	_start_scene_music()
 
 	# Set HUD location name
 	UILayer.hud.location_name = "Verdant Forest"
@@ -426,6 +428,14 @@ func _on_encounter_triggered(enemy_group: Array[Resource]) -> void:
 	if DialogueManager.is_active():
 		return
 	BattleManager.start_battle(enemy_group)
+
+
+func _start_scene_music() -> void:
+	var bgm := load(SCENE_BGM_PATH) as AudioStream
+	if bgm:
+		AudioManager.play_bgm(bgm, 1.5)
+	else:
+		push_warning("Scene BGM not found: " + SCENE_BGM_PATH)
 
 
 func _setup_tilemap() -> void:

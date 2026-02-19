@@ -3,6 +3,7 @@ extends State
 ## Handles battle victory: calculates rewards, shows victory screen.
 
 const UITheme = preload("res://ui/ui_theme.gd")
+const FANFARE_PATH: String = "res://assets/music/Success!.ogg"
 
 var battle_scene: Node = null
 
@@ -12,6 +13,13 @@ func set_battle_scene(scene: Node) -> void:
 
 
 func enter() -> void:
+	# Play victory fanfare
+	var fanfare := load(FANFARE_PATH) as AudioStream
+	if fanfare:
+		AudioManager.play_bgm(fanfare, 0.0)
+	else:
+		push_warning("Victory fanfare not found: " + FANFARE_PATH)
+
 	var total_exp: int = 0
 	var total_gold: int = 0
 	var items: Array[String] = []

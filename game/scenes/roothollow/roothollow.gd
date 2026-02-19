@@ -22,6 +22,7 @@ const SCOUTS_QUEST_PATH: String = (
 const ELDER_QUEST_PATH: String = (
 	"res://data/quests/elder_wisdom.tres"
 )
+const SCENE_BGM_PATH: String = "res://assets/music/Town Theme Day.ogg"
 
 # Quest dialogue text keyed by quest id and phase
 const _QUEST_TEXT: Dictionary = {
@@ -95,6 +96,7 @@ var _elder_quest: Resource = null
 func _ready() -> void:
 	_setup_tilemap()
 	MapBuilder.create_boundary_walls(self, 640, 448)
+	_start_scene_music()
 	UILayer.hud.location_name = "Roothollow"
 
 	# Add spawn point to group for GameManager lookup
@@ -141,6 +143,14 @@ func _ready() -> void:
 
 	# Set flag-reactive NPC dialogue
 	_setup_npc_dialogue()
+
+
+func _start_scene_music() -> void:
+	var bgm := load(SCENE_BGM_PATH) as AudioStream
+	if bgm:
+		AudioManager.play_bgm(bgm, 1.0)
+	else:
+		push_warning("Scene BGM not found: " + SCENE_BGM_PATH)
 
 
 func _setup_tilemap() -> void:
