@@ -36,6 +36,9 @@ func enter() -> void:
 				await _play_attacker_anim(enemy)
 				var damage := enemy.deal_damage(enemy.attack)
 				var actual := action.target.take_damage(damage)
+				AudioManager.play_sfx(load(SfxLibrary.COMBAT_ATTACK_HIT))
+				if not action.target.is_alive:
+					AudioManager.play_sfx(load(SfxLibrary.COMBAT_DEATH))
 				if _battle_ui:
 					_battle_ui.add_battle_log(
 						"%s attacks %s for %d damage!" % [
@@ -59,6 +62,13 @@ func enter() -> void:
 					var actual := action.target.take_damage(
 						damage, is_magical
 					)
+					AudioManager.play_sfx(
+						load(SfxLibrary.COMBAT_MAGIC_CAST)
+					)
+					if not action.target.is_alive:
+						AudioManager.play_sfx(
+							load(SfxLibrary.COMBAT_DEATH)
+						)
 					if _battle_ui:
 						_battle_ui.add_battle_log(
 							"%s uses %s on %s for %d damage!" % [
@@ -69,6 +79,10 @@ func enter() -> void:
 							],
 							UITheme.LogType.DAMAGE,
 						)
+				else:
+					AudioManager.play_sfx(
+						load(SfxLibrary.COMBAT_MAGIC_CAST)
+					)
 				# Apply status effect from ability
 				_try_apply_status(action.ability, action.target)
 		BattleAction.Type.DEFEND:
@@ -118,6 +132,7 @@ func _try_apply_status(ability: AbilityData, target: Battler) -> void:
 		effect.display_name = ability.status_effect
 		effect.duration = ability.status_effect_duration
 		target.apply_status(effect)
+		AudioManager.play_sfx(load(SfxLibrary.COMBAT_STATUS_APPLY))
 		if _battle_ui:
 			_battle_ui.add_battle_log(
 				"%s is affected by %s!" % [

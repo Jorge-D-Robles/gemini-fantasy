@@ -64,6 +64,9 @@ func _execute_attack(attacker: Battler, target: Battler) -> void:
 
 	var damage := attacker.deal_damage(attacker.attack)
 	var actual := target.take_damage(damage)
+	AudioManager.play_sfx(load(SfxLibrary.COMBAT_ATTACK_HIT))
+	if not target.is_alive:
+		AudioManager.play_sfx(load(SfxLibrary.COMBAT_DEATH))
 	if _battle_ui:
 		_battle_ui.add_battle_log(
 			"%s attacks %s for %d damage!" % [
@@ -102,6 +105,9 @@ func _execute_ability(
 			ability.damage_base, is_magical, true
 		)
 		var actual := target.take_damage(damage, is_magical)
+		AudioManager.play_sfx(load(SfxLibrary.COMBAT_MAGIC_CAST))
+		if not target.is_alive:
+			AudioManager.play_sfx(load(SfxLibrary.COMBAT_DEATH))
 		if _battle_ui:
 			_battle_ui.add_battle_log(
 				"%s uses %s on %s for %d damage!" % [
@@ -113,6 +119,7 @@ func _execute_ability(
 				UITheme.LogType.DAMAGE,
 			)
 	else:
+		AudioManager.play_sfx(load(SfxLibrary.COMBAT_MAGIC_CAST))
 		if _battle_ui:
 			_battle_ui.add_battle_log(
 				"%s uses %s!" % [
@@ -137,6 +144,7 @@ func _execute_item(
 	match item.effect_type:
 		ItemData.EffectType.HEAL_HP:
 			var healed := target.heal(item.effect_value)
+			AudioManager.play_sfx(load(SfxLibrary.COMBAT_HEAL_CHIME))
 			_show_heal_number(target, healed)
 			if _battle_ui:
 				_battle_ui.add_battle_log(
@@ -148,6 +156,7 @@ func _execute_item(
 				)
 		ItemData.EffectType.HEAL_EE:
 			var restored := target.restore_ee(item.effect_value)
+			AudioManager.play_sfx(load(SfxLibrary.COMBAT_HEAL_CHIME))
 			if _battle_ui:
 				_battle_ui.add_battle_log(
 					"%s restored %d EE!" % [
@@ -158,6 +167,7 @@ func _execute_item(
 				)
 		ItemData.EffectType.CURE_HOLLOW:
 			target.cure_hollow()
+			AudioManager.play_sfx(load(SfxLibrary.COMBAT_HEAL_CHIME))
 			if _battle_ui:
 				_battle_ui.add_battle_log(
 					"%s is grounded!" % [
@@ -184,6 +194,7 @@ func _try_apply_status(ability: AbilityData, target: Battler) -> void:
 		effect.display_name = ability.status_effect
 		effect.duration = ability.status_effect_duration
 		target.apply_status(effect)
+		AudioManager.play_sfx(load(SfxLibrary.COMBAT_STATUS_APPLY))
 		if _battle_ui:
 			_battle_ui.add_battle_log(
 				"%s is affected by %s!" % [
