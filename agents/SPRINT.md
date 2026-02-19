@@ -13,13 +13,6 @@ Started: 2026-02-18
 
 ## Queue
 
-### T-0079
-- Title: Expand opening sequence to match Chapter 1 story script
-- Status: todo
-- Assigned: unassigned
-- Priority: high
-- Depends: none
-
 ### T-0080
 - Title: Expand Lyra discovery dialogue to match story script (~50 lines)
 - Status: todo
@@ -296,6 +289,13 @@ Started: 2026-02-18
 ---
 
 ## Done This Sprint
+
+### T-0079
+- Title: Expand opening sequence to match Chapter 1 story script
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: Expanded Lyra discovery dialogue from 6 to 23 lines matching Chapter 1 story script beats (discovery, analysis, first contact, identity, warning, resolve). Extracted _build_dialogue() helper. 9 tests.
 
 ### T-0090
 - Title: Add quest log/journal UI screen

@@ -798,6 +798,56 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 - Refs: game/entities/player/player.gd, game/ui/hud/hud.gd
 - Notes: Small HUD hint ("[E] Talk") when player InteractionRay detects target. May overlap with T-0092 (tutorial hints).
 
+### T-0115
+- Title: BUG — Pause menu party panel shows max HP/EE instead of current HP/EE
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Milestone: M0
+- Depends: none
+- Refs: game/ui/pause_menu/pause_menu.gd
+- Notes: _create_member_info() reads member.max_hp and displays both values as max. Should read PartyManager runtime HP/EE state. Visible bug for demo players.
+
+### T-0116
+- Title: Disable or stub Settings button on title screen
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M0
+- Depends: none
+- Refs: game/ui/title_screen/title_screen.gd
+- Notes: settings_pressed signal emitted but nothing handles it. Grey out or show "Coming Soon" until T-0068 is implemented.
+
+### T-0117
+- Title: Implement BGM stack in AudioManager for battle music restore
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Milestone: M0
+- Depends: none
+- Refs: game/autoloads/audio_manager.gd, game/autoloads/battle_manager.gd
+- Notes: push_bgm()/pop_bgm() stack to save/restore overworld music across battle transitions. Required for T-0064 to work end-to-end.
+
+### T-0119
+- Title: Quest log reward display should show item display names, not IDs
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M0
+- Depends: T-0090
+- Refs: game/ui/quest_log/quest_log.gd
+- Notes: compute_quest_list() returns raw item ID strings. Resolve to display names via ItemData lookup.
+
+### T-0120
+- Title: Add quest accept/complete toast notification in HUD
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M0
+- Depends: T-0087
+- Refs: game/ui/hud/hud.gd, game/autoloads/quest_manager.gd
+- Notes: 2-3s slide-in toast for "New Quest: [name]" / "Quest Complete: [name]". Queue-based for multiple simultaneous triggers.
+
 ---
 
 ## M2 — Act II: The Weight of Echoes
