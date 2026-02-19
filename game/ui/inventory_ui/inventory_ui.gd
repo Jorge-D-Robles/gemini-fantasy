@@ -14,6 +14,12 @@ enum Category {
 
 const UIHelpers = preload("res://ui/ui_helpers.gd")
 const UITheme = preload("res://ui/ui_theme.gd")
+const InventoryUIFilter = preload(
+	"res://ui/inventory_ui/inventory_ui_filter.gd"
+)
+const InventoryUIDetail = preload(
+	"res://ui/inventory_ui/inventory_ui_detail.gd"
+)
 
 var _is_open: bool = false
 var _current_category: Category = Category.ALL
@@ -98,16 +104,9 @@ func _refresh_item_list() -> void:
 	_selected_index = -1
 
 	var items := InventoryManager.get_all_items()
-	for id: StringName in items:
-		var count: int = items[id]
-		if count <= 0:
-			continue
-		var entry := _build_entry(id, count)
-		if entry.is_empty():
-			continue
-		if not _matches_category(entry):
-			continue
-		_displayed_entries.append(entry)
+	_displayed_entries = InventoryUIFilter.compute_item_entries(
+		items, _resolve_item, _current_category,
+	)
 
 	if _displayed_entries.is_empty():
 		var empty_label := Label.new()
@@ -144,57 +143,18 @@ func _refresh_item_list() -> void:
 		_item_list_vbox.get_child(0).grab_focus()
 
 
-func _build_entry(
-	id: StringName,
-	count: int,
-) -> Dictionary:
+func _resolve_item(id: StringName) -> Dictionary:
 	var item_data := InventoryManager.get_item_data(id)
 	if item_data:
-		return {
-			"id": id,
-			"count": count,
-			"data": item_data,
-			"is_equipment": false,
-			"display_name": item_data.display_name,
-		}
+		return {"data": item_data, "is_equipment": false}
 	var equip_path := "res://data/equipment/%s.tres" % id
 	if ResourceLoader.exists(equip_path):
 		var equip_data := load(equip_path) as EquipmentData
 		if equip_data:
 			return {
-				"id": id,
-				"count": count,
-				"data": equip_data,
-				"is_equipment": true,
-				"display_name": equip_data.display_name,
+				"data": equip_data, "is_equipment": true,
 			}
 	return {}
-
-
-func _matches_category(entry: Dictionary) -> bool:
-	var result := true
-	match _current_category:
-		Category.CONSUMABLES:
-			if entry["is_equipment"]:
-				result = false
-			else:
-				var item: ItemData = entry["data"]
-				result = (
-					item.item_type
-					== ItemData.ItemType.CONSUMABLE
-				)
-		Category.EQUIPMENT:
-			result = entry["is_equipment"]
-		Category.KEY_ITEMS:
-			if entry["is_equipment"]:
-				result = false
-			else:
-				var item: ItemData = entry["data"]
-				result = (
-					item.item_type
-					== ItemData.ItemType.KEY_ITEM
-				)
-	return result
 
 
 func _on_item_pressed(index: int) -> void:
@@ -213,61 +173,30 @@ func _update_detail(index: int) -> void:
 		return
 
 	var entry: Dictionary = _displayed_entries[index]
-	var data: Resource = entry["data"]
+	var detail := InventoryUIDetail.compute_item_detail(
+		entry
+	)
 
-	_item_name_label.text = entry["display_name"]
+	_item_name_label.text = detail["name"]
+	_item_desc_label.text = detail["description"]
 	UIHelpers.clear_children(_stats_vbox)
 
-	if entry["is_equipment"]:
-		var equip := data as EquipmentData
-		_item_desc_label.text = equip.description
-		_show_equipment_stats(equip)
-		_use_button.visible = false
-		_equip_button.visible = true
-	else:
-		var item := data as ItemData
-		_item_desc_label.text = item.description
-		if item.sell_price > 0:
-			_add_stat_line(
-				"Sell: %d gold" % item.sell_price
+	if entry.get("is_equipment", false):
+		var equip := entry["data"] as EquipmentData
+		if equip:
+			var eq_stats := (
+				InventoryUIDetail
+				.compute_equipment_stats(equip)
 			)
-		var is_consumable: bool = (
-			item.item_type
-			== ItemData.ItemType.CONSUMABLE
-		)
-		_use_button.visible = is_consumable
-		_equip_button.visible = false
+			for line: String in eq_stats:
+				_add_stat_line(line)
+	else:
+		for line: String in detail["stats"]:
+			_add_stat_line(line)
 
+	_use_button.visible = detail["show_use"]
+	_equip_button.visible = detail["show_equip"]
 	_update_action_focus(index)
-
-
-func _show_equipment_stats(equip: EquipmentData) -> void:
-	var slot_names := [
-		"Weapon", "Helmet", "Chest", "Accessory",
-	]
-	if (
-		equip.slot_type >= 0
-		and equip.slot_type < slot_names.size()
-	):
-		_add_stat_line(
-			"Slot: %s" % slot_names[equip.slot_type]
-		)
-	if equip.attack_bonus != 0:
-		_add_stat_line("ATK: +%d" % equip.attack_bonus)
-	if equip.magic_bonus != 0:
-		_add_stat_line("MAG: +%d" % equip.magic_bonus)
-	if equip.defense_bonus != 0:
-		_add_stat_line("DEF: +%d" % equip.defense_bonus)
-	if equip.resistance_bonus != 0:
-		_add_stat_line("RES: +%d" % equip.resistance_bonus)
-	if equip.speed_bonus != 0:
-		_add_stat_line("SPD: +%d" % equip.speed_bonus)
-	if equip.luck_bonus != 0:
-		_add_stat_line("LCK: +%d" % equip.luck_bonus)
-	if equip.sell_price > 0:
-		_add_stat_line(
-			"Sell: %d gold" % equip.sell_price
-		)
 
 
 func _add_stat_line(text: String) -> void:
