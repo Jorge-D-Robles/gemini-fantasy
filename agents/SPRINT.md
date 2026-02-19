@@ -15,15 +15,6 @@ Started: 2026-02-18
 
 
 
-### T-0147
-- Title: Add battle auto-play mode to playtest runner for combat balance testing
-- Status: todo
-- Assigned: unassigned
-- Priority: medium
-- Depends: T-0145
-- Refs: docs/game-design/09-playtest-runner.md
-- **RESERVED: This ticket is part of the playtest runner feature (T-0144..T-0147). Skip this and pick another task unless you were specifically assigned to implement the playtest runner.**
-- Notes: Phase 4 (optional). AI-driven party actions during playtested battles (auto-attack). Battle outcome logging (win/loss, turns, HP remaining). Balance data collection.
 
 ### T-0095
 - Title: Add battler idle animations in combat
@@ -126,6 +117,14 @@ Started: 2026-02-18
 ---
 
 ## Done This Sprint
+
+### T-0147
+- Title: Add battle auto-play mode to playtest runner for combat balance testing
+- Status: done
+- Assigned: claude
+- Started: 2026-02-19
+- Completed: 2026-02-19
+- Notes: Added auto_play_battle action type to PlaytestActions and runner. AI-driven party auto-attack: polls BattleStateMachine.current_state, emits command_selected("attack") on PlayerTurn and target_selected(first_enemy) on TargetSelect. Captures victory/defeat via BattleManager.battle_ended signal. Logs outcome, player action count, and final HP per character. 4 new tests (1065 total). Updated battle_test.json preset to use auto_play_battle.
 
 ### T-0146
 - Title: Create /playtest skill and preset configs for common test scenarios

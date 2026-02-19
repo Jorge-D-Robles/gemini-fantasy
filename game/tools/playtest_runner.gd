@@ -272,6 +272,8 @@ func _execute_action(action: Dictionary) -> void:
 			)
 		"wait_battle":
 			await _wait_battle(action.get("timeout", 30.0))
+		"auto_play_battle":
+			await _execute_auto_play_battle(action)
 		"wait_state":
 			await _wait_state(
 				action.get("state", "OVERWORLD"),
@@ -370,6 +372,119 @@ func _wait_battle(timeout: float) -> void:
 		var msg := "wait_battle timed out after %.1f seconds" % timeout
 		_warnings.append(msg)
 		push_warning("PlaytestRunner: " + msg)
+
+
+## Auto-play a battle by issuing attack commands each player turn.
+## Optionally triggers the battle if "enemies" field is provided.
+## Logs the outcome (victory/defeat, player actions, final party HP).
+func _execute_auto_play_battle(action: Dictionary) -> void:
+	var timeout: float = action.get("timeout", 60.0)
+	var enemy_ids: Array = action.get("enemies", [])
+	var can_escape: bool = action.get("can_escape", false)
+
+	# Optionally trigger a battle if enemies are specified.
+	if not enemy_ids.is_empty():
+		await _trigger_battle(enemy_ids, can_escape)
+		await get_tree().process_frame
+
+	# Wait for BattleManager to report an active battle.
+	var wait := 0.0
+	while not BattleManager.is_in_battle() and wait < 5.0:
+		await get_tree().process_frame
+		wait += get_process_delta_time()
+	if not BattleManager.is_in_battle():
+		_warnings.append("auto_play_battle: battle never started")
+		return
+
+	# Wait for the battle scene to become current_scene.
+	var battle_scene: Node = null
+	wait = 0.0
+	while battle_scene == null and wait < 10.0:
+		await get_tree().process_frame
+		wait += get_process_delta_time()
+		var candidate: Node = get_tree().current_scene
+		if is_instance_valid(candidate) and \
+				candidate.has_method("get_living_enemies"):
+			battle_scene = candidate
+	if battle_scene == null:
+		var msg := "auto_play_battle: timed out waiting for battle scene"
+		_errors.append(msg)
+		push_error("PlaytestRunner: " + msg)
+		return
+
+	var battle_ui: Node = battle_scene.get_node_or_null("BattleUI")
+	var state_machine: Node = battle_scene.get_node_or_null("BattleStateMachine")
+	if battle_ui == null or state_machine == null:
+		var msg := "auto_play_battle: BattleUI or BattleStateMachine missing"
+		_errors.append(msg)
+		push_error("PlaytestRunner: " + msg)
+		return
+
+	_log("auto_play_battle: connected to battle scene, auto-playing")
+
+	# Capture outcome via one-shot lambda on BattleManager.battle_ended.
+	var result := {"done": false, "victory": false}
+	var on_ended := func(v: bool) -> void:
+		result["done"] = true
+		result["victory"] = v
+	BattleManager.battle_ended.connect(on_ended, CONNECT_ONE_SHOT)
+
+	var player_actions := 0
+	var elapsed := 0.0
+	var last_state_name := StringName("")
+
+	while not result["done"] and elapsed < timeout:
+		await get_tree().process_frame
+		elapsed += get_process_delta_time()
+
+		if not BattleManager.is_in_battle():
+			break
+		if not is_instance_valid(battle_scene):
+			break
+
+		var cur: Variant = state_machine.get("current_state")
+		if not cur is Node:
+			continue
+		var cur_name: StringName = (cur as Node).name
+		if cur_name == last_state_name:
+			continue
+		last_state_name = cur_name
+
+		if cur_name == &"PlayerTurn":
+			# Wait one frame so PlayerTurnState.enter() wires up command_selected.
+			await get_tree().process_frame
+			if not BattleManager.is_in_battle():
+				break
+			battle_ui.command_selected.emit("attack")
+			player_actions += 1
+			_log("auto_play_battle: action %d — attack" % player_actions)
+		elif cur_name == &"TargetSelect":
+			# Wait one frame so TargetSelectState.enter() wires up target_selected.
+			await get_tree().process_frame
+			if not BattleManager.is_in_battle():
+				break
+			if is_instance_valid(battle_scene):
+				var living: Array = battle_scene.call("get_living_enemies")
+				if living.size() > 0:
+					battle_ui.target_selected.emit(living[0])
+
+	if elapsed >= timeout and not result["done"]:
+		var msg := "auto_play_battle: timed out after %.1f seconds" % timeout
+		_warnings.append(msg)
+		push_warning("PlaytestRunner: " + msg)
+		if BattleManager.battle_ended.is_connected(on_ended):
+			BattleManager.battle_ended.disconnect(on_ended)
+
+	var outcome := "victory" if result.get("victory", false) else "defeat"
+	_log("auto_play_battle: result=%s player_actions=%d" % [outcome, player_actions])
+
+	# Log final party HP for balance analysis.
+	var active_party: Array[Resource] = PartyManager.get_active_party()
+	for char_res: Resource in active_party:
+		if "id" in char_res:
+			var char_id: StringName = char_res.get("id")
+			var hp: int = PartyManager.get_hp(char_id)
+			_log("auto_play_battle: HP %s=%d" % [str(char_id), hp])
 
 
 # --- State Actions ---

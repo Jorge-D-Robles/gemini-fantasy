@@ -4,6 +4,7 @@ Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[
 
 ---
 
+- [2026-02-19] T-0147: Add battle auto-play mode to playtest runner — auto_play_battle action type, polls BattleStateMachine states, emits attack/target signals automatically, captures outcome via BattleManager.battle_ended, logs HP balance data, 4 tests (claude)
 - [2026-02-19] T-0146: Create /playtest skill and preset configs — 7 preset JSON configs, /playtest SKILL.md, fixed runner scene loading to use call_deferred (runner persists across scene changes), end-to-end verified (claude)
 - [2026-02-19] T-0145: Add full action set to playtest runner — PlaytestActions registry (14 types), interact/cancel/menu/advance_dialogue/wait_dialogue/select_choice/trigger_battle/wait_battle/wait_state/set_flag/log, structured log file, 36 tests (claude)
 - [2026-02-19] T-0144: Build playtest runner core — playtest_runner.tscn/gd, playtest_config.gd (JSON+CLI parse), playtest_capture.gd (screenshot+report), state injection (party/flags/items/gold/equipment/quests), basic actions (wait/screenshot/move), timeout exit, 34 tests (claude)

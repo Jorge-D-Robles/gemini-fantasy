@@ -193,3 +193,30 @@ func test_advance_dialogue_maps_to_interact() -> void:
 	assert_eq(
 		PlaytestActions.get_action_input_name("advance_dialogue"), "interact"
 	)
+
+
+# --- auto_play_battle ---
+
+func test_action_types_includes_auto_play_battle() -> void:
+	assert_true("auto_play_battle" in PlaytestActions.get_all_action_types())
+
+
+func test_auto_play_battle_valid_minimal() -> void:
+	var errors := PlaytestActions.validate_action({"type": "auto_play_battle"})
+	assert_eq(errors, [])
+
+
+func test_auto_play_battle_valid_with_enemies() -> void:
+	var errors := PlaytestActions.validate_action({
+		"type": "auto_play_battle",
+		"enemies": ["memory_bloom"],
+	})
+	assert_eq(errors, [])
+
+
+func test_auto_play_battle_empty_enemies_rejected() -> void:
+	var errors := PlaytestActions.validate_action({
+		"type": "auto_play_battle",
+		"enemies": [],
+	})
+	assert_true(errors.size() > 0)

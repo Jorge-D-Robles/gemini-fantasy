@@ -152,6 +152,7 @@ JSON report. Unlike scene_preview (static layout check), playtest_runner tests l
 | `select_choice` | `index: int` | Select dialogue choice |
 | `trigger_battle` | `enemies: Array[String]` | Force-start a battle |
 | `wait_battle` | `timeout: float = 30` | Wait until battle ends |
+| `auto_play_battle` | `enemies?: Array[String], can_escape?: bool, timeout?: float` | Auto-play a battle using attack-first AI; optionally triggers battle; logs outcome |
 | `wait_state` | `state: String, timeout: float` | Wait for GameManager state |
 | `set_flag` | `flag: String` | Set event flag mid-sequence |
 | `log` | `message: String` | Write to playtest log |

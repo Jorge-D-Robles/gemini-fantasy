@@ -29,6 +29,7 @@ static func get_all_action_types() -> Array[String]:
 		"select_choice",
 		"trigger_battle",
 		"wait_battle",
+		"auto_play_battle",
 		"wait_state",
 		"set_flag",
 		"log",
@@ -66,6 +67,13 @@ static func validate_action(action: Dictionary) -> Array[String]:
 			elif not (action["enemies"] is Array) or \
 					(action["enemies"] as Array).is_empty():
 				errors.append("trigger_battle: 'enemies' must be a non-empty array")
+		"auto_play_battle":
+			if action.has("enemies"):
+				if not (action["enemies"] is Array) or \
+						(action["enemies"] as Array).is_empty():
+					errors.append(
+						"auto_play_battle: 'enemies' must be a non-empty array if provided"
+					)
 		"set_flag":
 			if not action.has("flag") or (action.get("flag", "") as String).is_empty():
 				errors.append("set_flag: 'flag' field is required")
