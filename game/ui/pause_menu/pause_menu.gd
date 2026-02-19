@@ -74,6 +74,7 @@ func open() -> void:
 	visible = true
 	GameManager.push_state(GameManager.GameState.MENU)
 	get_tree().paused = true
+	AudioManager.play_sfx(load(SfxLibrary.UI_MENU_OPEN))
 	_refresh_party_panel()
 	_show_panel("party")
 	_party_button.grab_focus()
@@ -92,6 +93,7 @@ func close() -> void:
 	if _settings_menu != null:
 		_settings_menu.queue_free()
 		_settings_menu = null
+	AudioManager.play_sfx(load(SfxLibrary.UI_CANCEL))
 	_is_open = false
 	visible = false
 	get_tree().paused = false
@@ -144,6 +146,7 @@ func _refresh_party_panel() -> void:
 func _open_inventory() -> void:
 	if _inventory_ui != null:
 		return
+	AudioManager.play_sfx(load(SfxLibrary.UI_CONFIRM))
 	_menu_panel.visible = false
 	_pause_label.visible = false
 	_inventory_ui = INVENTORY_UI_SCENE.instantiate()
@@ -167,6 +170,7 @@ func _on_inventory_closed() -> void:
 func _open_quest_log() -> void:
 	if _quest_log != null:
 		return
+	AudioManager.play_sfx(load(SfxLibrary.UI_CONFIRM))
 	_menu_panel.visible = false
 	_pause_label.visible = false
 	_quest_log = QuestLogScript.new()
@@ -190,6 +194,7 @@ func _on_quest_log_closed() -> void:
 func _open_settings() -> void:
 	if _settings_menu != null:
 		return
+	AudioManager.play_sfx(load(SfxLibrary.UI_CONFIRM))
 	_menu_panel.visible = false
 	_pause_label.visible = false
 	_settings_menu = SettingsMenuScript.new()
@@ -269,6 +274,7 @@ func _add_stat_label(parent: Node, text: String) -> void:
 
 
 func _on_quit_pressed() -> void:
+	AudioManager.play_sfx(load(SfxLibrary.UI_CONFIRM))
 	close()
 	GameManager.change_scene(SP.TITLE_SCREEN)
 

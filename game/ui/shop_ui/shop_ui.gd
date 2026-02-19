@@ -58,6 +58,7 @@ func open(shop_data: ShopData) -> void:
 		return
 	if _is_open:
 		close()
+	AudioManager.play_sfx(load(SfxLibrary.UI_MENU_OPEN))
 	_shop_data = shop_data
 	_is_open = true
 	_mode = Mode.BUY
@@ -74,6 +75,7 @@ func open(shop_data: ShopData) -> void:
 func close() -> void:
 	if not _is_open:
 		return
+	AudioManager.play_sfx(load(SfxLibrary.UI_CANCEL))
 	_is_open = false
 	_shop_data = null
 	_selected_item = null

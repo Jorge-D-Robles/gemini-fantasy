@@ -13,13 +13,6 @@ Started: 2026-02-18
 
 ## Queue
 
-### T-0066
-- Title: Add UI sound effects (menu, dialogue, buttons)
-- Status: todo
-- Assigned: unassigned
-- Priority: medium
-- Depends: none
-
 ### T-0067
 - Title: Add combat sound effects (attack, magic, heal, death)
 - Status: todo
@@ -150,6 +143,13 @@ Started: 2026-02-18
 ---
 
 ## Done This Sprint
+
+### T-0066
+- Title: Add UI sound effects (menu, dialogue, buttons)
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: Wired AudioManager.play_sfx(load(SfxLibrary.UI_*)) into 8 UI scripts (27 insertion points). 4 SFX types: UI_CONFIRM (buttons), UI_CANCEL (close/back), UI_MENU_OPEN (panels), UI_DIALOGUE_ADVANCE (dialogue). Covers dialogue, pause, title, settings, inventory, shop, quest log, battle UI. All 964 tests pass.
 
 ### T-0139
 - Title: Source SFX assets for UI and combat

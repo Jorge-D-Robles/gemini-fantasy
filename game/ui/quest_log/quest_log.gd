@@ -57,6 +57,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func open() -> void:
+	AudioManager.play_sfx(load(SfxLibrary.UI_MENU_OPEN))
 	visible = true
 	_showing_completed = false
 	_selected_quest_id = &""
@@ -65,6 +66,7 @@ func open() -> void:
 
 
 func close() -> void:
+	AudioManager.play_sfx(load(SfxLibrary.UI_CANCEL))
 	visible = false
 	quest_log_closed.emit()
 

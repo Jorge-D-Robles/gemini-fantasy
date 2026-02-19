@@ -72,11 +72,13 @@ func _animate_intro() -> void:
 
 
 func _on_new_game_pressed() -> void:
+	AudioManager.play_sfx(load(SfxLibrary.UI_CONFIRM))
 	new_game_pressed.emit()
 	GameManager.change_scene(SP.OVERGROWN_RUINS)
 
 
 func _on_continue_pressed() -> void:
+	AudioManager.play_sfx(load(SfxLibrary.UI_CONFIRM))
 	continue_pressed.emit()
 	var data: Dictionary = SaveManager.load_save_data(0)
 	if data.is_empty():
@@ -104,6 +106,7 @@ func _on_continue_pressed() -> void:
 
 
 func _on_settings_pressed() -> void:
+	AudioManager.play_sfx(load(SfxLibrary.UI_CONFIRM))
 	settings_pressed.emit()
 	if _settings_menu != null:
 		return
