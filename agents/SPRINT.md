@@ -9,7 +9,11 @@ Started: 2026-02-16
 
 ## Active
 
-(none)
+### T-0048
+- Title: Organic tilemap overhaul — multi-terrain ground, dense detail for all 3 scenes
+- Status: in-progress
+- Assigned: claude
+- Started: 2026-02-18
 
 ---
 

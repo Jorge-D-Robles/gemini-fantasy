@@ -8,9 +8,14 @@ extends RefCounted
 const MAP_COLS: int = 40
 const MAP_ROWS: int = 28
 
-# -- Ground: single tile fill from A5_A row 8 (bright green) --
+# -- Ground: organic terrain patches (all col 0 to avoid seams) --
+# G = Bright green grass (row 8) — dominant open areas ~60%
+# D = Dirt/earth (row 2) — around buildings, path edges ~20%
+# E = Dark earth/roots (row 6) — forest border transition ~20%
 const GROUND_LEGEND: Dictionary = {
 	"G": Vector2i(0, 8),
+	"D": Vector2i(0, 2),
+	"E": Vector2i(0, 6),
 }
 
 # -- Paths: gray stone from A5_A row 10 --
@@ -91,6 +96,50 @@ const BUILDING_LEGEND: Dictionary = {
 
 # ===== Text maps (40 cols x 28 rows) =====
 
+# Ground terrain — organic patches of grass, dirt, dark earth
+# G = bright green grass (dominant open areas)
+# D = dirt/earth (around buildings, path borders, well-trodden areas)
+# E = dark earth/roots (transition band at forest border edge)
+# Visible balance: G ~61%, D ~18%, E ~21% (under-canopy E not counted)
+# Row key:  0-3 = under canopy / forest edge transition (E)
+#           4-8 = Inn zone — dirt yard around building
+#           9   = scattered dirt above main road
+#          10-11 = main road (paths overlay, ground is green)
+#          12    = scattered dirt below main road
+#          13-18 = central area with paths, shop dirt yard (cols 27-33)
+#          19-23 = elder dirt yard (cols 11-18)
+#          24-27 = under canopy / forest edge (E)
+const GROUND_MAP: Array[String] = [
+	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
+	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
+	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
+	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
+	"EEEEEGGGGGGGGGGGGGDGGDGGGGGGGGGGGEEEEEEE",
+	"EEEEEGGGGGDDDDGGGGDGGGGGGGGGGGGGGGEEEEEE",
+	"EEEEEGGGDDDDDDDDGGDGGDGGGGGGGGGGGGEEEEEE",
+	"EEEEEGGGDDDDDDDDGGGGGDGGGGGGGGGGGGGEEEEE",
+	"EEEEEEGGGDDDDDDGGGGGGDGGGGGGGGGGGGEEEEEE",
+	"EEEEEEDDDGDDDDDDDGGGGGDDDDGGGGDDDGEEEEEE",
+	"EEEEEEGGGGGGGGGGGGGGGGGGGGGGGGGGGGEEEEEE",
+	"EEEEEGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGEEEEE",
+	"EEEEEDDDDDGGGGGGGGGGGGDDDGGGDDDGGGGEEEEE",
+	"EEEEEGGGGGGGGGGGGGDGGGGGGGGGGGGGGGGEEEEE",
+	"EEEEEGGGGGGGGGGGGGDGGDGGGGGGGGGGGGGEEEEE",
+	"EEEEEGDDDGGGGGGGGGDGGGGGGGGGGGGGGGEEEEEE",
+	"EEEEEGGDDGGGGGGGGGGGGDGGGGGGDDDDDGEEEEEE",
+	"EEEEEEGGGGGGGGGGGGDGGGGGGGGDDDDDDDEEEEEE",
+	"EEEEEEGGGGGGGGGGGGDGGDGGGGGDDDDDDGEEEEEE",
+	"EEEEEEGGGGGGGDDDDDDGGGGGGGGGDDDDGGEEEEEE",
+	"EEEEEGGGDDGGDDDDDDDGGDGGGGGGGGGGGGGEEEEE",
+	"EEEEEGGGGGGDDDDDDDDGGGGGGGGGGGGGGGEEEEEE",
+	"EEEEEGGGGGGGDDDDDDDGGGGGGGGGGGGGGEEEEEEE",
+	"EEEEEEEGGGGGGDDDDGDGGDGGGGGGGGGEEEEEEEEE",
+	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
+	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
+	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
+	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
+]
+
 # Stone paths: main E-W road, N-S crossroad, plaza, approaches
 const PATH_MAP: Array[String] = [
 	"",
@@ -127,35 +176,36 @@ const PATH_MAP: Array[String] = [
 # Characters: f,F,b,B = flowers (source 0, _ground_detail)
 #             m,M,n   = mushroom decor (source 1, _decorations)
 #             r,R,o   = stone decor (source 3, _decorations)
+# Coverage: ~20-25% of visible open tiles (125+ decorations)
 const DECOR_MAP: Array[String] = [
-	"",
-	"",
-	"",
-	"",
-	"",
-	"      f  r           b                 ",
-	"                 F          o           ",
-	"        b   m                     f     ",
-	"       m              M  F             ",
-	"      f     b                R          ",
-	"",
-	"",
-	"      F  r      b m          f   n      ",
-	"",
-	"                             o          ",
-	"   M    b                        F      ",
-	"     f       R          b m             ",
-	"               F                   f    ",
-	"        b                    r     M    ",
-	"     f  n           B                   ",
-	"                         f         b  R ",
-	"      B              f                  ",
-	"          o                              ",
-	"          f M                 b          ",
-	"",
-	"",
-	"",
-	"",
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"     m      F   R f m  M    r    B      ",
+	"   r   B m    R          o     r       F",
+	"     f           m   b       r   F      ",
+	"    R           f      b r f           F",
+	"    R  n          f  b       B b   r    ",
+	"         b  f r r      o b b     o     f",
+	"     F f             f       o m        ",
+	"                                       R",
+	"    r                              F    ",
+	"      r r       F F    f    f f         ",
+	"   n      b  M            F       M    r",
+	"      r r                     B         ",
+	"                        F R b     r     ",
+	"   f   r f  b   b f   n                m",
+	"     M                   M        F     ",
+	"           f F  f F  B     m    r      f",
+	"      f b              f      f    r    ",
+	"    f      M         f   m  M   b       ",
+	"                                   b   r",
+	"      f f  f          f m  r f m        ",
+	"    R         r                  M      ",
+	"      R f R b    b R  r f b o  m        ",
+	"                                        ",
+	"                                        ",
+	"                                        ",
 ]
 
 # Forest border — single canopy tile, organic clearing shape

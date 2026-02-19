@@ -156,12 +156,8 @@ func _setup_tilemap() -> void:
 		atlas_paths,
 		m.SOLID_TILES,
 	)
-	# Ground: uniform bright green fill
-	var ground_row: String = "G".repeat(m.MAP_COLS)
-	var ground_map: Array[String] = []
-	for i: int in m.MAP_ROWS:
-		ground_map.append(ground_row)
-	MapBuilder.build_layer(_ground, ground_map, m.GROUND_LEGEND)
+	# Ground: organic terrain patches (grass, dirt, dark earth)
+	MapBuilder.build_layer(_ground, m.GROUND_MAP, m.GROUND_LEGEND)
 	# Paths (source 0)
 	MapBuilder.build_layer(_paths, m.PATH_MAP, m.PATH_LEGEND)
 	# Ground detail flower accents (source 0)
