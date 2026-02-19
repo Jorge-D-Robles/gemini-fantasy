@@ -978,6 +978,56 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 - Refs: game/ui/title_screen/title_screen.gd, game/autoloads/save_manager.gd
 - Notes: Continue button shows no save context. Add a label showing saved scene name and timestamp. Use compute_area_display_name() for location. 3+ tests.
 
+### T-0134
+- Title: Add Elder Morin briefing scene — tactical objective-setting for Overgrown Capital
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M0
+- Depends: T-0082
+- Refs: docs/story/act1/04-old-iron.md (Scene 3), game/scenes/roothollow/roothollow.gd
+- Notes: Chapter 4 Scene 3 — Elder's planning session establishes Overgrown Capital as next objective. Triggers in Roothollow after garrick_recruited flag. 6-9 lines of dialogue. EventFlags gate. 4+ tests.
+
+### T-0135
+- Title: Add Chapter 4 Scene 5 night scene — Garrick and Lyra conversation at camp
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Milestone: M0
+- Depends: T-0085
+- Refs: docs/story/act1/04-old-iron.md (Scene 5), game/events/garrick_meets_lyra.gd
+- Notes: Quiet night scene at Roothollow before departure. Garrick and Lyra open up. Requires camp/rest system (T-0023) or can be Roothollow inn trigger. Gated by garrick_met_lyra flag. 8-10 lines. 4+ tests.
+
+### T-0136
+- Title: Add player-driven defeat screen with Load/Title recovery options
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M0
+- Depends: none
+- Refs: game/systems/battle/states/defeat_state.gd, game/ui/battle_ui/battle_ui.gd
+- Notes: defeat_state.gd uses hardcoded 2.0s timer with no player choice. Add Load Last Save and Return to Title buttons. Static compute_defeat_options() for testability. Replace timer with awaited input. 4+ tests.
+
+### T-0137
+- Title: Add Roothollow market expansion — Maeve stocks Forest Remedy and Crystal Wick after Iris
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Milestone: M0
+- Depends: T-0082
+- Refs: docs/story/act1/04-old-iron.md (Scene 1), game/scenes/roothollow/roothollow_dialogue.gd
+- Notes: Chapter 4 Scene 1 specifies new items when iris_recruited is set. Flag-conditional item pool addition. May need new ItemData resources. 3+ tests.
+
+### T-0138
+- Title: Add scrollable battle log with history
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Milestone: M0
+- Depends: none
+- Refs: game/ui/battle_ui/battle_ui.gd
+- Notes: Battle log currently shows fixed lines with oldest pushed off. Add ScrollContainer wrapping RichTextLabel. Auto-scroll to bottom on new entry. 3+ tests.
+
 ---
 
 ## M2 — Act II: The Weight of Echoes
