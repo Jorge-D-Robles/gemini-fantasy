@@ -85,6 +85,12 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 12
 text = "Status"
 
+[node name="SettingsButton" type="Button" parent="MenuPanel/MarginContainer/HBoxContainer/MenuButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Settings"
+
 [node name="QuitButton" type="Button" parent="MenuPanel/MarginContainer/HBoxContainer/MenuButtons"]
 unique_name_in_owner = true
 layout_mode = 2

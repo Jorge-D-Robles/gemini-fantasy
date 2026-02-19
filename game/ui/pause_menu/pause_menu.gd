@@ -13,10 +13,14 @@ const INVENTORY_UI_SCENE := preload(
 	"res://ui/inventory_ui/inventory_ui.tscn"
 )
 const QuestLogScript = preload("res://ui/quest_log/quest_log.gd")
+const SettingsMenuScript = preload(
+	"res://ui/settings_menu/settings_menu.gd"
+)
 
 var _is_open: bool = false
 var _inventory_ui: Control = null
 var _quest_log: Control = null
+var _settings_menu: Control = null
 
 @onready var _dim_overlay: ColorRect = %DimOverlay
 @onready var _menu_panel: PanelContainer = %MenuPanel
@@ -24,6 +28,7 @@ var _quest_log: Control = null
 @onready var _items_button: Button = %ItemsButton
 @onready var _quests_button: Button = %QuestsButton
 @onready var _status_button: Button = %StatusButton
+@onready var _settings_button: Button = %SettingsButton
 @onready var _quit_button: Button = %QuitButton
 @onready var _party_panel: VBoxContainer = %PartyPanel
 @onready var _item_panel: VBoxContainer = %ItemPanel
@@ -84,6 +89,9 @@ func close() -> void:
 	if _quest_log != null:
 		_quest_log.queue_free()
 		_quest_log = null
+	if _settings_menu != null:
+		_settings_menu.queue_free()
+		_settings_menu = null
 	_is_open = false
 	visible = false
 	get_tree().paused = false
@@ -96,6 +104,7 @@ func _connect_buttons() -> void:
 	_items_button.pressed.connect(_open_inventory)
 	_quests_button.pressed.connect(_open_quest_log)
 	_status_button.pressed.connect(_show_panel.bind("status"))
+	_settings_button.pressed.connect(_open_settings)
 	_quit_button.pressed.connect(_on_quit_pressed)
 
 
@@ -105,6 +114,7 @@ func _setup_focus_navigation() -> void:
 		_items_button,
 		_quests_button,
 		_status_button,
+		_settings_button,
 		_quit_button,
 	])
 
@@ -175,6 +185,29 @@ func _on_quest_log_closed() -> void:
 	_menu_panel.visible = true
 	_pause_label.visible = true
 	_quests_button.grab_focus()
+
+
+func _open_settings() -> void:
+	if _settings_menu != null:
+		return
+	_menu_panel.visible = false
+	_pause_label.visible = false
+	_settings_menu = SettingsMenuScript.new()
+	_settings_menu.process_mode = Node.PROCESS_MODE_ALWAYS
+	add_child(_settings_menu)
+	_settings_menu.settings_menu_closed.connect(
+		_on_settings_closed
+	)
+	_settings_menu.open()
+
+
+func _on_settings_closed() -> void:
+	if _settings_menu != null:
+		_settings_menu.queue_free()
+		_settings_menu = null
+	_menu_panel.visible = true
+	_pause_label.visible = true
+	_settings_button.grab_focus()
 
 
 func _create_member_info(member: Resource) -> VBoxContainer:

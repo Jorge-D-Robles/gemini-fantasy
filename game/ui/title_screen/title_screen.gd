@@ -8,7 +8,12 @@ signal settings_pressed
 
 const UIHelpers = preload("res://ui/ui_helpers.gd")
 const SP = preload("res://systems/scene_paths.gd")
+const SettingsMenuScript = preload(
+	"res://ui/settings_menu/settings_menu.gd"
+)
 const TITLE_BGM_PATH: String = "res://assets/music/Main Character.ogg"
+
+var _settings_menu: Control = null
 
 @onready var title_label: Label = %TitleLabel
 @onready var subtitle_label: Label = %SubtitleLabel
@@ -100,3 +105,17 @@ func _on_continue_pressed() -> void:
 
 func _on_settings_pressed() -> void:
 	settings_pressed.emit()
+	if _settings_menu != null:
+		return
+	_settings_menu = SettingsMenuScript.new()
+	add_child(_settings_menu)
+	_settings_menu.settings_menu_closed.connect(
+		_on_settings_closed
+	)
+
+
+func _on_settings_closed() -> void:
+	if _settings_menu != null:
+		_settings_menu.queue_free()
+		_settings_menu = null
+	settings_button.grab_focus()

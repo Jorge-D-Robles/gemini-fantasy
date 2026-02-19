@@ -14,6 +14,7 @@ All UI screens and overlays. Each subdirectory contains a `.tscn` scene and a `.
 | `inventory_ui/inventory_ui_detail.gd` | Static utilities: `compute_equipment_stats()`, `compute_item_detail()` | `const InventoryUIDetail = preload("res://ui/inventory_ui/inventory_ui_detail.gd")` |
 | `shop_ui/shop_ui_detail.gd` | Static utilities: `compute_equip_stat_lines()`, `compute_item_effect_text()`, `compute_detail_info()` | `const ShopUIDetail = preload("res://ui/shop_ui/shop_ui_detail.gd")` |
 | `shop_ui/shop_ui_list.gd` | Static utilities: `compute_buy_entries()`, `compute_sell_entries()` | `const ShopUIList = preload("res://ui/shop_ui/shop_ui_list.gd")` |
+| `settings_menu/settings_data.gd` | Static utilities: `percent_to_db()`, `db_to_percent()`, `apply_volume()`, `save_settings()`, `load_settings()` | `const SD = preload("res://ui/settings_menu/settings_data.gd")` |
 
 All UI screens should import these instead of defining local color constants or utility functions.
 
@@ -28,6 +29,7 @@ All UI screens should import these instead of defining local color constants or 
 | `quest_log/` | `Control` (script-only) | — | Quest log sub-screen: active/completed quests with objectives and rewards |
 | `title_screen/` | `Control` | — | Title screen with animated intro and main menu buttons |
 | `shop_ui/` | `CanvasLayer` | — | Shop overlay: buy/sell tabs, item list, detail panel, price display |
+| `settings_menu/` | `Control` (script-only) | — | Volume sliders for Master, BGM, SFX buses with disk persistence |
 | `demo_end_screen/` | `Control` | — | Demo ending: "Thanks for Playing!" with party lineup and return-to-title button |
 
 ## Color Palette
