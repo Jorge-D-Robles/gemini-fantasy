@@ -948,6 +948,36 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 - Refs: game/autoloads/audio_manager.gd
 - Notes: play_bgm() hardcodes volume_db = 0.0 when starting a new track without crossfade. set_bgm_volume() changes the current player but is overwritten on next play_bgm() call. Fix: add _bgm_volume_db field; apply it in play_bgm(). Acceptance: volume slider changes persist across BGM track transitions. 4+ tests.
 
+### T-0131
+- Title: Add Kael-Iris arrival dialogue at Roothollow entrance (Chapter 4 Scene 1)
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M0
+- Depends: T-0082
+- Refs: docs/story/act1/04-old-iron.md (Scene 1), game/scenes/roothollow/roothollow.gd
+- Notes: Chapter 4 Scene 1 opens with Kael and Iris crossing a rope bridge into Roothollow. Iris comments on the tree architecture. One-time dialogue sequence triggered on first entry to Roothollow with iris_recruited=true, gated by EventFlags. 6-8 lines. 5+ tests.
+
+### T-0132
+- Title: Add "Defend" status badge on party battler panels during combat
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Milestone: M0
+- Depends: none
+- Refs: game/ui/battle_ui/battle_ui.gd, game/systems/battle/battler.gd
+- Notes: Battler.is_defending is tracked but the battle UI shows no visual indicator. Add a "DEF" badge (similar to status effect badges from T-0054) that appears when is_defending is true. Reuse UITheme.get_status_color() pattern. 3+ tests.
+
+### T-0133
+- Title: Add save slot summary (location + timestamp) on Continue button
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Milestone: M0
+- Depends: none
+- Refs: game/ui/title_screen/title_screen.gd, game/autoloads/save_manager.gd
+- Notes: Continue button shows no save context. Add a label showing saved scene name and timestamp. Use compute_area_display_name() for location. 3+ tests.
+
 ---
 
 ## M2 — Act II: The Weight of Echoes
