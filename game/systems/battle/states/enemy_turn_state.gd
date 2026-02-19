@@ -2,6 +2,8 @@ extends State
 
 ## AI chooses and executes an action for the current enemy battler.
 
+const UITheme = preload("res://ui/ui_theme.gd")
+
 var battle_scene: Node = null
 var _battle_ui: Node = null
 
@@ -40,7 +42,8 @@ func enter() -> void:
 							enemy.get_display_name(),
 							action.target.get_display_name(),
 							actual,
-						]
+						],
+						UITheme.LogType.DAMAGE,
 					)
 		BattleAction.Type.ABILITY:
 			if action.ability and action.target:
@@ -63,7 +66,8 @@ func enter() -> void:
 								action.ability.display_name,
 								action.target.get_display_name(),
 								actual,
-							]
+							],
+							UITheme.LogType.DAMAGE,
 						)
 				# Apply status effect from ability
 				_try_apply_status(action.ability, action.target)
@@ -71,12 +75,14 @@ func enter() -> void:
 			enemy.defend()
 			if _battle_ui:
 				_battle_ui.add_battle_log(
-					"%s defends." % enemy.get_display_name()
+					"%s defends." % enemy.get_display_name(),
+					UITheme.LogType.INFO,
 				)
 		BattleAction.Type.WAIT:
 			if _battle_ui:
 				_battle_ui.add_battle_log(
-					"%s waits." % enemy.get_display_name()
+					"%s waits." % enemy.get_display_name(),
+					UITheme.LogType.INFO,
 				)
 
 	# Sync UI after every action
@@ -117,5 +123,6 @@ func _try_apply_status(ability: AbilityData, target: Battler) -> void:
 				"%s is affected by %s!" % [
 					target.get_display_name(),
 					ability.status_effect,
-				]
+				],
+				UITheme.LogType.STATUS,
 			)

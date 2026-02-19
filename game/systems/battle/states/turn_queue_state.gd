@@ -2,6 +2,8 @@ extends State
 
 ## Determines the next battler to act and transitions to appropriate state.
 
+const UITheme = preload("res://ui/ui_theme.gd")
+
 var battle_scene: Node = null
 
 
@@ -36,7 +38,8 @@ func enter() -> void:
 		)
 		if battle_ui:
 			battle_ui.add_battle_log(
-				"%s is stunned!" % next_battler.get_display_name()
+				"%s is stunned!" % next_battler.get_display_name(),
+				UITheme.LogType.STATUS,
 			)
 		state_machine.transition_to("TurnEnd")
 		return

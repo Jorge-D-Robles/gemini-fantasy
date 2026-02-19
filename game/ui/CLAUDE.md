@@ -60,7 +60,7 @@ func show_target_selector(targets: Array[Battler], callback: Callable) -> void
 func update_party_status(party: Array[Battler]) -> void
 func update_turn_order(queue: Array[Battler]) -> void
 func update_resonance(gauge_value: float, state: Battler.ResonanceState) -> void
-func add_battle_log(text: String) -> void
+func add_battle_log(text: String, log_type: int = UITheme.LogType.INFO) -> void
 func show_victory(exp: int, gold: int, items: Array[String]) -> void
 func show_defeat() -> void
 ```

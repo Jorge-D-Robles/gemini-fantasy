@@ -7,6 +7,7 @@ signal battle_finished(victory: bool)
 
 const PARTY_BATTLER_SCENE_PATH: String = "res://entities/battle/party_battler_scene.tscn"
 const ENEMY_BATTLER_SCENE_PATH: String = "res://entities/battle/enemy_battler_scene.tscn"
+const UITheme = preload("res://ui/ui_theme.gd")
 
 var party_battlers: Array[PartyBattler] = []
 var enemy_battlers: Array[EnemyBattler] = []
@@ -15,8 +16,8 @@ var current_battler: Battler = null
 var current_action: BattleAction = null
 var pending_command: String = ""
 var can_escape: bool = true
-var _battle_result: bool = false
 var area_scene_path: String = ""
+var _battle_result: bool = false
 
 @onready var party_node: Node2D = $Battlers/PartyBattlers
 @onready var enemy_node: Node2D = $Battlers/EnemyBattlers
@@ -219,17 +220,21 @@ func _on_resonance_state_changed(
 	match new:
 		Battler.ResonanceState.RESONANT:
 			battle_ui.add_battle_log(
-				"%s is Resonant!" % name_str
+				"%s is Resonant!" % name_str,
+				UITheme.LogType.STATUS,
 			)
 		Battler.ResonanceState.OVERLOAD:
 			battle_ui.add_battle_log(
-				"%s enters Overload!" % name_str
+				"%s enters Overload!" % name_str,
+				UITheme.LogType.STATUS,
 			)
 		Battler.ResonanceState.HOLLOW:
 			battle_ui.add_battle_log(
-				"%s has become Hollow..." % name_str
+				"%s has become Hollow..." % name_str,
+				UITheme.LogType.STATUS,
 			)
 		Battler.ResonanceState.FOCUSED:
 			battle_ui.add_battle_log(
-				"%s is grounded." % name_str
+				"%s is grounded." % name_str,
+				UITheme.LogType.STATUS,
 			)

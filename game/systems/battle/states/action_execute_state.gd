@@ -2,6 +2,8 @@ extends State
 
 ## Executes the chosen action (attack, ability, item) and checks battle end.
 
+const UITheme = preload("res://ui/ui_theme.gd")
+
 var battle_scene: Node = null
 var _battle_ui: Node = null
 
@@ -68,7 +70,8 @@ func _execute_attack(attacker: Battler, target: Battler) -> void:
 				attacker.get_display_name(),
 				target.get_display_name(),
 				actual,
-			]
+			],
+			UITheme.LogType.DAMAGE,
 		)
 
 
@@ -84,7 +87,9 @@ func _execute_ability(
 
 	if not attacker.use_ee(ability.ee_cost):
 		if _battle_ui:
-			_battle_ui.add_battle_log("Not enough EE!")
+			_battle_ui.add_battle_log(
+				"Not enough EE!", UITheme.LogType.SYSTEM,
+			)
 		return false
 
 	var is_magical := ability.damage_stat == AbilityData.DamageStat.MAGIC
@@ -104,7 +109,8 @@ func _execute_ability(
 					ability.display_name,
 					target.get_display_name(),
 					actual,
-				]
+				],
+				UITheme.LogType.DAMAGE,
 			)
 	else:
 		if _battle_ui:
@@ -112,7 +118,8 @@ func _execute_ability(
 				"%s uses %s!" % [
 					attacker.get_display_name(),
 					ability.display_name,
-				]
+				],
+				UITheme.LogType.STATUS,
 			)
 
 	# Apply status effect with probability check
@@ -136,7 +143,8 @@ func _execute_item(
 					"%s healed for %d HP!" % [
 						target.get_display_name(),
 						healed,
-					]
+					],
+					UITheme.LogType.HEAL,
 				)
 		ItemData.EffectType.HEAL_EE:
 			var restored := target.restore_ee(item.effect_value)
@@ -145,7 +153,8 @@ func _execute_item(
 					"%s restored %d EE!" % [
 						target.get_display_name(),
 						restored,
-					]
+					],
+					UITheme.LogType.HEAL,
 				)
 		ItemData.EffectType.CURE_HOLLOW:
 			target.cure_hollow()
@@ -153,7 +162,8 @@ func _execute_item(
 				_battle_ui.add_battle_log(
 					"%s is grounded!" % [
 						target.get_display_name(),
-					]
+					],
+					UITheme.LogType.STATUS,
 				)
 
 
@@ -179,7 +189,8 @@ func _try_apply_status(ability: AbilityData, target: Battler) -> void:
 				"%s is affected by %s!" % [
 					target.get_display_name(),
 					ability.status_effect,
-				]
+				],
+				UITheme.LogType.STATUS,
 			)
 
 
