@@ -58,13 +58,30 @@ NPC (StaticBody2D) — class_name NPC
 ```
 
 **Key behavior:**
-- Exports: `npc_name`, `dialogue_lines: Array[String]`, `portrait_path`, `face_player: bool`
+- Exports: `npc_name`, `dialogue_lines: Array[String]`, `portrait_path`, `face_player: bool`, `indicator_type: IndicatorType`
 - `interact()` — called by player raycast; starts `DialogueManager.start_dialogue()`
 - `_face_toward_player()` — flips `sprite.flip_h` based on player X position
 - Emits `interaction_started` / `interaction_ended` signals
 - Calls `EventBus.emit_npc_talked_to(npc_name)` and `emit_npc_interaction_ended()`
 - Adds self to group `"npcs"`
 - Portrait loading is guarded with null check + `push_warning()`
+
+**Indicator system:**
+- `enum IndicatorType { NONE, CHAT, QUEST, QUEST_ACTIVE, SHOP }` — default `NONE`
+- Floating Label above NPC head (position `(0, -24)`, z_index=1, font_size=10)
+- Icons: CHAT=`...`, QUEST=`!`, QUEST_ACTIVE=`?`, SHOP=`$`
+- Colors: QUEST/SHOP=`UITheme.TEXT_GOLD`, QUEST_ACTIVE=`UITheme.TEXT_PRIMARY`, CHAT=white
+- Initially hidden; shown when player enters `InteractionArea`, hidden on exit
+- Hidden during dialogue (`_is_talking`), re-shown when dialogue ends if player still in range
+- Subtle bob animation (±2px, 1.2s loop, TRANS_SINE)
+- Tween killed in `_exit_tree()` to prevent callbacks on freed nodes
+- Can be changed at runtime via setter — creates/destroys indicator dynamically
+
+**Usage in scene scripts:**
+```gdscript
+npc.indicator_type = NPC.IndicatorType.QUEST  # shows "!" in gold
+npc.indicator_type = NPC.IndicatorType.SHOP   # shows "$" in gold
+```
 
 ---
 
