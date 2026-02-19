@@ -381,6 +381,16 @@ func _spawn_zone_marker() -> void:
 	add_child(marker)
 
 
+static func _compute_quest_indicator(
+	quest_id: StringName,
+) -> NPC.IndicatorType:
+	if QuestManager.is_quest_completed(quest_id):
+		return NPC.IndicatorType.CHAT
+	if QuestManager.is_quest_active(quest_id):
+		return NPC.IndicatorType.QUEST_ACTIVE
+	return NPC.IndicatorType.QUEST
+
+
 func _setup_npc_dialogue() -> void:
 	var flags := EventFlags.get_all_flags()
 
@@ -388,31 +398,41 @@ func _setup_npc_dialogue() -> void:
 	if innkeeper:
 		innkeeper.npc_name = "Maren"
 		innkeeper.dialogue_lines = get_maren_dialogue(flags)
+		innkeeper.indicator_type = NPC.IndicatorType.CHAT
 
 	var shopkeeper: StaticBody2D = $Entities/ShopkeeperNPC
 	if shopkeeper:
 		shopkeeper.npc_name = "Bram"
 		shopkeeper.dialogue_lines = get_bram_dialogue(flags)
+		shopkeeper.indicator_type = NPC.IndicatorType.SHOP
 
 	var elder: StaticBody2D = $Entities/TownfolkNPC1
 	if elder:
 		elder.npc_name = "Elder Thessa"
 		elder.dialogue_lines = get_thessa_dialogue(flags)
+		elder.indicator_type = _compute_quest_indicator(
+			&"elder_wisdom",
+		)
 
 	var scout: StaticBody2D = $Entities/TownfolkNPC2
 	if scout:
 		scout.npc_name = "Wren"
 		scout.dialogue_lines = get_wren_dialogue(flags)
+		scout.indicator_type = _compute_quest_indicator(
+			&"scouts_report",
+		)
 
 	if _garrick_npc and _garrick_npc.visible:
 		_garrick_npc.dialogue_lines = (
 			get_garrick_casual_dialogue(flags)
 		)
+		_garrick_npc.indicator_type = NPC.IndicatorType.CHAT
 
 	var lina: StaticBody2D = $Entities/LinaNPC
 	if lina:
 		lina.npc_name = "Lina"
 		lina.dialogue_lines = get_lina_dialogue(flags)
+		lina.indicator_type = NPC.IndicatorType.CHAT
 
 
 # -- Flag-reactive dialogue helpers (static for testability) --

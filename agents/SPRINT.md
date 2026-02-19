@@ -15,10 +15,11 @@ Started: 2026-02-18
 
 ### T-0089
 - Title: Add NPC interaction indicators (speech bubble icon above head)
-- Status: todo
-- Assigned: unassigned
+- Status: in-progress
+- Assigned: claude
 - Priority: high
 - Depends: none
+- Started: 2026-02-19
 
 ### T-0090
 - Title: Add quest log/journal UI screen
