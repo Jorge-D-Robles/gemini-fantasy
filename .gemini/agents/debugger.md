@@ -8,7 +8,6 @@ tools:
   - replace
   - write_file
   - run_shell_command
-  - godot-docs
 model: inherit
 ---
 
