@@ -13,13 +13,6 @@ Started: 2026-02-18
 
 ## Queue
 
-### T-0139
-- Title: Source SFX assets from Time Fantasy packs for UI and combat
-- Status: todo
-- Assigned: unassigned
-- Priority: high
-- Depends: none
-
 ### T-0066
 - Title: Add UI sound effects (menu, dialogue, buttons)
 - Status: todo
@@ -157,6 +150,13 @@ Started: 2026-02-18
 ---
 
 ## Done This Sprint
+
+### T-0139
+- Title: Source SFX assets for UI and combat
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: Time Fantasy packs have no audio. Generated 10 procedural placeholder SFX (Python+ffmpeg). SfxLibrary constants class with 4 UI + 6 combat path constants. OGG Vorbis 44.1kHz mono. sfx/CLAUDE.md docs. 7 new tests (964 total).
 
 ### T-0084
 - Title: Add companion follower sprites in overworld
