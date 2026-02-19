@@ -62,6 +62,9 @@ func _execute_attack(attacker: Battler, target: Battler) -> void:
 	# Play attacker's attack animation
 	await _play_attacker_anim(attacker)
 
+	# Play impact VFX on target (fire-and-forget)
+	_play_vfx(target, AbilityData.Element.NONE)
+
 	var damage := attacker.deal_damage(attacker.attack)
 	var actual := target.take_damage(damage)
 	AudioManager.play_sfx(load(SfxLibrary.COMBAT_ATTACK_HIT))
@@ -99,6 +102,10 @@ func _execute_ability(
 
 	# Play attacker's attack animation
 	await _play_attacker_anim(attacker)
+
+	# Play element VFX on target (fire-and-forget)
+	if target and target.is_alive:
+		_play_vfx(target, ability.element)
 
 	if ability.damage_base > 0 and target and target.is_alive:
 		var damage := attacker.deal_damage(
@@ -145,6 +152,7 @@ func _execute_item(
 		ItemData.EffectType.HEAL_HP:
 			var healed := target.heal(item.effect_value)
 			AudioManager.play_sfx(load(SfxLibrary.COMBAT_HEAL_CHIME))
+			_play_heal_vfx(target)
 			_show_heal_number(target, healed)
 			if _battle_ui:
 				_battle_ui.add_battle_log(
@@ -157,6 +165,7 @@ func _execute_item(
 		ItemData.EffectType.HEAL_EE:
 			var restored := target.restore_ee(item.effect_value)
 			AudioManager.play_sfx(load(SfxLibrary.COMBAT_HEAL_CHIME))
+			_play_heal_vfx(target)
 			if _battle_ui:
 				_battle_ui.add_battle_log(
 					"%s restored %d EE!" % [
@@ -203,6 +212,24 @@ func _try_apply_status(ability: AbilityData, target: Battler) -> void:
 				],
 				UITheme.LogType.STATUS,
 			)
+
+
+func _play_vfx(target: Battler, element: AbilityData.Element) -> void:
+	var visual: Node2D = battle_scene.get_visual_scene(target)
+	if not visual:
+		return
+	var vfx := BattleVFX.new()
+	visual.add_child(vfx)
+	vfx.setup(element)
+
+
+func _play_heal_vfx(target: Battler) -> void:
+	var visual: Node2D = battle_scene.get_visual_scene(target)
+	if not visual:
+		return
+	var vfx := BattleVFX.new()
+	visual.add_child(vfx)
+	vfx.setup_heal()
 
 
 func _show_heal_number(target: Battler, amount: int) -> void:
