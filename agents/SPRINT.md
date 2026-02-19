@@ -13,13 +13,6 @@ Started: 2026-02-18
 
 ## Queue
 
-### T-0064
-- Title: Integrate BGM playback into all scenes and battle system
-- Status: todo
-- Assigned: unassigned
-- Priority: high
-- Depends: none
-
 ### T-0072
 - Title: Create scene_paths.gd for centralized scene path constants
 - Status: todo
@@ -373,6 +366,13 @@ Started: 2026-02-18
 - Assigned: claude
 - Completed: 2026-02-19
 - Notes: PanelContainer in HUD (top-right, below PartyStatus). QuestTitle (gold) + ObjectiveLabel (lavender). Static compute_tracker_state() for testability. Connected to 4 QuestManager signals. 7 tests.
+
+### T-0064
+- Title: Integrate BGM playback into all scenes and battle system
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: Scene-owned BGM via SCENE_BGM_PATH constants and _start_scene_music() in _ready(). BattleManager plays battle/boss BGM with boss detection via EnemyData.AiType.BOSS. Victory fanfare. AudioManager.get_current_bgm_path() accessor. Null-safe OGG loading. 8 new tests (787 total).
 
 ### T-0088
 - Title: Add visual markers for zone transitions (sparkle/arrow effects)

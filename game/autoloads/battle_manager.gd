@@ -6,6 +6,10 @@ signal battle_started
 signal battle_ended(victory: bool)
 
 const BATTLE_SCENE_PATH: String = "res://systems/battle/battle_scene.tscn"
+const BATTLE_BGM_PATH: String = "res://assets/music/Battle Theme Organ.ogg"
+const BOSS_BGM_PATH: String = (
+	"res://assets/music/Epic Boss Battle 1st section.ogg"
+)
 
 var _battle_scene: Node = null
 var _is_in_battle: bool = false
@@ -31,6 +35,16 @@ func start_battle(
 		return
 	_is_in_battle = true
 	battle_started.emit()
+
+	# Play battle BGM (boss or standard)
+	var bgm_path := get_battle_bgm_path(enemy_group)
+	var bgm := load(bgm_path) as AudioStream
+	if bgm:
+		AudioManager.play_bgm(bgm, 0.5)
+	else:
+		push_warning(
+			"BattleManager: battle BGM not found: " + bgm_path
+		)
 
 	GameManager.push_state(GameManager.GameState.BATTLE)
 
@@ -65,6 +79,24 @@ func start_battle(
 
 func is_in_battle() -> bool:
 	return _is_in_battle
+
+
+static func is_boss_encounter(
+	enemy_group: Array[Resource],
+) -> bool:
+	for enemy: Resource in enemy_group:
+		if enemy is EnemyData:
+			if enemy.ai_type == EnemyData.AiType.BOSS:
+				return true
+	return false
+
+
+static func get_battle_bgm_path(
+	enemy_group: Array[Resource],
+) -> String:
+	if is_boss_encounter(enemy_group):
+		return BOSS_BGM_PATH
+	return BATTLE_BGM_PATH
 
 
 func _on_battle_finished(victory: bool) -> void:

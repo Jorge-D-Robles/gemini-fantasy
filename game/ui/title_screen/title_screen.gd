@@ -7,6 +7,7 @@ signal continue_pressed
 signal settings_pressed
 
 const UIHelpers = preload("res://ui/ui_helpers.gd")
+const TITLE_BGM_PATH: String = "res://assets/music/Main Character.ogg"
 
 @onready var title_label: Label = %TitleLabel
 @onready var subtitle_label: Label = %SubtitleLabel
@@ -18,11 +19,20 @@ const UIHelpers = preload("res://ui/ui_helpers.gd")
 
 
 func _ready() -> void:
+	_start_title_music()
 	_connect_buttons()
 	_setup_focus_navigation()
 	_check_save_data()
 	_animate_intro()
 	new_game_button.grab_focus()
+
+
+func _start_title_music() -> void:
+	var bgm := load(TITLE_BGM_PATH) as AudioStream
+	if bgm:
+		AudioManager.play_bgm(bgm, 0.0)
+	else:
+		push_warning("Title BGM not found: " + TITLE_BGM_PATH)
 
 
 func _connect_buttons() -> void:
