@@ -1,89 +1,176 @@
 extends Node2D
 
-## Roothollow — safe town hub with mushroom village buildings.
-## No random encounters. Features NPCs (innkeeper, shopkeeper,
-## townfolk), Garrick recruitment, save point, exit to Verdant Forest.
-## Tilemap data is in roothollow_maps.gd (Maps).
-
-const Maps = preload("roothollow_maps.gd")
+## Roothollow — safe town hub. No random encounters.
+## Features NPCs (innkeeper, shopkeeper, townfolk), Garrick recruitment,
+## a save point, and an exit to the Verdant Forest.
 
 const VERDANT_FOREST_PATH: String = (
 	"res://scenes/verdant_forest/verdant_forest.tscn"
 )
-const SHOP_DATA_PATH: String = (
-	"res://data/shops/roothollow_general.tres"
-)
-const HERB_QUEST_PATH: String = (
-	"res://data/quests/herb_gathering.tres"
-)
-const SCOUTS_QUEST_PATH: String = (
-	"res://data/quests/scouts_report.tres"
-)
-const ELDER_QUEST_PATH: String = (
-	"res://data/quests/elder_wisdom.tres"
-)
 
-# Quest dialogue text keyed by quest id and phase
-const _QUEST_TEXT: Dictionary = {
-	&"herb_gathering": {
-		"offer": "One more thing — I need medicinal herbs"
-			+ " from the Verdant Forest. The village supply"
-			+ " is running dangerously low."
-			+ " Would you gather some for me?",
-		"accept": "Thank you, dear! Look for forest herbs"
-			+ " growing near the clearings. I'll need three.",
-		"reminder": "Any luck finding those herbs"
-			+ " in the Verdant Forest?",
-		"turnin": "You found them! These will keep the"
-			+ " village healthy for weeks."
-			+ " Take this as thanks.",
-	},
-	&"scouts_report": {
-		"offer": "Actually — I have a job for you. Strange"
-			+ " creatures keep emerging near the ruins."
-			+ " I need someone to investigate and clear"
-			+ " the area. Interested?",
-		"accept": "Good. Head to the Overgrown Ruins, see"
-			+ " what's stirring, and deal with any threats."
-			+ " Report back when it's done.",
-		"reminder": "How's the scouting mission going?"
-			+ " Clear those creatures near the ruins"
-			+ " and report back.",
-		"turnin": "Solid work. The intelligence will help"
-			+ " us keep Roothollow safe."
-			+ " Here's your payment.",
-	},
-	&"elder_wisdom": {
-		"offer": "Before you go — there is something I"
-			+ " need. An Echo Fragment at the old village"
-			+ " memorial in the Verdant Forest. It holds"
-			+ " memories of Roothollow's founding."
-			+ " Would you retrieve it for me?",
-		"accept": "The memorial is south of the main path"
-			+ " in the forest, near a cluster of stones."
-			+ " Be careful — echoes there may be restless.",
-		"reminder": "Have you found the memorial Echo in"
-			+ " the Verdant Forest? It's near a cluster"
-			+ " of stones south of the main path.",
-		"turnin": "You brought it... The memories within"
-			+ " are extraordinary. These are the voices"
-			+ " of Roothollow's founders."
-			+ " Here — you've earned this.",
-	},
+# -- Ground: 8 clean grass variants from A5_A row 0 --
+const GROUND_LEGEND: Dictionary = {
+	"G": Vector2i(0, 0), "g": Vector2i(1, 0),
+	"H": Vector2i(2, 0), "h": Vector2i(3, 0),
+	"I": Vector2i(4, 0), "i": Vector2i(5, 0),
+	"J": Vector2i(6, 0), "j": Vector2i(7, 0),
 }
 
-var _shop_data: Resource = null
-var _herb_quest: Resource = null
-var _scouts_quest: Resource = null
-var _elder_quest: Resource = null
+# -- Paths: 6 stone walkway variants from A5_A rows 10-11 --
+const PATH_LEGEND: Dictionary = {
+	"S": Vector2i(0, 10), "s": Vector2i(1, 10),
+	"P": Vector2i(2, 10), "p": Vector2i(3, 10),
+	"Q": Vector2i(4, 10), "q": Vector2i(5, 10),
+}
+
+# -- Detail: 4 flower/foliage accents from A5_A row 14 --
+const DETAIL_LEGEND: Dictionary = {
+	"f": Vector2i(0, 14), "F": Vector2i(1, 14),
+	"b": Vector2i(2, 14), "B": Vector2i(3, 14),
+}
+
+# Block-rotation constants: 6 blocks of 8 chars = 48 cols per row
+const _B0: String = "GhIgjHiG"
+const _B1: String = "jIHgGhiJ"
+const _B2: String = "hGjIiHgJ"
+const _B3: String = "IgHjGiJh"
+const _B4: String = "gJhIjGHi"
+const _B5: String = "HiGjhJgI"
+
+# 48 cols x 38 rows — all grass, block-rotated for variety
+const GROUND_MAP: Array[String] = [
+	_B0 + _B1 + _B2 + _B3 + _B4 + _B5,
+	_B3 + _B5 + _B0 + _B4 + _B1 + _B2,
+	_B1 + _B2 + _B4 + _B5 + _B3 + _B0,
+	_B5 + _B0 + _B3 + _B1 + _B2 + _B4,
+	_B2 + _B4 + _B1 + _B0 + _B5 + _B3,
+	_B4 + _B3 + _B5 + _B2 + _B0 + _B1,
+	_B0 + _B5 + _B2 + _B3 + _B4 + _B1,
+	_B3 + _B1 + _B4 + _B5 + _B0 + _B2,
+	_B2 + _B0 + _B3 + _B4 + _B1 + _B5,
+	_B5 + _B4 + _B0 + _B1 + _B2 + _B3,
+	_B1 + _B3 + _B5 + _B2 + _B4 + _B0,
+	_B4 + _B2 + _B1 + _B0 + _B3 + _B5,
+	_B0 + _B4 + _B3 + _B5 + _B1 + _B2,
+	_B3 + _B0 + _B2 + _B4 + _B5 + _B1,
+	_B5 + _B1 + _B4 + _B3 + _B0 + _B2,
+	_B2 + _B5 + _B0 + _B1 + _B3 + _B4,
+	_B4 + _B3 + _B1 + _B2 + _B5 + _B0,
+	_B1 + _B2 + _B5 + _B0 + _B4 + _B3,
+	_B0 + _B3 + _B4 + _B2 + _B1 + _B5,
+	_B3 + _B5 + _B1 + _B4 + _B2 + _B0,
+	_B5 + _B0 + _B2 + _B1 + _B3 + _B4,
+	_B2 + _B4 + _B3 + _B5 + _B0 + _B1,
+	_B4 + _B1 + _B0 + _B3 + _B5 + _B2,
+	_B1 + _B2 + _B5 + _B4 + _B0 + _B3,
+	_B0 + _B5 + _B3 + _B2 + _B4 + _B1,
+	_B3 + _B0 + _B4 + _B1 + _B2 + _B5,
+	_B5 + _B4 + _B1 + _B0 + _B3 + _B2,
+	_B2 + _B1 + _B0 + _B3 + _B5 + _B4,
+	_B4 + _B3 + _B2 + _B5 + _B1 + _B0,
+	_B1 + _B5 + _B4 + _B0 + _B2 + _B3,
+	_B0 + _B2 + _B3 + _B4 + _B5 + _B1,
+	_B3 + _B4 + _B5 + _B2 + _B0 + _B1,
+	_B5 + _B1 + _B0 + _B3 + _B4 + _B2,
+	_B2 + _B3 + _B1 + _B5 + _B0 + _B4,
+	_B4 + _B0 + _B2 + _B1 + _B3 + _B5,
+	_B1 + _B5 + _B4 + _B0 + _B2 + _B3,
+	_B0 + _B2 + _B5 + _B4 + _B1 + _B3,
+	_B3 + _B4 + _B0 + _B1 + _B5 + _B2,
+]
+
+# Stone walkways: main E-W road, N-S road, plaza, building approaches
+# Rows 11-12 (y=176-192): main east-west road
+# Cols 19-21 (x=304-336): north-south road
+# Cols 17-23, rows 14-17: central plaza around save point
+# Inn approach: cols 7-10, rows 5-7
+# Shop approach: cols 25-28, rows 5-7
+const PATH_MAP: Array[String] = [
+	"                                                ",
+	"                                                ",
+	"                                                ",
+	"                                                ",
+	"                                                ",
+	"       SsPp                   QqSs              ",
+	"       pQqS                   sPpQ              ",
+	"       SspP                   QsPq              ",
+	"                   SsP                          ",
+	"                   pQq                          ",
+	"                   SsP                          ",
+	" SsPpQqSsPpQqSsPpQqSsPpQqSsPpQqSsPpQqSs        ",
+	" pQqSsPpQqSsPpQqSsPpQqSsPpQqSsPpQqSsPp        ",
+	"                   SsP                          ",
+	"                 QqSsPpQq                       ",
+	"                 SsPpQqSs                       ",
+	"                 pQqSsPpQ                       ",
+	"                 QqSsPpQq                       ",
+	"                   SsP                          ",
+	"                   pQq                          ",
+	"                   SsP                          ",
+	"                   pQq                          ",
+	"                   SsP                          ",
+	"                                                ",
+	"                                                ",
+	"                                                ",
+	"                                                ",
+	"                                                ",
+	"                                                ",
+	"                                                ",
+	"                                                ",
+	"                                                ",
+	"                                                ",
+	"                                                ",
+	"                                                ",
+	"                                                ",
+	"                                                ",
+	"                                                ",
+]
+
+# Sparse flowers on open grass, avoiding roads/buildings/NPCs
+const DETAIL_MAP: Array[String] = [
+	"                                                ",
+	"   f                  B              b          ",
+	"                                                ",
+	"                                                ",
+	"                                                ",
+	"                                                ",
+	"  B                                     f       ",
+	"                                                ",
+	"                                                ",
+	"      f                          b              ",
+	"                                                ",
+	"                                                ",
+	"                                                ",
+	"                                                ",
+	"                                                ",
+	"                                                ",
+	"                                                ",
+	"                                                ",
+	"                                                ",
+	"                                                ",
+	"  f                                       B     ",
+	"                                                ",
+	"                                                ",
+	"        B                                       ",
+	"                                 f              ",
+	"                                                ",
+	"                                                ",
+	"   b                      f                     ",
+	"                                                ",
+	"                                                ",
+	"                                          b     ",
+	"                                                ",
+	"          F                    B                ",
+	"                                                ",
+	"                                                ",
+	"    b                                           ",
+	"                                                ",
+	"                                                ",
+]
 
 @onready var _ground: TileMapLayer = $Ground
 @onready var _paths: TileMapLayer = $Paths
 @onready var _ground_detail: TileMapLayer = $GroundDetail
-@onready var _trees_border: TileMapLayer = $TreesBorder
-@onready var _decorations: TileMapLayer = $Decorations
-@onready var _objects: TileMapLayer = $Objects
-@onready var _above_player: TileMapLayer = $AbovePlayer
 @onready var _player: CharacterBody2D = $Entities/Player
 @onready var _spawn_from_forest: Marker2D = $Entities/SpawnFromForest
 @onready var _exit_to_forest: Area2D = $Triggers/ExitToForest
@@ -103,31 +190,10 @@ func _ready() -> void:
 	_exit_to_forest.body_entered.connect(_on_exit_to_forest_entered)
 	_garrick_zone.body_entered.connect(_on_garrick_zone_entered)
 
-	# Load shop and quest data
-	_shop_data = load(SHOP_DATA_PATH)
-	_herb_quest = load(HERB_QUEST_PATH)
-	_scouts_quest = load(SCOUTS_QUEST_PATH)
-	_elder_quest = load(ELDER_QUEST_PATH)
-
 	# Connect innkeeper special interaction
 	var innkeeper: StaticBody2D = $Entities/InnkeeperNPC
 	if innkeeper:
 		innkeeper.interaction_ended.connect(_on_innkeeper_finished)
-
-	# Connect shopkeeper to open shop after dialogue
-	var shopkeeper: StaticBody2D = $Entities/ShopkeeperNPC
-	if shopkeeper:
-		shopkeeper.interaction_ended.connect(
-			_on_shopkeeper_finished,
-		)
-
-	# Connect NPC interaction_ended for quest offering
-	var wren_npc: StaticBody2D = $Entities/TownfolkNPC2
-	if wren_npc:
-		wren_npc.interaction_ended.connect(_on_wren_finished)
-	var thessa_npc: StaticBody2D = $Entities/TownfolkNPC1
-	if thessa_npc:
-		thessa_npc.interaction_ended.connect(_on_thessa_finished)
 
 	# Hide Garrick recruitment zone if already recruited
 	if EventFlags.has_flag(GarrickRecruitment.FLAG_NAME):
@@ -140,55 +206,15 @@ func _ready() -> void:
 
 
 func _setup_tilemap() -> void:
-	var m := Maps
-	var atlas_paths: Array[String] = [
-		MapBuilder.FAIRY_FOREST_A5_A,
-		MapBuilder.MUSHROOM_VILLAGE,
-		MapBuilder.FOREST_OBJECTS,
-		MapBuilder.STONE_OBJECTS,
-		MapBuilder.TREE_OBJECTS,
-	]
+	var atlas_paths: Array[String] = [MapBuilder.FAIRY_FOREST_A5_A]
 	MapBuilder.apply_tileset(
-		[
-			_ground, _paths, _ground_detail, _decorations,
-			_objects, _trees_border, _above_player,
-		] as Array[TileMapLayer],
+		[_ground, _paths, _ground_detail] as Array[TileMapLayer],
 		atlas_paths,
-		m.SOLID_TILES,
 	)
-	# Ground: uniform bright green fill
-	var ground_row: String = "G".repeat(m.MAP_COLS)
-	var ground_map: Array[String] = []
-	for i: int in m.MAP_ROWS:
-		ground_map.append(ground_row)
-	MapBuilder.build_layer(_ground, ground_map, m.GROUND_LEGEND)
-	# Paths (source 0)
-	MapBuilder.build_layer(_paths, m.PATH_MAP, m.PATH_LEGEND)
-	# Ground detail flower accents (source 0)
+	MapBuilder.build_layer(_ground, GROUND_MAP, GROUND_LEGEND)
+	MapBuilder.build_layer(_paths, PATH_MAP, PATH_LEGEND)
 	MapBuilder.build_layer(
-		_ground_detail, m.DECOR_MAP, m.DETAIL_LEGEND,
-	)
-	# Forest border canopy (source 2)
-	MapBuilder.build_layer(
-		_trees_border, m.BORDER_MAP, m.BORDER_LEGEND, 2,
-	)
-	# Mushroom building walls (source 1, Objects layer)
-	MapBuilder.build_layer(
-		_objects, m.BUILDING_MAP, m.BUILDING_LEGEND, 1,
-	)
-	# Mushroom caps / rooftops (source 1, AbovePlayer)
-	MapBuilder.build_layer(
-		_above_player, m.ROOF_MAP, m.ROOF_LEGEND, 1,
-	)
-	# Mushroom ground decorations (source 1)
-	MapBuilder.build_layer(
-		_decorations, m.DECOR_MAP,
-		m.MUSHROOM_DECOR_LEGEND, 1,
-	)
-	# Stone ground decorations (source 3)
-	MapBuilder.build_layer(
-		_decorations, m.DECOR_MAP,
-		m.STONE_DECOR_LEGEND, 3,
+		_ground_detail, DETAIL_MAP, DETAIL_LEGEND,
 	)
 
 
@@ -226,146 +252,11 @@ func _on_innkeeper_finished() -> void:
 	PartyManager.heal_all()
 	var heal_lines: Array[DialogueLine] = [
 		DialogueLine.create(
-			"Maren",
+			"Innkeeper",
 			"Rest well. Your party has been fully restored.",
 		),
 	]
 	DialogueManager.start_dialogue(heal_lines)
-	await DialogueManager.dialogue_ended
-	_check_quest_chain(_herb_quest, "Maren")
-
-
-func _on_shopkeeper_finished() -> void:
-	if _shop_data == null:
-		return
-	var shop_mgr := get_node_or_null("/root/ShopManager")
-	if shop_mgr:
-		shop_mgr.open_shop(_shop_data)
-
-
-func _on_wren_finished() -> void:
-	_check_quest_chain(_scouts_quest, "Wren")
-
-
-func _on_thessa_finished() -> void:
-	_check_quest_chain(_elder_quest, "Elder Thessa")
-
-
-func _check_quest_chain(
-	quest_data: Resource,
-	speaker: String,
-) -> void:
-	if quest_data == null:
-		return
-	var qid: StringName = quest_data.id
-
-	if QuestManager.is_quest_completed(qid):
-		return
-
-	if QuestManager.is_quest_active(qid):
-		if _is_turnin_ready(qid):
-			_do_quest_turnin(qid, quest_data, speaker)
-		else:
-			var reminder := _get_quest_reminder(qid)
-			if not reminder.is_empty():
-				var lines: Array[DialogueLine] = [
-					DialogueLine.create(speaker, reminder),
-				]
-				DialogueManager.start_dialogue(lines)
-		return
-
-	if not _can_offer_quest(qid, quest_data):
-		return
-
-	# Show quest offer with Accept/Decline choice
-	var offer_text := _get_quest_offer(qid)
-	if offer_text.is_empty():
-		return
-	var offer_line := DialogueLine.create(
-		speaker, offer_text, null,
-		["Accept", "Decline"] as Array[String],
-	)
-
-	var accepted := false
-	DialogueManager.choice_selected.connect(
-		func(index: int) -> void: accepted = (index == 0),
-		CONNECT_ONE_SHOT,
-	)
-	DialogueManager.start_dialogue([offer_line])
-	await DialogueManager.dialogue_ended
-
-	if accepted:
-		QuestManager.accept_quest(quest_data)
-		var accept_text := _get_quest_accept(qid)
-		if not accept_text.is_empty():
-			var lines: Array[DialogueLine] = [
-				DialogueLine.create(speaker, accept_text),
-			]
-			DialogueManager.start_dialogue(lines)
-
-
-func _do_quest_turnin(
-	qid: StringName,
-	quest_data: Resource,
-	speaker: String,
-) -> void:
-	var turnin_text := _get_quest_turnin(qid)
-	if turnin_text.is_empty():
-		return
-	var lines: Array[DialogueLine] = [
-		DialogueLine.create(speaker, turnin_text),
-	]
-	DialogueManager.start_dialogue(lines)
-	await DialogueManager.dialogue_ended
-
-	# Complete the final objective (turn-in) — auto-completes quest
-	var objectives := QuestManager.get_objective_status(qid)
-	if not objectives.is_empty():
-		QuestManager.complete_objective(qid, objectives.size() - 1)
-
-	# Grant gold reward
-	if quest_data.reward_gold > 0:
-		InventoryManager.add_gold(quest_data.reward_gold)
-
-
-static func _is_turnin_ready(qid: StringName) -> bool:
-	var objectives := QuestManager.get_objective_status(qid)
-	if objectives.is_empty():
-		return false
-	if objectives.back():
-		return false
-	for i in objectives.size() - 1:
-		if not objectives[i]:
-			return false
-	return true
-
-
-static func _can_offer_quest(
-	qid: StringName,
-	quest_data: Resource,
-) -> bool:
-	if not QuestManager.can_accept_quest(quest_data):
-		return false
-	match qid:
-		&"herb_gathering", &"elder_wisdom":
-			return EventFlags.has_flag("opening_lyra_discovered")
-	return true
-
-
-static func _get_quest_offer(qid: StringName) -> String:
-	return _QUEST_TEXT.get(qid, {}).get("offer", "")
-
-
-static func _get_quest_accept(qid: StringName) -> String:
-	return _QUEST_TEXT.get(qid, {}).get("accept", "")
-
-
-static func _get_quest_reminder(qid: StringName) -> String:
-	return _QUEST_TEXT.get(qid, {}).get("reminder", "")
-
-
-static func _get_quest_turnin(qid: StringName) -> String:
-	return _QUEST_TEXT.get(qid, {}).get("turnin", "")
 
 
 func _setup_npc_dialogue() -> void:
@@ -713,50 +604,3 @@ static func get_lina_dialogue(
 		"When I grow up, I want to be an Echo hunter like"
 		+ " you! I'll have a big journal and everything!",
 	])
-
-
-# -- Quest logic helpers (static / pure for testability) --
-
-
-static func should_offer_quest(
-	quest_id: StringName,
-	active_ids: Array,
-	completed_ids: Array,
-) -> bool:
-	if quest_id in active_ids:
-		return false
-	if quest_id in completed_ids:
-		return false
-	return true
-
-
-static func can_complete_herb_quest(herb_count: int) -> bool:
-	return herb_count >= 3
-
-
-static func can_complete_elder_quest(
-	obj_status: Array,
-) -> bool:
-	return (
-		obj_status.size() >= 2
-		and obj_status[0]
-		and not obj_status[1]
-	)
-
-
-static func can_complete_scouts_quest(
-	ruins_visited: bool,
-) -> bool:
-	return ruins_visited
-
-
-static func get_quest_offer_lines(
-	qid: StringName,
-) -> PackedStringArray:
-	return PackedStringArray([_get_quest_offer(qid)])
-
-
-static func get_quest_complete_lines(
-	qid: StringName,
-) -> PackedStringArray:
-	return PackedStringArray([_get_quest_turnin(qid)])

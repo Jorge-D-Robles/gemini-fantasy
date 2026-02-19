@@ -219,25 +219,23 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0021
 - Title: Build inventory UI
-- Status: done
-- Assigned: claude
+- Status: todo
+- Assigned: unassigned
 - Priority: medium
 - Milestone: M0
 - Depends: T-0012, T-0013
 - Refs: docs/best-practices/08-ui-patterns.md
-- Notes: Done as T-0041. Category filtering, item use/equip, gamepad focus navigation.
-- Completed: 2026-02-18
+- Notes: Item list with categories. Use/equip items. Item descriptions. Stack display. Focus navigation.
 
 ### T-0022
 - Title: Build shop system
-- Status: done
-- Assigned: claude
+- Status: todo
+- Assigned: unassigned
 - Priority: medium
 - Milestone: M0
 - Depends: T-0012
 - Refs: docs/game-design/01-core-mechanics.md
-- Notes: Done as T-0040/T-0042. ShopData Resource, ShopManager autoload, ShopUI with buy/sell.
-- Completed: 2026-02-18
+- Notes: ShopData Resource. Buy/sell with gold. Price modifiers. Shop UI with item comparison.
 
 ### T-0023
 - Title: Implement camp/rest system

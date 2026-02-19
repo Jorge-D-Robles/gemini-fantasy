@@ -2,11 +2,11 @@
 
 ## Story Structure
 
-A ~25-hour main story campaign across three acts, with the narrative shifting perspectives and revealing deeper truths about The Severance.
+A ~40-hour campaign across three acts, with the narrative shifting perspectives and revealing deeper truths about The Severance.
 
 ---
 
-## ACT I: The Echo Thief (Hours 1-9)
+## ACT I: The Echo Thief (Hours 1-15)
 
 ### Opening
 
@@ -43,7 +43,7 @@ In the ruins beneath Prismfall, the party assembles enough of Lyra's consciousne
 
 Lyra's team discovered that the global Resonance network had become sentient—a collective consciousness of all humanity called **The Convergence**. It was benevolent but growing rapidly toward a singularity that would have dissolved individual identity entirely. Everyone would have become one mind.
 
-To preserve human individuality, Lyra's team of twelve scientists destroyed the network, knowing it would cause catastrophic damage. The death toll was approximately **800 million people** — nearly a third of the global population. They believed it was worth it.
+To preserve human individuality, Lyra's team destroyed the network, knowing it would cause catastrophic damage. They believed it was worth it.
 
 But now the fragments are reassembling. The Convergence isn't dead—just scattered. And both the Initiative and the Shepherds know this. They're not opposed to each other; they're racing to control what comes next.
 
@@ -57,7 +57,7 @@ The party escapes, but now they're hunted by both factions.
 
 ---
 
-## ACT II: The Weight of Echoes (Hours 10-18)
+## ACT II: The Weight of Echoes (Hours 16-30)
 
 ### New Direction
 
@@ -69,9 +69,9 @@ The party goes rogue, seeking the other two Resonance Anchors before either fact
 
 5. **Cipher** - One of the other Resonance Anchors. A non-binary hacker from Gearhaven who's been evading the Initiative for years. They use Resonance to interface with technology in unprecedented ways. Sarcastic, paranoid, fiercely protective of their freedom.
 
-### The Resonance Child
+### The Second Anchor
 
-The party finds **Ash** in Emberhearth: a child who doesn't speak but can communicate through shared emotional resonance. Ash is being protected by the Ash Walker nomads who recognize them as sacred. The party initially believes Ash is the third Anchor, but this is later revealed to be a misunderstanding -- Ash is profoundly Resonance-sensitive and can amplify Anchor abilities, but is not themselves an Anchor.
+The party finds the second Anchor in Emberhearth: **Ash**, a child who doesn't speak but can communicate through shared emotional resonance. Ash is being protected by the Ash Walker nomads who recognize them as sacred.
 
 The Shepherds of Silence attack Emberhearth to kill Ash, believing that eliminating the Anchors will make the Convergence impossible to restore. The party must defend the city in a major battle sequence.
 
@@ -112,13 +112,13 @@ Both plans will devastate Aethermoor. The party must find a third option.
 
 ### Act II End
 
-The party makes a desperate gambit: they'll enter the Resonance Nexus at the heart of The Hollows and attempt to communicate with the Convergence directly. They'll use the three Anchors—Kael, Cipher, and Lyra—to bridge between human and collective consciousness, with Ash amplifying the connection.
+The party makes a desperate gambit: they'll enter the Resonance Nexus at the heart of The Hollows and attempt to communicate with the Convergence directly. They'll use the three Anchors—Kael, Lyra, and Ash—to bridge between human and collective consciousness.
 
 But to do this, they need to willingly crystallize themselves, risking becoming Hollow.
 
 ---
 
-## ACT III: Convergence (Hours 19-25)
+## ACT III: Convergence (Hours 31-40)
 
 ### The Descent
 

@@ -42,8 +42,8 @@ ultrathink
 
 ```
 <LevelName> (Node2D) -- level_name.gd
-  ├── Ground (TileMapLayer)             # Base terrain (organic multi-terrain patches)
-  ├── GroundDetail (TileMapLayer)       # Ground decorations (15-30% coverage)
+  ├── Ground (TileMapLayer)             # Base terrain (single-tile fill)
+  ├── GroundDetail (TileMapLayer)       # Sparse accents (flowers, bushes)
   ├── Trees (TileMapLayer)              # Forest borders (B-sheet, collision)
   ├── Paths (TileMapLayer)              # Walkway overlay
   ├── Objects (TileMapLayer)            # Rocks, buildings (B-sheet, collision)
