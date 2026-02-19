@@ -13,21 +13,6 @@ Started: 2026-02-18
 
 ## Queue
 
-### T-0092
-- Title: Add tutorial hints for controls on first playthrough
-- Status: in-progress
-- Assigned: claude
-- Started: 2026-02-19
-- Priority: medium
-- Depends: none
-
-### T-0094
-- Title: Implement battle ability animations and visual effects
-- Status: todo
-- Assigned: unassigned
-- Priority: medium
-- Depends: none
-
 ### T-0095
 - Title: Add battler idle animations in combat
 - Status: todo
@@ -129,6 +114,20 @@ Started: 2026-02-18
 ---
 
 ## Done This Sprint
+
+### T-0094
+- Title: Implement battle ability animations and visual effects
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: BattleVFX script-only Node2D (follows DamagePopup fire-and-forget pattern). Per-element AnimatedSprite2D built from pixel_animations_gfxpack sprite sheets (9 VFX: fire, ice, water, wind, earth, holy, darkness, impact, heal). Static get_vfx_config()/build_sprite_frames() for testability. Integrated into action_execute_state.gd for attacks, abilities, and healing items. 7 new tests (988 total).
+
+### T-0092
+- Title: Add tutorial hints for controls on first playthrough
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: TutorialHints static utility (3 hints: interact, menu, zone_travel). HUD overlay with tween fade animation, interact-only dismiss, state-change cleanup. Triggers in scene scripts (Roothollow interact, Overgrown Ruins menu/zone_travel). EventFlags for show-once persistence. 11 new tests (981 total).
 
 ### T-0083
 - Title: Update Roothollow NPC dialogue to match story scripts and style guide

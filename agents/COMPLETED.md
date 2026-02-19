@@ -4,6 +4,7 @@ Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[
 
 ---
 
+- [2026-02-19] T-0092: Add tutorial hints for controls on first playthrough — TutorialHints utility, HUD overlay with tween animation, interact-only dismiss, 3 hint types in 2 scenes, EventFlags persistence, 11 tests (claude)
 - [2026-02-19] T-0083: Update Roothollow NPC dialogue to match story scripts and style guide — Verdant Tangle slang for 5 NPCs, Cindral Wastes voice for Garrick, fixed 4 cliché lines, 6 new tests (claude)
 - [2026-02-19] T-0139: Source SFX assets for UI and combat — 10 procedural placeholder OGGs, SfxLibrary constants class, sfx/CLAUDE.md, 7 tests (claude)
 - [2026-02-19] T-0084: Add companion follower sprites in overworld — CompanionController/CompanionFollower, Iris+Garrick sprites, position history buffer, 18 tests (claude)
@@ -127,3 +128,5 @@ These 26 fixes were completed before the ticket system was established:
 - [2026-02-19] T-0139: Source SFX assets for UI and combat — 10 procedural placeholder OGGs, SfxLibrary constants class, sfx/CLAUDE.md, 7 tests (964 total) (claude)
 - [2026-02-19] T-0066: Add UI sound effects — wired AudioManager.play_sfx(load(SfxLibrary.UI_*)) into 8 UI scripts (27 insertion points), 4 SFX types (confirm/cancel/menu_open/dialogue_advance), covers dialogue/pause/title/settings/inventory/shop/quest_log/battle_ui (claude)
 - [2026-02-19] T-0067: Add combat sound effects — wired AudioManager.play_sfx(load(SfxLibrary.COMBAT_*)) into action_execute_state.gd and enemy_turn_state.gd, 5 SFX types (attack_hit/magic_cast/heal_chime/death/status_apply), CRITICAL_HIT deferred (claude)
+- [2026-02-19] T-0092: Add tutorial hints for controls — TutorialHints static utility (3 hints: interact, menu, zone_travel), HUD overlay with tween fade animation, interact-only dismiss, state-change cleanup, triggers in scene scripts, EventFlags for show-once persistence, 11 new tests (981 total) (claude)
+- [2026-02-19] T-0094: Implement battle ability VFX — BattleVFX fire-and-forget Node2D (DamagePopup pattern), 9 per-element AnimatedSprite2D from pixel_animations_gfxpack, static get_vfx_config()/build_sprite_frames(), integrated into action_execute_state.gd for attacks/abilities/healing, 7 new tests (988 total) (claude)
