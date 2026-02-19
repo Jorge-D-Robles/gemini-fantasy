@@ -43,6 +43,12 @@ func enter() -> void:
 		for item_id in items:
 			inv.add_item(StringName(item_id), 1)
 
+	# Apply XP to all party members
+	var pm: Node = get_node_or_null("/root/PartyManager")
+	var level_ups: Array[Dictionary] = []
+	if pm:
+		level_ups = apply_xp_rewards(pm.get_active_party(), total_exp)
+
 	var battle_ui: Node = battle_scene.get_node_or_null("BattleUI")
 	if battle_ui:
 		battle_ui.show_victory(total_exp, total_gold, items)
@@ -50,7 +56,30 @@ func enter() -> void:
 			"Victory! Gained %d EXP and %d Gold." % [total_exp, total_gold],
 			UITheme.LogType.VICTORY,
 		)
+		for lu: Dictionary in level_ups:
+			battle_ui.add_battle_log(
+				"%s reached Level %d!" % [lu["character"], lu["level"]],
+				UITheme.LogType.VICTORY,
+			)
 
 	# Wait for player to dismiss victory screen
 	await get_tree().create_timer(2.0).timeout
 	battle_scene.end_battle(true)
+
+
+## Applies XP to each CharacterData in the party. Returns an array of
+## level-up info dicts with "character", "level", and "changes" keys.
+static func apply_xp_rewards(
+	party: Array[Resource], total_exp: int,
+) -> Array[Dictionary]:
+	var level_ups: Array[Dictionary] = []
+	for member: Resource in party:
+		if member is CharacterData:
+			var results := LevelManager.add_xp(member, total_exp)
+			for changes: Dictionary in results:
+				level_ups.append({
+					"character": member.display_name,
+					"level": member.level,
+					"changes": changes,
+				})
+	return level_ups

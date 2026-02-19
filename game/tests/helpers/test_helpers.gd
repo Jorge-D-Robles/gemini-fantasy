@@ -165,6 +165,38 @@ static func make_equipment(
 	return e
 
 
+static func make_character_data(
+	overrides: Dictionary = {},
+) -> CharacterData:
+	var c := CharacterData.new()
+	c.id = overrides.get("id", &"test_hero")
+	c.display_name = overrides.get("display_name", "Test Hero")
+	c.max_hp = overrides.get("max_hp", 100)
+	c.max_ee = overrides.get("max_ee", 50)
+	c.attack = overrides.get("attack", 10)
+	c.magic = overrides.get("magic", 10)
+	c.defense = overrides.get("defense", 10)
+	c.resistance = overrides.get("resistance", 10)
+	c.speed = overrides.get("speed", 10)
+	c.luck = overrides.get("luck", 5)
+	c.level = overrides.get("level", 1)
+	c.current_xp = overrides.get("current_xp", 0)
+	c.hp_growth = overrides.get("hp_growth", 10.0)
+	c.ee_growth = overrides.get("ee_growth", 5.0)
+	c.attack_growth = overrides.get("attack_growth", 1.5)
+	c.magic_growth = overrides.get("magic_growth", 1.5)
+	c.defense_growth = overrides.get("defense_growth", 1.5)
+	c.resistance_growth = overrides.get("resistance_growth", 1.5)
+	c.speed_growth = overrides.get("speed_growth", 1.0)
+	c.luck_growth = overrides.get("luck_growth", 1.0)
+	var abilities_override: Array = overrides.get("abilities", [])
+	var typed_abilities: Array[Resource] = []
+	for a in abilities_override:
+		typed_abilities.append(a)
+	c.abilities = typed_abilities
+	return c
+
+
 static func make_quest(overrides: Dictionary = {}) -> QuestData:
 	var q := QuestData.new()
 	q.id = overrides.get("id", &"test_quest")
