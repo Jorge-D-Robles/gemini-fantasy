@@ -52,6 +52,151 @@ Every session, before writing any code:
 
 Agent names: Use `claude` or `gemini` as the assignee value.
 
+## Autonomous Loop
+
+When running in autonomous mode (long unattended sessions), follow this loop for every task. The loop ensures plans are reviewed before implementation, code is reviewed before merging, and the backlog stays full.
+
+### Loop Overview
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  1. PICK TASK (from SPRINT.md queue)                    │
+│  2. COMPACT context window (clean slate)                │
+│  3. RESEARCH (godot-docs, best-practices, design docs)  │
+│  4. CREATE PLAN (files, architecture, approach)         │
+│  5. REVIEW PLAN (adversarial + neutral reviewers)       │
+│  6. UPDATE PLAN (incorporate reviewer feedback)         │
+│  7. IMPLEMENT (parallel agents where possible)          │
+│  8. RUN TESTS (/run-tests, /scene-preview if visual)   │
+│  9. PR CODE REVIEW (pr-code-reviewer safety gate)      │
+│ 10. MERGE (commit, push, PR, merge, pull)              │
+│ 11. PLAN NEXT (task-planner updates backlog/sprint)    │
+│ 12. GOTO 1                                             │
+└─────────────────────────────────────────────────────────┘
+```
+
+### Step-by-Step
+
+#### 1. Pick Task
+- Read `agents/SPRINT.md`
+- Resume any `in-progress` task assigned to you
+- Otherwise pick the highest-priority unassigned task whose dependencies are met
+- Claim it: set `Assigned: [your-name]`, `Status: in-progress`, `Started: [date]`
+
+#### 2. Compact Context
+- Before starting significant new work, use `/compact` to compress the conversation history
+- This ensures a clean context window for each task cycle, preventing confusion from stale state
+- The task description from SPRINT.md provides all needed context for the new cycle
+
+#### 3. Research
+- Call `godot-docs` subagent for every Godot class involved
+- Read relevant `docs/best-practices/*.md` files
+- Read relevant `docs/game-design/` and `docs/lore/` docs
+- Scan existing code for similar patterns
+
+#### 4. Create Plan
+- List all files to create/modify
+- Define the architecture (node hierarchy, signal connections, resource types)
+- Define the public API for each new script
+- Identify integration points with existing systems
+- Write the TDD test plan (what tests will be written first)
+
+#### 5. Review Plan — Dual Reviewer Consensus
+Spawn **both reviewers in parallel**:
+
+```
+Task(subagent_type="plan-reviewer-adversarial", prompt="Review this plan for task T-XXXX: <task title>\n\n<full plan text>")
+Task(subagent_type="plan-reviewer-neutral", prompt="Review this plan for task T-XXXX: <task title>\n\n<full plan text>")
+```
+
+**Consensus rules:**
+- **Both APPROVE** → proceed to implementation
+- **Both REJECT** → rethink the approach fundamentally
+- **One APPROVE, one REVISE** → apply the revision suggestions and proceed
+- **Both REVISE** → apply all revision suggestions, then re-review if changes were significant
+- **Any REJECT + other REVISE** → major rework needed, re-review after changes
+
+If re-review is needed, spawn reviewers again with the updated plan AND the previous review for context.
+
+#### 6. Update Plan
+- Incorporate all accepted reviewer feedback
+- Document which suggestions were applied and which were intentionally declined (with reasoning)
+- The updated plan becomes the implementation spec
+
+#### 7. Implement
+Follow TDD:
+1. **RED** — Write failing tests first
+2. **GREEN** — Write minimum code to pass tests
+3. **REFACTOR** — Clean up while tests stay green
+
+**Parallelize where possible:**
+- Independent Resource classes can be created in parallel
+- Tests and implementation for separate systems can be parallelized
+- Multiple data files (`.tres`) can be created in parallel
+- UI and backend logic can be developed in parallel if APIs are defined
+
+**Do NOT parallelize:**
+- Tilemap work (single agent only — see tilemap rules)
+- Code that depends on other code being written first
+- Integration wiring (must happen after all pieces exist)
+
+#### 8. Run Tests & Verify
+- Run `/run-tests` (gdlint + GUT) — all must pass
+- If the task touched visual content, run `/scene-preview` on every affected scene
+- Fix any failures before proceeding
+
+#### 9. PR Code Review
+Before merging, spawn the safety gate reviewer:
+
+```
+Task(subagent_type="pr-code-reviewer", prompt="Review PR for task T-XXXX: <task title>\n\nTask description: <description>\n\nBranch: feature/claude1")
+```
+
+**The reviewer's verdict is binding:**
+- **APPROVE** → proceed to merge
+- **APPROVE WITH NOTES** → fix notes if trivial, or proceed and track as follow-up
+- **REJECT** → fix ALL blocking issues, re-run tests, then re-review
+
+**Never bypass the code reviewer.** If the reviewer rejects, fix the issues and submit for review again.
+
+#### 10. Merge
+Follow the standard git workflow:
+1. Stage changed files and commit
+2. Push to the current branch
+3. Create PR via `gh pr create`
+4. Merge via `gh pr merge --merge`
+5. `git pull` to sync
+6. `git -C /Users/robles/repos/games/gemini-fantasy pull` to update main repo
+7. Update SPRINT.md: move ticket to "Done This Sprint", set `Status: done`, `Completed: [date]`
+8. Append to `agents/COMPLETED.md`
+
+#### 11. Plan Next — Task Pipeline
+Spawn the task planner to keep the backlog healthy:
+
+```
+Task(subagent_type="task-planner", prompt="Just completed T-XXXX: <task title>. <brief description of what was built>. Analyze milestone progress and create new tasks.")
+```
+
+Apply the task planner's recommendations:
+- Add new tasks to `agents/BACKLOG.md`
+- Move ready tasks to the sprint queue in `agents/SPRINT.md`
+- Update dependency chains for newly unblocked tasks
+
+#### 12. Loop
+Return to Step 1. Pick the next task from the sprint queue and repeat.
+
+### Safety Rails
+
+The autonomous loop has multiple safety gates to prevent catastrophic merges:
+
+1. **Dual plan review** — Two independent reviewers must reach consensus before implementation starts
+2. **TDD** — Tests are written before implementation, catching logic errors early
+3. **PR code review** — Final safety gate checks for deleted files, broken references, and regressions
+4. **Test gate** — All tests must pass before the PR is created
+5. **Visual verification** — Scene previews catch visual regressions
+
+**If any gate fails, the loop stops and fixes the issue before continuing.** The loop never "skips ahead" past a failed gate.
+
 ## MANDATORY: Research Before Code
 
 **DO NOT write or modify any GDScript, .tscn, or .tres file without first completing ALL of these steps:**
@@ -181,6 +326,10 @@ See `game/data/CLAUDE.md` for the .tres template and `game/resources/CLAUDE.md` 
 | `integration-checker` | `Task(subagent_type="integration-checker")` | Cross-system wiring check (sonnet) |
 | `debugger` | `Task(subagent_type="debugger")` | Bug diagnosis and fix |
 | `tilemap-builder` | `Task(subagent_type="tilemap-builder")` | Tilemap design (opus) |
+| `plan-reviewer-adversarial` | `Task(subagent_type="plan-reviewer-adversarial")` | Adversarial plan review (sonnet) |
+| `plan-reviewer-neutral` | `Task(subagent_type="plan-reviewer-neutral")` | Neutral plan review (sonnet) |
+| `pr-code-reviewer` | `Task(subagent_type="pr-code-reviewer")` | PR merge safety gate (sonnet) |
+| `task-planner` | `Task(subagent_type="task-planner")` | Milestone tracking & task creation (sonnet) |
 
 Use parallel agents for large features (e.g., `godot-docs` + `Explore` for research, then `gdscript-reviewer` + `integration-checker` for quality).
 
