@@ -43,6 +43,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		if _is_typing:
 			_skip_typing()
 		else:
+			AudioManager.play_sfx(load(SfxLibrary.UI_DIALOGUE_ADVANCE))
 			DialogueManager.advance()
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("cancel"):
@@ -129,6 +130,7 @@ func _on_typing_finished() -> void:
 
 
 func _on_choice_selected(index: int) -> void:
+	AudioManager.play_sfx(load(SfxLibrary.UI_CONFIRM))
 	_choices_container.visible = false
 	_clear_choices()
 	DialogueManager.select_choice(index)

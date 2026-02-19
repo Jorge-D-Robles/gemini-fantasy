@@ -32,12 +32,14 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func open() -> void:
+	AudioManager.play_sfx(load(SfxLibrary.UI_MENU_OPEN))
 	visible = true
 	_load_current_values()
 	_master_slider.grab_focus()
 
 
 func close() -> void:
+	AudioManager.play_sfx(load(SfxLibrary.UI_CANCEL))
 	_save_current_values()
 	visible = false
 	settings_menu_closed.emit()

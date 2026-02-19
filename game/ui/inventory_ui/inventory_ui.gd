@@ -59,6 +59,7 @@ func _ready() -> void:
 func open() -> void:
 	if _is_open:
 		return
+	AudioManager.play_sfx(load(SfxLibrary.UI_MENU_OPEN))
 	_is_open = true
 	visible = true
 	_current_category = Category.ALL
@@ -70,6 +71,7 @@ func open() -> void:
 func close() -> void:
 	if not _is_open:
 		return
+	AudioManager.play_sfx(load(SfxLibrary.UI_CANCEL))
 	_is_open = false
 	visible = false
 	_char_select_active = false

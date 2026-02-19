@@ -368,20 +368,25 @@ func _apply_panel_styles() -> void:
 
 
 func _connect_command_buttons() -> void:
-	_attack_button.pressed.connect(
-		func() -> void: command_selected.emit("attack")
+	_attack_button.pressed.connect(func() -> void:
+		AudioManager.play_sfx(load(SfxLibrary.UI_CONFIRM))
+		command_selected.emit("attack")
 	)
-	_skill_button.pressed.connect(
-		func() -> void: command_selected.emit("skill")
+	_skill_button.pressed.connect(func() -> void:
+		AudioManager.play_sfx(load(SfxLibrary.UI_CONFIRM))
+		command_selected.emit("skill")
 	)
-	_item_button.pressed.connect(
-		func() -> void: command_selected.emit("item")
+	_item_button.pressed.connect(func() -> void:
+		AudioManager.play_sfx(load(SfxLibrary.UI_CONFIRM))
+		command_selected.emit("item")
 	)
-	_defend_button.pressed.connect(
-		func() -> void: command_selected.emit("defend")
+	_defend_button.pressed.connect(func() -> void:
+		AudioManager.play_sfx(load(SfxLibrary.UI_CONFIRM))
+		command_selected.emit("defend")
 	)
-	_flee_button.pressed.connect(
-		func() -> void: command_selected.emit("flee")
+	_flee_button.pressed.connect(func() -> void:
+		AudioManager.play_sfx(load(SfxLibrary.UI_CANCEL))
+		command_selected.emit("flee")
 	)
 
 	var buttons: Array[Button] = [
@@ -644,6 +649,7 @@ func _find_visual_scene(battler: Battler) -> Node2D:
 func _confirm_target() -> void:
 	if _target_list.is_empty():
 		return
+	AudioManager.play_sfx(load(SfxLibrary.UI_CONFIRM))
 	var target := _target_list[_target_index]
 	_clear_highlight()
 	_target_selector.visible = false
@@ -651,26 +657,31 @@ func _confirm_target() -> void:
 
 
 func _cancel_target_selection() -> void:
+	AudioManager.play_sfx(load(SfxLibrary.UI_CANCEL))
 	_clear_highlight()
 	_target_selector.visible = false
 	target_cancelled.emit()
 
 
 func _hide_skill_submenu() -> void:
+	AudioManager.play_sfx(load(SfxLibrary.UI_CANCEL))
 	_skill_submenu.visible = false
 	submenu_cancelled.emit()
 
 
 func _hide_item_submenu() -> void:
+	AudioManager.play_sfx(load(SfxLibrary.UI_CANCEL))
 	_item_submenu.visible = false
 	submenu_cancelled.emit()
 
 
 func _on_skill_pressed(ability: Resource) -> void:
+	AudioManager.play_sfx(load(SfxLibrary.UI_CONFIRM))
 	skill_selected.emit(ability)
 
 
 func _on_item_pressed(item: Resource) -> void:
+	AudioManager.play_sfx(load(SfxLibrary.UI_CONFIRM))
 	item_selected.emit(item)
 
 
