@@ -62,7 +62,13 @@ func change_scene(
 
 	transition_midpoint.emit()
 	get_tree().change_scene_to_file(scene_path)
-	await get_tree().tree_changed
+	# SceneTree.scene_changed fires after the new scene is fully added to the
+	# tree and _ready() has run on all nodes — unlike tree_changed, which fires
+	# on the first hierarchy mutation (old scene removal) before _ready() runs.
+	# Awaiting scene_changed ensures that scene_changed.emit() below is called
+	# after the new scene's _ready() completes, so listeners such as
+	# BattleManager._restore_player_position() can reliably find nodes by group.
+	await get_tree().scene_changed
 
 	if spawn_point:
 		var player := get_tree().get_first_node_in_group("player")
