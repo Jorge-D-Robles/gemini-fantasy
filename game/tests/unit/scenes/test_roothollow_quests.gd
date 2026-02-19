@@ -8,7 +8,7 @@ var _rh: GDScript
 
 
 func before_each() -> void:
-	_rh = load("res://scenes/roothollow/roothollow.gd")
+	_rh = load("res://scenes/roothollow/roothollow_quests.gd")
 
 
 # -- should_offer_quest (pure logic) --
@@ -54,59 +54,59 @@ func test_should_offer_false_when_active_and_completed() -> void:
 # -- Quest offer text --
 
 func test_herb_quest_offer_not_empty() -> void:
-	var text: String = _rh._get_quest_offer(&"herb_gathering")
+	var text: String = _rh.get_quest_offer(&"herb_gathering")
 	assert_true(text.length() > 0)
 
 
 func test_herb_quest_offer_mentions_herbs() -> void:
-	var text: String = _rh._get_quest_offer(&"herb_gathering")
+	var text: String = _rh.get_quest_offer(&"herb_gathering")
 	assert_string_contains(text, "herb")
 
 
 func test_scouts_quest_offer_not_empty() -> void:
-	var text: String = _rh._get_quest_offer(&"scouts_report")
+	var text: String = _rh.get_quest_offer(&"scouts_report")
 	assert_true(text.length() > 0)
 
 
 func test_scouts_quest_offer_mentions_ruins() -> void:
-	var text: String = _rh._get_quest_offer(&"scouts_report")
+	var text: String = _rh.get_quest_offer(&"scouts_report")
 	assert_string_contains(text, "ruins")
 
 
 func test_elder_quest_offer_not_empty() -> void:
-	var text: String = _rh._get_quest_offer(&"elder_wisdom")
+	var text: String = _rh.get_quest_offer(&"elder_wisdom")
 	assert_true(text.length() > 0)
 
 
 func test_elder_quest_offer_mentions_memorial() -> void:
-	var text: String = _rh._get_quest_offer(&"elder_wisdom")
+	var text: String = _rh.get_quest_offer(&"elder_wisdom")
 	assert_string_contains(text, "memorial")
 
 
 func test_unknown_quest_offer_returns_empty() -> void:
-	var text: String = _rh._get_quest_offer(&"nonexistent")
+	var text: String = _rh.get_quest_offer(&"nonexistent")
 	assert_eq(text, "")
 
 
 # -- Quest turnin text --
 
 func test_herb_turnin_not_empty() -> void:
-	var text: String = _rh._get_quest_turnin(&"herb_gathering")
+	var text: String = _rh.get_quest_turnin(&"herb_gathering")
 	assert_true(text.length() > 0)
 
 
 func test_scouts_turnin_not_empty() -> void:
-	var text: String = _rh._get_quest_turnin(&"scouts_report")
+	var text: String = _rh.get_quest_turnin(&"scouts_report")
 	assert_true(text.length() > 0)
 
 
 func test_elder_turnin_not_empty() -> void:
-	var text: String = _rh._get_quest_turnin(&"elder_wisdom")
+	var text: String = _rh.get_quest_turnin(&"elder_wisdom")
 	assert_true(text.length() > 0)
 
 
 func test_unknown_turnin_returns_empty() -> void:
-	var text: String = _rh._get_quest_turnin(&"nonexistent")
+	var text: String = _rh.get_quest_turnin(&"nonexistent")
 	assert_eq(text, "")
 
 

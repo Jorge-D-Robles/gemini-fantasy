@@ -9,7 +9,7 @@ var _rh: GDScript
 
 
 func before_each() -> void:
-	_rh = load("res://scenes/roothollow/roothollow.gd")
+	_rh = load("res://scenes/roothollow/roothollow_dialogue.gd")
 
 
 func _flags(names: Array = []) -> Dictionary:
