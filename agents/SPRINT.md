@@ -13,8 +13,12 @@ Started: 2026-02-18
 
 ## Queue
 
-
-
+### T-0139
+- Title: Source SFX assets from Time Fantasy packs for UI and combat
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Depends: none
 
 ### T-0066
 - Title: Add UI sound effects (menu, dialogue, buttons)

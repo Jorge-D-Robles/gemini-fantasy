@@ -810,13 +810,13 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0116
 - Title: Disable or stub Settings button on title screen
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: medium
 - Milestone: M0
 - Depends: none
 - Refs: game/ui/title_screen/title_screen.gd
-- Notes: settings_pressed signal emitted but nothing handles it. Grey out or show "Coming Soon" until T-0068 is implemented.
+- Notes: Resolved by T-0068 — settings menu is fully implemented.
 
 ### T-0117
 - Title: Implement BGM stack in AudioManager for battle music restore
@@ -860,23 +860,23 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0122
 - Title: Add AudioBus volume persistence — save/restore BGM+SFX volumes across sessions
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: medium
 - Milestone: M0
 - Depends: T-0068
 - Refs: game/autoloads/audio_manager.gd
-- Notes: Write bgm_volume and sfx_volume to user://settings.json. Load on AudioManager._ready(). Save whenever sliders change. Acceptance: volume preferences survive game restart.
+- Notes: Superseded by T-0068 — SettingsData persists BGM/SFX/Master volumes to user://settings.json.
 
 ### T-0123
 - Title: BUG — Overworld BGM restore timing after battle may produce audio glitch
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M0
 - Depends: none
 - Refs: game/autoloads/battle_manager.gd, game/autoloads/audio_manager.gd
-- Notes: Victory fanfare crossfades to area BGM on scene reload. Implement T-0117 push_bgm()/pop_bgm() stack for clean save/restore. Acceptance: returning from any battle restores correct area BGM with no audio artifacts.
+- Notes: Resolved by T-0117 — push_bgm()/pop_bgm() stack cleanly saves and restores overworld BGM across battle transitions.
 
 ### T-0124
 - Title: BUG — XP computed and displayed in victory screen but never applied to party members
@@ -942,11 +942,11 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 - Title: BUG — AudioManager.play_bgm() resets volume_db to 0.0, ignoring user volume setting
 - Status: todo
 - Assigned: unassigned
-- Priority: medium
+- Priority: low
 - Milestone: M0
 - Depends: T-0068
 - Refs: game/autoloads/audio_manager.gd
-- Notes: play_bgm() hardcodes volume_db = 0.0 when starting a new track without crossfade. set_bgm_volume() changes the current player but is overwritten on next play_bgm() call. Fix: add _bgm_volume_db field; apply it in play_bgm(). Acceptance: volume slider changes persist across BGM track transitions. 4+ tests.
+- Notes: play_bgm() hardcodes volume_db = 0.0 when starting a new track without crossfade. SettingsData bus-level volume survives (lower severity than originally assessed). Fix: add _bgm_volume_db field; apply it in play_bgm(). 4+ tests.
 
 ### T-0131
 - Title: Add Kael-Iris arrival dialogue at Roothollow entrance (Chapter 4 Scene 1)
@@ -1027,6 +1027,36 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 - Depends: none
 - Refs: game/ui/battle_ui/battle_ui.gd
 - Notes: Battle log currently shows fixed lines with oldest pushed off. Add ScrollContainer wrapping RichTextLabel. Auto-scroll to bottom on new entry. 3+ tests.
+
+### T-0139
+- Title: Source SFX assets from Time Fantasy packs for UI and combat
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Milestone: M0
+- Depends: none
+- Refs: game/autoloads/audio_manager.gd, docs/game-design/06-audio-design.md
+- Notes: T-0066 and T-0067 require SFX files to exist. Search /Users/robles/repos/games/assets/ for WAV/OGG SFX in Time Fantasy packs. Copy to game/assets/sfx/ui/ and game/assets/sfx/combat/ using /copy-assets workflow. Minimum set — UI: confirm, cancel, menu-open, dialogue-advance. Combat: attack-hit, magic-cast, heal-chime, death, critical-hit, status-apply. All files need .import entries. 3+ tests verifying load paths.
+
+### T-0140
+- Title: Refactor AudioManager to support named SFX channels with priority
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Milestone: M0
+- Depends: T-0139
+- Refs: game/autoloads/audio_manager.gd
+- Notes: Current round-robin SFX pool has no priority system. Add SfxPriority enum (CRITICAL, NORMAL, AMBIENT). Critical sounds (combat hits, death) always claim next free player. Ambient sounds skip if all pool players are busy. 5+ tests.
+
+### T-0141
+- Title: Add accessibility tooltips and keyboard shortcut hints to settings menu
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Milestone: M0
+- Depends: T-0068
+- Refs: game/ui/settings_menu/settings_menu.gd, docs/game-design/06-audio-design.md
+- Notes: Add tooltip text on each slider explaining what it controls, keyboard left/right arrow hint label, and reset-to-default button per slider. 3+ tests for compute_slider_tooltip() static function.
 
 ---
 
