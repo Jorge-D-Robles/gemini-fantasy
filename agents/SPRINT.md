@@ -14,20 +14,7 @@ Started: 2026-02-18
 ## Queue
 
 
-### T-0074
-- Title: Split battle_ui.gd into composable panel components
-- Status: in-progress
-- Assigned: claude
-- Priority: medium
-- Depends: T-0069
-- Started: 2026-02-19
 
-### T-0075
-- Title: Split inventory_ui.gd into category manager, detail panel, and applicator
-- Status: todo
-- Assigned: unassigned
-- Priority: medium
-- Depends: T-0069
 
 ### T-0076
 - Title: Split shop_ui.gd into buy panel, sell panel, and character selector
@@ -186,6 +173,20 @@ Started: 2026-02-18
 ---
 
 ## Done This Sprint
+
+### T-0075
+- Title: Split inventory_ui.gd into category manager, detail panel, and applicator
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: Extracted InventoryUIFilter (matches_category + compute_item_entries with Callable resolver) and InventoryUIDetail (compute_equipment_stats + compute_item_detail with guards). inventory_ui.gd reduced from 602 to 531 lines. Added HP/EE bonus display. 20 new tests (905 total).
+
+### T-0074
+- Title: Split battle_ui.gd into composable panel components
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: Extracted 4 static methods into BattleUIStatus (compute_status_badges + compute_target_info) and BattleUIVictory (compute_victory_display + stat_abbreviation). battle_ui.gd reduced from 793 to ~700 lines. Updated 3 test files. All 885 tests pass.
 
 ### T-0086
 - Title: Add demo ending sequence with "Thanks for playing" screen
