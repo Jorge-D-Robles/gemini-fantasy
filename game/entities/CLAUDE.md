@@ -105,6 +105,37 @@ Interactable (StaticBody2D) — class_name Interactable
 
 ---
 
+## ZoneMarker (`zone_marker.gd`) — class_name ZoneMarker
+
+**Script-only component** (no .tscn — draws chevron via `_draw()`).
+
+Animated directional arrow marking zone transition exits. Scene scripts instantiate via `ZoneMarker.new()`, set properties, then `add_child()`. Persistent node — lives until parent scene is freed.
+
+```gdscript
+enum Direction { LEFT, RIGHT, UP, DOWN }
+var direction: Direction = Direction.RIGHT
+var marker_color: Color = DEFAULT_COLOR  # gold: Color(1.0, 0.9, 0.5, 1.0)
+var destination_name: String = ""        # optional label text
+```
+
+- **Chevron**: 6px filled polygon via `_draw()`, points in `direction`
+- **Alpha pulse**: `modulate:a` tweens 0.3-1.0 over 1.2s (infinite loop, TRANS_SINE)
+- **Directional bob**: position tweens +/-3px along arrow axis over 1.6s (infinite loop)
+- **Destination label**: optional `Label` child created when `destination_name` is set (font_size=7, centered below chevron)
+- **z_index = 1**: above ground, below AbovePlayer canopy (z_index=2)
+- **Cleanup**: `_exit_tree()` kills both tweens to prevent callbacks on freed nodes
+
+**Usage in scene scripts:**
+```gdscript
+var marker := ZoneMarker.new()
+marker.direction = ZoneMarker.Direction.LEFT
+marker.destination_name = "Verdant Forest"
+marker.position = _exit_to_forest.position + Vector2(12, 0)
+add_child(marker)
+```
+
+---
+
 ## battle/ — Battle Battler Scenes
 
 ### DamagePopup (`damage_popup.gd`) — class_name DamagePopup
