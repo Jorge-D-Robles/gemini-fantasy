@@ -63,6 +63,6 @@ RefCounted
 ## Adding a New Resource Type
 
 1. Create `game/resources/<name>.gd` with `class_name` + `extends Resource`
-2. Follow the code order from root `CLAUDE.md` (enums → @export groups → methods)
+2. Follow the code order from the `gdscript-conventions` skill (enums → @export groups → methods)
 3. Add corresponding `.tres` files under `game/data/<category>/`
-4. Reference from root `CLAUDE.md` "Adding Monsters" section if it's an enemy-related resource
+4. See `game/data/CLAUDE.md` for .tres file format and conventions
