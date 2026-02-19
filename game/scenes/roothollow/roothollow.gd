@@ -177,6 +177,10 @@ func _setup_tilemap() -> void:
 	MapBuilder.build_layer(
 		_above_player, m.ROOF_MAP, m.ROOF_LEGEND, 1,
 	)
+	# Forest canopy overlay (source 2, AbovePlayer)
+	MapBuilder.build_layer(
+		_above_player, m.CANOPY_MAP, m.CANOPY_LEGEND, 2,
+	)
 	# Mushroom ground decorations (source 1)
 	MapBuilder.build_layer(
 		_decorations, m.DECOR_MAP,

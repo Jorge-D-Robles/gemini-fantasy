@@ -311,6 +311,52 @@ const BUILDING_MAP: Array[String] = [
 	"",
 ]
 
+# -- Forest canopy overlay (source 2, AbovePlayer layer) --
+# Overhanging canopy at inner border edges — player walks under (z_index=2)
+# Tiles from first round canopy formation in FOREST_OBJECTS:
+# @ = right-side tile (transparent right edge) → placed at LEFT clearing edge
+# ! = center fill (solid green) → top/bottom bands
+# # = left-side tile (transparent left edge) → placed at RIGHT clearing edge
+const CANOPY_LEGEND: Dictionary = {
+	"!": Vector2i(1, 1),
+	"@": Vector2i(2, 1),
+	"#": Vector2i(0, 1),
+}
+
+# Canopy overlay follows BORDER_MAP inner edge, 1 tile into clearing.
+# Top/bottom bands: full clearing width. Side edges: 1 tile per side.
+# No overlap with ROOF_MAP positions (canopy at edges, roofs in center).
+const CANOPY_MAP: Array[String] = [
+	"",
+	"",
+	"",
+	"    !@#! @!#! #!@! @!#!!@!#!@#!!@!#",
+	"   @  !          !    #    @   !  #",
+	"    @!                            #!",
+	"   @!                              !#",
+	"   @                                #",
+	"    @                               #",
+	"     @                            #",
+	"   @                                #",
+	"   @                                 #",
+	"    @                               #",
+	"   @                                #",
+	"    @                               #",
+	"    @                               #",
+	"   @                               #",
+	"    @                               #",
+	"     @                            #",
+	"   @                                #",
+	"   @                                 #",
+	"    @                               #",
+	"   @                               #",
+	"    #!@#! @!#! @!#! !@#!!@!#!@#!!@!",
+	"      @!#! @!#!!@!# !@!#!@#!",
+	"",
+	"",
+	"",
+]
+
 # Solid tile definitions for collision
 # Source 1 = MUSHROOM_VILLAGE stems, Source 2 = FOREST_OBJECTS border
 const SOLID_TILES: Dictionary = {
