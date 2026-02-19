@@ -1,17 +1,12 @@
 extends CanvasLayer
 
 ## Pause menu with party, items, and status panels.
-## Pauses scene tree while open. Items button opens inventory UI.
+## Pauses scene tree while open.
 
 signal menu_opened
 signal menu_closed
 
-const INVENTORY_UI_SCENE := preload(
-	"res://ui/inventory_ui/inventory_ui.tscn"
-)
-
 var _is_open: bool = false
-var _inventory_ui: Control = null
 
 @onready var _dim_overlay: ColorRect = %DimOverlay
 @onready var _menu_panel: PanelContainer = %MenuPanel
@@ -64,6 +59,7 @@ func open() -> void:
 	GameManager.push_state(GameManager.GameState.MENU)
 	get_tree().paused = true
 	_refresh_party_panel()
+	_refresh_item_panel()
 	_show_panel("party")
 	_party_button.grab_focus()
 	menu_opened.emit()
@@ -72,9 +68,6 @@ func open() -> void:
 func close() -> void:
 	if not _is_open:
 		return
-	if _inventory_ui != null:
-		_inventory_ui.queue_free()
-		_inventory_ui = null
 	_is_open = false
 	visible = false
 	get_tree().paused = false
@@ -84,7 +77,7 @@ func close() -> void:
 
 func _connect_buttons() -> void:
 	_party_button.pressed.connect(_show_panel.bind("party"))
-	_items_button.pressed.connect(_open_inventory)
+	_items_button.pressed.connect(_show_panel.bind("items"))
 	_status_button.pressed.connect(_show_panel.bind("status"))
 	_quit_button.pressed.connect(_on_quit_pressed)
 
@@ -127,27 +120,16 @@ func _refresh_party_panel() -> void:
 		_party_panel.add_child(member_box)
 
 
-func _open_inventory() -> void:
-	if _inventory_ui != null:
-		return
-	_menu_panel.visible = false
-	_pause_label.visible = false
-	_inventory_ui = INVENTORY_UI_SCENE.instantiate()
-	_inventory_ui.process_mode = Node.PROCESS_MODE_ALWAYS
-	add_child(_inventory_ui)
-	_inventory_ui.inventory_closed.connect(
-		_on_inventory_closed
+func _refresh_item_panel() -> void:
+	_clear_children(_item_panel)
+
+	var placeholder := Label.new()
+	placeholder.text = "No items"
+	placeholder.add_theme_font_size_override("font_size", 10)
+	placeholder.add_theme_color_override(
+		"font_color", Color(0.6, 0.6, 0.6)
 	)
-	_inventory_ui.open()
-
-
-func _on_inventory_closed() -> void:
-	if _inventory_ui != null:
-		_inventory_ui.queue_free()
-		_inventory_ui = null
-	_menu_panel.visible = true
-	_pause_label.visible = true
-	_items_button.grab_focus()
+	_item_panel.add_child(placeholder)
 
 
 func _create_member_info(member: Resource) -> VBoxContainer:

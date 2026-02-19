@@ -13,71 +13,28 @@ const ANCIENT_SENTINEL_PATH: String = "res://data/enemies/ancient_sentinel.tres"
 const GALE_HARPY_PATH: String = "res://data/enemies/gale_harpy.tres"
 const EMBER_HOUND_PATH: String = "res://data/enemies/ember_hound.tres"
 
-# ---------- TILE LEGENDS ----------
-
-# Ground layer — bright green vegetation fill (A5_A row 8, source 0)
+# Ground layer — green vegetation tile for lush forest floor
 const GROUND_LEGEND: Dictionary = {
-	"G": Vector2i(0, 8),
+	"G": Vector2i(0, 8),   # Green vegetation (A5_A row 8)
 }
 
-# Path layer — single dirt path tile (A5_A row 4, source 0)
-const PATH_LEGEND: Dictionary = {
-	"P": Vector2i(0, 4),
-}
-
-# Dense forest fill — canopy center for impenetrable borders
-# (FOREST_OBJECTS, source 1)
+# Tree layer — B-sheet canopy center tile for solid tree borders
 const TREE_LEGEND: Dictionary = {
-	"T": Vector2i(1, 1),
+	"T": Vector2i(1, 1),   # Canopy center (B_forest, source 1)
 }
 
-# Individual tree trunks — 4 variants (FOREST_OBJECTS, source 1)
-# Placed in clearings and transition zones for distinct silhouettes
-const TRUNK_LEGEND: Dictionary = {
-	"A": Vector2i(8, 7),   # Tree type A — trunk base
-	"B": Vector2i(10, 7),  # Tree type B — trunk base variant
-	"C": Vector2i(8, 5),   # Tree type C — trunk mid-segment
-	"D": Vector2i(10, 5),  # Tree type D — trunk mid-segment variant
+# Path layer — single dirt path tile
+const PATH_LEGEND: Dictionary = {
+	"P": Vector2i(0, 4),   # Dirt path
 }
 
-# Tree canopies — 4 types x 4 tiles each (FOREST_OBJECTS, source 1)
-# Each 2x2 canopy sits above its trunk on the AbovePlayer layer
-const CANOPY_LEGEND: Dictionary = {
-	# Type A canopy (2x2) — round dark-edged crown
-	"1": Vector2i(0, 0),   # top-left
-	"2": Vector2i(1, 0),   # top-right
-	"3": Vector2i(0, 1),   # bottom-left
-	"4": Vector2i(1, 1),   # bottom-right
-	# Type B canopy (2x2) — broad crown variant
-	"5": Vector2i(2, 0),
-	"6": Vector2i(3, 0),
-	"7": Vector2i(2, 1),
-	"8": Vector2i(3, 1),
-	# Type C canopy (2x2) — wide spread crown
-	"a": Vector2i(4, 0),
-	"b": Vector2i(5, 0),
-	"c": Vector2i(4, 1),
-	"d": Vector2i(5, 1),
-	# Type D canopy (2x2) — dense leaf cluster
-	"e": Vector2i(6, 0),
-	"f": Vector2i(7, 0),
-	"g": Vector2i(6, 1),
-	"h": Vector2i(7, 1),
-}
-
-# Ground detail — rocks, flowers, leaves (STONE_OBJECTS, source 2)
+# Detail layer — sparse flower/foliage accents
 const DETAIL_LEGEND: Dictionary = {
-	"r": Vector2i(0, 0),   # Small rock
-	"R": Vector2i(1, 0),   # Rock variant
-	"s": Vector2i(2, 0),   # Pebble cluster
-	"f": Vector2i(0, 1),   # Orange flower
-	"F": Vector2i(2, 1),   # Flower variant
-	"l": Vector2i(0, 2),   # Green leaf
+	"f": Vector2i(0, 14),  # Flower accent
+	"b": Vector2i(2, 14),  # Bush accent
 }
 
-# ---------- MAP DATA (40 cols x 25 rows) ----------
-
-# Ground: uniform bright green fill
+# 40 cols x 25 rows — uniform grass fill
 const GROUND_MAP: Array[String] = [
 	"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
 	"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
@@ -103,37 +60,33 @@ const GROUND_MAP: Array[String] = [
 	"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
 	"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
 	"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-	"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
 ]
 
-# Dense forest borders with organic clearing and chokepoint exits
-# Rows 0-2:  solid forest wall (north border)
-# Rows 3-4:  forest thins — scattered gaps appear
-# Rows 5-8:  clearing for Iris zone — open interior, tree edges
-# Row 9:     scattered tree clusters below clearing
-# Rows 10-11: main east-west corridor (fully open, passage to edges)
-# Row 12:    scattered tree clusters above south forest
-# Rows 13-14: forest returns, dense transition
-# Rows 15-24: solid forest wall (south border)
+# Organic forest borders — dense edges with irregular clearing
+# Rows 0-2: solid forest
+# Rows 3-5: forest thins with gaps
+# Rows 6-9: large clearing for Iris zone
+# Rows 10-12: main east-west path (fully open)
+# Rows 13-16: forest returns with scattered clusters
+# Rows 17-24: solid forest
 const TREE_MAP: Array[String] = [
 	"TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",
 	"TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",
 	"TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",
-	"TTTTTTTTT  TT  TTTT       TTT  TTTTTTTTT",
-	"TTTTTTT        TT                TTTTTTT",
-	"TTTTT                              TTTTT",
-	"TTTTT                               TTTT",
+	"TTTTTTTTTT  TTTT       TTTTTTTTTTTTTTTTT",
+	"TTTTTTTTTT    TTT          TTTTTTTTTTTTT",
+	"TTTT  TT      TT            TTTTTTTTTTTT",
 	"TTTT                                TTTT",
-	"TTTT                                TTTT",
-	"TTTTT       TT            TT       TTTTT",
+	"TT                                    TT",
+	"TT                                    TT",
+	"TT                                    TT",
 	"                                        ",
 	"                                        ",
-	"TTTTT       TT            TT       TTTTT",
-	"TTTTTTT   TTTTT  TTTT  TTTTT   TTTTTTTTT",
-	"TTTTTTTTT  TTTTTTTTTTTTTTTTTT  TTTTTTTTT",
-	"TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",
-	"TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",
-	"TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",
+	"                                        ",
+	"TTTT        TT              TT      TTTT",
+	"TTTTTT        TTTT     TTTT     TTTTTTTT",
+	"TTTTTTTTTT      TTTTTTTTTTTTTTT  TTTTTTT",
+	"TTTTTTTTTTTT      TTTTTTTTTTTTTTTTTTTTTT",
 	"TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",
 	"TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",
 	"TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",
@@ -143,69 +96,7 @@ const TREE_MAP: Array[String] = [
 	"TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",
 ]
 
-# Individual tree trunks at clearing edges (FOREST_OBJECTS, source 1)
-# 4 variants (A-D) for visual variety. Collision blocks player.
-# Vertical alignment: trunk row Y sits below canopy rows Y-2, Y-1.
-const TRUNK_MAP: Array[String] = [
-	"                                        ",
-	"                                        ",
-	"                                        ",
-	"                                        ",
-	"           A           C                ",
-	"      A         B           D     C     ",
-	"                                        ",
-	"                      A                 ",
-	"      B                           D     ",
-	"        B                    C          ",
-	"                                        ",
-	"                                        ",
-	"        B                    D          ",
-	"                                        ",
-	"          A                   C         ",
-	"                                        ",
-	"                                        ",
-	"                                        ",
-	"                                        ",
-	"                                        ",
-	"                                        ",
-	"                                        ",
-	"                                        ",
-	"                                        ",
-	"                                        ",
-]
-
-# Tree canopies on AbovePlayer — 4 types (FOREST_OBJECTS, source 1)
-# Each 2x2 canopy sits 1-2 rows above its trunk position.
-# Player walks under these for depth effect.
-const CANOPY_MAP: Array[String] = [
-	"                                        ",
-	"                                        ",
-	"          12          ab                ",
-	"     12   34   56     cd   ef    ab     ",
-	"     34        78          gh    cd     ",
-	"                     12                 ",
-	"     56              34          ef     ",
-	"     7856                   ab   gh     ",
-	"       78                   cd          ",
-	"                                        ",
-	"       56                   ef          ",
-	"       78                   gh          ",
-	"         12                  ab         ",
-	"         34                  cd         ",
-	"                                        ",
-	"                                        ",
-	"                                        ",
-	"                                        ",
-	"                                        ",
-	"                                        ",
-	"                                        ",
-	"                                        ",
-	"                                        ",
-	"                                        ",
-	"                                        ",
-]
-
-# Dirt path — branches from corridor up to Iris clearing
+# Meandering path — stub up to Iris zone, main east-west route
 const PATH_MAP: Array[String] = [
 	"                                        ",
 	"                                        ",
@@ -213,14 +104,13 @@ const PATH_MAP: Array[String] = [
 	"                                        ",
 	"                                        ",
 	"                                        ",
-	"                  PP                    ",
-	"                  PPP                   ",
-	"                 PPPP                   ",
-	"                PPPPP                   ",
-	" PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP ",
-	" PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP ",
-	"                                        ",
-	"                                        ",
+	"                   PP                   ",
+	"                  PPPP                  ",
+	"                 PPPPPP                 ",
+	"                PPPPPPPP                ",
+	"   PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP  ",
+	"   PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP  ",
+	"   PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP  ",
 	"                                        ",
 	"                                        ",
 	"                                        ",
@@ -234,24 +124,22 @@ const PATH_MAP: Array[String] = [
 	"                                        ",
 ]
 
-# Ground detail — scattered rocks, flowers, leaves (STONE_OBJECTS, source 2)
-# ~26 tiles for 5-10% coverage in open areas
+# Sparse flower accents in open areas
 const DETAIL_MAP: Array[String] = [
 	"                                        ",
 	"                                        ",
 	"                                        ",
-	"                        r               ",
-	"            r               R           ",
-	"       F                    f     r     ",
-	"         r     l     f                  ",
-	"      f       R        l          F     ",
-	"          F      r      s     R         ",
-	"       r                   f       s    ",
 	"                                        ",
 	"                                        ",
-	"         s              r        F      ",
-	"      F            r                    ",
-	"                     f                  ",
+	"            f         b                 ",
+	"                                        ",
+	"        f                          f    ",
+	"                    b                   ",
+	"                                        ",
+	"                                        ",
+	"                                        ",
+	"        f                          b    ",
+	"              f            b            ",
 	"                                        ",
 	"                                        ",
 	"                                        ",
@@ -263,8 +151,6 @@ const DETAIL_MAP: Array[String] = [
 	"                                        ",
 	"                                        ",
 ]
-
-# ---------- NODE REFERENCES ----------
 
 @onready var _ground_layer: TileMapLayer = $Ground
 @onready var _ground_detail_layer: TileMapLayer = $GroundDetail
@@ -338,7 +224,6 @@ func _ready() -> void:
 		_iris_zone.monitoring = false
 
 
-
 func _on_exit_to_ruins_entered(body: Node2D) -> void:
 	if not body.is_in_group("player"):
 		return
@@ -397,19 +282,11 @@ func _on_encounter_triggered(enemy_group: Array[Resource]) -> void:
 
 func _setup_tilemap() -> void:
 	var atlas_paths: Array[String] = [
-		MapBuilder.FAIRY_FOREST_A5_A,   # source 0 — ground, path
-		MapBuilder.FOREST_OBJECTS,       # source 1 — trees, trunks, canopies
-		MapBuilder.STONE_OBJECTS,        # source 2 — detail: rocks, flowers
-		MapBuilder.TREE_OBJECTS,         # source 3 — reserved for pine trees
+		MapBuilder.FAIRY_FOREST_A5_A,   # source 0 — ground, path, detail
+		MapBuilder.FOREST_OBJECTS,       # source 1 — tree canopy objects
 	]
 	var solid: Dictionary = {
-		1: [
-			Vector2i(1, 1),    # Dense canopy fill (tree borders)
-			Vector2i(8, 7),    # Tree A trunk base
-			Vector2i(10, 7),   # Tree B trunk base
-			Vector2i(8, 5),    # Tree C trunk segment
-			Vector2i(10, 5),   # Tree D trunk segment
-		],
+		1: [Vector2i(1, 1)],   # B_forest canopy center — blocking
 	}
 	MapBuilder.apply_tileset(
 		[_ground_layer, _ground_detail_layer, _trees_layer,
@@ -418,19 +295,9 @@ func _setup_tilemap() -> void:
 		atlas_paths,
 		solid,
 	)
-	# Ground: uniform bright green fill (source 0)
 	MapBuilder.build_layer(_ground_layer, GROUND_MAP, GROUND_LEGEND)
-	# Paths: dirt path overlay (source 0)
-	MapBuilder.build_layer(_paths_layer, PATH_MAP, PATH_LEGEND)
-	# Trees: dense canopy fill for impenetrable borders (source 1)
+	MapBuilder.build_layer(
+		_ground_detail_layer, DETAIL_MAP, DETAIL_LEGEND
+	)
 	MapBuilder.build_layer(_trees_layer, TREE_MAP, TREE_LEGEND, 1)
-	# Objects: individual tree trunks with collision (source 1)
-	MapBuilder.build_layer(_objects_layer, TRUNK_MAP, TRUNK_LEGEND, 1)
-	# Ground detail: scattered rocks and flowers (source 2)
-	MapBuilder.build_layer(
-		_ground_detail_layer, DETAIL_MAP, DETAIL_LEGEND, 2
-	)
-	# Above player: tree canopies for walk-under depth (source 1)
-	MapBuilder.build_layer(
-		_above_player_layer, CANOPY_MAP, CANOPY_LEGEND, 1
-	)
+	MapBuilder.build_layer(_paths_layer, PATH_MAP, PATH_LEGEND)

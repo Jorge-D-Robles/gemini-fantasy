@@ -1,9 +1,8 @@
-[gd_resource type="Resource" script_class="CharacterData" load_steps=5 format=3 uid="uid://bgarrick"]
+[gd_resource type="Resource" script_class="CharacterData" load_steps=4 format=3 uid="uid://bgarrick"]
 
 [ext_resource type="Script" path="res://resources/character_data.gd" id="1_script"]
 [ext_resource type="Resource" uid="uid://bguardians_stand" path="res://data/abilities/guardians_stand.tres" id="2_guardians_stand"]
 [ext_resource type="Resource" uid="uid://bpurifying_light" path="res://data/abilities/purifying_light.tres" id="3_purifying_light"]
-[ext_resource type="Resource" uid="uid://biron_fortress" path="res://data/abilities/iron_fortress.tres" id="4_iron_fortress"]
 
 [resource]
 script = ExtResource("1_script")
@@ -27,7 +26,7 @@ resistance_growth = 2.0
 speed_growth = 0.8
 luck_growth = 0.8
 allowed_weapon_types = [5, 6]
-abilities = [ExtResource("2_guardians_stand"), ExtResource("3_purifying_light"), ExtResource("4_iron_fortress")]
+abilities = [ExtResource("2_guardians_stand"), ExtResource("3_purifying_light")]
 portrait_path = "res://assets/portraits/garrick_portrait.png"
 sprite_path = ""
 battle_sprite_path = "res://assets/sprites/characters/battle/garrick_battle.png"
