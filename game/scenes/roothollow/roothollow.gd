@@ -107,6 +107,9 @@ func _ready() -> void:
 		companion_ctrl.setup(player_node)
 		$Entities.add_child(companion_ctrl)
 
+	# Tutorial: interact hint on first NPC town visit
+	UILayer.hud.show_tutorial_hint("interact")
+
 
 func _start_scene_music() -> void:
 	var bgm := load(SCENE_BGM_PATH) as AudioStream

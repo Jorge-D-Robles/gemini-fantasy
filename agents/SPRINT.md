@@ -15,8 +15,9 @@ Started: 2026-02-18
 
 ### T-0092
 - Title: Add tutorial hints for controls on first playthrough
-- Status: todo
-- Assigned: unassigned
+- Status: in-progress
+- Assigned: claude
+- Started: 2026-02-19
 - Priority: medium
 - Depends: none
 

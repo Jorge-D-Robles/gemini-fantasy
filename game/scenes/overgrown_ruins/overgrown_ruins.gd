@@ -313,6 +313,9 @@ func _ready() -> void:
 		companion_ctrl.setup(player_node)
 		$Entities.add_child(companion_ctrl)
 
+	# Tutorial: menu hint after 4s on first visit
+	_schedule_menu_hint()
+
 
 func _spawn_zone_marker() -> void:
 	var marker := ZoneMarker.new()
@@ -419,6 +422,8 @@ func _on_lyra_zone_entered(body: Node2D) -> void:
 		_opening_sequence.trigger()
 		await _opening_sequence.sequence_completed
 		_encounter_system.enabled = true
+		# Tutorial: zone travel hint after first major story event
+		UILayer.hud.show_tutorial_hint("zone_travel")
 	elif EventFlags.has_flag("garrick_recruited") \
 			and not EventFlags.has_flag(
 				GarrickMeetsLyra.FLAG_NAME,
@@ -457,6 +462,11 @@ func _on_boss_zone_entered(body: Node2D) -> void:
 	_encounter_system.enabled = false
 	_boss_zone.monitoring = false
 	_boss_encounter.trigger()
+
+
+func _schedule_menu_hint() -> void:
+	await get_tree().create_timer(4.0).timeout
+	UILayer.hud.show_tutorial_hint("menu")
 
 
 func _on_encounter_triggered(enemy_group: Array[Resource]) -> void:
