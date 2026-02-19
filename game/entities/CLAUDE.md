@@ -107,6 +107,23 @@ Interactable (StaticBody2D) — class_name Interactable
 
 ## battle/ — Battle Battler Scenes
 
+### DamagePopup (`damage_popup.gd`) — class_name DamagePopup
+
+**Script-only component** (no .tscn — creates Label child in `_ready()`).
+
+Reusable floating damage/heal number. Battler scenes instantiate via `DamagePopup.new()`, `add_child()`, then `setup()`. Self-destructs via `queue_free()` after tween animation.
+
+```gdscript
+enum PopupType { DAMAGE, HEAL, CRITICAL }
+func setup(amount: int, type: PopupType = PopupType.DAMAGE) -> void
+```
+
+- **DAMAGE**: red text (`UITheme.LOG_DAMAGE`), plain number
+- **HEAL**: green text (`UITheme.LOG_HEAL`), "+N" format
+- **CRITICAL**: gold text (`UITheme.POPUP_CRITICAL`), "N!" format, larger font (14 vs 10)
+- Animation: float up 30px over 0.8s, fade after 0.3s delay, random X offset [-8, 8]
+- Multiple popups can coexist simultaneously (fire-and-forget, not awaitable)
+
 ### EnemyBattlerScene (`enemy_battler_scene.gd`)
 
 **Node hierarchy:**
@@ -115,12 +132,12 @@ EnemyBattlerScene (Node2D)
   Sprite2D         ← atlas-cropped to center column, row 0 of sprite sheet
   AnimationPlayer  ← "attack", "damage", "death" (fallback tweens if missing)
   HPBar (ProgressBar)
-  DamageLabel (Label)
 ```
 
 - `@export var enemy_data: EnemyData` — set by BattleManager when instantiating
 - `bind_battler(target: EnemyBattler)` — wires `hp_changed`, `damage_taken`, `defeated` signals
-- Animation methods: `play_attack_anim()`, `play_damage_anim()`, `play_death_anim()`, `show_damage_number()`
+- Animation methods: `play_attack_anim()`, `play_damage_anim()`, `play_death_anim()`
+- `show_damage_number(amount)` / `show_heal_number(amount)` — spawns DamagePopup (fire-and-forget)
 - All animation methods are `await`-able (return after tween/anim finishes)
 
 ### PartyBattlerScene (`party_battler_scene.gd`)
@@ -133,13 +150,12 @@ PartyBattlerScene (Node2D)
   HPBar (ProgressBar)  ← 48×4px, positioned at (-24, -54)
   EEBar (ProgressBar)  ← 48×3px, positioned at (-24, -49)
   StatusIcons (HBoxContainer) ← Label icons added per status effect
-  DamageLabel (Label)
 ```
 
 - `@export var character_data: CharacterData`
 - `bind_battler(target: PartyBattler)` — wires `hp_changed`, `ee_changed`, `damage_taken`, `status_effect_applied/removed`, `defeated`
 - `update_bars()` — refreshes HP and EE bar values
-- `show_damage_number(amount)` / `show_heal_number(amount)` — red/green floating label
+- `show_damage_number(amount)` / `show_heal_number(amount)` — spawns DamagePopup (fire-and-forget)
 - Status icons: 2-char abbreviations shown in `StatusIcons` HBoxContainer
 
 ---

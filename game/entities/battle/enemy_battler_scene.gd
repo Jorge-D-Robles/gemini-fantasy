@@ -11,12 +11,10 @@ var battler: EnemyBattler = null
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var anim_player: AnimationPlayer = $AnimationPlayer
 @onready var hp_bar: ProgressBar = $HPBar
-@onready var damage_label: Label = $DamageLabel
 
 
 func _ready() -> void:
 	hp_bar.visible = false
-	damage_label.visible = false
 	if enemy_data and not enemy_data.sprite_path.is_empty():
 		var tex := load(enemy_data.sprite_path) as Texture2D
 		if tex == null:
@@ -100,17 +98,15 @@ func play_death_anim() -> void:
 
 
 func show_damage_number(amount: int) -> void:
-	damage_label.text = str(amount)
-	damage_label.visible = true
-	damage_label.modulate.a = 1.0
-	damage_label.position = Vector2(0, -20)
+	var popup := DamagePopup.new()
+	add_child(popup)
+	popup.setup(amount, DamagePopup.PopupType.DAMAGE)
 
-	var tween := create_tween()
-	tween.set_parallel(true)
-	tween.tween_property(damage_label, "position:y", damage_label.position.y - 24.0, 0.6)
-	tween.tween_property(damage_label, "modulate:a", 0.0, 0.6).set_delay(0.3)
-	await tween.finished
-	damage_label.visible = false
+
+func show_heal_number(amount: int) -> void:
+	var popup := DamagePopup.new()
+	add_child(popup)
+	popup.setup(amount, DamagePopup.PopupType.HEAL)
 
 
 func show_hp_bar() -> void:

@@ -56,6 +56,9 @@ const LOG_SYSTEM := Color(0.95, 0.75, 0.3)
 const LOG_VICTORY := Color(0.95, 0.85, 0.3)
 const LOG_DEFEAT := Color(0.85, 0.15, 0.15)
 
+# ---- Damage popup colors ----
+const POPUP_CRITICAL := Color(1.0, 0.85, 0.2)
+
 const LOG_COLORS: Dictionary = {
 	LogType.INFO: LOG_INFO,
 	LogType.DAMAGE: LOG_DAMAGE,
