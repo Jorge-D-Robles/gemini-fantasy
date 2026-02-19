@@ -30,12 +30,6 @@ Started: 2026-02-18
 - Priority: medium
 - Depends: none
 
-### T-0084
-- Title: Add companion follower sprites in overworld
-- Status: todo
-- Assigned: unassigned
-- Priority: medium
-- Depends: none
 
 ### T-0083
 - Title: Update Roothollow NPC dialogue to match story scripts and style guide
@@ -159,6 +153,13 @@ Started: 2026-02-18
 ---
 
 ## Done This Sprint
+
+### T-0084
+- Title: Add companion follower sprites in overworld
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: CompanionController (position history buffer, FOLLOW_OFFSET=15, MAX_HISTORY=200) + CompanionFollower (3x4 sprite AnimatedSprite2D, z_index=-1). Iris/Garrick sprites extracted from Time Fantasy elements_core_pack_9. Kael filtered by ID. Signal cleanup in _exit_tree(). Wired into all 3 scenes. 18 new tests (957 total).
 
 ### T-0068
 - Title: Build settings/options menu with volume sliders

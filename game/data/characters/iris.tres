@@ -29,5 +29,5 @@ luck_growth = 1.0
 allowed_weapon_types = [3, 4]
 abilities = [ExtResource("2_heavy_strike"), ExtResource("3_emp_burst"), ExtResource("4_precision_shot")]
 portrait_path = "res://assets/portraits/iris_portrait.png"
-sprite_path = ""
+sprite_path = "res://assets/sprites/characters/iris_overworld.png"
 battle_sprite_path = "res://assets/sprites/characters/battle/iris_battle.png"

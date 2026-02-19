@@ -29,5 +29,5 @@ luck_growth = 0.8
 allowed_weapon_types = [5, 6]
 abilities = [ExtResource("2_guardians_stand"), ExtResource("3_purifying_light"), ExtResource("4_iron_fortress")]
 portrait_path = "res://assets/portraits/garrick_portrait.png"
-sprite_path = ""
+sprite_path = "res://assets/sprites/characters/garrick_overworld.png"
 battle_sprite_path = "res://assets/sprites/characters/battle/garrick_battle.png"

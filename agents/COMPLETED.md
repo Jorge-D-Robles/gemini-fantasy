@@ -4,6 +4,8 @@ Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[
 
 ---
 
+- [2026-02-19] T-0084: Add companion follower sprites in overworld — CompanionController/CompanionFollower, Iris+Garrick sprites, position history buffer, 18 tests (claude)
+
 ## Pre-Tracker (2026-02-16 Audit)
 
 These 26 fixes were completed before the ticket system was established:
