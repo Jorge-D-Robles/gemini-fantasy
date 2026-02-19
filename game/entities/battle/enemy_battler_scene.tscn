@@ -3,6 +3,7 @@
 [ext_resource type="Script" path="res://entities/battle/enemy_battler_scene.gd" id="1_ebs"]
 
 [node name="EnemyBattlerScene" type="Node2D"]
+z_index = 1
 script = ExtResource("1_ebs")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]

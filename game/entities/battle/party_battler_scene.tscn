@@ -3,6 +3,7 @@
 [ext_resource type="Script" path="res://entities/battle/party_battler_scene.gd" id="1_pbs"]
 
 [node name="PartyBattlerScene" type="Node2D"]
+z_index = 1
 script = ExtResource("1_pbs")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
