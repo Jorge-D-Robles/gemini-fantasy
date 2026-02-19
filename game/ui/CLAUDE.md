@@ -8,6 +8,8 @@ All UI screens and overlays. Each subdirectory contains a `.tscn` scene and a `.
 |------|---------|-------|
 | `ui_theme.gd` | Color palette constants (panels, text, bars, accents) | `const UITheme = preload("res://ui/ui_theme.gd")` |
 | `ui_helpers.gd` | Static utilities: `clear_children()`, `setup_focus_wrap()`, `create_panel_style()` | `const UIHelpers = preload("res://ui/ui_helpers.gd")` |
+| `battle_ui/battle_ui_status.gd` | Static utilities: `compute_status_badges()`, `compute_target_info()` | `const BattleUIStatus = preload("res://ui/battle_ui/battle_ui_status.gd")` |
+| `battle_ui/battle_ui_victory.gd` | Static utilities: `compute_victory_display()`, `stat_abbreviation()` | `const BattleUIVictory = preload("res://ui/battle_ui/battle_ui_victory.gd")` |
 
 All UI screens should import these instead of defining local color constants or utility functions.
 

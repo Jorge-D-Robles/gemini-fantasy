@@ -16,10 +16,11 @@ Started: 2026-02-18
 
 ### T-0074
 - Title: Split battle_ui.gd into composable panel components
-- Status: todo
-- Assigned: unassigned
+- Status: in-progress
+- Assigned: claude
 - Priority: medium
 - Depends: T-0069
+- Started: 2026-02-19
 
 ### T-0075
 - Title: Split inventory_ui.gd into category manager, detail panel, and applicator

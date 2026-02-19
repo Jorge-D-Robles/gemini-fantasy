@@ -1,9 +1,9 @@
 extends GutTest
 
-## Tests for BattleUI.compute_victory_display() static method.
+## Tests for BattleUIVictory.compute_victory_display() static method.
 ## Validates text formatting, member extraction, and level-up marking.
 
-const BattleUI = preload("res://ui/battle_ui/battle_ui.gd")
+const BattleUI = preload("res://ui/battle_ui/battle_ui_victory.gd")
 const Helpers = preload("res://tests/helpers/test_helpers.gd")
 
 

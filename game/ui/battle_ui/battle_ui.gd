@@ -19,6 +19,12 @@ enum Command {
 	FLEE,
 }
 
+const BattleUIStatus = preload(
+	"res://ui/battle_ui/battle_ui_status.gd"
+)
+const BattleUIVictory = preload(
+	"res://ui/battle_ui/battle_ui_victory.gd"
+)
 const GameBalance = preload("res://systems/game_balance.gd")
 const SP = preload("res://systems/scene_paths.gd")
 const UIHelpers = preload("res://ui/ui_helpers.gd")
@@ -268,7 +274,7 @@ func show_victory(
 	_clear_highlight()
 	_target_selector.visible = false
 
-	var data := compute_victory_display(
+	var data := BattleUIVictory.compute_victory_display(
 		party, exp, gold, items, level_ups,
 	)
 	_victory_exp_label.text = data["exp_text"]
@@ -482,7 +488,9 @@ func _create_party_row(battler: Battler) -> HBoxContainer:
 	row.add_child(res_lbl)
 
 	# Status effect badges
-	var badges := compute_status_badges(battler.get_status_effect_list())
+	var badges := BattleUIStatus.compute_status_badges(
+		battler.get_status_effect_list(),
+	)
 	for badge: Dictionary in badges:
 		var badge_lbl := Label.new()
 		badge_lbl.text = badge["text"]
@@ -567,7 +575,12 @@ func _build_victory_party_section(
 			for stat_key: String in changes:
 				var val: int = changes[stat_key]
 				parts.append(
-					"+%d %s" % [val, _stat_abbreviation(stat_key)]
+					"+%d %s" % [
+						val,
+						BattleUIVictory.stat_abbreviation(
+							stat_key,
+						),
+					]
 				)
 			if not parts.is_empty():
 				var stats_lbl := Label.new()
@@ -597,7 +610,7 @@ func _update_target_cursor() -> void:
 	_target_selector.global_position = target.global_position + Vector2(0, -20)
 
 	# Update name label
-	var info := compute_target_info(target)
+	var info := BattleUIStatus.compute_target_info(target)
 	if _name_label:
 		_name_label.text = info["name"]
 
@@ -681,109 +694,6 @@ func _setup_button_focus_wrap(container: Container) -> void:
 		if child is Button:
 			buttons.append(child)
 	UIHelpers.setup_focus_wrap(buttons)
-
-
-## Returns [{text: String, color: Color}, ...] for each active status effect.
-static func compute_status_badges(
-	effects: Array[StatusEffectData],
-) -> Array[Dictionary]:
-	var badges: Array[Dictionary] = []
-	for eff: StatusEffectData in effects:
-		badges.append({
-			"text": String(eff.id).left(2).to_upper(),
-			"color": UITheme.get_status_color(eff.effect_type),
-		})
-	return badges
-
-
-## Returns {name: String, color: Color, is_enemy: bool} for a target.
-static func compute_target_info(battler: Node) -> Dictionary:
-	if not is_instance_valid(battler):
-		return {"name": "???", "color": Color.WHITE, "is_enemy": true}
-	var display_name := "???"
-	if battler.has_method("get_display_name"):
-		display_name = battler.get_display_name()
-	var is_enemy: bool = not (battler is PartyBattler)
-	var highlight := UITheme.TARGET_HIGHLIGHT_ENEMY
-	if not is_enemy:
-		highlight = UITheme.TARGET_HIGHLIGHT_PARTY
-	return {
-		"name": display_name,
-		"color": highlight,
-		"is_enemy": is_enemy,
-	}
-
-
-## Returns structured victory display data for the enhanced victory screen.
-static func compute_victory_display(
-	party: Array[Resource], exp: int, gold: int,
-	items: Array[String], level_ups: Array[Dictionary],
-) -> Dictionary:
-	var exp_text := "EXP: +%d" % exp
-	var gold_text := "Gold: +%d" % gold
-	var items_text := "Items: "
-	if items.is_empty():
-		items_text += "None"
-	else:
-		items_text += ", ".join(items)
-
-	# Build level-up lookup by character name
-	var lu_by_name: Dictionary = {}
-	for lu: Dictionary in level_ups:
-		lu_by_name[lu.get("character", "")] = lu
-
-	var members: Array[Dictionary] = []
-	var level_up_messages: Array[String] = []
-
-	for member: Resource in party:
-		if not (member is CharacterData):
-			continue
-		var cd: CharacterData = member as CharacterData
-		var name_str: String = cd.display_name
-		var lu_info: Dictionary = lu_by_name.get(name_str, {})
-		var leveled: bool = not lu_info.is_empty()
-		var new_level: int = lu_info.get("level", cd.level)
-		var changes: Dictionary = lu_info.get("changes", {})
-
-		members.append({
-			"name": name_str,
-			"portrait_path": cd.portrait_path,
-			"level": new_level,
-			"leveled_up": leveled,
-			"stat_changes": changes,
-		})
-
-		if leveled:
-			var parts: Array[String] = []
-			for stat_key: String in changes:
-				var val: int = changes[stat_key]
-				var label := _stat_abbreviation(stat_key)
-				parts.append("+%d %s" % [val, label])
-			var msg := "%s LEVEL UP!" % name_str
-			if not parts.is_empty():
-				msg += " " + ", ".join(parts)
-			level_up_messages.append(msg)
-
-	return {
-		"members": members,
-		"exp_text": exp_text,
-		"gold_text": gold_text,
-		"items_text": items_text,
-		"level_up_messages": level_up_messages,
-	}
-
-
-static func _stat_abbreviation(stat_key: String) -> String:
-	match stat_key:
-		"max_hp": return "HP"
-		"max_ee": return "EE"
-		"attack": return "ATK"
-		"magic": return "MAG"
-		"defense": return "DEF"
-		"resistance": return "RES"
-		"speed": return "SPD"
-		"luck": return "LCK"
-		_: return stat_key.to_upper()
 
 
 func _create_color_stylebox(color: Color) -> StyleBoxFlat:
