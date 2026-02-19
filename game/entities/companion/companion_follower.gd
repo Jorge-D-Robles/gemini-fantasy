@@ -83,8 +83,15 @@ func _update_animation() -> void:
 static func build_sprite_frames(texture: Texture2D) -> SpriteFrames:
 	if texture == null:
 		return null
-	var frame_w: int = texture.get_width() / 3
-	var frame_h: int = texture.get_height() / 4
+	# Sprite sheets are RPG Maker MV/MZ format: 144x192 px containing 4
+	# characters (2 wide x 2 tall). Each character occupies 72x96 px with
+	# 3 walk columns x 4 direction rows. Frame size = 24x24 px.
+	# Always extract the top-left character (char_col=0, char_row=0).
+	var frame_w: int = texture.get_width() / (2 * 3)
+	var frame_h: int = texture.get_height() / (2 * 4)
+	var char_origin_x: int = 0
+	var char_origin_y: int = 0
+
 	var frames := SpriteFrames.new()
 	frames.remove_animation("default")
 
@@ -107,7 +114,10 @@ static func build_sprite_frames(texture: Texture2D) -> SpriteFrames:
 			var atlas := AtlasTexture.new()
 			atlas.atlas = texture
 			atlas.region = Rect2(
-				col * frame_w, row * frame_h, frame_w, frame_h,
+				char_origin_x + col * frame_w,
+				char_origin_y + row * frame_h,
+				frame_w,
+				frame_h,
 			)
 			frames.add_frame(walk_name, atlas)
 
@@ -118,7 +128,10 @@ static func build_sprite_frames(texture: Texture2D) -> SpriteFrames:
 		var idle_atlas := AtlasTexture.new()
 		idle_atlas.atlas = texture
 		idle_atlas.region = Rect2(
-			frame_w, row * frame_h, frame_w, frame_h,
+			char_origin_x + frame_w,
+			char_origin_y + row * frame_h,
+			frame_w,
+			frame_h,
 		)
 		frames.add_frame(idle_name, idle_atlas)
 

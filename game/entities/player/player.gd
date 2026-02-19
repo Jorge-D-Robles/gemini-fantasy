@@ -98,12 +98,23 @@ func _setup_animations() -> void:
 		push_error("Player: failed to load '%s' — reopen Godot editor to import" % SPRITE_PATH)
 		return
 
-	var frame_w: int = texture.get_width() / 3
-	var frame_h: int = texture.get_height() / 4
+	# kael_overworld.png is an RPG Maker MV/MZ character sheet: 144x192 px.
+	# Layout: 2 characters wide x 2 characters tall = 4 characters per sheet.
+	# Each character occupies 72x96 px with 3 walk columns x 4 direction rows.
+	# Frame size: 72/3 = 24 x 96/4 = 24 px.
+	# Kael is the top-left character (char_col=0, char_row=0).
+	var chars_per_row: int = 2
+	var chars_per_col: int = 2
+	var frame_w: int = texture.get_width() / (chars_per_row * 3)
+	var frame_h: int = texture.get_height() / (chars_per_col * 4)
+	# Pixel origin of the target character within the sheet (top-left character).
+	var char_origin_x: int = 0 * (frame_w * 3)
+	var char_origin_y: int = 0 * (frame_h * 4)
+
 	var frames := SpriteFrames.new()
 	frames.remove_animation("default")
 
-	# Row order: down=0, left=1, right=2, up=3
+	# Row order within each character's area: down=0, left=1, right=2, up=3
 	var row_map: Dictionary = {
 		"down": 0,
 		"left": 1,
@@ -123,17 +134,27 @@ func _setup_animations() -> void:
 		for col: int in walk_cycle:
 			var atlas := AtlasTexture.new()
 			atlas.atlas = texture
-			atlas.region = Rect2(col * frame_w, row * frame_h, frame_w, frame_h)
+			atlas.region = Rect2(
+				char_origin_x + col * frame_w,
+				char_origin_y + row * frame_h,
+				frame_w,
+				frame_h,
+			)
 			frames.add_frame(walk_name, atlas)
 
-		# Idle animation (single frame — middle column)
+		# Idle animation (single frame — middle column, index 1)
 		var idle_name := "idle_%s" % dir_name
 		frames.add_animation(idle_name)
 		frames.set_animation_speed(idle_name, 1.0)
 		frames.set_animation_loop(idle_name, false)
 		var idle_atlas := AtlasTexture.new()
 		idle_atlas.atlas = texture
-		idle_atlas.region = Rect2(frame_w, row * frame_h, frame_w, frame_h)
+		idle_atlas.region = Rect2(
+			char_origin_x + frame_w,
+			char_origin_y + row * frame_h,
+			frame_w,
+			frame_h,
+		)
 		frames.add_frame(idle_name, idle_atlas)
 
 	sprite.sprite_frames = frames
