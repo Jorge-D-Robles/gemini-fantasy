@@ -13,16 +13,6 @@ Started: 2026-02-18
 
 ## Queue
 
-### T-0144
-- Title: Build playtest runner — core scene with state injection and screenshot capture
-- Status: todo
-- Assigned: unassigned
-- Priority: critical
-- Depends: none
-- Refs: docs/game-design/09-playtest-runner.md
-- **RESERVED: This ticket is part of the playtest runner feature (T-0144..T-0147). Skip this and pick another task unless you were specifically assigned to implement the playtest runner.**
-- Notes: Phase 1. Create playtest_runner.tscn/gd in game/tools/. JSON config parsing + CLI arg fallback. State injection (party, flags, inventory, gold). Scene navigation via GameManager.change_scene(). Basic actions: wait, screenshot, move. Report JSON output. Timeout safety exit. Update game/tools/CLAUDE.md.
-
 ### T-0145
 - Title: Add full action set to playtest runner (dialogue, battle, input simulation)
 - Status: todo
@@ -154,6 +144,13 @@ Started: 2026-02-18
 ---
 
 ## Done This Sprint
+
+### T-0144
+- Title: Build playtest runner — core scene with state injection and screenshot capture
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: playtest_runner.tscn/gd (Node2D entry point with full autoload support). playtest_config.gd (static: JSON parse, CLI arg parse, merge_defaults, validate). playtest_capture.gd (static: screenshot filename format, viewport capture, JSON report builder). State injection: party/levels, flags, inventory, gold, equipment, quests. Basic actions: wait, screenshot, move. Timeout safety exit. Report JSON at /tmp/playtest/report.json. 34 new tests (1025 total). Updated game/tools/CLAUDE.md.
 
 ### T-0094
 - Title: Implement battle ability animations and visual effects
