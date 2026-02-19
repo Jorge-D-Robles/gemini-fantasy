@@ -226,6 +226,9 @@ const OBJECTS_MAP: Array[String] = [
 @onready var _spawn_from_forest: Marker2D = $Entities/SpawnFromForest
 @onready var _boss_zone: Area2D = $Triggers/BossZone
 @onready var _boss_encounter: BossEncounter = $BossEncounter
+@onready var _garrick_meets_lyra: GarrickMeetsLyra = (
+	$GarrickMeetsLyra
+)
 
 
 func _ready() -> void:
@@ -261,9 +264,20 @@ func _ready() -> void:
 	# Zone transition marker
 	_spawn_zone_marker()
 
-	# Hide Lyra discovery zone if already triggered
+	# Three-state Lyra zone logic:
+	# 1. Opening not done → zone fires OpeningSequence
+	# 2. Opening done + Garrick recruited + not met Lyra → zone fires
+	#    GarrickMeetsLyra
+	# 3. Both done (or Garrick not recruited) → zone disabled
 	if EventFlags.has_flag(OpeningSequence.FLAG_NAME):
-		_lyra_zone.monitoring = false
+		var garrick_available := EventFlags.has_flag(
+			"garrick_recruited",
+		)
+		var garrick_done := EventFlags.has_flag(
+			GarrickMeetsLyra.FLAG_NAME,
+		)
+		if garrick_done or not garrick_available:
+			_lyra_zone.monitoring = false
 
 	# Hide boss zone if already defeated
 	if EventFlags.has_flag(BossEncounter.FLAG_NAME):
@@ -377,19 +391,30 @@ func _on_exit_to_forest_entered(body: Node2D) -> void:
 func _on_lyra_zone_entered(body: Node2D) -> void:
 	if not body.is_in_group("player"):
 		return
-	if EventFlags.has_flag(OpeningSequence.FLAG_NAME):
-		return
 	if BattleManager.is_in_battle():
 		return
 	if DialogueManager.is_active():
 		return
 	if GameManager.is_transitioning():
 		return
-	_encounter_system.enabled = false
-	_lyra_zone.monitoring = false
-	_opening_sequence.trigger()
-	await _opening_sequence.sequence_completed
-	_encounter_system.enabled = true
+
+	if not EventFlags.has_flag(OpeningSequence.FLAG_NAME):
+		# Opening sequence — Kael discovers Lyra
+		_encounter_system.enabled = false
+		_lyra_zone.monitoring = false
+		_opening_sequence.trigger()
+		await _opening_sequence.sequence_completed
+		_encounter_system.enabled = true
+	elif EventFlags.has_flag("garrick_recruited") \
+			and not EventFlags.has_flag(
+				GarrickMeetsLyra.FLAG_NAME,
+			):
+		# Garrick meets Lyra — Chapter 4 Scene 5
+		_encounter_system.enabled = false
+		_lyra_zone.monitoring = false
+		_garrick_meets_lyra.trigger()
+		await _garrick_meets_lyra.sequence_completed
+		_encounter_system.enabled = true
 
 
 func _on_boss_zone_entered(body: Node2D) -> void:
