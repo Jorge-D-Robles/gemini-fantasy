@@ -8,6 +8,7 @@ signal menu_opened
 signal menu_closed
 
 const UIHelpers = preload("res://ui/ui_helpers.gd")
+const SP = preload("res://systems/scene_paths.gd")
 const INVENTORY_UI_SCENE := preload(
 	"res://ui/inventory_ui/inventory_ui.tscn"
 )
@@ -232,6 +233,4 @@ func _add_stat_label(parent: Node, text: String) -> void:
 
 func _on_quit_pressed() -> void:
 	close()
-	GameManager.change_scene(
-		"res://ui/title_screen/title_screen.tscn"
-	)
+	GameManager.change_scene(SP.TITLE_SCREEN)

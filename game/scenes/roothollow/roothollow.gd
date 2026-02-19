@@ -6,10 +6,7 @@ extends Node2D
 ## Tilemap data is in roothollow_maps.gd (Maps).
 
 const Maps = preload("roothollow_maps.gd")
-
-const VERDANT_FOREST_PATH: String = (
-	"res://scenes/verdant_forest/verdant_forest.tscn"
-)
+const SP = preload("res://systems/scene_paths.gd")
 const SHOP_DATA_PATH: String = (
 	"res://data/shops/roothollow_general.tres"
 )
@@ -212,7 +209,7 @@ func _on_exit_to_forest_entered(body: Node2D) -> void:
 	if GameManager.is_transitioning():
 		return
 	GameManager.change_scene(
-		VERDANT_FOREST_PATH,
+		SP.VERDANT_FOREST,
 		GameManager.FADE_DURATION,
 		"spawn_from_town",
 	)

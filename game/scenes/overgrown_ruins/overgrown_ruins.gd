@@ -5,7 +5,7 @@ extends Node2D
 ## Contains random encounters (Memory Blooms, Creeping Vines) and
 ## an exit to the Verdant Forest.
 
-const VERDANT_FOREST_PATH: String = "res://scenes/verdant_forest/verdant_forest.tscn"
+const SP = preload("res://systems/scene_paths.gd")
 const MEMORY_BLOOM_PATH: String = "res://data/enemies/memory_bloom.tres"
 const CREEPING_VINE_PATH: String = "res://data/enemies/creeping_vine.tres"
 const LAST_GARDENER_PATH: String = "res://data/enemies/last_gardener.tres"
@@ -368,7 +368,7 @@ func _on_exit_to_forest_entered(body: Node2D) -> void:
 	if BattleManager.is_in_battle():
 		return
 	GameManager.change_scene(
-		VERDANT_FOREST_PATH,
+		SP.VERDANT_FOREST,
 		GameManager.FADE_DURATION,
 		"spawn_from_forest",
 	)

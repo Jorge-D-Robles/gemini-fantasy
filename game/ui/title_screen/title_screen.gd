@@ -7,6 +7,7 @@ signal continue_pressed
 signal settings_pressed
 
 const UIHelpers = preload("res://ui/ui_helpers.gd")
+const SP = preload("res://systems/scene_paths.gd")
 const TITLE_BGM_PATH: String = "res://assets/music/Main Character.ogg"
 
 @onready var title_label: Label = %TitleLabel
@@ -67,9 +68,7 @@ func _animate_intro() -> void:
 
 func _on_new_game_pressed() -> void:
 	new_game_pressed.emit()
-	GameManager.change_scene(
-		"res://scenes/overgrown_ruins/overgrown_ruins.tscn"
-	)
+	GameManager.change_scene(SP.OVERGROWN_RUINS)
 
 
 func _on_continue_pressed() -> void:
