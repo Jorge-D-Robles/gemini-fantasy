@@ -20,6 +20,9 @@ const OVERGROWN_RUINS: String = (
 const TITLE_SCREEN: String = (
 	"res://ui/title_screen/title_screen.tscn"
 )
+const DEMO_END_SCREEN: String = (
+	"res://ui/demo_end_screen/demo_end_screen.tscn"
+)
 
 # -- Battle --
 const BATTLE_SCENE: String = (

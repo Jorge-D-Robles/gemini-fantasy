@@ -21,6 +21,7 @@ All UI screens should import these instead of defining local color constants or 
 | `pause_menu/` | `CanvasLayer` | 20 | In-game pause menu: party, items, quests, status panels |
 | `quest_log/` | `Control` (script-only) | — | Quest log sub-screen: active/completed quests with objectives and rewards |
 | `title_screen/` | `Control` | — | Title screen with animated intro and main menu buttons |
+| `demo_end_screen/` | `Control` | — | Demo ending: "Thanks for Playing!" with party lineup and return-to-title button |
 
 ## Color Palette
 

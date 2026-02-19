@@ -229,6 +229,7 @@ const OBJECTS_MAP: Array[String] = [
 @onready var _garrick_meets_lyra: GarrickMeetsLyra = (
 	$GarrickMeetsLyra
 )
+@onready var _demo_ending: DemoEnding = $DemoEnding
 
 
 func _ready() -> void:
@@ -264,11 +265,13 @@ func _ready() -> void:
 	# Zone transition marker
 	_spawn_zone_marker()
 
-	# Three-state Lyra zone logic:
+	# Lyra zone logic:
 	# 1. Opening not done → zone fires OpeningSequence
 	# 2. Opening done + Garrick recruited + not met Lyra → zone fires
-	#    GarrickMeetsLyra
-	# 3. Both done (or Garrick not recruited) → zone disabled
+	#    GarrickMeetsLyra (chains into DemoEnding)
+	# 3. All done (or Garrick not recruited) → zone disabled
+	# 4. Save-reload edge case: garrick_met_lyra set but demo_complete
+	#    not set → keep zone enabled so demo ending re-triggers
 	if EventFlags.has_flag(OpeningSequence.FLAG_NAME):
 		var garrick_available := EventFlags.has_flag(
 			"garrick_recruited",
@@ -276,7 +279,12 @@ func _ready() -> void:
 		var garrick_done := EventFlags.has_flag(
 			GarrickMeetsLyra.FLAG_NAME,
 		)
-		if garrick_done or not garrick_available:
+		var demo_done := EventFlags.has_flag(
+			DemoEnding.FLAG_NAME,
+		)
+		if demo_done:
+			_lyra_zone.monitoring = false
+		elif garrick_done or not garrick_available:
 			_lyra_zone.monitoring = false
 
 	# Hide boss zone if already defeated
@@ -414,7 +422,17 @@ func _on_lyra_zone_entered(body: Node2D) -> void:
 		_lyra_zone.monitoring = false
 		_garrick_meets_lyra.trigger()
 		await _garrick_meets_lyra.sequence_completed
-		_encounter_system.enabled = true
+		# Chain demo ending (encounters stay disabled — scene changes)
+		_demo_ending.trigger()
+	elif EventFlags.has_flag(GarrickMeetsLyra.FLAG_NAME) \
+			and not EventFlags.has_flag(
+				DemoEnding.FLAG_NAME,
+			):
+		# Save-reload edge case: garrick_met_lyra set but
+		# demo_complete not set — re-trigger demo ending
+		_encounter_system.enabled = false
+		_lyra_zone.monitoring = false
+		_demo_ending.trigger()
 
 
 func _on_boss_zone_entered(body: Node2D) -> void:

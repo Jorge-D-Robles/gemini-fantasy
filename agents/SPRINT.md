@@ -70,13 +70,6 @@ Started: 2026-02-18
 - Priority: medium
 - Depends: none
 
-### T-0086
-- Title: Add demo ending sequence with "Thanks for playing" screen
-- Status: todo
-- Assigned: unassigned
-- Priority: medium
-- Depends: T-0085
-
 ### T-0092
 - Title: Add tutorial hints for controls on first playthrough
 - Status: todo
@@ -192,6 +185,13 @@ Started: 2026-02-18
 ---
 
 ## Done This Sprint
+
+### T-0086
+- Title: Add demo ending sequence with "Thanks for playing" screen
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: DemoEnding event (4-line closing dialogue, BGM stop, scene transition). DemoEndScreen Control with party lineup and return-to-title. Save-reload edge case in overgrown_ruins.gd. 17 new tests (885 total).
 
 ### T-0060
 - Title: Roothollow — reduce ground detail density from 50% to 15%
