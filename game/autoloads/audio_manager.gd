@@ -6,6 +6,7 @@ signal bgm_changed(stream: AudioStream)
 
 const SFX_POOL_SIZE: int = 8
 const DEFAULT_FADE_TIME: float = 1.0
+const SD = preload("res://ui/settings_menu/settings_data.gd")
 
 var _bgm_player: AudioStreamPlayer
 var _bgm_fade_player: AudioStreamPlayer
@@ -17,6 +18,7 @@ var _bgm_stack: Array[Dictionary] = []
 func _ready() -> void:
 	_setup_bgm_players()
 	_setup_sfx_pool()
+	SD.apply_saved_settings()
 
 
 func play_bgm(stream: AudioStream, fade_time: float = DEFAULT_FADE_TIME) -> void:

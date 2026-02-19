@@ -32,10 +32,11 @@ Started: 2026-02-18
 
 ### T-0068
 - Title: Build settings/options menu with volume sliders
-- Status: todo
-- Assigned: unassigned
+- Status: in-progress
+- Assigned: claude
 - Priority: medium
 - Depends: T-0064
+- Started: 2026-02-19
 
 ### T-0084
 - Title: Add companion follower sprites in overworld
