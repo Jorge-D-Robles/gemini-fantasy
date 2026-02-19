@@ -20,12 +20,6 @@ Started: 2026-02-18
 - Priority: medium
 - Depends: none
 
-### T-0056
-- Title: Enhance victory screen with portraits and level-up display
-- Status: todo
-- Assigned: unassigned
-- Priority: medium
-- Depends: none
 
 ### T-0073
 - Title: Split roothollow.gd into tilemap, dialogue, and quest handler modules
@@ -226,6 +220,13 @@ Started: 2026-02-18
 ---
 
 ## Done This Sprint
+
+### T-0056
+- Title: Enhance victory screen with portraits and level-up display
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: Character portraits (32x32 atlas), name+level, "LEVEL UP!" callout with stat changes. compute_victory_display() static method. show_victory() extended with default args for backward compat. victory_state.gd passes party and level_ups. 7 tests.
 
 ### T-0055
 - Title: Improve battle target selector with name label and highlight

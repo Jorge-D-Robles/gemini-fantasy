@@ -49,9 +49,15 @@ func enter() -> void:
 	if pm:
 		level_ups = apply_xp_rewards(pm.get_active_party(), total_exp)
 
+	var party_data: Array[Resource] = []
+	if pm:
+		party_data = pm.get_active_party()
+
 	var battle_ui: Node = battle_scene.get_node_or_null("BattleUI")
 	if battle_ui:
-		battle_ui.show_victory(total_exp, total_gold, items)
+		battle_ui.show_victory(
+			total_exp, total_gold, items, party_data, level_ups,
+		)
 		battle_ui.add_battle_log(
 			"Victory! Gained %d EXP and %d Gold." % [total_exp, total_gold],
 			UITheme.LogType.VICTORY,

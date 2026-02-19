@@ -32,6 +32,7 @@ var _resonance_tween: Tween = null
 var _highlighted_target: Node = null
 var _original_modulate: Color = Color.WHITE
 var _name_label: Label = null
+var _victory_party_container: VBoxContainer = null
 
 @onready var _turn_order_container: HBoxContainer = %TurnOrderContainer
 @onready var _command_menu: PanelContainer = %CommandMenu
@@ -71,6 +72,7 @@ func _ready() -> void:
 	_resonance_bar.max_value = GameBalance.RESONANCE_MAX
 
 	_setup_target_name_label()
+	_setup_victory_party_container()
 	_apply_panel_styles()
 	_connect_command_buttons()
 	_connect_defeat_buttons()
@@ -257,18 +259,25 @@ func add_battle_log(
 	_battle_log.scroll_to_line(_battle_log.get_line_count() - 1)
 
 
-func show_victory(exp: int, gold: int, items: Array[String]) -> void:
+func show_victory(
+	exp: int, gold: int, items: Array[String],
+	party: Array[Resource] = [],
+	level_ups: Array[Dictionary] = [],
+) -> void:
 	hide_command_menu()
 	_clear_highlight()
 	_target_selector.visible = false
-	_victory_exp_label.text = "EXP: +%d" % exp
-	_victory_gold_label.text = "Gold: +%d" % gold
-	var items_text := "Items: "
-	if items.is_empty():
-		items_text += "None"
-	else:
-		items_text += ", ".join(items)
-	_victory_items_label.text = items_text
+
+	var data := compute_victory_display(
+		party, exp, gold, items, level_ups,
+	)
+	_victory_exp_label.text = data["exp_text"]
+	_victory_gold_label.text = data["gold_text"]
+	_victory_items_label.text = data["items_text"]
+
+	# Build party member rows with portraits and level-ups
+	_build_victory_party_section(data["members"])
+
 	_victory_screen.visible = true
 
 
@@ -495,6 +504,83 @@ func _setup_target_name_label() -> void:
 	_target_selector.add_child(_name_label)
 
 
+func _setup_victory_party_container() -> void:
+	_victory_party_container = VBoxContainer.new()
+	_victory_party_container.name = "PartySection"
+	_victory_party_container.add_theme_constant_override("separation", 2)
+	# Insert after VictoryTitle (index 0) in the VBox
+	var vbox: VBoxContainer = _victory_screen.get_node(
+		"MarginContainer/VBoxContainer"
+	)
+	if vbox:
+		vbox.add_child(_victory_party_container)
+		vbox.move_child(_victory_party_container, 1)
+
+
+func _build_victory_party_section(
+	members: Array,
+) -> void:
+	UIHelpers.clear_children(_victory_party_container)
+	if members.is_empty():
+		return
+
+	for m: Dictionary in members:
+		var row := HBoxContainer.new()
+		row.add_theme_constant_override("separation", 4)
+
+		# Portrait (small 32x32)
+		var portrait_path: String = m.get("portrait_path", "")
+		if not portrait_path.is_empty():
+			var tex := load(portrait_path) as Texture2D
+			if tex:
+				var tr := TextureRect.new()
+				var atlas := AtlasTexture.new()
+				atlas.atlas = tex
+				atlas.region = Rect2(0, 0, 96, 96)
+				tr.texture = atlas
+				tr.expand_mode = TextureRect.EXPAND_FIT_WIDTH
+				tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
+				tr.custom_minimum_size = Vector2(24, 24)
+				row.add_child(tr)
+
+		# Name + Level
+		var name_lbl := Label.new()
+		var level: int = m.get("level", 1)
+		name_lbl.text = "%s Lv%d" % [m.get("name", "???"), level]
+		name_lbl.add_theme_font_size_override("font_size", 8)
+		name_lbl.custom_minimum_size.x = 70
+		row.add_child(name_lbl)
+
+		# Level-up callout
+		if m.get("leveled_up", false):
+			var lu_lbl := Label.new()
+			lu_lbl.text = "LEVEL UP!"
+			lu_lbl.add_theme_font_size_override("font_size", 7)
+			lu_lbl.add_theme_color_override(
+				"font_color", UITheme.TEXT_GOLD,
+			)
+			row.add_child(lu_lbl)
+
+			# Top stat changes
+			var changes: Dictionary = m.get("stat_changes", {})
+			var parts: Array[String] = []
+			for stat_key: String in changes:
+				var val: int = changes[stat_key]
+				parts.append(
+					"+%d %s" % [val, _stat_abbreviation(stat_key)]
+				)
+			if not parts.is_empty():
+				var stats_lbl := Label.new()
+				stats_lbl.text = ", ".join(parts)
+				stats_lbl.add_theme_font_size_override("font_size", 6)
+				stats_lbl.add_theme_color_override(
+					"font_color", UITheme.TEXT_POSITIVE,
+				)
+				row.add_child(stats_lbl)
+
+		_victory_party_container.add_child(row)
+
+
 func _change_target(direction: int) -> void:
 	if _target_list.is_empty():
 		return
@@ -626,6 +712,78 @@ static func compute_target_info(battler: Node) -> Dictionary:
 		"color": highlight,
 		"is_enemy": is_enemy,
 	}
+
+
+## Returns structured victory display data for the enhanced victory screen.
+static func compute_victory_display(
+	party: Array[Resource], exp: int, gold: int,
+	items: Array[String], level_ups: Array[Dictionary],
+) -> Dictionary:
+	var exp_text := "EXP: +%d" % exp
+	var gold_text := "Gold: +%d" % gold
+	var items_text := "Items: "
+	if items.is_empty():
+		items_text += "None"
+	else:
+		items_text += ", ".join(items)
+
+	# Build level-up lookup by character name
+	var lu_by_name: Dictionary = {}
+	for lu: Dictionary in level_ups:
+		lu_by_name[lu.get("character", "")] = lu
+
+	var members: Array[Dictionary] = []
+	var level_up_messages: Array[String] = []
+
+	for member: Resource in party:
+		if not (member is CharacterData):
+			continue
+		var cd: CharacterData = member as CharacterData
+		var name_str: String = cd.display_name
+		var lu_info: Dictionary = lu_by_name.get(name_str, {})
+		var leveled: bool = not lu_info.is_empty()
+		var new_level: int = lu_info.get("level", cd.level)
+		var changes: Dictionary = lu_info.get("changes", {})
+
+		members.append({
+			"name": name_str,
+			"portrait_path": cd.portrait_path,
+			"level": new_level,
+			"leveled_up": leveled,
+			"stat_changes": changes,
+		})
+
+		if leveled:
+			var parts: Array[String] = []
+			for stat_key: String in changes:
+				var val: int = changes[stat_key]
+				var label := _stat_abbreviation(stat_key)
+				parts.append("+%d %s" % [val, label])
+			var msg := "%s LEVEL UP!" % name_str
+			if not parts.is_empty():
+				msg += " " + ", ".join(parts)
+			level_up_messages.append(msg)
+
+	return {
+		"members": members,
+		"exp_text": exp_text,
+		"gold_text": gold_text,
+		"items_text": items_text,
+		"level_up_messages": level_up_messages,
+	}
+
+
+static func _stat_abbreviation(stat_key: String) -> String:
+	match stat_key:
+		"max_hp": return "HP"
+		"max_ee": return "EE"
+		"attack": return "ATK"
+		"magic": return "MAG"
+		"defense": return "DEF"
+		"resistance": return "RES"
+		"speed": return "SPD"
+		"luck": return "LCK"
+		_: return stat_key.to_upper()
 
 
 func _create_color_stylebox(color: Color) -> StyleBoxFlat:
