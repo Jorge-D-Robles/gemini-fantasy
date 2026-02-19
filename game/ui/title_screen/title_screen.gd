@@ -6,6 +6,8 @@ signal new_game_pressed
 signal continue_pressed
 signal settings_pressed
 
+const UIHelpers = preload("res://ui/ui_helpers.gd")
+
 @onready var title_label: Label = %TitleLabel
 @onready var subtitle_label: Label = %SubtitleLabel
 @onready var new_game_button: Button = %NewGameButton
@@ -30,18 +32,9 @@ func _connect_buttons() -> void:
 
 
 func _setup_focus_navigation() -> void:
-	var buttons: Array[Button] = [
-		new_game_button,
-		continue_button,
-		settings_button,
-	]
-	for i in buttons.size():
-		if i > 0:
-			buttons[i].focus_neighbor_top = buttons[i - 1].get_path()
-		if i < buttons.size() - 1:
-			buttons[i].focus_neighbor_bottom = buttons[i + 1].get_path()
-	buttons[0].focus_neighbor_top = buttons[-1].get_path()
-	buttons[-1].focus_neighbor_bottom = buttons[0].get_path()
+	UIHelpers.setup_focus_wrap([
+		new_game_button, continue_button, settings_button,
+	])
 
 
 func _check_save_data() -> void:

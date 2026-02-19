@@ -6,6 +6,7 @@ extends CanvasLayer
 signal dialogue_line_finished
 signal dialogue_complete
 
+const UIHelpers = preload("res://ui/ui_helpers.gd")
 const CHARS_PER_SECOND: float = 30.0
 const SLIDE_DURATION: float = 0.2
 
@@ -140,22 +141,7 @@ func _clear_choices() -> void:
 
 
 func _setup_choice_focus() -> void:
-	for i in _choice_buttons.size():
-		if i > 0:
-			_choice_buttons[i].focus_neighbor_top = (
-				_choice_buttons[i - 1].get_path()
-			)
-		if i < _choice_buttons.size() - 1:
-			_choice_buttons[i].focus_neighbor_bottom = (
-				_choice_buttons[i + 1].get_path()
-			)
-	if _choice_buttons.size() > 1:
-		_choice_buttons[0].focus_neighbor_top = (
-			_choice_buttons[-1].get_path()
-		)
-		_choice_buttons[-1].focus_neighbor_bottom = (
-			_choice_buttons[0].get_path()
-		)
+	UIHelpers.setup_focus_wrap(_choice_buttons)
 
 
 func _stop_tween() -> void:

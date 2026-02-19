@@ -19,13 +19,8 @@ enum Command {
 	FLEE,
 }
 
-const HP_BAR_COLOR := Color(0.2, 0.8, 0.3)
-const HP_BAR_LOW_COLOR := Color(0.9, 0.3, 0.2)
-const HP_LOW_THRESHOLD: float = 0.25
-const EE_BAR_COLOR := Color(0.3, 0.5, 0.9)
-const PANEL_BG_COLOR := Color(0.08, 0.08, 0.15, 0.9)
-const PANEL_BORDER_COLOR := Color(0.35, 0.35, 0.5, 1.0)
-const ACTIVE_HIGHLIGHT_COLOR := Color(1.0, 0.9, 0.5)
+const UIHelpers = preload("res://ui/ui_helpers.gd")
+const UITheme = preload("res://ui/ui_theme.gd")
 
 var _active_battler: Battler = null
 var _target_list: Array[Battler] = []
@@ -118,7 +113,7 @@ func hide_command_menu() -> void:
 
 
 func show_skill_submenu(abilities: Array[Resource]) -> void:
-	_clear_children(_skill_list)
+	UIHelpers.clear_children(_skill_list)
 	_command_menu.visible = false
 
 	for ability in abilities:
@@ -138,7 +133,7 @@ func show_skill_submenu(abilities: Array[Resource]) -> void:
 
 
 func show_item_submenu(items: Array[Resource]) -> void:
-	_clear_children(_item_list)
+	UIHelpers.clear_children(_item_list)
 	_command_menu.visible = false
 
 	for item in items:
@@ -169,7 +164,7 @@ func show_target_selector(
 
 func update_party_status(party: Array[Battler]) -> void:
 	_party_cache = party
-	_clear_children(_party_rows)
+	UIHelpers.clear_children(_party_rows)
 
 	for battler in party:
 		var row := _create_party_row(battler)
@@ -177,7 +172,7 @@ func update_party_status(party: Array[Battler]) -> void:
 
 
 func update_turn_order(queue: Array[Battler]) -> void:
-	_clear_children(_turn_order_container)
+	UIHelpers.clear_children(_turn_order_container)
 
 	for battler in queue:
 		var icon := Label.new()
@@ -189,7 +184,7 @@ func update_turn_order(queue: Array[Battler]) -> void:
 			icon.add_theme_color_override("font_color", Color(1.0, 0.5, 0.5))
 
 		if battler == _active_battler:
-			icon.add_theme_color_override("font_color", ACTIVE_HIGHLIGHT_COLOR)
+			icon.add_theme_color_override("font_color", UITheme.ACTIVE_HIGHLIGHT)
 
 		_turn_order_container.add_child(icon)
 
@@ -294,6 +289,9 @@ func _update_active_portrait(battler: Battler) -> void:
 
 
 func _apply_panel_styles() -> void:
+	var base_style := UIHelpers.create_panel_style(
+		UITheme.BATTLE_PANEL_BG, UITheme.BATTLE_PANEL_BORDER, 1, 2,
+	)
 	var panels: Array[PanelContainer] = [
 		get_node("TopBar") as PanelContainer,
 		get_node("BottomPanel") as PanelContainer,
@@ -301,12 +299,12 @@ func _apply_panel_styles() -> void:
 	]
 	for panel in panels:
 		if panel:
-			panel.add_theme_stylebox_override("panel", _create_panel_style())
+			panel.add_theme_stylebox_override("panel", base_style)
 
 	# Slightly different style for inner panels
-	var inner_style := _create_panel_style()
-	inner_style.bg_color = Color(0.06, 0.06, 0.12, 0.7)
-	inner_style.set_border_width_all(1)
+	var inner_style := UIHelpers.create_panel_style(
+		Color(0.06, 0.06, 0.12, 0.7), UITheme.BATTLE_PANEL_BORDER, 1, 2,
+	)
 
 	if _command_menu:
 		_command_menu.add_theme_stylebox_override("panel", inner_style)
@@ -322,16 +320,15 @@ func _apply_panel_styles() -> void:
 		"BottomPanel/MarginContainer/HBoxContainer/PortraitSection/PortraitFrame"
 	) as PanelContainer
 	if portrait_frame:
-		var portrait_style := _create_panel_style()
-		portrait_style.bg_color = Color(0.05, 0.05, 0.1, 0.9)
-		portrait_style.border_color = Color(0.6, 0.5, 0.3)
+		var portrait_style := UIHelpers.create_panel_style(
+			Color(0.05, 0.05, 0.1, 0.9), Color(0.6, 0.5, 0.3), 1, 2,
+		)
 		portrait_frame.add_theme_stylebox_override("panel", portrait_style)
 
 	# Victory/defeat screen styles
-	var overlay_style := _create_panel_style()
-	overlay_style.bg_color = Color(0.05, 0.05, 0.1, 0.95)
-	overlay_style.set_border_width_all(2)
-	overlay_style.border_color = Color(0.5, 0.5, 0.6)
+	var overlay_style := UIHelpers.create_panel_style(
+		Color(0.05, 0.05, 0.1, 0.95), Color(0.5, 0.5, 0.6),
+	)
 
 	if _victory_screen:
 		_victory_screen.add_theme_stylebox_override("panel", overlay_style)
@@ -339,15 +336,6 @@ func _apply_panel_styles() -> void:
 		var defeat_style := overlay_style.duplicate() as StyleBoxFlat
 		defeat_style.border_color = Color(0.6, 0.2, 0.2)
 		_defeat_screen.add_theme_stylebox_override("panel", defeat_style)
-
-
-func _create_panel_style() -> StyleBoxFlat:
-	var style := StyleBoxFlat.new()
-	style.bg_color = PANEL_BG_COLOR
-	style.border_color = PANEL_BORDER_COLOR
-	style.set_border_width_all(1)
-	style.set_corner_radius_all(2)
-	return style
 
 
 func _connect_command_buttons() -> void:
@@ -374,22 +362,13 @@ func _connect_command_buttons() -> void:
 		_defend_button,
 		_flee_button,
 	]
-	for i in buttons.size():
-		if i > 0:
-			buttons[i].focus_neighbor_top = buttons[i - 1].get_path()
-		if i < buttons.size() - 1:
-			buttons[i].focus_neighbor_bottom = buttons[i + 1].get_path()
-	buttons[0].focus_neighbor_top = buttons[-1].get_path()
-	buttons[-1].focus_neighbor_bottom = buttons[0].get_path()
+	UIHelpers.setup_focus_wrap(buttons)
 
 
 func _connect_defeat_buttons() -> void:
 	_retry_button.pressed.connect(_on_retry_pressed)
 	_quit_button.pressed.connect(_on_quit_pressed)
-	_retry_button.focus_neighbor_bottom = _quit_button.get_path()
-	_quit_button.focus_neighbor_top = _retry_button.get_path()
-	_retry_button.focus_neighbor_top = _quit_button.get_path()
-	_quit_button.focus_neighbor_bottom = _retry_button.get_path()
+	UIHelpers.setup_focus_wrap([_retry_button, _quit_button])
 
 
 func _create_party_row(battler: Battler) -> HBoxContainer:
@@ -402,7 +381,7 @@ func _create_party_row(battler: Battler) -> HBoxContainer:
 	name_lbl.add_theme_font_size_override("font_size", 8)
 	name_lbl.custom_minimum_size.x = 40
 	if battler == _active_battler:
-		name_lbl.add_theme_color_override("font_color", ACTIVE_HIGHLIGHT_COLOR)
+		name_lbl.add_theme_color_override("font_color", UITheme.ACTIVE_HIGHLIGHT)
 	row.add_child(name_lbl)
 
 	# HP label
@@ -420,7 +399,9 @@ func _create_party_row(battler: Battler) -> HBoxContainer:
 	hp_bar.max_value = battler.max_hp
 	hp_bar.value = battler.current_hp
 	var hp_ratio: float = float(battler.current_hp) / float(maxi(battler.max_hp, 1))
-	var hp_color := HP_BAR_LOW_COLOR if hp_ratio <= HP_LOW_THRESHOLD else HP_BAR_COLOR
+	var hp_color := UITheme.HP_BAR_COLOR
+	if hp_ratio <= UITheme.HP_LOW_THRESHOLD:
+		hp_color = UITheme.HP_BAR_LOW_COLOR
 	hp_bar.add_theme_stylebox_override("fill", _create_color_stylebox(hp_color))
 	row.add_child(hp_bar)
 
@@ -445,7 +426,7 @@ func _create_party_row(battler: Battler) -> HBoxContainer:
 	ee_bar.show_percentage = false
 	ee_bar.max_value = battler.max_ee
 	ee_bar.value = battler.current_ee
-	ee_bar.add_theme_stylebox_override("fill", _create_color_stylebox(EE_BAR_COLOR))
+	ee_bar.add_theme_stylebox_override("fill", _create_color_stylebox(UITheme.EE_BAR_COLOR))
 	row.add_child(ee_bar)
 
 	# EE numbers
@@ -543,25 +524,12 @@ func _on_quit_pressed() -> void:
 	)
 
 
-func _clear_children(parent: Node) -> void:
-	for child in parent.get_children():
-		parent.remove_child(child)
-		child.queue_free()
-
-
 func _setup_button_focus_wrap(container: Container) -> void:
-	var buttons: Array[Button] = []
+	var buttons: Array[Control] = []
 	for child in container.get_children():
 		if child is Button:
 			buttons.append(child)
-	for i in buttons.size():
-		if i > 0:
-			buttons[i].focus_neighbor_top = buttons[i - 1].get_path()
-		if i < buttons.size() - 1:
-			buttons[i].focus_neighbor_bottom = buttons[i + 1].get_path()
-	if buttons.size() > 1:
-		buttons[0].focus_neighbor_top = buttons[-1].get_path()
-		buttons[-1].focus_neighbor_bottom = buttons[0].get_path()
+	UIHelpers.setup_focus_wrap(buttons)
 
 
 func _create_color_stylebox(color: Color) -> StyleBoxFlat:

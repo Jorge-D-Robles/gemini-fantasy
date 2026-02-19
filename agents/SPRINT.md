@@ -9,24 +9,11 @@ Started: 2026-02-18
 
 ## Active
 
-### T-0051
-- Title: Add battle background sprite and scene backdrop
-- Status: in-progress
-- Assigned: claude
-- Priority: critical
-- Depends: none
-- Started: 2026-02-19
+(none)
 
 ---
 
 ## Queue
-
-### T-0069
-- Title: Extract shared UI helpers (colors, focus nav, panel styles, clear_children)
-- Status: todo
-- Assigned: unassigned
-- Priority: high
-- Depends: none
 
 ### T-0071
 - Title: Centralize game balance constants into game_balance.gd
@@ -381,3 +368,17 @@ Started: 2026-02-18
 - Assigned: claude
 - Completed: 2026-02-19
 - Notes: Already fixed in codebase — limit_bottom=400 matches 25-row map (400px)
+
+### T-0051
+- Title: Add battle background sprite and scene backdrop
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: Programmatic gradient backgrounds per area type (forest/ruins/town/cave). 10 unit tests.
+
+### T-0069
+- Title: Extract shared UI helpers (colors, focus nav, panel styles, clear_children)
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: Created ui_theme.gd (19 color constants) and ui_helpers.gd (3 static utilities). Refactored 6 UI files. 19 tests.

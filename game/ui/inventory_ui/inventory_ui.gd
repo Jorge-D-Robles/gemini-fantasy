@@ -12,12 +12,8 @@ enum Category {
 	KEY_ITEMS,
 }
 
-const PANEL_BG := Color(0.12, 0.07, 0.22, 0.85)
-const PANEL_INNER_BG := Color(0.08, 0.05, 0.15, 0.9)
-const PANEL_BORDER := Color(0.45, 0.35, 0.65, 0.6)
-const TEXT_PRIMARY := Color(0.85, 0.75, 1.0)
-const TEXT_SECONDARY := Color(0.6, 0.55, 0.7)
-const ACCENT_GOLD := Color(0.85, 0.75, 0.45, 0.8)
+const UIHelpers = preload("res://ui/ui_helpers.gd")
+const UITheme = preload("res://ui/ui_theme.gd")
 
 var _is_open: bool = false
 var _current_category: Category = Category.ALL
@@ -97,7 +93,7 @@ func _update_gold() -> void:
 
 
 func _refresh_item_list() -> void:
-	_clear_children(_item_list_vbox)
+	UIHelpers.clear_children(_item_list_vbox)
 	_displayed_entries.clear()
 	_selected_index = -1
 
@@ -120,7 +116,7 @@ func _refresh_item_list() -> void:
 			"font_size", 10
 		)
 		empty_label.add_theme_color_override(
-			"font_color", TEXT_SECONDARY
+			"font_color", UITheme.TEXT_SECONDARY
 		)
 		_item_list_vbox.add_child(empty_label)
 		_all_btn.grab_focus()
@@ -143,7 +139,7 @@ func _refresh_item_list() -> void:
 		)
 		_item_list_vbox.add_child(btn)
 
-	_setup_focus_wrap(_item_list_vbox)
+	_setup_button_focus_wrap(_item_list_vbox)
 	if _item_list_vbox.get_child_count() > 0:
 		_item_list_vbox.get_child(0).grab_focus()
 
@@ -220,7 +216,7 @@ func _update_detail(index: int) -> void:
 	var data: Resource = entry["data"]
 
 	_item_name_label.text = entry["display_name"]
-	_clear_children(_stats_vbox)
+	UIHelpers.clear_children(_stats_vbox)
 
 	if entry["is_equipment"]:
 		var equip := data as EquipmentData
@@ -279,7 +275,7 @@ func _add_stat_line(text: String) -> void:
 	label.text = text
 	label.add_theme_font_size_override("font_size", 9)
 	label.add_theme_color_override(
-		"font_color", TEXT_SECONDARY
+		"font_color", UITheme.TEXT_SECONDARY
 	)
 	_stats_vbox.add_child(label)
 
@@ -287,7 +283,7 @@ func _add_stat_line(text: String) -> void:
 func _clear_detail() -> void:
 	_item_name_label.text = "Select an item"
 	_item_desc_label.text = ""
-	_clear_children(_stats_vbox)
+	UIHelpers.clear_children(_stats_vbox)
 	_use_button.visible = false
 	_equip_button.visible = false
 
@@ -361,14 +357,14 @@ func _on_equip_pressed() -> void:
 
 
 func _show_character_select() -> void:
-	_clear_children(_char_select_vbox)
+	UIHelpers.clear_children(_char_select_vbox)
 	var party := PartyManager.get_active_party()
 
 	var header := Label.new()
 	header.text = "Select Character:"
 	header.add_theme_font_size_override("font_size", 10)
 	header.add_theme_color_override(
-		"font_color", TEXT_PRIMARY
+		"font_color", UITheme.TEXT_PRIMARY
 	)
 	_char_select_vbox.add_child(header)
 
@@ -391,7 +387,7 @@ func _show_character_select() -> void:
 		)
 		_char_select_vbox.add_child(btn)
 
-	_setup_focus_wrap(_char_select_vbox)
+	_setup_button_focus_wrap(_char_select_vbox)
 	_char_select_panel.visible = true
 	_char_select_active = true
 	# Focus first character button (skip header label)
@@ -536,21 +532,10 @@ func _connect_category_buttons() -> void:
 
 
 func _setup_category_focus() -> void:
-	var btns: Array[Button] = [
-		_all_btn, _consumables_btn,
-		_equipment_btn, _key_items_btn,
-	]
-	for i in btns.size():
-		if i > 0:
-			btns[i].focus_neighbor_left = (
-				btns[i - 1].get_path()
-			)
-		if i < btns.size() - 1:
-			btns[i].focus_neighbor_right = (
-				btns[i + 1].get_path()
-			)
-	btns[0].focus_neighbor_left = btns[-1].get_path()
-	btns[-1].focus_neighbor_right = btns[0].get_path()
+	UIHelpers.setup_focus_wrap(
+		[_all_btn, _consumables_btn, _equipment_btn, _key_items_btn],
+		true,
+	)
 
 
 func _set_category(cat: Category) -> void:
@@ -572,38 +557,12 @@ func _update_category_highlights() -> void:
 	for i in btns.size():
 		if cats[i] == _current_category:
 			btns[i].add_theme_color_override(
-				"font_color", ACCENT_GOLD
+				"font_color", UITheme.ACCENT_GOLD
 			)
 		else:
 			btns[i].add_theme_color_override(
-				"font_color", TEXT_SECONDARY
+				"font_color", UITheme.TEXT_SECONDARY
 			)
-
-
-# -- Focus helpers --
-
-
-func _setup_focus_wrap(container: Container) -> void:
-	var buttons: Array[Button] = []
-	for child in container.get_children():
-		if child is Button:
-			buttons.append(child)
-	for i in buttons.size():
-		if i > 0:
-			buttons[i].focus_neighbor_top = (
-				buttons[i - 1].get_path()
-			)
-		if i < buttons.size() - 1:
-			buttons[i].focus_neighbor_bottom = (
-				buttons[i + 1].get_path()
-			)
-	if buttons.size() > 1:
-		buttons[0].focus_neighbor_top = (
-			buttons[-1].get_path()
-		)
-		buttons[-1].focus_neighbor_bottom = (
-			buttons[0].get_path()
-		)
 
 
 # -- Styling --
@@ -611,13 +570,11 @@ func _setup_focus_wrap(container: Container) -> void:
 
 func _apply_styles() -> void:
 	_main_panel.add_theme_stylebox_override(
-		"panel",
-		_create_panel_style(PANEL_BG, PANEL_BORDER),
+		"panel", UIHelpers.create_panel_style(),
 	)
-	var inner := _create_panel_style(
-		PANEL_INNER_BG, PANEL_BORDER
+	var inner := UIHelpers.create_panel_style(
+		UITheme.PANEL_INNER_BG, UITheme.PANEL_BORDER, 1,
 	)
-	inner.set_border_width_all(1)
 
 	var item_list_panel := (
 		_item_scroll.get_parent() as PanelContainer
@@ -631,28 +588,15 @@ func _apply_styles() -> void:
 	)
 
 	var char_style := inner.duplicate() as StyleBoxFlat
-	char_style.border_color = ACCENT_GOLD
+	char_style.border_color = UITheme.ACCENT_GOLD
 	_char_select_panel.add_theme_stylebox_override(
 		"panel", char_style
 	)
 
 
-func _create_panel_style(
-	bg: Color,
-	border: Color,
-) -> StyleBoxFlat:
-	var style := StyleBoxFlat.new()
-	style.bg_color = bg
-	style.border_color = border
-	style.set_border_width_all(2)
-	style.set_corner_radius_all(3)
-	return style
-
-
-# -- Utility --
-
-
-func _clear_children(parent: Node) -> void:
-	for child in parent.get_children():
-		parent.remove_child(child)
-		child.queue_free()
+func _setup_button_focus_wrap(container: Container) -> void:
+	var buttons: Array[Control] = []
+	for child in container.get_children():
+		if child is Button:
+			buttons.append(child)
+	UIHelpers.setup_focus_wrap(buttons)

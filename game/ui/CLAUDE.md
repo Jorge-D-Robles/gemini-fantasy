@@ -2,6 +2,15 @@
 
 All UI screens and overlays. Each subdirectory contains a `.tscn` scene and a `.gd` script. All UI nodes extend `CanvasLayer` except `title_screen` (extends `Control`).
 
+## Shared Modules
+
+| File | Purpose | Usage |
+|------|---------|-------|
+| `ui_theme.gd` | Color palette constants (panels, text, bars, accents) | `const UITheme = preload("res://ui/ui_theme.gd")` |
+| `ui_helpers.gd` | Static utilities: `clear_children()`, `setup_focus_wrap()`, `create_panel_style()` | `const UIHelpers = preload("res://ui/ui_helpers.gd")` |
+
+All UI screens should import these instead of defining local color constants or utility functions.
+
 ## Subdirectory Index
 
 | Directory | Scene Root | Layer | Purpose |
