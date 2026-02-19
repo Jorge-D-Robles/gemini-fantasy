@@ -59,6 +59,10 @@ const LOG_DEFEAT := Color(0.85, 0.15, 0.15)
 # ---- Damage popup colors ----
 const POPUP_CRITICAL := Color(1.0, 0.85, 0.2)
 
+# ---- Target selector highlight ----
+const TARGET_HIGHLIGHT_ENEMY := Color(1.2, 1.0, 1.0)
+const TARGET_HIGHLIGHT_PARTY := Color(1.0, 1.0, 1.2)
+
 # ---- Status effect colors ----
 const STATUS_BUFF := Color(0.4, 0.85, 0.4)
 const STATUS_DEBUFF := Color(0.85, 0.4, 0.4)
