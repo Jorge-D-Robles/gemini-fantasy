@@ -16,17 +16,17 @@
 	"actions": [
 		{"type": "wait", "seconds": 1.5},
 		{"type": "screenshot", "label": "overworld_before_battle"},
-		{"type": "trigger_battle", "enemies": ["memory_bloom", "creeping_vine"]},
-		{"type": "wait", "seconds": 2.0},
-		{"type": "screenshot", "label": "battle_started"},
-		{"type": "wait", "seconds": 5.0},
-		{"type": "screenshot", "label": "battle_midway"},
-		{"type": "wait_battle", "timeout": 60.0},
-		{"type": "screenshot", "label": "battle_ended"},
-		{"type": "log", "message": "Battle test complete"}
+		{
+			"type": "auto_play_battle",
+			"enemies": ["memory_bloom", "creeping_vine"],
+			"can_escape": false,
+			"timeout": 90.0
+		},
+		{"type": "screenshot", "label": "after_battle"},
+		{"type": "log", "message": "Battle auto-play test complete"}
 	],
 	"options": {
-		"timeout_seconds": 90.0,
+		"timeout_seconds": 120.0,
 		"disable_encounters": true,
 		"disable_bgm": true,
 		"output_dir": "/tmp/playtest/"
