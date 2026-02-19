@@ -30,14 +30,6 @@ Started: 2026-02-18
 - Priority: medium
 - Depends: none
 
-### T-0068
-- Title: Build settings/options menu with volume sliders
-- Status: in-progress
-- Assigned: claude
-- Priority: medium
-- Depends: T-0064
-- Started: 2026-02-19
-
 ### T-0084
 - Title: Add companion follower sprites in overworld
 - Status: todo
@@ -167,6 +159,13 @@ Started: 2026-02-18
 ---
 
 ## Done This Sprint
+
+### T-0068
+- Title: Build settings/options menu with volume sliders
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: SettingsData static utility (percent/dB conversion, bus-level control, JSON persistence). SettingsMenu script-only Control with 3 HSliders, live preview, save on close. Wired into title screen and pause menu. AudioManager loads on startup. 14 new tests (939 total).
 
 ### T-0076
 - Title: Split shop_ui.gd into buy panel, sell panel, and character selector
