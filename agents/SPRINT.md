@@ -13,21 +13,6 @@ Started: 2026-02-18
 
 ## Queue
 
-### T-0089
-- Title: Add NPC interaction indicators (speech bubble icon above head)
-- Status: in-progress
-- Assigned: claude
-- Priority: high
-- Depends: none
-- Started: 2026-02-19
-
-### T-0090
-- Title: Add quest log/journal UI screen
-- Status: todo
-- Assigned: unassigned
-- Priority: high
-- Depends: none
-
 ### T-0079
 - Title: Expand opening sequence to match Chapter 1 story script
 - Status: todo
@@ -311,6 +296,20 @@ Started: 2026-02-18
 ---
 
 ## Done This Sprint
+
+### T-0090
+- Title: Add quest log/journal UI screen
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: Script-only Control (no .tscn) opened from pause menu. Active/Completed tabs, quest list with detail panel, objectives with checkmarks, reward previews. compute_quest_list() static function for TDD. QuestsButton added to pause menu. 8 tests.
+
+### T-0089
+- Title: Add NPC interaction indicators (speech bubble icon above head)
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: IndicatorType enum (NONE/CHAT/QUEST/QUEST_ACTIVE/SHOP) in npc.gd. Floating Label with bob animation, proximity show/hide via InteractionArea, dialogue-aware, tween cleanup. Dynamic quest-state indicators for Thessa/Wren. 13 tests.
 
 ### T-0059
 - Title: Roothollow — add AbovePlayer tilemap layer and consolidate tree sprites

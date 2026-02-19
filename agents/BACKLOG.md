@@ -768,6 +768,36 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 - Refs: docs/game-design/01-core-mechanics.md
 - Notes: Combine materials into items. Recipe system, crafting UI, material gathering.
 
+### T-0111
+- Title: Add interaction indicators to Interactable objects (save points, chests, signs)
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M0
+- Depends: T-0089
+- Refs: game/entities/interactable/interactable.gd
+- Notes: T-0089 added indicators to NPCs only. Interactables (save points, chests, signs) need similar floating icons for visual cue. Reuse Label-based approach. One-time interactables hide after use.
+
+### T-0112
+- Title: Wire quest-NPC indicator updates on quest state change
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Milestone: M0
+- Depends: T-0089
+- Refs: game/scenes/roothollow/roothollow.gd, game/autoloads/quest_manager.gd
+- Notes: NPC indicator_type is computed once at scene load. Returning after completing objectives may not update indicators. Connect QuestManager signals to re-compute.
+
+### T-0113
+- Title: Add interaction prompt label near player when ray hits target
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Milestone: M0
+- Depends: T-0089
+- Refs: game/entities/player/player.gd, game/ui/hud/hud.gd
+- Notes: Small HUD hint ("[E] Talk") when player InteractionRay detects target. May overlap with T-0092 (tutorial hints).
+
 ---
 
 ## M2 — Act II: The Weight of Echoes
