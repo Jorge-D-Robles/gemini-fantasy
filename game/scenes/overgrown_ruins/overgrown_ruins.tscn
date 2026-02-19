@@ -35,6 +35,7 @@ z_index = 0
 z_index = 0
 
 [node name="Entities" type="Node2D" parent="."]
+z_index = 1
 
 [node name="Player" parent="Entities" instance=ExtResource("2_player")]
 position = Vector2(160, 200)
