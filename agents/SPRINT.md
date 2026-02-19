@@ -21,6 +21,13 @@ Started: 2026-02-16
 
 ## Done This Sprint
 
+### T-0047
+- Title: Visual overhaul — multi-tile objects, NPC sprites, boundary fixes for all 3 scenes
+- Status: done
+- Assigned: claude
+- Started: 2026-02-18
+- Completed: 2026-02-18
+
 ### T-0035
 - Title: Create Lyra character data and abilities
 - Status: done

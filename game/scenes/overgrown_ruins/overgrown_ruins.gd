@@ -45,6 +45,9 @@ const OBJECTS_LEGEND: Dictionary = {
 	"d": Vector2i(0, 0),   # Stone rubble
 	"e": Vector2i(1, 4),   # Green bush variant
 	"f": Vector2i(3, 0),   # Small rubble piece
+	"g": Vector2i(2, 4),   # Vine growth
+	"h": Vector2i(3, 4),   # Moss patch
+	"i": Vector2i(5, 0),   # Crumbled pillar
 	"1": Vector2i(4, 2),   # Teal face top-left
 	"2": Vector2i(5, 2),   # Teal face top-center
 	"3": Vector2i(6, 2),   # Teal face top-right
@@ -96,19 +99,19 @@ const DETAIL_MAP: Array[String] = [
 	"                 OOOOOOOOOOOO           ",
 	"                                        ",
 	"                                        ",
-	"   OOO                          OOO     ",
-	"   OO                            OO     ",
+	"   OOO                           OO     ",
+	"   OO                                   ",
+	"                                 OO     ",
+	"                                        ",
+	"   OO                           OOO     ",
+	"   OOOO                          OO     ",
+	"                                        ",
+	"  OOOO                           OO     ",
+	"  OO                                    ",
 	"                                        ",
 	"                                        ",
-	"   OO                            OO     ",
-	"   OOO                          OOO     ",
-	"                                        ",
-	"  OOO                            OOO    ",
-	"  OO                              OO    ",
-	"                                        ",
-	"                                        ",
-	"  OO                              OO    ",
-	"  OOO                            OOO    ",
+	"  OO                             OOO    ",
+	"   OOO                           OO     ",
 	"                                        ",
 	"                                        ",
 ]
@@ -152,12 +155,12 @@ const WALL_MAP: Array[String] = [
 	"WWWWWWWWWWWWWWWWG              GWWWWWWWW",
 	"WWWWWWWWWWWWWWWWGG            GGWWWWWWWW",
 	"WWWWWWWWWWWWWWWWWWWW      WWWWWWWWWWWWWW",
-	"WW        WWWWWWWWWW      WWWWWWWW    WW",
+	"WW        WWWWWWWWWW      WWWWWWWWWWWWWW",
+	"WW                                  WWWW",
 	"WW                                    WW",
-	"WW                                      ",
-	"WW                                      ",
 	"WW                                    WW",
-	"WW        WWWWWWWWWW      WWWWWWWW    WW",
+	"WW                                  WWWW",
+	"WW        WWWWWWWWWW      WWWWWWWWWWWWWW",
 	"WWWW    WWWWWWWWWWWWWW  WWWWWWWWWW  WWWW",
 	"WW                                    WW",
 	"WW          WW              WW        WW",
@@ -187,12 +190,12 @@ const OBJECTS_MAP: Array[String] = [
 	"   e       b                  b    e    ",
 	"     d  f                         f d   ",
 	"                                        ",
-	"   b  f                          f  b   ",
-	"         a    e            a         e  ",
-	"      d          78              f      ",
-	"         c    f  90    b      c      d  ",
-	"   e                            e       ",
-	"   b  f    d                  d  f  b   ",
+	"   b  f                             e   ",
+	"         a    e             h    f      ",
+	"      d          78       b      g      ",
+	"            f    90    c          d     ",
+	"   e     b                    i         ",
+	"   b  f    d               e     f  d   ",
 	"                                        ",
 	"                                        ",
 ]
