@@ -185,7 +185,10 @@ MapBuilder.create_atlas_source(texture_path: String) -> TileSetAtlasSource
 MapBuilder.create_tileset(atlas_paths: Array[String], solid_tiles: Dictionary) -> TileSet
 MapBuilder.build_layer(layer: TileMapLayer, map_data: Array[String], legend: Dictionary, source_id: int) -> void
 MapBuilder.apply_tileset(layers: Array[TileMapLayer], atlas_paths: Array[String], solid_tiles: Dictionary) -> void
+MapBuilder.create_boundary_walls(parent: Node, width_px: int, height_px: int) -> void
 ```
+
+`create_boundary_walls()` adds 4 invisible `StaticBody2D` walls around the map edges on collision layer 2 (bitmask `0b10`). The player's `collision_mask = 6` (layers 2+3) detects these walls. Each wall is 32px thick with 16px corner extensions to prevent diagonal escape. Walls are grouped under a `Boundaries` node.
 
 Pre-defined texture path constants: `FAIRY_FOREST_A5_A/B`, `RUINS_A5`, `OVERGROWN_RUINS_A5`, `FOREST_OBJECTS`, `TREE_OBJECTS`, `STONE_OBJECTS`, `MUSHROOM_VILLAGE`, `RUINS_OBJECTS`, `OVERGROWN_RUINS_OBJECTS`, `GIANT_TREE`.
 

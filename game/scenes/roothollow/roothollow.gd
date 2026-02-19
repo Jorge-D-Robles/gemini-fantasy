@@ -94,6 +94,7 @@ var _elder_quest: Resource = null
 
 func _ready() -> void:
 	_setup_tilemap()
+	MapBuilder.create_boundary_walls(self, 640, 448)
 	UILayer.hud.location_name = "Roothollow"
 
 	# Add spawn point to group for GameManager lookup

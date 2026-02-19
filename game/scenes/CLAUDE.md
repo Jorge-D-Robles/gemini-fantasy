@@ -81,7 +81,7 @@ func _setup_tilemap() -> void:
 ### verdant_forest/
 
 **Theme:** Lush enchanted forest with clearings, dirt path, dense tree borders.
-**Map:** 40 cols x 24 rows (640x384 px)
+**Map:** 40 cols x 25 rows (640x400 px)
 
 **Atlas Sources:**
 
@@ -100,7 +100,7 @@ func _setup_tilemap() -> void:
 ### roothollow/
 
 **Theme:** Cozy fairy forest village — safe town hub.
-**Map:** 48 cols x 38 rows (768x608 px)
+**Map:** 40 cols x 28 rows (640x448 px)
 
 **Atlas Sources:**
 

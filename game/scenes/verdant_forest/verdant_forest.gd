@@ -295,6 +295,7 @@ const DETAIL_MAP: Array[String] = [
 
 func _ready() -> void:
 	_setup_tilemap()
+	MapBuilder.create_boundary_walls(self, 640, 400)
 
 	# Set HUD location name
 	UILayer.hud.location_name = "Verdant Forest"

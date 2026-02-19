@@ -20,13 +20,6 @@ Started: 2026-02-18
 - Priority: high
 - Depends: none
 
-### T-0062
-- Title: Add boundary collision walls to all map edges
-- Status: todo
-- Assigned: unassigned
-- Priority: high
-- Depends: none
-
 ### T-0087
 - Title: Add on-screen objective tracker UI
 - Status: todo
@@ -338,6 +331,13 @@ Started: 2026-02-18
 ---
 
 ## Done This Sprint
+
+### T-0062
+- Title: Add boundary collision walls to all map edges
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: MapBuilder.create_boundary_walls() static method. 4 invisible StaticBody2D walls per scene on collision layer 2. All 3 scenes wired. Fixed CLAUDE.md map dimension errors. 12 tests.
 
 ### T-0049
 - Title: BUG — Verdant Forest camera limit cuts off bottom row

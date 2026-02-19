@@ -181,3 +181,64 @@ static func apply_tileset(
 	var tileset := create_tileset(atlas_paths, solid_tiles)
 	for layer: TileMapLayer in layers:
 		layer.tile_set = tileset
+
+
+## Create 4 invisible StaticBody2D walls around the map edges.
+##
+## Walls are placed just outside the map bounds on collision layer 2
+## (bitmask 0b10), which the player's collision_mask=6 detects.
+## Each wall is 32px thick and extends 16px past corners to prevent
+## diagonal escape. Walls are grouped under a "Boundaries" Node.
+## [param parent]: Scene root node to add walls to.
+## [param width_px]: Map width in pixels.
+## [param height_px]: Map height in pixels.
+static func create_boundary_walls(
+	parent: Node, width_px: int, height_px: int,
+) -> void:
+	var boundaries := Node.new()
+	boundaries.name = "Boundaries"
+	parent.add_child(boundaries)
+
+	var w := float(width_px)
+	var h := float(height_px)
+	var thickness: float = 32.0
+	var half_t: float = thickness / 2.0
+
+	_create_wall(
+		boundaries, "TopWall",
+		Vector2(w / 2.0, -half_t),
+		Vector2(w + thickness, thickness),
+	)
+	_create_wall(
+		boundaries, "BottomWall",
+		Vector2(w / 2.0, h + half_t),
+		Vector2(w + thickness, thickness),
+	)
+	_create_wall(
+		boundaries, "LeftWall",
+		Vector2(-half_t, h / 2.0),
+		Vector2(thickness, h + thickness),
+	)
+	_create_wall(
+		boundaries, "RightWall",
+		Vector2(w + half_t, h / 2.0),
+		Vector2(thickness, h + thickness),
+	)
+
+
+static func _create_wall(
+	parent: Node, wall_name: String,
+	pos: Vector2, size: Vector2,
+) -> void:
+	var wall := StaticBody2D.new()
+	wall.name = wall_name
+	wall.position = pos
+	wall.collision_layer = 2  # Layer 2 (bitmask 0b10) — tilemap physics
+	wall.collision_mask = 0
+	parent.add_child(wall)
+
+	var shape_node := CollisionShape2D.new()
+	var rect := RectangleShape2D.new()
+	rect.size = size
+	shape_node.shape = rect
+	wall.add_child(shape_node)
