@@ -13,6 +13,42 @@ Started: 2026-02-18
 
 ## Queue
 
+### T-0144
+- Title: Build playtest runner — core scene with state injection and screenshot capture
+- Status: todo
+- Assigned: unassigned
+- Priority: critical
+- Depends: none
+- Refs: docs/game-design/09-playtest-runner.md
+- Notes: Phase 1. Create playtest_runner.tscn/gd in game/tools/. JSON config parsing + CLI arg fallback. State injection (party, flags, inventory, gold). Scene navigation via GameManager.change_scene(). Basic actions: wait, screenshot, move. Report JSON output. Timeout safety exit. Update game/tools/CLAUDE.md.
+
+### T-0145
+- Title: Add full action set to playtest runner (dialogue, battle, input simulation)
+- Status: todo
+- Assigned: unassigned
+- Priority: critical
+- Depends: T-0144
+- Refs: docs/game-design/09-playtest-runner.md
+- Notes: Phase 2. Input simulation: interact, cancel, menu. Dialogue actions: advance_dialogue, wait_dialogue, select_choice. Battle actions: trigger_battle, wait_battle. State actions: wait_state, set_flag, log. Equipment/quest injection. Error collection. Periodic screenshot capture.
+
+### T-0146
+- Title: Create /playtest skill and preset configs for common test scenarios
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Depends: T-0145
+- Refs: docs/game-design/09-playtest-runner.md
+- Notes: Phase 3. Create /playtest skill wrapping CLI invocation. Preset configs in game/tools/playtest_presets/ (new_game, mid_game, battle_test, boss_test, dialogue_test, full_walkthrough). Inline CLI args support. Update CLAUDE.md with usage docs.
+
+### T-0147
+- Title: Add battle auto-play mode to playtest runner for combat balance testing
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Depends: T-0145
+- Refs: docs/game-design/09-playtest-runner.md
+- Notes: Phase 4 (optional). AI-driven party actions during playtested battles (auto-attack). Battle outcome logging (win/loss, turns, HP remaining). Balance data collection.
+
 ### T-0095
 - Title: Add battler idle animations in combat
 - Status: todo
