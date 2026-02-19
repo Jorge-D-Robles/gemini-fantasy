@@ -29,10 +29,11 @@ Started: 2026-02-18
 
 ### T-0053
 - Title: Add floating damage numbers above targets
-- Status: todo
-- Assigned: unassigned
+- Status: in-progress
+- Assigned: claude
 - Priority: high
 - Depends: none
+- Started: 2026-02-19
 
 ### T-0087
 - Title: Add on-screen objective tracker UI

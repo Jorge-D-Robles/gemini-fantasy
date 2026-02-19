@@ -16,11 +16,3 @@ offset_top = -24.0
 offset_right = 20.0
 offset_bottom = -20.0
 show_percentage = false
-
-[node name="DamageLabel" type="Label" parent="."]
-visible = false
-offset_left = -16.0
-offset_top = -20.0
-offset_right = 16.0
-offset_bottom = -8.0
-horizontal_alignment = 1

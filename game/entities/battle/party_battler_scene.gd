@@ -15,12 +15,10 @@ var battler: PartyBattler = null
 @onready var hp_bar: ProgressBar = $HPBar
 @onready var ee_bar: ProgressBar = $EEBar
 @onready var status_icons: HBoxContainer = $StatusIcons
-@onready var damage_label: Label = $DamageLabel
 
 
 func _ready() -> void:
 	_setup_bars()
-	damage_label.visible = false
 	if character_data and not character_data.battle_sprite_path.is_empty():
 		var tex := load(character_data.battle_sprite_path) as Texture2D
 		if tex:
@@ -95,43 +93,15 @@ func play_idle_anim() -> void:
 
 
 func show_damage_number(amount: int) -> void:
-	damage_label.text = str(amount)
-	damage_label.add_theme_color_override("font_color", Color(1.0, 0.3, 0.3))
-	damage_label.visible = true
-	damage_label.modulate.a = 1.0
-	damage_label.position = Vector2(0, -20)
-
-	var tween := create_tween()
-	tween.set_parallel(true)
-	tween.tween_property(
-		damage_label, "position:y",
-		damage_label.position.y - 24.0, 0.6,
-	)
-	tween.tween_property(
-		damage_label, "modulate:a", 0.0, 0.6,
-	).set_delay(0.3)
-	await tween.finished
-	damage_label.visible = false
+	var popup := DamagePopup.new()
+	add_child(popup)
+	popup.setup(amount, DamagePopup.PopupType.DAMAGE)
 
 
 func show_heal_number(amount: int) -> void:
-	damage_label.text = "+%d" % amount
-	damage_label.add_theme_color_override("font_color", Color(0.3, 1.0, 0.3))
-	damage_label.visible = true
-	damage_label.modulate.a = 1.0
-	damage_label.position = Vector2(0, -20)
-
-	var tween := create_tween()
-	tween.set_parallel(true)
-	tween.tween_property(
-		damage_label, "position:y",
-		damage_label.position.y - 20.0, 0.5,
-	)
-	tween.tween_property(
-		damage_label, "modulate:a", 0.0, 0.5,
-	).set_delay(0.3)
-	await tween.finished
-	damage_label.visible = false
+	var popup := DamagePopup.new()
+	add_child(popup)
+	popup.setup(amount, DamagePopup.PopupType.HEAL)
 
 
 func _setup_bars() -> void:
