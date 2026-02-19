@@ -205,8 +205,8 @@ Task(subagent_type="pr-code-reviewer", prompt="Review PR for task T-XXXX: <task 
 
 #### 11. Merge
 Follow the standard git workflow:
-1. Stage changed files and commit
-2. Push to the current branch
+1. **Delete the plan file** — `rm agents/plans/T-XXXX-plan.md` (it served its purpose and must not be included in the PR)
+2. Stage changed files and commit
 3. Create PR via `gh pr create`
 4. Merge via `gh pr merge --merge`
 5. `git pull` to sync
