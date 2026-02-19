@@ -107,3 +107,4 @@ These 26 fixes were completed before the ticket system was established:
 - [2026-02-19] T-0124: BUG fix — XP never applied to party members after battle victory. Extracted static apply_xp_rewards(), calls LevelManager.add_xp() per CharacterData, logs level-ups in battle log, 9 new tests (796 total) (claude)
 - [2026-02-19] T-0072: Create scene_paths.gd — centralized ScenePaths class (5 constants), refactored 8 consumer files (3 scenes, 3 UI, 1 autoload), 7 new tests (803 total) (claude)
 - [2026-02-19] T-0115: BUG fix — Pause menu showed max HP/EE instead of current. Extracted static compute_member_stats() reading PartyManager runtime state, 7 new tests (810 total) (claude)
+- [2026-02-19] T-0117: Implement BGM stack — push_bgm()/pop_bgm()/has_stacked_bgm() in AudioManager, BattleManager push/pop wiring, _crossfade_bgm_at() for position-aware restore, 8 new tests (818 total) (claude)

@@ -367,6 +367,13 @@ Started: 2026-02-18
 - Completed: 2026-02-19
 - Notes: Scene-owned BGM via SCENE_BGM_PATH constants and _start_scene_music() in _ready(). BattleManager plays battle/boss BGM with boss detection via EnemyData.AiType.BOSS. Victory fanfare. AudioManager.get_current_bgm_path() accessor. Null-safe OGG loading. 8 new tests (787 total).
 
+### T-0117
+- Title: Implement BGM stack in AudioManager for battle music restore
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: push_bgm()/pop_bgm()/has_stacked_bgm() in AudioManager. BattleManager pushes before battle, pops after. _crossfade_bgm_at() for position-aware restore. 8 new tests (818 total).
+
 ### T-0115
 - Title: BUG — Pause menu party panel shows max HP/EE instead of current HP/EE
 - Status: done
