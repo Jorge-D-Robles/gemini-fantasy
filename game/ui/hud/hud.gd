@@ -1,7 +1,16 @@
 extends CanvasLayer
 
 ## Overworld HUD showing location, gold, party status, interaction prompts,
-## and active quest objective tracker.
+## active quest objective tracker, and area name popup on zone transitions.
+
+const SP = preload("res://systems/scene_paths.gd")
+const UITheme = preload("res://ui/ui_theme.gd")
+
+const AREA_NAMES: Dictionary = {
+	SP.ROOTHOLLOW: "Roothollow",
+	SP.VERDANT_FOREST: "Verdant Forest",
+	SP.OVERGROWN_RUINS: "Overgrown Ruins",
+}
 
 @export var location_name: String = "" :
 	set(value):
@@ -10,6 +19,8 @@ extends CanvasLayer
 			_location_label.text = value
 
 var _gold: int = 0
+var _area_name_popup: Label = null
+var _area_popup_tween: Tween = null
 
 @onready var _location_label: Label = %LocationLabel
 @onready var _gold_label: Label = %GoldLabel
@@ -27,6 +38,7 @@ func _ready() -> void:
 	_location_label.text = location_name
 	_update_gold_display()
 	update_party_display()
+	_setup_area_name_popup()
 
 	PartyManager.party_changed.connect(_on_party_changed)
 	PartyManager.party_state_changed.connect(_on_party_state_changed)
@@ -102,6 +114,12 @@ static func compute_tracker_state(qm: Node) -> Dictionary:
 			objective = "- %s" % quest.objectives[i]
 			break
 	return {"visible": true, "title": title, "objective": objective}
+
+
+## Maps a scene path to its human-readable area display name.
+## Returns "" for non-overworld scenes (title, battle, unknown).
+static func compute_area_display_name(scene_path: String) -> String:
+	return AREA_NAMES.get(scene_path, "")
 
 
 func _update_gold_display() -> void:
@@ -180,6 +198,9 @@ func _on_scene_changed(scene_path: String) -> void:
 		visible = false
 	else:
 		visible = true
+		var area := compute_area_display_name(scene_path)
+		if not area.is_empty():
+			_show_area_name(area)
 
 
 func _on_game_state_changed(
@@ -193,3 +214,40 @@ func _on_game_state_changed(
 			visible = false
 		_:
 			pass
+
+
+func _setup_area_name_popup() -> void:
+	_area_name_popup = Label.new()
+	_area_name_popup.name = "AreaNamePopup"
+	_area_name_popup.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_area_name_popup.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_area_name_popup.anchors_preset = Control.PRESET_CENTER_TOP
+	_area_name_popup.position = Vector2(-150, 40)
+	_area_name_popup.custom_minimum_size = Vector2(300, 40)
+	_area_name_popup.add_theme_font_size_override("font_size", 20)
+	_area_name_popup.add_theme_color_override(
+		"font_color", UITheme.TEXT_PRIMARY,
+	)
+	_area_name_popup.add_theme_color_override(
+		"font_shadow_color", Color(0, 0, 0, 0.8),
+	)
+	_area_name_popup.add_theme_constant_override("shadow_offset_x", 1)
+	_area_name_popup.add_theme_constant_override("shadow_offset_y", 1)
+	_area_name_popup.modulate.a = 0.0
+	add_child(_area_name_popup)
+
+
+func _show_area_name(area_name: String) -> void:
+	if not _area_name_popup:
+		return
+	_area_name_popup.text = area_name
+	if _area_popup_tween and _area_popup_tween.is_valid():
+		_area_popup_tween.kill()
+	_area_popup_tween = create_tween()
+	_area_popup_tween.tween_property(
+		_area_name_popup, "modulate:a", 1.0, 0.3,
+	)
+	_area_popup_tween.tween_interval(2.0)
+	_area_popup_tween.tween_property(
+		_area_name_popup, "modulate:a", 0.0, 0.5,
+	)

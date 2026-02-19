@@ -918,6 +918,26 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 - Refs: game/autoloads/save_manager.gd, game/ui/title_screen/title_screen.gd
 - Notes: Save slots show no playtime. SaveManager serializes a timestamp field. Compute elapsed hours:minutes and display in each slot label. Acceptance: each save slot shows "XX:XX" playtime alongside location name. 4+ tests.
 
+### T-0129
+- Title: Add player-driven victory screen dismissal (confirm input replaces 2.0s timer)
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M0
+- Depends: none
+- Refs: game/systems/battle/states/victory_state.gd, game/ui/battle_ui/battle_ui.gd
+- Notes: victory_state.gd uses await create_timer(2.0) — players cannot re-read rewards. Add "Press [confirm]" label, emit victory_dismissed signal, await interact input with 0.5s grace delay. 4+ tests.
+
+### T-0130
+- Title: Add live playtime accumulation to GameManager for save slot display
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Milestone: M0
+- Depends: none
+- Refs: game/autoloads/game_manager.gd, game/autoloads/save_manager.gd
+- Notes: SaveManager accepts playtime param but nothing accumulates it. Add playtime_seconds to GameManager, increment in _process during OVERWORLD/MENU. Wire into save calls. Prerequisite for T-0127. 4+ tests.
+
 ### T-0128
 - Title: BUG — AudioManager.play_bgm() resets volume_db to 0.0, ignoring user volume setting
 - Status: todo

@@ -100,10 +100,11 @@ Started: 2026-02-18
 
 ### T-0091
 - Title: Add area name display on zone transitions
-- Status: todo
-- Assigned: unassigned
+- Status: in-progress
+- Assigned: claude
 - Priority: medium
 - Depends: none
+- Started: 2026-02-19
 
 ### T-0092
 - Title: Add tutorial hints for controls on first playthrough
