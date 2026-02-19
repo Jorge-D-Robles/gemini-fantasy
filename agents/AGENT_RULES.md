@@ -729,4 +729,22 @@ Design documents in `docs/` define all game mechanics, story, and content:
 | `docs/mechanics/character-abilities.md` | Skill trees, abilities per character |
 | `docs/IMPLEMENTATION_GUIDE.md` | Development roadmap, 6 phases, priorities |
 
+### Story Scripts (Implementation-Ready)
+
+The complete game script is in `docs/story/`. These are scene-by-scene scripts with dialogue, stage directions, gameplay notes, and choice points — ready for direct implementation.
+
+| Directory/File | Contains |
+|----------------|----------|
+| `docs/story/STYLE_GUIDE.md` | Writing bible: character voices, regional slang, anti-patterns, pacing |
+| `docs/story/CONSISTENCY_REPORT.md` | Cross-act consistency analysis and recommendations |
+| `docs/story/act1/01-10` | Act I: The Echo Thief (10 chapters, ~45K words) |
+| `docs/story/act2/11-20` | Act II: The Weight of Echoes (10 chapters, ~55K words) |
+| `docs/story/act3/21-28` | Act III: Convergence (8 chapters including 4 endings, ~60K words) |
+| `docs/story/character-quests/` | 8 personal quest scripts (one per party member) |
+| `docs/story/camp-scenes/bonding-conversations.md` | 20-30 camp bonding conversations between party members |
+| `docs/story/camp-scenes/party-banter.md` | 30-40 short overworld banter triggers |
+| `docs/story/camp-scenes/npc-dialogue.md` | NPC dialogue for all settlements (3 progression stages each) |
+
+**When implementing dialogue or cutscenes**, always reference the corresponding story script chapter.
+
 **ALWAYS** consult design docs before inventing mechanics or story content.

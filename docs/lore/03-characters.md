@@ -211,7 +211,7 @@ As a Resonance Anchor, they can interface with technology in unprecedented ways,
 
 ---
 
-### Lyra (Echo)
+### Lyra Reyes (Echo)
 **Age**: Was 36 during The Severance | **Pronouns**: She/Her | **Origin**: Pre-Severance Resonance Nexus
 
 **Appearance**:
@@ -295,7 +295,7 @@ Ash is developing their own language through Resonance—a purely emotional comm
 ### Prophet Null
 **Antagonist, Shepherds of Silence**
 
-**Appearance**: Hooded figure whose face is never seen clearly. Speaks with voice of crowds. Gender ambiguous.
+**Pronouns**: She/Her | **Appearance**: Hooded figure whose face is never seen clearly. Speaks with voice of crowds. Her identity was once ambiguous to the public, but she is a woman consumed by her mission.
 
 **Motivation**: Witnessed loved ones become Hollow from Resonance addiction. Believes all crystal technology is existential threat. Willing to commit genocide to "save" humanity's souls.
 
