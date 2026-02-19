@@ -92,3 +92,4 @@ These 26 fixes were completed before the ticket system was established:
 - [2026-02-19] T-0052: Color-code battle log messages — LogType enum + 7 LOG_* colors in ui_theme.gd, BBCode color wrapping in add_battle_log(), 25 call sites across 8 files, 16 tests (claude)
 - [2026-02-19] T-0053: Floating damage numbers — reusable DamagePopup component (DAMAGE/HEAL/CRITICAL types), replaced inline single-label in both battler scenes, added show_heal_number() to EnemyBattlerScene, 11 tests (claude)
 - [2026-02-19] T-0062: Boundary collision walls — MapBuilder.create_boundary_walls() static method, 4 invisible StaticBody2D walls per scene on collision layer 2, all 3 scenes wired, fixed CLAUDE.md map dimensions, 12 tests (claude)
+- [2026-02-19] T-0059: Roothollow AbovePlayer canopy overlay — CANOPY_LEGEND (3 FOREST_OBJECTS tiles: center, left-edge, right-edge) + CANOPY_MAP at inner border edges, build_layer wired in _setup_tilemap() (claude)

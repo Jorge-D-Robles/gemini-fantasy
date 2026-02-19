@@ -13,13 +13,6 @@ Started: 2026-02-18
 
 ## Queue
 
-### T-0059
-- Title: Roothollow — add AbovePlayer tilemap layer and consolidate tree sprites
-- Status: todo
-- Assigned: unassigned
-- Priority: high
-- Depends: none
-
 ### T-0087
 - Title: Add on-screen objective tracker UI
 - Status: todo
@@ -331,6 +324,13 @@ Started: 2026-02-18
 ---
 
 ## Done This Sprint
+
+### T-0059
+- Title: Roothollow — add AbovePlayer tilemap layer and consolidate tree sprites
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: CANOPY_LEGEND (3 tiles from FOREST_OBJECTS) and CANOPY_MAP (40x28, canopy at inner border edges). build_layer call added to _setup_tilemap(). No overlap with ROOF_MAP.
 
 ### T-0062
 - Title: Add boundary collision walls to all map edges
