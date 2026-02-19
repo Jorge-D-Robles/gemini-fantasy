@@ -252,6 +252,23 @@ func get_active_effect_count() -> int:
 	return _active_effects.size()
 
 
+## Returns the StatusEffectData for a given effect id, or null if not found.
+func get_effect_data(effect_id: StringName) -> StatusEffectData:
+	for entry: Dictionary in _active_effects:
+		var eff: StatusEffectData = entry["data"]
+		if eff.id == effect_id:
+			return eff
+	return null
+
+
+## Returns a list of all active StatusEffectData objects (safe copy).
+func get_status_effect_list() -> Array[StatusEffectData]:
+	var result: Array[StatusEffectData] = []
+	for entry: Dictionary in _active_effects:
+		result.append(entry["data"])
+	return result
+
+
 ## Returns true if any active effect prevents acting.
 func is_action_prevented() -> bool:
 	return BattlerStatus.is_action_prevented(_active_effects)
