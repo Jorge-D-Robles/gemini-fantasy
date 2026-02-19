@@ -29,6 +29,9 @@ var _target_list: Array[Battler] = []
 var _target_index: int = 0
 var _party_cache: Array[Battler] = []
 var _resonance_tween: Tween = null
+var _highlighted_target: Node = null
+var _original_modulate: Color = Color.WHITE
+var _name_label: Label = null
 
 @onready var _turn_order_container: HBoxContainer = %TurnOrderContainer
 @onready var _command_menu: PanelContainer = %CommandMenu
@@ -67,6 +70,7 @@ func _ready() -> void:
 	_defeat_screen.visible = false
 	_resonance_bar.max_value = GameBalance.RESONANCE_MAX
 
+	_setup_target_name_label()
 	_apply_panel_styles()
 	_connect_command_buttons()
 	_connect_defeat_buttons()
@@ -255,6 +259,7 @@ func add_battle_log(
 
 func show_victory(exp: int, gold: int, items: Array[String]) -> void:
 	hide_command_menu()
+	_clear_highlight()
 	_target_selector.visible = false
 	_victory_exp_label.text = "EXP: +%d" % exp
 	_victory_gold_label.text = "Gold: +%d" % gold
@@ -269,6 +274,7 @@ func show_victory(exp: int, gold: int, items: Array[String]) -> void:
 
 func show_defeat() -> void:
 	hide_command_menu()
+	_clear_highlight()
 	_target_selector.visible = false
 	_defeat_screen.visible = true
 	_retry_button.grab_focus()
@@ -478,6 +484,17 @@ func _create_party_row(battler: Battler) -> HBoxContainer:
 	return row
 
 
+func _setup_target_name_label() -> void:
+	_name_label = Label.new()
+	_name_label.name = "TargetName"
+	_name_label.add_theme_font_size_override("font_size", 8)
+	_name_label.add_theme_color_override("font_color", UITheme.TEXT_PRIMARY)
+	_name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_name_label.position = Vector2(-30, 10)
+	_name_label.custom_minimum_size.x = 60
+	_target_selector.add_child(_name_label)
+
+
 func _change_target(direction: int) -> void:
 	if _target_list.is_empty():
 		return
@@ -493,16 +510,49 @@ func _update_target_cursor() -> void:
 	var target := _target_list[_target_index]
 	_target_selector.global_position = target.global_position + Vector2(0, -20)
 
+	# Update name label
+	var info := compute_target_info(target)
+	if _name_label:
+		_name_label.text = info["name"]
+
+	# Apply highlight to visual scene
+	_apply_highlight(target, info["color"])
+
+
+func _apply_highlight(battler: Battler, color: Color) -> void:
+	_clear_highlight()
+	var visual: Node2D = _find_visual_scene(battler)
+	if visual:
+		_highlighted_target = visual
+		_original_modulate = visual.modulate
+		visual.modulate = color
+
+
+func _clear_highlight() -> void:
+	if is_instance_valid(_highlighted_target) and _highlighted_target is CanvasItem:
+		_highlighted_target.modulate = _original_modulate
+	_highlighted_target = null
+	_original_modulate = Color.WHITE
+
+
+func _find_visual_scene(battler: Battler) -> Node2D:
+	for child in battler.get_children():
+		if child is PartyBattlerScene or child is EnemyBattlerScene:
+			return child
+	return null
+
 
 func _confirm_target() -> void:
 	if _target_list.is_empty():
 		return
 	var target := _target_list[_target_index]
+	_clear_highlight()
 	_target_selector.visible = false
 	target_selected.emit(target)
 
 
 func _cancel_target_selection() -> void:
+	_clear_highlight()
 	_target_selector.visible = false
 	target_cancelled.emit()
 
@@ -558,6 +608,24 @@ static func compute_status_badges(
 			"color": UITheme.get_status_color(eff.effect_type),
 		})
 	return badges
+
+
+## Returns {name: String, color: Color, is_enemy: bool} for a target.
+static func compute_target_info(battler: Node) -> Dictionary:
+	if not is_instance_valid(battler):
+		return {"name": "???", "color": Color.WHITE, "is_enemy": true}
+	var display_name := "???"
+	if battler.has_method("get_display_name"):
+		display_name = battler.get_display_name()
+	var is_enemy: bool = not (battler is PartyBattler)
+	var highlight := UITheme.TARGET_HIGHLIGHT_ENEMY
+	if not is_enemy:
+		highlight = UITheme.TARGET_HIGHLIGHT_PARTY
+	return {
+		"name": display_name,
+		"color": highlight,
+		"is_enemy": is_enemy,
+	}
 
 
 func _create_color_stylebox(color: Color) -> StyleBoxFlat:

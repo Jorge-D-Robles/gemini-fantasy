@@ -20,13 +20,6 @@ Started: 2026-02-18
 - Priority: medium
 - Depends: none
 
-### T-0055
-- Title: Improve battle target selector with name label and highlight
-- Status: todo
-- Assigned: unassigned
-- Priority: medium
-- Depends: none
-
 ### T-0056
 - Title: Enhance victory screen with portraits and level-up display
 - Status: todo
@@ -233,6 +226,13 @@ Started: 2026-02-18
 ---
 
 ## Done This Sprint
+
+### T-0055
+- Title: Improve battle target selector with name label and highlight
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: Name label on TargetSelector showing target display name, visual highlight tint (modulate) on selected battler with cache/restore, compute_target_info() static method, TARGET_HIGHLIGHT_ENEMY/PARTY in UITheme. 5 tests.
 
 ### T-0050
 - Title: BUG — Overgrown Ruins spawn position check uses Vector2.ZERO comparison
