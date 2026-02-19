@@ -5,6 +5,7 @@ extends CanvasLayer
 
 const SP = preload("res://systems/scene_paths.gd")
 const UITheme = preload("res://ui/ui_theme.gd")
+const TH = preload("res://ui/hud/tutorial_hints.gd")
 
 const AREA_NAMES: Dictionary = {
 	SP.ROOTHOLLOW: "Roothollow",
@@ -21,6 +22,9 @@ const AREA_NAMES: Dictionary = {
 var _gold: int = 0
 var _area_name_popup: Label = null
 var _area_popup_tween: Tween = null
+var _tutorial_popup: Label = null
+var _tutorial_tween: Tween = null
+var _tutorial_visible: bool = false
 
 @onready var _location_label: Label = %LocationLabel
 @onready var _gold_label: Label = %GoldLabel
@@ -39,6 +43,7 @@ func _ready() -> void:
 	_update_gold_display()
 	update_party_display()
 	_setup_area_name_popup()
+	_setup_tutorial_popup()
 
 	PartyManager.party_changed.connect(_on_party_changed)
 	PartyManager.party_state_changed.connect(_on_party_state_changed)
@@ -58,6 +63,34 @@ func _ready() -> void:
 		qm.quest_completed.connect(_on_quest_changed)
 		qm.quest_failed.connect(_on_quest_changed)
 		update_objective_tracker()
+
+
+func _exit_tree() -> void:
+	if _area_popup_tween and _area_popup_tween.is_valid():
+		_area_popup_tween.kill()
+	if _tutorial_tween and _tutorial_tween.is_valid():
+		_tutorial_tween.kill()
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if not _tutorial_visible:
+		return
+	if event.is_action_pressed("interact"):
+		_dismiss_tutorial_hint()
+		get_viewport().set_input_as_handled()
+
+
+func show_tutorial_hint(hint_id: String) -> void:
+	if GameManager.current_state != GameManager.GameState.OVERWORLD:
+		return
+	var flags := EventFlags.get_all_flags()
+	if not TH.should_show(hint_id, flags):
+		return
+	EventFlags.set_flag(TH.get_flag_name(hint_id))
+	var text := TH.get_hint_text(hint_id)
+	if text.is_empty():
+		return
+	_show_tutorial_popup(text)
 
 
 func show_interaction_prompt(text: String) -> void:
@@ -211,6 +244,7 @@ func _on_game_state_changed(
 		GameManager.GameState.OVERWORLD:
 			visible = true
 		GameManager.GameState.BATTLE, GameManager.GameState.CUTSCENE:
+			_dismiss_tutorial_hint()
 			visible = false
 		_:
 			pass
@@ -251,3 +285,56 @@ func _show_area_name(area_name: String) -> void:
 	_area_popup_tween.tween_property(
 		_area_name_popup, "modulate:a", 0.0, 0.5,
 	)
+
+
+func _setup_tutorial_popup() -> void:
+	_tutorial_popup = Label.new()
+	_tutorial_popup.name = "TutorialPopup"
+	_tutorial_popup.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_tutorial_popup.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_tutorial_popup.anchors_preset = Control.PRESET_CENTER_BOTTOM
+	_tutorial_popup.position = Vector2(-150, -60)
+	_tutorial_popup.custom_minimum_size = Vector2(300, 24)
+	_tutorial_popup.add_theme_font_size_override("font_size", 10)
+	_tutorial_popup.add_theme_color_override(
+		"font_color", UITheme.TEXT_PRIMARY,
+	)
+	_tutorial_popup.add_theme_color_override(
+		"font_shadow_color", Color(0, 0, 0, 0.9),
+	)
+	_tutorial_popup.add_theme_constant_override("shadow_offset_x", 1)
+	_tutorial_popup.add_theme_constant_override("shadow_offset_y", 1)
+	_tutorial_popup.modulate.a = 0.0
+	add_child(_tutorial_popup)
+
+
+func _show_tutorial_popup(text: String) -> void:
+	if not _tutorial_popup:
+		return
+	_tutorial_popup.text = text
+	if _tutorial_tween and _tutorial_tween.is_valid():
+		_tutorial_tween.kill()
+	_tutorial_visible = true
+	_tutorial_tween = create_tween()
+	_tutorial_tween.tween_property(
+		_tutorial_popup, "modulate:a", 1.0, 0.3,
+	)
+	_tutorial_tween.tween_interval(4.2)
+	_tutorial_tween.tween_property(
+		_tutorial_popup, "modulate:a", 0.0, 0.5,
+	)
+	_tutorial_tween.tween_callback(_on_tutorial_dismissed)
+
+
+func _dismiss_tutorial_hint() -> void:
+	if not _tutorial_visible:
+		return
+	_tutorial_visible = false
+	if _tutorial_tween and _tutorial_tween.is_valid():
+		_tutorial_tween.kill()
+	if _tutorial_popup:
+		_tutorial_popup.modulate.a = 0.0
+
+
+func _on_tutorial_dismissed() -> void:
+	_tutorial_visible = false
