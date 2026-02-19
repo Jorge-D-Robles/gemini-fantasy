@@ -62,14 +62,22 @@ When in doubt, **visually inspect** the PNG using the Read tool — it displays 
 
 **CRITICAL**: Assets must exist in the main repo (where Godot runs) AND the current worktree (if using one).
 
+**FOR TILESETS: Import the ENTIRE pack, not just one file.** Each Time Fantasy pack contains A5 terrain sheets and B object sheets designed to work together. Always copy all tile sheets from the pack so the full palette is available:
+
 ```bash
-# Main repo (ALWAYS do this)
+# Tilesets — copy ALL tile sheets from the pack
 MAIN_REPO="/Users/robles/repos/games/gemini-fantasy/game/assets"
+WORKTREE="/Users/robles/repos/games/gemini-fantasy/.worktrees/<branch>/game/assets"
+cp /Users/robles/repos/games/assets/<pack>/tile*.png "$MAIN_REPO/tilesets/"
+cp /Users/robles/repos/games/assets/<pack>/tile*.png "$WORKTREE/tilesets/"
+```
+
+For other asset types (sprites, portraits, etc.), copy individual files:
+
+```bash
+# Individual assets
 mkdir -p "$MAIN_REPO/<subdir>"
 cp "<source_path>" "$MAIN_REPO/<subdir>/<filename>"
-
-# Worktree (do this if working in a worktree)
-WORKTREE="/Users/robles/repos/games/gemini-fantasy/.worktrees/<branch>/game/assets"
 mkdir -p "$WORKTREE/<subdir>"
 cp "<source_path>" "$WORKTREE/<subdir>/<filename>"
 ```

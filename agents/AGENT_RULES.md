@@ -217,8 +217,10 @@ agents/            # Project management (milestones, backlog, sprint, completed 
 - Full asset index with detailed descriptions: `/Users/robles/repos/games/assets/CLAUDE.md`
 ### Tile Usage Rules
 
+- **Design a believable place, not a tile grid.** Before placing any tiles, imagine the location as a real place — what would a cozy mushroom village actually look like? Where would the paths wind? Where would trees grow naturally? A town has a main road with buildings along it, a central gathering area, side alleys, gardens. A forest has clusters of trees with natural clearings, fallen logs, rocky outcrops. Design the place first, then express it in tiles. Never start by filling a grid with repeated characters.
+- **Search for JRPG reference images before designing.** Use WebSearch to find screenshots of towns, forests, or dungeons from classic JRPGs (Final Fantasy, Chrono Trigger, Secret of Mana, Octopath Traveler, RPG Maker showcase maps). Study how professional level designers place buildings, trees, paths, and decorations to create organic, lived-in environments. Use these references to guide your layout.
 - **Only use A5 and B tile sheets.** A5 sheets (128x256) contain flat 16x16 terrain grids. B sheets (256x256) contain 16x16 object tiles. These are the only tile formats available in the project.
-- **Use single-tile fills for ground layers.** Each column in an A5 tile sheet is a DIFFERENT tile variant — columns 0 and 1 are NOT left/right halves of a pair. Alternating columns creates visible checkerboard/stripe artifacts. Use ONE consistent tile (same `Vector2i(col, row)`) for the entire ground fill.
+- **Build organic ground, not uniform fills.** Do NOT fill the entire ground with a single repeated tile — that looks flat and artificial. Instead, use large natural patches of different terrain types (grass from row 8, dirt from row 2, stone from row 10) blended together in irregular shapes. Add B-sheet ground objects (pebbles, grass tufts, fallen leaves, moss patches) at 15-30% coverage to break up any repetition. The ground should look like a real landscape with terrain variation, not a solid-colored rectangle. **One technical constraint:** within each terrain patch, use ONE column consistently (e.g., all `(0, 8)` for a grass area). Different A5 columns of the same row have mismatched edge patterns that create visible seams when placed adjacent to each other.
 - **Use B-sheet objects for visual variety.** Trees, rocks, buildings, and decorative objects from B-format sheets provide all the visual interest. Do not try to create variety by mixing A5 columns.
 - **Use large patches for terrain changes.** If you need different terrain types (grass + dirt), use tiles from different A5 ROWS in 8x8+ contiguous patches, never from different columns of the same row.
 - **Pass `source_id` for B-sheet layers.** When calling `MapBuilder.build_layer()` for layers using B-sheet tiles, pass the correct source_id parameter (e.g., `1` if the B sheet is the second atlas path).
@@ -229,6 +231,7 @@ agents/            # Project management (milestones, backlog, sprint, completed 
 - **Never repeat the same decorative object in a grid pattern.** Trees, rocks, flowers, and other decorative objects must be placed organically — vary spacing, mix different object types, leave irregular gaps. A row of identical trees evenly spaced looks artificial. Cluster 2-3 trees, leave a gap, place a rock, then another tree group.
 - **Mix object variants.** If the B-sheet has multiple tree types (e.g., different canopy shapes, sizes), use several variants in the same area. Same for rocks, bushes, flowers. Repetition of a single asset is the biggest visual quality killer.
 - **Create depth with layering.** Use the AbovePlayer layer for tree canopies, rooftop overhangs, and archways that the player walks behind. Use GroundDetail for small ground accents (pebbles, grass tufts, fallen leaves). Every scene should have at least 4 layers: Ground, Objects, AbovePlayer, and one detail layer.
+- **Think like a JRPG level designer.** Every scene should have: (1) a clear navigation flow — the player knows where to go, (2) visual landmarks that make the area memorable, (3) spaces that feel intentional — a bench by a path, a garden behind a house, a pile of crates near a shop, (4) environmental storytelling — the world looks lived-in, not procedurally generated.
 
 ## Asset Workflow
 
@@ -270,6 +273,18 @@ When you need an asset:
 4. **Verify Godot can load it** — the user must reopen the Godot editor to trigger import
 
 Or use the `/copy-assets` skill which automates steps 2-3.
+
+### MANDATORY: Import Entire Tile Packs
+
+**When importing tilesets from an asset pack, copy ALL tile sheets from that pack — not just the one you need right now.** Each Time Fantasy pack contains A5 terrain sheets and B object sheets that are designed to work together. Importing only one file means future work on that scene will be missing tiles that should be available.
+
+Example: If you need `tf_ff_tileB_forest.png` from the fairy forest pack, copy ALL `tile*.png` files from `tf_fairyforest_12.28.20/1x/`:
+```bash
+cp /Users/robles/repos/games/assets/tf_fairyforest_12.28.20/1x/tile*.png \
+   /Users/robles/repos/games/gemini-fantasy/game/assets/tilesets/
+```
+
+This ensures every tile in the pack is available for building richer, more varied scenes. You may not need every sheet today, but having the full palette prevents you from being limited to a subset of tiles when designing.
 
 ### Common Pitfall: `load()` Returns Null
 
