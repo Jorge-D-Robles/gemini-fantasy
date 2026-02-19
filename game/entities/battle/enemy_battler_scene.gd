@@ -4,9 +4,12 @@ extends Node2D
 ## Visual representation of an enemy in battle.
 ## Connects to an EnemyBattler logic node for stat/signal data.
 
+const UITheme = preload("res://ui/ui_theme.gd")
+
 @export var enemy_data: EnemyData
 
 var battler: EnemyBattler = null
+var status_icons: HBoxContainer = null
 
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var anim_player: AnimationPlayer = $AnimationPlayer
@@ -15,6 +18,11 @@ var battler: EnemyBattler = null
 
 func _ready() -> void:
 	hp_bar.visible = false
+	status_icons = HBoxContainer.new()
+	status_icons.name = "StatusIcons"
+	status_icons.position = Vector2(-20, -30)
+	status_icons.size = Vector2(40, 8)
+	add_child(status_icons)
 	if enemy_data and not enemy_data.sprite_path.is_empty():
 		var tex := load(enemy_data.sprite_path) as Texture2D
 		if tex == null:
@@ -47,6 +55,8 @@ func bind_battler(target: EnemyBattler) -> void:
 	battler.hp_changed.connect(_on_hp_changed)
 	battler.damage_taken.connect(_on_damage_taken)
 	battler.defeated.connect(_on_defeated)
+	battler.status_effect_applied.connect(_on_status_applied)
+	battler.status_effect_removed.connect(_on_status_removed)
 
 	hp_bar.max_value = battler.max_hp
 	hp_bar.value = battler.current_hp
@@ -126,6 +136,30 @@ func _on_hp_changed(new_hp: int, max_hp_val: int) -> void:
 func _on_damage_taken(amount: int) -> void:
 	show_damage_number(amount)
 	play_damage_anim()
+
+
+func _on_status_applied(effect: StringName) -> void:
+	if not status_icons:
+		return
+	var icon := Label.new()
+	icon.name = String(effect)
+	icon.text = String(effect).left(2).to_upper()
+	icon.add_theme_font_size_override("font_size", 8)
+	var color := UITheme.LOG_STATUS
+	if battler:
+		var eff_data: StatusEffectData = battler.get_effect_data(effect)
+		if eff_data:
+			color = UITheme.get_status_color(eff_data.effect_type)
+	icon.add_theme_color_override("font_color", color)
+	status_icons.add_child(icon)
+
+
+func _on_status_removed(effect: StringName) -> void:
+	if not status_icons:
+		return
+	var icon: Node = status_icons.get_node_or_null(String(effect))
+	if icon:
+		icon.queue_free()
 
 
 func _on_defeated() -> void:

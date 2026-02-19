@@ -59,6 +59,13 @@ const LOG_DEFEAT := Color(0.85, 0.15, 0.15)
 # ---- Damage popup colors ----
 const POPUP_CRITICAL := Color(1.0, 0.85, 0.2)
 
+# ---- Status effect colors ----
+const STATUS_BUFF := Color(0.4, 0.85, 0.4)
+const STATUS_DEBUFF := Color(0.85, 0.4, 0.4)
+const STATUS_DOT := Color(0.95, 0.6, 0.2)
+const STATUS_HOT := Color(0.3, 0.9, 0.8)
+const STATUS_STUN := Color(0.95, 0.75, 0.3)
+
 const LOG_COLORS: Dictionary = {
 	LogType.INFO: LOG_INFO,
 	LogType.DAMAGE: LOG_DAMAGE,
@@ -69,6 +76,19 @@ const LOG_COLORS: Dictionary = {
 	LogType.DEFEAT: LOG_DEFEAT,
 }
 
+const STATUS_COLORS: Dictionary = {
+	0: STATUS_BUFF,   # StatusEffectData.EffectType.BUFF
+	1: STATUS_DEBUFF, # StatusEffectData.EffectType.DEBUFF
+	2: STATUS_DOT,    # StatusEffectData.EffectType.DAMAGE_OVER_TIME
+	3: STATUS_HOT,    # StatusEffectData.EffectType.HEAL_OVER_TIME
+	4: STATUS_STUN,   # StatusEffectData.EffectType.STUN
+}
+
 
 static func get_log_color(log_type: int) -> Color:
 	return LOG_COLORS.get(log_type, Color(0.8, 0.75, 0.9))
+
+
+## Returns color for a StatusEffectData.EffectType int value.
+static func get_status_color(effect_type: int) -> Color:
+	return STATUS_COLORS.get(effect_type, LOG_STATUS)

@@ -20,13 +20,6 @@ Started: 2026-02-18
 - Priority: medium
 - Depends: none
 
-### T-0054
-- Title: Add status effect icons/badges on battler panels
-- Status: todo
-- Assigned: unassigned
-- Priority: medium
-- Depends: none
-
 ### T-0055
 - Title: Improve battle target selector with name label and highlight
 - Status: todo
@@ -394,6 +387,13 @@ Started: 2026-02-18
 - Assigned: claude
 - Completed: 2026-02-19
 - Notes: Extracted static apply_xp_rewards() in victory_state.gd. Calls LevelManager.add_xp() for each CharacterData in party, logs level-ups in battle log. Added make_character_data() to test_helpers.gd. 9 new tests (796 total).
+
+### T-0054
+- Title: Add status effect icons/badges on battler panels
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: Color-coded 2-char badges by EffectType (BUFF/DEBUFF/DOT/HOT/STUN). Battler.get_effect_data() + get_status_effect_list() accessors, UITheme.get_status_color(), BattleUI.compute_status_badges(). Enemy battler sprites now show status icons. 14 new tests (832 total).
 
 ### T-0088
 - Title: Add visual markers for zone transitions (sparkle/arrow effects)

@@ -466,6 +466,15 @@ func _create_party_row(battler: Battler) -> HBoxContainer:
 			)
 	row.add_child(res_lbl)
 
+	# Status effect badges
+	var badges := compute_status_badges(battler.get_status_effect_list())
+	for badge: Dictionary in badges:
+		var badge_lbl := Label.new()
+		badge_lbl.text = badge["text"]
+		badge_lbl.add_theme_font_size_override("font_size", 6)
+		badge_lbl.add_theme_color_override("font_color", badge["color"])
+		row.add_child(badge_lbl)
+
 	return row
 
 
@@ -536,6 +545,19 @@ func _setup_button_focus_wrap(container: Container) -> void:
 		if child is Button:
 			buttons.append(child)
 	UIHelpers.setup_focus_wrap(buttons)
+
+
+## Returns [{text: String, color: Color}, ...] for each active status effect.
+static func compute_status_badges(
+	effects: Array[StatusEffectData],
+) -> Array[Dictionary]:
+	var badges: Array[Dictionary] = []
+	for eff: StatusEffectData in effects:
+		badges.append({
+			"text": String(eff.id).left(2).to_upper(),
+			"color": UITheme.get_status_color(eff.effect_type),
+		})
+	return badges
 
 
 func _create_color_stylebox(color: Color) -> StyleBoxFlat:

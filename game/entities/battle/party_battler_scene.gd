@@ -4,6 +4,7 @@ extends Node2D
 ## Visual representation of a party member in battle.
 ## Connects to a PartyBattler logic node for stat/signal data.
 
+const UITheme = preload("res://ui/ui_theme.gd")
 const BATTLE_SPRITE_SCALE: float = 2.0
 
 @export var character_data: CharacterData
@@ -144,6 +145,12 @@ func _on_status_applied(effect: StringName) -> void:
 	icon.name = String(effect)
 	icon.text = String(effect).left(2).to_upper()
 	icon.add_theme_font_size_override("font_size", 8)
+	var color := UITheme.LOG_STATUS
+	if battler:
+		var eff_data: StatusEffectData = battler.get_effect_data(effect)
+		if eff_data:
+			color = UITheme.get_status_color(eff_data.effect_type)
+	icon.add_theme_color_override("font_color", color)
 	status_icons.add_child(icon)
 
 
