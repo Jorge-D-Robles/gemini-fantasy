@@ -23,10 +23,11 @@ Started: 2026-02-18
 
 ### T-0073
 - Title: Split roothollow.gd into tilemap, dialogue, and quest handler modules
-- Status: todo
-- Assigned: unassigned
+- Status: in-progress
+- Assigned: claude
 - Priority: medium
 - Depends: none
+- Started: 2026-02-19
 
 ### T-0074
 - Title: Split battle_ui.gd into composable panel components
@@ -97,14 +98,6 @@ Started: 2026-02-18
 - Assigned: unassigned
 - Priority: medium
 - Depends: T-0085
-
-### T-0091
-- Title: Add area name display on zone transitions
-- Status: in-progress
-- Assigned: claude
-- Priority: medium
-- Depends: none
-- Started: 2026-02-19
 
 ### T-0092
 - Title: Add tutorial hints for controls on first playthrough
@@ -221,6 +214,13 @@ Started: 2026-02-18
 ---
 
 ## Done This Sprint
+
+### T-0091
+- Title: Add area name display on zone transitions
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: Centered popup Label with fade-in/hold/fade-out tween (0.3s/2.0s/0.5s). Static compute_area_display_name() maps scene paths to display names. AREA_NAMES dict for 3 zones. 5 tests (849 total).
 
 ### T-0056
 - Title: Enhance victory screen with portraits and level-up display
