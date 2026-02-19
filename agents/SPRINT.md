@@ -13,13 +13,6 @@ Started: 2026-02-18
 
 ## Queue
 
-### T-0070
-- Title: Split battler.gd into damage calculator, resonance controller, and status manager
-- Status: todo
-- Assigned: unassigned
-- Priority: high
-- Depends: none
-
 ### T-0064
 - Title: Integrate BGM playback into all scenes and battle system
 - Status: todo
@@ -268,6 +261,13 @@ Started: 2026-02-18
 ---
 
 ## Done This Sprint
+
+### T-0070
+- Title: Split battler.gd into damage calculator, resonance controller, and status manager
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: 3 static utility classes (BattlerDamage, BattlerResonance, BattlerStatus) with delegation from battler.gd. tick_effects() kept in Battler for HP state ownership. 28 new tests (779 total). Updated systems/CLAUDE.md.
 
 ### T-0080
 - Title: Expand Lyra discovery dialogue to match story script (~50 lines)
