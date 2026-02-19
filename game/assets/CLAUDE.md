@@ -17,6 +17,9 @@ assets/
   portraits/                   # Character face portraits for dialogue (16 files)
   icons/                       # Item/ability icon sheets — 24px, 32px, halloween (3 files)
   music/                       # Background music OGG tracks (12 files) — see music/CLAUDE.md
+  sfx/                         # Sound effects (10 files) — see sfx/CLAUDE.md
+    ui/                        # UI interaction SFX (confirm, cancel, menu, dialogue)
+    combat/                    # Combat feedback SFX (attack, magic, heal, death, crit, status)
 ```
 
 ## Source Assets
@@ -81,4 +84,5 @@ if tex == null:
 | Misc sprites | 34 |
 | Portraits | 16 |
 | Icons | 3 |
-| **Total** | **274** |
+| SFX | 10 |
+| **Total** | **284** |

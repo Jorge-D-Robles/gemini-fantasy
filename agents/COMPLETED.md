@@ -4,6 +4,7 @@ Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[
 
 ---
 
+- [2026-02-19] T-0139: Source SFX assets for UI and combat — 10 procedural placeholder OGGs, SfxLibrary constants class, sfx/CLAUDE.md, 7 tests (claude)
 - [2026-02-19] T-0084: Add companion follower sprites in overworld — CompanionController/CompanionFollower, Iris+Garrick sprites, position history buffer, 18 tests (claude)
 
 ## Pre-Tracker (2026-02-16 Audit)

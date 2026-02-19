@@ -13,6 +13,8 @@ Core game systems: state machine framework, battle logic, encounter management, 
 | `progression/` | XP and leveling calculation utilities |
 | `map_builder.gd` | Static utility for building TileMapLayers from Time Fantasy tiles |
 | `game_balance.gd` | Centralized game balance constants (resonance, damage, XP, AI, party limits) |
+| `scene_paths.gd` | Centralized scene path constants (ScenePaths class) |
+| `sfx_library.gd` | Centralized SFX asset path constants (SfxLibrary class) |
 
 ---
 
