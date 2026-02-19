@@ -13,14 +13,6 @@ Started: 2026-02-18
 
 ## Queue
 
-### T-0067
-- Title: Add combat sound effects (attack, magic, heal, death)
-- Status: todo
-- Assigned: unassigned
-- Priority: medium
-- Depends: none
-
-
 ### T-0083
 - Title: Update Roothollow NPC dialogue to match story scripts and style guide
 - Status: todo
@@ -143,6 +135,13 @@ Started: 2026-02-18
 ---
 
 ## Done This Sprint
+
+### T-0067
+- Title: Add combat sound effects (attack, magic, heal, death)
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: Wired AudioManager.play_sfx(load(SfxLibrary.COMBAT_*)) into 2 battle state scripts. 5 SFX types: ATTACK_HIT (melee), MAGIC_CAST (abilities), HEAL_CHIME (items), DEATH (kill), STATUS_APPLY (effects). Covers both player and enemy actions. CRITICAL_HIT deferred (no crit detection exists). All 964 tests pass.
 
 ### T-0066
 - Title: Add UI sound effects (menu, dialogue, buttons)
