@@ -20,13 +20,6 @@ Started: 2026-02-18
 - Priority: high
 - Depends: T-0079
 
-### T-0082
-- Title: Expand Garrick recruitment to match story script
-- Status: todo
-- Assigned: unassigned
-- Priority: high
-- Depends: none
-
 ### T-0070
 - Title: Split battler.gd into damage calculator, resonance controller, and status manager
 - Status: todo
@@ -282,6 +275,13 @@ Started: 2026-02-18
 ---
 
 ## Done This Sprint
+
+### T-0082
+- Title: Expand Garrick recruitment to match story script
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: Expanded from 6 to 17 lines matching Chapter 4 story script. Extracted _build_dialogue() helper. Covers Scenes 2+4 beats: Iris Shepherd recognition, identity reveal, crystal corruption, Willowmere confession, Lyra proposition, conditions, honey cakes closing. 10 tests.
 
 ### T-0081
 - Title: Expand Iris recruitment to match Chapter 3 story script
