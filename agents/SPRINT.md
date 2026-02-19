@@ -77,13 +77,6 @@ Started: 2026-02-18
 - Priority: medium
 - Depends: none
 
-### T-0085
-- Title: Implement Chapter 4 content — Garrick's deeper story at the shrine
-- Status: todo
-- Assigned: unassigned
-- Priority: medium
-- Depends: T-0082
-
 ### T-0086
 - Title: Add demo ending sequence with "Thanks for playing" screen
 - Status: todo
@@ -206,6 +199,13 @@ Started: 2026-02-18
 ---
 
 ## Done This Sprint
+
+### T-0085
+- Title: Implement Chapter 4 content — Garrick's deeper story at the shrine
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: GarrickMeetsLyra event (14-line dialogue compressing Chapter 4 Scene 5). Three-state LyraDiscoveryZone logic in overgrown_ruins.gd. Garrick confronts Lyra — "Are you in pain?" emotional peak. Flag garrick_met_lyra. 12 new tests (861 total).
 
 ### T-0073
 - Title: Split roothollow.gd into tilemap, dialogue, and quest handler modules

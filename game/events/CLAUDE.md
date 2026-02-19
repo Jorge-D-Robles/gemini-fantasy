@@ -11,6 +11,7 @@ Story event scripts — one-shot cutscenes, recruitments, and story triggers. Ea
 | `garrick_recruitment.gd` | `GarrickRecruitment` | Roothollow / Garrick NPC | `garrick_recruited` |
 | `iris_recruitment.gd` | `IrisRecruitment` | Verdant Forest | `iris_recruited` |
 | `boss_encounter.gd` | `BossEncounter` | Overgrown Ruins / BossZone | `boss_defeated` |
+| `garrick_meets_lyra.gd` | `GarrickMeetsLyra` | Overgrown Ruins / LyraDiscoveryZone | `garrick_met_lyra` |
 
 > **Note:** `event_flags.gd` lives here but is registered as the `EventFlags` autoload in `project.godot`. See `game/autoloads/CLAUDE.md` for the autoload inventory.
 
@@ -86,6 +87,15 @@ func trigger() -> void:
 - On victory: sets `boss_defeated` flag, awards 200 bonus gold, shows post-battle dialogue
 - On defeat: flag is NOT set — player can retry on next visit
 - Scene disables `BossZone.monitoring` on trigger and on revisit if flag is set
+
+### GarrickMeetsLyra
+- Garrick meets Lyra for the first time in the preserved room
+- Compresses Chapter 4, Scene 5 from `docs/story/act1/04-old-iron.md`
+- Emotional peak: Garrick asks "Are you in pain?" — connects his guilt to Lyra's fragmentation
+- 14-line dialogue (Lyra, Garrick, Kael)
+- Prerequisites: `opening_lyra_discovered` AND `garrick_recruited` (checked at scene level)
+- Reuses `LyraDiscoveryZone` Area2D with three-state logic in `overgrown_ruins.gd`
+- Sets `garrick_met_lyra` flag — downstream dependency for T-0086 (demo ending)
 
 ## Adding New Events
 

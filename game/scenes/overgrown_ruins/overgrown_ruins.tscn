@@ -1,10 +1,11 @@
-[gd_scene load_steps=12 format=3 uid="uid://c4ruins000001"]
+[gd_scene load_steps=13 format=3 uid="uid://c4ruins000001"]
 
 [ext_resource type="Script" path="res://scenes/overgrown_ruins/overgrown_ruins.gd" id="1_ruins"]
 [ext_resource type="PackedScene" uid="uid://c4player00001" path="res://entities/player/player.tscn" id="2_player"]
 [ext_resource type="Script" path="res://systems/encounter/encounter_system.gd" id="4_encounter"]
 [ext_resource type="Script" path="res://events/opening_sequence.gd" id="5_opening"]
 [ext_resource type="Script" path="res://events/boss_encounter.gd" id="6_boss"]
+[ext_resource type="Script" path="res://events/garrick_meets_lyra.gd" id="7_garrick_lyra"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_exit"]
 size = Vector2(16, 64)
@@ -72,6 +73,9 @@ script = ExtResource("5_opening")
 
 [node name="BossEncounter" type="Node" parent="."]
 script = ExtResource("6_boss")
+
+[node name="GarrickMeetsLyra" type="Node" parent="."]
+script = ExtResource("7_garrick_lyra")
 
 [node name="BossZone" type="Area2D" parent="Triggers"]
 position = Vector2(384, 64)
