@@ -908,6 +908,26 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 - Refs: game/ui/battle_ui/battle_ui.gd, game/systems/battle/states/victory_state.gd
 - Notes: After T-0124 applies XP, show "Kael reached Level 3!" callouts with stat changes.
 
+### T-0127
+- Title: Add playtime display to save/load screen
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Milestone: M0
+- Depends: none
+- Refs: game/autoloads/save_manager.gd, game/ui/title_screen/title_screen.gd
+- Notes: Save slots show no playtime. SaveManager serializes a timestamp field. Compute elapsed hours:minutes and display in each slot label. Acceptance: each save slot shows "XX:XX" playtime alongside location name. 4+ tests.
+
+### T-0128
+- Title: BUG — AudioManager.play_bgm() resets volume_db to 0.0, ignoring user volume setting
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M0
+- Depends: T-0068
+- Refs: game/autoloads/audio_manager.gd
+- Notes: play_bgm() hardcodes volume_db = 0.0 when starting a new track without crossfade. set_bgm_volume() changes the current player but is overwritten on next play_bgm() call. Fix: add _bgm_volume_db field; apply it in play_bgm(). Acceptance: volume slider changes persist across BGM track transitions. 4+ tests.
+
 ---
 
 ## M2 — Act II: The Weight of Echoes
