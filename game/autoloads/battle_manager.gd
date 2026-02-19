@@ -55,6 +55,8 @@ func start_battle(
 	await GameManager.change_scene(BATTLE_SCENE_PATH)
 
 	_battle_scene = get_tree().current_scene
+	if "area_scene_path" in _battle_scene:
+		_battle_scene.area_scene_path = _pre_battle_scene_path
 	if _battle_scene.has_method("setup_battle"):
 		_battle_scene.setup_battle(party_data, enemy_group, can_escape)
 	if _battle_scene.has_signal("battle_finished"):

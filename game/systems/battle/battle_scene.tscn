@@ -14,11 +14,13 @@
 [ext_resource type="Script" path="res://systems/battle/states/victory_state.gd" id="12_vs"]
 [ext_resource type="Script" path="res://systems/battle/states/defeat_state.gd" id="13_ds"]
 [ext_resource type="PackedScene" uid="uid://c3b4a5t6l7e8u" path="res://ui/battle_ui/battle_ui.tscn" id="14_bui"]
+[ext_resource type="Script" path="res://systems/battle/battle_background.gd" id="15_bg"]
 
 [node name="BattleScene" type="Node2D"]
 script = ExtResource("1_battle")
 
 [node name="BattleBackground" type="Sprite2D" parent="."]
+script = ExtResource("15_bg")
 
 [node name="Battlers" type="Node2D" parent="."]
 

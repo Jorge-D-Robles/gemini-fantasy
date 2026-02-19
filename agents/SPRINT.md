@@ -9,25 +9,17 @@ Started: 2026-02-18
 
 ## Active
 
-(none)
+### T-0051
+- Title: Add battle background sprite and scene backdrop
+- Status: in-progress
+- Assigned: claude
+- Priority: critical
+- Depends: none
+- Started: 2026-02-19
 
 ---
 
 ## Queue
-
-### T-0049
-- Title: BUG — Verdant Forest camera limit cuts off bottom row
-- Status: todo
-- Assigned: unassigned
-- Priority: critical
-- Depends: none
-
-### T-0051
-- Title: Add battle background sprite and scene backdrop
-- Status: todo
-- Assigned: unassigned
-- Priority: critical
-- Depends: none
 
 ### T-0069
 - Title: Extract shared UI helpers (colors, focus nav, panel styles, clear_children)
@@ -383,4 +375,9 @@ Started: 2026-02-18
 
 ## Done This Sprint
 
-(none yet — carried forward from S02: T-0047, T-0048 completed before sprint start)
+### T-0049
+- Title: BUG — Verdant Forest camera limit cuts off bottom row
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: Already fixed in codebase — limit_bottom=400 matches 25-row map (400px)

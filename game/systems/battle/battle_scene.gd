@@ -16,11 +16,13 @@ var current_action: BattleAction = null
 var pending_command: String = ""
 var can_escape: bool = true
 var _battle_result: bool = false
+var area_scene_path: String = ""
 
 @onready var party_node: Node2D = $Battlers/PartyBattlers
 @onready var enemy_node: Node2D = $Battlers/EnemyBattlers
 @onready var turn_queue: TurnQueue = $TurnQueue
 @onready var state_machine: BattleStateMachine = $BattleStateMachine
+@onready var _background: Sprite2D = $BattleBackground
 
 
 func _ready() -> void:
@@ -34,6 +36,7 @@ func setup_battle(
 	escapable: bool = true,
 ) -> void:
 	can_escape = escapable
+	_setup_background()
 	_spawn_party(party_data)
 	_spawn_enemies(enemy_data)
 	_build_battler_list()
@@ -192,6 +195,12 @@ func _persist_party_state() -> void:
 		if battler.character_id != &"":
 			pm.set_hp(battler.character_id, battler.current_hp)
 			pm.set_ee(battler.character_id, battler.current_ee)
+
+
+func _setup_background() -> void:
+	if _background and _background.has_method("setup"):
+		var area: int = _background.area_from_scene_path(area_scene_path)
+		_background.setup(area)
 
 
 func _on_battler_defeated(battler: Battler) -> void:
