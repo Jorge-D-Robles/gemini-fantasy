@@ -94,3 +94,4 @@ These 26 fixes were completed before the ticket system was established:
 - [2026-02-19] T-0062: Boundary collision walls — MapBuilder.create_boundary_walls() static method, 4 invisible StaticBody2D walls per scene on collision layer 2, all 3 scenes wired, fixed CLAUDE.md map dimensions, 12 tests (claude)
 - [2026-02-19] T-0059: Roothollow AbovePlayer canopy overlay — CANOPY_LEGEND (3 FOREST_OBJECTS tiles: center, left-edge, right-edge) + CANOPY_MAP at inner border edges, build_layer wired in _setup_tilemap() (claude)
 - [2026-02-19] T-0087: On-screen objective tracker UI — PanelContainer in HUD below PartyStatus, QuestTitle + ObjectiveLabel labels, static compute_tracker_state() for TDD, 4 QuestManager signal connections, 7 tests (claude)
+- [2026-02-19] T-0088: Zone transition markers — ZoneMarker script-only Node2D with _draw() chevron, alpha pulse + directional bob tweens, optional destination label, all 3 scenes wired (4 exits), 11 tests (claude)

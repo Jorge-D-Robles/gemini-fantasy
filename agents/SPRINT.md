@@ -13,13 +13,6 @@ Started: 2026-02-18
 
 ## Queue
 
-### T-0088
-- Title: Add visual markers for zone transitions (sparkle/arrow effects)
-- Status: todo
-- Assigned: unassigned
-- Priority: high
-- Depends: none
-
 ### T-0089
 - Title: Add NPC interaction indicators (speech bubble icon above head)
 - Status: todo
@@ -380,3 +373,10 @@ Started: 2026-02-18
 - Assigned: claude
 - Completed: 2026-02-19
 - Notes: PanelContainer in HUD (top-right, below PartyStatus). QuestTitle (gold) + ObjectiveLabel (lavender). Static compute_tracker_state() for testability. Connected to 4 QuestManager signals. 7 tests.
+
+### T-0088
+- Title: Add visual markers for zone transitions (sparkle/arrow effects)
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: ZoneMarker script-only Node2D with _draw() chevron arrow, alpha pulse + directional bob tweens, optional destination label. Integrated into all 3 scenes (4 exit triggers). 11 tests.

@@ -309,6 +309,9 @@ func _ready() -> void:
 	_exit_to_town.body_entered.connect(_on_exit_to_town_entered)
 	_iris_zone.body_entered.connect(_on_iris_zone_entered)
 
+	# Zone transition markers
+	_spawn_zone_markers()
+
 	# Setup encounter system
 	var creeping_vine := load(CREEPING_VINE_PATH) as Resource
 	var ash_stalker := load(ASH_STALKER_PATH) as Resource
@@ -349,6 +352,24 @@ func _ready() -> void:
 	if EventFlags.has_flag(IrisRecruitment.FLAG_NAME):
 		_iris_zone.monitoring = false
 
+
+
+func _spawn_zone_markers() -> void:
+	var left_marker := ZoneMarker.new()
+	left_marker.direction = ZoneMarker.Direction.LEFT
+	left_marker.destination_name = "Overgrown Ruins"
+	left_marker.position = (
+		_exit_to_ruins.position + Vector2(12, 0)
+	)
+	add_child(left_marker)
+
+	var right_marker := ZoneMarker.new()
+	right_marker.direction = ZoneMarker.Direction.RIGHT
+	right_marker.destination_name = "Roothollow"
+	right_marker.position = (
+		_exit_to_town.position + Vector2(-12, 0)
+	)
+	add_child(right_marker)
 
 
 func _on_exit_to_ruins_entered(body: Node2D) -> void:

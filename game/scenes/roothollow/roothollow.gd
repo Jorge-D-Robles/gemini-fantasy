@@ -104,6 +104,9 @@ func _ready() -> void:
 	_exit_to_forest.body_entered.connect(_on_exit_to_forest_entered)
 	_garrick_zone.body_entered.connect(_on_garrick_zone_entered)
 
+	# Zone transition marker
+	_spawn_zone_marker()
+
 	# Load shop and quest data
 	_shop_data = load(SHOP_DATA_PATH)
 	_herb_quest = load(HERB_QUEST_PATH)
@@ -367,6 +370,15 @@ static func _get_quest_reminder(qid: StringName) -> String:
 
 static func _get_quest_turnin(qid: StringName) -> String:
 	return _QUEST_TEXT.get(qid, {}).get("turnin", "")
+
+
+func _spawn_zone_marker() -> void:
+	var marker := ZoneMarker.new()
+	marker.direction = ZoneMarker.Direction.LEFT
+	marker.marker_color = ZoneMarker.DEFAULT_COLOR
+	marker.destination_name = "Verdant Forest"
+	marker.position = _exit_to_forest.position + Vector2(12, 0)
+	add_child(marker)
 
 
 func _setup_npc_dialogue() -> void:

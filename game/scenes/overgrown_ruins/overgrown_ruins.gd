@@ -254,6 +254,9 @@ func _ready() -> void:
 	_lyra_zone.body_entered.connect(_on_lyra_zone_entered)
 	_boss_zone.body_entered.connect(_on_boss_zone_entered)
 
+	# Zone transition marker
+	_spawn_zone_marker()
+
 	# Hide Lyra discovery zone if already triggered
 	if EventFlags.has_flag(OpeningSequence.FLAG_NAME):
 		_lyra_zone.monitoring = false
@@ -277,6 +280,16 @@ func _ready() -> void:
 
 	_encounter_system.setup(pool)
 	_encounter_system.encounter_triggered.connect(_on_encounter_triggered)
+
+
+func _spawn_zone_marker() -> void:
+	var marker := ZoneMarker.new()
+	marker.direction = ZoneMarker.Direction.RIGHT
+	marker.destination_name = "Verdant Forest"
+	marker.position = (
+		_exit_to_forest.position + Vector2(-12, 0)
+	)
+	add_child(marker)
 
 
 func _setup_tilemap() -> void:
