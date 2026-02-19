@@ -16,14 +16,6 @@ Started: 2026-02-18
 
 
 
-### T-0076
-- Title: Split shop_ui.gd into buy panel, sell panel, and character selector
-- Status: in-progress
-- Assigned: claude
-- Priority: medium
-- Depends: T-0069
-- Started: 2026-02-19
-
 ### T-0066
 - Title: Add UI sound effects (menu, dialogue, buttons)
 - Status: todo
@@ -174,6 +166,13 @@ Started: 2026-02-18
 ---
 
 ## Done This Sprint
+
+### T-0076
+- Title: Split shop_ui.gd into buy panel, sell panel, and character selector
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: Extracted ShopUIDetail (equip stat lines, item effect text, detail panel info) and ShopUIList (buy/sell entry computation with Callable DI). shop_ui.gd reduced 484->457 lines. 20 new tests (925 total).
 
 ### T-0075
 - Title: Split inventory_ui.gd into category manager, detail panel, and applicator
