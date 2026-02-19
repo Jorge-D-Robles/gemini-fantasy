@@ -20,13 +20,6 @@ Started: 2026-02-18
 - Priority: high
 - Depends: T-0079
 
-### T-0081
-- Title: Expand Iris recruitment to match Chapter 3 story script
-- Status: todo
-- Assigned: unassigned
-- Priority: high
-- Depends: none
-
 ### T-0082
 - Title: Expand Garrick recruitment to match story script
 - Status: todo
@@ -289,6 +282,13 @@ Started: 2026-02-18
 ---
 
 ## Done This Sprint
+
+### T-0081
+- Title: Expand Iris recruitment to match Chapter 3 story script
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: Expanded from 7 to 19 lines (7 pre-battle + 12 post-battle). Extracted _build_pre_battle_dialogue() and static _build_post_battle_lines() helpers. Covers Scenes 2-4 beats: combat encounter, identity reveal, Resonance Cage, Lyra reveal, Dane foreshadowing, pragmatic joining. 12 tests.
 
 ### T-0079
 - Title: Expand opening sequence to match Chapter 1 story script

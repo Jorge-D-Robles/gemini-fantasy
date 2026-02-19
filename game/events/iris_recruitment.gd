@@ -3,6 +3,9 @@ extends Node
 
 ## Iris recruitment event in the Verdant Forest.
 ## Triggers a cutscene, a forced battle, then Iris joins the party.
+## Dialogue matches Chapter 3 ("The Deserter") of the story script
+## (docs/story/act1/03-the-deserter.md), adapting Option B (Kael
+## intervenes directly). After the battle, Iris joins the party.
 
 signal sequence_completed
 
@@ -18,11 +21,7 @@ func trigger() -> void:
 	EventFlags.set_flag(FLAG_NAME)
 	GameManager.push_state(GameManager.GameState.CUTSCENE)
 
-	var pre_battle_lines: Array[DialogueLine] = [
-		DialogueLine.create("Iris", "Hah! These things just keep coming!"),
-		DialogueLine.create("Kael", "Need a hand?"),
-		DialogueLine.create("Iris", "I won't turn it down! Watch the flanks!"),
-	]
+	var pre_battle_lines: Array[DialogueLine] = _build_pre_battle_dialogue()
 
 	DialogueManager.start_dialogue(pre_battle_lines)
 	await DialogueManager.dialogue_ended
@@ -51,6 +50,47 @@ func trigger() -> void:
 		_play_post_battle_dialogue()
 
 
+func _build_pre_battle_dialogue() -> Array[DialogueLine]:
+	return [
+		# Iris mid-fight, talking to herself
+		DialogueLine.create(
+			"Iris",
+			"Hah! These things just keep coming!",
+		),
+		DialogueLine.create(
+			"Iris",
+			"Two ranged, one melee, one tech. Three exits."
+			+ " Come on, Iris, worse odds than this.",
+		),
+
+		# Kael intervenes — sees a flanking swordsman
+		DialogueLine.create(
+			"Kael",
+			"Behind you!",
+		),
+		DialogueLine.create(
+			"Iris",
+			"Who the hell--? ...Never mind. Left flank,"
+			+ " take the rifle!",
+		),
+		DialogueLine.create(
+			"Kael",
+			"I-- okay!",
+		),
+
+		# Iris takes command
+		DialogueLine.create(
+			"Iris",
+			"Move when I move. And keep your guard up"
+			+ " -- you left your whole left side open.",
+		),
+		DialogueLine.create(
+			"Iris",
+			"On three. One-- forget it, just go!",
+		),
+	]
+
+
 static func _on_iris_battle_ended(victory: bool) -> void:
 	if not victory:
 		# On defeat, clear the flag so the event can re-trigger
@@ -62,14 +102,92 @@ static func _on_iris_battle_ended(victory: bool) -> void:
 static func _play_post_battle_dialogue() -> void:
 	GameManager.push_state(GameManager.GameState.CUTSCENE)
 
-	var post_battle_lines: Array[DialogueLine] = [
-		DialogueLine.create("Iris", "Not bad! Name's Iris. I'm an engineer from the eastern settlements."),
-		DialogueLine.create("Kael", "Kael. I found something strange in the ruins... a conscious Echo."),
-		DialogueLine.create("Iris", "A conscious Echo? That shouldn't be possible. I need to see this."),
-		DialogueLine.create("Iris", "Mind if I tag along? I've got some theories about the Echo interference."),
-	]
+	var post_battle_lines: Array[DialogueLine] = _build_post_battle_lines()
 
 	DialogueManager.start_dialogue(post_battle_lines)
 	await DialogueManager.dialogue_ended
 
 	GameManager.pop_state()
+
+
+static func _build_post_battle_lines() -> Array[DialogueLine]:
+	return [
+		# Aftermath urgency — Iris counts exits, needs to move
+		DialogueLine.create(
+			"Iris",
+			"Three exits. We came from the south. They"
+			+ " came from the north -- that's where their"
+			+ " camp is. We're going east. Now.",
+		),
+		DialogueLine.create(
+			"Kael",
+			"I-- hi. I'm Kael.",
+		),
+		DialogueLine.create(
+			"Iris",
+			"Great. Can you run? Their reinforcements"
+			+ " don't bluff. Ten minutes, maybe less.",
+		),
+
+		# Identity reveal — rapid-fire, military cadence
+		DialogueLine.create(
+			"Iris",
+			"Iris Mantle. Former Lieutenant, Reclamation"
+			+ " Initiative Engineering Corps. 'Former' being"
+			+ " the word that matters.",
+		),
+		DialogueLine.create(
+			"Iris",
+			"They're in the Tangle hunting Resonance"
+			+ " anomalies. Consciousness indicators. I know"
+			+ " what they do with the ones they find, and"
+			+ " they'd prefer I stopped breathing.",
+		),
+
+		# Resonance Cage reveal
+		DialogueLine.create(
+			"Kael",
+			"What do they do with them?",
+		),
+		DialogueLine.create(
+			"Iris",
+			"Feed them into something called the Resonance"
+			+ " Cage. Director Vex's project. Every conscious"
+			+ " fragment they've found in five years -- gone."
+			+ " Consumed like fuel.",
+		),
+		DialogueLine.create(
+			"Iris",
+			"I built the extraction tools. Helped them find"
+			+ " those fragments. Then I walked into the wrong"
+			+ " lab and saw what happened next.",
+		),
+		# Dane foreshadowing
+		DialogueLine.create(
+			"Iris",
+			"Took what data I could and ran. Left my brother"
+			+ " Dane behind with those people.",
+		),
+
+		# Kael reveals Lyra — direct, no setup
+		DialogueLine.create(
+			"Kael",
+			"Iris. I found a conscious Echo. In the south"
+			+ " ruins. Her name is Lyra. She's alive.",
+		),
+		DialogueLine.create(
+			"Iris",
+			"...You found one. A real-- the Initiative's"
+			+ " sensors will pick her up. They're surveying"
+			+ " this sector. We need to get to her first.",
+		),
+
+		# Iris joins — pragmatic, not sentimental
+		DialogueLine.create(
+			"Iris",
+			"Also -- no offense, but you fight like someone"
+			+ " who learned from a book. You need someone"
+			+ " watching your back who knows which end of a"
+			+ " rifle goes forward.",
+		),
+	]
