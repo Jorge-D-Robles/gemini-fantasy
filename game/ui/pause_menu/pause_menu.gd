@@ -198,10 +198,14 @@ func _create_member_info(member: Resource) -> VBoxContainer:
 	stats_row.add_theme_constant_override("separation", 8)
 	box.add_child(stats_row)
 
-	var hp_val: int = member.max_hp if "max_hp" in member else 0
-	var ee_val: int = member.max_ee if "max_ee" in member else 0
-	_add_stat_label(stats_row, "HP: %d/%d" % [hp_val, hp_val])
-	_add_stat_label(stats_row, "EE: %d/%d" % [ee_val, ee_val])
+	var pm: Node = get_node_or_null("/root/PartyManager")
+	var s := compute_member_stats(member, pm)
+	_add_stat_label(
+		stats_row, "HP: %d/%d" % [s["current_hp"], s["max_hp"]]
+	)
+	_add_stat_label(
+		stats_row, "EE: %d/%d" % [s["current_ee"], s["max_ee"]]
+	)
 
 	var stats_row2 := HBoxContainer.new()
 	stats_row2.add_theme_constant_override("separation", 8)
@@ -234,3 +238,26 @@ func _add_stat_label(parent: Node, text: String) -> void:
 func _on_quit_pressed() -> void:
 	close()
 	GameManager.change_scene(SP.TITLE_SCREEN)
+
+
+## Returns current/max HP and EE for a party member. Uses PartyManager
+## runtime state for current values, falls back to base max if unavailable.
+static func compute_member_stats(
+	member: Resource, pm: Node,
+) -> Dictionary:
+	var max_hp: int = member.max_hp if "max_hp" in member else 0
+	var max_ee: int = member.max_ee if "max_ee" in member else 0
+	var cur_hp: int = max_hp
+	var cur_ee: int = max_ee
+	if pm and "id" in member:
+		var id: StringName = member.id
+		if pm.has_method("get_hp"):
+			cur_hp = pm.get_hp(id)
+		if pm.has_method("get_ee"):
+			cur_ee = pm.get_ee(id)
+	return {
+		"current_hp": cur_hp,
+		"max_hp": max_hp,
+		"current_ee": cur_ee,
+		"max_ee": max_ee,
+	}

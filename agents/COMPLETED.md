@@ -106,3 +106,4 @@ These 26 fixes were completed before the ticket system was established:
 - [2026-02-19] T-0050: BUG fix — Overgrown Ruins spawn position check used fragile Vector2.ZERO comparison, replaced with unconditional spawn point set (GameManager/SaveManager override after _ready) (claude)
 - [2026-02-19] T-0124: BUG fix — XP never applied to party members after battle victory. Extracted static apply_xp_rewards(), calls LevelManager.add_xp() per CharacterData, logs level-ups in battle log, 9 new tests (796 total) (claude)
 - [2026-02-19] T-0072: Create scene_paths.gd — centralized ScenePaths class (5 constants), refactored 8 consumer files (3 scenes, 3 UI, 1 autoload), 7 new tests (803 total) (claude)
+- [2026-02-19] T-0115: BUG fix — Pause menu showed max HP/EE instead of current. Extracted static compute_member_stats() reading PartyManager runtime state, 7 new tests (810 total) (claude)

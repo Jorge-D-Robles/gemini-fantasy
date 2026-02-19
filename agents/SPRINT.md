@@ -367,6 +367,13 @@ Started: 2026-02-18
 - Completed: 2026-02-19
 - Notes: Scene-owned BGM via SCENE_BGM_PATH constants and _start_scene_music() in _ready(). BattleManager plays battle/boss BGM with boss detection via EnemyData.AiType.BOSS. Victory fanfare. AudioManager.get_current_bgm_path() accessor. Null-safe OGG loading. 8 new tests (787 total).
 
+### T-0115
+- Title: BUG — Pause menu party panel shows max HP/EE instead of current HP/EE
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: Extracted static compute_member_stats() in pause_menu.gd. Reads PartyManager runtime HP/EE state for current values, falls back to max when unavailable. 7 new tests (810 total).
+
 ### T-0072
 - Title: Create scene_paths.gd for centralized scene path constants
 - Status: done
