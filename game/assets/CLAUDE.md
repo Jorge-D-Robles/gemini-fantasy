@@ -19,7 +19,7 @@ assets/
 
 ## Source Assets
 
-All art comes from Time Fantasy packs at `/Users/robles/repos/games/assets/`. **Never generate placeholder art.** See the root CLAUDE.md "Available Art Assets" section for the full pack index and format notes.
+All art comes from Time Fantasy packs at `/Users/robles/repos/games/assets/`. **Never generate placeholder art.** See `assets/CLAUDE.md` (repo root) for the full pack index and format notes.
 
 ## Copy Workflow
 

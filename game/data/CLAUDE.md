@@ -98,11 +98,11 @@ display_name = "<Name>"
 - **Loot table format**: `[{"item_id": "potion", "drop_chance": 0.35}]`
 - **Sprite paths** reference `res://assets/sprites/enemies/<name>.png` — must exist and be imported by Godot
 - **Character abilities** are linked as `ExtResource` references, not inlined
-- See root `CLAUDE.md` "Adding Monsters" section for the full enemy creation workflow
+- See `game/resources/CLAUDE.md` for the EnemyData schema and enum values
 
 ## Adding New Entries
 
-Follow the template in root `CLAUDE.md` for enemies. For other types:
+For enemies, use the `.tres` format above as a template. For other types:
 
 1. Copy an existing `.tres` of the same class as a template
 2. Update `uid`, `id`, `display_name`, and all relevant fields

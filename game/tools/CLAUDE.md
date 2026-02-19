@@ -44,4 +44,4 @@ Used by the `/scene-preview` skill to capture screenshots of any scene for visua
 
 ### Usage via Skill
 
-Prefer `/scene-preview` in most cases — see root CLAUDE.md "MANDATORY: Visual Verification".
+Prefer `/scene-preview` in most cases — see root CLAUDE.md "Visual Verification" section.
