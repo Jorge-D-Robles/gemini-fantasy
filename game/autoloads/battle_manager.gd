@@ -34,9 +34,10 @@ func start_battle(
 		push_warning("BattleManager: blocked — scene transition active.")
 		return
 	_is_in_battle = true
-	battle_started.emit()
 
-	# Play battle BGM (boss or standard)
+	# Save current BGM before emitting signal (listeners may change BGM)
+	AudioManager.push_bgm()
+	battle_started.emit()
 	var bgm_path := get_battle_bgm_path(enemy_group)
 	var bgm := load(bgm_path) as AudioStream
 	if bgm:
@@ -103,6 +104,10 @@ func _on_battle_finished(victory: bool) -> void:
 	_is_in_battle = false
 	GameManager.pop_state()
 	battle_ended.emit(victory)
+
+	# Restore pre-battle BGM (scene _ready() may override, but the
+	# same-stream guard in play_bgm() will skip the duplicate call)
+	AudioManager.pop_bgm(1.0)
 
 	if not _pre_battle_scene_path.is_empty():
 		GameManager.scene_changed.connect(
