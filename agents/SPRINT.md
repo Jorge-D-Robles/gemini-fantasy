@@ -27,13 +27,6 @@ Started: 2026-02-18
 - Priority: medium
 - Depends: none
 
-### T-0050
-- Title: BUG — Overgrown Ruins spawn position check uses Vector2.ZERO comparison
-- Status: todo
-- Assigned: unassigned
-- Priority: medium
-- Depends: none
-
 ### T-0054
 - Title: Add status effect icons/badges on battler panels
 - Status: todo
@@ -254,6 +247,13 @@ Started: 2026-02-18
 ---
 
 ## Done This Sprint
+
+### T-0050
+- Title: BUG — Overgrown Ruins spawn position check uses Vector2.ZERO comparison
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: Removed fragile Vector2.ZERO comparison. Always set player to spawn point — GameManager and SaveManager override after _ready() as needed.
 
 ### T-0070
 - Title: Split battler.gd into damage calculator, resonance controller, and status manager

@@ -240,9 +240,11 @@ func _ready() -> void:
 		if kael_data:
 			PartyManager.add_character(kael_data)
 
-	# Place player at spawn if no spawn point group was set by GameManager
+	# Set default spawn position — GameManager.change_scene() with
+	# spawn_point and SaveManager.set_pending_position() will override
+	# after _ready() if a specific position was requested.
 	var player_node := get_tree().get_first_node_in_group("player")
-	if player_node and player_node.global_position == Vector2.ZERO:
+	if player_node:
 		player_node.global_position = _spawn_point.global_position
 
 	# HUD setup
