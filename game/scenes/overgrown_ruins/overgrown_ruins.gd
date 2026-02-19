@@ -307,6 +307,12 @@ func _ready() -> void:
 	_encounter_system.setup(pool)
 	_encounter_system.encounter_triggered.connect(_on_encounter_triggered)
 
+	# Companion followers
+	if player_node:
+		var companion_ctrl := CompanionController.new()
+		companion_ctrl.setup(player_node)
+		$Entities.add_child(companion_ctrl)
+
 
 func _spawn_zone_marker() -> void:
 	var marker := ZoneMarker.new()

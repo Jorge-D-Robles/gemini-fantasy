@@ -4,6 +4,8 @@ Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[
 
 ---
 
+- [2026-02-19] T-0084: Add companion follower sprites in overworld — CompanionController/CompanionFollower, Iris+Garrick sprites, position history buffer, 18 tests (claude)
+
 ## Pre-Tracker (2026-02-16 Audit)
 
 These 26 fixes were completed before the ticket system was established:
@@ -119,3 +121,4 @@ These 26 fixes were completed before the ticket system was established:
 - [2026-02-19] T-0074: Split battle_ui.gd — extracted BattleUIStatus (compute_status_badges + compute_target_info) and BattleUIVictory (compute_victory_display + stat_abbreviation), 793->700 lines, updated 3 test preloads, 885 tests pass (claude)
 - [2026-02-19] T-0075: Split inventory_ui.gd — extracted InventoryUIFilter (matches_category + compute_item_entries with Callable DI) and InventoryUIDetail (compute_equipment_stats + compute_item_detail), 602->531 lines, added HP/EE bonus display, 20 new tests (905 total) (claude)
 - [2026-02-19] T-0076: Split shop_ui.gd — extracted ShopUIDetail (equip stat lines, item effect text, detail panel info) and ShopUIList (buy/sell entry computation with Callable DI), 484->457 lines, 20 new tests (925 total) (claude)
+- [2026-02-19] T-0068: Settings menu — SettingsData (percent/dB conversion, bus-level volume, JSON persistence), SettingsMenu (3 HSliders, live preview, save on close), title screen + pause menu integration, AudioManager startup load, 14 new tests (939 total) (claude)

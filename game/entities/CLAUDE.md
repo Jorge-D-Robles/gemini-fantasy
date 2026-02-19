@@ -11,6 +11,7 @@ See root `CLAUDE.md` for project-wide conventions.
 | `npc/` | Base NPC scene — dialogue, facing player |
 | `interactable/` | Generic interactable with pluggable strategy |
 | `interactable/strategies/` | Concrete `InteractionStrategy` implementations |
+| `companion/` | Companion followers that trail behind the player |
 | `battle/` | Visual battler scenes for combat (enemy + party) |
 
 ---
@@ -41,6 +42,42 @@ Player (CharacterBody2D) — class_name Player
 **Public API:**
 - `set_movement_enabled(enabled: bool)` — freeze/unfreeze player
 - `get_facing_direction() -> Vector2` — current facing as unit vector
+
+---
+
+## companion/ — Companion Followers
+
+**Files:** `companion_controller.gd`, `companion_follower.gd`
+
+**CompanionController** (`class_name CompanionController`, `extends Node`):
+- Manages all follower entities that trail behind the player
+- Records player position history buffer (MAX_HISTORY=200 frames)
+- Assigns follower positions directly from the buffer (FOLLOW_OFFSET=15 frames apart)
+- Connects to `PartyManager.party_changed` and `GameManager.game_state_changed`
+- Rebuilds followers when party changes; pauses when not in OVERWORLD state
+- Filters Kael from followers by ID (`KAEL_ID = &"kael"`)
+- Cleans up signal connections in `_exit_tree()`
+
+**CompanionFollower** (`class_name CompanionFollower`, `extends Node2D`):
+- Single follower entity with `AnimatedSprite2D` built at runtime from 3x4 sprite sheet
+- `setup(sprite_path, char_id)` — loads texture, builds 8 animations (walk/idle x 4 directions)
+- `set_facing(Facing)` / `set_moving(bool)` — driven by controller
+- `SPRITE_SCALE = Vector2(0.55, 0.75)`, `z_index = -1` (behind player)
+
+**Wiring in scene scripts** (added at end of `_ready()`):
+```gdscript
+var player_node := get_tree().get_first_node_in_group("player") as Node2D
+if player_node:
+    var companion_ctrl := CompanionController.new()
+    companion_ctrl.setup(player_node)
+    $Entities.add_child(companion_ctrl)
+```
+
+**Static helpers** (testable without scene tree):
+- `CompanionController.compute_followers_needed(party)` — filters Kael from party
+- `CompanionController.compute_history_index(idx, size, offset)` — history buffer lookup
+- `CompanionFollower.build_sprite_frames(texture)` — creates SpriteFrames from 3x4 sheet
+- `CompanionFollower.compute_facing_from_direction(dir)` — Vector2 to Facing enum
 
 ---
 

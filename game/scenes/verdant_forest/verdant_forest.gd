@@ -353,6 +353,14 @@ func _ready() -> void:
 	if EventFlags.has_flag(IrisRecruitment.FLAG_NAME):
 		_iris_zone.monitoring = false
 
+	# Companion followers
+	var player_node := get_tree().get_first_node_in_group(
+		"player",
+	) as Node2D
+	if player_node:
+		var companion_ctrl := CompanionController.new()
+		companion_ctrl.setup(player_node)
+		$Entities.add_child(companion_ctrl)
 
 
 func _spawn_zone_markers() -> void:
