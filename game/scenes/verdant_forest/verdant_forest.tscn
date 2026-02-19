@@ -50,25 +50,25 @@ z_index = 2
 [node name="Entities" type="Node2D" parent="."]
 
 [node name="Player" parent="Entities" instance=ExtResource("2_player")]
-position = Vector2(80, 180)
+position = Vector2(48, 176)
 
 [node name="Camera2D" parent="Entities/Player" index="3"]
 limit_left = 0
 limit_top = 0
 limit_right = 640
-limit_bottom = 384
+limit_bottom = 400
 
 [node name="SpawnFromRuins" type="Marker2D" parent="Entities"]
-position = Vector2(80, 180)
+position = Vector2(48, 176)
 
 [node name="SpawnFromTown" type="Marker2D" parent="Entities"]
-position = Vector2(560, 180)
+position = Vector2(592, 176)
 
 [node name="IrisEventMarker" type="Marker2D" parent="Entities"]
 position = Vector2(320, 120)
 
 [node name="MemorialMarker" parent="Entities" instance=ExtResource("6_interact")]
-position = Vector2(168, 224)
+position = Vector2(176, 176)
 strategy = SubResource("memorial_echo_strat")
 one_time = false
 
@@ -79,7 +79,7 @@ texture_filter = 0
 [node name="Triggers" type="Node2D" parent="."]
 
 [node name="ExitToRuins" type="Area2D" parent="Triggers"]
-position = Vector2(16, 180)
+position = Vector2(24, 176)
 collision_layer = 0
 collision_mask = 1
 
@@ -87,7 +87,7 @@ collision_mask = 1
 shape = SubResource("RectangleShape2D_exit_ruins")
 
 [node name="ExitToTown" type="Area2D" parent="Triggers"]
-position = Vector2(624, 180)
+position = Vector2(616, 176)
 collision_layer = 0
 collision_mask = 1
 

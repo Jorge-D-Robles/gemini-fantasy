@@ -80,3 +80,4 @@ These 26 fixes were completed before the ticket system was established:
 - [2026-02-18] T-0044: Build boss encounter — BossEncounter event, pre/post-battle dialogue, can_escape=false, boss_defeated flag (claude)
 - [2026-02-18] T-0045: Wire shop NPC and side quests — Bram shop, 3 quest NPCs, memorial marker, quest chain logic (claude)
 - [2026-02-18] T-0046: Integration — lint fixes, test fixes, file sync, 582/582 tests passing (claude)
+- [2026-02-18] T-0047: Visual overhaul — multi-tile mushroom buildings, distinct NPC sprites, forest tree objects, sealed boundaries, broken symmetry (claude)

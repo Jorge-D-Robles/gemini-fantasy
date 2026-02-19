@@ -1,8 +1,11 @@
 extends Node2D
 
-## Roothollow — safe town hub. No random encounters.
-## Features NPCs (innkeeper, shopkeeper, townfolk), Garrick recruitment,
-## a save point, and an exit to the Verdant Forest.
+## Roothollow — safe town hub with mushroom village buildings.
+## No random encounters. Features NPCs (innkeeper, shopkeeper,
+## townfolk), Garrick recruitment, save point, exit to Verdant Forest.
+## Tilemap data is in roothollow_maps.gd (Maps).
+
+const Maps = preload("roothollow_maps.gd")
 
 const VERDANT_FOREST_PATH: String = (
 	"res://scenes/verdant_forest/verdant_forest.tscn"
@@ -19,58 +22,6 @@ const SCOUTS_QUEST_PATH: String = (
 const ELDER_QUEST_PATH: String = (
 	"res://data/quests/elder_wisdom.tres"
 )
-
-# -- Map dimensions --
-const MAP_COLS: int = 48
-const MAP_ROWS: int = 38
-
-# -- Ground: single tile fill from A5_A row 8 (bright green) --
-const GROUND_LEGEND: Dictionary = {
-	"G": Vector2i(0, 8),
-}
-
-# -- Paths: single gray stone tile from A5_A row 10 --
-const PATH_LEGEND: Dictionary = {
-	"S": Vector2i(0, 10),
-}
-
-# -- Detail: flower/foliage accents from A5_A row 14 --
-const DETAIL_LEGEND: Dictionary = {
-	"f": Vector2i(0, 14),
-	"F": Vector2i(1, 14),
-	"b": Vector2i(2, 14),
-	"B": Vector2i(3, 14),
-}
-
-# -- Forest border canopy (source 2 = FOREST_OBJECTS) --
-const BORDER_LEGEND: Dictionary = {
-	"T": Vector2i(1, 1),
-}
-
-# -- Mushroom decorations (source 1 = MUSHROOM_VILLAGE) --
-const MUSHROOM_LEGEND: Dictionary = {
-	"m": Vector2i(0, 0),
-	"M": Vector2i(1, 0),
-}
-
-# -- Stone decorations (source 3 = STONE_OBJECTS) --
-const STONE_LEGEND: Dictionary = {
-	"r": Vector2i(0, 0),
-	"o": Vector2i(0, 1),
-}
-
-# Border thickness: [left, right] per row (38 entries)
-const _BORDER_SPEC: Array = [
-	[48, 0], [48, 0],
-	[4, 5], [3, 4], [3, 3],
-	[2, 3], [3, 4], [2, 3], [3, 3],
-	[0, 4], [0, 3], [0, 3], [0, 4], [0, 3],
-	[2, 4], [3, 3], [2, 3], [3, 4], [3, 3],
-	[2, 4], [3, 3], [3, 3], [2, 4], [3, 3],
-	[3, 4], [4, 3], [3, 4], [4, 4], [3, 5],
-	[4, 4], [5, 4], [4, 5], [5, 5], [6, 6],
-	[48, 0], [48, 0], [48, 0], [48, 0],
-]
 
 # Quest dialogue text keyed by quest id and phase
 const _QUEST_TEXT: Dictionary = {
@@ -121,174 +72,6 @@ const _QUEST_TEXT: Dictionary = {
 	},
 }
 
-# Stone paths: inn/shop approaches, E-W road, N-S road, plaza
-const PATH_MAP: Array[String] = [
-	"",
-	"",
-	"",
-	"",
-	"",
-	"       SSSS                   SSSS",
-	"       SSSS                   SSSS",
-	"       SSSS                   SSSS",
-	"                   SSS",
-	"                   SSS",
-	"                   SSS",
-	" SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS",
-	" SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS",
-	"                   SSS",
-	"                 SSSSSSSS",
-	"                 SSSSSSSS",
-	"                 SSSSSSSS",
-	"                 SSSSSSSS",
-	"                   SSS",
-	"                   SSS",
-	"                   SSS",
-	"                   SSS",
-	"                   SSS",
-	"",
-	"",
-	"",
-	"",
-	"",
-	"",
-	"",
-	"",
-	"",
-	"",
-	"",
-	"",
-	"",
-	"",
-	"",
-]
-
-# Flower/bush accents — 10-15% coverage on open ground
-const DETAIL_MAP: Array[String] = [
-	"",
-	"",
-	"     f          b                         F",
-	"                  f      b",
-	"      b                             f  F",
-	"  f b                  F               b",
-	"                 f                   b",
-	"   F   b                         f     b",
-	"  f        b                F        b",
-	"      f                     b         F",
-	"     b    F            f        b",
-	"                                        f",
-	"                                         b",
-	"    f     b                      F    b",
-	"   b  f      F                       b",
-	"  F   b                                 f",
-	"      f       b                   F",
-	"    b     F                              f",
-	"   f  b                   F      b",
-	"  b      F                      f     b",
-	"    f        b             F      b",
-	"  F     b                   f        b",
-	"  b   f                        F  b",
-	"   f  b  F      b        f   B   b",
-	"  b    f     F       b    f     F",
-	" F  b    f        b    F     b",
-	"    f   b  F         f     b    F",
-	"  b  f      b     F    b   f  b",
-	" f     F  b     f        b     F",
-	"   b f   F    b      f    b   f",
-	"  f    b      F      b   f    b",
-	"F  b    f     b       f    B  f",
-	"   f  b     F      b    f     b",
-	"  b      f      b     F     b",
-	"",
-	"",
-	"",
-	"",
-]
-
-# Mushroom decorations (source 1 = MUSHROOM_VILLAGE)
-const MUSHROOM_MAP: Array[String] = [
-	"",
-	"",
-	"",
-	"                  m",
-	"                                    M",
-	"",
-	"    m",
-	"",
-	"                    M",
-	"",
-	"",
-	"",
-	"",
-	"         m                    M",
-	"",
-	"                                       m",
-	"   M",
-	"",
-	"            m",
-	"",
-	"                         M",
-	"",
-	"      m",
-	"                   M             m",
-	"",
-	"  m                                   M",
-	"",
-	"              m",
-	"",
-	"   M                         m",
-	"",
-	"        m                             M",
-	"",
-	"",
-	"",
-	"",
-	"",
-	"",
-]
-
-# Stone decorations (source 3 = STONE_OBJECTS)
-const STONE_MAP: Array[String] = [
-	"",
-	"",
-	"",
-	"   r                          o",
-	"",
-	"               r                       o",
-	"",
-	"        o                               r",
-	"",
-	"",
-	"  r                    o",
-	"",
-	"",
-	"                                   r",
-	"       o",
-	"",
-	"                          r",
-	"   o                                    r",
-	"",
-	"             r",
-	"",
-	"    o                             r",
-	"",
-	"                o",
-	"   r                                    o",
-	"",
-	"          o                   r",
-	"",
-	"     r                               o",
-	"",
-	"               r",
-	"   o                                 r",
-	"",
-	"",
-	"",
-	"",
-	"",
-	"",
-]
-
 var _shop_data: Resource = null
 var _herb_quest: Resource = null
 var _scouts_quest: Resource = null
@@ -299,6 +82,8 @@ var _elder_quest: Resource = null
 @onready var _ground_detail: TileMapLayer = $GroundDetail
 @onready var _trees_border: TileMapLayer = $TreesBorder
 @onready var _decorations: TileMapLayer = $Decorations
+@onready var _objects: TileMapLayer = $Objects
+@onready var _above_player: TileMapLayer = $AbovePlayer
 @onready var _player: CharacterBody2D = $Entities/Player
 @onready var _spawn_from_forest: Marker2D = $Entities/SpawnFromForest
 @onready var _exit_to_forest: Area2D = $Triggers/ExitToForest
@@ -355,64 +140,56 @@ func _ready() -> void:
 
 
 func _setup_tilemap() -> void:
+	var m := Maps
 	var atlas_paths: Array[String] = [
 		MapBuilder.FAIRY_FOREST_A5_A,
 		MapBuilder.MUSHROOM_VILLAGE,
 		MapBuilder.FOREST_OBJECTS,
 		MapBuilder.STONE_OBJECTS,
+		MapBuilder.TREE_OBJECTS,
 	]
-	var solid: Dictionary = {
-		2: [Vector2i(1, 1)],
-	}
 	MapBuilder.apply_tileset(
 		[
-			_ground, _paths, _ground_detail,
-			_trees_border, _decorations,
+			_ground, _paths, _ground_detail, _decorations,
+			_objects, _trees_border, _above_player,
 		] as Array[TileMapLayer],
 		atlas_paths,
-		solid,
+		m.SOLID_TILES,
 	)
-	# Ground: uniform single-tile fill
-	var ground_row: String = "G".repeat(MAP_COLS)
+	# Ground: uniform bright green fill
+	var ground_row: String = "G".repeat(m.MAP_COLS)
 	var ground_map: Array[String] = []
-	for i: int in MAP_ROWS:
+	for i: int in m.MAP_ROWS:
 		ground_map.append(ground_row)
-	MapBuilder.build_layer(_ground, ground_map, GROUND_LEGEND)
-	# Paths
-	MapBuilder.build_layer(_paths, PATH_MAP, PATH_LEGEND)
-	# Ground detail accents
+	MapBuilder.build_layer(_ground, ground_map, m.GROUND_LEGEND)
+	# Paths (source 0)
+	MapBuilder.build_layer(_paths, m.PATH_MAP, m.PATH_LEGEND)
+	# Ground detail flower accents (source 0)
 	MapBuilder.build_layer(
-		_ground_detail, DETAIL_MAP, DETAIL_LEGEND,
+		_ground_detail, m.DECOR_MAP, m.DETAIL_LEGEND,
 	)
 	# Forest border canopy (source 2)
-	var border_map: Array[String] = _make_border_map()
 	MapBuilder.build_layer(
-		_trees_border, border_map, BORDER_LEGEND, 2,
+		_trees_border, m.BORDER_MAP, m.BORDER_LEGEND, 2,
 	)
-	# Mushroom decorations (source 1)
+	# Mushroom building walls (source 1, Objects layer)
 	MapBuilder.build_layer(
-		_decorations, MUSHROOM_MAP, MUSHROOM_LEGEND, 1,
+		_objects, m.BUILDING_MAP, m.BUILDING_LEGEND, 1,
 	)
-	# Stone decorations (source 3)
+	# Mushroom caps / rooftops (source 1, AbovePlayer)
 	MapBuilder.build_layer(
-		_decorations, STONE_MAP, STONE_LEGEND, 3,
+		_above_player, m.ROOF_MAP, m.ROOF_LEGEND, 1,
 	)
-
-
-static func _make_border_map() -> Array[String]:
-	var result: Array[String] = []
-	for spec: Array in _BORDER_SPEC:
-		var left: int = spec[0]
-		var right: int = spec[1]
-		if left + right >= MAP_COLS:
-			result.append("T".repeat(MAP_COLS))
-		else:
-			result.append(
-				"T".repeat(left)
-				+ " ".repeat(MAP_COLS - left - right)
-				+ "T".repeat(right)
-			)
-	return result
+	# Mushroom ground decorations (source 1)
+	MapBuilder.build_layer(
+		_decorations, m.DECOR_MAP,
+		m.MUSHROOM_DECOR_LEGEND, 1,
+	)
+	# Stone ground decorations (source 3)
+	MapBuilder.build_layer(
+		_decorations, m.DECOR_MAP,
+		m.STONE_DECOR_LEGEND, 3,
+	)
 
 
 func _on_exit_to_forest_entered(body: Node2D) -> void:
