@@ -266,23 +266,24 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0063
 - Title: Source and import BGM tracks for demo areas
+- Status: done
+- Assigned: user
+- Priority: high
+- Milestone: M0
+- Depends: none
+- Refs: game/assets/music/
+- Notes: DONE — 12 OGG tracks already imported at game/assets/music/ with .import files generated. Tracks: Battle Theme Organ, Battle! Intro, Castle, Desert Theme, Epic Boss Battle 1st section, Main Character, My Hometown, Peaceful Days, Success!, Town Theme Day, Town Theme Night, Welcoming Heart Piano.
+- Completed: 2026-02-18
+
+### T-0064
+- Title: Integrate BGM playback into all scenes and battle system
 - Status: todo
 - Assigned: unassigned
 - Priority: high
 - Milestone: M0
 - Depends: none
-- Refs: docs/game-design/06-audio-design.md, game/autoloads/audio_manager.gd
-- Notes: AudioManager exists with crossfade but no audio files. Source BGM: Roothollow (peaceful village), Verdant Forest (mysterious/nature), Overgrown Ruins (tense/ancient). Search Time Fantasy packs and /Users/robles/repos/games/assets/ for audio. Copy to game/assets/audio/bgm/.
-
-### T-0064
-- Title: Integrate BGM playback into scene _ready() methods
-- Status: todo
-- Assigned: unassigned
-- Priority: high
-- Milestone: M0
-- Depends: T-0063
-- Refs: game/autoloads/audio_manager.gd, game/scenes/roothollow/roothollow.gd, game/scenes/verdant_forest/verdant_forest.gd, game/scenes/overgrown_ruins/overgrown_ruins.gd
-- Notes: Add AudioManager.play_bgm() calls in each scene's _ready(). Crossfade between area themes on scene transition. Load tracks with null check.
+- Refs: game/autoloads/audio_manager.gd, game/scenes/roothollow/roothollow.gd, game/scenes/verdant_forest/verdant_forest.gd, game/scenes/overgrown_ruins/overgrown_ruins.gd, game/autoloads/battle_manager.gd, game/systems/battle/battle_scene.gd, game/systems/battle/states/victory_state.gd
+- Notes: 12 BGM tracks exist at res://assets/music/. Wire AudioManager.play_bgm() into all relevant game events. Suggested mapping — Roothollow: "Town Theme Day.ogg" or "My Hometown.ogg". Verdant Forest: "Peaceful Days.ogg". Overgrown Ruins: "Castle.ogg". Standard battles: "Battle Theme Organ.ogg" (use "Battle! Intro.ogg" as optional intro). Boss battles: "Epic Boss Battle 1st section.ogg". Victory: "Success!.ogg". Title screen: "Main Character.ogg" or "Welcoming Heart Piano.ogg". Implementation: load each track in scene _ready() or as preloaded const, call AudioManager.play_bgm(stream). Battle music: play on battle start, restore area BGM on battle end (save reference to current area track before battle). Victory jingle: play "Success!.ogg" in victory_state.gd, then resume area BGM after results screen. All load() calls must null-check. Crossfade between tracks using AudioManager's built-in fade_time parameter.
 
 ### T-0065
 - Title: Add battle music (standard encounters and boss)
@@ -290,9 +291,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 - Assigned: unassigned
 - Priority: high
 - Milestone: M0
-- Depends: T-0063
+- Depends: none
 - Refs: game/autoloads/audio_manager.gd, game/autoloads/battle_manager.gd
-- Notes: Play battle BGM when combat starts, restore area BGM when combat ends. 2 tracks: standard encounter + boss. Wire into BattleManager or battle_start_state.
+- Notes: MERGED INTO T-0064. This ticket is superseded — battle music integration is now part of the unified BGM integration task T-0064.
 
 ### T-0066
 - Title: Add UI sound effects (menu, dialogue, buttons)
@@ -300,9 +301,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 - Assigned: unassigned
 - Priority: medium
 - Milestone: M0
-- Depends: T-0063
+- Depends: none
 - Refs: game/autoloads/audio_manager.gd, game/ui/dialogue/dialogue_box.gd
-- Notes: SFX for: menu open/close, button hover/select, dialogue advance, choice select. Wire AudioManager.play_sfx() into UI scripts.
+- Notes: SFX for: menu open/close, button hover/select, dialogue advance, choice select. Wire AudioManager.play_sfx() into UI scripts. No SFX assets exist yet — will need to source or create.
 
 ### T-0067
 - Title: Add combat sound effects (attack, magic, heal, death)
@@ -310,9 +311,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 - Assigned: unassigned
 - Priority: medium
 - Milestone: M0
-- Depends: T-0063
+- Depends: none
 - Refs: game/autoloads/audio_manager.gd, game/systems/battle/states/action_execute_state.gd
-- Notes: SFX: physical attack hit, magic cast, healing chime, enemy death, critical hit, status effect apply, resonance overload. Wire into action_execute_state.gd.
+- Notes: SFX: physical attack hit, magic cast, healing chime, enemy death, critical hit, status effect apply, resonance overload. Wire into action_execute_state.gd. No SFX assets exist yet — will need to source or create.
 
 ### T-0068
 - Title: Build settings/options menu with volume sliders
