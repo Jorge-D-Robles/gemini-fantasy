@@ -2,6 +2,7 @@ extends GutTest
 
 ## Tests for Battler — HP, EE, damage formulas, Resonance, status effects.
 
+const GameBalance = preload("res://systems/game_balance.gd")
 const Helpers = preload("res://tests/helpers/test_helpers.gd")
 
 var _battler: Battler
@@ -150,7 +151,7 @@ func test_defend_gains_resonance() -> void:
 
 func test_resonance_capped_at_max() -> void:
 	_battler.add_resonance(200.0)
-	assert_eq(_battler.resonance_gauge, Battler.RESONANCE_MAX)
+	assert_eq(_battler.resonance_gauge, GameBalance.RESONANCE_MAX)
 
 
 # ---- Defend ----

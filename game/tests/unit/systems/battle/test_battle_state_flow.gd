@@ -3,6 +3,7 @@ extends GutTest
 ## Tests for battle state flow — skill availability, cancel handling,
 ## and graceful fallback when actions fail mid-execution.
 
+const GameBalance = preload("res://systems/game_balance.gd")
 const Helpers = preload("res://tests/helpers/test_helpers.gd")
 
 
@@ -60,7 +61,7 @@ func test_hollow_state_returns_no_abilities() -> void:
 	add_child_autofree(b)
 
 	# Force hollow state by reaching overload then getting defeated
-	b.resonance_gauge = Battler.RESONANCE_OVERLOAD_THRESHOLD + 1
+	b.resonance_gauge = GameBalance.RESONANCE_OVERLOAD_THRESHOLD + 1
 	b.resonance_state = Battler.ResonanceState.HOLLOW
 
 	var available := b.get_available_abilities()

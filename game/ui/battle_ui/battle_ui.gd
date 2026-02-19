@@ -19,6 +19,7 @@ enum Command {
 	FLEE,
 }
 
+const GameBalance = preload("res://systems/game_balance.gd")
 const UIHelpers = preload("res://ui/ui_helpers.gd")
 const UITheme = preload("res://ui/ui_theme.gd")
 
@@ -63,7 +64,7 @@ func _ready() -> void:
 	_target_selector.visible = false
 	_victory_screen.visible = false
 	_defeat_screen.visible = false
-	_resonance_bar.max_value = Battler.RESONANCE_MAX
+	_resonance_bar.max_value = GameBalance.RESONANCE_MAX
 
 	_apply_panel_styles()
 	_connect_command_buttons()

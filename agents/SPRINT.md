@@ -9,18 +9,17 @@ Started: 2026-02-18
 
 ## Active
 
-(none)
+### T-0071
+- Title: Centralize game balance constants into game_balance.gd
+- Status: in-progress
+- Assigned: claude
+- Priority: high
+- Depends: none
+- Started: 2026-02-19
 
 ---
 
 ## Queue
-
-### T-0071
-- Title: Centralize game balance constants into game_balance.gd
-- Status: todo
-- Assigned: unassigned
-- Priority: high
-- Depends: none
 
 ### T-0059
 - Title: Roothollow — add AbovePlayer tilemap layer and consolidate tree sprites
