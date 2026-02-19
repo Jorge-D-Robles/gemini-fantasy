@@ -4,6 +4,7 @@ Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[
 
 ---
 
+- [2026-02-19] T-0083: Update Roothollow NPC dialogue to match story scripts and style guide — Verdant Tangle slang for 5 NPCs, Cindral Wastes voice for Garrick, fixed 4 cliché lines, 6 new tests (claude)
 - [2026-02-19] T-0139: Source SFX assets for UI and combat — 10 procedural placeholder OGGs, SfxLibrary constants class, sfx/CLAUDE.md, 7 tests (claude)
 - [2026-02-19] T-0084: Add companion follower sprites in overworld — CompanionController/CompanionFollower, Iris+Garrick sprites, position history buffer, 18 tests (claude)
 
