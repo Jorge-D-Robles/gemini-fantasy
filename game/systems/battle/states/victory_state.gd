@@ -2,6 +2,8 @@ extends State
 
 ## Handles battle victory: calculates rewards, shows victory screen.
 
+const UITheme = preload("res://ui/ui_theme.gd")
+
 var battle_scene: Node = null
 
 
@@ -37,7 +39,8 @@ func enter() -> void:
 	if battle_ui:
 		battle_ui.show_victory(total_exp, total_gold, items)
 		battle_ui.add_battle_log(
-			"Victory! Gained %d EXP and %d Gold." % [total_exp, total_gold]
+			"Victory! Gained %d EXP and %d Gold." % [total_exp, total_gold],
+			UITheme.LogType.VICTORY,
 		)
 
 	# Wait for player to dismiss victory screen

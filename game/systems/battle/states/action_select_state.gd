@@ -2,6 +2,8 @@ extends State
 
 ## Handles skill and item submenu selection.
 
+const UITheme = preload("res://ui/ui_theme.gd")
+
 var battle_scene: Node = null
 var _battle_ui: Node = null
 var _mode: String = ""
@@ -22,7 +24,9 @@ func enter() -> void:
 	if _mode == "item":
 		var usable: Array[ItemData] = InventoryManager.get_usable_items()
 		if usable.is_empty():
-			_battle_ui.add_battle_log("No items available!")
+			_battle_ui.add_battle_log(
+				"No items available!", UITheme.LogType.SYSTEM,
+			)
 			state_machine.transition_to("PlayerTurn")
 			return
 		var items_as_resource: Array[Resource] = []
@@ -39,7 +43,9 @@ func enter() -> void:
 			var party_battler := battler as PartyBattler
 			var available := party_battler.get_available_abilities()
 			if available.is_empty():
-				_battle_ui.add_battle_log("No skills available!")
+				_battle_ui.add_battle_log(
+					"No skills available!", UITheme.LogType.SYSTEM,
+				)
 				state_machine.transition_to("PlayerTurn")
 				return
 			_mode = "skill"

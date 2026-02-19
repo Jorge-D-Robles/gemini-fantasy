@@ -2,6 +2,8 @@ extends State
 
 ## Shows the command menu for the active party member.
 
+const UITheme = preload("res://ui/ui_theme.gd")
+
 var battle_scene: Node = null
 var _battle_ui: Node = null
 
@@ -46,15 +48,20 @@ func _on_command_selected(command: String) -> void:
 		"defend":
 			battle_scene.current_battler.defend()
 			_battle_ui.add_battle_log(
-				"%s defends." % battle_scene.current_battler.get_display_name()
+				"%s defends." % battle_scene.current_battler.get_display_name(),
+				UITheme.LogType.INFO,
 			)
 			_battle_ui.hide_command_menu()
 			state_machine.transition_to("TurnEnd")
 		"flee":
 			if battle_scene.can_escape:
-				_battle_ui.add_battle_log("The party fled!")
+				_battle_ui.add_battle_log(
+					"The party fled!", UITheme.LogType.INFO,
+				)
 				_battle_ui.hide_command_menu()
 				battle_scene.end_battle(false)
 			else:
-				_battle_ui.add_battle_log("Can't escape!")
+				_battle_ui.add_battle_log(
+					"Can't escape!", UITheme.LogType.SYSTEM,
+				)
 				_battle_ui.show_command_menu(battle_scene.current_battler)

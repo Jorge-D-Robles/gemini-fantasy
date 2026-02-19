@@ -9,14 +9,6 @@ Started: 2026-02-18
 
 ## Active
 
-### T-0071
-- Title: Centralize game balance constants into game_balance.gd
-- Status: in-progress
-- Assigned: claude
-- Priority: high
-- Depends: none
-- Started: 2026-02-19
-
 ---
 
 ## Queue
@@ -30,13 +22,6 @@ Started: 2026-02-18
 
 ### T-0062
 - Title: Add boundary collision walls to all map edges
-- Status: todo
-- Assigned: unassigned
-- Priority: high
-- Depends: none
-
-### T-0052
-- Title: Color-code battle log messages by type
 - Status: todo
 - Assigned: unassigned
 - Priority: high
@@ -381,3 +366,17 @@ Started: 2026-02-18
 - Assigned: claude
 - Completed: 2026-02-19
 - Notes: Created ui_theme.gd (19 color constants) and ui_helpers.gd (3 static utilities). Refactored 6 UI files. 19 tests.
+
+### T-0071
+- Title: Centralize game balance constants into game_balance.gd
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: Created game_balance.gd (22 constants, 7 categories). Refactored 5 source files. 23 tests.
+
+### T-0052
+- Title: Color-code battle log messages by type
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: LogType enum + 7 LOG_* colors in ui_theme.gd, BBCode color wrapping in add_battle_log(), all 25 call sites updated across 8 files. Fixed duplicate const GB in enemy_battler.gd. 16 tests.

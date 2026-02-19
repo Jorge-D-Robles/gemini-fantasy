@@ -5,8 +5,6 @@ extends Battler
 
 signal ai_action_chosen(action: BattleAction)
 
-const GB = preload("res://systems/game_balance.gd")
-
 @export var ai_type: EnemyData.AiType = EnemyData.AiType.BASIC
 
 var loot_table: Array[Dictionary] = []
