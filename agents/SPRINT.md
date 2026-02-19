@@ -27,14 +27,6 @@ Started: 2026-02-18
 - Priority: high
 - Depends: none
 
-### T-0053
-- Title: Add floating damage numbers above targets
-- Status: in-progress
-- Assigned: claude
-- Priority: high
-- Depends: none
-- Started: 2026-02-19
-
 ### T-0087
 - Title: Add on-screen objective tracker UI
 - Status: todo
@@ -381,3 +373,10 @@ Started: 2026-02-18
 - Assigned: claude
 - Completed: 2026-02-19
 - Notes: LogType enum + 7 LOG_* colors in ui_theme.gd, BBCode color wrapping in add_battle_log(), all 25 call sites updated across 8 files. Fixed duplicate const GB in enemy_battler.gd. 16 tests.
+
+### T-0053
+- Title: Add floating damage numbers above targets
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
+- Notes: Created reusable DamagePopup component (script-only Node2D). Supports DAMAGE/HEAL/CRITICAL types with colored text, 0.8s float-up animation. Replaced inline single-label in both battler scenes. Added missing show_heal_number() to EnemyBattlerScene. 11 tests.
