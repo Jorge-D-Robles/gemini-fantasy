@@ -9,20 +9,62 @@ extends RefCounted
 
 const TILE_SIZE: int = 16
 
-# --- Terrain sheets (A5 format: 128x256, 8 cols x 16 rows) ---
+# --- Fairy Forest ---
 const FAIRY_FOREST_A5_A: String = "res://assets/tilesets/tf_ff_tileA5_a.png"
 const FAIRY_FOREST_A5_B: String = "res://assets/tilesets/tf_ff_tileA5_b.png"
-const RUINS_A5: String = "res://assets/tilesets/tf_A5_ruins2.png"
-const OVERGROWN_RUINS_A5: String = "res://assets/tilesets/tf_A5_ruins3.png"
-
-# --- Object sheets (B format: 256x256, 16 cols x 16 rows) ---
 const FOREST_OBJECTS: String = "res://assets/tilesets/tf_ff_tileB_forest.png"
 const TREE_OBJECTS: String = "res://assets/tilesets/tf_ff_tileB_trees.png"
 const STONE_OBJECTS: String = "res://assets/tilesets/tf_ff_tileB_stone.png"
 const MUSHROOM_VILLAGE: String = "res://assets/tilesets/tf_ff_tileB_mushroomvillage.png"
+
+# --- Ruin Dungeons ---
+const RUINS1_A5: String = "res://assets/tilesets/tf_A5_ruins1.png"
+const RUINS_A5: String = "res://assets/tilesets/tf_A5_ruins2.png"
+const OVERGROWN_RUINS_A5: String = "res://assets/tilesets/tf_A5_ruins3.png"
+const RUINS1_OBJECTS: String = "res://assets/tilesets/tf_B_ruins1.png"
 const RUINS_OBJECTS: String = "res://assets/tilesets/tf_B_ruins2.png"
 const OVERGROWN_RUINS_OBJECTS: String = "res://assets/tilesets/tf_B_ruins3.png"
+
+# --- Giant Tree ---
+const GIANT_TREE_A5_EXT: String = "res://assets/tilesets/tf_A5_gianttree_ext.png"
+const GIANT_TREE_A5_INT: String = "res://assets/tilesets/tf_A5_gianttree_int.png"
 const GIANT_TREE: String = "res://assets/tilesets/tf_B_gianttree_ext.png"
+const GIANT_TREE_INT: String = "res://assets/tilesets/tf_B_gianttree_int.png"
+
+# --- Ashlands ---
+const ASHLANDS_A5: String = "res://assets/tilesets/tf_A5_ashlands_1.png"
+const ASHLANDS_OBJECTS: String = "res://assets/tilesets/tf_B_ashlands_1.png"
+
+# --- Atlantis ---
+const ATLANTIS_A5_A: String = "res://assets/tilesets/tf_A5_atlantisA.png"
+const ATLANTIS_A5_B: String = "res://assets/tilesets/tf_A5_atlantisB.png"
+const ATLANTIS_OBJECTS_A: String = "res://assets/tilesets/tf_B_atlantisA.png"
+const ATLANTIS_OBJECTS_B: String = "res://assets/tilesets/tf_B_atlantisB.png"
+
+# --- Dark Dimension ---
+const DARK_DIMENSION_A5: String = "res://assets/tilesets/tf_dd_A5_1.png"
+const DARK_DIMENSION_OBJECTS: String = "res://assets/tilesets/tf_dd_B_1.png"
+
+# --- Steampunk ---
+const STEAMPUNK_A5_DUNGEON: String = "res://assets/tilesets/tfsteampunk_tileA5_dungeon.png"
+const STEAMPUNK_A5_INT: String = "res://assets/tilesets/tfsteampunk_tileA5_int.png"
+const STEAMPUNK_A5_TRAIN: String = "res://assets/tilesets/tfsteampunk_tileA5_trainint.png"
+const STEAMPUNK_CITY1: String = "res://assets/tilesets/tfsteampunk_tileB_city1.png"
+const STEAMPUNK_CITY2: String = "res://assets/tilesets/tfsteampunk_tileB_city2.png"
+const STEAMPUNK_CITY2B: String = "res://assets/tilesets/tfsteampunk_tileB_city2b.png"
+const STEAMPUNK_CITY2C: String = "res://assets/tilesets/tfsteampunk_tileB_city2c.png"
+const STEAMPUNK_DUNGEON: String = "res://assets/tilesets/tfsteampunk_tileB_dungeon.png"
+const STEAMPUNK_INT1: String = "res://assets/tilesets/tfsteampunk_tileB_int1.png"
+const STEAMPUNK_INT2: String = "res://assets/tilesets/tfsteampunk_tileB_int2.png"
+const STEAMPUNK_TRAIN1: String = "res://assets/tilesets/tfsteampunk_tileB_train1.png"
+const STEAMPUNK_TRAIN2: String = "res://assets/tilesets/tfsteampunk_tileB_train2.png"
+const SEWERS_A5: String = "res://assets/tilesets/tfsewers_tileA5_1.png"
+const SEWERS_OBJECTS: String = "res://assets/tilesets/tfsewers_tileB_1.png"
+
+# --- Winter ---
+const WINTER_OBJECTS_B: String = "res://assets/tilesets/tf_winter_tileB.png"
+const WINTER_OBJECTS_C: String = "res://assets/tilesets/tf_winter_tileC.png"
+const WINTER_OBJECTS_D: String = "res://assets/tilesets/tf_winter_tileD.png"
 
 
 ## Create a TileSetAtlasSource from a texture path.
