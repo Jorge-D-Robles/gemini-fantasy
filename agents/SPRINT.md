@@ -1,9 +1,9 @@
 # Current Sprint
 
-Sprint: S02-demo
+Sprint: S03-demo-polish
 Milestone: M0
-Goal: Build the first playable demo — 3 areas, NPC dialogue, inventory, battle rewards, HP persistence
-Started: 2026-02-16
+Goal: Polish demo to professional quality — fix tilemaps, add battle backgrounds, integrate audio, align dialogue with story scripts, add navigation markers, refactor monolithic code into reusable components
+Started: 2026-02-18
 
 ---
 
@@ -15,246 +15,386 @@ Started: 2026-02-16
 
 ## Queue
 
-(empty)
+### T-0049
+- Title: BUG — Verdant Forest camera limit cuts off bottom row
+- Status: todo
+- Assigned: unassigned
+- Priority: critical
+- Depends: none
+
+### T-0051
+- Title: Add battle background sprite and scene backdrop
+- Status: todo
+- Assigned: unassigned
+- Priority: critical
+- Depends: none
+
+### T-0069
+- Title: Extract shared UI helpers (colors, focus nav, panel styles, clear_children)
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Depends: none
+
+### T-0071
+- Title: Centralize game balance constants into game_balance.gd
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Depends: none
+
+### T-0059
+- Title: Roothollow — add AbovePlayer tilemap layer and consolidate tree sprites
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Depends: none
+
+### T-0062
+- Title: Add boundary collision walls to all map edges
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Depends: none
+
+### T-0052
+- Title: Color-code battle log messages by type
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Depends: none
+
+### T-0053
+- Title: Add floating damage numbers above targets
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Depends: none
+
+### T-0087
+- Title: Add on-screen objective tracker UI
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Depends: none
+
+### T-0088
+- Title: Add visual markers for zone transitions (sparkle/arrow effects)
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Depends: none
+
+### T-0089
+- Title: Add NPC interaction indicators (speech bubble icon above head)
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Depends: none
+
+### T-0090
+- Title: Add quest log/journal UI screen
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Depends: none
+
+### T-0079
+- Title: Expand opening sequence to match Chapter 1 story script
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Depends: none
+
+### T-0080
+- Title: Expand Lyra discovery dialogue to match story script (~50 lines)
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Depends: T-0079
+
+### T-0081
+- Title: Expand Iris recruitment to match Chapter 3 story script
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Depends: none
+
+### T-0082
+- Title: Expand Garrick recruitment to match story script
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Depends: none
+
+### T-0070
+- Title: Split battler.gd into damage calculator, resonance controller, and status manager
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Depends: none
+
+### T-0063
+- Title: Source and import BGM tracks for demo areas
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Depends: none
+
+### T-0064
+- Title: Integrate BGM playback into scene _ready() methods
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Depends: T-0063
+
+### T-0065
+- Title: Add battle music (standard encounters and boss)
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Depends: T-0063
+
+### T-0072
+- Title: Create scene_paths.gd for centralized scene path constants
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Depends: none
+
+### T-0060
+- Title: Roothollow — reduce ground detail density from 50% to 15%
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Depends: none
+
+### T-0050
+- Title: BUG — Overgrown Ruins spawn position check uses Vector2.ZERO comparison
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Depends: none
+
+### T-0054
+- Title: Add status effect icons/badges on battler panels
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Depends: none
+
+### T-0055
+- Title: Improve battle target selector with name label and highlight
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Depends: none
+
+### T-0056
+- Title: Enhance victory screen with portraits and level-up display
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Depends: none
+
+### T-0073
+- Title: Split roothollow.gd into tilemap, dialogue, and quest handler modules
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Depends: none
+
+### T-0074
+- Title: Split battle_ui.gd into composable panel components
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Depends: T-0069
+
+### T-0075
+- Title: Split inventory_ui.gd into category manager, detail panel, and applicator
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Depends: T-0069
+
+### T-0076
+- Title: Split shop_ui.gd into buy panel, sell panel, and character selector
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Depends: T-0069
+
+### T-0066
+- Title: Add UI sound effects (menu, dialogue, buttons)
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Depends: T-0063
+
+### T-0067
+- Title: Add combat sound effects (attack, magic, heal, death)
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Depends: T-0063
+
+### T-0068
+- Title: Build settings/options menu with volume sliders
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Depends: T-0064
+
+### T-0084
+- Title: Add companion follower sprites in overworld
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Depends: none
+
+### T-0083
+- Title: Update Roothollow NPC dialogue to match story scripts and style guide
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Depends: none
+
+### T-0085
+- Title: Implement Chapter 4 content — Garrick's deeper story at the shrine
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Depends: T-0082
+
+### T-0086
+- Title: Add demo ending sequence with "Thanks for playing" screen
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Depends: T-0085
+
+### T-0091
+- Title: Add area name display on zone transitions
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Depends: none
+
+### T-0092
+- Title: Add tutorial hints for controls on first playthrough
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Depends: none
+
+### T-0094
+- Title: Implement battle ability animations and visual effects
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Depends: none
+
+### T-0095
+- Title: Add battler idle animations in combat
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Depends: none
+
+### T-0097
+- Title: Add save point visual markers in scenes
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Depends: none
+
+### T-0101
+- Title: Implement party formation and swap UI in pause menu
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Depends: T-0020
+
+### T-0057
+- Title: Improve turn order display with current actor highlight
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Depends: none
+
+### T-0058
+- Title: Add screen shake on heavy damage
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Depends: none
+
+### T-0061
+- Title: Overgrown Ruins — separate debris layer and fix z-index ambiguity
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Depends: none
+
+### T-0077
+- Title: Split verdant_forest.gd and overgrown_ruins.gd into tilemap/encounter/dialogue modules
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Depends: T-0073
+
+### T-0078
+- Title: Create reusable asset loader helper with consistent null-check pattern
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Depends: none
+
+### T-0093
+- Title: Add fragment tracker / compass UI for story objectives
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Depends: T-0087
+
+### T-0096
+- Title: Add particle effects for healing, resonance, and criticals
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Depends: T-0094
+
+### T-0098
+- Title: Add overworld encounter warning (grass rustle before battle)
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Depends: none
+
+### T-0099
+- Title: Add transition animations between zones (beyond fade)
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Depends: none
+
+### T-0100
+- Title: Add NPC idle animations (breathing, head turn, fidget)
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Depends: none
+
+### T-0102
+- Title: Add minimap or compass to HUD
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Depends: none
 
 ---
 
 ## Done This Sprint
 
-### T-0048
-- Title: Organic tilemap overhaul — multi-terrain ground, dense detail for all 3 scenes
-- Status: done
-- Assigned: claude
-- Started: 2026-02-18
-- Completed: 2026-02-18
-
-### T-0047
-- Title: Visual overhaul — multi-tile objects, NPC sprites, boundary fixes for all 3 scenes
-- Status: done
-- Assigned: claude
-- Started: 2026-02-18
-- Completed: 2026-02-18
-
-### T-0035
-- Title: Create Lyra character data and abilities
-- Status: done
-- Assigned: claude
-- Started: 2026-02-18
-- Completed: 2026-02-18
-
-### T-0036
-- Title: Create The Last Gardener boss enemy data
-- Status: done
-- Assigned: claude
-- Started: 2026-02-18
-- Completed: 2026-02-18
-
-### T-0037
-- Title: Create additional character abilities for Kael, Iris, and Garrick
-- Status: done
-- Assigned: claude
-- Started: 2026-02-18
-- Completed: 2026-02-18
-
-### T-0038
-- Title: Create additional items and equipment for shops and dungeon loot
-- Status: done
-- Assigned: claude
-- Started: 2026-02-18
-- Completed: 2026-02-18
-
-### T-0039
-- Title: Create quest data files for 3 demo side quests
-- Status: done
-- Assigned: claude
-- Started: 2026-02-18
-- Completed: 2026-02-18
-
-### T-0040
-- Title: Build shop system with ShopData resource and ShopManager autoload
-- Status: done
-- Assigned: claude
-- Started: 2026-02-18
-- Completed: 2026-02-18
-
-### T-0041
-- Title: Build inventory UI for browsing and using items outside battle
-- Status: done
-- Assigned: claude
-- Started: 2026-02-18
-- Completed: 2026-02-18
-
-### T-0042
-- Title: Build shop UI for buying and selling items
-- Status: done
-- Assigned: claude
-- Started: 2026-02-18
-- Completed: 2026-02-18
-
-### T-0043
-- Title: Wire Lyra recruitment event into Overgrown Ruins scene
-- Status: done
-- Assigned: claude
-- Started: 2026-02-18
-- Completed: 2026-02-18
-
-### T-0044
-- Title: Build boss encounter for The Last Gardener in Overgrown Ruins
-- Status: done
-- Assigned: claude
-- Started: 2026-02-18
-- Completed: 2026-02-18
-
-### T-0045
-- Title: Wire shop NPC and side quests into game scenes
-- Status: done
-- Assigned: claude
-- Started: 2026-02-18
-- Completed: 2026-02-18
-
-### T-0046
-- Title: Integration — register autoloads, wire UIs, update systems, run tests
-- Status: done
-- Assigned: claude
-- Started: 2026-02-18
-- Completed: 2026-02-18
-
-### T-0007
-- Title: Wire unconnected signals to EventBus or QuestManager
-- Status: done
-- Assigned: claude
-- Started: 2026-02-16
-- Completed: 2026-02-16
-
-### T-0016
-- Title: Build quest tracking system
-- Status: done
-- Assigned: claude
-- Started: 2026-02-16
-- Completed: 2026-02-16
-
-### T-0015
-- Title: Implement Resonance gauge UI and overload/hollow mechanics
-- Status: done
-- Assigned: claude
-- Started: 2026-02-16
-- Completed: 2026-02-16
-
-### T-0017
-- Title: Implement status effect system
-- Status: done
-- Assigned: claude
-- Started: 2026-02-16
-- Completed: 2026-02-16
-
-### T-0013
-- Title: Build equipment system
-- Status: done
-- Assigned: claude
-- Started: 2026-02-16
-- Completed: 2026-02-16
-
-### T-0034
-- Title: BUG — Dialogue and encounter can overlap in same frame
-- Status: done
-- Assigned: claude
-- Completed: 2026-02-16
-
-### T-0033
-- Title: Add demo conclusion event
-- Status: done
-- Assigned: claude
-- Completed: 2026-02-16
-
-### T-0032
-- Title: Build basic save/load system
-- Status: done
-- Assigned: claude
-- Completed: 2026-02-16
-
-### T-0027
-- Title: Implement party HP/EE persistence between battles
-- Status: done
-- Assigned: claude
-- Completed: 2026-02-16
-
-### T-0012
-- Title: Build inventory system
-- Status: done
-- Assigned: claude
-- Completed: 2026-02-16
-
-### T-0028
-- Title: Wire item usage in battle
-- Status: done
-- Assigned: claude
-- Completed: 2026-02-16
-
-### T-0029
-- Title: Implement innkeeper healing with persistent HP/EE
-- Status: done
-- Assigned: claude
-- Completed: 2026-02-16
-
-### T-0030
-- Title: Build battle victory rewards screen
-- Status: done
-- Assigned: claude
-- Completed: 2026-02-16
-
-### T-0031
-- Title: Add NPC entities and dialogue content to Roothollow
-- Status: done
-- Assigned: claude
-- Completed: 2026-02-16
-
-### T-0019
-- Title: Implement leveling and XP system
-- Status: done
-- Assigned: claude
-- Completed: 2026-02-16
-
-(Carried over from S01)
-
-### T-0020
-- Title: Battle system state persistence, real-time UI sync, and visual feedback
-- Status: done
-- Assigned: claude
-- Completed: 2026-02-16
-
-### T-0001
-- Title: Add class_name declarations to all autoload scripts
-- Status: wontfix
-- Assigned: claude
-- Notes: INVALID — Godot autoloads cannot have class_name; causes "hides autoload singleton" error. Reverted.
-- Completed: 2026-02-16
-
-### T-0002
-- Title: Extract TurnQueue into its own scene
-- Status: done
-- Assigned: claude
-- Completed: 2026-02-16
-
-### T-0003
-- Title: Refactor Interactable into composition pattern
-- Status: done
-- Assigned: claude
-- Completed: 2026-02-16
-
-### T-0004
-- Title: Replace Dictionary-based dialogue/encounter data with custom Resources
-- Status: done
-- Assigned: claude
-- Completed: 2026-02-16
-
-### T-0005
-- Title: Replace meta-based state communication with typed BattleAction
-- Status: done
-- Assigned: claude
-- Completed: 2026-02-16
-
-### T-0006
-- Title: Use AnimatedSprite2D for player animation
-- Status: done
-- Assigned: claude
-- Completed: 2026-02-16
+(none yet — carried forward from S02: T-0047, T-0048 completed before sprint start)
