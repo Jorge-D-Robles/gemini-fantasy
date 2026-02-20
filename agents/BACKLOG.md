@@ -222,13 +222,15 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0023
 - Title: Implement camp/rest system
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: medium
 - Milestone: M0
 - Depends: T-0009
-- Refs: docs/game-design/01-core-mechanics.md
-- Notes: Rest at designated points. Full HP/EE restore. Optional bonding scenes. Camp menu UI.
+- Refs: docs/game-design/01-core-mechanics.md, game/ui/camp_menu/camp_menu.gd, game/entities/interactable/strategies/camp_strategy.gd
+- Notes: Rest at designated points. Full HP/EE restore. Optional bonding scenes. Camp menu UI. CampMenuData static helper; CampMenu script-only Control (Rest + Leave Camp); CampStrategy opens from any Interactable. Follow-up: place campfire interactable in Verdant Forest.
 
 ### T-0024
 - Title: Implement fast travel system
