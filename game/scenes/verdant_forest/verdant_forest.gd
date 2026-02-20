@@ -11,7 +11,7 @@ const HOLLOW_SPECTER_PATH: String = "res://data/enemies/hollow_specter.tres"
 const ANCIENT_SENTINEL_PATH: String = "res://data/enemies/ancient_sentinel.tres"
 const GALE_HARPY_PATH: String = "res://data/enemies/gale_harpy.tres"
 const EMBER_HOUND_PATH: String = "res://data/enemies/ember_hound.tres"
-const SCENE_BGM_PATH: String = "res://assets/music/Desert Theme.ogg"
+const SCENE_BGM_PATH: String = "res://assets/music/Verdant Forest.ogg"
 
 # ---------- TILE LEGENDS ----------
 
