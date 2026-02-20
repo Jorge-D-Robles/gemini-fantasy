@@ -3,7 +3,7 @@ extends GutTest
 ## Tests for Verdant Forest CANOPY_MAP — verifies south-half canopy
 ## coverage so trunks in rows 17-23 have AbovePlayer tiles above them.
 
-const VerdantForest = preload("res://scenes/verdant_forest/verdant_forest.gd")
+const VerdantForest = preload("res://scenes/verdant_forest/verdant_forest_map.gd")
 
 const MAP_ROWS: int = 25
 const MAP_COLS: int = 40
