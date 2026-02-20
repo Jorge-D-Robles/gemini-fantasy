@@ -87,16 +87,18 @@ Started: 2026-02-20
 
 ### T-0201
 - Title: Place childs_laughter echo interactable in Verdant Forest
-- Status: in-progress
+- Status: done
 - Assigned: claude
 - Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: medium
 - Depends: T-0182, T-0198
 
 ### T-0196
 - Title: Add OVERGROWN_CAPITAL constant to ScenePaths
-- Status: todo
-- Assigned: unassigned
+- Status: in-progress
+- Assigned: claude
+- Started: 2026-02-20
 - Priority: low
 - Depends: none
 

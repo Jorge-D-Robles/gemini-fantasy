@@ -61,11 +61,23 @@ func test_battle_scene_path_defined() -> void:
 	)
 
 
+func test_overgrown_capital_path_defined() -> void:
+	assert_true(
+		SP.OVERGROWN_CAPITAL.ends_with(".tscn"),
+		"OVERGROWN_CAPITAL should be a .tscn path",
+	)
+	assert_true(
+		SP.OVERGROWN_CAPITAL.contains("overgrown_capital"),
+		"OVERGROWN_CAPITAL path should contain 'overgrown_capital'",
+	)
+
+
 func test_all_paths_start_with_res() -> void:
 	var paths: Array[String] = [
 		SP.ROOTHOLLOW,
 		SP.VERDANT_FOREST,
 		SP.OVERGROWN_RUINS,
+		SP.OVERGROWN_CAPITAL,
 		SP.TITLE_SCREEN,
 		SP.BATTLE_SCENE,
 	]
@@ -81,6 +93,7 @@ func test_paths_are_unique() -> void:
 		SP.ROOTHOLLOW,
 		SP.VERDANT_FOREST,
 		SP.OVERGROWN_RUINS,
+		SP.OVERGROWN_CAPITAL,
 		SP.TITLE_SCREEN,
 		SP.BATTLE_SCENE,
 	]
