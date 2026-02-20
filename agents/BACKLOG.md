@@ -43,8 +43,10 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0172
 - Title: Add party banter trigger scaffold — BanterManager static helper
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: low
 - Milestone: M0
 - Depends: T-0081, T-0082
@@ -118,8 +120,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0166
 - Title: BUG — Defend stance clears before enemy can attack (is_defending reset in TurnEnd)
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: low
 - Milestone: M0
 - Depends: none
