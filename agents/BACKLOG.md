@@ -1082,8 +1082,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0184
 - Title: Seed ability tree .tres files for all 8 party members
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: high
 - Milestone: M1
 - Depends: T-0018
@@ -1463,8 +1464,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0190
 - Title: Implement Chapter 5 Overgrown Capital dungeon tilemap and navigation skeleton
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: high
 - Milestone: M1
 - Depends: T-0103
@@ -1524,8 +1526,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0196
 - Title: Add ScenePaths constant for Overgrown Capital and mark T-0106 superseded
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: low
 - Milestone: M1
 - Depends: none
@@ -1534,8 +1537,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0197
 - Title: Seed Story Echo .tres files for Act I (Morning Commute, Family Dinner, Warning Ignored, The First Crack)
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: high
 - Milestone: M1
 - Depends: T-0182
@@ -1544,8 +1548,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0198
 - Title: Refactor MemorialEchoStrategy to support generic echo placement (not tied to elder_wisdom quest)
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: high
 - Milestone: M1
 - Depends: T-0182
@@ -1574,8 +1579,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0201
 - Title: Place childs_laughter echo interactable in Verdant Forest at camp clearing
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: medium
 - Milestone: M1
 - Depends: T-0182, T-0198
@@ -1761,6 +1767,45 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 - Depends: T-0018, T-0184
 - Refs: docs/mechanics/character-abilities.md, game/resources/skill_tree_data.gd, docs/best-practices/08-ui-patterns.md
 - Notes: Script-only SkillTreeUI Control (same pattern as echo_journal.gd). Character tab per party member. Node list with name, SP cost, unlocked/locked/available state, parent dependency shown. Confirm button spends skill_points from CharacterData. compute_skill_tree_entries(char_data) and compute_node_state(node, char_data) static helpers for TDD. "Skill Tree" button added to pause menu. 8+ tests.
+
+### T-0220
+- Title: Mark T-0008, T-0010, T-0011 as done — superseded by T-0181 hygiene sweep
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Milestone: M0
+- Depends: none
+- Notes: T-0181 (M0 hygiene sweep) explicitly combined and addressed T-0008 (replace has_method duck-typing), T-0010 (add return type hints), T-0011 (add doc comments). Update their Status to done with Superseded note pointing to T-0181. Doc-only change, 0 tests required.
+
+### T-0221
+- Title: Seed AbilityData .tres files for Kael's full ability set (7 abilities)
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Milestone: M1
+- Depends: T-0018, T-0184
+- Refs: docs/mechanics/character-abilities.md (Kael Voss section), game/data/abilities/, game/resources/ability_data.gd
+- Notes: Create 7 AbilityData .tres files from design doc: echo_strike, resonance_pulse, memory_weave, adaptive_strike, echo_fusion, reality_anchor, convergence_touch. Stats per docs/mechanics/character-abilities.md (EE costs, damage types, elements). 7+ tests verifying EE cost, damage_stat type, and non-empty display_name per ability.
+
+### T-0222
+- Title: Seed AbilityData .tres files for Iris and Garrick full ability sets
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Milestone: M1
+- Depends: T-0018, T-0184
+- Refs: docs/mechanics/character-abilities.md (Iris and Garrick sections), game/data/abilities/
+- Notes: Iris: heavy_strike, emp_burst, overclock, shrapnel_shot, prototype_deploy, resonance_disruptor, railgun (7 abilities). Garrick: guardians_stand, purifying_light, shield_bash, martyrs_resolve, crystal_purge, unbreakable, last_stand (7 abilities). Stats per design doc. 10+ tests covering at least one ability per character.
+
+### T-0223
+- Title: Seed AbilityData .tres files for Nyx and Lyra (4-ability stubs each)
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M1
+- Depends: T-0018
+- Refs: docs/mechanics/character-abilities.md (Nyx and Lyra sections), game/data/abilities/
+- Notes: Nyx: void_bolt, phase_shift, reality_break, shadow_bind (first 4 of 7). Lyra: echo_mend, memory_strike, resonance_shield, fragment_vision (matches existing ability refs in lyra.tres). 6+ tests.
 
 ---
 
