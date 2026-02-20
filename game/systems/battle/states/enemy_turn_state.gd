@@ -3,6 +3,7 @@ extends State
 ## AI chooses and executes an action for the current enemy battler.
 
 const UITheme = preload("res://ui/ui_theme.gd")
+const BattlerDamage = preload("res://systems/battle/battler_damage.gd")
 
 var battle_scene: Node = null
 var _battle_ui: Node = null
@@ -34,20 +35,38 @@ func enter() -> void:
 		BattleAction.Type.ATTACK:
 			if action.target and action.target.is_alive:
 				await _play_attacker_anim(enemy)
+				var is_crit := BattlerDamage.roll_crit(enemy.luck)
 				var damage := enemy.deal_damage(enemy.attack)
+				if is_crit:
+					damage = BattlerDamage.apply_crit(damage)
 				var actual := action.target.take_damage(damage)
-				AudioManager.play_sfx(load(SfxLibrary.COMBAT_ATTACK_HIT))
-				if not action.target.is_alive:
-					AudioManager.play_sfx(load(SfxLibrary.COMBAT_DEATH))
-				if _battle_ui:
-					_battle_ui.add_battle_log(
-						"%s attacks %s for %d damage!" % [
-							enemy.get_display_name(),
-							action.target.get_display_name(),
-							actual,
-						],
-						UITheme.LogType.DAMAGE,
-					)
+				if is_crit:
+					AudioManager.play_sfx(load(SfxLibrary.COMBAT_CRITICAL_HIT))
+					if not action.target.is_alive:
+						AudioManager.play_sfx(load(SfxLibrary.COMBAT_DEATH))
+					_show_critical_popup(action.target, actual)
+					if _battle_ui:
+						_battle_ui.add_battle_log(
+							"CRITICAL HIT! %s attacks %s for %d damage!" % [
+								enemy.get_display_name(),
+								action.target.get_display_name(),
+								actual,
+							],
+							UITheme.LogType.DAMAGE,
+						)
+				else:
+					AudioManager.play_sfx(load(SfxLibrary.COMBAT_ATTACK_HIT))
+					if not action.target.is_alive:
+						AudioManager.play_sfx(load(SfxLibrary.COMBAT_DEATH))
+					if _battle_ui:
+						_battle_ui.add_battle_log(
+							"%s attacks %s for %d damage!" % [
+								enemy.get_display_name(),
+								action.target.get_display_name(),
+								actual,
+							],
+							UITheme.LogType.DAMAGE,
+						)
 		BattleAction.Type.ABILITY:
 			if action.ability and action.target:
 				enemy.use_ee(action.ability.ee_cost)
@@ -119,6 +138,15 @@ func _play_attacker_anim(attacker: Battler) -> void:
 	var visual: Node2D = battle_scene.get_visual_scene(attacker)
 	if visual and visual.has_method("play_attack_anim"):
 		await visual.play_attack_anim()
+
+
+func _show_critical_popup(target: Battler, amount: int) -> void:
+	var visual: Node2D = battle_scene.get_visual_scene(target)
+	if not visual:
+		return
+	var popup := DamagePopup.new()
+	visual.add_child(popup)
+	popup.setup(amount, DamagePopup.PopupType.CRITICAL)
 
 
 func _try_apply_status(ability: AbilityData, target: Battler) -> void:
