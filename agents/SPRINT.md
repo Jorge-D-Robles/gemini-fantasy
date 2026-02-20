@@ -168,16 +168,19 @@ Started: 2026-02-20
 
 ### T-0219
 - Title: Build skill tree UI screen — view and unlock nodes from pause menu
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: high
 - Depends: T-0018, T-0184
 
 ### T-0221
 - Title: Seed AbilityData .tres files for Kael's full ability set (7 abilities)
-- Status: in-progress
+- Status: done
 - Assigned: claude
 - Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: high
 - Depends: T-0018, T-0184
 
