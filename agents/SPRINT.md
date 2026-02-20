@@ -52,9 +52,10 @@ Started: 2026-02-20
 
 ### T-0187
 - Title: Build Echo Collection Journal UI (view collected echoes in pause menu)
-- Status: in-progress
+- Status: done
 - Assigned: claude
 - Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: medium
 - Depends: T-0182
 
