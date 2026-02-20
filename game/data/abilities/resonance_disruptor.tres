@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://bresonancedisruptorability"]
+
+[ext_resource type="Script" path="res://resources/ability_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"resonance_disruptor"
+display_name = "Resonance Disruptor"
+description = "Emit a field that cripples all enemies' Resonance generation by 50% for 3 turns. Enemies cannot enter the Resonant state while affected."
+ee_cost = 50
+resonance_cost = 0.0
+damage_base = 0
+damage_stat = 0
+target_type = 1
+element = 0
+status_effect = "resonance_block"
+status_chance = 1.0
+status_effect_duration = 3
+animation_name = "resonance_disruptor"

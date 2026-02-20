@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://bcrystalpurgeability"]
+
+[ext_resource type="Script" path="res://resources/ability_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"crystal_purge"
+display_name = "Crystal Purge"
+description = "Cleanse the area of Resonance corruption with purifying light. Deals heavy damage to Echo-type enemies and heals the entire party."
+ee_cost = 40
+resonance_cost = 0.0
+damage_base = 120
+damage_stat = 1
+target_type = 1
+element = 6
+status_effect = ""
+status_chance = 0.0
+status_effect_duration = 3
+animation_name = "crystal_purge"

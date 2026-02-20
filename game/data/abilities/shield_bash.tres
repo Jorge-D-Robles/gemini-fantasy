@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://bshieldbashability"]
+
+[ext_resource type="Script" path="res://resources/ability_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"shield_bash"
+display_name = "Shield Bash"
+description = "A powerful shield blow that deals physical damage and shoves the enemy back in the turn order. High chance to stun."
+ee_cost = 22
+resonance_cost = 0.0
+damage_base = 110
+damage_stat = 0
+target_type = 0
+element = 0
+status_effect = "stun"
+status_chance = 0.4
+status_effect_duration = 1
+animation_name = "shield_bash"

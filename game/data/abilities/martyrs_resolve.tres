@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://bmartyrsresolveability"]
+
+[ext_resource type="Script" path="res://resources/ability_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"martyrs_resolve"
+display_name = "Martyr's Resolve"
+description = "Garrick steps into the breach — all damage dealt to party members is redirected to him for 2 turns. Grants a temporary HP shield."
+ee_cost = 35
+resonance_cost = 30.0
+damage_base = 0
+damage_stat = 0
+target_type = 4
+element = 0
+status_effect = "damage_redirect"
+status_chance = 1.0
+status_effect_duration = 2
+animation_name = "martyrs_resolve"
