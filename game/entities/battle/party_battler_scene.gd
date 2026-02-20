@@ -5,6 +5,7 @@ extends Node2D
 ## Connects to a PartyBattler logic node for stat/signal data.
 
 const UITheme = preload("res://ui/ui_theme.gd")
+const BP = preload("res://systems/battle/battle_particles.gd")
 const BATTLE_SPRITE_SCALE: float = 3.0
 const BOB_AMPLITUDE: float = 3.0
 const BOB_HALF_PERIOD: float = 0.6
@@ -49,6 +50,7 @@ func bind_battler(target: PartyBattler) -> void:
 	battler.status_effect_applied.connect(_on_status_applied)
 	battler.status_effect_removed.connect(_on_status_removed)
 	battler.defeated.connect(_on_defeated)
+	battler.resonance_state_changed.connect(_on_resonance_state_changed)
 	update_bars()
 
 
@@ -198,3 +200,12 @@ func _on_defeated() -> void:
 	var tween := create_tween()
 	tween.tween_property(sprite, "modulate:a", 0.3, 0.4)
 	await tween.finished
+
+
+func _on_resonance_state_changed(
+	old_state: Battler.ResonanceState,
+	new_state: Battler.ResonanceState,
+) -> void:
+	if not BP.should_show_resonance_flash(old_state, new_state):
+		return
+	_flash_color(BP.compute_resonance_flash_color(new_state))
