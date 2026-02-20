@@ -28,9 +28,12 @@ func enter() -> void:
 			# Apply save data to restore state before the fatal encounter.
 			var data := SaveManager.load_save_data(0)
 			if not data.is_empty():
+				var echo_mgr: Node = get_tree().root.get_node_or_null(
+					"EchoManager"
+				)
 				SaveManager.apply_save_data(
 					data, PartyManager, InventoryManager, EventFlags,
-					EquipmentManager, QuestManager,
+					EquipmentManager, QuestManager, echo_mgr,
 				)
 				var saved_scene: String = data.get("scene_path", SP.TITLE_SCREEN)
 				GameManager.change_scene(saved_scene)
