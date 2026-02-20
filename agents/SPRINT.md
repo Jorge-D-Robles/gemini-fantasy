@@ -52,18 +52,42 @@ Started: 2026-02-20
 
 ### T-0187
 - Title: Build Echo Collection Journal UI (view collected echoes in pause menu)
-- Status: in-progress
+- Status: done
 - Assigned: claude
 - Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: medium
 - Depends: T-0182
 
 ### T-0103
 - Title: Implement Chapter 5 — The Overgrown Capital dungeon
-- Status: todo
+- Status: superseded
 - Assigned: unassigned
 - Priority: high
 - Depends: T-0085
+- Notes: Superseded by T-0190/T-0191/T-0192/T-0193/T-0194/T-0195. Work against sub-tasks.
+
+### T-0198
+- Title: Refactor MemorialEchoStrategy for generic echo placement
+- Status: in-progress
+- Assigned: claude
+- Started: 2026-02-20
+- Priority: high
+- Depends: T-0182
+
+### T-0197
+- Title: Seed Story Echo .tres files (Morning Commute, Family Dinner, Warning Ignored, The First Crack)
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Depends: T-0182
+
+### T-0190
+- Title: Implement Chapter 5 Overgrown Capital dungeon tilemap and navigation skeleton
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Depends: T-0198, T-0197
 
 ### T-0184
 - Title: Seed ability tree .tres files for all 8 party members
