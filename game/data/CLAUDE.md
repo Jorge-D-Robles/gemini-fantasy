@@ -64,11 +64,13 @@ data/
 | `oak_staff` | Oak Staff | WEAPON | STAFF |
 | `speed_ring` | Speed Ring | ACCESSORY | — |
 
-### items/ (5)
+### items/ (7)
 | ID | Display Name | Effect | Value |
 |----|-------------|--------|-------|
 | `antidote` | Antidote | CURE_STATUS | — |
-| `ether` | Ether | HEAL_EE | — |
+| `crystal_wick` | Crystal Wick | HEAL_EE | 30 EE (unlocked after iris_recruited) |
+| `ether` | Ether | HEAL_EE | 30 EE |
+| `forest_remedy` | Forest Remedy | HEAL_HP | 80 HP (unlocked after iris_recruited) |
 | `phoenix_down` | Phoenix Down | REVIVE | — |
 | `potion` | Potion | HEAL_HP | 50 HP |
 | `resonance_tonic` | Resonance Tonic | — | — |
