@@ -617,37 +617,19 @@ func _build_victory_party_section(
 		name_lbl.custom_minimum_size.x = 70
 		row.add_child(name_lbl)
 
-		# Level-up callout
+		# Level-up callout using static helper for testability
 		if m.get("leveled_up", false):
 			var lu_lbl := Label.new()
-			lu_lbl.text = "LEVEL UP!"
+			lu_lbl.text = BattleUIVictory.compute_level_up_callout_text(
+				m.get("name", ""),
+				m.get("level", 1),
+				m.get("stat_changes", {}),
+			)
 			lu_lbl.add_theme_font_size_override("font_size", 7)
 			lu_lbl.add_theme_color_override(
 				"font_color", UITheme.TEXT_GOLD,
 			)
 			row.add_child(lu_lbl)
-
-			# Top stat changes
-			var changes: Dictionary = m.get("stat_changes", {})
-			var parts: Array[String] = []
-			for stat_key: String in changes:
-				var val: int = changes[stat_key]
-				parts.append(
-					"+%d %s" % [
-						val,
-						BattleUIVictory.stat_abbreviation(
-							stat_key,
-						),
-					]
-				)
-			if not parts.is_empty():
-				var stats_lbl := Label.new()
-				stats_lbl.text = ", ".join(parts)
-				stats_lbl.add_theme_font_size_override("font_size", 6)
-				stats_lbl.add_theme_color_override(
-					"font_color", UITheme.TEXT_POSITIVE,
-				)
-				row.add_child(stats_lbl)
 
 		_victory_party_container.add_child(row)
 
