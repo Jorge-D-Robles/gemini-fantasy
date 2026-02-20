@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://brailgunability"]
+
+[ext_resource type="Script" path="res://resources/ability_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"railgun"
+display_name = "Railgun"
+description = "Channel Iris's cybernetic arm into a hyper-velocity spike round. Extreme single-target piercing damage that ignores defense. Always critical against mechanical enemies."
+ee_cost = 70
+resonance_cost = 60.0
+damage_base = 350
+damage_stat = 0
+target_type = 0
+element = 0
+status_effect = ""
+status_chance = 0.0
+status_effect_duration = 3
+animation_name = "railgun"

@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://bprototypedeployability"]
+
+[ext_resource type="Script" path="res://resources/ability_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"prototype_deploy"
+display_name = "Prototype Deploy"
+description = "Deploy an experimental combat drone that fights alongside the party for 5 turns. The drone grows more powerful with skill tree upgrades."
+ee_cost = 40
+resonance_cost = 40.0
+damage_base = 0
+damage_stat = 0
+target_type = 4
+element = 0
+status_effect = "drone_deployed"
+status_chance = 1.0
+status_effect_duration = 5
+animation_name = "prototype_deploy"

@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://bunbreakableability"]
+
+[ext_resource type="Script" path="res://resources/ability_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"unbreakable"
+display_name = "Unbreakable"
+description = "Garrick becomes completely immune to damage for 1 turn while still acting freely. All damage prevented is stored and released as a counter-attack."
+ee_cost = 50
+resonance_cost = 50.0
+damage_base = 0
+damage_stat = 0
+target_type = 4
+element = 0
+status_effect = "invincible"
+status_chance = 1.0
+status_effect_duration = 1
+animation_name = "unbreakable"
