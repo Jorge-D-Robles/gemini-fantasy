@@ -84,9 +84,10 @@ Started: 2026-02-18
 
 ### T-0119
 - Title: Quest log reward display should show item display names, not IDs
-- Status: in-progress
+- Status: done
 - Assigned: claude
 - Started: 2026-02-19
+- Completed: 2026-02-19
 - Priority: medium
 - Depends: T-0090
 - Refs: game/ui/quest_log/quest_log.gd
@@ -114,10 +115,20 @@ Started: 2026-02-18
 - Refs: game/ui/battle_ui/battle_ui.gd, game/systems/battle/states/victory_state.gd
 - Notes: compute_level_up_callout_text(character, level, changes) static helper; format "★ Kael reached Level 4! HP+10, ATK+2"; used in _build_victory_party_section and level_up_messages; 7 tests (1111 total).
 
-### T-0128
-- Title: BUG — AudioManager.play_bgm() resets volume_db to 0.0, ignoring user volume setting
+### T-0159
+- Title: Fix Verdant Forest south canopy gap — extend AbovePlayer layer to rows 15-24
 - Status: todo
 - Assigned: unassigned
+- Priority: medium
+- Depends: none
+- Refs: game/scenes/verdant_forest/verdant_forest.gd (CANOPY_MAP), docs/best-practices/11-tilemaps-and-level-design.md
+- Notes: CANOPY_MAP has no entries in rows 15-24. South forest has trunk placements but no AbovePlayer canopy overlay. Extend CANOPY_MAP with 2x2 canopy tiles above each south-half trunk. 2+ tests.
+
+### T-0128
+- Title: BUG — AudioManager.play_bgm() resets volume_db to 0.0, ignoring user volume setting
+- Status: in-progress
+- Assigned: claude
+- Started: 2026-02-19
 - Priority: low
 - Depends: T-0068
 - Refs: game/autoloads/audio_manager.gd
@@ -242,6 +253,14 @@ Started: 2026-02-18
 ---
 
 ## Done This Sprint
+
+### T-0119
+- Title: Quest log reward display should show item display names, not IDs
+- Status: done
+- Assigned: claude
+- Started: 2026-02-19
+- Completed: 2026-02-19
+- Notes: compute_item_display_name() static helper with ResourceLoader.exists() guard; fallback to raw ID; rewards.items now Array[String] of display names; _on_quest_selected renders names via join(); 3 new tests (1121 total).
 
 ### T-0120
 - Title: Add quest accept/complete toast notification in HUD
