@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://becho_fusion"]
+
+[ext_resource type="Script" path="res://resources/ability_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"echo_fusion"
+display_name = "Echo Fusion"
+description = "Temporarily combines two equipped Echoes into a unified resonance burst. The resulting effect is unique to the combination — discover them all."
+ee_cost = 40
+resonance_cost = 50.0
+damage_base = 160
+damage_stat = 1
+target_type = 0
+element = 0
+status_effect = ""
+status_chance = 0.0
+status_effect_duration = 3
+animation_name = "echo_fusion"

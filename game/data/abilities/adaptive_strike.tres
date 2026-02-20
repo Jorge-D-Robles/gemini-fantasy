@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://badaptive_strike"]
+
+[ext_resource type="Script" path="res://resources/ability_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"adaptive_strike"
+display_name = "Adaptive Strike"
+description = "Physical attack that reads the enemy's weakness and shifts element to exploit it. Requires prior observation from the previous turn."
+ee_cost = 30
+resonance_cost = 0.0
+damage_base = 140
+damage_stat = 0
+target_type = 0
+element = 0
+status_effect = ""
+status_chance = 0.0
+status_effect_duration = 3
+animation_name = "adaptive_strike"
