@@ -13,6 +13,12 @@ func set_battle_scene(scene: Node) -> void:
 
 
 func enter() -> void:
+	# Clear defend stance from the previous turn — is_defending persists
+	# through TurnEnd so enemies can attack into it, and clears here when
+	# the battler starts choosing their next action.
+	if battle_scene.current_battler:
+		battle_scene.current_battler.is_defending = false
+
 	_battle_ui = battle_scene.get_node_or_null("BattleUI")
 	if not _battle_ui:
 		push_error("PlayerTurnState: BattleUI not found.")

@@ -292,12 +292,25 @@ Started: 2026-02-18
 
 ### T-0133
 - Title: Add save slot summary (location + timestamp) on Continue button
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: low
 - Depends: none
 - Refs: game/ui/title_screen/title_screen.gd, game/autoloads/save_manager.gd
-- Notes: Continue button shows no save context. Add a label showing saved scene name and timestamp. Use compute_area_display_name() for location. 3+ tests.
+- Notes: timestamp field in gather_save_data(); compute_save_summary() + _format_save_timestamp() static helpers; _show_save_label() adds Label below ContinueButton. 8 tests. PR #197 merged.
+
+### T-0166
+- Title: BUG — Defend stance clears before enemy can attack
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
+- Priority: low
+- Depends: none
+- Refs: game/systems/battle/battler.gd, game/systems/battle/states/turn_end_state.gd, game/systems/battle/states/player_turn_state.gd
+- Notes: Removed is_defending=false from Battler.end_turn(); added clear in PlayerTurnState.enter() so defend persists through enemy attacks. Updated test_battler.gd and test_battle_state_persistence.gd. 4 tests. PR #198 merged.
 
 ### T-0148
 - Title: Add camp scene "Three Around a Fire" — Garrick, Iris, Kael evening dialogue

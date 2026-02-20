@@ -4,6 +4,8 @@ Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[
 
 ---
 
+- [2026-02-20] T-0166: BUG defend stance persists through TurnEnd — removed is_defending=false from end_turn(), cleared in PlayerTurnState.enter(); 4 tests updated, PR #198 (claude)
+- [2026-02-20] T-0133: Save slot summary on Continue button — timestamp in gather_save_data, compute_save_summary/format_save_timestamp static helpers, _show_save_label programmatic label below ContinueButton, 8 tests, PR #197 (claude)
 - [2026-02-20] T-0132: Add DEF badge on party battler panels — DEFEND_BADGE_COLOR, compute_defend_badge() static helper, wired in _create_party_row, fixed TurnEnd/PlayerTurnState timing for badge visibility, 4 tests, PR #196 (claude)
 - [2026-02-20] T-0149: Add Spring Shrine interactable south of Roothollow — RoothollowZone module with compute_garrick_zone_can_trigger/compute_shrine_marker_visible, shrine direction label, 8 tests (claude)
 - [2026-02-20] T-0159: Fix Verdant Forest south canopy gap — CANOPY_MAP rows 15-22 filled with 88 type-matched 2x2 canopy tiles above 22 south-half trunks, 6 tests (claude)

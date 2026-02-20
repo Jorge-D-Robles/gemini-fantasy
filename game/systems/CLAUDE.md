@@ -95,7 +95,7 @@ func take_damage(amount: int, is_magical: bool = false) -> int
 func deal_damage(base: int, is_magical: bool, is_ability: bool) -> int
 func heal(amount: int) -> int
 func defend() -> void                  # halves incoming damage, gains resonance
-func end_turn() -> void                # clears is_defending, recalculates turn_delay
+func end_turn() -> void                # recalculates turn_delay (is_defending cleared by PlayerTurnState.enter)
 func add_resonance(amount: float) -> void
 func apply_status(effect_data: StatusEffectData) -> void
 func tick_effects() -> void            # call once per turn end

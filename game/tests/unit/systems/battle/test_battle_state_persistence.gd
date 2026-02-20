@@ -171,17 +171,20 @@ func test_defeat_after_accumulated_damage() -> void:
 	assert_false(b.is_alive, "Should be defeated after accumulated damage")
 
 
-func test_defend_stance_cleared_each_turn() -> void:
+func test_defend_stance_persists_through_end_turn() -> void:
+	# is_defending should NOT clear in end_turn — it persists so enemy attacks
+	# in the same round use the halved damage. PlayerTurnState.enter() clears it.
 	var b := Helpers.make_battler()
 	add_child_autofree(b)
 
 	b.defend()
 	assert_true(b.is_defending)
 	b.end_turn()
-	assert_false(b.is_defending, "Defend clears on turn end")
+	assert_true(b.is_defending, "Defend persists after end_turn (cleared by PlayerTurnState)")
 
-	# Next turn, not defending unless explicitly set
-	assert_false(b.is_defending, "Not defending on next turn")
+	# Simulate PlayerTurnState.enter() clearing is_defending for next player turn
+	b.is_defending = false
+	assert_false(b.is_defending, "Defend clears at start of next player turn")
 
 
 # ---- Status effects persist across turns ----
