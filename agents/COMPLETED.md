@@ -3,6 +3,8 @@
 Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[date] Description`.
 
 ---
+- [2026-02-20] T-0127: Playtime display on title screen — compute_playtime_str(seconds) formats as "HH:MM" (empty for <60s), compute_save_summary() gains playtime_str key, _show_save_label() includes playtime between location and date; 7 tests (1423 total) (claude)
+- [2026-02-20] T-0165: Party UI keyboard/gamepad navigation — already implemented: _setup_focus() wires UIHelpers.setup_focus_wrap + cross-column left/right + back button; compute_cross_column_focus_index() in party_ui_data.gd with 5 tests (claude)
 - [2026-02-20] T-0172: BanterManager scaffold — static RefCounted class with BANTERS registry (key/gate/party/locations), compute_eligible_banters(party_ids, flags, location) returns eligible keys, bond_01_knife_lessons registered; 8 tests (1416 total) (claude)
 - [2026-02-20] T-0166: Defend stance persist bug — already fixed: end_turn() does not clear is_defending, PlayerTurnState.enter() clears it at next player turn; test_end_turn_does_not_clear_defend confirms behavior (claude)
 - [2026-02-20] T-0174: Iris personal quest stub — iris_engineers_oath.tres (QuestData "The Engineer's Oath: Pending", CHARACTER type), IRIS_QUEST_PATH constant + compute_should_auto_accept_iris_quest() static helper in iris_recruitment.gd, auto-accept after post-battle dialogue; 3 new tests (1408 total) (claude)

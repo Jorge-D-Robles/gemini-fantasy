@@ -76,6 +76,8 @@ func _show_save_label(summary: Dictionary) -> void:
 	var parts: Array[String] = []
 	if not summary["location"].is_empty():
 		parts.append(summary["location"])
+	if not summary.get("playtime_str", "").is_empty():
+		parts.append(summary["playtime_str"])
 	if not summary["time_str"].is_empty():
 		parts.append(summary["time_str"])
 	if parts.is_empty():
@@ -89,16 +91,28 @@ func _show_save_label(summary: Dictionary) -> void:
 	menu_container.move_child(_save_label, continue_button.get_index() + 1)
 
 
-## Returns {location: String, time_str: String} for a save data dictionary.
+## Returns {location: String, time_str: String, playtime_str: String}.
 ## Returns empty strings if the data is absent or the fields are missing.
 static func compute_save_summary(save_data: Dictionary) -> Dictionary:
 	if save_data.is_empty():
-		return {"location": "", "time_str": ""}
+		return {"location": "", "time_str": "", "playtime_str": ""}
 	var scene_path: String = save_data.get("scene_path", "")
 	var location: String = AREA_NAMES.get(scene_path, "")
 	var timestamp: int = int(save_data.get("timestamp", 0))
 	var time_str: String = _format_save_timestamp(timestamp)
-	return {"location": location, "time_str": time_str}
+	var playtime_seconds: float = float(save_data.get("playtime_seconds", 0.0))
+	var playtime_str: String = compute_playtime_str(playtime_seconds)
+	return {"location": location, "time_str": time_str, "playtime_str": playtime_str}
+
+
+## Formats playtime_seconds as "HH:MM". Returns "" for < 60 seconds.
+static func compute_playtime_str(playtime_seconds: float) -> String:
+	if playtime_seconds < 60.0:
+		return ""
+	var total_minutes: int = int(playtime_seconds) / 60
+	var hours: int = total_minutes / 60
+	var minutes: int = total_minutes % 60
+	return "%02d:%02d" % [hours, minutes]
 
 
 static func _format_save_timestamp(unix_time: int) -> String:

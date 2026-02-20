@@ -75,3 +75,60 @@ func test_compute_save_summary_unknown_scene_returns_empty_location() -> void:
 		result["location"], "",
 		"Unknown scene path should give empty location",
 	)
+
+
+# -- compute_playtime_str --
+
+
+func test_compute_playtime_str_zero_returns_empty() -> void:
+	assert_eq(
+		TitleScreenScript.compute_playtime_str(0.0),
+		"",
+		"0 seconds should return empty (not shown)",
+	)
+
+
+func test_compute_playtime_str_less_than_one_minute_returns_empty() -> void:
+	assert_eq(
+		TitleScreenScript.compute_playtime_str(59.9),
+		"",
+		"Less than 60 seconds should return empty",
+	)
+
+
+func test_compute_playtime_str_one_minute() -> void:
+	assert_eq(
+		TitleScreenScript.compute_playtime_str(60.0),
+		"00:01",
+		"60 seconds should format as 00:01",
+	)
+
+
+func test_compute_playtime_str_one_hour() -> void:
+	assert_eq(
+		TitleScreenScript.compute_playtime_str(3600.0),
+		"01:00",
+		"3600 seconds should format as 01:00",
+	)
+
+
+func test_compute_playtime_str_ninety_minutes() -> void:
+	assert_eq(
+		TitleScreenScript.compute_playtime_str(5400.0),
+		"01:30",
+		"5400 seconds should format as 01:30",
+	)
+
+
+func test_compute_save_summary_includes_playtime_str_key() -> void:
+	var result: Dictionary = TitleScreenScript.compute_save_summary({})
+	assert_true("playtime_str" in result, "Summary must include playtime_str key")
+
+
+func test_compute_save_summary_with_playtime_formats_correctly() -> void:
+	var result: Dictionary = TitleScreenScript.compute_save_summary({
+		"scene_path": SP.ROOTHOLLOW,
+		"timestamp": 0,
+		"playtime_seconds": 3661.0,
+	})
+	assert_eq(result["playtime_str"], "01:01", "3661 seconds = 01:01")

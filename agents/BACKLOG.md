@@ -89,8 +89,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0165
 - Title: Add keyboard and gamepad focus navigation to party_ui sub-screen
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: medium
 - Milestone: M0
 - Depends: T-0020
@@ -1054,8 +1055,10 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0127
 - Title: Add playtime display to save/load screen
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: low
 - Milestone: M0
 - Depends: none
