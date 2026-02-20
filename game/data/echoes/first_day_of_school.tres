@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="EchoData" load_steps=2 format=3 uid="uid://bfirst_day_of_school"]
+
+[ext_resource type="Script" path="res://resources/echo_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"first_day_of_school"
+display_name = "First Day of School"
+description = "A child 'learns' a year's mathematics in forty minutes — knowledge without confusion, lessons without memory of struggle."
+lore_text = "The classroom was efficient. Perfectly efficient. The teacher didn't speak; the Network spoke through them. In forty minutes, every child had absorbed the year's curriculum. By afternoon, they had forgotten what it felt like not to understand. They never learned that feeling again."
+rarity = 0
+echo_type = 3
+effect_type = 4
+effect_value = 0
+element = 0
+target_type = 4
+uses_per_battle = 0
+icon_path = ""

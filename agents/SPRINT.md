@@ -9,6 +9,15 @@ Started: 2026-02-20
 
 ## Active
 
+### T-0205
+- Title: Seed and place Residential Quarter echo interactables in Overgrown Capital
+- Status: in-progress
+- Assigned: claude
+- Started: 2026-02-20
+- Priority: medium
+- Depends: T-0190, T-0197
+- Refs: docs/game-design/05-dungeon-designs.md (Residential Quarter), docs/lore/04-echo-catalog.md
+
 ### T-0199
 - Title: Place Morning Commute and Family Dinner echo interactables in Overgrown Capital Market District
 - Status: done

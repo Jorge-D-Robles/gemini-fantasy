@@ -23,6 +23,8 @@ const LYRA_FRAGMENT_2_ECHO_ID: StringName = &"lyra_fragment_2"
 const LYRA_FRAGMENT_2_FLAG: String = "lyra_fragment_2_collected"
 const MORNING_COMMUTE_ECHO_ID: StringName = &"morning_commute"
 const FAMILY_DINNER_ECHO_ID: StringName = &"family_dinner"
+const MOTHERS_COMFORT_ECHO_ID: StringName = &"mothers_comfort"
+const FIRST_DAY_OF_SCHOOL_ECHO_ID: StringName = &"first_day_of_school"
 
 # Tilemap data (legends + maps) lives in OvergrownCapitalMap.
 # Encounter pool builder lives in OvergrownCapitalEncounters.
@@ -86,6 +88,40 @@ static func compute_gardener_zone_position() -> Vector2:
 static func compute_research_quarter_echo_position() -> Vector2:
 	## Lyra Fragment 2 echo in the Research Quarter lab — col 28, row 6.
 	return Vector2(448.0, 96.0)
+
+
+static func compute_residential_echo_positions() -> Array:
+	## Two echo positions in the Residential Quarter.
+	## [0] Mother's Comfort — apartment room, col 5, row 15.
+	## [1] First Day of School — school building, col 9, row 12.
+	return [Vector2(80.0, 240.0), Vector2(144.0, 192.0)]
+
+
+static func compute_mothers_comfort_vision_lines() -> Array[String]:
+	## Vision for Mother's Comfort echo — warmth in a residential apartment.
+	return [
+		"Kael",
+		("An apartment. Small, clean. Children's drawings taped to the walls."
+			+ " Something is baking."),
+		"Lyra",
+		("She's humming. The baby's finally asleep."
+			+ " She keeps humming even when she doesn't need to."),
+		"Kael",
+		"She was happy. Just this moment — she was happy.",
+	]
+
+
+static func compute_first_day_of_school_vision_lines() -> Array[String]:
+	## Vision for First Day of School echo — Network-mediated education.
+	return [
+		"Kael",
+		"A classroom. The children aren't looking at the teacher — their eyes are somewhere else.",
+		"Iris",
+		("Direct neural injection. They're not learning; they're being loaded."
+			+ " In forty minutes they'll 'know' a year's mathematics."),
+		"Garrick",
+		"They look like they're sleeping. They look like they've always looked like that.",
+	]
 
 
 static func compute_market_echo_positions() -> Array:
@@ -181,6 +217,7 @@ func _ready() -> void:
 	_setup_purification_nodes()
 	_setup_lyra_fragment_echo()
 	_setup_market_echoes()
+	_setup_residential_echoes()
 
 	UILayer.hud.location_name = "Overgrown Capital"
 
@@ -470,3 +507,33 @@ func _setup_market_echoes() -> void:
 	dinner_interactable.indicator_type = Interactable.IndicatorType.INTERACT
 	dinner_interactable.position = positions[1]
 	$Entities.add_child(dinner_interactable)
+
+
+func _setup_residential_echoes() -> void:
+	var positions := compute_residential_echo_positions()
+
+	# Mother's Comfort — apartment room, western Residential Quarter.
+	var comfort_strat := MEMORIAL_ECHO_STRATEGY_SCRIPT.new() as MemorialEchoStrategy
+	comfort_strat.echo_id = MOTHERS_COMFORT_ECHO_ID
+	comfort_strat.require_quest_id = &""
+	comfort_strat.vision_lines = compute_mothers_comfort_vision_lines()
+	var comfort_interactable := INTERACTABLE_SCENE.instantiate() as Interactable
+	comfort_interactable.name = "MothersComfortEcho"
+	comfort_interactable.strategy = comfort_strat
+	comfort_interactable.one_time = true
+	comfort_interactable.indicator_type = Interactable.IndicatorType.INTERACT
+	comfort_interactable.position = positions[0]
+	$Entities.add_child(comfort_interactable)
+
+	# First Day of School — school building, central Residential Quarter.
+	var school_strat := MEMORIAL_ECHO_STRATEGY_SCRIPT.new() as MemorialEchoStrategy
+	school_strat.echo_id = FIRST_DAY_OF_SCHOOL_ECHO_ID
+	school_strat.require_quest_id = &""
+	school_strat.vision_lines = compute_first_day_of_school_vision_lines()
+	var school_interactable := INTERACTABLE_SCENE.instantiate() as Interactable
+	school_interactable.name = "FirstDayOfSchoolEcho"
+	school_interactable.strategy = school_strat
+	school_interactable.one_time = true
+	school_interactable.indicator_type = Interactable.IndicatorType.INTERACT
+	school_interactable.position = positions[1]
+	$Entities.add_child(school_interactable)
