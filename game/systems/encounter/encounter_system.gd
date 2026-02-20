@@ -6,11 +6,13 @@ extends Node
 ## to count steps, then rolls for encounters based on configurable rates.
 
 signal encounter_triggered(enemy_group: Array[Resource])
+signal encounter_warning
 
 @export var encounter_rate: float = 0.1
 @export var min_steps_between: int = 5
 @export var step_distance: float = 16.0
 @export var enabled: bool = true
+@export var warning_delay: float = 0.8
 
 ## Array of weighted encounter group definitions.
 var enemy_pool: Array[EncounterPoolEntry] = []
@@ -19,6 +21,8 @@ var _step_counter: int = 0
 var _distance_accumulator: float = 0.0
 var _player: CharacterBody2D = null
 var _previous_position := Vector2.ZERO
+var _warning_in_progress: bool = false
+var _pending_group: Array[Resource] = []
 
 
 func _ready() -> void:
@@ -57,6 +61,8 @@ func reset_steps() -> void:
 
 
 func _on_step() -> void:
+	if _warning_in_progress:
+		return
 	_step_counter += 1
 	if _step_counter < min_steps_between:
 		return
@@ -64,7 +70,20 @@ func _on_step() -> void:
 		_step_counter = 0
 		var group := _select_enemy_group()
 		if not group.is_empty():
-			encounter_triggered.emit(group)
+			_pending_group = group
+			_warning_in_progress = true
+			encounter_warning.emit()
+			get_tree().create_timer(warning_delay).timeout.connect(
+				_on_warning_timeout, CONNECT_ONE_SHOT,
+			)
+
+
+func _on_warning_timeout() -> void:
+	_warning_in_progress = false
+	var group := _pending_group
+	_pending_group = []
+	if not group.is_empty():
+		encounter_triggered.emit(group)
 
 
 func _select_enemy_group() -> Array[Resource]:

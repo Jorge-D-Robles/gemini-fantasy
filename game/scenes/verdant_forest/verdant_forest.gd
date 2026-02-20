@@ -375,6 +375,7 @@ func _ready() -> void:
 
 	_encounter_system.setup(pool)
 	_encounter_system.encounter_triggered.connect(_on_encounter_triggered)
+	_encounter_system.encounter_warning.connect(_on_encounter_warning)
 
 	# Hide Iris event zone if already recruited
 	if EventFlags.has_flag(IrisRecruitment.FLAG_NAME):
@@ -454,6 +455,12 @@ func _on_iris_zone_entered(body: Node2D) -> void:
 	_iris_event.trigger()
 	await _iris_event.sequence_completed
 	_encounter_system.enabled = true
+
+
+func _on_encounter_warning() -> void:
+	var tween := create_tween()
+	tween.tween_property(self, "modulate", Color(1.3, 1.3, 0.9), 0.15)
+	tween.tween_property(self, "modulate", Color.WHITE, 0.25)
 
 
 func _on_encounter_triggered(enemy_group: Array[Resource]) -> void:

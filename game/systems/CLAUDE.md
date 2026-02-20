@@ -155,11 +155,13 @@ signal turn_order_changed(order: Array[Battler])
 @export var min_steps_between: int = 5
 @export var step_distance: float = 16.0   # pixels per "step"
 @export var enabled: bool = true
+@export var warning_delay: float = 0.8    # seconds between warning and trigger
 var enemy_pool: Array[EncounterPoolEntry] = []
 
 func setup(pool: Array[EncounterPoolEntry]) -> void
 func reset_steps() -> void
-signal encounter_triggered(enemy_group: Array[Resource])
+signal encounter_warning                           # emitted when encounter roll succeeds
+signal encounter_triggered(enemy_group: Array[Resource])  # emitted after warning_delay
 ```
 
 - Finds player via `get_tree().get_first_node_in_group("player")`

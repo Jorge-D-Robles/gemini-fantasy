@@ -4,6 +4,8 @@ Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[
 
 ---
 
+[2026-02-20] T-0098: Add overworld encounter warning — two-phase encounter_warning→encounter_triggered flow with 0.8s delay; yellow screen flash in Verdant Forest and Overgrown Ruins (claude)
+
 - [2026-02-20] T-0078: AssetLoader static utility — load_sfx/bgm/texture/scene/resource with exists() guard + push_warning, 10 tests, PR merged (claude)
 - [2026-02-20] T-0061: Overgrown Ruins debris layer & z-index fix — GroundDebris layer, Walls/Objects z_index 0 (was -1), walls now visible, 5 tests, PR merged (claude)
 - [2026-02-20] T-0058: Screen shake on heavy damage — BattleShake static utility (is_heavy_hit, compute_intensity, shake), 25% HP threshold, 3–7px intensity, wired in action_execute_state, 10 tests, PR merged (claude)
