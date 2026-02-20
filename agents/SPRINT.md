@@ -354,8 +354,10 @@ Started: 2026-02-18
 
 ### T-0099
 - Title: Add transition animations between zones (beyond fade)
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: low
 - Depends: none
 
