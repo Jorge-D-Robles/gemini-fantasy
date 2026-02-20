@@ -48,9 +48,10 @@ Started: 2026-02-18
 
 ### T-0162
 - Title: Add Verdant Forest traversal dialogue — party comments heading to Overgrown Capital
-- Status: in-progress
+- Status: done
 - Assigned: claude
 - Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: low
 - Depends: T-0085
 - Refs: docs/story/act1/04-old-iron.md (End of Chapter hook), game/scenes/verdant_forest/verdant_forest.gd
