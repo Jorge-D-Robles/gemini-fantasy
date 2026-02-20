@@ -74,8 +74,30 @@ func test_compute_includes_rewards() -> void:
 	assert_eq(rewards["gold"], 200)
 	assert_eq(rewards["exp"], 100)
 	assert_eq(rewards["items"].size(), 2)
-	assert_has(rewards["items"], &"potion")
-	assert_has(rewards["items"], &"ether")
+	# Items are resolved to display names, not raw IDs
+	assert_has(rewards["items"], "Potion")
+	assert_has(rewards["items"], "Ether")
+
+
+func test_compute_item_display_name_known_item() -> void:
+	var name: String = QuestLogScript.compute_item_display_name(&"potion")
+	assert_eq(name, "Potion", "Known item resolves to display name")
+
+
+func test_compute_item_display_name_unknown_item_falls_back_to_id() -> void:
+	var name: String = QuestLogScript.compute_item_display_name(
+		&"nonexistent_item_xyz"
+	)
+	assert_false(name.is_empty(), "Unknown item returns non-empty fallback")
+	assert_true(
+		name.contains("nonexistent_item_xyz"),
+		"Fallback includes the item ID",
+	)
+
+
+func test_compute_item_display_name_ether() -> void:
+	var name: String = QuestLogScript.compute_item_display_name(&"ether")
+	assert_eq(name, "Ether", "Ether item resolves to display name")
 
 
 func test_compute_completed_tab_shows_completed() -> void:

@@ -84,8 +84,9 @@ Started: 2026-02-18
 
 ### T-0119
 - Title: Quest log reward display should show item display names, not IDs
-- Status: todo
-- Assigned: unassigned
+- Status: in-progress
+- Assigned: claude
+- Started: 2026-02-19
 - Priority: medium
 - Depends: T-0090
 - Refs: game/ui/quest_log/quest_log.gd
