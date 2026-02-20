@@ -41,6 +41,14 @@ Started: 2026-02-20
 - Priority: high
 - Depends: none
 
+### T-0189
+- Title: Wire EchoManager into all SaveManager call sites
+- Status: in-progress
+- Assigned: claude
+- Started: 2026-02-20
+- Priority: medium
+- Depends: T-0182
+
 ### T-0103
 - Title: Implement Chapter 5 — The Overgrown Capital dungeon
 - Status: todo
