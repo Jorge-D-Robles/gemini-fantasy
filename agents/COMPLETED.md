@@ -4,6 +4,7 @@ Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[
 
 ---
 
+- [2026-02-19] T-0131: Kael-Iris arrival cutscene at Roothollow — 6-line dialogue, iris_recruited gate, roothollow_iris_arrival_seen flag, GameManager CUTSCENE push/pop, call_deferred trigger, 6 tests (claude)
 - [2026-02-19] T-0121: Roothollow Chapter 4 NPC dialogue — iris_recruited branches for Maren/Bram/Wren/Lina with story-accurate content (food offer, shrine stranger, deserter ID, horse question), 8 tests (claude)
 - [2026-02-19] T-0128: AudioManager BGM volume persistence — _bgm_volume_db field, set_bgm_volume() persists across crossfades and cold starts, 5 tests (claude)
 - [2026-02-19] T-0119: Quest log item reward display names — compute_item_display_name() static helper, ResourceLoader.exists() guard, fallback to ID string, items as Array[String] of display names, ", ".join() rendering, 3 new tests (claude)

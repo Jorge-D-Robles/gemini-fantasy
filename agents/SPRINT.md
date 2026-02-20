@@ -35,8 +35,10 @@ Started: 2026-02-18
 
 ### T-0131
 - Title: Add Kael-Iris arrival dialogue at Roothollow entrance (Chapter 4 Scene 1)
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-19
+- Completed: 2026-02-19
 - Priority: medium
 - Depends: T-0082
 - Refs: docs/story/act1/04-old-iron.md (Scene 1), game/scenes/roothollow/roothollow.gd
