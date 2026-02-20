@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://2MhGA6nrXjv"
+path="res://.godot/imported/Epic Boss Battle 1st section.ogg-8517d77ccad80bcf428a9d8aec501b11.oggvorbisstr"
+
+[deps]
+
+source_file="res://assets/music/Epic Boss Battle 1st section.ogg"
+dest_files=["res://.godot/imported/Epic Boss Battle 1st section.ogg-8517d77ccad80bcf428a9d8aec501b11.oggvorbisstr"]
+
+[params]
+
+loop=true
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
