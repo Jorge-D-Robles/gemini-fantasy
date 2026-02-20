@@ -1,0 +1,51 @@
+[gd_scene load_steps=5 format=3 uid="uid://c4capital0001"]
+
+[ext_resource type="Script" path="res://scenes/overgrown_capital/overgrown_capital.gd" id="1_capital"]
+[ext_resource type="PackedScene" uid="uid://c4player00001" path="res://entities/player/player.tscn" id="2_player"]
+[ext_resource type="Script" path="res://systems/encounter/encounter_system.gd" id="3_encounter"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_exit"]
+size = Vector2(112, 16)
+
+[node name="OvergrownCapital" type="Node2D"]
+script = ExtResource("1_capital")
+
+[node name="Ground" type="TileMapLayer" parent="."]
+collision_enabled = false
+z_index = -2
+
+[node name="GroundDetail" type="TileMapLayer" parent="."]
+collision_enabled = false
+z_index = -1
+
+[node name="Walls" type="TileMapLayer" parent="."]
+z_index = 0
+
+[node name="Objects" type="TileMapLayer" parent="."]
+z_index = 0
+
+[node name="AbovePlayer" type="TileMapLayer" parent="."]
+collision_enabled = false
+z_index = 2
+
+[node name="Entities" type="Node2D" parent="."]
+z_index = 1
+
+[node name="Player" parent="Entities" instance=ExtResource("2_player")]
+position = Vector2(320, 400)
+
+[node name="SpawnFromRuins" type="Marker2D" parent="Entities"]
+position = Vector2(320, 400)
+
+[node name="Triggers" type="Node2D" parent="."]
+
+[node name="ExitToRuins" type="Area2D" parent="Triggers"]
+position = Vector2(320, 424)
+collision_layer = 0
+collision_mask = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Triggers/ExitToRuins"]
+shape = SubResource("RectangleShape2D_exit")
+
+[node name="EncounterSystem" type="Node" parent="."]
+script = ExtResource("3_encounter")

@@ -105,8 +105,10 @@ Started: 2026-02-20
 
 ### T-0190
 - Title: Implement Chapter 5 Overgrown Capital dungeon tilemap and navigation skeleton
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: high
 - Depends: T-0198, T-0197
 
