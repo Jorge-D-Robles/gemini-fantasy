@@ -8,10 +8,7 @@ extends Node2D
 const SP = preload("res://systems/scene_paths.gd")
 const MEMORY_BLOOM_PATH: String = "res://data/enemies/memory_bloom.tres"
 const CREEPING_VINE_PATH: String = "res://data/enemies/creeping_vine.tres"
-# Castle.ogg is a placeholder until T-0210 wires the dedicated Echoes of the Capital track.
-# Using a distinct path from Overgrown Ruins (which also shares Echoes of the Capital)
-# prevents AudioManager BGM stack collisions on scene transitions.
-const SCENE_BGM_PATH: String = "res://assets/music/Castle.ogg"
+const SCENE_BGM_PATH: String = "res://assets/music/Echoes of the Capital.ogg"
 
 # Tilemap data (legends + maps) lives in OvergrownCapitalMap.
 # Encounter pool builder lives in OvergrownCapitalEncounters.

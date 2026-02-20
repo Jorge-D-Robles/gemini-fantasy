@@ -83,6 +83,7 @@ func test_scene_bgm_constants_defined() -> void:
 		"res://scenes/roothollow/roothollow.gd": "SCENE_BGM_PATH",
 		"res://scenes/verdant_forest/verdant_forest.gd": "SCENE_BGM_PATH",
 		"res://scenes/overgrown_ruins/overgrown_ruins.gd": "SCENE_BGM_PATH",
+		"res://scenes/overgrown_capital/overgrown_capital.gd": "SCENE_BGM_PATH",
 		"res://ui/title_screen/title_screen.gd": "TITLE_BGM_PATH",
 		"res://systems/battle/states/victory_state.gd": "FANFARE_PATH",
 	}
@@ -103,3 +104,13 @@ func test_scene_bgm_constants_defined() -> void:
 			source.contains(".ogg"),
 			path + " BGM path should reference an OGG file",
 		)
+
+
+func test_overgrown_capital_bgm_is_echoes_of_the_capital() -> void:
+	var source := FileAccess.get_file_as_string(
+		"res://scenes/overgrown_capital/overgrown_capital.gd"
+	)
+	assert_true(
+		source.contains("Echoes of the Capital.ogg"),
+		"Overgrown Capital should use 'Echoes of the Capital.ogg', not a placeholder",
+	)
