@@ -16,11 +16,13 @@ const SCENE_BGM_PATH: String = "res://assets/music/Overgrown Memories.ogg"
 # ---------- TILE LEGENDS ----------
 
 # Ground layer — organic multi-terrain patches (A5_A, source 0)
-# G = bright green vegetation (dominant ~65%), open clearings and paths
+# G = bright green vegetation (dominant ~50%), open clearings
+# g = muted green variant (row 9), adds variety without seam artifacts
 # D = dirt/earth (20%), flanking paths, around tree trunk bases
 # E = dark earth/roots (15%), under dense forest canopy, transition zones
 const GROUND_LEGEND: Dictionary = {
 	"G": Vector2i(0, 8),
+	"g": Vector2i(0, 9),
 	"D": Vector2i(0, 2),
 	"E": Vector2i(0, 6),
 }
@@ -45,8 +47,10 @@ const TRUNK_LEGEND: Dictionary = {
 	"D": Vector2i(10, 5),  # Tree type D — trunk mid-segment variant
 }
 
-# Tree canopies — 4 types x 4 tiles each (FOREST_OBJECTS, source 1)
-# Each 2x2 canopy sits above its trunk on the AbovePlayer layer
+# Tree canopies — 8 types x 4 tiles each (FOREST_OBJECTS, source 1)
+# Rows 0-1: Types A-D (darker, rounder canopies)
+# Rows 2-3: Types E-H (lighter, rounder canopy variants)
+# Each 2x2 canopy sits 2 rows above its trunk on AbovePlayer layer.
 const CANOPY_LEGEND: Dictionary = {
 	# Type A canopy (2x2) — round dark-edged crown
 	"1": Vector2i(0, 0),   # top-left
@@ -68,6 +72,26 @@ const CANOPY_LEGEND: Dictionary = {
 	"f": Vector2i(7, 0),
 	"g": Vector2i(6, 1),
 	"h": Vector2i(7, 1),
+	# Type E canopy (2x2) — lighter round crown (rows 2-3)
+	"i": Vector2i(0, 2),
+	"j": Vector2i(1, 2),
+	"k": Vector2i(0, 3),
+	"l": Vector2i(1, 3),
+	# Type F canopy (2x2) — lighter broad crown
+	"m": Vector2i(2, 2),
+	"n": Vector2i(3, 2),
+	"o": Vector2i(2, 3),
+	"p": Vector2i(3, 3),
+	# Type G canopy (2x2) — lighter spread crown
+	"q": Vector2i(4, 2),
+	"r": Vector2i(5, 2),
+	"s": Vector2i(4, 3),
+	"t": Vector2i(5, 3),
+	# Type H canopy (2x2) — lighter dense cluster
+	"u": Vector2i(6, 2),
+	"v": Vector2i(7, 2),
+	"w": Vector2i(6, 3),
+	"x": Vector2i(7, 3),
 }
 
 # Ground detail — rocks, flowers, leaves (STONE_OBJECTS, source 2)
@@ -87,8 +111,7 @@ const DETAIL_LEGEND: Dictionary = {
 
 # Ground: organic multi-terrain patches
 # G = bright green vegetation, D = dirt/earth, E = dark earth/roots
-# E under dense forest (rows 0-2, 15-24), D flanking paths and near trunks
-# G dominant in clearings (rows 5-8), D in corridor (rows 10-11)
+# North/south forest edges = E, clearings = G, paths/dirt zones = D
 const GROUND_MAP: Array[String] = [
 	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
 	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
@@ -96,22 +119,22 @@ const GROUND_MAP: Array[String] = [
 	"EEEEEEEEEGGEEEEEEEEGGGGGGGEEEGGEEEEEEEEE",
 	"EEEEEEEGGGDGGGEEEGGGGGDGGGGGGGGGGEEEEEEE",
 	"EEEEEEDGGGGGGGGDGGGGGGGGGGGDGGGGGDEEEEEE",
-	"EEEEEGGGGGGGGGGGDDDDDDGGGGGGGGGGGGGGEEEE",
-	"EEEEGGGGGGGGGGGGDDDDDDGGGGGGGGGGGGGGEEEE",
-	"EEEEGDGGGGGGGGGGDDDDDDGGGGGGGGGGGDGGEEEE",
-	"EEEEEGGDGGGEEEGDDDDDDGGGEEEEDGGGGGEEEEEE",
+	"EEEEEGGGgGGGGGGGDDDDDDGGGGGGGGGgGGGGEEEE",
+	"EEEEGGGGGGGGgGGGDDDDDDGGGGgGGGGGGGGGEEEE",
+	"EEEEGDGGGGGGGGGGDDDDDDGGGGGGGGgDGGEEEE",
+	"EEEEEGGDGGGEEEGDDDDDDGGGEEEEDGGGgGEEEEEE",
 	"GDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDG",
 	"GDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDG",
-	"EEEEEGGDGGGEEEGGGGGGGGGGGGEEDGGGGGEEEEEE",
+	"EEEEEGGDGGGEEEGGGGGGGGGGGGEEDGGGgGEEEEEE",
 	"EEEEEEEGGGEEEEEGGEEEEGGEEEEEGGGEEEEEEEEE",
 	"EEEEEEEEEDDEEEEEEEEEEEEEEEEEEDDEEEEEEEEE",
 	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
-	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
-	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
-	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
-	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
-	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
-	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
+	"EEEEEEEEEEEEGGGGGGGGGGGGGGGGEEEEEEEEEEEE",
+	"EEEEEEEEEEGGGgGGDDDDDDDDGGGGgGEEEEEEEEEE",
+	"EEEEEEEEEGGGgGGDDDDDDDDGGGgGGEEEEEEEEEEE",
+	"EEEEEEEEGGGgGGDDDDDDDDDDGGGgGGEEEEEEEEEE",
+	"EEEEEEEEGGGGgGGGGGGgGGGGGgGGGGEEEEEEEEEE",
+	"EEEEEEEEEEGGGGgGGGGgGGGGGEEEEEEEEEEEEEEE",
 	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
 	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
 	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
@@ -143,14 +166,14 @@ const TREE_MAP: Array[String] = [
 	"TTTTTTT   TTTTT  TTTT  TTTTT   TTTTTTTTT",
 	"TTTTTTTTT  TTTTTTTTTTTTTTTTTT  TTTTTTTTT",
 	"TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",
-	"TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",
-	"TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",
-	"TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",
-	"TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",
-	"TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",
-	"TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",
-	"TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",
-	"TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",
+	"TTTTTTTTT  TTTTTTTTTTTTTTT  TTTTTTTTTTT",
+	"TTTTTTT   TTTTT  TTTT  TTTTT   TTTTTTTTT",
+	"TTTTTT       TT            TT       TTTT",
+	"TTTT                                TTTT",
+	"TTTTT                              TTTTT",
+	"TTTTT       TT            TT       TTTTT",
+	"TTTTTTT        TT                TTTTTTT",
+	"TTTTTTTTT  TT  TTTT       TTT  TTTTTTTTT",
 	"TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",
 ]
 
@@ -160,8 +183,8 @@ const TREE_MAP: Array[String] = [
 const TRUNK_MAP: Array[String] = [
 	"                                        ",
 	"                                        ",
-	"                                        ",
-	"                                        ",
+	"  A    B    C    D    A    B    C    D  ",
+	"    B         D              A     C    ",
 	"           A           C                ",
 	"      A         B           D     C     ",
 	"                                        ",
@@ -175,13 +198,13 @@ const TRUNK_MAP: Array[String] = [
 	"          A                   C         ",
 	"                                        ",
 	"                                        ",
-	"                                        ",
-	"                                        ",
-	"                                        ",
-	"                                        ",
-	"                                        ",
-	"                                        ",
-	"                                        ",
+	"   B       C    D       A        B      ",
+	"     D   A          B         C         ",
+	"            A         D         B       ",
+	"              C           A             ",
+	"        D          B                    ",
+	"          A              C              ",
+	"    D           B          A       C    ",
 	"                                        ",
 ]
 

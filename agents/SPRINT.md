@@ -87,8 +87,9 @@ Started: 2026-02-18
 
 ### T-0129
 - Title: Add player-driven victory screen dismissal (confirm input replaces 2.0s timer)
-- Status: todo
-- Assigned: unassigned
+- Status: in-progress
+- Assigned: claude
+- Started: 2026-02-19
 - Priority: medium
 - Depends: none
 - Refs: game/systems/battle/states/victory_state.gd, game/ui/battle_ui/battle_ui.gd

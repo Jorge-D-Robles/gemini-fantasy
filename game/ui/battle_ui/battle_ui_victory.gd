@@ -68,6 +68,12 @@ static func compute_victory_display(
 	}
 
 
+## Returns the prompt text shown on the victory screen asking the
+## player to dismiss. action_name is the InputMap action to display.
+static func compute_dismiss_prompt_text(action_name: String = "confirm") -> String:
+	return "Press [%s] to continue" % action_name
+
+
 ## Converts a stat key to a short abbreviation for display.
 static func stat_abbreviation(stat_key: String) -> String:
 	match stat_key:
