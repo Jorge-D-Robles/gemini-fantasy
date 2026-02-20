@@ -4,6 +4,7 @@ extends GutTest
 ## are built correctly for each combination of enemy resources.
 
 const Helpers := preload("res://tests/helpers/test_helpers.gd")
+const ECHO_NOMAD_TRES := preload("res://data/enemies/echo_nomad.tres")
 
 
 func _make_enemy(id: StringName = &"test_enemy") -> Resource:
@@ -58,13 +59,13 @@ func test_build_pool_null_nomad_still_yields_four_entries() -> void:
 
 
 func test_echo_nomad_tres_loads() -> void:
-	var nomad := load("res://data/enemies/echo_nomad.tres") as EnemyData
+	var nomad := ECHO_NOMAD_TRES as EnemyData
 	assert_not_null(nomad, "echo_nomad.tres must load")
 	assert_eq(nomad.id, &"echo_nomad", "id must be echo_nomad")
 
 
 func test_echo_nomad_stats_magic_biased() -> void:
-	var nomad := load("res://data/enemies/echo_nomad.tres") as EnemyData
+	var nomad := ECHO_NOMAD_TRES as EnemyData
 	assert_not_null(nomad)
 	assert_gt(nomad.magic, nomad.attack, "Echo Nomad must be magic-biased")
 	assert_gte(nomad.max_hp, 80, "Echo Nomad HP should be ~90")
