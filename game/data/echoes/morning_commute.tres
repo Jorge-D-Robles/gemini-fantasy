@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="EchoData" load_steps=2 format=3 uid="uid://bmorning_commute"]
+
+[ext_resource type="Script" path="res://resources/echo_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"morning_commute"
+display_name = "Morning Commute"
+description = "A worker escapes the mundane with stored memories of a beach vacation — while the train carries their empty body to work."
+lore_text = "The Memory Network made every commute a holiday. Eyes closed, faces serene, hundreds of passengers relived their favourite moments while automated systems ferried them to jobs they had stopped feeling. Nobody spoke. Nobody looked out the windows. The world outside had become unnecessary."
+rarity = 0
+echo_type = 3
+effect_type = 4
+effect_value = 0
+element = 0
+target_type = 4
+uses_per_battle = 0
+icon_path = ""

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="EchoData" load_steps=2 format=3 uid="uid://bwarning_ignored"]
+
+[ext_resource type="Script" path="res://resources/echo_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"warning_ignored"
+display_name = "Warning Ignored"
+description = "Lyra's team stands before the Convergence Council, data in hand, voices trembling — and the vote goes wrong."
+lore_text = "They had the models. They had the failure projections. Lyra pressed her palms to the table and said it plainly: the Convergence lattice would cascade. Not might. Would. A councillor smiled and called it alarmist. Another called it an opportunity to tighten regulation. The motion to delay was passed unanimously. The team filed out into a corridor buzzing with cheerful Memory Network advertisements. Three weeks later, the First Crack."
+rarity = 1
+echo_type = 3
+effect_type = 4
+effect_value = 0
+element = 0
+target_type = 4
+uses_per_battle = 0
+icon_path = ""
