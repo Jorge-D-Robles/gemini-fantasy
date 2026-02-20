@@ -121,30 +121,37 @@ Started: 2026-02-20
 
 ### T-0233
 - Title: Code health — fix remaining gdlint violations
-- Status: in-progress
+- Status: done
 - Assigned: claude
 - Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: high
 - Depends: none
 
 ### T-0234
 - Title: Code health — remove dead legacy wrapper methods from Battler
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: high
 - Depends: none
 
 ### T-0235
 - Title: Code health — eliminate ScenePaths duplication in game_manager.gd
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: medium
 - Depends: none
 
 ### T-0236
 - Title: Code health — add resonance-state color constants to UITheme
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: medium
 - Depends: none
 
