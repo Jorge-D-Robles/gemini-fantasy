@@ -2,13 +2,13 @@
 
 importer="oggvorbisstr"
 type="AudioStreamOggVorbis"
-uid="uid://3SA9iVidVdV"
-path="res://.godot/imported/Town Theme Night.ogg-880d973e9d3932404ee80d85e98679d9.oggvorbisstr"
+uid="uid://47hXkVFoNyp"
+path="res://.godot/imported/Town Theme Night.ogg-b829594376b81bbb82c73ccdef6c2775.oggvorbisstr"
 
 [deps]
 
 source_file="res://assets/music/Town Theme Night.ogg"
-dest_files=["res://.godot/imported/Town Theme Night.ogg-880d973e9d3932404ee80d85e98679d9.oggvorbisstr"]
+dest_files=["res://.godot/imported/Town Theme Night.ogg-b829594376b81bbb82c73ccdef6c2775.oggvorbisstr"]
 
 [params]
 

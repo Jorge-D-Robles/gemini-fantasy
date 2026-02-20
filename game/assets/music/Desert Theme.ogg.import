@@ -2,13 +2,13 @@
 
 importer="oggvorbisstr"
 type="AudioStreamOggVorbis"
-uid="uid://3tqezZKMqEA"
-path="res://.godot/imported/Desert Theme.ogg-6348dd3eb988a47144fca0ca7742cef9.oggvorbisstr"
+uid="uid://1NRUM5SasTO"
+path="res://.godot/imported/Desert Theme.ogg-4095063961254a6cffc2f72070e8c298.oggvorbisstr"
 
 [deps]
 
 source_file="res://assets/music/Desert Theme.ogg"
-dest_files=["res://.godot/imported/Desert Theme.ogg-6348dd3eb988a47144fca0ca7742cef9.oggvorbisstr"]
+dest_files=["res://.godot/imported/Desert Theme.ogg-4095063961254a6cffc2f72070e8c298.oggvorbisstr"]
 
 [params]
 
