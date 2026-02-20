@@ -3,6 +3,7 @@
 Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[date] Description`.
 
 ---
+- [2026-02-20] T-0196: Add OVERGROWN_CAPITAL constant to ScenePaths — Dungeon scenes section, path constant, 1 new test (1598 total). PR #252 (claude)
 - [2026-02-20] T-0201: Place childs_laughter echo interactable in Verdant Forest — CHILDS_LAUGHTER_ECHO_ID constant, compute_forest_echo_position() helper (352,192), MemorialEchoStrategy with vision_lines, one_time=true; 6 tests; 1597 total. PR #251 (claude)
 - [2026-02-20] T-0197: Seed Story Echo .tres files — morning_commute/family_dinner (Common), warning_ignored (Uncommon), the_first_crack (Rare); all UNIQUE_ECHO type, uses_per_battle=0; lore authored from echo catalog + design docs; 12 tests; 1591 total. PR #250 (claude)
 - [2026-02-20] T-0198: Refactor MemorialEchoStrategy for generic echo placement — require_quest_id export (empty=generic, set=quest-gated), vision_lines export for configurable dialogue, compute_should_collect() static pure helper, has_been_used read guard, push_warning for odd vision_lines, verdant_forest.tscn updated with require_quest_id=elder_wisdom; 8 tests; 1579 total. PR #249 (claude)
