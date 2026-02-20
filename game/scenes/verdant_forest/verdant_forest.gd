@@ -37,10 +37,12 @@ const SCENE_BGM_PATH: String = "res://assets/music/Overgrown Memories.ogg"
 @onready var _player: CharacterBody2D = $Entities/Player
 @onready var _spawn_from_ruins: Marker2D = $Entities/SpawnFromRuins
 @onready var _spawn_from_town: Marker2D = $Entities/SpawnFromTown
+@onready var _spawn_from_capital: Marker2D = $Entities/SpawnFromCapital
 @onready var _encounter_system: EncounterSystem = $EncounterSystem
 @onready var _iris_event: IrisRecruitment = $IrisRecruitment
 @onready var _exit_to_ruins: Area2D = $Triggers/ExitToRuins
 @onready var _exit_to_town: Area2D = $Triggers/ExitToTown
+@onready var _exit_to_capital: Area2D = $Triggers/ExitToCapital
 @onready var _iris_zone: Area2D = $Triggers/IrisEventZone
 
 
@@ -74,10 +76,12 @@ func _ready() -> void:
 	# Add spawn points to groups so GameManager.change_scene can find them
 	_spawn_from_ruins.add_to_group("spawn_from_ruins")
 	_spawn_from_town.add_to_group("spawn_from_town")
+	_spawn_from_capital.add_to_group("spawn_from_capital")
 
 	# Connect trigger areas
 	_exit_to_ruins.body_entered.connect(_on_exit_to_ruins_entered)
 	_exit_to_town.body_entered.connect(_on_exit_to_town_entered)
+	_exit_to_capital.body_entered.connect(_on_exit_to_capital_entered)
 	_iris_zone.body_entered.connect(_on_iris_zone_entered)
 
 	# Zone transition markers
@@ -159,6 +163,14 @@ func _spawn_zone_markers() -> void:
 	)
 	add_child(right_marker)
 
+	var top_marker := ZoneMarker.new()
+	top_marker.direction = ZoneMarker.Direction.UP
+	top_marker.destination_name = "Overgrown Capital"
+	top_marker.position = (
+		_exit_to_capital.position + Vector2(0, 12)
+	)
+	add_child(top_marker)
+
 
 func _on_exit_to_ruins_entered(body: Node2D) -> void:
 	if not body.is_in_group("player"):
@@ -187,6 +199,22 @@ func _on_exit_to_town_entered(body: Node2D) -> void:
 		return
 	GameManager.change_scene(
 		SP.ROOTHOLLOW,
+		GameManager.FADE_DURATION,
+		"spawn_from_forest",
+	)
+
+
+func _on_exit_to_capital_entered(body: Node2D) -> void:
+	if not body.is_in_group("player"):
+		return
+	if GameManager.is_transitioning():
+		return
+	if DialogueManager.is_active():
+		return
+	if BattleManager.is_in_battle():
+		return
+	GameManager.change_scene(
+		SP.OVERGROWN_CAPITAL,
 		GameManager.FADE_DURATION,
 		"spawn_from_forest",
 	)

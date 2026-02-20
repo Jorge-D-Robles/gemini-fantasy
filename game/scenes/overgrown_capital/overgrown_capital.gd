@@ -61,9 +61,10 @@ func _ready() -> void:
 
 	UILayer.hud.location_name = "Overgrown Capital"
 
-	# Register spawn group — GameManager.change_scene() looks for this group
-	# when transitioning from Overgrown Ruins (wired via T-0216).
+	# Register spawn groups — GameManager.change_scene() looks for these groups
+	# when transitioning from Overgrown Ruins or Verdant Forest.
 	_spawn_from_ruins.add_to_group("spawn_from_ruins")
+	_spawn_from_ruins.add_to_group("spawn_from_forest")
 
 	# Set default spawn position — overridden by GameManager after _ready()
 	# if a specific spawn group was requested.
@@ -157,4 +158,4 @@ func _on_exit_to_ruins_entered(body: Node2D) -> void:
 		return
 	if BattleManager.is_in_battle():
 		return
-	GameManager.change_scene(SP.OVERGROWN_RUINS, GameManager.FADE_DURATION, "spawn_from_capital")
+	GameManager.change_scene(SP.VERDANT_FOREST, GameManager.FADE_DURATION, "spawn_from_capital")
