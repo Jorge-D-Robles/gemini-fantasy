@@ -887,3 +887,10 @@ Started: 2026-02-18
 - Assigned: claude
 - Completed: 2026-02-20
 - Notes: InteractionHint static helper (compute_interaction_hint_text) looks up bound key via InputMap; player._update_interaction_prompt() called each physics frame after move_and_slide(); set_movement_enabled(false) hides prompt; fallback "[ ] Interact"; 5 tests (1500 total passing).
+
+### T-0023
+- Title: Implement camp/rest system
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
+- Notes: CampMenuData pure static helper (compute_menu_options/compute_rest_message/compute_healing_needed); CampMenu script-only Control with Rest+Leave Camp buttons, pushes MENU state; CampStrategy Resource that instantiates and opens CampMenu via UILayer; 10 tests (1510 total passing).
