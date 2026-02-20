@@ -6,6 +6,76 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ## M0 — Foundation
 
+### T-0175
+- Title: Add fade-in on BGM stack pop/restore to prevent audio snap
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Milestone: M0
+- Depends: T-0117, T-0128
+- Refs: game/autoloads/audio_manager.gd
+- Notes: pop_bgm() resumes overworld track at saved position but volume snaps immediately to _bgm_volume_db. Should fade from 0.0 to _bgm_volume_db over 0.5s (half normal crossfade). compute_bgm_restore_fade_duration() static helper. 2+ tests.
+
+### T-0174
+- Title: Add Iris personal quest stub to quest log after recruitment
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Milestone: M0
+- Depends: T-0081, T-0090
+- Refs: docs/story/character-quests/iris-engineers-oath.md, game/data/quests/
+- Notes: After iris_recruited, create QuestData .tres "The Engineer's Oath: Pending" with one objective: "Understand why Iris left the Initiative." Single-stage narrative breadcrumb. QuestManager auto-accepts on iris_recruited flag. compute_should_auto_accept_iris_quest(flags) static helper. 3+ tests.
+
+### T-0173
+- Title: Add Garrick personal quest stub to quest log after recruitment
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Milestone: M0
+- Depends: T-0082, T-0090
+- Refs: docs/story/character-quests/garrick-three-burns.md, game/data/quests/
+- Notes: After garrick_recruited, create QuestData .tres "Something He Carries" with one objective: "Travel with Garrick and learn his story." Single-stage narrative breadcrumb. QuestManager auto-accepts on garrick_recruited flag in GarrickRecruitment.trigger(). compute_should_auto_accept_garrick_quest(flags) static helper. 3+ tests.
+
+### T-0172
+- Title: Add party banter trigger scaffold — BanterManager static helper
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Milestone: M0
+- Depends: T-0081, T-0082
+- Refs: docs/story/camp-scenes/party-banter.md, game/scenes/verdant_forest/verdant_forest.gd
+- Notes: Lightweight static class BanterManager (RefCounted, no autoload). compute_eligible_banters(party_ids, flags, location) returns Array of eligible banter keys. Enables T-0169 and future banters without per-scene boilerplate. 5+ tests verifying eligibility conditions.
+
+### T-0171
+- Title: Add Overgrown Capital entry scene — 3-person party gate dialogue on entry
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M0
+- Depends: T-0085
+- Refs: docs/story/act1/05-into-the-capital.md (Scene 1), game/scenes/overgrown_ruins/overgrown_ruins.gd
+- Notes: Chapter 5 Scene 1 gate dialogue (4-5 lines): Garrick reacts to scale of ruins, Iris reports crystal density and pre-Sev population, Kael quiet. Gated by garrick_recruited AND overgrown_capital_entry_seen flag (one-shot). Trigger on scene entry via call_deferred. Static module pattern from T-0162. 3+ tests.
+
+### T-0170
+- Title: Disambiguate innkeeper rest options — priority logic for night events
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Milestone: M0
+- Depends: T-0148, T-0135
+- Refs: game/scenes/roothollow/roothollow.gd, game/events/camp_three_fires.gd, game/events/garrick_night_scene.gd
+- Notes: Innkeeper fires CampThreeFires or GarrickNightScene from same handler. If both flags are unset, GarrickNightScene (garrick_met_lyra gate) takes priority over CampThreeFires (garrick_recruited gate) per story order. compute_innkeeper_night_event(flags) static helper for TDD. 3+ tests.
+
+### T-0169
+- Title: Add Iris-Kael overworld banter — BOND-01 "Knife Lessons" post-Chapter-3 scene
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Milestone: M0
+- Depends: T-0081
+- Refs: docs/story/camp-scenes/party-banter.md (BOND-01), game/scenes/verdant_forest/verdant_forest.gd
+- Notes: 5-line campfire banter at Verdant Forest after iris_recruited flag. Iris corrects Kael's knife grip. EventFlags gate: bond_01_knife_lessons. Static compute_bond01_eligible(flags, party) helper. 3+ tests.
+
 ### T-0165
 - Title: Add keyboard and gamepad focus navigation to party_ui sub-screen
 - Status: todo
