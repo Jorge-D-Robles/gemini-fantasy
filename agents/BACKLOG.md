@@ -1130,13 +1130,23 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0245
 - Title: Code health — add BattleActionExecutor to deduplicate attack/ability execution between states
-- Status: todo
+- Status: done
+- Completed: 2026-02-20
 - Assigned: unassigned
 - Priority: high
 - Milestone: M0
 - Depends: T-0238
 - Refs: game/systems/battle/states/action_execute_state.gd, game/systems/battle/states/enemy_turn_state.gd
 - Notes: `_execute_attack()` in action_execute_state.gd and the attack block in enemy_turn_state.gd share ~50 lines of copy-paste (crit roll, damage call, sound, UI log, anim). `_execute_ability()` and its enemy counterpart share another ~50 lines. StatusEffectData creation appears in both files identically. Extract a static `BattleActionExecutor` class (game/systems/battle/battle_action_executor.gd) with: `static func execute_attack(attacker, target, scene) -> void` and `static func execute_ability(attacker, ability, target, scene) -> void`. Both states call these. No behavior change. Existing battle tests must remain green.
+
+### T-0246
+- Title: Reconcile BACKLOG.md — sync done/todo statuses for completed sprint tasks
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Milestone: M0
+- Depends: none
+- Notes: T-0228 through T-0245 are Status: done in SPRINT.md but many still show Status: todo in BACKLOG.md. Also T-0191 through T-0212 completed this sprint need M1 BACKLOG statuses synced. T-0008/T-0010/T-0011 need to be marked superseded (by T-0181). T-0202 and T-0204 (doc-only dependency updates) can be folded in. Pure documentation update, 0 behavior changes, 0 tests required.
 
 ---
 
@@ -1152,15 +1162,46 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 - Refs: docs/story/act1/chapter-05-overgrown-capital.md, docs/game-design/05-dungeon-designs.md
 - Notes: Superseded by T-0190 (tilemap skeleton), T-0191 (Lyra Fragment 2 + vision), T-0192 (Last Gardener), T-0193 (post-dungeon camp), T-0194 (Story Echo .tres), T-0195 (Purification Node). Work against those sub-tasks instead.
 
+### T-0247
+- Title: Verify and wire Nyx introduction trigger zone in Verdant Forest
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
+- Priority: high
+- Milestone: M1
+- Depends: T-0225, T-0191
+- Notes: T-0225 created NyxIntroduction event and tests. Verdant_forest.gd already has _maybe_trigger_nyx_introduction() wired via call_deferred in _ready(). Trigger gates on compute_can_trigger(flags) which requires garrick_recruited + lyra_fragment_2_collected + NOT nyx_introduction_seen. DONE — already implemented.
+
+### T-0248
+- Title: Recruit Nyx into party — create nyx.tres and wire PartyManager.add_character() after introduction
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Milestone: M1
+- Depends: T-0225, T-0247
+- Refs: game/events/nyx_introduction.gd, game/data/characters/, docs/lore/03-characters.md
+- Notes: nyx.tres CharacterData does not exist. Create game/data/characters/nyx.tres (CharacterData: id="nyx", display_name="Nyx", level 5, stats per lore doc — element DARKNESS). NyxIntroduction.trigger() should call PartyManager.add_character() at end of dialogue. compute_nyx_character_data() static helper returns resource path. Set nyx_recruited flag. 5+ tests verifying nyx.tres loads, has correct stats, and party add is called.
+
+### T-0249
+- Title: Chapter 7 "A Village Burns" story event scaffold
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M1
+- Depends: T-0191, T-0248
+- Refs: docs/story/act1/07-a-village-burns.md, game/events/
+- Notes: docs/story/act1/07-a-village-burns.md has a complete chapter script. Create game/events/village_burns.gd implementing Scenes 1-2 (~20-25 lines). Gate on lyra_fragment_2_collected AND nyx_met AND NOT village_burns_seen. VillageBurns.compute_can_trigger(flags) static helper. Set village_burns_seen flag. 5+ tests.
+
 ### T-0104
 - Title: Implement Chapters 6-10 story events and dialogue
 - Status: todo
 - Assigned: unassigned
 - Priority: high
 - Milestone: M1
-- Depends: T-0103
+- Depends: T-0248, T-0249
 - Refs: docs/story/act1/
-- Notes: Remaining Act I chapters. New areas, character development, faction conflicts.
+- Notes: Remaining Act I chapters. New areas, character development, faction conflicts. Updated dependency from T-0103 (superseded) to T-0248+T-0249.
 
 ### T-0105
 - Title: Build Prismfall Approach area
@@ -1168,9 +1209,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 - Assigned: unassigned
 - Priority: high
 - Milestone: M1
-- Depends: T-0103
-- Refs: docs/game-design/03-world-map-and-locations.md
-- Notes: New overworld area. Tilemap, encounters, NPCs, transitions.
+- Depends: T-0248
+- Refs: docs/game-design/03-world-map-and-locations.md, docs/story/act1/08-the-crystal-city.md
+- Notes: New overworld area (Crystalline Steppes approach to Prismfall). Tilemap (crystal formations, steppes terrain), encounters, NPCs, transitions from Verdant Forest → Prismfall. Updated dependency from T-0103 (superseded) to T-0248.
 
 ### T-0106
 - Title: Implement Echo Fragment collection system

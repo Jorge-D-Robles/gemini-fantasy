@@ -74,6 +74,14 @@ Started: 2026-02-20
 
 ## Queue
 
+### T-0248
+- Title: Recruit Nyx into party — create nyx.tres and wire PartyManager.add_character() after introduction
+- Status: in-progress
+- Assigned: claude
+- Started: 2026-02-20
+- Priority: high
+- Depends: T-0225, T-0247
+
 ### T-0228
 - Title: Test cleanup — delete constant-value, enum-ordinal, and has_signal/has_method assertions
 - Status: done
