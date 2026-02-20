@@ -2,13 +2,13 @@
 
 importer="oggvorbisstr"
 type="AudioStreamOggVorbis"
-uid="uid://534atlpvSVW"
-path="res://.godot/imported/Epic Boss Battle 1st section.ogg-e397fa09d5892835a1c9e735f6d88882.oggvorbisstr"
+uid="uid://rs402hi1i385"
+path="res://.godot/imported/Epic Boss Battle 1st section.ogg-f0ae7e5121fabdc9a912d1a4b138769e.oggvorbisstr"
 
 [deps]
 
 source_file="res://assets/music/Epic Boss Battle 1st section.ogg"
-dest_files=["res://.godot/imported/Epic Boss Battle 1st section.ogg-e397fa09d5892835a1c9e735f6d88882.oggvorbisstr"]
+dest_files=["res://.godot/imported/Epic Boss Battle 1st section.ogg-f0ae7e5121fabdc9a912d1a4b138769e.oggvorbisstr"]
 
 [params]
 

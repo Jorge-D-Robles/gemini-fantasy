@@ -2,13 +2,13 @@
 
 importer="oggvorbisstr"
 type="AudioStreamOggVorbis"
-uid="uid://1uTEKxCGFdi"
-path="res://.godot/imported/Welcoming Heart Piano.ogg-b7c098aa74e68bb8430bce77acc16c77.oggvorbisstr"
+uid="uid://0vjykgu0c1dh"
+path="res://.godot/imported/Welcoming Heart Piano.ogg-b238881e80ce4b84594f9e547927e95e.oggvorbisstr"
 
 [deps]
 
 source_file="res://assets/music/Welcoming Heart Piano.ogg"
-dest_files=["res://.godot/imported/Welcoming Heart Piano.ogg-b7c098aa74e68bb8430bce77acc16c77.oggvorbisstr"]
+dest_files=["res://.godot/imported/Welcoming Heart Piano.ogg-b238881e80ce4b84594f9e547927e95e.oggvorbisstr"]
 
 [params]
 

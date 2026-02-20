@@ -3,12 +3,12 @@
 importer="oggvorbisstr"
 type="AudioStreamOggVorbis"
 uid="uid://c8mx5yt3pn6qw"
-path="res://.godot/imported/Echoes of the Capital.ogg-627f50e3fa27b17f4eeb235a1942ceff.oggvorbisstr"
+path="res://.godot/imported/Echoes of the Capital.ogg-e48ef71b091ccd797ff62301805fec68.oggvorbisstr"
 
 [deps]
 
 source_file="res://assets/music/Echoes of the Capital.ogg"
-dest_files=["res://.godot/imported/Echoes of the Capital.ogg-627f50e3fa27b17f4eeb235a1942ceff.oggvorbisstr"]
+dest_files=["res://.godot/imported/Echoes of the Capital.ogg-e48ef71b091ccd797ff62301805fec68.oggvorbisstr"]
 
 [params]
 

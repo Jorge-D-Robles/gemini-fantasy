@@ -2,13 +2,13 @@
 
 importer="oggvorbisstr"
 type="AudioStreamOggVorbis"
-uid="uid://0UsDBrSFz7m"
-path="res://.godot/imported/Peaceful Days.ogg-717a3e87fae6df476dfed1cc47b1b66f.oggvorbisstr"
+uid="uid://duvj3gyiwbvcq"
+path="res://.godot/imported/Peaceful Days.ogg-07c7520af076c431bb2f25a0fe31bf3b.oggvorbisstr"
 
 [deps]
 
 source_file="res://assets/music/Peaceful Days.ogg"
-dest_files=["res://.godot/imported/Peaceful Days.ogg-717a3e87fae6df476dfed1cc47b1b66f.oggvorbisstr"]
+dest_files=["res://.godot/imported/Peaceful Days.ogg-07c7520af076c431bb2f25a0fe31bf3b.oggvorbisstr"]
 
 [params]
 
