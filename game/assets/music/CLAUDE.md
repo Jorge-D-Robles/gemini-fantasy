@@ -4,35 +4,153 @@ Background music tracks for all game scenes and events. **OGG files are gitignor
 
 ## Track Index
 
-| File | Suggested Use | Duration | Loop |
-|------|--------------|----------|------|
-| `Battle Theme Organ.ogg` | Standard random encounters | ~1:30 | Yes |
-| `Battle! Intro.ogg` | Battle intro sting / boss phase transition | ~0:30 | No |
-| `Castle.ogg` | Overgrown Ruins, dungeon exploration | ~0:45 | Yes |
-| `Desert Theme.ogg` | Desert/arid region (future content) | ~3:30 | Yes |
-| `Epic Boss Battle 1st section.ogg` | Boss encounters (The Last Gardener, etc.) | ~1:00 | Yes |
-| `Main Character.ogg` | Title screen, character theme | ~0:45 | Yes |
-| `My Hometown.ogg` | Roothollow (alternate/evening) | ~2:15 | Yes |
-| `Peaceful Days.ogg` | Verdant Forest, calm exploration | ~1:20 | Yes |
-| `Success!.ogg` | Battle victory fanfare | ~0:20 | No |
-| `Town Theme Day.ogg` | Roothollow (daytime, primary) | ~2:30 | Yes |
-| `Town Theme Night.ogg` | Roothollow (nighttime/post-crisis) | ~2:40 | Yes |
-| `Welcoming Heart Piano.ogg` | Title screen (alternate), emotional cutscenes | ~1:30 | Yes |
+### OGG Tracks (currently wired)
+
+| File | Suggested Use | Loop |
+|------|--------------|------|
+| `Battle Theme 1.ogg` | Standard random encounters (primary battle BGM) | Yes |
+| `Battle Theme Organ.ogg` | Alternate battle theme (reserved) | Yes |
+| `Battle! Intro.ogg` | Battle intro sting | No |
+| `Castle.ogg` | Legacy — superseded by `Echoes of the Capital.ogg` | Yes |
+| `Desert Theme.ogg` | Desert/arid region (future content) | Yes |
+| `Echoes of the Capital.ogg` | Overgrown Ruins, Overgrown Capital dungeon | Yes |
+| `Epic Boss Battle 1st section.ogg` | Boss encounters (The Last Gardener, etc.) | Yes |
+| `Main Character.ogg` | Title screen, character theme | Yes |
+| `My Hometown.ogg` | Roothollow (alternate/evening) | Yes |
+| `Overgrown Memories.ogg` | Verdant Forest exploration | Yes |
+| `Peaceful Days.ogg` | Calm exploration (reserved for future content) | Yes |
+| `Success!.ogg` | Battle victory fanfare | No |
+| `Town Theme Day.ogg` | Roothollow (daytime, primary) | Yes |
+| `Town Theme Night.ogg` | Roothollow (nighttime/post-crisis) | Yes |
+| `Welcoming Heart Piano.ogg` | Title screen (alternate), emotional cutscenes | Yes |
+
+### MP3 Tracks (full OST library — all imported)
+
+#### Battle & Combat
+| File | Suggested Use | Loop |
+|------|--------------|------|
+| `Battle Theme (1).mp3` | Standard encounters (MP3 mirror of `Battle Theme 1.ogg`) | Yes |
+| `Battle Theme Organ.mp3` | Alternate battle BGM | Yes |
+| `Battle! Intro.mp3` | Battle intro sting | No |
+| `Epic Boss Battle 1st section.mp3` | Boss battles | Yes |
+| `Memory Gauntlet.mp3` | High-difficulty optional dungeon (future) | Yes |
+| `Steel Heart.mp3` | Intense mid-game combat zone (future) | Yes |
+| `Three Burns Heavy.mp3` | Late-game heavy encounter (future) | Yes |
+| `Before the Breaking.mp3` | Pre-boss dungeon corridor / tension buildup | Yes |
+
+#### Exploration & Areas
+| File | Suggested Use | Loop |
+|------|--------------|------|
+| `Overgrown Memories.mp3` | Verdant Forest (MP3 mirror) | Yes |
+| `Echoes of the Capital.mp3` | Overgrown Ruins / Capital (MP3 mirror) | Yes |
+| `Castle.mp3` | Legacy dungeon (MP3 mirror) | Yes |
+| `Wandering Through Quiet Lands.mp3` | Calm overworld exploration / travel montage | Yes |
+| `Shepherds of Silence.mp3` | Mysterious area / forgotten ruins | Yes |
+| `Ghost in the Machine.mp3` | Nyx's domain / mechanical/construct areas | Yes |
+| `Gilded World, Empty Throne.mp3` | Capital throne room / authority zones | Yes |
+| `Kingdom of First Light.mp3` | Prismfall Approach / hope-filled grand area | Yes |
+| `The Sea of Static.mp3` | The Severance zone / void regions | Yes |
+| `Convergence Suite.mp3` | Final dungeon / climax area | Yes |
+| `Resonance Shrine — Sacred Rest.mp3` | Save points, camp sites, shrines | Yes |
+| `All As One.mp3` | Alliance hub / Prismfall council area | Yes |
+| `Free Resonants – The Council Hopeful.mp3` | Faction council chambers | Yes |
+| `Reclamation Initiative March.mp3` | Military/faction march sequences | Yes |
+
+#### Town & Social
+| File | Suggested Use | Loop |
+|------|--------------|------|
+| `Town Theme Day.mp3` | Roothollow (MP3 mirror) | Yes |
+| `Town Theme Night.mp3` | Roothollow night (MP3 mirror) | Yes |
+| `My Hometown.mp3` | Roothollow alternate (MP3 mirror) | Yes |
+| `Shop & Inn Theme – "Afternoon Ledger".mp3` | Roothollow shop/inn interactions | Yes |
+| `Embers of Today.mp3` | Campfire / warm evening scene | Yes |
+| `Embers Between Us.mp3` | Emotional camp conversation | No |
+| `Book of Names.mp3` | Echo Journal / lore discovery moment | No |
+
+#### Victory & Defeat
+| File | Suggested Use | Loop |
+|------|--------------|------|
+| `Success!.mp3` | Victory fanfare (MP3 mirror) | No |
+| `Radiant Victory Fanfare.mp3` | Alternate / major victory fanfare | No |
+| `Level Up.mp3` | Level-up jingle (plays alongside victory when level-ups occur) | No |
+| `Game Over (For Now).mp3` | Defeat screen BGM | No |
+
+#### Character Themes
+| File | Character | Loop |
+|------|-----------|------|
+| `Main Character.mp3` | Kael — title / overworld theme | Yes |
+| `Fragments — Kael's Theme (Early).mp3` | Kael early-game identity | Yes |
+| `Fragments — Kael's Theme (Mid).mp3` | Kael mid-game development | Yes |
+| `Fragments — Kael's Theme (Late).mp3` | Kael late-game resolution | Yes |
+| `Fragments — Piano Solo.mp3` | Kael introspective / quiet moment | No |
+| `Bridge of Stars (Kael's Limit Break).mp3` | Kael Limit Break activation | No |
+| `Iris_ Engineer's Oath.mp3` | Iris — recruitment / character theme | No |
+| `Weight of the Shield.mp3` | Garrick — recruitment / character theme | No |
+| `What Am I, Nyx_.mp3` | Nyx — introduction / character theme | No |
+| `Fragments of Self.mp3` | Lyra — echo/memory reflection | No |
+
+#### Story Events & Cutscenes
+| File | Suggested Use | Loop |
+|------|--------------|------|
+| `Echo Captured — Memory Preserved.mp3` | Echo fragment collection sting | No |
+| `Echo of Tomorrow (Choir Version).mp3` | Major echo revelation / ending echo | No |
+| `Ash_ The Drawing.mp3` | Dramatic revelation / confrontation cutscene | No |
+| `After the Stormfire.mp3` | Post-boss recovery / morning-after scene | No |
+| `New Dawn.mp3` | Hope / resolution after major story beat | No |
+| `One Voice Above the World.mp3` | Grand speech / climactic moment | No |
+| `The Becoming.mp3` | Character transformation scene | No |
+| `The Truth of the Convergence.mp3` | Climactic lore revelation cutscene | No |
+| `The Goodbyes — Kael's Farewell.mp3` | Kael farewell / departure scene | No |
+| `Welcoming Heart Piano.mp3` | Emotional/tender cutscene (OGG mirror) | Yes |
+
+#### Endings & Credits
+| File | Suggested Use | Loop |
+|------|--------------|------|
+| `Silence — Ending A.mp3` | Ending A (sacrifice) credits | No |
+| `Harmony — Ending D (The Bridge).mp3` | Ending D credits | No |
+| `Fragments of Tomorrow.mp3` | Main ending theme | No |
+| `Fragments of Tomorrow — Credits.mp3` | Full credits roll | No |
+| `Control — Epilogue.mp3` | Epilogue — control ending | No |
+| `Unity — Epilogue.mp3` | Epilogue — unity ending | No |
+| `Harmony — Epilogue.mp3` | Epilogue — harmony ending | No |
+| `Silence — Epilogue.mp3` | Epilogue — silence ending | No |
 
 ## Scene-to-Track Mapping
 
 Use these assignments when wiring `AudioManager.play_bgm()` into scene scripts:
 
-| Scene / Event | Track | Fade Time |
-|--------------|-------|-----------|
-| Title screen | `Main Character.ogg` or `Welcoming Heart Piano.ogg` | 0.0 (instant) |
-| Roothollow (town) | `Town Theme Day.ogg` | 1.0 |
-| Verdant Forest | `Peaceful Days.ogg` | 1.5 |
-| Overgrown Ruins | `Castle.ogg` | 1.5 |
-| Random encounter | `Battle Theme Organ.ogg` | 0.5 |
-| Boss battle | `Epic Boss Battle 1st section.ogg` | 0.5 |
-| Victory | `Success!.ogg` | 0.0 (instant) |
-| Post-victory (return to field) | Restore previous scene BGM | 1.0 |
+### Currently Wired (✓ = implemented)
+
+| Scene / Event | Track | Fade Time | Status |
+|--------------|-------|-----------|--------|
+| Title screen | `Main Character.ogg` | 0.0 (instant) | ✓ |
+| Roothollow (town) | `Town Theme Day.ogg` | 1.0 | ✓ |
+| Verdant Forest | `Overgrown Memories.ogg` | 1.5 | ✓ |
+| Overgrown Ruins | `Echoes of the Capital.ogg` | 1.5 | ✓ |
+| Overgrown Capital | `Echoes of the Capital.ogg` | 1.5 | ✓ |
+| Random encounter | `Battle Theme 1.ogg` | 0.5 | ✓ |
+| Boss battle | `Epic Boss Battle 1st section.ogg` | 0.5 | ✓ |
+| Victory fanfare | `Success!.ogg` | 0.0 (instant) | ✓ |
+| Post-victory (return to field) | Restore previous scene BGM | 1.0 | ✓ |
+| Defeat screen | `Game Over (For Now).mp3` | 0.5 | ✓ |
+| Level-up during victory | `Level Up.mp3` | 0.0 (instant) | ✓ |
+| Echo collection | `Echo Captured — Memory Preserved.mp3` | 0.5 | ✓ |
+| Iris recruitment | `Iris_ Engineer's Oath.mp3` | 1.0 | ✓ |
+| Garrick recruitment | `Weight of the Shield.mp3` | 1.0 | ✓ |
+| Nyx introduction | `What Am I, Nyx_.mp3` | 1.0 | ✓ |
+
+### Planned (future scenes/events)
+
+| Scene / Event | Track | Notes |
+|--------------|-------|-------|
+| Roothollow shop/inn | `Shop & Inn Theme – "Afternoon Ledger".mp3` | Wire when shop opens as sub-screen |
+| Camp/save point | `Resonance Shrine — Sacred Rest.mp3` | Wire to camp_menu open |
+| Prismfall Approach | `Kingdom of First Light.mp3` | Future scene |
+| Final dungeon | `Convergence Suite.mp3` | Future scene |
+| Kael Limit Break | `Bridge of Stars (Kael's Limit Break).mp3` | Future battle system |
+| Credits roll | `Fragments of Tomorrow — Credits.mp3` | Future ending screen |
+| Ending A | `Silence — Ending A.mp3` | Future ending screen |
+| Ending D | `Harmony — Ending D (The Bridge).mp3` | Future ending screen |
 
 ## AudioManager API
 

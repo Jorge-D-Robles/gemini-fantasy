@@ -13,6 +13,7 @@ const FLAG_NAME: String = "iris_recruited"
 const IRIS_DATA_PATH: String = "res://data/characters/iris.tres"
 const ASH_STALKER_PATH: String = "res://data/enemies/ash_stalker.tres"
 const IRIS_QUEST_PATH: String = "res://data/quests/iris_engineers_oath.tres"
+const IRIS_BGM_PATH: String = "res://assets/music/Iris_ Engineer's Oath.ogg"
 
 
 func trigger() -> void:
@@ -21,6 +22,13 @@ func trigger() -> void:
 
 	EventFlags.set_flag(FLAG_NAME)
 	GameManager.push_state(GameManager.GameState.CUTSCENE)
+
+	AudioManager.push_bgm()
+	var iris_bgm := load(IRIS_BGM_PATH) as AudioStream
+	if iris_bgm:
+		AudioManager.play_bgm(iris_bgm, 1.0)
+	else:
+		push_warning("Iris BGM not found: " + IRIS_BGM_PATH)
 
 	var pre_battle_lines: Array[DialogueLine] = _build_pre_battle_dialogue()
 

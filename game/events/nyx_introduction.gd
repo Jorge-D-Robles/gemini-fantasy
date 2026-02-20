@@ -14,6 +14,7 @@ signal sequence_completed
 
 const FLAG_NAME: String = "nyx_introduction_seen"
 const NYX_MET_FLAG: String = "nyx_met"
+const NYX_BGM_PATH: String = "res://assets/music/What Am I, Nyx_.ogg"
 
 
 ## Returns true when the event is eligible to fire:
@@ -166,9 +167,17 @@ func trigger() -> void:
 	EventFlags.set_flag(NYX_MET_FLAG)
 	GameManager.push_state(GameManager.GameState.CUTSCENE)
 
+	AudioManager.push_bgm()
+	var nyx_bgm := load(NYX_BGM_PATH) as AudioStream
+	if nyx_bgm:
+		AudioManager.play_bgm(nyx_bgm, 1.0)
+	else:
+		push_warning("Nyx BGM not found: " + NYX_BGM_PATH)
+
 	var lines: Array[DialogueLine] = compute_nyx_intro_lines()
 	DialogueManager.start_dialogue(lines)
 	await DialogueManager.dialogue_ended
 
+	AudioManager.pop_bgm(1.5)
 	GameManager.pop_state()
 	sequence_completed.emit()

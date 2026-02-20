@@ -12,6 +12,7 @@ signal sequence_completed
 const FLAG_NAME: String = "garrick_recruited"
 const GARRICK_DATA_PATH: String = "res://data/characters/garrick.tres"
 const GARRICK_QUEST_PATH: String = "res://data/quests/garrick_three_burns.tres"
+const GARRICK_BGM_PATH: String = "res://assets/music/Weight of the Shield.ogg"
 
 
 func trigger() -> void:
@@ -20,6 +21,13 @@ func trigger() -> void:
 
 	EventFlags.set_flag(FLAG_NAME)
 	GameManager.push_state(GameManager.GameState.CUTSCENE)
+
+	AudioManager.push_bgm()
+	var garrick_bgm := load(GARRICK_BGM_PATH) as AudioStream
+	if garrick_bgm:
+		AudioManager.play_bgm(garrick_bgm, 1.0)
+	else:
+		push_warning("Garrick BGM not found: " + GARRICK_BGM_PATH)
 
 	var lines: Array[DialogueLine] = _build_dialogue()
 
@@ -37,6 +45,7 @@ func trigger() -> void:
 		if quest:
 			QuestManager.accept_quest(quest)
 
+	AudioManager.pop_bgm(1.5)
 	GameManager.pop_state()
 	sequence_completed.emit()
 

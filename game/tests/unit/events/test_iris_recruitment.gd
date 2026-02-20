@@ -109,3 +109,18 @@ func test_compute_should_auto_accept_false_when_not_recruited() -> void:
 		IrisRecruitment.compute_should_auto_accept_iris_quest({}),
 		"Should not auto-accept when iris_recruited flag is missing",
 	)
+
+
+func test_iris_bgm_path_constant_exists() -> void:
+	assert_true(
+		_recruitment.get("IRIS_BGM_PATH") != null,
+		"IrisRecruitment must declare IRIS_BGM_PATH for character theme",
+	)
+
+
+func test_iris_bgm_path_points_to_engineers_oath() -> void:
+	assert_eq(
+		_recruitment.IRIS_BGM_PATH,
+		"res://assets/music/Iris_ Engineer's Oath.ogg",
+		"IRIS_BGM_PATH should reference Iris_ Engineer's Oath",
+	)
