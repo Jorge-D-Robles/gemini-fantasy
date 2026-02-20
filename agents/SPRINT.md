@@ -9,6 +9,15 @@ Started: 2026-02-20
 
 ## Active
 
+### T-0199
+- Title: Place Morning Commute and Family Dinner echo interactables in Overgrown Capital Market District
+- Status: in-progress
+- Assigned: claude
+- Started: 2026-02-20
+- Priority: medium
+- Depends: T-0190, T-0197, T-0198
+- Refs: docs/story/act1/05-into-the-capital.md (Scene 2), docs/lore/04-echo-catalog.md
+
 ### T-0200
 - Title: Add Leaving the Capital scene — post-dungeon processing dialogue (Chapter 5 Scene 6)
 - Status: done

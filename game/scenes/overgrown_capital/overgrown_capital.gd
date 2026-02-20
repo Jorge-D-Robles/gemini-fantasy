@@ -21,6 +21,8 @@ const ECHO_NOMAD_PATH: String = "res://data/enemies/echo_nomad.tres"
 const SCENE_BGM_PATH: String = "res://assets/music/Echoes of the Capital.ogg"
 const LYRA_FRAGMENT_2_ECHO_ID: StringName = &"lyra_fragment_2"
 const LYRA_FRAGMENT_2_FLAG: String = "lyra_fragment_2_collected"
+const MORNING_COMMUTE_ECHO_ID: StringName = &"morning_commute"
+const FAMILY_DINNER_ECHO_ID: StringName = &"family_dinner"
 
 # Tilemap data (legends + maps) lives in OvergrownCapitalMap.
 # Encounter pool builder lives in OvergrownCapitalEncounters.
@@ -86,6 +88,43 @@ static func compute_research_quarter_echo_position() -> Vector2:
 	return Vector2(448.0, 96.0)
 
 
+static func compute_market_echo_positions() -> Array:
+	## Two echo positions in the Market District.
+	## [0] Morning Commute — transit bench area, col 6, row 20.
+	## [1] Family Dinner — residential quarter, col 34, row 20.
+	return [Vector2(96.0, 320.0), Vector2(544.0, 320.0)]
+
+
+static func compute_morning_commute_vision_lines() -> Array[String]:
+	## Vision for Morning Commute echo — the empty commuter in the Memory Network.
+	return [
+		"Kael",
+		("A man on a bench. Eyes closed. Peaceful expression."
+			+ " The market moves around him — vendors, crowds, noise —"
+			+ " and he isn't here at all."),
+		"Iris",
+		("Memory Network. He's reliving something better."
+			+ " A beach, a summer, something that ended before the Severance."),
+		"Kael",
+		("They were everywhere. Thousands of them, walking and eating and riding"
+			+ " while their minds were somewhere else entirely."),
+	]
+
+
+static func compute_family_dinner_vision_lines() -> Array[String]:
+	## Vision for Family Dinner echo — the family seated apart in the Network.
+	return [
+		"Kael",
+		("A kitchen. Table set for four. Food going cold."
+			+ " Three of them are far away — I can feel it,"
+			+ " the kind of absence that isn't absence."),
+		"Garrick",
+		("The youngest is awake. Watching. Waiting for someone to come back."),
+		"Kael",
+		"No one does.",
+	]
+
+
 static func compute_research_quarter_lines() -> Array[String]:
 	## Returns vision_lines for Lyra Fragment 2: approach dialogue (Iris reads
 	## nameplate) followed by the memory sequence (Marcus Cole, 140-day countdown,
@@ -141,6 +180,7 @@ func _ready() -> void:
 	_setup_encounters()
 	_setup_purification_nodes()
 	_setup_lyra_fragment_echo()
+	_setup_market_echoes()
 
 	UILayer.hud.location_name = "Overgrown Capital"
 
@@ -400,3 +440,33 @@ func _trigger_leaving_capital_and_exit() -> void:
 	await event.sequence_completed
 	event.queue_free()
 	GameManager.change_scene(SP.VERDANT_FOREST, GameManager.FADE_DURATION, "spawn_from_capital")
+
+
+func _setup_market_echoes() -> void:
+	var positions := compute_market_echo_positions()
+
+	# Morning Commute — transit bench area, western Market District.
+	var morning_strat := MEMORIAL_ECHO_STRATEGY_SCRIPT.new() as MemorialEchoStrategy
+	morning_strat.echo_id = MORNING_COMMUTE_ECHO_ID
+	morning_strat.require_quest_id = &""
+	morning_strat.vision_lines = compute_morning_commute_vision_lines()
+	var morning_interactable := INTERACTABLE_SCENE.instantiate() as Interactable
+	morning_interactable.name = "MorningCommuteEcho"
+	morning_interactable.strategy = morning_strat
+	morning_interactable.one_time = true
+	morning_interactable.indicator_type = Interactable.IndicatorType.INTERACT
+	morning_interactable.position = positions[0]
+	$Entities.add_child(morning_interactable)
+
+	# Family Dinner — residential quarter, eastern Market District.
+	var dinner_strat := MEMORIAL_ECHO_STRATEGY_SCRIPT.new() as MemorialEchoStrategy
+	dinner_strat.echo_id = FAMILY_DINNER_ECHO_ID
+	dinner_strat.require_quest_id = &""
+	dinner_strat.vision_lines = compute_family_dinner_vision_lines()
+	var dinner_interactable := INTERACTABLE_SCENE.instantiate() as Interactable
+	dinner_interactable.name = "FamilyDinnerEcho"
+	dinner_interactable.strategy = dinner_strat
+	dinner_interactable.one_time = true
+	dinner_interactable.indicator_type = Interactable.IndicatorType.INTERACT
+	dinner_interactable.position = positions[1]
+	$Entities.add_child(dinner_interactable)
