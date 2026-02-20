@@ -400,8 +400,10 @@ Started: 2026-02-18
 
 ### T-0148
 - Title: Add camp scene "Three Around a Fire" — Garrick, Iris, Kael evening dialogue
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: low
 - Depends: T-0085
 - Refs: docs/story/act1/04-old-iron.md (Camp Scene), game/events/

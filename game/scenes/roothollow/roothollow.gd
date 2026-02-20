@@ -14,6 +14,7 @@ const Dialogue = preload("roothollow_dialogue.gd")
 const Quests = preload("roothollow_quests.gd")
 const Zone = preload("roothollow_zone.gd")
 const SP = preload("res://systems/scene_paths.gd")
+const CampThreeFiresScript = preload("res://events/camp_three_fires.gd")
 const SHOP_DATA_PATH: String = (
 	"res://data/shops/roothollow_general.tres"
 )
@@ -247,6 +248,14 @@ func _on_innkeeper_finished() -> void:
 	DialogueManager.start_dialogue(heal_lines)
 	await DialogueManager.dialogue_ended
 	_check_quest_chain(_herb_quest, "Maren")
+	# After resting with the full party assembled, trigger the campfire scene.
+	if EventFlags.has_flag("garrick_recruited") and \
+			not EventFlags.has_flag(CampThreeFires.FLAG_NAME):
+		var camp_event: Node = CampThreeFiresScript.new()
+		add_child(camp_event)
+		camp_event.trigger()
+		await camp_event.sequence_completed
+		camp_event.queue_free()
 
 
 func _on_shopkeeper_finished() -> void:
