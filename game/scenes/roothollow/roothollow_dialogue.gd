@@ -24,16 +24,17 @@ static func get_maren_dialogue(
 		])
 	if flags.get("iris_recruited", false):
 		return PackedStringArray([
-			"So you've brought company! A soldier, by the look"
-			+ " of her. Or... former soldier?",
-			"Don't worry, I don't pry. Anyone who fights"
-			+ " alongside Kael is welcome at my table."
-			+ " That's root deep, that is.",
-			"That arm of hers... Resonance-powered, isn't it?"
-			+ " Haven't seen Initiative tech this far east"
-			+ " in years.",
+			"Kael! You've been gone two days without a word,"
+			+ " and you come back with a woman in military armor."
+			+ " I've got questions.",
+			"It's root deep typical of you."
+			+ " Well, she's welcome to browse.",
+			"You hungry? You look hungry."
+			+ " Here \u2014 on the house."
+			+ " Any friend of Kael's gets one free meal."
+			+ " After that, you pay like everyone else.",
 			"I'll set out extra bowls."
-			+ " You all look like you could use a real meal.",
+			+ " You both look like you could use a real meal.",
 		])
 	if flags.get("opening_lyra_discovered", false):
 		return PackedStringArray([
@@ -83,14 +84,17 @@ static func get_bram_dialogue(
 		])
 	if flags.get("iris_recruited", false):
 		return PackedStringArray([
-			"Your new friend... she's from the Ironcoast,"
-			+ " isn't she? I can tell by the armor.",
-			"N-not that there's anything wrong with that!"
-			+ " The Federation makes good gear."
-			+ " Very reliable. Very... heavily armed.",
-			"Actually, if she has any contacts in the supply"
-			+ " chain, I'd love an introduction."
-			+ " Strictly business! ...root deep, I mean it.",
+			"Kael, did you see the stranger at the old shrine"
+			+ " yesterday? Big woman. Military bearing."
+			+ " Stood there for an hour without moving.",
+			"I brought her some dried bread. She wouldn't eat"
+			+ " a bite. Just stared at the stones like they"
+			+ " owed her something — root deep unsettling.",
+			"Then this morning she comes asking after you by"
+			+ " name. Wouldn't say where she was from.",
+			"She's your new companion, then."
+			+ " Whatever she's carrying, I hope it doesn't"
+			+ " land on Roothollow.",
 		])
 	if flags.get("opening_lyra_discovered", false):
 		return PackedStringArray([
@@ -210,15 +214,13 @@ static func get_wren_dialogue(
 		])
 	if flags.get("iris_recruited", false):
 		return PackedStringArray([
-			"Your new companion handles herself well."
-			+ " I watched her take down a crystal-shard"
-			+ " serpent near the forest edge without"
-			+ " breaking stride.",
-			"That arm of hers packs a punch. Literally."
-			+ " The serpent didn't know what hit it.",
-			"Good. You need someone who can fight. Things"
-			+ " between here and the ruins are getting"
-			+ " root deep dangerous.",
+			"That woman's a deserter \u2014 or Initiative"
+			+ " undercover. Either way, I know the armor."
+			+ " Stripped insignias, but the alloy gives it away.",
+			"Watch yourself. People don't walk away"
+			+ " from the Initiative without consequences.",
+			"It's root deep trouble, following that kind"
+			+ " of soldier. Keep your eyes open.",
 		])
 	if flags.get("opening_lyra_discovered", false):
 		return PackedStringArray([
@@ -290,10 +292,13 @@ static func get_lina_dialogue(
 		])
 	if flags.get("iris_recruited", false):
 		return PackedStringArray([
-			"Your friend has a SHINY ARM!"
-			+ " Is it made of crystal? Can I touch it?",
-			"She said maybe later."
-			+ " That's grown-up talk for no, isn't it?",
+			"Kael! There's a big man at the shrine!"
+			+ " Is he a knight? He LOOKS like a knight.",
+			"Knights have horses, right?"
+			+ " Does he have a horse??"
+			+ " I want to see the horse.",
+			"Mama said stop bothering him"
+			+ " but I only asked three times.",
 		])
 	if flags.get("opening_lyra_discovered", false):
 		return PackedStringArray([

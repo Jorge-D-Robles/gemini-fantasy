@@ -44,7 +44,18 @@ func test_maren_iris_recruited() -> void:
 		_flags(["opening_lyra_discovered", "iris_recruited"])
 	)
 	assert_eq(lines.size(), 4)
-	assert_string_contains(lines[0], "brought company")
+	assert_string_contains(lines[0], "two days without a word")
+
+
+func test_maren_iris_recruited_offers_food() -> void:
+	var lines: PackedStringArray = _rh.get_maren_dialogue(
+		_flags(["opening_lyra_discovered", "iris_recruited"])
+	)
+	assert_true(
+		_any_line_contains(lines, "hungry")
+		or _any_line_contains(lines, "meal"),
+		"Maren should offer food to Iris",
+	)
 
 
 func test_maren_garrick_recruited() -> void:
@@ -94,8 +105,23 @@ func test_bram_iris_recruited() -> void:
 	var lines: PackedStringArray = _rh.get_bram_dialogue(
 		_flags(["opening_lyra_discovered", "iris_recruited"])
 	)
-	assert_eq(lines.size(), 3)
-	assert_string_contains(lines[0], "Ironcoast")
+	assert_eq(lines.size(), 4)
+	assert_true(
+		_any_line_contains(lines, "shrine")
+		or _any_line_contains(lines, "stranger"),
+		"Bram should mention the shrine stranger",
+	)
+
+
+func test_bram_iris_recruited_mentions_refused_food() -> void:
+	var lines: PackedStringArray = _rh.get_bram_dialogue(
+		_flags(["opening_lyra_discovered", "iris_recruited"])
+	)
+	assert_true(
+		_any_line_contains(lines, "eat")
+		or _any_line_contains(lines, "food"),
+		"Bram should mention that the stranger refused food",
+	)
 
 
 func test_bram_garrick_recruited() -> void:
@@ -197,7 +223,18 @@ func test_wren_iris_recruited() -> void:
 		_flags(["opening_lyra_discovered", "iris_recruited"])
 	)
 	assert_eq(lines.size(), 3)
-	assert_string_contains(lines[0], "handles herself well")
+	assert_string_contains(lines[0], "deserter")
+
+
+func test_wren_iris_recruited_welcomes_deserter() -> void:
+	var lines: PackedStringArray = _rh.get_wren_dialogue(
+		_flags(["opening_lyra_discovered", "iris_recruited"])
+	)
+	assert_true(
+		_any_line_contains(lines, "deserter")
+		or _any_line_contains(lines, "undercover"),
+		"Wren should challenge or accept Iris as deserter",
+	)
 
 
 func test_wren_garrick_recruited() -> void:
@@ -260,8 +297,18 @@ func test_lina_iris_recruited() -> void:
 	var lines: PackedStringArray = _rh.get_lina_dialogue(
 		_flags(["opening_lyra_discovered", "iris_recruited"])
 	)
-	assert_eq(lines.size(), 2)
-	assert_string_contains(lines[0], "SHINY ARM")
+	assert_eq(lines.size(), 3)
+	assert_string_contains(lines[0], "shrine")
+
+
+func test_lina_iris_recruited_mentions_horse() -> void:
+	var lines: PackedStringArray = _rh.get_lina_dialogue(
+		_flags(["opening_lyra_discovered", "iris_recruited"])
+	)
+	assert_true(
+		_any_line_contains(lines, "horse"),
+		"Lina should ask about the horse when Iris is recruited",
+	)
 
 
 func test_lina_garrick_recruited() -> void:
