@@ -1,0 +1,71 @@
+[gd_resource type="Resource" script_class="SkillTreeData" load_steps=9 format=3 uid="uid://bgarrick_judgment_path"]
+
+[ext_resource type="Script" path="res://resources/skill_tree_data.gd" id="1_std"]
+[ext_resource type="Script" path="res://resources/skill_tree_node_data.gd" id="2_stnd"]
+
+[sub_resource type="Resource" id="Node_garrick_righteous_fury"]
+script = ExtResource("2_stnd")
+id = &"garrick_righteous_fury"
+display_name = "Righteous Fury"
+description = "Deal 50% more damage to evil enemy types"
+tier = 1
+ap_cost = 1
+required_node_ids = []
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_garrick_hammer_of_justice"]
+script = ExtResource("2_stnd")
+id = &"garrick_hammer_of_justice"
+display_name = "Hammer of Justice"
+description = "Mace attacks can deal holy damage"
+tier = 1
+ap_cost = 1
+required_node_ids = []
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_garrick_condemn"]
+script = ExtResource("2_stnd")
+id = &"garrick_condemn"
+display_name = "Condemn"
+description = "Mark enemy to take increased damage from all sources"
+tier = 2
+ap_cost = 2
+required_node_ids = [&"garrick_righteous_fury"]
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_garrick_holy_fire"]
+script = ExtResource("2_stnd")
+id = &"garrick_holy_fire"
+display_name = "Holy Fire"
+description = "Attacks have chance to burn enemies"
+tier = 2
+ap_cost = 2
+required_node_ids = [&"garrick_hammer_of_justice"]
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_garrick_divine_judgment"]
+script = ExtResource("2_stnd")
+id = &"garrick_divine_judgment"
+display_name = "Divine Judgment"
+description = "Massive damage based on how much damage the enemy has dealt"
+tier = 3
+ap_cost = 3
+required_node_ids = [&"garrick_condemn"]
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_garrick_paladins_wrath"]
+script = ExtResource("2_stnd")
+id = &"garrick_paladins_wrath"
+display_name = "Paladin's Wrath"
+description = "Can attack and defend in the same turn"
+tier = 3
+ap_cost = 3
+required_node_ids = [&"garrick_holy_fire"]
+unlocks_ability = null
+
+[resource]
+script = ExtResource("1_std")
+id = &"garrick_judgment_path"
+display_name = "Judgment Path"
+description = "Focus: Holy Damage and Offensive Power"
+nodes = [SubResource("Node_garrick_righteous_fury"), SubResource("Node_garrick_hammer_of_justice"), SubResource("Node_garrick_condemn"), SubResource("Node_garrick_holy_fire"), SubResource("Node_garrick_divine_judgment"), SubResource("Node_garrick_paladins_wrath")]

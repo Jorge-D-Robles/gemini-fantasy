@@ -1,0 +1,41 @@
+[gd_resource type="Resource" script_class="SkillTreeData" load_steps=6 format=3 uid="uid://bsienna_experimentation_path"]
+
+[ext_resource type="Script" path="res://resources/skill_tree_data.gd" id="1_std"]
+[ext_resource type="Script" path="res://resources/skill_tree_node_data.gd" id="2_stnd"]
+
+[sub_resource type="Resource" id="Node_sienna_test_subject"]
+script = ExtResource("2_stnd")
+id = &"sienna_test_subject"
+display_name = "Test Subject"
+description = "Entry node for the Experimentation path"
+tier = 1
+ap_cost = 1
+required_node_ids = []
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_sienna_refined_formula"]
+script = ExtResource("2_stnd")
+id = &"sienna_refined_formula"
+display_name = "Refined Formula"
+description = "Mid-tier Experimentation path node"
+tier = 2
+ap_cost = 2
+required_node_ids = [&"sienna_test_subject"]
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_sienna_perfect_catalyst"]
+script = ExtResource("2_stnd")
+id = &"sienna_perfect_catalyst"
+display_name = "Perfect Catalyst"
+description = "Experimentation path capstone"
+tier = 3
+ap_cost = 3
+required_node_ids = [&"sienna_refined_formula"]
+unlocks_ability = null
+
+[resource]
+script = ExtResource("1_std")
+id = &"sienna_experimentation_path"
+display_name = "Experimentation Path"
+description = "Focus: Alchemical Experimentation and Catalysts"
+nodes = [SubResource("Node_sienna_test_subject"), SubResource("Node_sienna_refined_formula"), SubResource("Node_sienna_perfect_catalyst")]

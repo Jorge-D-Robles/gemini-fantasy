@@ -1,0 +1,71 @@
+[gd_resource type="Resource" script_class="SkillTreeData" load_steps=9 format=3 uid="uid://bnyx_chaos_path"]
+
+[ext_resource type="Script" path="res://resources/skill_tree_data.gd" id="1_std"]
+[ext_resource type="Script" path="res://resources/skill_tree_node_data.gd" id="2_stnd"]
+
+[sub_resource type="Resource" id="Node_nyx_embrace_chaos"]
+script = ExtResource("2_stnd")
+id = &"nyx_embrace_chaos"
+display_name = "Embrace Chaos"
+description = "Reality Break effects are more extreme"
+tier = 1
+ap_cost = 1
+required_node_ids = []
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_nyx_wild_magic"]
+script = ExtResource("2_stnd")
+id = &"nyx_wild_magic"
+display_name = "Wild Magic"
+description = "All abilities have 20% chance to cast twice"
+tier = 1
+ap_cost = 1
+required_node_ids = []
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_nyx_entropy"]
+script = ExtResource("2_stnd")
+id = &"nyx_entropy"
+display_name = "Entropy"
+description = "Enemies near Nyx lose buffs over time"
+tier = 2
+ap_cost = 2
+required_node_ids = [&"nyx_embrace_chaos"]
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_nyx_unpredictable"]
+script = ExtResource("2_stnd")
+id = &"nyx_unpredictable"
+display_name = "Unpredictable"
+description = "Nyx gains a random stat boost each turn"
+tier = 2
+ap_cost = 2
+required_node_ids = [&"nyx_wild_magic"]
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_nyx_chaos_storm"]
+script = ExtResource("2_stnd")
+id = &"nyx_chaos_storm"
+display_name = "Chaos Storm"
+description = "Everyone including allies takes random effects"
+tier = 3
+ap_cost = 3
+required_node_ids = [&"nyx_entropy"]
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_nyx_pure_chaos"]
+script = ExtResource("2_stnd")
+id = &"nyx_pure_chaos"
+display_name = "Pure Chaos"
+description = "Once per battle, trigger all of Nyx's random effects simultaneously"
+tier = 3
+ap_cost = 3
+required_node_ids = [&"nyx_unpredictable"]
+unlocks_ability = null
+
+[resource]
+script = ExtResource("1_std")
+id = &"nyx_chaos_path"
+display_name = "Chaos Path"
+description = "Focus: Unpredictability and Reality Warping"
+nodes = [SubResource("Node_nyx_embrace_chaos"), SubResource("Node_nyx_wild_magic"), SubResource("Node_nyx_entropy"), SubResource("Node_nyx_unpredictable"), SubResource("Node_nyx_chaos_storm"), SubResource("Node_nyx_pure_chaos")]

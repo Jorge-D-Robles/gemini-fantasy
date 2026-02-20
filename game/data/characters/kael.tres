@@ -1,10 +1,13 @@
-[gd_resource type="Resource" script_class="CharacterData" load_steps=6 format=3 uid="uid://bkael"]
+[gd_resource type="Resource" script_class="CharacterData" load_steps=9 format=3 uid="uid://bkael"]
 
 [ext_resource type="Script" path="res://resources/character_data.gd" id="1_script"]
 [ext_resource type="Resource" uid="uid://becho_strike" path="res://data/abilities/echo_strike.tres" id="2_echo_strike"]
 [ext_resource type="Resource" uid="uid://bresonance_pulse" path="res://data/abilities/resonance_pulse.tres" id="3_resonance_pulse"]
 [ext_resource type="Resource" uid="uid://bflame_blade" path="res://data/abilities/flame_blade.tres" id="4_flame_blade"]
 [ext_resource type="Resource" uid="uid://bmemory_weave" path="res://data/abilities/memory_weave.tres" id="5_memory_weave"]
+[ext_resource type="Resource" uid="uid://bkael_hunter_path" path="res://data/skill_trees/kael_hunter_path.tres" id="6_hunter"]
+[ext_resource type="Resource" uid="uid://bkael_memory_path" path="res://data/skill_trees/kael_memory_path.tres" id="7_memory"]
+[ext_resource type="Resource" uid="uid://bkael_bridge_path" path="res://data/skill_trees/kael_bridge_path.tres" id="8_bridge"]
 
 [resource]
 script = ExtResource("1_script")
@@ -32,3 +35,4 @@ abilities = [ExtResource("2_echo_strike"), ExtResource("3_resonance_pulse"), Ext
 portrait_path = "res://assets/portraits/kael_portrait.png"
 sprite_path = ""
 battle_sprite_path = "res://assets/sprites/characters/battle/kael_battle.png"
+skill_trees = [ExtResource("6_hunter"), ExtResource("7_memory"), ExtResource("8_bridge")]

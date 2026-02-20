@@ -1,0 +1,41 @@
+[gd_resource type="Resource" script_class="SkillTreeData" load_steps=6 format=3 uid="uid://bcipher_anchor_path"]
+
+[ext_resource type="Script" path="res://resources/skill_tree_data.gd" id="1_std"]
+[ext_resource type="Script" path="res://resources/skill_tree_node_data.gd" id="2_stnd"]
+
+[sub_resource type="Resource" id="Node_cipher_grounding"]
+script = ExtResource("2_stnd")
+id = &"cipher_grounding"
+display_name = "Grounding"
+description = "Entry node for the Anchor path"
+tier = 1
+ap_cost = 1
+required_node_ids = []
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_cipher_anchor_sense"]
+script = ExtResource("2_stnd")
+id = &"cipher_anchor_sense"
+display_name = "Anchor Sense"
+description = "Mid-tier Anchor path node"
+tier = 2
+ap_cost = 2
+required_node_ids = [&"cipher_grounding"]
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_cipher_unshakeable"]
+script = ExtResource("2_stnd")
+id = &"cipher_unshakeable"
+display_name = "Unshakeable"
+description = "Anchor path capstone"
+tier = 3
+ap_cost = 3
+required_node_ids = [&"cipher_anchor_sense"]
+unlocks_ability = null
+
+[resource]
+script = ExtResource("1_std")
+id = &"cipher_anchor_path"
+display_name = "Anchor Path"
+description = "Focus: Stability and Psychological Resilience"
+nodes = [SubResource("Node_cipher_grounding"), SubResource("Node_cipher_anchor_sense"), SubResource("Node_cipher_unshakeable")]

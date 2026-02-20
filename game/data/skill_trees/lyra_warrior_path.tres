@@ -1,0 +1,41 @@
+[gd_resource type="Resource" script_class="SkillTreeData" load_steps=6 format=3 uid="uid://blyra_warrior_path"]
+
+[ext_resource type="Script" path="res://resources/skill_tree_data.gd" id="1_std"]
+[ext_resource type="Script" path="res://resources/skill_tree_node_data.gd" id="2_stnd"]
+
+[sub_resource type="Resource" id="Node_lyra_warrior_training"]
+script = ExtResource("2_stnd")
+id = &"lyra_warrior_training"
+display_name = "Warrior Training"
+description = "Entry node for the Warrior path"
+tier = 1
+ap_cost = 1
+required_node_ids = []
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_lyra_battle_stance"]
+script = ExtResource("2_stnd")
+id = &"lyra_battle_stance"
+display_name = "Battle Stance"
+description = "Mid-tier Warrior path node"
+tier = 2
+ap_cost = 2
+required_node_ids = [&"lyra_warrior_training"]
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_lyra_warrior_apex"]
+script = ExtResource("2_stnd")
+id = &"lyra_warrior_apex"
+display_name = "Warrior Apex"
+description = "Warrior path capstone"
+tier = 3
+ap_cost = 3
+required_node_ids = [&"lyra_battle_stance"]
+unlocks_ability = null
+
+[resource]
+script = ExtResource("1_std")
+id = &"lyra_warrior_path"
+display_name = "Warrior Path"
+description = "Focus: Physical Combat Mastery"
+nodes = [SubResource("Node_lyra_warrior_training"), SubResource("Node_lyra_battle_stance"), SubResource("Node_lyra_warrior_apex")]

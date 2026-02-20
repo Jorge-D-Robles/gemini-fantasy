@@ -114,10 +114,47 @@ Started: 2026-02-20
 
 ### T-0184
 - Title: Seed ability tree .tres files for all 8 party members
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
+- Priority: high
+- Depends: T-0018
+
+### T-0210
+- Title: Wire dedicated Echoes of the Capital BGM for Overgrown Capital (replace Castle.ogg)
 - Status: todo
 - Assigned: unassigned
 - Priority: high
-- Depends: T-0018
+- Depends: T-0190
+
+### T-0209
+- Title: Add Echo Nomad enemy to Overgrown Capital encounter pool
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Depends: T-0190
+
+### T-0212
+- Title: Wire Verdant Forest → Overgrown Capital transition (ExitToCapital trigger)
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Depends: T-0190, T-0196
+
+### T-0195
+- Title: Implement Purification Node mechanic for crystal-blocked dungeon paths
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Depends: T-0190
+
+### T-0191
+- Title: Add Lyra's Fragment 2 collectible and Chapter 5 Research Quarter vision sequence
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Depends: T-0190
 
 ---
 

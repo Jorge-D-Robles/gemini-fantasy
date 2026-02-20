@@ -1,0 +1,41 @@
+[gd_resource type="Resource" script_class="SkillTreeData" load_steps=6 format=3 uid="uid://bsienna_redemption_path"]
+
+[ext_resource type="Script" path="res://resources/skill_tree_data.gd" id="1_std"]
+[ext_resource type="Script" path="res://resources/skill_tree_node_data.gd" id="2_stnd"]
+
+[sub_resource type="Resource" id="Node_sienna_regret"]
+script = ExtResource("2_stnd")
+id = &"sienna_regret"
+display_name = "Regret"
+description = "Entry node for the Redemption path"
+tier = 1
+ap_cost = 1
+required_node_ids = []
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_sienna_amends"]
+script = ExtResource("2_stnd")
+id = &"sienna_amends"
+display_name = "Making Amends"
+description = "Mid-tier Redemption path node"
+tier = 2
+ap_cost = 2
+required_node_ids = [&"sienna_regret"]
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_sienna_absolution"]
+script = ExtResource("2_stnd")
+id = &"sienna_absolution"
+display_name = "Absolution"
+description = "Redemption path capstone"
+tier = 3
+ap_cost = 3
+required_node_ids = [&"sienna_amends"]
+unlocks_ability = null
+
+[resource]
+script = ExtResource("1_std")
+id = &"sienna_redemption_path"
+display_name = "Redemption Path"
+description = "Focus: Atonement and Personal Growth"
+nodes = [SubResource("Node_sienna_regret"), SubResource("Node_sienna_amends"), SubResource("Node_sienna_absolution")]

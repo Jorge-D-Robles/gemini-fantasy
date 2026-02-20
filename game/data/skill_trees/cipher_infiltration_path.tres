@@ -1,0 +1,41 @@
+[gd_resource type="Resource" script_class="SkillTreeData" load_steps=6 format=3 uid="uid://bcipher_infiltration_path"]
+
+[ext_resource type="Script" path="res://resources/skill_tree_data.gd" id="1_std"]
+[ext_resource type="Script" path="res://resources/skill_tree_node_data.gd" id="2_stnd"]
+
+[sub_resource type="Resource" id="Node_cipher_shadow_step"]
+script = ExtResource("2_stnd")
+id = &"cipher_shadow_step"
+display_name = "Shadow Step"
+description = "Entry node for the Infiltration path"
+tier = 1
+ap_cost = 1
+required_node_ids = []
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_cipher_deep_cover"]
+script = ExtResource("2_stnd")
+id = &"cipher_deep_cover"
+display_name = "Deep Cover"
+description = "Mid-tier Infiltration path node"
+tier = 2
+ap_cost = 2
+required_node_ids = [&"cipher_shadow_step"]
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_cipher_ghost_protocol"]
+script = ExtResource("2_stnd")
+id = &"cipher_ghost_protocol"
+display_name = "Ghost Protocol"
+description = "Infiltration path capstone"
+tier = 3
+ap_cost = 3
+required_node_ids = [&"cipher_deep_cover"]
+unlocks_ability = null
+
+[resource]
+script = ExtResource("1_std")
+id = &"cipher_infiltration_path"
+display_name = "Infiltration Path"
+description = "Focus: Stealth and Subterfuge"
+nodes = [SubResource("Node_cipher_shadow_step"), SubResource("Node_cipher_deep_cover"), SubResource("Node_cipher_ghost_protocol")]

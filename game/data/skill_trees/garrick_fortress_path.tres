@@ -1,0 +1,71 @@
+[gd_resource type="Resource" script_class="SkillTreeData" load_steps=9 format=3 uid="uid://bgarrick_fortress_path"]
+
+[ext_resource type="Script" path="res://resources/skill_tree_data.gd" id="1_std"]
+[ext_resource type="Script" path="res://resources/skill_tree_node_data.gd" id="2_stnd"]
+
+[sub_resource type="Resource" id="Node_garrick_immovable"]
+script = ExtResource("2_stnd")
+id = &"garrick_immovable"
+display_name = "Immovable"
+description = "Can't be knocked back or moved"
+tier = 1
+ap_cost = 1
+required_node_ids = []
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_garrick_shield_mastery"]
+script = ExtResource("2_stnd")
+id = &"garrick_shield_mastery"
+display_name = "Shield Mastery"
+description = "+30% Defense when equipped with shield"
+tier = 1
+ap_cost = 1
+required_node_ids = []
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_garrick_protect"]
+script = ExtResource("2_stnd")
+id = &"garrick_protect"
+display_name = "Protect"
+description = "Can cover adjacent allies, taking hits for them"
+tier = 2
+ap_cost = 2
+required_node_ids = [&"garrick_immovable"]
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_garrick_reinforced"]
+script = ExtResource("2_stnd")
+id = &"garrick_reinforced"
+display_name = "Reinforced"
+description = "+500 max HP"
+tier = 2
+ap_cost = 2
+required_node_ids = [&"garrick_shield_mastery"]
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_garrick_bulwark"]
+script = ExtResource("2_stnd")
+id = &"garrick_bulwark"
+display_name = "Bulwark"
+description = "Create barrier blocking all damage to party for 1 turn"
+tier = 3
+ap_cost = 3
+required_node_ids = [&"garrick_protect"]
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_garrick_living_wall"]
+script = ExtResource("2_stnd")
+id = &"garrick_living_wall"
+display_name = "Living Wall"
+description = "Garrick's presence reduces all party damage by 20% passively"
+tier = 3
+ap_cost = 3
+required_node_ids = [&"garrick_reinforced"]
+unlocks_ability = null
+
+[resource]
+script = ExtResource("1_std")
+id = &"garrick_fortress_path"
+display_name = "Fortress Path"
+description = "Focus: Defense and Party Protection"
+nodes = [SubResource("Node_garrick_immovable"), SubResource("Node_garrick_shield_mastery"), SubResource("Node_garrick_protect"), SubResource("Node_garrick_reinforced"), SubResource("Node_garrick_bulwark"), SubResource("Node_garrick_living_wall")]
