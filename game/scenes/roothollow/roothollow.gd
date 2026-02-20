@@ -12,6 +12,7 @@ extends Node2D
 const Maps = preload("roothollow_maps.gd")
 const Dialogue = preload("roothollow_dialogue.gd")
 const Quests = preload("roothollow_quests.gd")
+const Shop = preload("roothollow_shop.gd")
 const Zone = preload("roothollow_zone.gd")
 const SP = preload("res://systems/scene_paths.gd")
 const CampThreeFiresScript = preload("res://events/camp_three_fires.gd")
@@ -271,8 +272,24 @@ func _on_shopkeeper_finished() -> void:
 	if _shop_data == null:
 		return
 	var shop_mgr := get_node_or_null("/root/ShopManager")
-	if shop_mgr:
+	if shop_mgr == null:
+		return
+	# Build flag-conditional item list (iris_recruited adds Forest Remedy + Crystal Wick)
+	var flags := EventFlags.get_all_flags()
+	var paths: Array[String] = Shop.compute_item_paths(
+		_shop_data.item_paths, flags,
+	)
+	if paths.size() == _shop_data.item_paths.size():
+		# No expansion needed — use base shop data directly
 		shop_mgr.open_shop(_shop_data)
+		return
+	var expanded := ShopData.new()
+	expanded.shop_id = _shop_data.shop_id
+	expanded.shop_name = _shop_data.shop_name
+	expanded.buy_price_modifier = _shop_data.buy_price_modifier
+	expanded.sell_price_modifier = _shop_data.sell_price_modifier
+	expanded.item_paths = paths
+	shop_mgr.open_shop(expanded)
 
 
 func _on_wren_finished() -> void:

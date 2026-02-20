@@ -213,8 +213,10 @@ Started: 2026-02-18
 
 ### T-0137
 - Title: Add Roothollow market expansion — Maeve stocks Forest Remedy and Crystal Wick after Iris
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: low
 - Depends: T-0082
 - Refs: docs/story/act1/04-old-iron.md (Scene 1), game/scenes/roothollow/roothollow_dialogue.gd
