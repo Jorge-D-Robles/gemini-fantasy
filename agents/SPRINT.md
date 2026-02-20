@@ -303,12 +303,14 @@ Started: 2026-02-18
 
 ### T-0149
 - Title: Add Spring Shrine interactable south of Roothollow — Garrick meeting location
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: medium
 - Depends: T-0082
 - Refs: docs/story/act1/04-old-iron.md (Scene 2), game/scenes/roothollow/roothollow.gd
-- Notes: Chapter 4 Scene 2 places Garrick recruitment at spring shrine. Add trigger zone in Roothollow scene activating garrick_recruitment event when approached (after iris_recruited, before garrick_recruited). 4+ tests.
+- Notes: Extracted zone trigger conditions to roothollow_zone.gd (RoothollowZone, RefCounted). compute_garrick_zone_can_trigger() requires opening_lyra_discovered AND iris_recruited, blocks if garrick_recruited. compute_shrine_marker_visible() shows "↓ Spring Shrine" label between iris and garrick recruitment. _on_garrick_zone_entered refactored to use module. 8 tests (1172 total).
 
 ---
 

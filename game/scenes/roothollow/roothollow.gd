@@ -12,6 +12,7 @@ extends Node2D
 const Maps = preload("roothollow_maps.gd")
 const Dialogue = preload("roothollow_dialogue.gd")
 const Quests = preload("roothollow_quests.gd")
+const Zone = preload("roothollow_zone.gd")
 const SP = preload("res://systems/scene_paths.gd")
 const SHOP_DATA_PATH: String = (
 	"res://data/shops/roothollow_general.tres"
@@ -70,6 +71,9 @@ func _ready() -> void:
 
 	# Save point visual marker
 	_spawn_save_point_marker()
+
+	# Shrine direction marker (visible while Garrick is at shrine)
+	_spawn_shrine_marker()
 
 	# Load shop and quest data
 	_shop_data = load(SHOP_DATA_PATH)
@@ -216,12 +220,8 @@ func _on_exit_to_forest_entered(body: Node2D) -> void:
 func _on_garrick_zone_entered(body: Node2D) -> void:
 	if not body.is_in_group("player"):
 		return
-	if EventFlags.has_flag(GarrickRecruitment.FLAG_NAME):
-		return
-	# Require Lyra discovery and Iris recruitment first
-	if not EventFlags.has_flag("opening_lyra_discovered"):
-		return
-	if not EventFlags.has_flag("iris_recruited"):
+	var flags := EventFlags.get_all_flags()
+	if not Zone.compute_garrick_zone_can_trigger(flags):
 		return
 	_garrick_zone.monitoring = false
 	_garrick_event.trigger()
@@ -391,6 +391,25 @@ func _spawn_zone_marker() -> void:
 	marker.destination_name = "Verdant Forest"
 	marker.position = _exit_to_forest.position + Vector2(12, 0)
 	add_child(marker)
+
+
+func _spawn_shrine_marker() -> void:
+	var flags := EventFlags.get_all_flags()
+	if not Zone.compute_shrine_marker_visible(flags):
+		return
+	var label := Label.new()
+	label.text = "\u2193 Spring Shrine"
+	label.modulate = Color(0.6, 0.9, 1.0, 0.85)
+	label.position = _garrick_zone.position + Vector2(-36, -20)
+	var tween := create_tween()
+	tween.set_loops()
+	tween.tween_property(
+		label, "modulate:a", 0.3, 0.9,
+	).set_trans(Tween.TRANS_SINE)
+	tween.tween_property(
+		label, "modulate:a", 0.85, 0.9,
+	).set_trans(Tween.TRANS_SINE)
+	add_child(label)
 
 
 static func _compute_quest_indicator(
