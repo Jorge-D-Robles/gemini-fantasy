@@ -6,7 +6,7 @@ signal battle_started
 signal battle_ended(victory: bool)
 
 const SP = preload("res://systems/scene_paths.gd")
-const BATTLE_BGM_PATH: String = "res://assets/music/Battle Theme Organ.ogg"
+const BATTLE_BGM_PATH: String = "res://assets/music/Battle Theme 1.ogg"
 const BOSS_BGM_PATH: String = (
 	"res://assets/music/Epic Boss Battle 1st section.ogg"
 )
