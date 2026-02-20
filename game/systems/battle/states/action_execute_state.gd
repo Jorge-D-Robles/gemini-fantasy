@@ -70,6 +70,7 @@ func _execute_attack(attacker: Battler, target: Battler) -> void:
 	if is_crit:
 		damage = BattlerDamage.apply_crit(damage)
 	var actual := target.take_damage(damage)
+	_maybe_shake_on_damage(target, actual)
 
 	if is_crit:
 		AudioManager.play_sfx(load(SfxLibrary.COMBAT_CRITICAL_HIT))
@@ -131,6 +132,7 @@ func _execute_ability(
 			ability.damage_base, is_magical, true
 		)
 		var actual := target.take_damage(damage, is_magical)
+		_maybe_shake_on_damage(target, actual)
 		AudioManager.play_sfx(load(SfxLibrary.COMBAT_MAGIC_CAST))
 		if not target.is_alive:
 			AudioManager.play_sfx(load(SfxLibrary.COMBAT_DEATH))
@@ -209,6 +211,13 @@ func _play_attacker_anim(attacker: Battler) -> void:
 	var visual: Node2D = battle_scene.get_visual_scene(attacker)
 	if visual and visual.has_method("play_attack_anim"):
 		await visual.play_attack_anim()
+
+
+func _maybe_shake_on_damage(target: Battler, actual: int) -> void:
+	if not BattleShake.is_heavy_hit(actual, target.max_hp):
+		return
+	var intensity := BattleShake.compute_intensity(actual, target.max_hp)
+	BattleShake.shake(battle_scene as Node2D, intensity, BattleShake.SHAKE_DURATION)
 
 
 func _try_apply_status(ability: AbilityData, target: Battler) -> void:
