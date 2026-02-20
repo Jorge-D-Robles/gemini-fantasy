@@ -27,6 +27,12 @@ const _INDICATOR_OFFSET_Y: float = -24.0
 const _BOB_AMOUNT: float = 2.0
 const _BOB_HALF_DURATION: float = 0.6
 
+## Idle animation parameters.
+const BREATHE_SCALE_DELTA: float = 0.03
+const BREATHE_HALF_DURATION: float = 1.1
+const HEAD_TURN_MIN_INTERVAL: float = 3.5
+const HEAD_TURN_MAX_INTERVAL: float = 8.0
+
 const UITheme = preload("res://ui/ui_theme.gd")
 
 @export var npc_name: String = ""
@@ -43,6 +49,8 @@ var _is_talking: bool = false
 var _player_in_range: bool = false
 var _indicator: Label
 var _indicator_tween: Tween
+var _idle_tween: Tween
+var _idle_running: bool = false
 
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var interaction_area: Area2D = $InteractionArea
@@ -54,11 +62,67 @@ func _ready() -> void:
 	if interaction_area:
 		interaction_area.body_entered.connect(_on_body_entered_range)
 		interaction_area.body_exited.connect(_on_body_exited_range)
+	start_idle_animation()
 
 
 func _exit_tree() -> void:
 	if _indicator_tween:
 		_indicator_tween.kill()
+	_idle_running = false
+	if _idle_tween:
+		_idle_tween.kill()
+
+
+func start_idle_animation() -> void:
+	_idle_running = true
+	_start_breathe_tween()
+	_schedule_head_turn()
+
+
+func stop_idle_animation() -> void:
+	_idle_running = false
+	if _idle_tween:
+		_idle_tween.kill()
+		_idle_tween = null
+	if sprite:
+		sprite.scale.y = 1.0
+
+
+func _start_breathe_tween() -> void:
+	if not sprite or not is_inside_tree():
+		return
+	if _idle_tween:
+		_idle_tween.kill()
+	_idle_tween = create_tween()
+	_idle_tween.set_loops(0)
+	_idle_tween.set_trans(Tween.TRANS_SINE)
+	_idle_tween.tween_property(
+		sprite, "scale:y",
+		1.0 + BREATHE_SCALE_DELTA, BREATHE_HALF_DURATION
+	)
+	_idle_tween.tween_property(
+		sprite, "scale:y",
+		1.0 - BREATHE_SCALE_DELTA, BREATHE_HALF_DURATION
+	)
+
+
+func _schedule_head_turn() -> void:
+	if not _idle_running or not is_inside_tree():
+		return
+	var delay: float = randf_range(
+		HEAD_TURN_MIN_INTERVAL, HEAD_TURN_MAX_INTERVAL
+	)
+	get_tree().create_timer(delay).timeout.connect(
+		_do_head_turn, CONNECT_ONE_SHOT
+	)
+
+
+func _do_head_turn() -> void:
+	if not _idle_running:
+		return
+	if not _is_talking and sprite:
+		sprite.flip_h = not sprite.flip_h
+	_schedule_head_turn()
 
 
 func interact() -> void:
@@ -70,6 +134,7 @@ func interact() -> void:
 	if face_player:
 		_face_toward_player()
 
+	stop_idle_animation()
 	_is_talking = true
 	if _indicator:
 		_indicator.visible = false
@@ -174,6 +239,7 @@ func _on_dialogue_ended() -> void:
 	_is_talking = false
 	if _indicator and _player_in_range:
 		_indicator.visible = true
+	start_idle_animation()
 	interaction_ended.emit()
 	var bus := get_node_or_null("/root/EventBus")
 	if bus:

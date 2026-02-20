@@ -802,8 +802,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0100
 - Title: Add NPC idle animations (breathing, head turn, fidget)
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: low
 - Milestone: M0
 - Depends: none
