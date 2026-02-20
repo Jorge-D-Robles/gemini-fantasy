@@ -674,6 +674,26 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 - Refs: game/ui/hud/hud.gd
 - Notes: No minimap/compass. Start with compass (simpler), upgrade to minimap later. Low priority for 3-scene demo.
 
+### T-0156
+- Title: Verify and wire enemy crit attacks through ActionExecute state
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Milestone: M0
+- Depends: T-0143
+- Refs: game/systems/battle/states/enemy_turn_state.gd, game/systems/battle/states/action_execute_state.gd
+- Notes: T-0143 added crit rolls in _execute_attack() inside ActionExecuteState. Confirm whether EnemyTurnState routes through ActionExecute (if so, crits already apply to enemies). If enemies use a separate execution path, wire BattlerDamage.roll_crit(attacker.luck) + apply_crit() there. 3+ tests verifying enemy crit chance matches the 5%+luck*0.5% formula.
+
+### T-0158
+- Title: Add hit flash animation on battler sprites when taking damage
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M0
+- Depends: none
+- Refs: game/entities/battle/party_battler_scene.gd, game/entities/battle/enemy_battler_scene.gd
+- Notes: When a battler takes damage, briefly modulate the sprite to white (0.15s flash, then fade back to normal over 0.1s). Add play_hit_flash() method to both party_battler_scene.gd and enemy_battler_scene.gd. Wire call from ActionExecuteState after damage is applied. Pairs with DamagePopup for tactile feedback. 4+ tests for flash timing, color values, and that the visual restores correctly.
+
 ---
 
 ## M1 — Act I: The Echo Thief
@@ -1004,13 +1024,13 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0153
 - Title: Seed luck stat in CharacterData .tres files for Kael, Iris, Garrick, Lyra
-- Status: todo
+- Status: done
 - Assigned: unassigned
 - Priority: medium
 - Milestone: M0
 - Depends: none
 - Refs: game/data/characters/, game/resources/character_data.gd
-- Notes: T-0143 critical hit formula uses luck * 0.5% but luck is 0 in all CharacterData .tres files. Set luck: Kael=8 (balanced), Iris=12 (sharp eye), Garrick=4 (heavy), Lyra=10 (attuned). If character_data.gd lacks a luck field, add it. 3+ tests verifying luck values load and feed crit formula. Do alongside T-0143.
+- Notes: SUPERSEDED — all four CharacterData .tres files already have non-zero luck values (Kael=10, Iris=8, Garrick=8, Lyra=12) set during Sprint S02 character data creation. These feed directly into BattlerDamage.compute_crit_chance() in T-0143. No code changes needed.
 
 ### T-0154
 - Title: Add camp/rest trigger zone at Roothollow inn entrance for T-0148 camp event

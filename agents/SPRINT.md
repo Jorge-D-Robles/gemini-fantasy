@@ -102,21 +102,14 @@ Started: 2026-02-18
 
 ### T-0126
 - Title: Show level-up callouts and stat gains in victory screen
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-19
+- Completed: 2026-02-19
 - Priority: medium
 - Depends: T-0124
 - Refs: game/ui/battle_ui/battle_ui.gd, game/systems/battle/states/victory_state.gd
-- Notes: After T-0124 applies XP, show "Kael reached Level 3!" callouts with stat changes. T-0124 done — unblocked.
-
-### T-0125
-- Title: Improve game over / defeat screen with recovery options
-- Status: duplicate
-- Assigned: unassigned
-- Priority: medium
-- Depends: none
-- Refs: game/systems/battle/states/defeat_state.gd, game/ui/battle_ui/battle_ui.gd
-- Notes: DUPLICATE of T-0136 (completed 2026-02-19). T-0136 fully implements defeat screen dismiss flow with Load Last Save / Return to Title buttons, compute_defeat_options() helper, and signal-based state machine integration.
+- Notes: compute_level_up_callout_text(character, level, changes) static helper; format "★ Kael reached Level 4! HP+10, ATK+2"; used in _build_victory_party_section and level_up_messages; 7 tests (1111 total).
 
 ### T-0128
 - Title: BUG — AudioManager.play_bgm() resets volume_db to 0.0, ignoring user volume setting
@@ -144,6 +137,15 @@ Started: 2026-02-18
 - Depends: T-0082
 - Refs: docs/story/act1/04-old-iron.md (Scene 1), game/scenes/roothollow/roothollow_dialogue.gd
 - Notes: Flag-conditional item pool addition when iris_recruited is set. May need new ItemData resources. 3+ tests. T-0082 done — unblocked.
+
+### T-0158
+- Title: Add hit flash animation on battler sprites when taking damage
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Depends: none
+- Refs: game/entities/battle/party_battler_scene.gd, game/entities/battle/enemy_battler_scene.gd
+- Notes: White modulate flash (0.15s on, 0.1s fade) on damage. play_hit_flash() on both battler scenes. Wire from ActionExecuteState. 4+ tests.
 
 ### T-0095
 - Title: Add battler idle animations in combat
@@ -247,6 +249,14 @@ Started: 2026-02-18
 
 ## Done This Sprint
 
+### T-0126
+- Title: Show level-up callouts and stat gains in victory screen
+- Status: done
+- Assigned: claude
+- Started: 2026-02-19
+- Completed: 2026-02-19
+- Notes: compute_level_up_callout_text(character, level, changes) static helper; format "★ Kael reached Level 4! HP+10, ATK+2"; wired into _build_victory_party_section replacing hardcoded text; level_up_messages uses same helper; 7 tests (1111 total).
+
 ### T-0111
 - Title: Add interaction indicators to Interactable objects (save points, chests, signs)
 - Status: done
@@ -254,6 +264,12 @@ Started: 2026-02-18
 - Started: 2026-02-19
 - Completed: 2026-02-19
 - Notes: IndicatorType enum (NONE/INTERACT/SAVE); compute_indicator_text/visible static helpers; floating Label with bob tween; InteractionArea body signals; hides permanently after one_time use; gold color for SAVE; 11 tests (1104 total).
+
+### T-0125
+- Title: Improve game over / defeat screen with recovery options
+- Status: duplicate
+- Assigned: unassigned
+- Notes: DUPLICATE of T-0136 (completed 2026-02-19). T-0136 fully implements defeat screen dismiss flow with Load Last Save / Return to Title buttons, compute_defeat_options() helper, and signal-based state machine integration.
 
 ### T-0143
 - Title: Implement critical hit mechanic and wire CRITICAL_HIT SFX and popup

@@ -49,15 +49,9 @@ static func compute_victory_display(
 		})
 
 		if leveled:
-			var parts: Array[String] = []
-			for stat_key: String in changes:
-				var val: int = changes[stat_key]
-				var label := stat_abbreviation(stat_key)
-				parts.append("+%d %s" % [val, label])
-			var msg := "%s LEVEL UP!" % name_str
-			if not parts.is_empty():
-				msg += " " + ", ".join(parts)
-			level_up_messages.append(msg)
+			level_up_messages.append(
+				compute_level_up_callout_text(name_str, new_level, changes)
+			)
 
 	return {
 		"members": members,
@@ -66,6 +60,23 @@ static func compute_victory_display(
 		"items_text": items_text,
 		"level_up_messages": level_up_messages,
 	}
+
+
+## Generates the per-character level-up callout string shown in the
+## victory screen. Format: "★ Kael reached Level 4! HP+10, ATK+2"
+static func compute_level_up_callout_text(
+	character: String,
+	level: int,
+	changes: Dictionary,
+) -> String:
+	var parts: Array[String] = []
+	for stat_key: String in changes:
+		var val: int = changes[stat_key]
+		parts.append("+%d %s" % [val, stat_abbreviation(stat_key)])
+	var base := "★ %s reached Level %d!" % [character, level]
+	if parts.is_empty():
+		return base
+	return base + " " + ", ".join(parts)
 
 
 ## Returns the prompt text shown on the victory screen asking the
