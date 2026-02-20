@@ -11,6 +11,7 @@ signal sequence_completed
 
 const FLAG_NAME: String = "garrick_recruited"
 const GARRICK_DATA_PATH: String = "res://data/characters/garrick.tres"
+const GARRICK_QUEST_PATH: String = "res://data/quests/garrick_three_burns.tres"
 
 
 func trigger() -> void:
@@ -30,8 +31,20 @@ func trigger() -> void:
 	if garrick_data:
 		PartyManager.add_character(garrick_data)
 
+	# Auto-accept personal quest breadcrumb
+	if compute_should_auto_accept_garrick_quest(EventFlags.get_all_flags()):
+		var quest := load(GARRICK_QUEST_PATH) as Resource
+		if quest:
+			QuestManager.accept_quest(quest)
+
 	GameManager.pop_state()
 	sequence_completed.emit()
+
+
+## Returns true if the personal quest breadcrumb should be auto-accepted.
+## Called after recruitment so garrick_recruited flag is already set.
+static func compute_should_auto_accept_garrick_quest(flags: Dictionary) -> bool:
+	return flags.get("garrick_recruited", false)
 
 
 # Iris is assumed to be in party at this point (iris_recruited flag

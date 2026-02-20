@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="QuestData" load_steps=2 format=3 uid="uid://bgarrick_three_burns"]
+
+[ext_resource type="Script" path="res://resources/quest_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"garrick_three_burns"
+title = "Something He Carries"
+description = "Garrick scratched the crest off his shield and kept walking. He doesn't talk about what he did under the Shepherds of Silence. He doesn't need to. Travel with him long enough, and the story will find its own way out."
+objectives = ["Travel with Garrick and learn his story."]
+reward_gold = 0
+reward_exp = 0
+reward_item_ids = []
+quest_type = 2
+prerequisites = []

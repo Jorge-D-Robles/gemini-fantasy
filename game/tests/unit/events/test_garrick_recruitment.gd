@@ -77,3 +77,29 @@ func test_build_dialogue_garrick_mentions_shepherd() -> void:
 		found,
 		"Garrick should mention Shepherds in his lines",
 	)
+
+
+# -- personal quest auto-accept helper --
+
+
+func test_garrick_quest_path_constant() -> void:
+	assert_eq(
+		_recruitment.GARRICK_QUEST_PATH,
+		"res://data/quests/garrick_three_burns.tres",
+		"GARRICK_QUEST_PATH should point to the personal quest .tres",
+	)
+
+
+func test_compute_should_auto_accept_true_when_recruited() -> void:
+	var flags := {"garrick_recruited": true}
+	assert_true(
+		_recruitment.compute_should_auto_accept_garrick_quest(flags),
+		"Should auto-accept when garrick_recruited flag is set",
+	)
+
+
+func test_compute_should_auto_accept_false_when_not_recruited() -> void:
+	assert_false(
+		_recruitment.compute_should_auto_accept_garrick_quest({}),
+		"Should not auto-accept when garrick_recruited flag is missing",
+	)
