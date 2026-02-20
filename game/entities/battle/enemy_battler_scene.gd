@@ -5,11 +5,14 @@ extends Node2D
 ## Connects to an EnemyBattler logic node for stat/signal data.
 
 const UITheme = preload("res://ui/ui_theme.gd")
+const BOB_AMPLITUDE: float = 3.0
+const BOB_HALF_PERIOD: float = 0.6
 
 @export var enemy_data: EnemyData
 
 var battler: EnemyBattler = null
 var status_icons: HBoxContainer = null
+var _idle_tween: Tween = null
 
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var anim_player: AnimationPlayer = $AnimationPlayer
@@ -48,6 +51,11 @@ func _ready() -> void:
 		else:
 			sprite.texture = tex
 		sprite.scale = Vector2.ONE * enemy_data.battle_scale
+	start_idle_anim()
+
+
+func _exit_tree() -> void:
+	stop_idle_anim()
 
 
 func bind_battler(target: EnemyBattler) -> void:
@@ -65,6 +73,7 @@ func bind_battler(target: EnemyBattler) -> void:
 
 
 func play_attack_anim() -> void:
+	stop_idle_anim()
 	if anim_player.has_animation("attack"):
 		anim_player.play("attack")
 		await anim_player.animation_finished
@@ -76,9 +85,11 @@ func play_attack_anim() -> void:
 		tween.tween_interval(0.06)
 		tween.tween_property(self, "position:x", origin_x, 0.08)
 		await tween.finished
+	start_idle_anim()
 
 
 func play_damage_anim() -> void:
+	stop_idle_anim()
 	if anim_player.has_animation("damage"):
 		anim_player.play("damage")
 		await anim_player.animation_finished
@@ -93,9 +104,11 @@ func play_damage_anim() -> void:
 		tween.tween_property(self, "position:x", origin_x, 0.04)
 		tween.tween_property(sprite, "modulate", Color.WHITE, 0.12)
 		await tween.finished
+	start_idle_anim()
 
 
 func play_death_anim() -> void:
+	stop_idle_anim()
 	if anim_player.has_animation("death"):
 		anim_player.play("death")
 		await anim_player.animation_finished
@@ -117,6 +130,27 @@ func show_heal_number(amount: int) -> void:
 	var popup := DamagePopup.new()
 	add_child(popup)
 	popup.setup(amount, DamagePopup.PopupType.HEAL)
+
+
+func start_idle_anim() -> void:
+	if not sprite:
+		return
+	stop_idle_anim()
+	_idle_tween = create_tween().set_loops()
+	_idle_tween.tween_property(
+		sprite, "position:y", -BOB_AMPLITUDE, BOB_HALF_PERIOD,
+	).set_trans(Tween.TRANS_SINE)
+	_idle_tween.tween_property(
+		sprite, "position:y", 0.0, BOB_HALF_PERIOD,
+	).set_trans(Tween.TRANS_SINE)
+
+
+func stop_idle_anim() -> void:
+	if _idle_tween and _idle_tween.is_valid():
+		_idle_tween.kill()
+	_idle_tween = null
+	if sprite:
+		sprite.position.y = 0.0
 
 
 func show_hp_bar() -> void:
@@ -163,4 +197,5 @@ func _on_status_removed(effect: StringName) -> void:
 
 
 func _on_defeated() -> void:
+	stop_idle_anim()
 	play_death_anim()

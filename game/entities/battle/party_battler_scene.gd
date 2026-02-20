@@ -6,10 +6,13 @@ extends Node2D
 
 const UITheme = preload("res://ui/ui_theme.gd")
 const BATTLE_SPRITE_SCALE: float = 3.0
+const BOB_AMPLITUDE: float = 3.0
+const BOB_HALF_PERIOD: float = 0.6
 
 @export var character_data: CharacterData
 
 var battler: PartyBattler = null
+var _idle_tween: Tween = null
 
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var anim_player: AnimationPlayer = $AnimationPlayer
@@ -31,6 +34,11 @@ func _ready() -> void:
 				"Failed to load '%s' — reopen Godot editor to import"
 				% character_data.battle_sprite_path
 			)
+	start_idle_anim()
+
+
+func _exit_tree() -> void:
+	stop_idle_anim()
 
 
 func bind_battler(target: PartyBattler) -> void:
@@ -54,6 +62,7 @@ func update_bars() -> void:
 
 
 func play_attack_anim() -> void:
+	stop_idle_anim()
 	if anim_player.has_animation("attack"):
 		anim_player.play("attack")
 		await anim_player.animation_finished
@@ -65,9 +74,11 @@ func play_attack_anim() -> void:
 		tween.tween_interval(0.06)
 		tween.tween_property(self, "position:x", origin_x, 0.08)
 		await tween.finished
+	start_idle_anim()
 
 
 func play_damage_anim() -> void:
+	stop_idle_anim()
 	if anim_player.has_animation("damage"):
 		anim_player.play("damage")
 		await anim_player.animation_finished
@@ -82,6 +93,7 @@ func play_damage_anim() -> void:
 		tween.tween_property(self, "position:x", origin_x, 0.04)
 		tween.tween_property(sprite, "modulate", Color.WHITE, 0.12)
 		await tween.finished
+	start_idle_anim()
 
 
 func play_heal_anim() -> void:
@@ -91,6 +103,27 @@ func play_heal_anim() -> void:
 func play_idle_anim() -> void:
 	if anim_player.has_animation("idle"):
 		anim_player.play("idle")
+
+
+func start_idle_anim() -> void:
+	if not sprite:
+		return
+	stop_idle_anim()
+	_idle_tween = create_tween().set_loops()
+	_idle_tween.tween_property(
+		sprite, "position:y", -BOB_AMPLITUDE, BOB_HALF_PERIOD,
+	).set_trans(Tween.TRANS_SINE)
+	_idle_tween.tween_property(
+		sprite, "position:y", 0.0, BOB_HALF_PERIOD,
+	).set_trans(Tween.TRANS_SINE)
+
+
+func stop_idle_anim() -> void:
+	if _idle_tween and _idle_tween.is_valid():
+		_idle_tween.kill()
+	_idle_tween = null
+	if sprite:
+		sprite.position.y = 0.0
 
 
 func show_damage_number(amount: int) -> void:
@@ -161,6 +194,7 @@ func _on_status_removed(effect: StringName) -> void:
 
 
 func _on_defeated() -> void:
+	stop_idle_anim()
 	var tween := create_tween()
 	tween.tween_property(sprite, "modulate:a", 0.3, 0.4)
 	await tween.finished
