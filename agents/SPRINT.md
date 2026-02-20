@@ -168,8 +168,10 @@ Started: 2026-02-20
 
 ### T-0219
 - Title: Build skill tree UI screen — view and unlock nodes from pause menu
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: high
 - Depends: T-0018, T-0184
 
