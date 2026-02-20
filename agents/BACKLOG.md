@@ -19,8 +19,10 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0174
 - Title: Add Iris personal quest stub to quest log after recruitment
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: low
 - Milestone: M0
 - Depends: T-0081, T-0090
@@ -126,8 +128,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0167
 - Title: Add playtime accumulation gate — prevent ticking during battle or cutscene
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: low
 - Milestone: M0
 - Depends: T-0130

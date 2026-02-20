@@ -12,6 +12,7 @@ signal sequence_completed
 const FLAG_NAME: String = "iris_recruited"
 const IRIS_DATA_PATH: String = "res://data/characters/iris.tres"
 const ASH_STALKER_PATH: String = "res://data/enemies/ash_stalker.tres"
+const IRIS_QUEST_PATH: String = "res://data/quests/iris_engineers_oath.tres"
 
 
 func trigger() -> void:
@@ -99,6 +100,12 @@ static func _on_iris_battle_ended(victory: bool) -> void:
 	_play_post_battle_dialogue()
 
 
+## Returns true if the personal quest breadcrumb should be auto-accepted.
+## Called after recruitment so iris_recruited flag is already set.
+static func compute_should_auto_accept_iris_quest(flags: Dictionary) -> bool:
+	return flags.get("iris_recruited", false)
+
+
 static func _play_post_battle_dialogue() -> void:
 	GameManager.push_state(GameManager.GameState.CUTSCENE)
 
@@ -106,6 +113,12 @@ static func _play_post_battle_dialogue() -> void:
 
 	DialogueManager.start_dialogue(post_battle_lines)
 	await DialogueManager.dialogue_ended
+
+	# Auto-accept personal quest breadcrumb
+	if compute_should_auto_accept_iris_quest(EventFlags.get_all_flags()):
+		var quest := load(IRIS_QUEST_PATH) as Resource
+		if quest:
+			QuestManager.accept_quest(quest)
 
 	GameManager.pop_state()
 
