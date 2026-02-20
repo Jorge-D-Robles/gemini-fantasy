@@ -363,15 +363,19 @@ Started: 2026-02-18
 
 ### T-0100
 - Title: Add NPC idle animations (breathing, head turn, fidget)
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: low
 - Depends: none
+- Notes: BREATHE_SCALE_DELTA=0.03/BREATHE_HALF_DURATION=1.1s/HEAD_TURN_MIN=3.5s/HEAD_TURN_MAX=8.0s; start_idle_animation()/stop_idle_animation() in _ready()/_exit_tree()/interact(); 8 tests in test_npc_idle_anim.gd (1438 total). PR #230 merged.
 
 ### T-0102
 - Title: Add minimap or compass to HUD
-- Status: todo
-- Assigned: unassigned
+- Status: in-progress
+- Assigned: claude
+- Started: 2026-02-20
 - Priority: low
 - Depends: none
 

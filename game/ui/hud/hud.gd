@@ -7,6 +7,7 @@ const SP = preload("res://systems/scene_paths.gd")
 const UITheme = preload("res://ui/ui_theme.gd")
 const TH = preload("res://ui/hud/tutorial_hints.gd")
 const FragmentTracker = preload("res://ui/hud/hud_fragment_tracker.gd")
+const HudCompass = preload("res://ui/hud/hud_compass.gd")
 
 const AREA_NAMES: Dictionary = {
 	SP.ROOTHOLLOW: "Roothollow",
@@ -26,6 +27,7 @@ const TOAST_FADE_DURATION: float = 0.5
 
 var _gold: int = 0
 var _current_scene_path: String = ""
+var _compass_label: Label = null
 var _fragment_tracker_label: Label = null
 var _area_name_popup: Label = null
 var _area_popup_tween: Tween = null
@@ -57,6 +59,7 @@ func _ready() -> void:
 	_setup_tutorial_popup()
 	_setup_quest_toast()
 	_setup_fragment_tracker()
+	_setup_compass()
 
 	PartyManager.party_changed.connect(_on_party_changed)
 	PartyManager.party_state_changed.connect(_on_party_state_changed)
@@ -308,6 +311,7 @@ func _on_scene_changed(scene_path: String) -> void:
 		var area := compute_area_display_name(scene_path)
 		if not area.is_empty():
 			_show_area_name(area)
+	update_compass(scene_path)
 	update_fragment_tracker()
 
 
@@ -457,6 +461,15 @@ func _setup_fragment_tracker() -> void:
 	add_child(_fragment_tracker_label)
 
 
+func update_compass(scene_path: String) -> void:
+	if not _compass_label:
+		return
+	var visible_flag: bool = HudCompass.compute_compass_visible(scene_path)
+	_compass_label.visible = visible_flag
+	if visible_flag:
+		_compass_label.text = HudCompass.compute_compass_text(scene_path)
+
+
 func update_fragment_tracker() -> void:
 	if not _fragment_tracker_label:
 		return
@@ -467,3 +480,21 @@ func update_fragment_tracker() -> void:
 	_fragment_tracker_label.visible = state["visible"]
 	if state["visible"]:
 		_fragment_tracker_label.text = state["label"]
+
+
+func _setup_compass() -> void:
+	_compass_label = Label.new()
+	_compass_label.name = "ZoneCompass"
+	_compass_label.anchors_preset = Control.PRESET_BOTTOM_LEFT
+	_compass_label.position = Vector2(8.0, -24.0)
+	_compass_label.add_theme_font_size_override("font_size", 9)
+	_compass_label.add_theme_color_override(
+		"font_color", UITheme.TEXT_SECONDARY,
+	)
+	_compass_label.add_theme_color_override(
+		"font_shadow_color", Color(0.0, 0.0, 0.0, 0.85),
+	)
+	_compass_label.add_theme_constant_override("shadow_offset_x", 1)
+	_compass_label.add_theme_constant_override("shadow_offset_y", 1)
+	_compass_label.visible = false
+	add_child(_compass_label)
