@@ -132,16 +132,18 @@ Started: 2026-02-20
 
 ### T-0209
 - Title: Add Echo Nomad enemy to Overgrown Capital encounter pool
-- Status: in-progress
+- Status: done
 - Assigned: claude
 - Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: high
 - Depends: T-0190
 
 ### T-0212
 - Title: Wire Verdant Forest → Overgrown Capital transition (ExitToCapital trigger)
-- Status: todo
-- Assigned: unassigned
+- Status: in-progress
+- Assigned: claude
+- Started: 2026-02-20
 - Priority: high
 - Depends: T-0190, T-0196
 
