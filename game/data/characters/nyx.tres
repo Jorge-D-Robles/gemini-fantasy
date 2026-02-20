@@ -1,0 +1,34 @@
+[gd_resource type="Resource" script_class="CharacterData" load_steps=5 format=3 uid="uid://bnyx"]
+
+[ext_resource type="Script" path="res://resources/character_data.gd" id="1_script"]
+[ext_resource type="Resource" uid="uid://bnyx_chaos_path" path="res://data/skill_trees/nyx_chaos_path.tres" id="2_chaos"]
+[ext_resource type="Resource" uid="uid://bnyx_identity_path" path="res://data/skill_trees/nyx_identity_path.tres" id="3_identity"]
+[ext_resource type="Resource" uid="uid://bnyx_hollows_path" path="res://data/skill_trees/nyx_hollows_path.tres" id="4_hollows"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"nyx"
+display_name = "Nyx"
+description = "A newborn consciousness from The Hollows — extraordinarily powerful and unpredictable. Nyx speaks directly into minds and experiences all emotions without filter."
+max_hp = 90
+max_ee = 130
+attack = 8
+magic = 22
+defense = 7
+resistance = 16
+speed = 14
+luck = 18
+hp_growth = 10.0
+ee_growth = 12.0
+attack_growth = 1.0
+magic_growth = 3.0
+defense_growth = 1.0
+resistance_growth = 2.0
+speed_growth = 1.5
+luck_growth = 2.0
+allowed_weapon_types = [7, 13]
+abilities = []
+portrait_path = "res://assets/portraits/nyx_portrait.png"
+sprite_path = "res://assets/sprites/characters/nyx_overworld.png"
+battle_sprite_path = "res://assets/sprites/characters/battle/nyx_battle.png"
+skill_trees = [ExtResource("2_chaos"), ExtResource("3_identity"), ExtResource("4_hollows")]

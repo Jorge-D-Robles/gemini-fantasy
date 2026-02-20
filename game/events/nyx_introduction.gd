@@ -15,6 +15,7 @@ signal sequence_completed
 const FLAG_NAME: String = "nyx_introduction_seen"
 const NYX_MET_FLAG: String = "nyx_met"
 const NYX_BGM_PATH: String = "res://assets/music/What Am I, Nyx_.ogg"
+const NYX_CHARACTER_PATH: String = "res://data/characters/nyx.tres"
 
 
 ## Returns true when the event is eligible to fire:
@@ -177,6 +178,12 @@ func trigger() -> void:
 	var lines: Array[DialogueLine] = compute_nyx_intro_lines()
 	DialogueManager.start_dialogue(lines)
 	await DialogueManager.dialogue_ended
+
+	var nyx_data := load(NYX_CHARACTER_PATH) as CharacterData
+	if nyx_data:
+		PartyManager.add_character(nyx_data)
+	else:
+		push_warning("NyxIntroduction: could not load " + NYX_CHARACTER_PATH)
 
 	AudioManager.pop_bgm(1.5)
 	GameManager.pop_state()
