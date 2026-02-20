@@ -311,7 +311,7 @@ func show_victory_dismiss_prompt() -> void:
 	if not vbox:
 		return
 	_victory_dismiss_label = Label.new()
-	_victory_dismiss_label.text = BattleUIVictory.compute_dismiss_prompt_text()
+	_victory_dismiss_label.text = BattleUIVictory.compute_dismiss_prompt_text("interact")
 	_victory_dismiss_label.add_theme_font_size_override("font_size", 9)
 	_victory_dismiss_label.add_theme_color_override(
 		"font_color", UITheme.TEXT_SECONDARY,
