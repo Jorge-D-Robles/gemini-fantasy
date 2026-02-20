@@ -78,8 +78,9 @@ Started: 2026-02-20
 
 ### T-0197
 - Title: Seed Story Echo .tres files (Morning Commute, Family Dinner, Warning Ignored, The First Crack)
-- Status: todo
-- Assigned: unassigned
+- Status: in-progress
+- Assigned: claude
+- Started: 2026-02-20
 - Priority: high
 - Depends: T-0182
 

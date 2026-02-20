@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="EchoData" load_steps=2 format=3 uid="uid://bfamily_dinner"]
+
+[ext_resource type="Script" path="res://resources/echo_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"family_dinner"
+display_name = "Family Dinner"
+description = "A family seated together, yet worlds apart — each mind adrift in a private memory while food grows cold between them."
+lore_text = "Four people around a table. Mother savoured a childhood birthday. Father replayed a championship match. The eldest child drifted through someone else's love story. The youngest sat with empty eyes, too young to navigate the Network, too used to silence to call for them. Nobody noticed. This was normal."
+rarity = 0
+echo_type = 3
+effect_type = 4
+effect_value = 0
+element = 0
+target_type = 4
+uses_per_battle = 0
+icon_path = ""

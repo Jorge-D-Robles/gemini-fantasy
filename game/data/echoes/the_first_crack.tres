@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="EchoData" load_steps=2 format=3 uid="uid://bthe_first_crack"]
+
+[ext_resource type="Script" path="res://resources/echo_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"the_first_crack"
+display_name = "The First Crack"
+description = "The moment the Convergence lattice began to fail — experienced by every connected mind simultaneously."
+lore_text = "It was not a sound. It was a silence where there had always been sound — the hum of a million shared minds suddenly, impossibly quiet. Then the wrong memories came. Strangers' grief flooding into your joy. A child's first word surfacing in a soldier's nightmare. Boundaries that had never needed defending because they had always held. For one terrible second, everyone was everyone else. Then the lattice collapsed, and everyone was no one."
+rarity = 2
+echo_type = 3
+effect_type = 4
+effect_value = 0
+element = 0
+target_type = 4
+uses_per_battle = 0
+icon_path = ""
