@@ -9,6 +9,7 @@ Started: 2026-02-20
 
 ## Active
 
+
 ### T-0205
 - Title: Seed and place Residential Quarter echo interactables in Overgrown Capital
 - Status: done
@@ -673,6 +674,14 @@ Started: 2026-02-20
 ---
 
 ## Done This Sprint
+
+### T-0211
+- Title: Tilemap visual design for Overgrown Capital — three-district layout
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
+- Notes: Filled GROUND_MAP (3 terrain types), DETAIL_MAP (64 ornate tiles in market), DEBRIS_MAP (35 tiles), WALL_MAP (boundary walls + district separators), OBJECTS_MAP (props), ABOVE_PLAYER_MAP (vine canopy). Wired AbovePlayer @onready in overgrown_capital.gd. 9 new tests (14 total in test_overgrown_capital_map.gd). PR merged.
 
 ### T-0026
 - Title: Build debug console
