@@ -11,9 +11,17 @@ const SP = preload("res://systems/scene_paths.gd")
 const SettingsMenuScript = preload(
 	"res://ui/settings_menu/settings_menu.gd"
 )
+const UITheme = preload("res://ui/ui_theme.gd")
 const TITLE_BGM_PATH: String = "res://assets/music/Welcoming Heart Piano.ogg"
 
+const AREA_NAMES: Dictionary = {
+	SP.ROOTHOLLOW: "Roothollow",
+	SP.VERDANT_FOREST: "Verdant Forest",
+	SP.OVERGROWN_RUINS: "Overgrown Ruins",
+}
+
 var _settings_menu: Control = null
+var _save_label: Label = null
 
 @onready var title_label: Label = %TitleLabel
 @onready var subtitle_label: Label = %SubtitleLabel
@@ -54,7 +62,61 @@ func _setup_focus_navigation() -> void:
 
 
 func _check_save_data() -> void:
-	continue_button.disabled = not SaveManager.has_save(0)
+	var has_save: bool = SaveManager.has_save(0)
+	continue_button.disabled = not has_save
+	if has_save:
+		var data: Dictionary = SaveManager.load_save_data(0)
+		var summary: Dictionary = compute_save_summary(data)
+		_show_save_label(summary)
+
+
+func _show_save_label(summary: Dictionary) -> void:
+	if _save_label != null:
+		return
+	var parts: Array[String] = []
+	if not summary["location"].is_empty():
+		parts.append(summary["location"])
+	if not summary["time_str"].is_empty():
+		parts.append(summary["time_str"])
+	if parts.is_empty():
+		return
+	_save_label = Label.new()
+	_save_label.text = " — ".join(parts)
+	_save_label.add_theme_font_size_override("font_size", 9)
+	_save_label.add_theme_color_override("font_color", UITheme.TEXT_SECONDARY)
+	_save_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	menu_container.add_child(_save_label)
+	menu_container.move_child(_save_label, continue_button.get_index() + 1)
+
+
+## Returns {location: String, time_str: String} for a save data dictionary.
+## Returns empty strings if the data is absent or the fields are missing.
+static func compute_save_summary(save_data: Dictionary) -> Dictionary:
+	if save_data.is_empty():
+		return {"location": "", "time_str": ""}
+	var scene_path: String = save_data.get("scene_path", "")
+	var location: String = AREA_NAMES.get(scene_path, "")
+	var timestamp: int = int(save_data.get("timestamp", 0))
+	var time_str: String = _format_save_timestamp(timestamp)
+	return {"location": location, "time_str": time_str}
+
+
+static func _format_save_timestamp(unix_time: int) -> String:
+	if unix_time <= 0:
+		return ""
+	var dt: Dictionary = Time.get_datetime_dict_from_unix_time(unix_time)
+	const MONTHS: Array[String] = [
+		"", "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+		"Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+	]
+	var month_idx: int = dt.get("month", 0)
+	var month_str: String = MONTHS[month_idx] if month_idx in range(1, 13) else ""
+	return "%02d %s, %02d:%02d" % [
+		dt.get("day", 0),
+		month_str,
+		dt.get("hour", 0),
+		dt.get("minute", 0),
+	]
 
 
 func _animate_intro() -> void:
