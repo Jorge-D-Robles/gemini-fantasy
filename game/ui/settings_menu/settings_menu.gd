@@ -95,7 +95,7 @@ func _build_ui() -> void:
 
 	var panel := PanelContainer.new()
 	panel.set_anchors_and_offsets_preset(PRESET_CENTER)
-	panel.custom_minimum_size = Vector2(300, 270)
+	panel.custom_minimum_size = Vector2(300, 380)
 	panel.add_theme_stylebox_override(
 		"panel", UIHelpers.create_panel_style()
 	)
@@ -159,6 +159,43 @@ func _build_ui() -> void:
 	)
 	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vbox.add_child(hint)
+
+	vbox.add_child(HSeparator.new())
+
+	var controls_title := Label.new()
+	controls_title.text = "Controls"
+	controls_title.add_theme_font_size_override("font_size", 13)
+	controls_title.add_theme_color_override(
+		"font_color", UITheme.TEXT_GOLD
+	)
+	controls_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	vbox.add_child(controls_title)
+
+	var bindings := SD.compute_control_bindings()
+	var grid := GridContainer.new()
+	grid.columns = 2
+	grid.add_theme_constant_override("h_separation", 12)
+	grid.add_theme_constant_override("v_separation", 2)
+	vbox.add_child(grid)
+
+	for entry: Dictionary in bindings:
+		var action_label := Label.new()
+		action_label.text = entry["label"] as String
+		action_label.add_theme_font_size_override("font_size", 9)
+		action_label.add_theme_color_override(
+			"font_color", UITheme.TEXT_SECONDARY
+		)
+		action_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		grid.add_child(action_label)
+
+		var key_label := Label.new()
+		key_label.text = entry["key"] as String
+		key_label.add_theme_font_size_override("font_size", 9)
+		key_label.add_theme_color_override(
+			"font_color", UITheme.TEXT_PRIMARY
+		)
+		key_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		grid.add_child(key_label)
 
 	vbox.add_child(HSeparator.new())
 
