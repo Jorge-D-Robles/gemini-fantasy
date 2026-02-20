@@ -16,6 +16,11 @@ const OVERGROWN_RUINS: String = (
 	"res://scenes/overgrown_ruins/overgrown_ruins.tscn"
 )
 
+# -- Dungeon scenes --
+const OVERGROWN_CAPITAL: String = (
+	"res://scenes/overgrown_capital/overgrown_capital.tscn"
+)
+
 # -- UI scenes --
 const TITLE_SCREEN: String = (
 	"res://ui/title_screen/title_screen.tscn"
