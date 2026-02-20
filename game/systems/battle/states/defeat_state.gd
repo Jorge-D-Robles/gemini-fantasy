@@ -5,6 +5,7 @@ extends State
 
 const UITheme = preload("res://ui/ui_theme.gd")
 const SP = preload("res://systems/scene_paths.gd")
+const DEFEAT_BGM_PATH: String = "res://assets/music/Game Over (For Now).ogg"
 
 var battle_scene: Node = null
 
@@ -14,6 +15,12 @@ func set_battle_scene(scene: Node) -> void:
 
 
 func enter() -> void:
+	var defeat_bgm := load(DEFEAT_BGM_PATH) as AudioStream
+	if defeat_bgm:
+		AudioManager.play_bgm(defeat_bgm, 0.5)
+	else:
+		push_warning("Defeat BGM not found: " + DEFEAT_BGM_PATH)
+
 	var battle_ui: Node = battle_scene.get_node_or_null("BattleUI")
 	if battle_ui:
 		battle_ui.show_defeat()

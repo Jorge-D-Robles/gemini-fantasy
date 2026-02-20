@@ -125,3 +125,18 @@ func test_nyx_wanting_things_line() -> void:
 			found = true
 			break
 	assert_true(found, "Nyx must express wanting things (new organ metaphor)")
+
+
+func test_nyx_bgm_path_constant_exists() -> void:
+	assert_true(
+		_event.get("NYX_BGM_PATH") != null,
+		"NyxIntroduction must declare NYX_BGM_PATH constant for character theme",
+	)
+
+
+func test_nyx_bgm_path_points_to_nyx_track() -> void:
+	assert_eq(
+		_event.NYX_BGM_PATH,
+		"res://assets/music/What Am I, Nyx_.ogg",
+		"NYX_BGM_PATH should reference the Nyx character theme",
+	)

@@ -99,3 +99,20 @@ func test_quest_gated_already_collected_returns_false() -> void:
 		false,
 	)
 	assert_false(result, "Quest-gated echo must not re-collect when echo already in collection")
+
+
+func test_echo_bgm_path_constant_exists() -> void:
+	var strategy: Resource = StrategyScript.new()
+	assert_true(
+		strategy.get("ECHO_BGM_PATH") != null,
+		"MemorialEchoStrategy must declare ECHO_BGM_PATH for the echo collection sting",
+	)
+
+
+func test_echo_bgm_path_points_to_echo_captured_track() -> void:
+	var strategy: Resource = StrategyScript.new()
+	assert_eq(
+		strategy.ECHO_BGM_PATH,
+		"res://assets/music/Echo Captured — Memory Preserved.ogg",
+		"ECHO_BGM_PATH should reference 'Echo Captured — Memory Preserved.mp3'",
+	)

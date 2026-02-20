@@ -11,6 +11,9 @@ extends InteractionStrategy
 ## elder_wisdom behaviour — only collects when the named quest is active and
 ## objective 0 is incomplete.
 
+const ECHO_BGM_PATH: String = "res://assets/music/Echo Captured — Memory Preserved.ogg"
+const ECHO_BGM_DURATION: float = 4.0
+
 @export_multiline var text: String = ""
 @export var echo_id: StringName = &""
 @export var vision_lines: Array[String] = []
@@ -63,6 +66,13 @@ func execute(owner: Node) -> void:
 		if echo_id != &"":
 			EchoManager.collect_echo(echo_id)
 		owner.has_been_used = true
+		# Play echo capture sting, then restore area BGM after it finishes.
+		AudioManager.push_bgm()
+		var echo_bgm := load(ECHO_BGM_PATH) as AudioStream
+		if echo_bgm:
+			AudioManager.play_bgm(echo_bgm, 0.5)
+			await owner.get_tree().create_timer(ECHO_BGM_DURATION).timeout
+		AudioManager.pop_bgm(1.0)
 	else:
 		var message: String = text if not text.is_empty() else (
 			"A weathered memorial stone, etched with the"

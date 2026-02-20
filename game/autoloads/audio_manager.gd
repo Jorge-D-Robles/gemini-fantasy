@@ -28,6 +28,7 @@ var _bgm_volume_db: float = 0.0
 
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	_setup_bgm_players()
 	_setup_sfx_pool()
 	SD.apply_saved_settings()
@@ -209,11 +210,13 @@ func _setup_bgm_players() -> void:
 	_bgm_player = AudioStreamPlayer.new()
 	_bgm_player.name = "BGMPlayer"
 	_bgm_player.bus = "BGM"
+	_bgm_player.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(_bgm_player)
 
 	_bgm_fade_player = AudioStreamPlayer.new()
 	_bgm_fade_player.name = "BGMFadePlayer"
 	_bgm_fade_player.bus = "BGM"
+	_bgm_fade_player.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(_bgm_fade_player)
 
 

@@ -5,6 +5,7 @@ extends State
 
 const UITheme = preload("res://ui/ui_theme.gd")
 const FANFARE_PATH: String = "res://assets/music/Success!.ogg"
+const LEVEL_UP_BGM_PATH: String = "res://assets/music/Level Up.ogg"
 
 ## Seconds before the dismiss prompt appears (prevents instant accidental skip).
 const GRACE_PERIOD: float = 0.5
@@ -52,6 +53,14 @@ func enter() -> void:
 	var level_ups: Array[Dictionary] = []
 	if pm:
 		level_ups = apply_xp_rewards(pm.get_active_party(), total_exp)
+
+	# Play level-up jingle when any character levels up.
+	if not level_ups.is_empty():
+		var level_up_bgm := load(LEVEL_UP_BGM_PATH) as AudioStream
+		if level_up_bgm:
+			AudioManager.play_bgm(level_up_bgm, 0.0)
+		else:
+			push_warning("Level-up BGM not found: " + LEVEL_UP_BGM_PATH)
 
 	var party_data: Array[Resource] = []
 	if pm:

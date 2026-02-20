@@ -103,3 +103,18 @@ func test_compute_should_auto_accept_false_when_not_recruited() -> void:
 		_recruitment.compute_should_auto_accept_garrick_quest({}),
 		"Should not auto-accept when garrick_recruited flag is missing",
 	)
+
+
+func test_garrick_bgm_path_constant_exists() -> void:
+	assert_true(
+		_recruitment.get("GARRICK_BGM_PATH") != null,
+		"GarrickRecruitment must declare GARRICK_BGM_PATH for character theme",
+	)
+
+
+func test_garrick_bgm_path_points_to_weight_of_the_shield() -> void:
+	assert_eq(
+		_recruitment.GARRICK_BGM_PATH,
+		"res://assets/music/Weight of the Shield.ogg",
+		"GARRICK_BGM_PATH should reference Weight of the Shield",
+	)
