@@ -84,6 +84,22 @@ static func compute_cross_column_focus_index(
 	return min(source_index, target_count - 1)
 
 
+## Returns a human-readable explanation of why a swap is invalid.
+## Used by party_ui.gd to populate the transient status label.
+static func compute_swap_feedback_text(
+	active_index: int,
+	active_size: int,
+	reserve_size: int,
+) -> String:
+	if active_index < 0:
+		return "Select an active member first."
+	if reserve_size == 0:
+		return "No reserve members available."
+	if active_index >= active_size:
+		return "Invalid active selection."
+	return "Cannot swap."
+
+
 ## Returns display sections for the party panel.
 ## Result keys: active (Array[Dictionary]), reserve (Array[Dictionary]),
 ## has_reserve (bool).
