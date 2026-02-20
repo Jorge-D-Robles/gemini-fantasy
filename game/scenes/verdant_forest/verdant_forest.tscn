@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://c4forest00001"]
+[gd_scene load_steps=16 format=3 uid="uid://c4forest00001"]
 
 [ext_resource type="Script" path="res://scenes/verdant_forest/verdant_forest.gd" id="1_forest"]
 [ext_resource type="PackedScene" uid="uid://c4player00001" path="res://entities/player/player.tscn" id="2_player"]
@@ -16,6 +16,9 @@ size = Vector2(16, 64)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_iris"]
 size = Vector2(48, 48)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_exit_capital"]
+size = Vector2(112, 16)
 
 [sub_resource type="Resource" id="memorial_echo_strat"]
 script = ExtResource("7_memorial")
@@ -66,6 +69,9 @@ position = Vector2(48, 176)
 [node name="SpawnFromTown" type="Marker2D" parent="Entities"]
 position = Vector2(592, 176)
 
+[node name="SpawnFromCapital" type="Marker2D" parent="Entities"]
+position = Vector2(320, 48)
+
 [node name="IrisEventMarker" type="Marker2D" parent="Entities"]
 position = Vector2(320, 120)
 
@@ -95,6 +101,14 @@ collision_mask = 1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Triggers/ExitToTown"]
 shape = SubResource("RectangleShape2D_exit_town")
+
+[node name="ExitToCapital" type="Area2D" parent="Triggers"]
+position = Vector2(320, 8)
+collision_layer = 0
+collision_mask = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Triggers/ExitToCapital"]
+shape = SubResource("RectangleShape2D_exit_capital")
 
 [node name="IrisEventZone" type="Area2D" parent="Triggers"]
 position = Vector2(320, 120)
