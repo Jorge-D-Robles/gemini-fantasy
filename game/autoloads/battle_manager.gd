@@ -11,7 +11,7 @@ const BOSS_BGM_PATH: String = (
 	"res://assets/music/Epic Boss Battle 1st section.ogg"
 )
 
-var _battle_scene: Node = null
+var _battle_scene: BattleScene = null
 var _is_in_battle: bool = false
 var _pre_battle_scene_path: String = ""
 var _pre_battle_player_position: Vector2 = Vector2.ZERO
@@ -69,13 +69,14 @@ func start_battle(
 
 	await GameManager.change_scene(SP.BATTLE_SCENE)
 
-	_battle_scene = get_tree().current_scene
-	if "area_scene_path" in _battle_scene:
-		_battle_scene.area_scene_path = _pre_battle_scene_path
-	if _battle_scene.has_method("setup_battle"):
-		_battle_scene.setup_battle(party_data, enemy_group, can_escape)
-	if _battle_scene.has_signal("battle_finished"):
-		_battle_scene.battle_finished.connect(_on_battle_finished)
+	_battle_scene = get_tree().current_scene as BattleScene
+	if not _battle_scene:
+		push_error("BattleManager: current scene is not BattleScene.")
+		_is_in_battle = false
+		return
+	_battle_scene.area_scene_path = _pre_battle_scene_path
+	_battle_scene.setup_battle(party_data, enemy_group, can_escape)
+	_battle_scene.battle_finished.connect(_on_battle_finished)
 
 
 func is_in_battle() -> bool:
