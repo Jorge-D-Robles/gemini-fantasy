@@ -11,9 +11,10 @@ Started: 2026-02-20
 
 ### T-0200
 - Title: Add Leaving the Capital scene — post-dungeon processing dialogue (Chapter 5 Scene 6)
-- Status: in-progress
+- Status: done
 - Assigned: claude
 - Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: medium
 - Depends: T-0191
 - Refs: docs/story/act1/05-into-the-capital.md (Scene 6), game/events/, game/scenes/overgrown_capital/overgrown_capital.gd
