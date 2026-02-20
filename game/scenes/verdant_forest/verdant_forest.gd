@@ -8,6 +8,7 @@ const SP = preload("res://systems/scene_paths.gd")
 const Dialogue = preload("res://scenes/verdant_forest/verdant_forest_dialogue.gd")
 const Bond01 = preload("res://scenes/verdant_forest/verdant_forest_bond01_dialogue.gd")
 const AfterCapitalCampScript = preload("res://events/after_capital_camp.gd")
+const NyxIntroductionScript = preload("res://events/nyx_introduction.gd")
 const INTERACTABLE_SCENE := preload("res://entities/interactable/interactable.tscn")
 const CAMP_STRATEGY_SCRIPT := preload(
 	"res://entities/interactable/strategies/camp_strategy.gd"
@@ -147,6 +148,8 @@ func _ready() -> void:
 	_maybe_trigger_bond01_dialogue.call_deferred()
 	# After the Capital camp scene (fires once after lyra_fragment_2_collected)
 	_maybe_trigger_after_capital_camp.call_deferred()
+	# Nyx introduction (fires once after garrick_recruited + lyra_fragment_2_collected)
+	_maybe_trigger_nyx_introduction.call_deferred()
 
 
 func _spawn_zone_markers() -> void:
@@ -289,6 +292,17 @@ func _maybe_trigger_after_capital_camp() -> void:
 	camp_event.trigger()
 	await camp_event.sequence_completed
 	camp_event.queue_free()
+
+
+func _maybe_trigger_nyx_introduction() -> void:
+	var flags: Dictionary = EventFlags.get_all_flags()
+	if not NyxIntroduction.compute_can_trigger(flags):
+		return
+	var nyx_event: Node = NyxIntroductionScript.new()
+	add_child(nyx_event)
+	nyx_event.trigger()
+	await nyx_event.sequence_completed
+	nyx_event.queue_free()
 
 
 func _start_scene_music() -> void:
