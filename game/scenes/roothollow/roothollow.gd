@@ -68,6 +68,9 @@ func _ready() -> void:
 	# Zone transition marker
 	_spawn_zone_marker()
 
+	# Save point visual marker
+	_spawn_save_point_marker()
+
 	# Load shop and quest data
 	_shop_data = load(SHOP_DATA_PATH)
 	_herb_quest = load(HERB_QUEST_PATH)
@@ -335,6 +338,15 @@ static func _can_offer_quest(
 		&"herb_gathering", &"elder_wisdom":
 			return EventFlags.has_flag("opening_lyra_discovered")
 	return true
+
+
+func _spawn_save_point_marker() -> void:
+	var save_point: Node = $Entities/SavePoint
+	if not save_point:
+		return
+	save_point.indicator_type = Interactable.IndicatorType.SAVE
+	var marker := SavePointMarker.new()
+	save_point.add_child(marker)
 
 
 func _spawn_zone_marker() -> void:
