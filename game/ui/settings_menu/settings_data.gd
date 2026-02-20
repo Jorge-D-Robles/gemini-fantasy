@@ -11,6 +11,7 @@ extends RefCounted
 const SETTINGS_PATH := "user://settings.json"
 const SETTINGS_VERSION := 1
 const SILENT_DB := -80.0
+const DEFAULT_VOLUME := 100
 
 
 ## Converts a 0-100 percent to decibels.
@@ -106,6 +107,20 @@ static func save_settings(
 ## Convenience: load from the default path.
 static func load_settings() -> Dictionary:
 	return load_settings_from(SETTINGS_PATH)
+
+
+## Returns a human-readable description of what each slider controls.
+## Returns "" for unrecognised slider IDs.
+static func compute_slider_tooltip(slider_id: String) -> String:
+	match slider_id:
+		"master":
+			return "Overall game volume — adjusts all audio simultaneously."
+		"bgm":
+			return "Background music volume — does not affect sound effects."
+		"sfx":
+			return "Sound effects volume — does not affect background music."
+		_:
+			return ""
 
 
 ## Loads saved settings and applies them to AudioServer buses.
