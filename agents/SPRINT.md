@@ -202,9 +202,10 @@ Started: 2026-02-18
 
 ### T-0135
 - Title: Add Chapter 4 Scene 5 night scene — Garrick and Lyra conversation at camp
-- Status: in-progress
+- Status: done
 - Assigned: claude
 - Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: low
 - Depends: T-0085
 - Refs: docs/story/act1/04-old-iron.md (Scene 5), game/events/garrick_meets_lyra.gd
