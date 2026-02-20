@@ -103,3 +103,5 @@ func test_compute_should_not_tick_in_cutscene() -> void:
 		_gm.compute_should_tick_playtime(_gm.GameState.CUTSCENE),
 		"Cutscene state should not tick playtime",
 	)
+
+
