@@ -4,6 +4,7 @@ Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[
 
 ---
 
+- [2026-02-20] T-0159: Fix Verdant Forest south canopy gap — CANOPY_MAP rows 15-22 filled with 88 type-matched 2x2 canopy tiles above 22 south-half trunks, 6 tests (claude)
 - [2026-02-19] T-0134: Elder Thessa Overgrown Capital briefing — 7-line one-time scene (garrick_recruited gate), thessa_briefing_seen flag, research quarter + time constraint + Initiative threat, CUTSCENE push/pop, 7 tests (claude)
 - [2026-02-19] T-0131: Kael-Iris arrival cutscene at Roothollow — 6-line dialogue, iris_recruited gate, roothollow_iris_arrival_seen flag, GameManager CUTSCENE push/pop, call_deferred trigger, 6 tests (claude)
 - [2026-02-19] T-0121: Roothollow Chapter 4 NPC dialogue — iris_recruited branches for Maren/Bram/Wren/Lina with story-accurate content (food offer, shrine stranger, deserter ID, horse question), 8 tests (claude)

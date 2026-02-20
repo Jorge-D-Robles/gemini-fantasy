@@ -123,12 +123,14 @@ Started: 2026-02-18
 
 ### T-0159
 - Title: Fix Verdant Forest south canopy gap — extend AbovePlayer layer to rows 15-24
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-19
+- Completed: 2026-02-20
 - Priority: medium
 - Depends: none
 - Refs: game/scenes/verdant_forest/verdant_forest.gd (CANOPY_MAP), docs/best-practices/11-tilemaps-and-level-design.md
-- Notes: CANOPY_MAP has no entries in rows 15-24. South forest has trunk placements but no AbovePlayer canopy overlay. Extend CANOPY_MAP with 2x2 canopy tiles above each south-half trunk. 2+ tests.
+- Notes: CANOPY_MAP rows 15-22 filled with 88 type-matched 2x2 canopy tiles above 22 south-half trunks. Trunk A→1234, B→5678, C→abcd, D→efgh. Canopy top at trunk_row-2, bottom at trunk_row-1, cols trunk_col-1 and trunk_col. 6 tests (1164 total).
 
 ### T-0128
 - Title: BUG — AudioManager.play_bgm() resets volume_db to 0.0, ignoring user volume setting
