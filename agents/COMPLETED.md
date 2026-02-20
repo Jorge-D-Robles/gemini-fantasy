@@ -4,6 +4,7 @@ Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[
 
 ---
 
+- [2026-02-19] T-0120: Quest accept/complete toast notification in HUD — compute_toast_text() static helper, _setup_quest_toast() Label at PRESET_CENTER_BOTTOM in gold, queue-based coroutine, fade-in/hold/fade-out, 7 tests (claude)
 - [2026-02-19] T-0143: Critical hit mechanic — compute_crit_chance/roll_crit/apply_crit in BattlerDamage; 5% base + luck*0.5% formula; ×1.5 damage, COMBAT_CRITICAL_HIT SFX, CRITICAL popup; death SFX on killing crit; 12 tests (claude)
 - [2026-02-19] T-0136: Player-driven defeat screen — defeat_action_chosen signal, compute_defeat_options(has_save), RetryButton hidden if no save, defeat_state awaits choice then loads save or title, 9 tests (claude)
 - [2026-02-19] T-0129: Player-driven victory screen dismissal — GRACE_PERIOD=0.5, show_victory_dismiss_prompt("interact"), victory_dismissed signal, 7 tests; fixed stale z_index test (tscn parsing); verdant forest ground/canopy improvements (claude)

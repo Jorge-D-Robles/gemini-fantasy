@@ -73,12 +73,14 @@ Started: 2026-02-18
 
 ### T-0120
 - Title: Add quest accept/complete toast notification in HUD
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-19
+- Completed: 2026-02-19
 - Priority: medium
 - Depends: T-0087
 - Refs: game/ui/hud/hud.gd, game/autoloads/quest_manager.gd
-- Notes: 2-3s slide-in toast for "New Quest: [name]" / "Quest Complete: [name]". Queue-based. 4+ tests. T-0087 done — unblocked.
+- Notes: compute_toast_text() static helper; "New Quest: [name]" / "Quest Complete: [name]"; _setup_quest_toast() creates Label at PRESET_CENTER_BOTTOM in gold color; queue-based _process_quest_toasts() coroutine; fade-in 0.3s / hold 2.0s / fade-out 0.5s; 7 tests (1118 total).
 
 ### T-0119
 - Title: Quest log reward display should show item display names, not IDs
@@ -137,15 +139,6 @@ Started: 2026-02-18
 - Depends: T-0082
 - Refs: docs/story/act1/04-old-iron.md (Scene 1), game/scenes/roothollow/roothollow_dialogue.gd
 - Notes: Flag-conditional item pool addition when iris_recruited is set. May need new ItemData resources. 3+ tests. T-0082 done — unblocked.
-
-### T-0158
-- Title: Add hit flash animation on battler sprites when taking damage
-- Status: todo
-- Assigned: unassigned
-- Priority: medium
-- Depends: none
-- Refs: game/entities/battle/party_battler_scene.gd, game/entities/battle/enemy_battler_scene.gd
-- Notes: White modulate flash (0.15s on, 0.1s fade) on damage. play_hit_flash() on both battler scenes. Wire from ActionExecuteState. 4+ tests.
 
 ### T-0095
 - Title: Add battler idle animations in combat
@@ -248,6 +241,14 @@ Started: 2026-02-18
 ---
 
 ## Done This Sprint
+
+### T-0120
+- Title: Add quest accept/complete toast notification in HUD
+- Status: done
+- Assigned: claude
+- Started: 2026-02-19
+- Completed: 2026-02-19
+- Notes: compute_toast_text() static helper; "New Quest: [name]" / "Quest Complete: [name]"; _setup_quest_toast() creates Label at PRESET_CENTER_BOTTOM in gold color; queue-based _process_quest_toasts() coroutine; fade-in 0.3s / hold 2.0s / fade-out 0.5s; 7 tests (1118 total).
 
 ### T-0126
 - Title: Show level-up callouts and stat gains in victory screen
