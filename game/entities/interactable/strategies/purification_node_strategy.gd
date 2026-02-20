@@ -40,6 +40,11 @@ func execute(owner: Node) -> void:
 
 
 func _build_activation_lines() -> Array[DialogueLine]:
+	if activation_lines.size() % 2 != 0:
+		push_warning(
+			"PurificationNodeStrategy '%s': activation_lines has odd count; last entry ignored."
+			% node_id
+		)
 	var result: Array[DialogueLine] = []
 	var i := 0
 	while i + 1 < activation_lines.size():
