@@ -3,6 +3,7 @@
 Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[date] Description`.
 
 ---
+- [2026-02-20] T-0164: Wire party_changed signal into party_ui — _connect/_disconnect_party_signals() with is_connected guard, _on_party_changed() live rebuild, removed redundant manual _build_ui() after swap; 5 new tests (1400 total) (claude)
 - [2026-02-20] T-0169: BOND-01 Knife Lessons banter — VerdantForestBond01Dialogue static module (5-line Iris/Kael knife grip scene), compute_bond01_eligible() helper, wired via call_deferred in verdant_forest.gd; 13 new tests (1395 total) (claude)
 - [2026-02-20] T-0170: Innkeeper night event priority — RootHollowNightEvents static helper (GarrickNightScene > CampThreeFires priority), roothollow.gd if/elif dispatch replaces dual-if bug; 11 new tests (1382 total) (claude)
 - [2026-02-20] T-0096: Particle effects for healing/resonance/crits — BattleParticles static module (resonance flash colors, crit flash color/duration), resonance_state_changed wired in PartyBattlerScene, scene-wide crit flash in ActionExecuteState; 11 new tests (1371 total) (claude)
