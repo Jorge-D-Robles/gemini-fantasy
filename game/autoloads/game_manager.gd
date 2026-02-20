@@ -19,15 +19,26 @@ enum GameState {
 const FADE_DURATION: float = 0.5
 
 var current_state: GameState = GameState.OVERWORLD
+var playtime_seconds: float = 0.0
 var _state_stack: Array[GameState] = []
 var _is_transitioning: bool = false
-
 var _transition_layer: CanvasLayer = null
 var _fade_rect: ColorRect = null
 
 
 func _ready() -> void:
 	_setup_transition_layer()
+
+
+func _process(delta: float) -> void:
+	if compute_should_tick_playtime(current_state):
+		playtime_seconds += delta
+
+
+## Returns true when playtime should accumulate (player is in control).
+## Excludes BATTLE and CUTSCENE to prevent inflating reported time.
+static func compute_should_tick_playtime(state: GameState) -> bool:
+	return state == GameState.OVERWORLD or state == GameState.MENU
 
 
 func push_state(new_state: GameState) -> void:

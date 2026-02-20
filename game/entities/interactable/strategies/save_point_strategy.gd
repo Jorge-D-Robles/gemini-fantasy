@@ -20,6 +20,7 @@ func execute(owner: Node) -> void:
 		0,
 		PartyManager, InventoryManager, EventFlags,
 		scene_path, player_pos, equip_mgr, quest_mgr,
+		GameManager.playtime_seconds,
 	)
 	var msg: String = text if ok else fail_text
 	var lines: Array[DialogueLine] = [
