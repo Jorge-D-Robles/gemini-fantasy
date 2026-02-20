@@ -191,13 +191,16 @@ func deserialize(
 	_quest_data.clear()
 	_objectives.clear()
 	_states.clear()
-	# Build lookup from provided quest resources
 	var lookup := {}
 	for q in quest_resources:
 		if q and q.id != &"":
 			lookup[String(q.id)] = q
-	# Restore active quests
-	var active: Dictionary = data.get("active", {})
+	_restore_active_quests(data.get("active", {}), lookup)
+	_restore_completed_quests(data.get("completed", []), lookup)
+	_restore_failed_quests(data.get("failed", []), lookup)
+
+
+func _restore_active_quests(active: Dictionary, lookup: Dictionary) -> void:
 	for qid_str: String in active:
 		var qid := StringName(qid_str)
 		var quest: Resource = lookup.get(qid_str, null)
@@ -210,21 +213,20 @@ func deserialize(
 		var completion: Array[bool] = []
 		completion.resize(obj_count)
 		for i in obj_count:
-			if i < saved_obj.size():
-				completion[i] = bool(saved_obj[i])
-			else:
-				completion[i] = false
+			completion[i] = bool(saved_obj[i]) if i < saved_obj.size() else false
 		_objectives[qid] = completion
-	# Restore completed quests
-	var completed: Array = data.get("completed", [])
+
+
+func _restore_completed_quests(completed: Array, lookup: Dictionary) -> void:
 	for qid_str in completed:
 		var qid := StringName(qid_str)
 		var quest: Resource = lookup.get(String(qid_str), null)
 		if quest:
 			_quest_data[qid] = quest
 		_states[qid] = State.COMPLETED
-	# Restore failed quests
-	var failed_arr: Array = data.get("failed", [])
+
+
+func _restore_failed_quests(failed_arr: Array, lookup: Dictionary) -> void:
 	for qid_str in failed_arr:
 		var qid := StringName(qid_str)
 		var quest: Resource = lookup.get(String(qid_str), null)

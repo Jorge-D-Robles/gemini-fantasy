@@ -4,6 +4,7 @@ extends State
 
 const UITheme = preload("res://ui/ui_theme.gd")
 const BattlerDamage = preload("res://systems/battle/battler_damage.gd")
+const ENEMY_TURN_DELAY: float = 0.4
 
 var battle_scene: Node = null
 var _battle_ui: Node = null
@@ -21,120 +22,23 @@ func enter() -> void:
 		state_machine.transition_to("TurnQueueState")
 		return
 
-	var party_battlers: Array[Battler] = []
-	for b in battle_scene.party_battlers:
-		party_battlers.append(b)
-
-	var enemy_battlers: Array[Battler] = []
-	for b in battle_scene.enemy_battlers:
-		enemy_battlers.append(b)
-
-	var action := enemy.choose_action(party_battlers, enemy_battlers)
+	var action := enemy.choose_action(
+		battle_scene.party_battlers, battle_scene.enemy_battlers,
+	)
 
 	match action.type:
 		BattleAction.Type.ATTACK:
-			if action.target and action.target.is_alive:
-				await _play_attacker_anim(enemy)
-				var is_crit := BattlerDamage.roll_crit(enemy.luck)
-				var damage := enemy.deal_damage(enemy.attack)
-				if is_crit:
-					damage = BattlerDamage.apply_crit(damage)
-				var actual := action.target.take_damage(damage)
-				if is_crit:
-					AudioManager.play_sfx(
-						load(SfxLibrary.COMBAT_CRITICAL_HIT),
-						AudioManager.SfxPriority.CRITICAL,
-					)
-					if not action.target.is_alive:
-						AudioManager.play_sfx(
-							load(SfxLibrary.COMBAT_DEATH),
-							AudioManager.SfxPriority.CRITICAL,
-						)
-					_show_critical_popup(action.target, actual)
-					if _battle_ui:
-						_battle_ui.add_battle_log(
-							"CRITICAL HIT! %s attacks %s for %d damage!" % [
-								enemy.get_display_name(),
-								action.target.get_display_name(),
-								actual,
-							],
-							UITheme.LogType.DAMAGE,
-						)
-				else:
-					AudioManager.play_sfx(load(SfxLibrary.COMBAT_ATTACK_HIT))
-					if not action.target.is_alive:
-						AudioManager.play_sfx(
-							load(SfxLibrary.COMBAT_DEATH),
-							AudioManager.SfxPriority.CRITICAL,
-						)
-					if _battle_ui:
-						_battle_ui.add_battle_log(
-							"%s attacks %s for %d damage!" % [
-								enemy.get_display_name(),
-								action.target.get_display_name(),
-								actual,
-							],
-							UITheme.LogType.DAMAGE,
-						)
+			await _handle_attack_action(action, enemy)
 		BattleAction.Type.ABILITY:
-			if action.ability and action.target:
-				enemy.use_ee(action.ability.ee_cost)
-				await _play_attacker_anim(enemy)
-				var is_magical := (
-					action.ability.damage_stat
-					== AbilityData.DamageStat.MAGIC
-				)
-				var base := action.ability.damage_base
-				if base > 0 and action.target.is_alive:
-					var damage := enemy.deal_damage(base, is_magical)
-					var actual := action.target.take_damage(
-						damage, is_magical
-					)
-					AudioManager.play_sfx(
-						load(SfxLibrary.COMBAT_MAGIC_CAST)
-					)
-					if not action.target.is_alive:
-						AudioManager.play_sfx(
-							load(SfxLibrary.COMBAT_DEATH),
-							AudioManager.SfxPriority.CRITICAL,
-						)
-					if _battle_ui:
-						_battle_ui.add_battle_log(
-							"%s uses %s on %s for %d damage!" % [
-								enemy.get_display_name(),
-								action.ability.display_name,
-								action.target.get_display_name(),
-								actual,
-							],
-							UITheme.LogType.DAMAGE,
-						)
-				else:
-					AudioManager.play_sfx(
-						load(SfxLibrary.COMBAT_MAGIC_CAST)
-					)
-				# Apply status effect from ability
-				_try_apply_status(action.ability, action.target)
+			await _handle_ability_action(action, enemy)
 		BattleAction.Type.DEFEND:
-			enemy.defend()
-			if _battle_ui:
-				_battle_ui.add_battle_log(
-					"%s defends." % enemy.get_display_name(),
-					UITheme.LogType.INFO,
-				)
+			_handle_defend_action(enemy)
 		BattleAction.Type.WAIT:
-			if _battle_ui:
-				_battle_ui.add_battle_log(
-					"%s waits." % enemy.get_display_name(),
-					UITheme.LogType.INFO,
-				)
+			_handle_wait_action(enemy)
 
-	# Sync UI after every action
 	battle_scene.refresh_battle_ui()
+	await get_tree().create_timer(ENEMY_TURN_DELAY).timeout
 
-	# Brief delay for visual feedback
-	await get_tree().create_timer(0.4).timeout
-
-	# Check battle end
 	var result: int = battle_scene.check_battle_end()
 	if result == 1:
 		state_machine.transition_to("Victory")
@@ -142,6 +46,90 @@ func enter() -> void:
 		state_machine.transition_to("Defeat")
 	else:
 		state_machine.transition_to("TurnEnd")
+
+
+func _handle_attack_action(action: BattleAction, enemy: EnemyBattler) -> void:
+	if not action.target or not action.target.is_alive:
+		return
+	await _play_attacker_anim(enemy)
+	var is_crit := BattlerDamage.roll_crit(enemy.luck)
+	var damage := enemy.deal_damage(enemy.attack)
+	if is_crit:
+		damage = BattlerDamage.apply_crit(damage)
+	var actual := action.target.take_damage(damage)
+	if is_crit:
+		AudioManager.play_sfx(
+			load(SfxLibrary.COMBAT_CRITICAL_HIT),
+			AudioManager.SfxPriority.CRITICAL,
+		)
+		_show_critical_popup(action.target, actual)
+		if _battle_ui:
+			_battle_ui.add_battle_log(
+				"CRITICAL HIT! %s attacks %s for %d damage!" % [
+					enemy.get_display_name(),
+					action.target.get_display_name(),
+					actual,
+				],
+				UITheme.LogType.DAMAGE,
+			)
+	else:
+		AudioManager.play_sfx(load(SfxLibrary.COMBAT_ATTACK_HIT))
+		if _battle_ui:
+			_battle_ui.add_battle_log(
+				"%s attacks %s for %d damage!" % [
+					enemy.get_display_name(),
+					action.target.get_display_name(),
+					actual,
+				],
+				UITheme.LogType.DAMAGE,
+			)
+	if not action.target.is_alive:
+		AudioManager.play_sfx(
+			load(SfxLibrary.COMBAT_DEATH), AudioManager.SfxPriority.CRITICAL,
+		)
+
+
+func _handle_ability_action(action: BattleAction, enemy: EnemyBattler) -> void:
+	if not action.ability or not action.target:
+		return
+	enemy.use_ee(action.ability.ee_cost)
+	await _play_attacker_anim(enemy)
+	var is_magical := action.ability.damage_stat == AbilityData.DamageStat.MAGIC
+	var base := action.ability.damage_base
+	AudioManager.play_sfx(load(SfxLibrary.COMBAT_MAGIC_CAST))
+	if base > 0 and action.target.is_alive:
+		var damage := enemy.deal_damage(base, is_magical)
+		var actual := action.target.take_damage(damage, is_magical)
+		if not action.target.is_alive:
+			AudioManager.play_sfx(
+				load(SfxLibrary.COMBAT_DEATH), AudioManager.SfxPriority.CRITICAL,
+			)
+		if _battle_ui:
+			_battle_ui.add_battle_log(
+				"%s uses %s on %s for %d damage!" % [
+					enemy.get_display_name(),
+					action.ability.display_name,
+					action.target.get_display_name(),
+					actual,
+				],
+				UITheme.LogType.DAMAGE,
+			)
+	_try_apply_status(action.ability, action.target)
+
+
+func _handle_defend_action(enemy: EnemyBattler) -> void:
+	enemy.defend()
+	if _battle_ui:
+		_battle_ui.add_battle_log(
+			"%s defends." % enemy.get_display_name(), UITheme.LogType.INFO,
+		)
+
+
+func _handle_wait_action(enemy: EnemyBattler) -> void:
+	if _battle_ui:
+		_battle_ui.add_battle_log(
+			"%s waits." % enemy.get_display_name(), UITheme.LogType.INFO,
+		)
 
 
 func _play_attacker_anim(attacker: Battler) -> void:

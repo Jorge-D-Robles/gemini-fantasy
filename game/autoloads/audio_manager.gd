@@ -165,32 +165,21 @@ func set_bgm_volume(volume_db: float) -> void:
 
 
 func _crossfade_bgm(new_stream: AudioStream, fade_time: float) -> void:
-	_bgm_fade_player.stream = _bgm_player.stream
-	_bgm_fade_player.volume_db = _bgm_player.volume_db
-	_bgm_fade_player.play(
-		_bgm_player.get_playback_position()
-	)
-
-	_bgm_player.stream = new_stream
-	_bgm_player.volume_db = -80.0
-	_bgm_player.play()
-
-	var tween := create_tween()
-	tween.set_parallel(true)
-	tween.tween_property(_bgm_player, "volume_db", _bgm_volume_db, fade_time)
-	tween.tween_property(_bgm_fade_player, "volume_db", -80.0, fade_time)
-	tween.set_parallel(false)
-	tween.tween_callback(_bgm_fade_player.stop)
+	_do_crossfade(new_stream, 0.0, fade_time)
 
 
 func _crossfade_bgm_at(
 	new_stream: AudioStream, start_pos: float, fade_time: float,
 ) -> void:
+	_do_crossfade(new_stream, start_pos, fade_time)
+
+
+func _do_crossfade(
+	new_stream: AudioStream, start_pos: float, fade_time: float,
+) -> void:
 	_bgm_fade_player.stream = _bgm_player.stream
 	_bgm_fade_player.volume_db = _bgm_player.volume_db
-	_bgm_fade_player.play(
-		_bgm_player.get_playback_position()
-	)
+	_bgm_fade_player.play(_bgm_player.get_playback_position())
 
 	_bgm_player.stream = new_stream
 	_bgm_player.volume_db = -80.0
@@ -199,9 +188,7 @@ func _crossfade_bgm_at(
 	var tween := create_tween()
 	tween.set_parallel(true)
 	tween.tween_property(_bgm_player, "volume_db", _bgm_volume_db, fade_time)
-	tween.tween_property(
-		_bgm_fade_player, "volume_db", -80.0, fade_time
-	)
+	tween.tween_property(_bgm_fade_player, "volume_db", -80.0, fade_time)
 	tween.set_parallel(false)
 	tween.tween_callback(_bgm_fade_player.stop)
 
