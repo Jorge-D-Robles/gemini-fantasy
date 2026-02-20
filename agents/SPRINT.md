@@ -87,12 +87,14 @@ Started: 2026-02-18
 
 ### T-0136
 - Title: Add player-driven defeat screen with Load/Title recovery options
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-19
+- Completed: 2026-02-19
 - Priority: medium
 - Depends: none
 - Refs: game/systems/battle/states/defeat_state.gd, game/ui/battle_ui/battle_ui.gd
-- Notes: Replace hardcoded 2.0s timer with Load Last Save and Return to Title buttons. Static compute_defeat_options(). 4+ tests.
+- Notes: defeat_action_chosen signal; compute_defeat_options(has_save) helper; RetryButton hidden when no save; defeat_state awaits signal, loads save or goes to title; 9 tests.
 
 ### T-0126
 - Title: Show level-up callouts and stat gains in victory screen
@@ -240,6 +242,14 @@ Started: 2026-02-18
 ---
 
 ## Done This Sprint
+
+### T-0136
+- Title: Add player-driven defeat screen with Load/Title recovery options
+- Status: done
+- Assigned: claude
+- Started: 2026-02-19
+- Completed: 2026-02-19
+- Notes: defeat_action_chosen signal; compute_defeat_options(has_save) helper; defeat_state awaits signal, loads save or goes to title; 9 tests.
 
 ### T-0129
 - Title: Add player-driven victory screen dismissal (confirm input replaces 2.0s timer)
