@@ -87,8 +87,9 @@ Started: 2026-02-20
 
 ### T-0201
 - Title: Place childs_laughter echo interactable in Verdant Forest
-- Status: todo
-- Assigned: unassigned
+- Status: in-progress
+- Assigned: claude
+- Started: 2026-02-20
 - Priority: medium
 - Depends: T-0182, T-0198
 
