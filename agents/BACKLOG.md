@@ -29,8 +29,10 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0173
 - Title: Add Garrick personal quest stub to quest log after recruitment
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: low
 - Milestone: M0
 - Depends: T-0082, T-0090
