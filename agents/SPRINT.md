@@ -59,8 +59,10 @@ Started: 2026-02-18
 
 ### T-0163
 - Title: Add party swap validation feedback in party UI
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: low
 - Depends: T-0020
 - Refs: game/ui/party_ui/party_ui.gd, game/ui/party_ui/party_ui_data.gd

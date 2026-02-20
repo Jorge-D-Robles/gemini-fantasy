@@ -25,6 +25,7 @@ var _reserve_buttons: Array[Button] = []
 var _back_button: Button = null
 var _detail_panel: PanelContainer = null
 var _detail_content: VBoxContainer = null
+var _status_label: Label = null
 
 
 func _ready() -> void:
@@ -109,6 +110,16 @@ func _build_ui() -> void:
 
 	var sep := HSeparator.new()
 	root_vbox.add_child(sep)
+
+	# Transient error feedback label (hidden until an invalid swap is attempted)
+	_status_label = Label.new()
+	_status_label.add_theme_font_size_override("font_size", _FONT_HINT)
+	_status_label.add_theme_color_override(
+		"font_color", UITheme.TEXT_NEGATIVE,
+	)
+	_status_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_status_label.visible = false
+	root_vbox.add_child(_status_label)
 
 	# Two-column layout
 	var columns := HBoxContainer.new()
@@ -257,12 +268,47 @@ func _on_reserve_pressed(reserve_index: int) -> void:
 		_active_buttons.size(),
 		_reserve_buttons.size(),
 	):
+		_show_swap_error(
+			PartyUIData.compute_swap_feedback_text(
+				_selected_active_index,
+				_active_buttons.size(),
+				_reserve_buttons.size(),
+			)
+		)
 		return
 	_pm.swap_members(_selected_active_index, reserve_index)
 	AudioManager.play_sfx(load(SfxLibrary.UI_CONFIRM))
 	_build_ui()
 	if not _active_buttons.is_empty():
 		_active_buttons[0].grab_focus()
+
+
+func _show_swap_error(msg: String) -> void:
+	AudioManager.play_sfx(load(SfxLibrary.UI_CANCEL))
+	# Flash the selected active button red for 0.3 s total.
+	if _selected_active_index >= 0 and (
+		_selected_active_index < _active_buttons.size()
+	):
+		var btn := _active_buttons[_selected_active_index]
+		var tween := create_tween()
+		tween.tween_property(btn, "modulate", Color(1.0, 0.3, 0.3), 0.05)
+		# Return to the selection-highlight color (yellow) rather than white.
+		tween.tween_property(btn, "modulate", Color(1.0, 1.0, 0.5), 0.25)
+	# Show transient status label, then fade it out.
+	if _status_label == null:
+		return
+	_status_label.modulate.a = 1.0
+	_status_label.text = msg
+	_status_label.visible = true
+	var label_tween := create_tween()
+	label_tween.tween_interval(1.2)
+	label_tween.tween_property(_status_label, "modulate:a", 0.0, 0.3)
+	label_tween.tween_callback(
+		func() -> void:
+			if is_instance_valid(_status_label):
+				_status_label.visible = false
+				_status_label.modulate.a = 1.0
+	)
 
 
 func _show_member_detail(member: Resource) -> void:
