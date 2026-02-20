@@ -29,6 +29,9 @@ const BattleUIStatus = preload(
 const BattleUIDefeat = preload(
 	"res://ui/battle_ui/battle_ui_defeat.gd"
 )
+const BattleUILog = preload(
+	"res://ui/battle_ui/battle_ui_log.gd"
+)
 const BattleUIVictory = preload(
 	"res://ui/battle_ui/battle_ui_victory.gd"
 )
@@ -261,11 +264,7 @@ func update_resonance(gauge_value: float, state: Battler.ResonanceState) -> void
 func add_battle_log(
 	text: String, log_type: int = UITheme.LogType.INFO,
 ) -> void:
-	var color: Color = UITheme.get_log_color(log_type)
-	var hex := color.to_html(false)
-	_battle_log.append_text(
-		"[color=#%s]%s[/color]\n" % [hex, text]
-	)
+	_battle_log.append_text(BattleUILog.compute_log_entry(text, log_type))
 	_battle_log.scroll_to_line(_battle_log.get_line_count() - 1)
 
 
