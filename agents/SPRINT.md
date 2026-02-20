@@ -13,8 +13,140 @@ Started: 2026-02-18
 
 ## Queue
 
+### T-0020
+- Title: Build party management UI
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Depends: T-0013
+- Refs: docs/best-practices/08-ui-patterns.md
+- Notes: View party members, stats, equipment. Swap active/reserve members. Focus navigation for gamepad support. T-0013 done — unblocked.
 
+### T-0121
+- Title: Add Roothollow Chapter 4 NPC dialogue updates (Iris arrival reactions)
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Depends: T-0082
+- Refs: docs/story/act1/04-old-iron.md (Scene 1), game/scenes/roothollow/roothollow.gd
+- Notes: Chapter 4 Scene 1: 5 NPCs with iris_recruited flag variants. Maeve greets Iris, Old Wick accepts "deserter" label, Tomas mentions shrine stranger, Yara asks about horse, Petra notes Garrick refused food. 6+ tests. T-0082 done — unblocked.
 
+### T-0131
+- Title: Add Kael-Iris arrival dialogue at Roothollow entrance (Chapter 4 Scene 1)
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Depends: T-0082
+- Refs: docs/story/act1/04-old-iron.md (Scene 1), game/scenes/roothollow/roothollow.gd
+- Notes: 6-8 lines on first entry with iris_recruited=true. Iris comments on tree architecture. EventFlags gate. 5+ tests. T-0082 done — unblocked.
+
+### T-0134
+- Title: Add Elder Morin briefing scene — tactical objective-setting for Overgrown Capital
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Depends: T-0082
+- Refs: docs/story/act1/04-old-iron.md (Scene 3), game/scenes/roothollow/roothollow.gd
+- Notes: 6-9 lines in Morin's study after garrick_recruited flag. Establishes Overgrown Capital as next objective. 4+ tests. T-0082 done — unblocked.
+
+### T-0143
+- Title: Implement critical hit mechanic and wire CRITICAL_HIT SFX and popup
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Depends: T-0067
+- Refs: game/systems/battle/battler_damage.gd, game/systems/battle/states/action_execute_state.gd, game/entities/battle/damage_popup.gd
+- Notes: luck stat is unused. Add crit chance: base 5% + (luck * 0.5)%. BattlerDamage returns crit flag. On crit: ×1.5 damage, COMBAT_CRITICAL_HIT SFX, DamagePopup.CRITICAL. 5+ tests. T-0067 done — unblocked.
+
+### T-0111
+- Title: Add interaction indicators to Interactable objects (save points, chests, signs)
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Depends: T-0089
+- Refs: game/entities/interactable/interactable.gd
+- Notes: Reuse Label-based approach from NPC indicators. One-time interactables hide after use. 4+ tests. T-0089 done — unblocked.
+
+### T-0120
+- Title: Add quest accept/complete toast notification in HUD
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Depends: T-0087
+- Refs: game/ui/hud/hud.gd, game/autoloads/quest_manager.gd
+- Notes: 2-3s slide-in toast for "New Quest: [name]" / "Quest Complete: [name]". Queue-based. 4+ tests. T-0087 done — unblocked.
+
+### T-0119
+- Title: Quest log reward display should show item display names, not IDs
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Depends: T-0090
+- Refs: game/ui/quest_log/quest_log.gd
+- Notes: compute_quest_list() returns raw item ID strings. Resolve to display names via ItemData lookup. T-0090 done — unblocked.
+
+### T-0129
+- Title: Add player-driven victory screen dismissal (confirm input replaces 2.0s timer)
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Depends: none
+- Refs: game/systems/battle/states/victory_state.gd, game/ui/battle_ui/battle_ui.gd
+- Notes: Replace await create_timer(2.0) with "Press [confirm]" label + await interact input (0.5s grace). 4+ tests.
+
+### T-0136
+- Title: Add player-driven defeat screen with Load/Title recovery options
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Depends: none
+- Refs: game/systems/battle/states/defeat_state.gd, game/ui/battle_ui/battle_ui.gd
+- Notes: Replace hardcoded 2.0s timer with Load Last Save and Return to Title buttons. Static compute_defeat_options(). 4+ tests.
+
+### T-0126
+- Title: Show level-up callouts and stat gains in victory screen
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Depends: T-0124
+- Refs: game/ui/battle_ui/battle_ui.gd, game/systems/battle/states/victory_state.gd
+- Notes: After T-0124 applies XP, show "Kael reached Level 3!" callouts with stat changes. T-0124 done — unblocked.
+
+### T-0125
+- Title: Improve game over / defeat screen with recovery options
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Depends: none
+- Refs: game/systems/battle/states/defeat_state.gd, game/ui/battle_ui/battle_ui.gd
+- Notes: Add styled "Game Over" panel with "Load Last Save" and "Return to Title" buttons. See also T-0136 (overlapping scope — consider merging).
+
+### T-0128
+- Title: BUG — AudioManager.play_bgm() resets volume_db to 0.0, ignoring user volume setting
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Depends: T-0068
+- Refs: game/autoloads/audio_manager.gd
+- Notes: play_bgm() hardcodes volume_db = 0.0. Add _bgm_volume_db field; apply in play_bgm(). 4+ tests. T-0068 done — unblocked.
+
+### T-0135
+- Title: Add Chapter 4 Scene 5 night scene — Garrick and Lyra conversation at camp
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Depends: T-0085
+- Refs: docs/story/act1/04-old-iron.md (Scene 5), game/events/garrick_meets_lyra.gd
+- Notes: Quiet night scene at Roothollow before departure. 8-10 lines. Gated by garrick_met_lyra flag. T-0085 done — unblocked.
+
+### T-0137
+- Title: Add Roothollow market expansion — Maeve stocks Forest Remedy and Crystal Wick after Iris
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Depends: T-0082
+- Refs: docs/story/act1/04-old-iron.md (Scene 1), game/scenes/roothollow/roothollow_dialogue.gd
+- Notes: Flag-conditional item pool addition when iris_recruited is set. May need new ItemData resources. 3+ tests. T-0082 done — unblocked.
 
 ### T-0095
 - Title: Add battler idle animations in combat
