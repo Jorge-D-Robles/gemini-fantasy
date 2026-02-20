@@ -964,13 +964,13 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0103
 - Title: Implement Chapter 5 — The Overgrown Capital dungeon
-- Status: todo
+- Status: superseded
 - Assigned: unassigned
 - Priority: high
 - Milestone: M1
 - Depends: T-0085
 - Refs: docs/story/act1/chapter-05-overgrown-capital.md, docs/game-design/05-dungeon-designs.md
-- Notes: First full dungeon. Multi-room tilemap, puzzles, encounters, boss. Major content milestone.
+- Notes: Superseded by T-0190 (tilemap skeleton), T-0191 (Lyra Fragment 2 + vision), T-0192 (Last Gardener), T-0193 (post-dungeon camp), T-0194 (Story Echo .tres), T-0195 (Purification Node). Work against those sub-tasks instead.
 
 ### T-0104
 - Title: Implement Chapters 6-10 story events and dialogue
@@ -994,13 +994,13 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0106
 - Title: Implement Echo Fragment collection system
-- Status: todo
+- Status: superseded
 - Assigned: unassigned
 - Priority: high
 - Milestone: M1
 - Depends: none
 - Refs: docs/lore/04-echo-catalog.md, docs/game-design/01-core-mechanics.md
-- Notes: Core gameplay mechanic. EchoFragment Resource, EchoManager autoload, collection UI, world placement.
+- Notes: Superseded by T-0182 (EchoManager autoload), T-0189 (SaveManager wiring), T-0187 (Journal UI). The full Echo collection pipeline is complete.
 
 ### T-0107
 - Title: Implement full character ability trees for all party members
@@ -1522,6 +1522,76 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 - Depends: T-0190
 - Refs: docs/story/act1/05-into-the-capital.md (Scene 2-3), game/entities/interactable/
 - Notes: PurificationNodeStrategy (extends InteractionStrategy). One-time use. On activate: set flag node_<id>_cleared, emit node_cleared(node_id) signal, clear collision/visual. compute_node_active_state(flags, node_id) static helper. Placed at Market->Entertainment and Entertainment->Research exits. 4+ tests.
+
+### T-0196
+- Title: Add ScenePaths constant for Overgrown Capital and mark T-0106 superseded
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Milestone: M1
+- Depends: none
+- Refs: game/systems/scene_paths.gd, agents/BACKLOG.md
+- Notes: (1) Add OVERGROWN_CAPITAL constant to scene_paths.gd so transition triggers have a typed path. (2) T-0106 Status update done in BACKLOG.md. 1 test verifying constant is non-empty.
+
+### T-0197
+- Title: Seed Story Echo .tres files for Act I (Morning Commute, Family Dinner, Warning Ignored, The First Crack)
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Milestone: M1
+- Depends: T-0182
+- Refs: docs/lore/04-echo-catalog.md, game/data/echoes/, game/resources/echo_data.gd
+- Notes: Create 4 Story Echo .tres files: morning_commute.tres (Common, Story), family_dinner.tres (Common, Story), warning_ignored.tres (Uncommon, Story), the_first_crack.tres (Rare, Story). Each needs id, display_name, rarity, echo_type, lore_text, kael_notes. 4+ tests verifying unique IDs, rarity values, non-empty lore_text.
+
+### T-0198
+- Title: Refactor MemorialEchoStrategy to support generic echo placement (not tied to elder_wisdom quest)
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Milestone: M1
+- Depends: T-0182
+- Refs: game/entities/interactable/strategies/memorial_echo_strategy.gd, docs/story/act1/05-into-the-capital.md
+- Notes: Add require_quest_id: StringName = &"" export. When empty, just show vision_lines dialogue, collect echo, set has_been_used=true. When set, preserve existing quest-objective-complete behavior. compute_should_collect(echo_id, require_quest_id, quest_active, obj_done) static helper. 6+ tests.
+
+### T-0199
+- Title: Place Morning Commute and Family Dinner echo interactables in Overgrown Capital Market District
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M1
+- Depends: T-0190, T-0197, T-0198
+- Refs: docs/story/act1/05-into-the-capital.md (Scene 2), docs/lore/04-echo-catalog.md
+- Notes: Two EchoInteractableStrategy interactables in Market District. Vision dialogue 2-3 lines each. compute_market_echo_positions() static helper. 4+ tests.
+
+### T-0200
+- Title: Add Leaving the Capital scene — post-dungeon processing dialogue (Chapter 5 Scene 6)
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M1
+- Depends: T-0191
+- Refs: docs/story/act1/05-into-the-capital.md (Scene 6), game/events/
+- Notes: 9-line dialogue: Garrick on loss of two million people, Iris on Initiative guilt, Kael on the choice behind the Severance. New event file game/events/leaving_capital.gd. Gated by lyra_fragment_2_collected AND NOT leaving_capital_seen. compute_leaving_capital_lines() helper. 5+ tests.
+
+### T-0201
+- Title: Place childs_laughter echo interactable in Verdant Forest at camp clearing
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M1
+- Depends: T-0182, T-0198
+- Refs: docs/lore/04-echo-catalog.md (childs_laughter — Verdant Tangle), game/scenes/verdant_forest/verdant_forest.gd
+- Notes: Place one-time EchoInteractableStrategy at Vector2(352, 192) near campfire in Verdant Forest. Vision line: "Pure joy. A child chasing fireflies through a summer field, before The Severance." Gives players first in-world echo pickup before the dungeon. compute_forest_echo_position() helper. 3+ tests.
+
+### T-0202
+- Title: Update T-0104 dependency from T-0103 to T-0191 (narrative pivot is Lyra Fragment 2)
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Milestone: M1
+- Depends: none
+- Refs: agents/BACKLOG.md
+- Notes: T-0104 (Chapters 6-10) currently depends on T-0103 which is superseded. Update dependency to T-0191 (Lyra's Fragment 2 + Research Quarter vision) which is the actual narrative gate for Act I Chapter 5 completion. Doc-only change.
 
 ---
 
