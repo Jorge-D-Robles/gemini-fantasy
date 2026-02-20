@@ -4,6 +4,7 @@ Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[
 
 ---
 
+- [2026-02-20] T-0165: Party UI cross-column keyboard/gamepad focus nav — compute_cross_column_focus_index() helper, _setup_focus() two-column rewrite, 5 tests, PR #199 (claude)
 - [2026-02-20] T-0166: BUG defend stance persists through TurnEnd — removed is_defending=false from end_turn(), cleared in PlayerTurnState.enter(); 4 tests updated, PR #198 (claude)
 - [2026-02-20] T-0133: Save slot summary on Continue button — timestamp in gather_save_data, compute_save_summary/format_save_timestamp static helpers, _show_save_label programmatic label below ContinueButton, 8 tests, PR #197 (claude)
 - [2026-02-20] T-0132: Add DEF badge on party battler panels — DEFEND_BADGE_COLOR, compute_defend_badge() static helper, wired in _create_party_row, fixed TurnEnd/PlayerTurnState timing for badge visibility, 4 tests, PR #196 (claude)

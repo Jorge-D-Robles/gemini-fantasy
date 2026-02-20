@@ -193,6 +193,17 @@ Started: 2026-02-18
 - Depends: T-0020
 - Notes: compute_equipment_slots helper + character detail panel (stats + equipment) in party_ui. 5 new tests. PR #195 merged.
 
+### T-0165
+- Title: Add keyboard and gamepad focus navigation to party_ui sub-screen
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
+- Priority: medium
+- Depends: T-0020
+- Refs: game/ui/party_ui/party_ui.gd, docs/best-practices/08-ui-patterns.md
+- Notes: compute_cross_column_focus_index() static helper in party_ui_data.gd; _setup_focus() rewritten with vertical wrap per column, right/left cross-column neighbors, Back button wired downward from column bottoms. 5 tests. PR #199 merged.
+
 ### T-0057
 - Title: Improve turn order display with current actor highlight
 - Status: todo
