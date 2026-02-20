@@ -294,6 +294,9 @@ const DETAIL_MAP: Array[String] = [
 
 
 func _ready() -> void:
+	# Force z_index at runtime — .tscn value may be stale in editor cache.
+	# Characters must render above tilemap layers (Objects/Walls z=0).
+	$Entities.z_index = 1
 	_setup_tilemap()
 	MapBuilder.create_boundary_walls(self, 640, 400)
 	_start_scene_music()
