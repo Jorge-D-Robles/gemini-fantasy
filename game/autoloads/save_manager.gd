@@ -40,10 +40,11 @@ func save_game(
 	equipment: Node = null,
 	quests: Node = null,
 	playtime: float = 0.0,
+	echo_mgr: Node = null,
 ) -> bool:
 	var data := gather_save_data(
 		party, inventory, flags,
-		scene_path, player_position, equipment, quests, playtime,
+		scene_path, player_position, equipment, quests, playtime, echo_mgr,
 	)
 	return _write_save_file(slot, data)
 
@@ -79,6 +80,7 @@ func apply_save_data(
 	flags: Node,
 	equipment: Node = null,
 	quests: Node = null,
+	echo_mgr: Node = null,
 ) -> void:
 	_apply_inventory(data.get("inventory", {}), inventory)
 	_apply_flags(data.get("event_flags", {}), flags)
@@ -87,6 +89,8 @@ func apply_save_data(
 		equipment.deserialize(data.get("equipment", {}))
 	if quests:
 		quests.deserialize(data.get("quests", {}), [])
+	if echo_mgr:
+		echo_mgr.deserialize(data.get("echoes_save", {}))
 
 
 func delete_save(slot: int) -> void:
@@ -104,6 +108,7 @@ func gather_save_data(
 	equipment: Node = null,
 	quests: Node = null,
 	playtime: float = 0.0,
+	echo_mgr: Node = null,
 ) -> Dictionary:
 	var data := {
 		"version": SAVE_VERSION,
@@ -123,6 +128,8 @@ func gather_save_data(
 		data["equipment"] = equipment.serialize()
 	if quests:
 		data["quests"] = quests.serialize()
+	if echo_mgr:
+		data["echoes_save"] = echo_mgr.serialize()
 	return data
 
 

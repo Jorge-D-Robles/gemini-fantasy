@@ -237,26 +237,27 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 - Status: todo
 - Assigned: unassigned
 - Priority: low
-- Milestone: M0
+- Milestone: M1
 - Depends: none
 - Refs: docs/game-design/03-world-map-and-locations.md
-- Notes: Unlock fast travel points as discovered. World map selection UI. Transition animations.
+- Notes: Unlock fast travel points as discovered. World map selection UI. Transition animations. Re-milestoned from M0 (T-0185) — full system build, out of scope for M0 close.
 
 ### T-0025
 - Title: Build bonding system framework
 - Status: todo
 - Assigned: unassigned
 - Priority: low
-- Milestone: M0
+- Milestone: M1
 - Depends: none
 - Refs: docs/game-design/01-core-mechanics.md, docs/lore/03-characters.md
-- Notes: BondData Resource. Affinity tracking between characters. Bond events at camp.
+- Notes: BondData Resource. Affinity tracking between characters. Bond events at camp. Re-milestoned from M0 (T-0185) — full system build, out of scope for M0 close.
 
 ### T-0026
 - Title: Build debug console
-- Status: in-progress
+- Status: done
 - Assigned: claude
 - Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: low
 - Milestone: M0
 - Depends: none
@@ -937,6 +938,26 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 - Refs: game/entities/battle/party_battler_scene.gd, game/entities/battle/enemy_battler_scene.gd
 - Notes: SUPERSEDED — play_damage_anim() already implements white+red flash with position recoil shake in both battler scenes, wired to _on_damage_taken() via battler.damage_taken signal. Functionality fully present.
 
+### T-0180
+- Title: Place campfire interactable in Verdant Forest
+- Status: done
+- Assigned: claude
+- Priority: medium
+- Milestone: M0
+- Depends: T-0023
+- Refs: game/scenes/verdant_forest/verdant_forest.gd, game/entities/interactable/strategies/camp_strategy.gd
+- Notes: T-0023 completed CampStrategy but placed no campfire in any scene. Add a campfire Interactable in the Verdant Forest clearing (mid-map, off the path). Wire CampStrategy as its strategy. one_time=false so it is usable repeatedly. Acceptance: player can interact with campfire to open CampMenu (Rest + Leave Camp). 3+ tests verifying campfire is present and CampStrategy wired correctly.
+
+### T-0181
+- Title: M0 hygiene sweep — type hints, return types, and doc comments in autoloads and core scripts
+- Status: done
+- Assigned: claude
+- Priority: low
+- Milestone: M0
+- Depends: none
+- Refs: game/autoloads/, game/systems/battle/battler.gd, game/systems/battle/battle_scene.gd
+- Notes: Combines T-0008, T-0010, T-0011. Single targeted sweep: (1) Replace has_method/has_signal duck-typing with typed references. (2) Add return type annotations on methods missing them. (3) Add doc comments to public signals and methods in autoloads and battle scripts. Run gdlint to verify no new warnings. No behavior changes — pure code quality. 0 new tests required (existing 1536 must stay green).
+
 ---
 
 ## M1 — Act I: The Echo Thief
@@ -1023,23 +1044,51 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0150
 - Title: Add Garrick character quest scaffold — QuestData .tres and quest hook
-- Status: todo
+- Status: superseded
 - Assigned: unassigned
 - Priority: low
 - Milestone: M1
 - Depends: T-0082
-- Refs: docs/story/character-quests/garrick-three-burns.md, game/data/quests/
-- Notes: Create QuestData .tres resource for "Three Burns" (Garrick's character quest). Multi-part quest with three objective locations from his past. Prerequisites: garrick_recruited. No full scene implementation — just data file and QuestManager integration so the quest appears in the quest log. 3+ tests.
+- Notes: SUPERSEDED by T-0173 (completed 2026-02-20) which created the QuestData .tres and auto-accept helper for Garrick's "Something He Carries" quest stub.
 
 ### T-0151
 - Title: Add Iris character quest scaffold — QuestData .tres and quest hook
-- Status: todo
+- Status: superseded
 - Assigned: unassigned
 - Priority: low
 - Milestone: M1
 - Depends: T-0081
-- Refs: docs/story/character-quests/iris-engineers-oath.md, game/data/quests/
-- Notes: Create QuestData .tres resource for "The Engineer's Oath" (Iris's character quest). Prerequisites: iris_recruited. No full scene implementation — just data file and QuestManager integration so quest appears in quest log. 3+ tests.
+- Notes: SUPERSEDED by T-0174 (completed 2026-02-20) which created the QuestData .tres and auto-accept helper for Iris's "The Engineer's Oath" quest stub.
+
+### T-0182
+- Title: Implement EchoFragment Resource and EchoManager autoload — core collection system
+- Status: in-progress
+- Assigned: claude
+- Priority: high
+- Milestone: M1
+- Depends: none
+- Refs: docs/lore/04-echo-catalog.md, docs/game-design/01-core-mechanics.md, game/resources/, game/autoloads/
+- Notes: Core M1 mechanic. EchoFragment Resource (id, display_name, lore_text, rarity enum, echo_type enum). EchoManager autoload: collect_echo(id), has_echo(id), get_collected_echoes(), save/load integration via SaveManager. Place 2-3 Act I story echo .tres files in game/data/echoes/. Wire MemorialEchoStrategy to collect echo on activation. echo_collected signal. HUD: echo count badge (small, top-left). 10+ tests covering collect, duplicate prevention, save/load round-trip.
+
+### T-0183
+- Title: Build Prismfall Approach overworld scene — ruined road connecting forest to Capital
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Milestone: M1
+- Depends: T-0103
+- Refs: docs/game-design/03-world-map-and-locations.md, docs/game-design/05-dungeon-designs.md, docs/story/act1/05-into-the-capital.md
+- Notes: New overworld area. Ruined approach road with crystallized vegetation. 40x25 tilemap using Fairy Forest A5_A + Ruins A5 accent tiles. 4-5 enemy encounter pool (harder than Verdant Forest). Two exit triggers: south to OvergrownRuins, north to OvgrCapitalDungeon (stub). At least 2 NPCs with lore flavor. Standard module split (PrismfallMap + PrismfallEncounters). Visual verification with /scene-preview --full-map required. 8+ tests.
+
+### T-0184
+- Title: Seed ability tree .tres files for all 8 party members
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Milestone: M1
+- Depends: T-0018
+- Refs: docs/mechanics/character-abilities.md, game/data/characters/, game/data/abilities/
+- Notes: T-0018 built the SkillTreeData framework. Create game/data/skill_trees/<char_id>_tree.tres for: kael, iris, garrick, lyra + serana, maren, dane, theron. Each tree: 8-10 SkillTreeNodeData nodes per docs/mechanics/character-abilities.md. Wire into CharacterData.skill_trees. 6+ tests verifying tree structure for at least 2 characters.
 
 ### T-0112
 - Title: Wire quest-NPC indicator updates on quest state change
@@ -1364,6 +1413,46 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 - Depends: T-0089
 - Refs: game/entities/player/player.gd, game/ui/hud/hud.gd, game/ui/hud/interaction_hint.gd
 - Notes: NPC indicators (T-0089) are above NPC heads but the player has no HUD cue. When InteractionRay detects an interactable, show a small [E] Interact label in HUD bottom-center. Supersedes T-0113 — mark T-0113 superseded. compute_interaction_hint_text(action_name) static helper using InputMap. 3+ tests.
+
+### T-0185
+- Title: Re-milestone fast travel and bonding system — move T-0024 and T-0025 to M1
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
+- Priority: low
+- Milestone: M0
+- Depends: none
+- Notes: Doc-only change. Updated T-0024 and T-0025 Milestone from M0 to M1. Both are full system builds (world map UI, affinity tracking) out of scope for M0 close.
+
+### T-0186
+- Title: Wire MemorialEchoStrategy to EchoManager.collect_echo() after T-0182
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Milestone: M1
+- Depends: T-0182
+- Refs: game/entities/interactable/strategies/memorial_echo_strategy.gd, game/autoloads/echo_manager.gd, docs/lore/04-echo-catalog.md
+- Notes: MemorialEchoStrategy currently shows dialogue/lore text when interacted with. After T-0182 creates EchoManager, update MemorialEchoStrategy to call EchoManager.collect_echo(echo_id) on activation so the echo is tracked. Wire echo_collected signal to HUD badge update. 3+ tests: collect_called_on_activation, duplicate_collect_prevention, hud_badge_updates_on_echo_collected.
+
+### T-0187
+- Title: Build Echo Collection Journal UI (view collected echoes in pause menu)
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M1
+- Depends: T-0182
+- Refs: docs/lore/04-echo-catalog.md, game/ui/pause_menu/pause_menu.gd
+- Notes: Script-only Control opened from pause menu (same pattern as quest_log.gd). Two panels: list of collected echoes and detail panel showing name, rarity badge, echo_type, lore_text, Kael notes. compute_echo_list() and compute_echo_detail() static helpers for TDD. "Echoes" button added to pause menu. Collection count label: "Echoes: X / 42". 6+ tests.
+
+### T-0188
+- Title: Place campfire interactable in Overgrown Ruins
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Milestone: M1
+- Depends: T-0023
+- Refs: game/scenes/overgrown_ruins/overgrown_ruins.gd, game/entities/interactable/strategies/camp_strategy.gd
+- Notes: Mirror of T-0180. Place a CampStrategy-powered Interactable in the Overgrown Ruins clearing. one_time=false. compute_ruins_campfire_name() and compute_ruins_campfire_position() static helpers. 3+ tests.
 
 ---
 

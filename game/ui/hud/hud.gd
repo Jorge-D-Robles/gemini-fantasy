@@ -29,6 +29,7 @@ var _gold: int = 0
 var _current_scene_path: String = ""
 var _compass_label: Label = null
 var _fragment_tracker_label: Label = null
+var _echo_badge_label: Label = null
 var _area_name_popup: Label = null
 var _area_popup_tween: Tween = null
 var _tutorial_popup: Label = null
@@ -60,6 +61,11 @@ func _ready() -> void:
 	_setup_quest_toast()
 	_setup_fragment_tracker()
 	_setup_compass()
+	_setup_echo_badge()
+	# Connect EchoManager for live badge updates
+	var em: Node = get_node_or_null("/root/EchoManager")
+	if em:
+		em.echo_collected.connect(_on_echo_collected)
 
 	PartyManager.party_changed.connect(_on_party_changed)
 	PartyManager.party_state_changed.connect(_on_party_state_changed)
@@ -498,3 +504,48 @@ func _setup_compass() -> void:
 	_compass_label.add_theme_constant_override("shadow_offset_y", 1)
 	_compass_label.visible = false
 	add_child(_compass_label)
+
+
+func _setup_echo_badge() -> void:
+	_echo_badge_label = Label.new()
+	_echo_badge_label.name = "EchoBadge"
+	_echo_badge_label.anchors_preset = Control.PRESET_BOTTOM_RIGHT
+	_echo_badge_label.position = Vector2(-80.0, -24.0)
+	_echo_badge_label.custom_minimum_size = Vector2(72.0, 16.0)
+	_echo_badge_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_echo_badge_label.add_theme_font_size_override("font_size", 9)
+	_echo_badge_label.add_theme_color_override(
+		"font_color", UITheme.TEXT_GOLD,
+	)
+	_echo_badge_label.add_theme_color_override(
+		"font_shadow_color", Color(0.0, 0.0, 0.0, 0.85),
+	)
+	_echo_badge_label.add_theme_constant_override("shadow_offset_x", 1)
+	_echo_badge_label.add_theme_constant_override("shadow_offset_y", 1)
+	_echo_badge_label.visible = false
+	add_child(_echo_badge_label)
+
+
+## Updates the echo count badge from EchoManager state.
+func update_echo_badge() -> void:
+	if not _echo_badge_label:
+		return
+	var em: Node = get_node_or_null("/root/EchoManager")
+	if not em:
+		_echo_badge_label.visible = false
+		return
+	var count: int = em.get_echo_count()
+	_echo_badge_label.visible = count > 0
+	if count > 0:
+		_echo_badge_label.text = "\u25c6 %d" % count
+
+
+## Returns the display text for the echo badge — pure static helper.
+static func compute_echo_badge_text(count: int) -> String:
+	if count <= 0:
+		return ""
+	return "\u25c6 %d" % count
+
+
+func _on_echo_collected(_id: StringName) -> void:
+	update_echo_badge()
