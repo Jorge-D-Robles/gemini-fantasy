@@ -11,6 +11,9 @@ signal item_selected(item: Resource)
 signal submenu_cancelled
 signal target_cancelled
 signal victory_dismissed
+## Emitted when player selects a defeat screen option.
+## action is "load" (load last save) or "quit" (return to title).
+signal defeat_action_chosen(action: String)
 
 enum Command {
 	ATTACK,
@@ -22,6 +25,9 @@ enum Command {
 
 const BattleUIStatus = preload(
 	"res://ui/battle_ui/battle_ui_status.gd"
+)
+const BattleUIDefeat = preload(
+	"res://ui/battle_ui/battle_ui_defeat.gd"
 )
 const BattleUIVictory = preload(
 	"res://ui/battle_ui/battle_ui_victory.gd"
@@ -300,8 +306,20 @@ func show_defeat() -> void:
 	hide_command_menu()
 	_clear_highlight()
 	_target_selector.visible = false
+	# Configure buttons based on whether a save file exists.
+	var has_save: bool = SaveManager.has_save(0)
+	var opts := BattleUIDefeat.compute_defeat_options(has_save)
+	_retry_button.visible = has_save
+	if has_save:
+		_retry_button.text = opts[0].get("label", "Load Last Save")
+		_quit_button.text = opts[1].get("label", "Return to Title")
+	else:
+		_quit_button.text = opts[0].get("label", "Return to Title")
 	_defeat_screen.visible = true
-	_retry_button.grab_focus()
+	if has_save:
+		_retry_button.grab_focus()
+	else:
+		_quit_button.grab_focus()
 
 
 func show_victory_dismiss_prompt() -> void:
@@ -722,16 +740,12 @@ func _on_item_pressed(item: Resource) -> void:
 
 func _on_retry_pressed() -> void:
 	_defeat_screen.visible = false
-	var current := get_tree().current_scene
-	if current:
-		GameManager.change_scene(current.scene_file_path)
-	else:
-		GameManager.change_scene(SP.TITLE_SCREEN)
+	defeat_action_chosen.emit("load")
 
 
 func _on_quit_pressed() -> void:
 	_defeat_screen.visible = false
-	GameManager.change_scene(SP.TITLE_SCREEN)
+	defeat_action_chosen.emit("quit")
 
 
 func _setup_button_focus_wrap(container: Container) -> void:

@@ -87,8 +87,9 @@ Started: 2026-02-18
 
 ### T-0136
 - Title: Add player-driven defeat screen with Load/Title recovery options
-- Status: todo
-- Assigned: unassigned
+- Status: in-progress
+- Assigned: claude
+- Started: 2026-02-19
 - Priority: medium
 - Depends: none
 - Refs: game/systems/battle/states/defeat_state.gd, game/ui/battle_ui/battle_ui.gd
