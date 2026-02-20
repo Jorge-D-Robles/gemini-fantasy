@@ -16,6 +16,9 @@ var _master_value_label: Label
 var _bgm_value_label: Label
 var _sfx_value_label: Label
 var _close_button: Button
+var _master_reset_btn: Button
+var _bgm_reset_btn: Button
+var _sfx_reset_btn: Button
 
 
 func _ready() -> void:
@@ -92,7 +95,7 @@ func _build_ui() -> void:
 
 	var panel := PanelContainer.new()
 	panel.set_anchors_and_offsets_preset(PRESET_CENTER)
-	panel.custom_minimum_size = Vector2(280, 220)
+	panel.custom_minimum_size = Vector2(300, 270)
 	panel.add_theme_stylebox_override(
 		"panel", UIHelpers.create_panel_style()
 	)
@@ -124,23 +127,38 @@ func _build_ui() -> void:
 	volume_section.add_theme_constant_override("separation", 6)
 	vbox.add_child(volume_section)
 
-	var master_row := _create_slider_row("Master")
+	var master_row := _create_slider_row("Master", "master")
 	_master_slider = master_row["slider"]
 	_master_value_label = master_row["value_label"]
+	_master_reset_btn = master_row["reset_btn"]
 	_master_slider.value_changed.connect(_on_master_changed)
+	_master_reset_btn.pressed.connect(_on_master_reset)
 	volume_section.add_child(master_row["container"])
 
-	var bgm_row := _create_slider_row("Music")
+	var bgm_row := _create_slider_row("Music", "bgm")
 	_bgm_slider = bgm_row["slider"]
 	_bgm_value_label = bgm_row["value_label"]
+	_bgm_reset_btn = bgm_row["reset_btn"]
 	_bgm_slider.value_changed.connect(_on_bgm_changed)
+	_bgm_reset_btn.pressed.connect(_on_bgm_reset)
 	volume_section.add_child(bgm_row["container"])
 
-	var sfx_row := _create_slider_row("Sound")
+	var sfx_row := _create_slider_row("Sound", "sfx")
 	_sfx_slider = sfx_row["slider"]
 	_sfx_value_label = sfx_row["value_label"]
+	_sfx_reset_btn = sfx_row["reset_btn"]
 	_sfx_slider.value_changed.connect(_on_sfx_changed)
+	_sfx_reset_btn.pressed.connect(_on_sfx_reset)
 	volume_section.add_child(sfx_row["container"])
+
+	var hint := Label.new()
+	hint.text = "← → keys: adjust slider  |  ↑ ↓: switch slider"
+	hint.add_theme_font_size_override("font_size", 8)
+	hint.add_theme_color_override(
+		"font_color", UITheme.TEXT_SECONDARY
+	)
+	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	vbox.add_child(hint)
 
 	vbox.add_child(HSeparator.new())
 
@@ -152,9 +170,15 @@ func _build_ui() -> void:
 	vbox.add_child(_close_button)
 
 
-func _create_slider_row(label_text: String) -> Dictionary:
+func _create_slider_row(
+	label_text: String, slider_id: String
+) -> Dictionary:
+	var vbox := VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 1)
+
 	var hbox := HBoxContainer.new()
 	hbox.add_theme_constant_override("separation", 8)
+	vbox.add_child(hbox)
 
 	var label := Label.new()
 	label.text = label_text
@@ -187,10 +211,27 @@ func _create_slider_row(label_text: String) -> Dictionary:
 	)
 	hbox.add_child(value_label)
 
+	var reset_btn := Button.new()
+	reset_btn.text = "↺"
+	reset_btn.custom_minimum_size = Vector2(22, 0)
+	reset_btn.add_theme_font_size_override("font_size", 10)
+	reset_btn.focus_mode = Control.FOCUS_NONE
+	reset_btn.tooltip_text = "Reset to default"
+	hbox.add_child(reset_btn)
+
+	var tooltip := Label.new()
+	tooltip.text = SD.compute_slider_tooltip(slider_id)
+	tooltip.add_theme_font_size_override("font_size", 8)
+	tooltip.add_theme_color_override(
+		"font_color", UITheme.TEXT_SECONDARY
+	)
+	vbox.add_child(tooltip)
+
 	return {
-		"container": hbox,
+		"container": vbox,
 		"slider": slider,
 		"value_label": value_label,
+		"reset_btn": reset_btn,
 	}
 
 
@@ -201,6 +242,21 @@ func _setup_focus() -> void:
 		_sfx_slider,
 		_close_button,
 	])
+
+
+func _on_master_reset() -> void:
+	_master_slider.value = SD.DEFAULT_VOLUME
+	SD.apply_volume("Master", SD.DEFAULT_VOLUME)
+
+
+func _on_bgm_reset() -> void:
+	_bgm_slider.value = SD.DEFAULT_VOLUME
+	SD.apply_volume("BGM", SD.DEFAULT_VOLUME)
+
+
+func _on_sfx_reset() -> void:
+	_sfx_slider.value = SD.DEFAULT_VOLUME
+	SD.apply_volume("SFX", SD.DEFAULT_VOLUME)
 
 
 func _apply_button_style(btn: Button) -> void:

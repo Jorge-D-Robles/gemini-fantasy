@@ -1128,8 +1128,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0141
 - Title: Add accessibility tooltips and keyboard shortcut hints to settings menu
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: low
 - Milestone: M0
 - Depends: T-0068
@@ -1222,8 +1223,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0155
 - Title: Wire dismiss prompt text to InputMap for remappable key display
-- Status: in-progress
+- Status: done
 - Assigned: claude
+- Completed: 2026-02-20
 - Priority: low
 - Milestone: M0
 - Depends: T-0129

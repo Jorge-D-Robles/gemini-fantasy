@@ -3,6 +3,8 @@
 Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[date] Description`.
 
 ---
+- [2026-02-20] T-0141: Settings menu accessibility — compute_slider_tooltip() pure helper (master/bgm/sfx descriptions), ↺ reset-to-default buttons per slider, "← → keys: adjust" keyboard hint label; 4 new tests (1430 total) (claude)
+- [2026-02-20] T-0155: Wire victory dismiss prompt to InputMap — compute_dismiss_prompt_from_events() pure helper extracts key/button labels from InputEvent array, compute_dismiss_prompt_text() reads live InputMap.action_get_events() with has_action guard; 3 new tests (1426 total) (claude)
 - [2026-02-20] T-0127: Playtime display on title screen — compute_playtime_str(seconds) formats as "HH:MM" (empty for <60s), compute_save_summary() gains playtime_str key, _show_save_label() includes playtime between location and date; 7 tests (1423 total) (claude)
 - [2026-02-20] T-0165: Party UI keyboard/gamepad navigation — already implemented: _setup_focus() wires UIHelpers.setup_focus_wrap + cross-column left/right + back button; compute_cross_column_focus_index() in party_ui_data.gd with 5 tests (claude)
 - [2026-02-20] T-0172: BanterManager scaffold — static RefCounted class with BANTERS registry (key/gate/party/locations), compute_eligible_banters(party_ids, flags, location) returns eligible keys, bond_01_knife_lessons registered; 8 tests (1416 total) (claude)
