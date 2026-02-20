@@ -24,9 +24,10 @@ Started: 2026-02-18
 
 ### T-0121
 - Title: Add Roothollow Chapter 4 NPC dialogue updates (Iris arrival reactions)
-- Status: in-progress
+- Status: done
 - Assigned: claude
 - Started: 2026-02-19
+- Completed: 2026-02-19
 - Priority: medium
 - Depends: T-0082
 - Refs: docs/story/act1/04-old-iron.md (Scene 1), game/scenes/roothollow/roothollow.gd
