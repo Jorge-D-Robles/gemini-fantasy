@@ -13,6 +13,7 @@ const INVENTORY_UI_SCENE := preload(
 	"res://ui/inventory_ui/inventory_ui.tscn"
 )
 const QuestLogScript = preload("res://ui/quest_log/quest_log.gd")
+const EchoJournalScript = preload("res://ui/echo_journal/echo_journal.gd")
 const SettingsMenuScript = preload(
 	"res://ui/settings_menu/settings_menu.gd"
 )
@@ -21,6 +22,7 @@ const PartyUIScript = preload("res://ui/party_ui/party_ui.gd")
 var _is_open: bool = false
 var _inventory_ui: Control = null
 var _quest_log: Control = null
+var _echo_journal: Control = null
 var _settings_menu: Control = null
 var _party_ui: Control = null
 
@@ -29,6 +31,7 @@ var _party_ui: Control = null
 @onready var _party_button: Button = %PartyButton
 @onready var _items_button: Button = %ItemsButton
 @onready var _quests_button: Button = %QuestsButton
+@onready var _echoes_button: Button = %EchoesButton
 @onready var _status_button: Button = %StatusButton
 @onready var _settings_button: Button = %SettingsButton
 @onready var _quit_button: Button = %QuitButton
@@ -92,6 +95,9 @@ func close() -> void:
 	if _quest_log != null:
 		_quest_log.queue_free()
 		_quest_log = null
+	if _echo_journal != null:
+		_echo_journal.queue_free()
+		_echo_journal = null
 	if _settings_menu != null:
 		_settings_menu.queue_free()
 		_settings_menu = null
@@ -110,6 +116,7 @@ func _connect_buttons() -> void:
 	_party_button.pressed.connect(_open_party_ui)
 	_items_button.pressed.connect(_open_inventory)
 	_quests_button.pressed.connect(_open_quest_log)
+	_echoes_button.pressed.connect(_open_echo_journal)
 	_status_button.pressed.connect(_show_panel.bind("status"))
 	_settings_button.pressed.connect(_open_settings)
 	_quit_button.pressed.connect(_on_quit_pressed)
@@ -120,6 +127,7 @@ func _setup_focus_navigation() -> void:
 		_party_button,
 		_items_button,
 		_quests_button,
+		_echoes_button,
 		_status_button,
 		_settings_button,
 		_quit_button,
@@ -194,6 +202,30 @@ func _on_quest_log_closed() -> void:
 	_menu_panel.visible = true
 	_pause_label.visible = true
 	_quests_button.grab_focus()
+
+
+func _open_echo_journal() -> void:
+	if _echo_journal != null:
+		return
+	AudioManager.play_sfx(load(SfxLibrary.UI_CONFIRM))
+	_menu_panel.visible = false
+	_pause_label.visible = false
+	_echo_journal = EchoJournalScript.new()
+	_echo_journal.process_mode = Node.PROCESS_MODE_ALWAYS
+	add_child(_echo_journal)
+	_echo_journal.echo_journal_closed.connect(
+		_on_echo_journal_closed
+	)
+	_echo_journal.open()
+
+
+func _on_echo_journal_closed() -> void:
+	if _echo_journal != null:
+		_echo_journal.queue_free()
+		_echo_journal = null
+	_menu_panel.visible = true
+	_pause_label.visible = true
+	_echoes_button.grab_focus()
 
 
 func _open_settings() -> void:

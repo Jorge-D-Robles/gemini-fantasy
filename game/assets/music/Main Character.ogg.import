@@ -2,13 +2,13 @@
 
 importer="oggvorbisstr"
 type="AudioStreamOggVorbis"
-uid="uid://0QCfRuRTtj5"
-path="res://.godot/imported/Main Character.ogg-d7880041696211aa3aa85d5055eb9be5.oggvorbisstr"
+uid="uid://bjoa1bi7v0caq"
+path="res://.godot/imported/Main Character.ogg-670f7185a7637ad7af9c3224fc468f7b.oggvorbisstr"
 
 [deps]
 
 source_file="res://assets/music/Main Character.ogg"
-dest_files=["res://.godot/imported/Main Character.ogg-d7880041696211aa3aa85d5055eb9be5.oggvorbisstr"]
+dest_files=["res://.godot/imported/Main Character.ogg-670f7185a7637ad7af9c3224fc468f7b.oggvorbisstr"]
 
 [params]
 

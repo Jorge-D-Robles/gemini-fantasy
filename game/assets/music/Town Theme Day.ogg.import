@@ -2,13 +2,13 @@
 
 importer="oggvorbisstr"
 type="AudioStreamOggVorbis"
-uid="uid://0nAkLroJ8CQ"
-path="res://.godot/imported/Town Theme Day.ogg-dcc236566987e24eecdfee255f8e8b3a.oggvorbisstr"
+uid="uid://bnpviusskdomx"
+path="res://.godot/imported/Town Theme Day.ogg-03d89054f2e3d291778d183b361143c6.oggvorbisstr"
 
 [deps]
 
 source_file="res://assets/music/Town Theme Day.ogg"
-dest_files=["res://.godot/imported/Town Theme Day.ogg-dcc236566987e24eecdfee255f8e8b3a.oggvorbisstr"]
+dest_files=["res://.godot/imported/Town Theme Day.ogg-03d89054f2e3d291778d183b361143c6.oggvorbisstr"]
 
 [params]
 
