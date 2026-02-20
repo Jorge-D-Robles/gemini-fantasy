@@ -9,6 +9,13 @@ extends BattlerData
 @export_group("Progression")
 @export var level: int = 1
 @export var current_xp: int = 0
+@export var skill_points: int = 0
+
+@export_group("Skill Tree")
+## IDs of skill tree nodes the character has unlocked.
+@export var unlocked_skill_ids: Array[StringName] = []
+## The character's skill paths (Array[SkillTreeData]).
+@export var skill_trees: Array[Resource] = []
 
 @export_group("Growth Rates")
 @export var hp_growth: float = 10.0

@@ -29,14 +29,17 @@ static func get_stat_at_level(base: int, growth: float, level: int) -> int:
 	return base + int(floor(growth * float(level - 1)))
 
 
-## Applies one level-up: increments level, returns dict of stat changes.
+## Applies one level-up: increments level, awards 1 skill point,
+## and returns dict of stat changes (including "skill_points": 1).
 ## Does NOT modify base stats — use get_stat_at_level() for scaled values.
 static func level_up(character: CharacterData) -> Dictionary:
 	var old_level := character.level
 	character.level += 1
+	character.skill_points += 1
 	var new_level := character.level
 
 	var changes := {}
+	changes["skill_points"] = 1
 	changes["hp"] = (
 		get_stat_at_level(character.max_hp, character.hp_growth, new_level)
 		- get_stat_at_level(character.max_hp, character.hp_growth, old_level)

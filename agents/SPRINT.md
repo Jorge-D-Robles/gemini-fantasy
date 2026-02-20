@@ -873,3 +873,10 @@ Started: 2026-02-18
 - Assigned: claude
 - Completed: 2026-02-20
 - Notes: Added CRITICAL_PRIORITY_PATHS constant and compute_sfx_priority() static helper to SfxLibrary. Updated action_execute_state.gd and enemy_turn_state.gd — COMBAT_DEATH and COMBAT_CRITICAL_HIT use SfxPriority.CRITICAL; all others remain NORMAL. 8 tests (1478 total passing).
+
+### T-0018
+- Title: Build skill tree framework
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
+- Notes: SkillTreeNodeData + SkillTreeData Resources; SkillTreeManager static utility with compute_can_unlock() + compute_unlock_result(); CharacterData gains skill_points/unlocked_skill_ids/skill_trees; LevelManager.level_up() awards 1 SP; stat_abbreviation() gains "sp" entry; 17 tests (1495 total passing).
