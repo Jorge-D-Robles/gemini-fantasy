@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://57wuCmGF4Ic"
+path="res://.godot/imported/Battle Theme Organ.ogg-50972ef2e65f2da9e7a709a90a98e605.oggvorbisstr"
+
+[deps]
+
+source_file="res://assets/music/Battle Theme Organ.ogg"
+dest_files=["res://.godot/imported/Battle Theme Organ.ogg-50972ef2e65f2da9e7a709a90a98e605.oggvorbisstr"]
+
+[params]
+
+loop=true
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

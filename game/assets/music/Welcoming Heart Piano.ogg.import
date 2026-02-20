@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://2200LlrvKKq"
+path="res://.godot/imported/Welcoming Heart Piano.ogg-840877e54a982596cf44e7599ffbba39.oggvorbisstr"
+
+[deps]
+
+source_file="res://assets/music/Welcoming Heart Piano.ogg"
+dest_files=["res://.godot/imported/Welcoming Heart Piano.ogg-840877e54a982596cf44e7599ffbba39.oggvorbisstr"]
+
+[params]
+
+loop=true
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

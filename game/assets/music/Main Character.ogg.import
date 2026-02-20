@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://2hhngNjXCzD"
+path="res://.godot/imported/Main Character.ogg-153d0bd4b69c6cbf28e8448fd205cdab.oggvorbisstr"
+
+[deps]
+
+source_file="res://assets/music/Main Character.ogg"
+dest_files=["res://.godot/imported/Main Character.ogg-153d0bd4b69c6cbf28e8448fd205cdab.oggvorbisstr"]
+
+[params]
+
+loop=true
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
