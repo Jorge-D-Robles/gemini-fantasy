@@ -37,6 +37,7 @@ var _gardener_zone: Area2D = null
 @onready var _ground_detail_layer: TileMapLayer = $GroundDetail
 @onready var _walls_layer: TileMapLayer = $Walls
 @onready var _objects_layer: TileMapLayer = $Objects
+@onready var _above_player_layer: TileMapLayer = $AbovePlayer
 @onready var _player: CharacterBody2D = $Entities/Player
 @onready var _spawn_from_ruins: Marker2D = $Entities/SpawnFromRuins
 @onready var _encounter_system: EncounterSystem = $EncounterSystem
@@ -264,7 +265,7 @@ func _setup_tilemap() -> void:
 	}
 	MapBuilder.apply_tileset(
 		[_ground_layer, _ground_detail_layer, _ground_debris_layer,
-		_walls_layer, _objects_layer] as Array[TileMapLayer],
+		_walls_layer, _objects_layer, _above_player_layer] as Array[TileMapLayer],
 		atlas_paths,
 		solid,
 	)
@@ -282,6 +283,10 @@ func _setup_tilemap() -> void:
 	)
 	MapBuilder.build_layer(
 		_objects_layer, OvergrownCapitalMap.OBJECTS_MAP, OvergrownCapitalMap.OBJECTS_LEGEND, 2
+	)
+	MapBuilder.build_layer(
+		_above_player_layer, OvergrownCapitalMap.ABOVE_PLAYER_MAP,
+		OvergrownCapitalMap.ABOVE_LEGEND, 2,
 	)
 
 
