@@ -1,10 +1,12 @@
 extends Node
 
-## Global UI autoload. Holds HUD, DialogueBox, PauseMenu, and ShopUI
-## as children so they persist across scene changes and don't need to be
-## added to every level scene manually.
+## Global UI autoload. Holds HUD, DialogueBox, PauseMenu, ShopUI,
+## and (in debug builds) the DebugConsole as persistent children.
 
 const SHOP_UI_SCENE := preload("res://ui/shop_ui/shop_ui.tscn")
+const DEBUG_CONSOLE_SCRIPT := preload(
+	"res://ui/debug_console/debug_console.gd"
+)
 
 var _shop_ui: Node = null
 
@@ -14,6 +16,10 @@ var _shop_ui: Node = null
 
 
 func _ready() -> void:
+	if OS.is_debug_build():
+		var console := DEBUG_CONSOLE_SCRIPT.new()
+		add_child(console)
+
 	var shop_mgr: Node = get_node_or_null("/root/ShopManager")
 	if shop_mgr:
 		shop_mgr.shop_opened.connect(_on_shop_opened)

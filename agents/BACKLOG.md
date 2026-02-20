@@ -254,8 +254,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0026
 - Title: Build debug console
-- Status: todo
-- Assigned: unassigned
+- Status: in-progress
+- Assigned: claude
+- Started: 2026-02-20
 - Priority: low
 - Milestone: M0
 - Depends: none
@@ -1342,14 +1343,15 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0178
 - Title: Add read-only control bindings display to settings menu
-- Status: in-progress
+- Status: done
 - Assigned: claude
 - Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: low
 - Milestone: M0
 - Depends: T-0068
 - Refs: game/ui/settings_menu/settings_menu.gd, docs/IMPLEMENTATION_GUIDE.md
-- Notes: Settings menu has volume sliders and accessibility hints but no control display. Add a Controls section below volume showing current key bindings (read-only for now, full remapping is M1 scope). compute_control_bindings_text() static helper. 3+ tests.
+- Notes: compute_control_bindings()/compute_action_label()/compute_action_key_label() static helpers in SettingsData; Controls section (GridContainer) in settings_menu.gd; 8 tests (1518 total passing). PR #240 merged.
 
 ### T-0179
 - Title: Add interaction prompt near player for interactable objects (supersedes T-0113)
