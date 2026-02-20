@@ -57,3 +57,19 @@ const ALL_PATHS: Array[String] = [
 	COMBAT_CRITICAL_HIT,
 	COMBAT_STATUS_APPLY,
 ]
+
+## SFX paths that must always play regardless of pool state.
+## Use AudioManager.SfxPriority.CRITICAL for these.
+const CRITICAL_PRIORITY_PATHS: Array[String] = [
+	COMBAT_DEATH,
+	COMBAT_CRITICAL_HIT,
+]
+
+
+static func compute_sfx_priority(sfx_path: String) -> int:
+	## Returns the AudioManager.SfxPriority value for the given SFX path.
+	## CRITICAL (0): death and critical hit sounds always play.
+	## NORMAL (1): all other sounds use round-robin pool.
+	if sfx_path in CRITICAL_PRIORITY_PATHS:
+		return 0  # AudioManager.SfxPriority.CRITICAL
+	return 1  # AudioManager.SfxPriority.NORMAL

@@ -41,9 +41,15 @@ func enter() -> void:
 					damage = BattlerDamage.apply_crit(damage)
 				var actual := action.target.take_damage(damage)
 				if is_crit:
-					AudioManager.play_sfx(load(SfxLibrary.COMBAT_CRITICAL_HIT))
+					AudioManager.play_sfx(
+						load(SfxLibrary.COMBAT_CRITICAL_HIT),
+						AudioManager.SfxPriority.CRITICAL,
+					)
 					if not action.target.is_alive:
-						AudioManager.play_sfx(load(SfxLibrary.COMBAT_DEATH))
+						AudioManager.play_sfx(
+							load(SfxLibrary.COMBAT_DEATH),
+							AudioManager.SfxPriority.CRITICAL,
+						)
 					_show_critical_popup(action.target, actual)
 					if _battle_ui:
 						_battle_ui.add_battle_log(
@@ -57,7 +63,10 @@ func enter() -> void:
 				else:
 					AudioManager.play_sfx(load(SfxLibrary.COMBAT_ATTACK_HIT))
 					if not action.target.is_alive:
-						AudioManager.play_sfx(load(SfxLibrary.COMBAT_DEATH))
+						AudioManager.play_sfx(
+							load(SfxLibrary.COMBAT_DEATH),
+							AudioManager.SfxPriority.CRITICAL,
+						)
 					if _battle_ui:
 						_battle_ui.add_battle_log(
 							"%s attacks %s for %d damage!" % [
@@ -86,7 +95,8 @@ func enter() -> void:
 					)
 					if not action.target.is_alive:
 						AudioManager.play_sfx(
-							load(SfxLibrary.COMBAT_DEATH)
+							load(SfxLibrary.COMBAT_DEATH),
+							AudioManager.SfxPriority.CRITICAL,
 						)
 					if _battle_ui:
 						_battle_ui.add_battle_log(

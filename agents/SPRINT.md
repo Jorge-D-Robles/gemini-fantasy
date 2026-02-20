@@ -866,3 +866,10 @@ Started: 2026-02-18
 - Assigned: claude
 - Completed: 2026-02-20
 - Notes: Updated 72 task statuses from todo/in-progress to done in BACKLOG.md. Added T-0177, T-0178, T-0179 to backlog. BACKLOG.md now accurately reflects project state: ~97 M0 tasks done, 9 remaining M0 todos, M1 tasks pending.
+
+### T-0177
+- Title: Wire SfxPriority.CRITICAL to combat death and crit SFX calls
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
+- Notes: Added CRITICAL_PRIORITY_PATHS constant and compute_sfx_priority() static helper to SfxLibrary. Updated action_execute_state.gd and enemy_turn_state.gd — COMBAT_DEATH and COMBAT_CRITICAL_HIT use SfxPriority.CRITICAL; all others remain NORMAL. 8 tests (1478 total passing).

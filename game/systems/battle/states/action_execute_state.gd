@@ -74,9 +74,15 @@ func _execute_attack(attacker: Battler, target: Battler) -> void:
 	_maybe_shake_on_damage(target, actual)
 
 	if is_crit:
-		AudioManager.play_sfx(load(SfxLibrary.COMBAT_CRITICAL_HIT))
+		AudioManager.play_sfx(
+			load(SfxLibrary.COMBAT_CRITICAL_HIT),
+			AudioManager.SfxPriority.CRITICAL,
+		)
 		if not target.is_alive:
-			AudioManager.play_sfx(load(SfxLibrary.COMBAT_DEATH))
+			AudioManager.play_sfx(
+				load(SfxLibrary.COMBAT_DEATH),
+				AudioManager.SfxPriority.CRITICAL,
+			)
 		_show_critical_popup(target, actual)
 		_flash_crit_on_scene()
 		if _battle_ui:
@@ -91,7 +97,10 @@ func _execute_attack(attacker: Battler, target: Battler) -> void:
 	else:
 		AudioManager.play_sfx(load(SfxLibrary.COMBAT_ATTACK_HIT))
 		if not target.is_alive:
-			AudioManager.play_sfx(load(SfxLibrary.COMBAT_DEATH))
+			AudioManager.play_sfx(
+				load(SfxLibrary.COMBAT_DEATH),
+				AudioManager.SfxPriority.CRITICAL,
+			)
 		if _battle_ui:
 			_battle_ui.add_battle_log(
 				"%s attacks %s for %d damage!" % [
@@ -137,7 +146,10 @@ func _execute_ability(
 		_maybe_shake_on_damage(target, actual)
 		AudioManager.play_sfx(load(SfxLibrary.COMBAT_MAGIC_CAST))
 		if not target.is_alive:
-			AudioManager.play_sfx(load(SfxLibrary.COMBAT_DEATH))
+			AudioManager.play_sfx(
+				load(SfxLibrary.COMBAT_DEATH),
+				AudioManager.SfxPriority.CRITICAL,
+			)
 		if _battle_ui:
 			_battle_ui.add_battle_log(
 				"%s uses %s on %s for %d damage!" % [
