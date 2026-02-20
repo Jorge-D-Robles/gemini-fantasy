@@ -20,13 +20,7 @@ Report any findings. If gdlint fails with errors, list them and note they should
 
 ### 2. Unit Tests with GUT (Headless)
 
-Run the GUT test suite headless via the Godot CLI. **IMPORTANT:** Use `--path` pointing to the **main repo** (not the worktree) because Godot's `.godot/` import cache lives there. The test `.gd` files are tracked in git and available at both paths.
-
-**First, pull the latest into the main repo** so Godot sees the newest test files:
-
-```bash
-git -C /Users/robles/repos/games/gemini-fantasy pull 2>&1
-```
+Run the GUT test suite headless via the Godot CLI. Working directly on the main repo — no worktrees.
 
 **If GUT was recently added or updated**, run the import step first (only needed once after adding new GUT files):
 

@@ -4,24 +4,22 @@
 
 ## Git Workflow
 
-**BEFORE starting any task**, rebase onto the latest `origin/main` to ensure you have up-to-date code and a clean history:
+**Single-branch, direct-to-main workflow.** No feature branches, no PRs, no worktrees. One Claude Code instance runs at a time, committing directly to `main`.
+
+**BEFORE starting any task**, sync to the latest `origin/main`:
 
 ```bash
 git fetch origin main
-git rebase origin/main
+git pull origin main
 ```
 
-After completing any task, **automatically commit, push, and merge** without asking:
+After completing any task, **automatically stage, commit, and push** without asking:
 
-1. Stage the changed files and commit with a clear message
-2. Create a new branch if on main, or push to the current branch
-3. Push to remote with `-u`
-4. Create a PR via `gh pr create`
-5. Merge the PR via `gh pr merge --merge`
-6. Run `git pull` to sync the merge commit locally
-7. **Pull main in the main repo** so Godot has the latest code immediately:
-   `git -C /Users/robles/repos/games/gemini-fantasy pull`
-   (Worktrees cannot checkout main — always pull from the main repo path.)
+1. Stage the changed files (`git add <specific files>`)
+2. Commit with a clear message
+3. Push to `origin main`
+
+That's it. No branches, no PRs, no worktrees.
 
 **MANDATORY:** "The issue tracker" refers to `agents/BACKLOG.md` (all tickets) and `agents/SPRINT.md` (current sprint). **DO NOT** use GitHub Issues or the `gh issue` command unless explicitly asked. Always check `agents/SPRINT.md` before starting work. New bugs go in `agents/BACKLOG.md`. Current work is tracked in `agents/SPRINT.md`.
 
@@ -70,7 +68,7 @@ When running in autonomous mode (long unattended sessions), follow this loop for
 │  8. IMPLEMENT (parallel agents where possible)           │
 │  9. RUN TESTS (/run-tests, /scene-preview if visual)    │
 │ 10. PR CODE REVIEW (pr-code-reviewer safety gate)       │
-│ 11. MERGE (commit, push, PR, merge, pull)               │
+│ 11. COMMIT & PUSH (commit to main, push)                │
 │ 12. PLAN NEXT (task-planner updates backlog/sprint)     │
 │ 13. GOTO 1                                              │
 └──────────────────────────────────────────────────────────┘
@@ -190,29 +188,26 @@ Follow TDD:
 - Fix any failures before proceeding
 
 #### 10. PR Code Review
-Before merging, spawn the safety gate reviewer:
+Before committing, spawn the safety gate reviewer:
 
 ```
-Task(subagent_type="pr-code-reviewer", prompt="Review PR for task T-XXXX: <task title>\n\nTask description: <description>\n\nBranch: feature/claude1")
+Task(subagent_type="pr-code-reviewer", prompt="Review changes for task T-XXXX: <task title>\n\nTask description: <description>\n\nWorking directly on main branch.")
 ```
 
 **The reviewer's verdict is binding:**
-- **APPROVE** → proceed to merge
+- **APPROVE** → proceed to commit and push
 - **APPROVE WITH NOTES** → fix notes if trivial, or proceed and track as follow-up
 - **REJECT** → fix ALL blocking issues, re-run tests, then re-review
 
 **Never bypass the code reviewer.** If the reviewer rejects, fix the issues and submit for review again.
 
-#### 11. Merge
-Follow the standard git workflow:
-1. **Delete the plan file** — `rm agents/plans/T-XXXX-plan.md` (it served its purpose and must not be included in the PR)
-2. Stage changed files and commit
-3. Create PR via `gh pr create`
-4. Merge via `gh pr merge --merge`
-5. `git pull` to sync
-6. `git -C /Users/robles/repos/games/gemini-fantasy pull` to update main repo
-7. Update SPRINT.md: move ticket to "Done This Sprint", set `Status: done`, `Completed: [date]`
-8. Append to `agents/COMPLETED.md`
+#### 11. Commit & Push
+1. **Delete the plan file** — `rm agents/plans/T-XXXX-plan.md` (it served its purpose)
+2. `git add <specific changed files>`
+3. `git commit -m "..."`
+4. `git push origin main`
+5. Update SPRINT.md: set `Status: done`, `Completed: [date]`
+6. Append to `agents/COMPLETED.md`
 
 #### 12. Plan Next — Task Pipeline
 Spawn the task planner to keep the backlog healthy:
