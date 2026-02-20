@@ -157,16 +157,19 @@ Started: 2026-02-20
 
 ### T-0237
 - Title: Code health — consolidate AudioManager crossfade duplication
-- Status: in-progress
+- Status: done
 - Assigned: claude
 - Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: high
 - Depends: none
 
 ### T-0238
 - Title: Code health — break down enemy_turn_state.enter() 130-line god method
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: high
 - Depends: none
 
@@ -179,22 +182,28 @@ Started: 2026-02-20
 
 ### T-0240
 - Title: Code health — extract equipment_manager.gd SLOT_KEYS constant
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: medium
 - Depends: none
 
 ### T-0241
 - Title: Code health — split quest_manager.deserialize() into focused helpers
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: medium
 - Depends: none
 
 ### T-0242
 - Title: Code health — extract pause_menu.gd open/close subscene boilerplate
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: medium
 - Depends: none
 
