@@ -1048,6 +1048,96 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 - Refs: game/ui/ui_theme.gd, game/ui/battle_ui/battle_ui.gd
 - Notes: `update_resonance()` in battle_ui.gd uses 8 inline `Color()` literals (fill + text for each of FOCUSED/RESONANT/OVERLOAD/HOLLOW states). These should be named constants in UITheme. Add: `RESONANCE_FOCUSED_BAR`, `RESONANCE_FOCUSED_TEXT`, `RESONANCE_RESONANT_BAR`, `RESONANCE_RESONANT_TEXT`, `RESONANCE_OVERLOAD_BAR`, `RESONANCE_OVERLOAD_TEXT`, `RESONANCE_HOLLOW_BAR`, `RESONANCE_HOLLOW_TEXT`. Also add `BATTLE_PANEL_INNER_BG := Color(0.06, 0.06, 0.12, 0.7)` for the inner submenu panels. Update battle_ui.gd to use all new constants. No behavior change. No new tests required — existing battle UI tests must remain green.
 
+### T-0237
+- Title: Code health — consolidate AudioManager crossfade duplication
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Milestone: M0
+- Depends: none
+- Refs: game/autoloads/audio_manager.gd
+- Notes: `_crossfade_bgm()` (lines 167-184) and `_crossfade_bgm_at()` (lines 186-206) are near-identical 20-line functions — the only difference is the `start_pos` argument. Extract a private `_do_crossfade(stream: AudioStream, start_pos: float, fade_time: float) -> void` helper that both public methods delegate to. No behavior change. Run /run-tests after.
+
+### T-0238
+- Title: Code health — break down enemy_turn_state.enter() 130-line god method
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Milestone: M0
+- Depends: none
+- Refs: game/systems/battle/states/enemy_turn_state.gd
+- Notes: `enter()` is ~130 lines handling: state validation, array conversion, AI action selection, attack/ability/defend/wait execution, sound, UI logging, and state transitions. Extract focused methods: `_handle_attack_action(action, attacker, targets)`, `_handle_ability_action(action, attacker, targets)`, `_handle_defend_action(attacker)`, `_handle_wait_action(attacker)`. Also remove the unnecessary Array[Battler] copies at lines 24-30 — party_battlers and enemy_battlers are already typed correctly in battle_scene. No behavior change. All tests must remain green.
+
+### T-0239
+- Title: Code health — deduplicate battle_scene._spawn_party and _spawn_enemies
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M0
+- Depends: none
+- Refs: game/systems/battle/battle_scene.gd
+- Notes: `_spawn_party()` (lines 105-130) and `_spawn_enemies()` (lines 132-155) share 15+ identical lines: iterate data array, create battler, initialize_from_data, connect signals, instantiate visual scene, bind visual to logic, add to node. Extract `_spawn_battlers(data_array: Array, battler_class: GDScript, scene_class: PackedScene, parent: Node, is_enemy: bool) -> Array[Battler]` and call it from both methods. No behavior change.
+
+### T-0240
+- Title: Code health — extract equipment_manager.gd SLOT_KEYS constant
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M0
+- Depends: none
+- Refs: game/autoloads/equipment_manager.gd
+- Notes: The slot key array `["weapon", "helmet", "chest", "accessory_0", "accessory_1"]` is hardcoded twice — once in `serialize()` (lines 166-167) and once in `deserialize()` (lines 180-181). Extract as `const SLOT_KEYS: Array[String] = ["weapon", "helmet", "chest", "accessory_0", "accessory_1"]` at file top level. Both methods reference the constant. No behavior change.
+
+### T-0241
+- Title: Code health — split quest_manager.deserialize() into focused helpers
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M0
+- Depends: none
+- Refs: game/autoloads/quest_manager.gd
+- Notes: `deserialize()` is ~47 lines mixing active/completed/failed quest restoration in one function. Split into: `_restore_active_quests(data, quest_resources)`, `_restore_completed_quests(data)`, `_restore_failed_quests(data)`. The public `deserialize()` calls all three. Each helper is under 20 lines. No behavior change. Existing serialization tests must remain green.
+
+### T-0242
+- Title: Code health — extract pause_menu.gd open/close subscene boilerplate
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M0
+- Depends: none
+- Refs: game/ui/pause_menu/pause_menu.gd
+- Notes: `_open_inventory`, `_open_quest_log`, `_open_echo_journal`, `_open_skill_tree_ui`, `_open_settings`, `_open_party_ui` all follow the same pattern: guard if already open, play sfx, hide menu_panel + pause_label, instantiate/assign, set process_mode, add_child, connect closed signal, call open(). The corresponding `_on_*_closed` handlers also follow the same pattern: free, nil, show menu_panel + pause_label, grab_focus. Extract `_open_subscene(var_ref: Control, script_or_scene, closed_signal_name: String, return_button: Button) -> Control` and `_close_subscene(var_ref: Control, return_button: Button)` helpers. No behavior change.
+
+### T-0243
+- Title: Code health — extract hud.gd duplicate popup setup functions
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M0
+- Depends: none
+- Refs: game/ui/hud/hud.gd
+- Notes: hud.gd has 6 near-identical popup setup blocks (lines 339-357, 376-395, 397-415, 450-467, 491-506, 509-526). Each creates a Label, sets font_size/color/alignment/position, and returns it. Extract `_create_popup_label(text: String, font_size: int, color: Color, position: Vector2) -> Label` that all 6 callers use. No behavior change.
+
+### T-0244
+- Title: Code health — create EventFlagRegistry for magic flag string constants
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M0
+- Depends: none
+- Refs: game/events/event_flags.gd, game/events/opening_sequence.gd, game/events/boss_encounter.gd, game/events/garrick_recruitment.gd, game/events/iris_recruitment.gd, game/events/nyx_introduction.gd, game/events/last_gardener_encounter.gd, game/events/leaving_capital.gd, game/events/after_capital_camp.gd, game/events/camp_three_fires.gd, game/events/garrick_night_scene.gd, game/events/garrick_meets_lyra.gd, game/events/demo_ending.gd, game/scenes/roothollow/roothollow.gd
+- Notes: Every event script and some scene scripts define a local `FLAG_NAME` const or use flag strings inline. Create `game/events/event_flag_registry.gd` (`class_name EventFlagRegistry`) with all flag name constants (e.g., `const OPENING_LYRA_DISCOVERED := "opening_lyra_discovered"`, `const GARRICK_RECRUITED := "garrick_recruited"`, etc.). Audit all usages of `EventFlags.has_flag(...)` / `EventFlags.set_flag(...)` across event and scene scripts; replace string literals with `EventFlagRegistry.*`. No behavior change — only string constant extraction.
+
+### T-0245
+- Title: Code health — add BattleActionExecutor to deduplicate attack/ability execution between states
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Milestone: M0
+- Depends: T-0238
+- Refs: game/systems/battle/states/action_execute_state.gd, game/systems/battle/states/enemy_turn_state.gd
+- Notes: `_execute_attack()` in action_execute_state.gd and the attack block in enemy_turn_state.gd share ~50 lines of copy-paste (crit roll, damage call, sound, UI log, anim). `_execute_ability()` and its enemy counterpart share another ~50 lines. StatusEffectData creation appears in both files identically. Extract a static `BattleActionExecutor` class (game/systems/battle/battle_action_executor.gd) with: `static func execute_attack(attacker, target, scene) -> void` and `static func execute_ability(attacker, ability, target, scene) -> void`. Both states call these. No behavior change. Existing battle tests must remain green.
+
 ---
 
 ## M1 — Act I: The Echo Thief

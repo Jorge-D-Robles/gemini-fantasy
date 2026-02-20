@@ -163,18 +163,26 @@ func _refresh_party_panel() -> void:
 		_party_panel.add_child(member_box)
 
 
-func _open_inventory() -> void:
-	if _inventory_ui != null:
-		return
+func _hide_for_subscene() -> void:
 	AudioManager.play_sfx(load(SfxLibrary.UI_CONFIRM))
 	_menu_panel.visible = false
 	_pause_label.visible = false
+
+
+func _restore_from_subscene(focus_button: Button) -> void:
+	_menu_panel.visible = true
+	_pause_label.visible = true
+	focus_button.grab_focus()
+
+
+func _open_inventory() -> void:
+	if _inventory_ui != null:
+		return
+	_hide_for_subscene()
 	_inventory_ui = INVENTORY_UI_SCENE.instantiate()
 	_inventory_ui.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(_inventory_ui)
-	_inventory_ui.inventory_closed.connect(
-		_on_inventory_closed
-	)
+	_inventory_ui.inventory_closed.connect(_on_inventory_closed)
 	_inventory_ui.open()
 
 
@@ -182,23 +190,17 @@ func _on_inventory_closed() -> void:
 	if _inventory_ui != null:
 		_inventory_ui.queue_free()
 		_inventory_ui = null
-	_menu_panel.visible = true
-	_pause_label.visible = true
-	_items_button.grab_focus()
+	_restore_from_subscene(_items_button)
 
 
 func _open_quest_log() -> void:
 	if _quest_log != null:
 		return
-	AudioManager.play_sfx(load(SfxLibrary.UI_CONFIRM))
-	_menu_panel.visible = false
-	_pause_label.visible = false
+	_hide_for_subscene()
 	_quest_log = QuestLogScript.new()
 	_quest_log.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(_quest_log)
-	_quest_log.quest_log_closed.connect(
-		_on_quest_log_closed
-	)
+	_quest_log.quest_log_closed.connect(_on_quest_log_closed)
 	_quest_log.open()
 
 
@@ -206,23 +208,17 @@ func _on_quest_log_closed() -> void:
 	if _quest_log != null:
 		_quest_log.queue_free()
 		_quest_log = null
-	_menu_panel.visible = true
-	_pause_label.visible = true
-	_quests_button.grab_focus()
+	_restore_from_subscene(_quests_button)
 
 
 func _open_echo_journal() -> void:
 	if _echo_journal != null:
 		return
-	AudioManager.play_sfx(load(SfxLibrary.UI_CONFIRM))
-	_menu_panel.visible = false
-	_pause_label.visible = false
+	_hide_for_subscene()
 	_echo_journal = EchoJournalScript.new()
 	_echo_journal.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(_echo_journal)
-	_echo_journal.echo_journal_closed.connect(
-		_on_echo_journal_closed
-	)
+	_echo_journal.echo_journal_closed.connect(_on_echo_journal_closed)
 	_echo_journal.open()
 
 
@@ -230,17 +226,13 @@ func _on_echo_journal_closed() -> void:
 	if _echo_journal != null:
 		_echo_journal.queue_free()
 		_echo_journal = null
-	_menu_panel.visible = true
-	_pause_label.visible = true
-	_echoes_button.grab_focus()
+	_restore_from_subscene(_echoes_button)
 
 
 func _open_skill_tree_ui() -> void:
 	if _skill_tree_ui != null:
 		return
-	AudioManager.play_sfx(load(SfxLibrary.UI_CONFIRM))
-	_menu_panel.visible = false
-	_pause_label.visible = false
+	_hide_for_subscene()
 	_skill_tree_ui = SkillTreeUIScript.new()
 	_skill_tree_ui.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(_skill_tree_ui)
@@ -252,23 +244,17 @@ func _on_skill_tree_ui_closed() -> void:
 	if _skill_tree_ui != null:
 		_skill_tree_ui.queue_free()
 		_skill_tree_ui = null
-	_menu_panel.visible = true
-	_pause_label.visible = true
-	_skill_tree_button.grab_focus()
+	_restore_from_subscene(_skill_tree_button)
 
 
 func _open_settings() -> void:
 	if _settings_menu != null:
 		return
-	AudioManager.play_sfx(load(SfxLibrary.UI_CONFIRM))
-	_menu_panel.visible = false
-	_pause_label.visible = false
+	_hide_for_subscene()
 	_settings_menu = SettingsMenuScript.new()
 	_settings_menu.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(_settings_menu)
-	_settings_menu.settings_menu_closed.connect(
-		_on_settings_closed
-	)
+	_settings_menu.settings_menu_closed.connect(_on_settings_closed)
 	_settings_menu.open()
 
 
@@ -276,17 +262,13 @@ func _on_settings_closed() -> void:
 	if _settings_menu != null:
 		_settings_menu.queue_free()
 		_settings_menu = null
-	_menu_panel.visible = true
-	_pause_label.visible = true
-	_settings_button.grab_focus()
+	_restore_from_subscene(_settings_button)
 
 
 func _open_party_ui() -> void:
 	if _party_ui != null:
 		return
-	AudioManager.play_sfx(load(SfxLibrary.UI_CONFIRM))
-	_menu_panel.visible = false
-	_pause_label.visible = false
+	_hide_for_subscene()
 	_party_ui = PartyUIScript.new()
 	_party_ui.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(_party_ui)
@@ -298,9 +280,7 @@ func _on_party_ui_closed() -> void:
 	if _party_ui != null:
 		_party_ui.queue_free()
 		_party_ui = null
-	_menu_panel.visible = true
-	_pause_label.visible = true
-	_party_button.grab_focus()
+	_restore_from_subscene(_party_button)
 
 
 func _create_member_info(member: Resource) -> VBoxContainer:

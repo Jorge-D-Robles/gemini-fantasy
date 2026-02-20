@@ -6,6 +6,10 @@ extends Node
 
 signal equipment_changed(character_id: StringName, slot: String)
 
+const SLOT_KEYS: Array[String] = [
+	"weapon", "helmet", "chest", "accessory_0", "accessory_1",
+]
+
 ## Per-character equipment: { StringName -> { slot_key -> EquipmentData } }
 var _equipment: Dictionary = {}
 
@@ -163,8 +167,7 @@ func serialize() -> Dictionary:
 	for character_id: StringName in _equipment:
 		var slots: Dictionary = _equipment[character_id]
 		var entry := {}
-		for key: String in ["weapon", "helmet", "chest",
-				"accessory_0", "accessory_1"]:
+		for key: String in SLOT_KEYS:
 			var item: EquipmentData = slots.get(key)
 			entry[key] = String(item.id) if item else ""
 		data[String(character_id)] = entry
@@ -177,8 +180,7 @@ func deserialize(data: Dictionary) -> void:
 		var char_id := StringName(char_id_str)
 		var entry: Dictionary = data[char_id_str]
 		var slots := _get_or_create_slots(char_id)
-		for key: String in ["weapon", "helmet", "chest",
-				"accessory_0", "accessory_1"]:
+		for key: String in SLOT_KEYS:
 			var equip_id: String = entry.get(key, "")
 			if equip_id.is_empty():
 				continue

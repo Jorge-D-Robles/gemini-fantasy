@@ -155,6 +155,56 @@ Started: 2026-02-20
 - Priority: medium
 - Depends: none
 
+### T-0237
+- Title: Code health — consolidate AudioManager crossfade duplication
+- Status: in-progress
+- Assigned: claude
+- Started: 2026-02-20
+- Priority: high
+- Depends: none
+
+### T-0238
+- Title: Code health — break down enemy_turn_state.enter() 130-line god method
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Depends: none
+
+### T-0239
+- Title: Code health — deduplicate battle_scene._spawn_party and _spawn_enemies
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Depends: none
+
+### T-0240
+- Title: Code health — extract equipment_manager.gd SLOT_KEYS constant
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Depends: none
+
+### T-0241
+- Title: Code health — split quest_manager.deserialize() into focused helpers
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Depends: none
+
+### T-0242
+- Title: Code health — extract pause_menu.gd open/close subscene boilerplate
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Depends: none
+
+### T-0245
+- Title: Code health — add BattleActionExecutor to deduplicate attack/ability execution
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Depends: T-0238
+
 ### T-0180
 - Title: Place campfire interactable in Verdant Forest
 - Status: done
