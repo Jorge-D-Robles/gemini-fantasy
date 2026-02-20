@@ -69,9 +69,10 @@ Started: 2026-02-20
 
 ### T-0198
 - Title: Refactor MemorialEchoStrategy for generic echo placement
-- Status: in-progress
+- Status: done
 - Assigned: claude
 - Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: high
 - Depends: T-0182
 

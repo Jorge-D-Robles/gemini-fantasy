@@ -3,6 +3,7 @@
 Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[date] Description`.
 
 ---
+- [2026-02-20] T-0198: Refactor MemorialEchoStrategy for generic echo placement — require_quest_id export (empty=generic, set=quest-gated), vision_lines export for configurable dialogue, compute_should_collect() static pure helper, has_been_used read guard, push_warning for odd vision_lines, verdant_forest.tscn updated with require_quest_id=elder_wisdom; 8 tests; 1579 total. PR #249 (claude)
 - [2026-02-20] T-0100: NPC idle animations — BREATHE_SCALE_DELTA=0.03/BREATHE_HALF_DURATION=1.1s scale.y breathing tween, HEAD_TURN_MIN=3.5s/MAX=8.0s random flip_h head turn via SceneTreeTimer; start/stop wired to _ready/_on_dialogue_ended/interact; 8 tests (1438 total) (claude)
 - [2026-02-20] T-0141: Settings menu accessibility — compute_slider_tooltip() pure helper (master/bgm/sfx descriptions), ↺ reset-to-default buttons per slider, "← → keys: adjust" keyboard hint label; 4 new tests (1430 total) (claude)
 - [2026-02-20] T-0155: Wire victory dismiss prompt to InputMap — compute_dismiss_prompt_from_events() pure helper extracts key/button labels from InputEvent array, compute_dismiss_prompt_text() reads live InputMap.action_get_events() with has_action guard; 3 new tests (1426 total) (claude)
