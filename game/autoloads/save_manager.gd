@@ -105,6 +105,7 @@ func gather_save_data(
 ) -> Dictionary:
 	var data := {
 		"version": SAVE_VERSION,
+		"timestamp": Time.get_unix_time_from_system(),
 		"scene_path": scene_path,
 		"player_position": {
 			"x": player_position.x,
