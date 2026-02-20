@@ -7,6 +7,7 @@ extends Node2D
 
 const SP = preload("res://systems/scene_paths.gd")
 const INTERACTABLE_SCENE := preload("res://entities/interactable/interactable.tscn")
+const LAST_GARDENER_ENCOUNTER_SCRIPT := preload("res://events/last_gardener_encounter.gd")
 const PURIFICATION_NODE_STRATEGY_SCRIPT := preload(
 	"res://entities/interactable/strategies/purification_node_strategy.gd"
 )
@@ -25,6 +26,7 @@ const LYRA_FRAGMENT_2_FLAG: String = "lyra_fragment_2_collected"
 
 var _ground_debris_layer: TileMapLayer = null
 var _crystal_walls: Dictionary = {}
+var _gardener_zone: Area2D = null
 
 @onready var _ground_layer: TileMapLayer = $Ground
 @onready var _ground_detail_layer: TileMapLayer = $GroundDetail
@@ -69,6 +71,13 @@ static func compute_crystal_wall_entertainment_position() -> Vector2:
 	## Crystal wall blocking Entertainment → Research path.
 	## One tile north of the entertainment Purification Node (col 30, row 9).
 	return Vector2(480.0, 144.0)
+
+
+static func compute_gardener_zone_position() -> Vector2:
+	## Trigger zone for The Last Gardener encounter.
+	## Positioned at col 20, row 3 — the Palace District approach,
+	## blocking the path north out of the Research Quarter.
+	return Vector2(320.0, 48.0)
 
 
 static func compute_research_quarter_echo_position() -> Vector2:
@@ -146,6 +155,7 @@ func _ready() -> void:
 		player_node.global_position = _spawn_from_ruins.global_position
 
 	_exit_to_ruins.body_entered.connect(_on_exit_to_ruins_entered)
+	_setup_gardener_zone()
 
 
 func _setup_tilemap() -> void:
@@ -325,6 +335,45 @@ func _setup_lyra_fragment_echo() -> void:
 func _on_echo_collected(echo_id: StringName) -> void:
 	if echo_id == LYRA_FRAGMENT_2_ECHO_ID:
 		EventFlags.set_flag(LYRA_FRAGMENT_2_FLAG)
+
+
+func _setup_gardener_zone() -> void:
+	if not LastGardenerEncounter.compute_can_trigger(EventFlags.get_all_flags()):
+		return
+	_gardener_zone = Area2D.new()
+	_gardener_zone.name = "GardenerZone"
+	var shape := CollisionShape2D.new()
+	var rect := RectangleShape2D.new()
+	rect.size = Vector2(96.0, 32.0)
+	shape.shape = rect
+	_gardener_zone.add_child(shape)
+	_gardener_zone.position = compute_gardener_zone_position()
+	_gardener_zone.body_entered.connect(_on_gardener_zone_entered)
+	$Triggers.add_child(_gardener_zone)
+
+
+func _on_gardener_zone_entered(body: Node2D) -> void:
+	if not body.is_in_group("player"):
+		return
+	if GameManager.is_transitioning():
+		return
+	if DialogueManager.is_active():
+		return
+	if BattleManager.is_in_battle():
+		return
+	if _gardener_zone:
+		_gardener_zone.monitoring = false
+	_trigger_gardener_encounter.call_deferred()
+
+
+func _trigger_gardener_encounter() -> void:
+	if not LastGardenerEncounter.compute_can_trigger(EventFlags.get_all_flags()):
+		return
+	var encounter: Node = LAST_GARDENER_ENCOUNTER_SCRIPT.new()
+	add_child(encounter)
+	encounter.trigger()
+	await encounter.sequence_completed
+	encounter.queue_free()
 
 
 func _on_exit_to_ruins_entered(body: Node2D) -> void:

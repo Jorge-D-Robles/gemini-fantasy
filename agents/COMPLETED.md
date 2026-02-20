@@ -3,6 +3,7 @@
 Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[date] Description`.
 
 ---
+- [2026-02-20] T-0192: LastGardenerEncounter event (last_gardener_encounter.gd) — 3-branch choice encounter; peaceful pass / Greenhouse Seed quest unlock / boss fight; 6-line approach dialogue with choice prompt; gated by lyra_fragment_2_collected; trigger zone at col 20 row 3 in overgrown_capital.gd; 17 tests (1708 total); PR #263 (claude)
 - [2026-02-20] T-0193: AfterCapitalCamp event (after_capital_camp.gd) — 15-line campfire scene compressing Chapter 5 Camp Scene; Iris/Garrick shared guilt, Kael "Neither of you is that person anymore"; gated by lyra_fragment_2_collected; wired in verdant_forest.gd via call_deferred; 15 tests (1691 total); PR #262 (claude)
 - [2026-02-20] T-0212: Wire Verdant Forest → Overgrown Capital transition — ExitToCapital Area2D (320,8) + SpawnFromCapital Marker2D (320,48) in Forest, spawn_from_forest group in Capital, fix Capital exit to SP.VERDANT_FOREST, ZoneMarker.UP; 10 tests; PR #257 (claude)
 - [2026-02-20] T-0209: Add Echo Nomad enemy to Overgrown Capital encounter pool — echo_nomad.tres (90 HP, magic-biased, AGGRESSIVE, ghost1.png), updated build_pool() with optional 3rd param, 4 new tests (9 total); PR #256 (claude)

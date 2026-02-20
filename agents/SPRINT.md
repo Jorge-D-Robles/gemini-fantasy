@@ -9,6 +9,16 @@ Started: 2026-02-20
 
 ## Active
 
+### T-0192
+- Title: Add The Last Gardener encounter — optional boss with three-choice resolution
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
+- Priority: medium
+- Depends: T-0190
+- Refs: docs/story/act1/05-into-the-capital.md (Scene 5), game/events/last_gardener_encounter.gd
+
 ### T-0193
 - Title: Add Chapter 5 post-dungeon camp scene — "After the Capital" campfire dialogue
 - Status: done
