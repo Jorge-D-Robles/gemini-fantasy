@@ -36,6 +36,16 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 - Refs: game/ui/party_ui/party_ui.gd, game/ui/party_ui/party_ui_data.gd
 - Notes: compute_swap_valid() returns false for invalid swaps (edge cases like 0-size lists). Currently the UI silently ignores the action. Add a 0.3s red flash on the active member button and a transient status label. compute_swap_feedback_text() static helper for TDD. 3+ tests.
 
+### T-0166
+- Title: BUG — Defend stance clears before enemy can attack (is_defending reset in TurnEnd)
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Milestone: M0
+- Depends: none
+- Refs: game/systems/battle/battler.gd, game/systems/battle/states/turn_end_state.gd, game/systems/battle/states/player_turn_state.gd
+- Notes: end_turn() clears is_defending immediately in TurnEnd. Enemy attacks in subsequent EnemyTurn see is_defending=false so damage is not halved. JRPG-correct behavior: is_defending should persist until the player's next turn starts. Fix: clear is_defending in PlayerTurnState.enter() for the active battler, not in end_turn(). Requires removing is_defending=false from Battler.end_turn() and updating test_end_turn_clears_defend. Also update CLAUDE.md docs for battler.end_turn().
+
 ### T-0162
 - Title: Add Verdant Forest traversal dialogue — party comments heading to Overgrown Capital
 - Status: todo

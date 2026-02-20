@@ -281,12 +281,14 @@ Started: 2026-02-18
 
 ### T-0132
 - Title: Add "Defend" status badge on party battler panels during combat
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: low
 - Depends: none
 - Refs: game/ui/battle_ui/battle_ui.gd, game/systems/battle/battler.gd
-- Notes: is_defending is tracked but battle UI shows no visual indicator. Add "DEF" badge (similar to T-0054 status effect badges) that appears when is_defending is true. 3+ tests.
+- Notes: DEFEND_BADGE_COLOR in UITheme; compute_defend_badge() static helper in BattleUIStatus; wired in battle_ui._create_party_row(); fixed TurnEnd to update_party_status() before end_turn(); fixed PlayerTurnState to update_party_status() after defend(). 4 tests. PR #196 merged.
 
 ### T-0133
 - Title: Add save slot summary (location + timestamp) on Continue button

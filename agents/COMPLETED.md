@@ -4,6 +4,7 @@ Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[
 
 ---
 
+- [2026-02-20] T-0132: Add DEF badge on party battler panels — DEFEND_BADGE_COLOR, compute_defend_badge() static helper, wired in _create_party_row, fixed TurnEnd/PlayerTurnState timing for badge visibility, 4 tests, PR #196 (claude)
 - [2026-02-20] T-0149: Add Spring Shrine interactable south of Roothollow — RoothollowZone module with compute_garrick_zone_can_trigger/compute_shrine_marker_visible, shrine direction label, 8 tests (claude)
 - [2026-02-20] T-0159: Fix Verdant Forest south canopy gap — CANOPY_MAP rows 15-22 filled with 88 type-matched 2x2 canopy tiles above 22 south-half trunks, 6 tests (claude)
 - [2026-02-20] T-0020: Build party management UI — party_ui_data.gd (compute_member_display/compute_swap_valid/compute_panel_sections), party_ui.gd (Control sub-screen, two-column active/reserve swap), pause_menu wired, 15 tests, PR #194 (claude)
