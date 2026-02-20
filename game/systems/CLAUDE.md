@@ -15,6 +15,7 @@ Core game systems: state machine framework, battle logic, encounter management, 
 | `game_balance.gd` | Centralized game balance constants (resonance, damage, XP, AI, party limits) |
 | `scene_paths.gd` | Centralized scene path constants (ScenePaths class) |
 | `sfx_library.gd` | Centralized SFX asset path constants (SfxLibrary class) |
+| `asset_loader.gd` | Static helpers: `load_sfx`, `load_bgm`, `load_texture`, `load_scene`, `load_resource` — null-guard + push_warning for missing gitignored assets |
 
 ---
 

@@ -243,10 +243,13 @@ Started: 2026-02-18
 
 ### T-0078
 - Title: Create reusable asset loader helper with consistent null-check pattern
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: low
 - Depends: none
+- Notes: AssetLoader static utility in game/systems/; load_sfx/load_bgm/load_texture/load_scene/load_resource with ResourceLoader.exists() guard + push_warning. 10 tests. PR merged.
 
 ### T-0093
 - Title: Add fragment tracker / compass UI for story objectives
