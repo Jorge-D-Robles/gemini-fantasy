@@ -173,13 +173,6 @@ Started: 2026-02-20
 - Priority: high
 - Depends: none
 
-### T-0239
-- Title: Code health — deduplicate battle_scene._spawn_party and _spawn_enemies
-- Status: todo
-- Assigned: unassigned
-- Priority: medium
-- Depends: none
-
 ### T-0240
 - Title: Code health — extract equipment_manager.gd SLOT_KEYS constant
 - Status: done
@@ -209,33 +202,37 @@ Started: 2026-02-20
 
 ### T-0245
 - Title: Code health — add BattleActionExecutor to deduplicate attack/ability execution
-- Status: in-progress
+- Status: done
 - Assigned: claude
 - Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: high
 - Depends: T-0238
 
 ### T-0239
 - Title: Code health — deduplicate battle_scene._spawn_party and _spawn_enemies
-- Status: in-progress
+- Status: done
 - Assigned: claude
 - Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: medium
 - Depends: none
 
 ### T-0243
 - Title: Code health — extract hud.gd duplicate popup setup functions
-- Status: in-progress
+- Status: done
 - Assigned: claude
 - Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: medium
 - Depends: none
 
 ### T-0244
 - Title: Code health — create EventFlagRegistry for magic flag string constants
-- Status: in-progress
+- Status: done
 - Assigned: claude
 - Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: medium
 - Depends: none
 
