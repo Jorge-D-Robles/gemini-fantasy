@@ -126,13 +126,14 @@ Started: 2026-02-18
 
 ### T-0128
 - Title: BUG — AudioManager.play_bgm() resets volume_db to 0.0, ignoring user volume setting
-- Status: in-progress
+- Status: done
 - Assigned: claude
 - Started: 2026-02-19
+- Completed: 2026-02-19
 - Priority: low
 - Depends: T-0068
 - Refs: game/autoloads/audio_manager.gd
-- Notes: play_bgm() hardcodes volume_db = 0.0. Add _bgm_volume_db field; apply in play_bgm(). 4+ tests. T-0068 done — unblocked.
+- Notes: Added _bgm_volume_db field; set_bgm_volume() persists it; play_bgm cold-start and pop_bgm restore use _bgm_volume_db; crossfade tweens fade to _bgm_volume_db; 5 tests (1126 total).
 
 ### T-0135
 - Title: Add Chapter 4 Scene 5 night scene — Garrick and Lyra conversation at camp
@@ -253,6 +254,14 @@ Started: 2026-02-18
 ---
 
 ## Done This Sprint
+
+### T-0128
+- Title: BUG — AudioManager BGM player volume resets on BGM change
+- Status: done
+- Assigned: claude
+- Started: 2026-02-19
+- Completed: 2026-02-19
+- Notes: _bgm_volume_db field added; set_bgm_volume() stores field; play_bgm/pop_bgm/crossfade tweens all use _bgm_volume_db; 5 tests (1126 total).
 
 ### T-0119
 - Title: Quest log reward display should show item display names, not IDs
