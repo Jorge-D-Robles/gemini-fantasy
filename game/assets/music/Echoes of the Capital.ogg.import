@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://c8mx5yt3pn6qw"
+path="res://.godot/imported/Echoes of the Capital.ogg-627f50e3fa27b17f4eeb235a1942ceff.oggvorbisstr"
+
+[deps]
+
+source_file="res://assets/music/Echoes of the Capital.ogg"
+dest_files=["res://.godot/imported/Echoes of the Capital.ogg-627f50e3fa27b17f4eeb235a1942ceff.oggvorbisstr"]
+
+[params]
+
+loop=true
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

@@ -11,7 +11,7 @@ const SP = preload("res://systems/scene_paths.gd")
 const SettingsMenuScript = preload(
 	"res://ui/settings_menu/settings_menu.gd"
 )
-const TITLE_BGM_PATH: String = "res://assets/music/Main Character.ogg"
+const TITLE_BGM_PATH: String = "res://assets/music/Welcoming Heart Piano.ogg"
 
 var _settings_menu: Control = null
 
