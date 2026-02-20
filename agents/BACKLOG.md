@@ -8,8 +8,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0175
 - Title: Add fade-in on BGM stack pop/restore to prevent audio snap
-- Status: in-progress
+- Status: done
 - Assigned: claude
+- Completed: 2026-02-20
 - Started: 2026-02-20
 - Priority: low
 - Milestone: M0
@@ -101,8 +102,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0164
 - Title: Wire party_changed signal from PartyManager into party_ui refresh
-- Status: in-progress
+- Status: done
 - Assigned: claude
+- Completed: 2026-02-20
 - Started: 2026-02-20
 - Priority: low
 - Milestone: M0
@@ -112,8 +114,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0163
 - Title: Add party swap validation feedback in party UI
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: low
 - Milestone: M0
 - Depends: T-0020
@@ -144,8 +147,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0168
 - Title: Verify and fix enemy turn routing through ActionExecuteState for consistent crit behavior
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: low
 - Milestone: M0
 - Depends: T-0143, T-0156
@@ -154,8 +158,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0162
 - Title: Add Verdant Forest traversal dialogue — party comments heading to Overgrown Capital
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: low
 - Milestone: M0
 - Depends: T-0085
@@ -273,8 +278,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0050
 - Title: BUG — Overgrown Ruins spawn position check uses Vector2.ZERO comparison
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: medium
 - Milestone: M0
 - Depends: none
@@ -287,8 +293,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0051
 - Title: Add battle background sprite and scene backdrop
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: critical
 - Milestone: M0
 - Depends: none
@@ -297,8 +304,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0052
 - Title: Color-code battle log messages by type
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: high
 - Milestone: M0
 - Depends: none
@@ -307,8 +315,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0053
 - Title: Add floating damage numbers above targets
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: high
 - Milestone: M0
 - Depends: none
@@ -317,8 +326,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0054
 - Title: Add status effect icons/badges on battler panels
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: medium
 - Milestone: M0
 - Depends: none
@@ -327,8 +337,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0055
 - Title: Improve battle target selector with name label and highlight
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: medium
 - Milestone: M0
 - Depends: none
@@ -337,8 +348,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0056
 - Title: Enhance victory screen with portraits and level-up display
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: medium
 - Milestone: M0
 - Depends: none
@@ -347,8 +359,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0057
 - Title: Improve turn order display with current actor highlight
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: low
 - Milestone: M0
 - Depends: none
@@ -357,8 +370,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0058
 - Title: Add screen shake on heavy damage
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: low
 - Milestone: M0
 - Depends: none
@@ -371,8 +385,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0059
 - Title: Roothollow — add AbovePlayer tilemap layer and consolidate tree sprites
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: high
 - Milestone: M0
 - Depends: none
@@ -381,8 +396,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0060
 - Title: Roothollow — reduce ground detail density from 50% to 15%
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: medium
 - Milestone: M0
 - Depends: none
@@ -391,8 +407,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0061
 - Title: Overgrown Ruins — separate debris layer and fix z-index ambiguity
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: low
 - Milestone: M0
 - Depends: none
@@ -401,8 +418,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0062
 - Title: Add boundary collision walls to all map edges
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: high
 - Milestone: M0
 - Depends: none
@@ -426,8 +444,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0064
 - Title: Integrate BGM playback into all scenes and battle system
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: high
 - Milestone: M0
 - Depends: none
@@ -436,8 +455,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0065
 - Title: Add battle music (standard encounters and boss)
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: high
 - Milestone: M0
 - Depends: none
@@ -446,8 +466,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0066
 - Title: Add UI sound effects (menu, dialogue, buttons)
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: medium
 - Milestone: M0
 - Depends: none
@@ -456,8 +477,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0067
 - Title: Add combat sound effects (attack, magic, heal, death)
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: medium
 - Milestone: M0
 - Depends: none
@@ -466,8 +488,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0068
 - Title: Build settings/options menu with volume sliders
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: medium
 - Milestone: M0
 - Depends: T-0064
@@ -480,8 +503,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0069
 - Title: Extract shared UI helpers (colors, focus nav, panel styles, clear_children)
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: high
 - Milestone: M0
 - Depends: none
@@ -490,8 +514,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0070
 - Title: Split battler.gd into damage calculator, resonance controller, and status manager
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: high
 - Milestone: M0
 - Depends: none
@@ -500,8 +525,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0071
 - Title: Centralize game balance constants into game_balance.gd
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: high
 - Milestone: M0
 - Depends: none
@@ -510,8 +536,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0072
 - Title: Create scene_paths.gd for centralized scene path constants
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: medium
 - Milestone: M0
 - Depends: none
@@ -520,8 +547,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0073
 - Title: Split roothollow.gd into tilemap, dialogue, and quest handler modules
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: medium
 - Milestone: M0
 - Depends: none
@@ -530,8 +558,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0074
 - Title: Split battle_ui.gd into composable panel components
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: medium
 - Milestone: M0
 - Depends: T-0069
@@ -540,8 +569,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0075
 - Title: Split inventory_ui.gd into category manager, detail panel, and applicator
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: medium
 - Milestone: M0
 - Depends: T-0069
@@ -550,8 +580,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0076
 - Title: Split shop_ui.gd into buy panel, sell panel, and character selector
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: medium
 - Milestone: M0
 - Depends: T-0069
@@ -560,8 +591,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0077
 - Title: Split verdant_forest.gd and overgrown_ruins.gd into tilemap/encounter/dialogue modules
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: low
 - Milestone: M0
 - Depends: T-0073
@@ -570,8 +602,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0078
 - Title: Create reusable asset loader helper with consistent null-check pattern
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: low
 - Milestone: M0
 - Depends: none
@@ -584,8 +617,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0079
 - Title: Expand opening sequence to match Chapter 1 story script
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: high
 - Milestone: M0
 - Depends: none
@@ -594,8 +628,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0080
 - Title: Expand Lyra discovery dialogue to match story script (~50 lines)
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: high
 - Milestone: M0
 - Depends: T-0079
@@ -604,8 +639,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0081
 - Title: Expand Iris recruitment to match Chapter 3 story script
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: high
 - Milestone: M0
 - Depends: none
@@ -614,8 +650,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0082
 - Title: Expand Garrick recruitment to match story script
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: high
 - Milestone: M0
 - Depends: none
@@ -624,8 +661,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0083
 - Title: Update Roothollow NPC dialogue to match story scripts and style guide
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: medium
 - Milestone: M0
 - Depends: none
@@ -634,8 +672,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0084
 - Title: Add companion follower sprites in overworld
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: medium
 - Milestone: M0
 - Depends: none
@@ -644,8 +683,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0085
 - Title: Implement Chapter 4 content — Garrick's deeper story at the shrine
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: medium
 - Milestone: M0
 - Depends: T-0082
@@ -654,8 +694,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0086
 - Title: Add demo ending sequence with "Thanks for playing" screen
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: medium
 - Milestone: M0
 - Depends: T-0085
@@ -668,8 +709,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0087
 - Title: Add on-screen objective tracker UI
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: high
 - Milestone: M0
 - Depends: none
@@ -678,8 +720,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0088
 - Title: Add visual markers for zone transitions (sparkle/arrow effects)
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: high
 - Milestone: M0
 - Depends: none
@@ -688,8 +731,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0089
 - Title: Add NPC interaction indicators (speech bubble icon above head)
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: high
 - Milestone: M0
 - Depends: none
@@ -698,8 +742,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0090
 - Title: Add quest log/journal UI screen
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: high
 - Milestone: M0
 - Depends: none
@@ -708,8 +753,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0091
 - Title: Add area name display on zone transitions
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: medium
 - Milestone: M0
 - Depends: none
@@ -718,8 +764,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0092
 - Title: Add tutorial hints for controls on first playthrough
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: medium
 - Milestone: M0
 - Depends: none
@@ -728,8 +775,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0093
 - Title: Add fragment tracker / compass UI for story objectives
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: low
 - Milestone: M0
 - Depends: T-0087
@@ -742,8 +790,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0094
 - Title: Implement battle ability animations and visual effects
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: medium
 - Milestone: M0
 - Depends: none
@@ -752,8 +801,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0095
 - Title: Add battler idle animations in combat
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: medium
 - Milestone: M0
 - Depends: none
@@ -762,8 +812,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0096
 - Title: Add particle effects for healing, resonance, and criticals
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: low
 - Milestone: M0
 - Depends: T-0094
@@ -771,8 +822,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0097
 - Title: Add save point visual markers in scenes
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: medium
 - Milestone: M0
 - Depends: none
@@ -781,8 +833,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0098
 - Title: Add overworld encounter warning (grass rustle before battle)
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: low
 - Milestone: M0
 - Depends: none
@@ -791,8 +844,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0099
 - Title: Add transition animations between zones (beyond fade)
-- Status: in-progress
+- Status: done
 - Assigned: claude
+- Completed: 2026-02-20
 - Priority: low
 - Milestone: M0
 - Depends: none
@@ -816,8 +870,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0101
 - Title: Implement party formation and swap UI in pause menu
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: medium
 - Milestone: M0
 - Depends: T-0020
@@ -826,8 +881,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0102
 - Title: Add minimap or compass to HUD
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: low
 - Milestone: M0
 - Depends: none
@@ -836,8 +892,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0159
 - Title: Fix Verdant Forest south canopy gap — extend AbovePlayer layer to rows 15-24
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: medium
 - Milestone: M0
 - Depends: none
@@ -846,8 +903,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0160
 - Title: Wire quest-NPC indicator refresh on QuestManager signals
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: low
 - Milestone: M0
 - Depends: T-0089, T-0090
@@ -990,8 +1048,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0113
 - Title: Add interaction prompt label near player when ray hits target
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: low
 - Milestone: M0
 - Depends: T-0089
@@ -1000,8 +1059,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0115
 - Title: BUG — Pause menu party panel shows max HP/EE instead of current HP/EE
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: high
 - Milestone: M0
 - Depends: none
@@ -1020,8 +1080,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0117
 - Title: Implement BGM stack in AudioManager for battle music restore
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: high
 - Milestone: M0
 - Depends: none
@@ -1050,8 +1111,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0124
 - Title: BUG — XP computed and displayed in victory screen but never applied to party members
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: high
 - Milestone: M0
 - Depends: none
@@ -1072,8 +1134,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0130
 - Title: Add live playtime accumulation to GameManager for save slot display
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: low
 - Milestone: M0
 - Depends: none
@@ -1082,8 +1145,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0132
 - Title: Add "Defend" status badge on party battler panels during combat
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: low
 - Milestone: M0
 - Depends: none
@@ -1092,8 +1156,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0133
 - Title: Add save slot summary (location + timestamp) on Continue button
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: low
 - Milestone: M0
 - Depends: none
@@ -1102,8 +1167,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0138
 - Title: Add scrollable battle log with history
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: low
 - Milestone: M0
 - Depends: none
@@ -1112,8 +1178,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0139
 - Title: Source SFX assets from Time Fantasy packs for UI and combat
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: high
 - Milestone: M0
 - Depends: none
@@ -1145,8 +1212,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0144
 - Title: Build playtest runner — core scene with state injection and screenshot capture
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: critical
 - Milestone: M0
 - Depends: none
@@ -1156,8 +1224,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0145
 - Title: Add full action set to playtest runner (dialogue, battle, input simulation)
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: critical
 - Milestone: M0
 - Depends: T-0144
@@ -1167,8 +1236,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0146
 - Title: Create /playtest skill and preset configs for common test scenarios
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: high
 - Milestone: M0
 - Depends: T-0145
@@ -1178,8 +1248,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0147
 - Title: Add battle auto-play mode to playtest runner for combat balance testing
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-19
 - Priority: medium
 - Milestone: M0
 - Depends: T-0145
@@ -1189,8 +1260,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0148
 - Title: Add camp scene "Three Around a Fire" — Garrick, Iris, Kael evening dialogue
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: low
 - Milestone: M0
 - Depends: T-0085
@@ -1199,8 +1271,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0149
 - Title: Add Spring Shrine interactable south of Roothollow — Garrick meeting location
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: medium
 - Milestone: M0
 - Depends: T-0082
@@ -1238,6 +1311,48 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 - Depends: T-0129
 - Refs: game/ui/battle_ui/battle_ui.gd, game/ui/battle_ui/battle_ui_victory.gd
 - Notes: compute_dismiss_prompt_text("interact") uses a static string. Wire to InputMap.action_get_events("interact") to dynamically show the actual key binding. Groundwork for future remapping feature. 2+ tests verifying prompt updates for keyboard vs joypad events.
+
+### T-0176
+- Title: Reconcile BACKLOG.md — mark all COMPLETED.md tickets as done
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
+- Priority: high
+- Milestone: M0
+- Depends: none
+- Refs: agents/BACKLOG.md, agents/COMPLETED.md
+- Notes: BACKLOG.md still shows ~80 M0 tickets as Status: todo that are confirmed done in COMPLETED.md and SPRINT.md. All completed tickets need their Status updated to done with Completed: date. Pure documentation update, no code changes. Acceptance: every ticket in BACKLOG.md that appears in COMPLETED.md has Status: done.
+
+### T-0177
+- Title: Wire SfxPriority.CRITICAL to combat death and crit SFX calls
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M0
+- Depends: T-0140
+- Refs: game/systems/battle/states/action_execute_state.gd, game/systems/battle/states/enemy_turn_state.gd
+- Notes: T-0140 added the SfxPriority system but existing play_sfx() calls in combat state scripts still use default NORMAL priority. Death SFX and critical hit SFX should use SfxPriority.CRITICAL so they always play even when 8 ambient/attack sounds are active simultaneously. UI_CONFIRM and ATTACK_HIT remain NORMAL. DEATH and COMBAT_CRITICAL_HIT should be CRITICAL. 4+ tests verifying correct priority is passed per SFX type.
+
+### T-0178
+- Title: Add read-only control bindings display to settings menu
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Milestone: M0
+- Depends: T-0068
+- Refs: game/ui/settings_menu/settings_menu.gd, docs/IMPLEMENTATION_GUIDE.md
+- Notes: Settings menu has volume sliders and accessibility hints but no control display. Add a Controls section below volume showing current key bindings (read-only for now, full remapping is M1 scope). compute_control_bindings_text() static helper. 3+ tests.
+
+### T-0179
+- Title: Add interaction prompt near player for interactable objects (supersedes T-0113)
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Milestone: M0
+- Depends: T-0089
+- Refs: game/entities/player/player.gd, game/ui/hud/hud.gd
+- Notes: NPC indicators (T-0089) are above NPC heads but the player has no HUD cue. When InteractionRay detects an interactable, show a small [E] Interact label in HUD bottom-center. Supersedes T-0113 — mark T-0113 superseded. compute_interaction_hint_text(action_name) static helper using InputMap. 3+ tests.
 
 ---
 

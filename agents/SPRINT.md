@@ -373,11 +373,13 @@ Started: 2026-02-18
 
 ### T-0102
 - Title: Add minimap or compass to HUD
-- Status: in-progress
+- Status: done
 - Assigned: claude
 - Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: low
 - Depends: none
+- Notes: HudCompass static module; compute_compass_text()/compute_compass_visible() pure helpers; zone adjacency map (Roothollow↔VerdantForest↔OvergrownRuins); wired into hud.gd _ready()/_on_scene_changed(); 12 tests. PR #232 merged.
 
 ### T-0160
 - Title: Wire quest-NPC indicator refresh on QuestManager signals
@@ -857,3 +859,10 @@ Started: 2026-02-18
 - Assigned: claude
 - Completed: 2026-02-19
 - Notes: ZoneMarker script-only Node2D with _draw() chevron arrow, alpha pulse + directional bob tweens, optional destination label. Integrated into all 3 scenes (4 exit triggers). 11 tests.
+
+### T-0176
+- Title: Reconcile BACKLOG.md — mark all COMPLETED.md tickets as done
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
+- Notes: Updated 72 task statuses from todo/in-progress to done in BACKLOG.md. Added T-0177, T-0178, T-0179 to backlog. BACKLOG.md now accurately reflects project state: ~97 M0 tasks done, 9 remaining M0 todos, M1 tasks pending.
