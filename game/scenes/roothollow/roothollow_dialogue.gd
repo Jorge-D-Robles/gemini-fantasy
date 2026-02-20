@@ -320,3 +320,40 @@ static func get_lina_dialogue(
 		"When I grow up, I want to be an Echo hunter like"
 		+ " you! I'll have a big journal and everything!",
 	])
+
+
+static func get_iris_arrival_lines() -> Array:
+	return [
+		{
+			"speaker": "Iris",
+			"text": "The whole village is in trees.",
+		},
+		{
+			"speaker": "Kael",
+			"text": "Yeah.",
+		},
+		{
+			"speaker": "Iris",
+			"text": "Living trees.",
+		},
+		{
+			"speaker": "Kael",
+			"text": "They've been here longer than the village."
+			+ " We just hollowed out rooms inside them"
+			+ " and called it home.",
+		},
+		{
+			"speaker": "Iris",
+			"text": "Gearhaven is built on rock."
+			+ " Everything is steel and concrete. This is...",
+		},
+		{
+			"speaker": "Iris",
+			"text": "...actually nice."
+			+ " Don't tell anyone I said that.",
+		},
+	]
+
+
+static func get_iris_arrival_flag() -> String:
+	return "roothollow_iris_arrival_seen"

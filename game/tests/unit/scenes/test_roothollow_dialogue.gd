@@ -491,3 +491,40 @@ func test_garrick_no_tangle_slang() -> void:
 		_has_tangle_slang(lyra_lines),
 		"Garrick should not use Tangle slang (lyra)",
 	)
+
+
+# -- Iris Arrival Cutscene --
+
+func test_iris_arrival_lines_count() -> void:
+	var lines: Array = _rh.get_iris_arrival_lines()
+	assert_eq(lines.size(), 6)
+
+
+func test_iris_arrival_first_speaker_is_iris() -> void:
+	var lines: Array = _rh.get_iris_arrival_lines()
+	assert_eq(lines[0]["speaker"], "Iris")
+
+
+func test_iris_arrival_first_line_mentions_trees() -> void:
+	var lines: Array = _rh.get_iris_arrival_lines()
+	assert_string_contains(lines[0]["text"], "trees")
+
+
+func test_iris_arrival_has_kael_lines() -> void:
+	var lines: Array = _rh.get_iris_arrival_lines()
+	var found := false
+	for line in lines:
+		if line["speaker"] == "Kael":
+			found = true
+			break
+	assert_true(found, "Arrival dialogue should include Kael lines")
+
+
+func test_iris_arrival_last_line_mentions_nice() -> void:
+	var lines: Array = _rh.get_iris_arrival_lines()
+	assert_string_contains(lines.back()["text"], "nice")
+
+
+func test_iris_arrival_flag_name_not_empty() -> void:
+	var flag: String = _rh.get_iris_arrival_flag()
+	assert_false(flag.is_empty(), "Arrival flag must not be empty")

@@ -118,6 +118,27 @@ func _ready() -> void:
 	# Tutorial: interact hint on first NPC town visit
 	UILayer.hud.show_tutorial_hint("interact")
 
+	# One-time Iris arrival cutscene on first entry with iris_recruited
+	_maybe_trigger_iris_arrival.call_deferred()
+
+
+func _maybe_trigger_iris_arrival() -> void:
+	if not EventFlags.has_flag("iris_recruited"):
+		return
+	if EventFlags.has_flag(Dialogue.get_iris_arrival_flag()):
+		return
+	EventFlags.set_flag(Dialogue.get_iris_arrival_flag())
+	var raw: Array = Dialogue.get_iris_arrival_lines()
+	var lines: Array[DialogueLine] = []
+	for entry: Dictionary in raw:
+		lines.append(
+			DialogueLine.create(entry["speaker"], entry["text"]),
+		)
+	GameManager.push_state(GameManager.GameState.CUTSCENE)
+	DialogueManager.start_dialogue(lines)
+	await DialogueManager.dialogue_ended
+	GameManager.pop_state()
+
 
 func _start_scene_music() -> void:
 	var bgm := load(SCENE_BGM_PATH) as AudioStream
