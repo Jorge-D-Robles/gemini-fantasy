@@ -226,3 +226,32 @@ func test_equipment_slots_accessory_shows_name() -> void:
 	em.equip_accessory(&"kael", ring, 0)
 	var slots: Dictionary = PartyUIData.compute_equipment_slots(&"kael", em)
 	assert_eq(slots["accessory_0"], "Speed Ring", "Accessory slot 0 should show item name")
+
+
+# -- compute_cross_column_focus_index --
+
+func test_cross_column_focus_same_index_returns_same() -> void:
+	var result: int = PartyUIData.compute_cross_column_focus_index(0, 3, 3)
+	assert_eq(result, 0, "Same-count columns navigate to the same row index")
+
+
+func test_cross_column_focus_clamps_to_last_when_target_shorter() -> void:
+	# Source index 3 in a 4-element column going to a 2-element column → index 1
+	var result: int = PartyUIData.compute_cross_column_focus_index(3, 4, 2)
+	assert_eq(result, 1, "Should clamp to last target when source is deeper")
+
+
+func test_cross_column_focus_empty_target_returns_negative() -> void:
+	var result: int = PartyUIData.compute_cross_column_focus_index(0, 3, 0)
+	assert_eq(result, -1, "No target column entries → -1 (do not navigate)")
+
+
+func test_cross_column_focus_single_item_each_column() -> void:
+	var result: int = PartyUIData.compute_cross_column_focus_index(0, 1, 1)
+	assert_eq(result, 0, "Single item in each column → row 0")
+
+
+func test_cross_column_focus_second_row_to_single_target() -> void:
+	# Active index 1, reserve has only 1 member → clamp to 0
+	var result: int = PartyUIData.compute_cross_column_focus_index(1, 3, 1)
+	assert_eq(result, 0, "Active row 1 going to single-row reserve → 0")

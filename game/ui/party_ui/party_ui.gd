@@ -330,10 +330,41 @@ func _refresh_button_highlights() -> void:
 
 
 func _setup_focus() -> void:
-	var all_buttons: Array[Button] = []
-	all_buttons.append_array(_active_buttons)
-	all_buttons.append_array(_reserve_buttons)
+	# Vertical wrap within each column independently.
+	if _active_buttons.size() > 1:
+		UIHelpers.setup_focus_wrap(_active_buttons)
+	if _reserve_buttons.size() > 1:
+		UIHelpers.setup_focus_wrap(_reserve_buttons)
+
+	# Cross-column horizontal navigation: left/right arrows switch columns.
+	for i: int in _active_buttons.size():
+		var ri: int = PartyUIData.compute_cross_column_focus_index(
+			i, _active_buttons.size(), _reserve_buttons.size()
+		)
+		if ri >= 0:
+			_active_buttons[i].focus_neighbor_right = _reserve_buttons[ri].get_path()
+	for i: int in _reserve_buttons.size():
+		var ai: int = PartyUIData.compute_cross_column_focus_index(
+			i, _reserve_buttons.size(), _active_buttons.size()
+		)
+		if ai >= 0:
+			_reserve_buttons[i].focus_neighbor_left = _active_buttons[ai].get_path()
+
+	# Back button connects downward from the bottom of each column.
 	if _back_button != null:
-		all_buttons.append(_back_button)
-	if all_buttons.size() > 1:
-		UIHelpers.setup_focus_wrap(all_buttons)
+		if not _active_buttons.is_empty():
+			_active_buttons[-1].focus_neighbor_bottom = _back_button.get_path()
+		if not _reserve_buttons.is_empty():
+			_reserve_buttons[-1].focus_neighbor_bottom = _back_button.get_path()
+		if not _active_buttons.is_empty():
+			_back_button.focus_neighbor_top = _active_buttons[-1].get_path()
+		elif not _reserve_buttons.is_empty():
+			_back_button.focus_neighbor_top = _reserve_buttons[-1].get_path()
+
+	# Ensure at least the first button has focus.
+	if not _active_buttons.is_empty():
+		return  # grab_focus() already called by open()
+	if not _reserve_buttons.is_empty():
+		return
+	if _back_button != null:
+		return

@@ -70,6 +70,20 @@ static func compute_equipment_slots(
 	return result
 
 
+## Returns the target row index for cross-column focus navigation.
+## Clamps [param source_index] to the last available row when the target
+## column has fewer entries than the source column.
+## Returns -1 when [param target_count] is zero (no navigation possible).
+static func compute_cross_column_focus_index(
+	source_index: int,
+	_source_count: int,
+	target_count: int,
+) -> int:
+	if target_count <= 0:
+		return -1
+	return min(source_index, target_count - 1)
+
+
 ## Returns display sections for the party panel.
 ## Result keys: active (Array[Dictionary]), reserve (Array[Dictionary]),
 ## has_reserve (bool).
