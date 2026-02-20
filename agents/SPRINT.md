@@ -62,12 +62,14 @@ Started: 2026-02-18
 
 ### T-0111
 - Title: Add interaction indicators to Interactable objects (save points, chests, signs)
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-19
+- Completed: 2026-02-19
 - Priority: medium
 - Depends: T-0089
 - Refs: game/entities/interactable/interactable.gd
-- Notes: Reuse Label-based approach from NPC indicators. One-time interactables hide after use. 4+ tests. T-0089 done — unblocked.
+- Notes: IndicatorType enum (NONE/INTERACT/SAVE); compute_indicator_text/visible static helpers; floating Label with bob tween; InteractionArea body signals; hides permanently after one_time use; gold color for SAVE; 11 tests (1104 total).
 
 ### T-0120
 - Title: Add quest accept/complete toast notification in HUD
@@ -244,6 +246,14 @@ Started: 2026-02-18
 ---
 
 ## Done This Sprint
+
+### T-0111
+- Title: Add interaction indicators to Interactable objects (save points, chests, signs)
+- Status: done
+- Assigned: claude
+- Started: 2026-02-19
+- Completed: 2026-02-19
+- Notes: IndicatorType enum (NONE/INTERACT/SAVE); compute_indicator_text/visible static helpers; floating Label with bob tween; InteractionArea body signals; hides permanently after one_time use; gold color for SAVE; 11 tests (1104 total).
 
 ### T-0143
 - Title: Implement critical hit mechanic and wire CRITICAL_HIT SFX and popup
