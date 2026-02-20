@@ -1350,12 +1350,14 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0179
 - Title: Add interaction prompt near player for interactable objects (supersedes T-0113)
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: low
 - Milestone: M0
 - Depends: T-0089
-- Refs: game/entities/player/player.gd, game/ui/hud/hud.gd
+- Refs: game/entities/player/player.gd, game/ui/hud/hud.gd, game/ui/hud/interaction_hint.gd
 - Notes: NPC indicators (T-0089) are above NPC heads but the player has no HUD cue. When InteractionRay detects an interactable, show a small [E] Interact label in HUD bottom-center. Supersedes T-0113 — mark T-0113 superseded. compute_interaction_hint_text(action_name) static helper using InputMap. 3+ tests.
 
 ---

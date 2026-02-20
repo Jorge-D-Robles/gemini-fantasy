@@ -880,3 +880,10 @@ Started: 2026-02-18
 - Assigned: claude
 - Completed: 2026-02-20
 - Notes: SkillTreeNodeData + SkillTreeData Resources; SkillTreeManager static utility with compute_can_unlock() + compute_unlock_result(); CharacterData gains skill_points/unlocked_skill_ids/skill_trees; LevelManager.level_up() awards 1 SP; stat_abbreviation() gains "sp" entry; 17 tests (1495 total passing).
+
+### T-0179
+- Title: Add interaction prompt near player for interactable objects (supersedes T-0113)
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
+- Notes: InteractionHint static helper (compute_interaction_hint_text) looks up bound key via InputMap; player._update_interaction_prompt() called each physics frame after move_and_slide(); set_movement_enabled(false) hides prompt; fallback "[ ] Interact"; 5 tests (1500 total passing).
