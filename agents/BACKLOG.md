@@ -1789,9 +1789,10 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0222
 - Title: Seed AbilityData .tres files for Iris and Garrick full ability sets
-- Status: in-progress
+- Status: done
 - Assigned: claude
 - Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: high
 - Milestone: M1
 - Depends: T-0018, T-0184
