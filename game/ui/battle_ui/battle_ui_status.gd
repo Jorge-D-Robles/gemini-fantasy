@@ -7,6 +7,14 @@ extends RefCounted
 const UITheme = preload("res://ui/ui_theme.gd")
 
 
+## Returns a one-element array [{text: "DEF", color: DEFEND_BADGE_COLOR}]
+## when [param is_defending] is true, otherwise an empty array.
+static func compute_defend_badge(is_defending: bool) -> Array[Dictionary]:
+	if not is_defending:
+		return []
+	return [{"text": "DEF", "color": UITheme.DEFEND_BADGE_COLOR}]
+
+
 ## Returns [{text: String, color: Color}, ...] for each active
 ## status effect.
 static func compute_status_badges(

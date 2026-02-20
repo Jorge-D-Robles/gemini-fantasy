@@ -13,13 +13,17 @@ func enter() -> void:
 	var battler: Battler = battle_scene.current_battler
 	if battler:
 		battler.tick_effects()
-		battler.end_turn()
 
+	# Refresh party status while is_defending is still set, so the DEF
+	# badge remains visible during the TurnEnd phase.
 	var battle_ui: Node = battle_scene.get_node_or_null("BattleUI")
 	if battle_ui:
 		battle_ui.update_party_status(battle_scene.get_living_party())
 		battle_ui.update_turn_order(
 			battle_scene.turn_queue.peek_order()
 		)
+
+	if battler:
+		battler.end_turn()
 
 	state_machine.transition_to("TurnQueueState")

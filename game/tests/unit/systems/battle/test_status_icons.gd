@@ -170,3 +170,30 @@ func test_compute_status_badges_multiple() -> void:
 	assert_eq(result[0]["color"], UITheme.STATUS_BUFF)
 	assert_eq(result[1]["color"], UITheme.STATUS_DOT)
 	assert_eq(result[2]["color"], UITheme.STATUS_STUN)
+
+
+# -- BattleUIStatus.compute_defend_badge() --
+
+
+func test_defend_badge_not_defending_returns_empty() -> void:
+	var result: Array = BattleUIScript.compute_defend_badge(false)
+	assert_eq(result.size(), 0, "Not defending -> no badge")
+
+
+func test_defend_badge_defending_returns_one_badge() -> void:
+	var result: Array = BattleUIScript.compute_defend_badge(true)
+	assert_eq(result.size(), 1, "Defending -> one badge")
+
+
+func test_defend_badge_text_is_def() -> void:
+	var result: Array = BattleUIScript.compute_defend_badge(true)
+	assert_eq(result[0]["text"], "DEF", "Defend badge text should be DEF")
+
+
+func test_defend_badge_color_matches_theme() -> void:
+	var result: Array = BattleUIScript.compute_defend_badge(true)
+	assert_eq(
+		result[0]["color"],
+		UITheme.DEFEND_BADGE_COLOR,
+		"Defend badge should use UITheme.DEFEND_BADGE_COLOR",
+	)
