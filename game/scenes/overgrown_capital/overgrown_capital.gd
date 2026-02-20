@@ -10,10 +10,15 @@ const INTERACTABLE_SCENE := preload("res://entities/interactable/interactable.ts
 const PURIFICATION_NODE_STRATEGY_SCRIPT := preload(
 	"res://entities/interactable/strategies/purification_node_strategy.gd"
 )
+const MEMORIAL_ECHO_STRATEGY_SCRIPT := preload(
+	"res://entities/interactable/strategies/memorial_echo_strategy.gd"
+)
 const MEMORY_BLOOM_PATH: String = "res://data/enemies/memory_bloom.tres"
 const CREEPING_VINE_PATH: String = "res://data/enemies/creeping_vine.tres"
 const ECHO_NOMAD_PATH: String = "res://data/enemies/echo_nomad.tres"
 const SCENE_BGM_PATH: String = "res://assets/music/Echoes of the Capital.ogg"
+const LYRA_FRAGMENT_2_ECHO_ID: StringName = &"lyra_fragment_2"
+const LYRA_FRAGMENT_2_FLAG: String = "lyra_fragment_2_collected"
 
 # Tilemap data (legends + maps) lives in OvergrownCapitalMap.
 # Encounter pool builder lives in OvergrownCapitalEncounters.
@@ -66,6 +71,43 @@ static func compute_crystal_wall_entertainment_position() -> Vector2:
 	return Vector2(480.0, 144.0)
 
 
+static func compute_research_quarter_echo_position() -> Vector2:
+	## Lyra Fragment 2 echo in the Research Quarter lab — col 28, row 6.
+	return Vector2(448.0, 96.0)
+
+
+static func compute_research_quarter_lines() -> Array[String]:
+	## Returns vision_lines for Lyra Fragment 2: approach dialogue (Iris reads
+	## nameplate) followed by the memory sequence (Marcus Cole, 140-day countdown,
+	## Lyra's apology) and the party's reaction after the vision.
+	return [
+		"Iris",
+		"Dr. L. Reyes. Resonance Dynamics. Department of Theoretical Consciousness.",
+		"Kael",
+		"This is her lab.",
+		"Kael",
+		'"World\'s Okayest Physicist."',
+		"Iris",
+		"I like her.",
+		"Kael",
+		"This is a big one. I can feel it from here.",
+		"Lyra",
+		("The connection density index has been climbing exponentially."
+			+ " At this rate we hit the singularity threshold in..."
+			+ " one hundred and forty days."),
+		"Lyra",
+		"I'm sorry. All of you. I'm sorry.",
+		"Kael",
+		("She knew it was coming. She warned people and they didn't listen."
+			+ " One hundred and forty days."),
+		"Iris",
+		("We should get out of here."
+			+ " The Initiative may have sensors that detect a fragment integration."),
+		"Garrick",
+		"Agreed.",
+	]
+
+
 func _ready() -> void:
 	# Explicit z-index hierarchy matching existing scene pattern.
 	$Ground.z_index = 0
@@ -88,6 +130,7 @@ func _ready() -> void:
 	_setup_camera_limits()
 	_setup_encounters()
 	_setup_purification_nodes()
+	_setup_lyra_fragment_echo()
 
 	UILayer.hud.location_name = "Overgrown Capital"
 
@@ -253,6 +296,35 @@ func _on_node_cleared(node_id: String) -> void:
 	if wall and is_instance_valid(wall):
 		wall.queue_free()
 	_crystal_walls.erase(node_id)
+
+
+func _setup_lyra_fragment_echo() -> void:
+	# Bridge persisted collection state — echo_collected signal fires in current
+	# session only, so ensure the EventFlag is set if already collected.
+	if EchoManager.has_echo(LYRA_FRAGMENT_2_ECHO_ID) and not EventFlags.has_flag(
+		LYRA_FRAGMENT_2_FLAG
+	):
+		EventFlags.set_flag(LYRA_FRAGMENT_2_FLAG)
+
+	EchoManager.echo_collected.connect(_on_echo_collected)
+
+	var echo_strat := MEMORIAL_ECHO_STRATEGY_SCRIPT.new() as MemorialEchoStrategy
+	echo_strat.echo_id = LYRA_FRAGMENT_2_ECHO_ID
+	echo_strat.require_quest_id = &""
+	echo_strat.vision_lines = compute_research_quarter_lines()
+
+	var echo_interactable := INTERACTABLE_SCENE.instantiate() as Interactable
+	echo_interactable.name = "LyraFragment2Echo"
+	echo_interactable.strategy = echo_strat
+	echo_interactable.one_time = true
+	echo_interactable.indicator_type = Interactable.IndicatorType.INTERACT
+	echo_interactable.position = compute_research_quarter_echo_position()
+	$Entities.add_child(echo_interactable)
+
+
+func _on_echo_collected(echo_id: StringName) -> void:
+	if echo_id == LYRA_FRAGMENT_2_ECHO_ID:
+		EventFlags.set_flag(LYRA_FRAGMENT_2_FLAG)
 
 
 func _on_exit_to_ruins_entered(body: Node2D) -> void:

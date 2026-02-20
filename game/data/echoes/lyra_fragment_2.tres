@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="EchoData" load_steps=2 format=3 uid="uid://blyra_fragment_2"]
+
+[ext_resource type="Script" path="res://resources/echo_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"lyra_fragment_2"
+display_name = "Lyra's Lab Memory"
+description = "Lyra Reyes' most urgent memory — the exponential curve on the whiteboard, the countdown calendar, and the apology she owed the world."
+lore_text = "Preserved three hundred years in Lyra's own laboratory, this fragment holds the moment she understood exactly how little time remained. The countdown she calculated was correct. Nobody believed her. The lab where she worked alone through the final months still stands, crystal-wrapped, exactly as she left it."
+rarity = 2
+echo_type = 3
+effect_type = 4
+effect_value = 0
+element = 0
+target_type = 4
+uses_per_battle = 1
+icon_path = ""
