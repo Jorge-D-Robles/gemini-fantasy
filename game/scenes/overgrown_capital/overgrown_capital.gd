@@ -6,6 +6,10 @@ extends Node2D
 ## Story events (Lyra Fragment 2, Last Gardener, camp scenes) live in T-0191–T-0195.
 
 const SP = preload("res://systems/scene_paths.gd")
+const INTERACTABLE_SCENE := preload("res://entities/interactable/interactable.tscn")
+const PURIFICATION_NODE_STRATEGY_SCRIPT := preload(
+	"res://entities/interactable/strategies/purification_node_strategy.gd"
+)
 const MEMORY_BLOOM_PATH: String = "res://data/enemies/memory_bloom.tres"
 const CREEPING_VINE_PATH: String = "res://data/enemies/creeping_vine.tres"
 const ECHO_NOMAD_PATH: String = "res://data/enemies/echo_nomad.tres"
@@ -15,6 +19,7 @@ const SCENE_BGM_PATH: String = "res://assets/music/Echoes of the Capital.ogg"
 # Encounter pool builder lives in OvergrownCapitalEncounters.
 
 var _ground_debris_layer: TileMapLayer = null
+var _crystal_walls: Dictionary = {}
 
 @onready var _ground_layer: TileMapLayer = $Ground
 @onready var _ground_detail_layer: TileMapLayer = $GroundDetail
@@ -35,6 +40,30 @@ static func compute_spawn_from_ruins_position() -> Vector2:
 static func compute_market_save_point_position() -> Vector2:
 	## Save point in the Market District entry area — col 10, row 23.
 	return Vector2(160.0, 368.0)
+
+
+static func compute_purification_node_market_position() -> Vector2:
+	## Purification Node blocking Market → Entertainment path.
+	## Positioned at col 18, row 13 — center-west, just north of Market District.
+	return Vector2(288.0, 208.0)
+
+
+static func compute_crystal_wall_market_position() -> Vector2:
+	## Crystal wall blocking Market → Entertainment path.
+	## One tile north of the market Purification Node (col 18, row 12).
+	return Vector2(288.0, 192.0)
+
+
+static func compute_purification_node_entertainment_position() -> Vector2:
+	## Purification Node blocking Entertainment → Research Quarter path.
+	## Positioned at col 30, row 10 — northeast area.
+	return Vector2(480.0, 160.0)
+
+
+static func compute_crystal_wall_entertainment_position() -> Vector2:
+	## Crystal wall blocking Entertainment → Research path.
+	## One tile north of the entertainment Purification Node (col 30, row 9).
+	return Vector2(480.0, 144.0)
 
 
 func _ready() -> void:
@@ -58,6 +87,7 @@ func _ready() -> void:
 	_start_scene_music()
 	_setup_camera_limits()
 	_setup_encounters()
+	_setup_purification_nodes()
 
 	UILayer.hud.location_name = "Overgrown Capital"
 
@@ -147,6 +177,82 @@ func _setup_encounters() -> void:
 	var echo_nomad := load(ECHO_NOMAD_PATH) as Resource
 	var pool := OvergrownCapitalEncounters.build_pool(memory_bloom, creeping_vine, echo_nomad)
 	_encounter_system.setup(pool)
+
+
+func _setup_purification_nodes() -> void:
+	# Market District → Entertainment District (node_id = "market_north").
+	var market_wall := _create_crystal_wall(compute_crystal_wall_market_position())
+	market_wall.name = "CrystalWallMarket"
+	_crystal_walls["market_north"] = market_wall
+	$Entities.add_child(market_wall)
+
+	var market_strat := PURIFICATION_NODE_STRATEGY_SCRIPT.new() as PurificationNodeStrategy
+	market_strat.node_id = "market_north"
+	market_strat.activation_lines = [
+		"Kael",
+		"The crystal vines are retreating… The path north is open.",
+	]
+	market_strat.node_cleared.connect(_on_node_cleared)
+	var market_node := INTERACTABLE_SCENE.instantiate() as Interactable
+	market_node.name = "PurificationNodeMarket"
+	market_node.strategy = market_strat
+	market_node.one_time = true
+	market_node.indicator_type = Interactable.IndicatorType.INTERACT
+	market_node.position = compute_purification_node_market_position()
+	$Entities.add_child(market_node)
+
+	# Entertainment District → Research Quarter (node_id = "entertainment_research").
+	var ent_wall := _create_crystal_wall(compute_crystal_wall_entertainment_position())
+	ent_wall.name = "CrystalWallEntertainment"
+	_crystal_walls["entertainment_research"] = ent_wall
+	$Entities.add_child(ent_wall)
+
+	var ent_strat := PURIFICATION_NODE_STRATEGY_SCRIPT.new() as PurificationNodeStrategy
+	ent_strat.node_id = "entertainment_research"
+	ent_strat.activation_lines = [
+		"Lyra",
+		"I can feel the Resonance shifting — the crystal lattice is dissolving.",
+		"Kael",
+		"The Research Quarter… we can reach it now.",
+	]
+	ent_strat.node_cleared.connect(_on_node_cleared)
+	var ent_node := INTERACTABLE_SCENE.instantiate() as Interactable
+	ent_node.name = "PurificationNodeEntertainment"
+	ent_node.strategy = ent_strat
+	ent_node.one_time = true
+	ent_node.indicator_type = Interactable.IndicatorType.INTERACT
+	ent_node.position = compute_purification_node_entertainment_position()
+	$Entities.add_child(ent_node)
+
+	# Apply persistent cleared state from previous sessions.
+	var all_flags := EventFlags.get_all_flags()
+	for nid: String in _crystal_walls.keys():
+		if not PurificationNodeStrategy.compute_node_active_state(all_flags, nid):
+			var wall: Node = _crystal_walls.get(nid)
+			if wall and is_instance_valid(wall):
+				wall.queue_free()
+			_crystal_walls.erase(nid)
+
+
+func _create_crystal_wall(at_position: Vector2) -> StaticBody2D:
+	## Creates a solid crystal wall that blocks the player (collision_layer = 2).
+	var wall := StaticBody2D.new()
+	wall.position = at_position
+	wall.collision_layer = 2
+	wall.collision_mask = 0
+	var shape := CollisionShape2D.new()
+	var rect := RectangleShape2D.new()
+	rect.size = Vector2(32.0, 16.0)
+	shape.shape = rect
+	wall.add_child(shape)
+	return wall
+
+
+func _on_node_cleared(node_id: String) -> void:
+	var wall: Node = _crystal_walls.get(node_id)
+	if wall and is_instance_valid(wall):
+		wall.queue_free()
+	_crystal_walls.erase(node_id)
 
 
 func _on_exit_to_ruins_entered(body: Node2D) -> void:
