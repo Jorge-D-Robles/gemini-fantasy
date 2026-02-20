@@ -960,8 +960,8 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0228
 - Title: Test cleanup — delete constant-value, enum-ordinal, and has_signal/has_method assertions
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M0
 - Depends: none
@@ -970,8 +970,8 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0229
 - Title: Test cleanup — slim event dialogue tests to contract and logic only
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M0
 - Depends: T-0228
@@ -980,8 +980,8 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0230
 - Title: Test cleanup — slim NPC scene dialogue tests to flag-routing only
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M0
 - Depends: T-0228
@@ -990,8 +990,8 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0231
 - Title: Test cleanup — consolidate fragmented audio manager test files
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: medium
 - Milestone: M0
 - Depends: none
@@ -1000,8 +1000,8 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0232
 - Title: Test cleanup — remove playtest infrastructure tests that duplicate production behavior
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: medium
 - Milestone: M0
 - Depends: none
@@ -1010,8 +1010,8 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0233
 - Title: Code health — fix remaining gdlint violations
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M0
 - Depends: none
@@ -1020,8 +1020,8 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0234
 - Title: Code health — remove dead legacy wrapper methods from Battler
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M0
 - Depends: none
@@ -1030,8 +1030,8 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0235
 - Title: Code health — eliminate ScenePaths duplication in game_manager.gd
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: medium
 - Milestone: M0
 - Depends: none
@@ -1040,8 +1040,8 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0236
 - Title: Code health — add resonance-state color constants to UITheme; replace magic Color values in battle_ui.gd
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: medium
 - Milestone: M0
 - Depends: none
@@ -1070,8 +1070,8 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0239
 - Title: Code health — deduplicate battle_scene._spawn_party and _spawn_enemies
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: medium
 - Milestone: M0
 - Depends: none
@@ -1110,8 +1110,8 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0243
 - Title: Code health — extract hud.gd duplicate popup setup functions
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: medium
 - Milestone: M0
 - Depends: none
@@ -1120,8 +1120,8 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0244
 - Title: Code health — create EventFlagRegistry for magic flag string constants
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: medium
 - Milestone: M0
 - Depends: none
@@ -1132,7 +1132,7 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 - Title: Code health — add BattleActionExecutor to deduplicate attack/ability execution between states
 - Status: done
 - Completed: 2026-02-20
-- Assigned: unassigned
+- Assigned: claude
 - Priority: high
 - Milestone: M0
 - Depends: T-0238
@@ -1141,12 +1141,13 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0246
 - Title: Reconcile BACKLOG.md — sync done/todo statuses for completed sprint tasks
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: high
 - Milestone: M0
 - Depends: none
-- Notes: T-0228 through T-0245 are Status: done in SPRINT.md but many still show Status: todo in BACKLOG.md. Also T-0191 through T-0212 completed this sprint need M1 BACKLOG statuses synced. T-0008/T-0010/T-0011 need to be marked superseded (by T-0181). T-0202 and T-0204 (doc-only dependency updates) can be folded in. Pure documentation update, 0 behavior changes, 0 tests required.
+- Notes: Updated 43 tasks from todo→done (T-0228–T-0245 code health sprint, T-0191–T-0225 M1 sprint completions, T-0248 Nyx recruitment). Pure documentation update, 0 behavior changes.
 
 ---
 
@@ -1175,8 +1176,8 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0248
 - Title: Recruit Nyx into party — create nyx.tres and wire PartyManager.add_character() after introduction
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M1
 - Depends: T-0225, T-0247
@@ -1696,8 +1697,8 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0191
 - Title: Add Lyra's Fragment 2 collectible and Chapter 5 Research Quarter vision sequence
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M1
 - Depends: T-0190, T-0182
@@ -1706,8 +1707,8 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0192
 - Title: Add The Last Gardener encounter — optional boss with three-choice resolution
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: medium
 - Milestone: M1
 - Depends: T-0190
@@ -1737,8 +1738,8 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0195
 - Title: Implement Purification Node mechanic for crystal-blocked dungeon paths
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M1
 - Depends: T-0190
@@ -1780,8 +1781,8 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0199
 - Title: Place Morning Commute and Family Dinner echo interactables in Overgrown Capital Market District
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: medium
 - Milestone: M1
 - Depends: T-0190, T-0197, T-0198
@@ -1790,8 +1791,8 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0200
 - Title: Add Leaving the Capital scene — post-dungeon processing dialogue (Chapter 5 Scene 6)
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: medium
 - Milestone: M1
 - Depends: T-0191
@@ -1841,8 +1842,8 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0205
 - Title: Seed and place Residential Quarter echo interactables in Overgrown Capital
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: medium
 - Milestone: M1
 - Depends: T-0190, T-0197
@@ -1881,8 +1882,8 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0209
 - Title: Add Echo Nomad enemy to Overgrown Capital encounter pool
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M1
 - Depends: T-0190
@@ -1891,8 +1892,8 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0210
 - Title: Wire dedicated Echoes of the Capital BGM for Overgrown Capital (replace Castle.ogg placeholder)
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M1
 - Depends: T-0190
@@ -1901,8 +1902,8 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0211
 - Title: Tilemap visual design for Overgrown Capital — three-district layout
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M1
 - Depends: T-0190
@@ -1911,8 +1912,8 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0212
 - Title: Wire Verdant Forest → Overgrown Capital transition (add ExitToCapital trigger)
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M1
 - Depends: T-0190, T-0196
@@ -1981,8 +1982,8 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0219
 - Title: Build skill tree UI screen — view and unlock nodes from pause menu
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M1
 - Depends: T-0018, T-0184
@@ -2000,8 +2001,8 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0221
 - Title: Seed AbilityData .tres files for Kael's full ability set (7 abilities)
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M1
 - Depends: T-0018, T-0184
@@ -2032,8 +2033,8 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0224
 - Title: Place save point interactable in Overgrown Capital Market District
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M1
 - Depends: T-0190
