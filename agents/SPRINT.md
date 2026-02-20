@@ -34,9 +34,10 @@ Started: 2026-02-20
 
 ### T-0182
 - Title: Implement EchoFragment Resource and EchoManager autoload
-- Status: in-progress
+- Status: done
 - Assigned: claude
 - Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: high
 - Depends: none
 

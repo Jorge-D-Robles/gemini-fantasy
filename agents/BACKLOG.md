@@ -1454,6 +1454,16 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 - Refs: game/scenes/overgrown_ruins/overgrown_ruins.gd, game/entities/interactable/strategies/camp_strategy.gd
 - Notes: Mirror of T-0180. Place a CampStrategy-powered Interactable in the Overgrown Ruins clearing. one_time=false. compute_ruins_campfire_name() and compute_ruins_campfire_position() static helpers. 3+ tests.
 
+### T-0189
+- Title: Wire EchoManager into all SaveManager call sites
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M1
+- Depends: T-0182
+- Refs: game/entities/interactable/strategies/save_point_strategy.gd, game/systems/battle/states/defeat_state.gd, game/ui/title_screen/title_screen.gd
+- Notes: Three save/load call sites do not yet pass EchoManager — save_point_strategy.gd (save_game), defeat_state.gd (apply_save_data), title_screen.gd (apply_save_data). Pass EchoManager as the trailing optional arg to ensure echo collection persists through save/load. 3+ tests verifying round-trip via each call site.
+
 ---
 
 ## M2 — Act II: The Weight of Echoes
