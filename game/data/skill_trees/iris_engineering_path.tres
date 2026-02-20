@@ -1,0 +1,71 @@
+[gd_resource type="Resource" script_class="SkillTreeData" load_steps=9 format=3 uid="uid://biris_engineering_path"]
+
+[ext_resource type="Script" path="res://resources/skill_tree_data.gd" id="1_std"]
+[ext_resource type="Script" path="res://resources/skill_tree_node_data.gd" id="2_stnd"]
+
+[sub_resource type="Resource" id="Node_iris_field_repairs"]
+script = ExtResource("2_stnd")
+id = &"iris_field_repairs"
+display_name = "Field Repairs"
+description = "Can use items on allies without consuming turn"
+tier = 1
+ap_cost = 1
+required_node_ids = []
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_iris_efficient_design"]
+script = ExtResource("2_stnd")
+id = &"iris_efficient_design"
+display_name = "Efficient Design"
+description = "All gadget abilities cost 20% less EE"
+tier = 1
+ap_cost = 1
+required_node_ids = []
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_iris_tactical_analysis"]
+script = ExtResource("2_stnd")
+id = &"iris_tactical_analysis"
+display_name = "Tactical Analysis"
+description = "Can scan enemies to reveal stats and weaknesses"
+tier = 2
+ap_cost = 2
+required_node_ids = [&"iris_field_repairs"]
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_iris_prototype_upgrade"]
+script = ExtResource("2_stnd")
+id = &"iris_prototype_upgrade"
+display_name = "Prototype Upgrade"
+description = "Deployed drones have +50% stats and last 2 turns longer"
+tier = 2
+ap_cost = 2
+required_node_ids = [&"iris_efficient_design"]
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_iris_sabotage"]
+script = ExtResource("2_stnd")
+id = &"iris_sabotage"
+display_name = "Sabotage"
+description = "Permanently reduce enemy attack/defense by 20%"
+tier = 3
+ap_cost = 3
+required_node_ids = [&"iris_tactical_analysis"]
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_iris_master_engineer"]
+script = ExtResource("2_stnd")
+id = &"iris_master_engineer"
+display_name = "Master Engineer"
+description = "Can deploy two drones simultaneously"
+tier = 3
+ap_cost = 3
+required_node_ids = [&"iris_prototype_upgrade"]
+unlocks_ability = null
+
+[resource]
+script = ExtResource("1_std")
+id = &"iris_engineering_path"
+display_name = "Engineering Path"
+description = "Focus: Gadgets, Support, and Tactical Control"
+nodes = [SubResource("Node_iris_field_repairs"), SubResource("Node_iris_efficient_design"), SubResource("Node_iris_tactical_analysis"), SubResource("Node_iris_prototype_upgrade"), SubResource("Node_iris_sabotage"), SubResource("Node_iris_master_engineer")]

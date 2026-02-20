@@ -1644,13 +1644,123 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0208
 - Title: Source or assign BGM for Overgrown Capital dungeon scene
-- Status: todo
+- Status: superseded
 - Assigned: unassigned
 - Priority: low
 - Milestone: M1
 - Depends: T-0190
 - Refs: docs/game-design/06-audio-design.md, game/assets/music/
-- Notes: Set SCENE_BGM_PATH constant in overgrown_capital.gd. Distinct from overgrown_ruins BGM (Castle.ogg). Import new OGG or repurpose unused track. Wire into _start_scene_music(). 1 test verifying path differs from ruins BGM.
+- Notes: Superseded by T-0210. Echoes of the Capital.ogg was already imported; T-0210 wires it directly.
+
+### T-0209
+- Title: Add Echo Nomad enemy to Overgrown Capital encounter pool
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Milestone: M1
+- Depends: T-0190
+- Refs: docs/game-design/02-enemy-design.md, game/scenes/overgrown_capital/overgrown_capital_encounters.gd, game/data/enemies/
+- Notes: Create game/data/enemies/echo_nomad.tres (EnemyData: REGULAR AI, ~90 HP, magic-biased, Echo Manifestation type). Add as 3rd entry in OvergrownCapitalEncounters.build_pool() alongside Memory Bloom and Creeping Vine. Acceptance: pool has 3+ entries, echo_nomad.tres loads correctly. Check Time Fantasy packs for translucent humanoid sprite first. 4+ tests verifying pool size and echo_nomad entry presence.
+
+### T-0210
+- Title: Wire dedicated Echoes of the Capital BGM for Overgrown Capital (replace Castle.ogg placeholder)
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Milestone: M1
+- Depends: T-0190
+- Refs: game/scenes/overgrown_capital/overgrown_capital.gd, game/assets/music/Echoes of the Capital.ogg
+- Notes: T-0190 uses Castle.ogg with a placeholder comment. Echoes of the Capital.ogg is already imported at res://assets/music/Echoes of the Capital.ogg. Change SCENE_BGM_PATH constant. Must be done before T-0212 (transition wiring) to avoid BGM stack collision with Overgrown Ruins. 1 test verifying the constant differs from overgrown_ruins SCENE_BGM_PATH.
+
+### T-0211
+- Title: Tilemap visual design for Overgrown Capital — three-district layout
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Milestone: M1
+- Depends: T-0190
+- Refs: docs/game-design/05-dungeon-designs.md, game/scenes/overgrown_capital/overgrown_capital_map.gd, docs/best-practices/11-tilemaps-and-level-design.md
+- Notes: Use tilemap-builder agent to design full visual layout for the 40x28 dungeon. Three visually distinct district aesthetics: Market (overgrown stalls, broad streets), Entertainment (theater ruin silhouette, ornate floor), Research Quarter (lab aesthetic, crystal growth). AbovePlayer layer for overhanging ruins. Place Purification Node blocker positions. MUST use /scene-preview --full-map after each district layer. Single agent only — no parallel tilemap work. 6+ tests verifying district tile density and bounds.
+
+### T-0212
+- Title: Wire Verdant Forest → Overgrown Capital transition (add ExitToCapital trigger)
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Milestone: M1
+- Depends: T-0190, T-0196
+- Refs: game/scenes/verdant_forest/verdant_forest.gd, game/scenes/verdant_forest/verdant_forest.tscn, game/scenes/overgrown_capital/overgrown_capital.tscn, game/systems/scene_paths.gd
+- Notes: Add ExitToCapital Area2D to verdant_forest.tscn (north edge). Wire in verdant_forest.gd with garrick_recruited flag gate — shows 1-line hint if not yet recruited ("The path north is not safe without the full party."). ZoneMarker UP direction "Overgrown Capital". Add SpawnFromForest Marker2D to overgrown_capital.tscn + register group "spawn_from_forest". Handler: GameManager.change_scene(SP.OVERGROWN_CAPITAL, FADE_DURATION, "spawn_from_forest"). compute_capital_exit_requires_garrick() static helper for TDD. 5+ tests.
+
+### T-0213
+- Title: Add Merchant's Regret optional mini-boss to Overgrown Capital Market District
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Milestone: M1
+- Depends: T-0190, T-0211
+- Refs: docs/game-design/05-dungeon-designs.md, game/data/enemies/
+- Notes: Create game/data/enemies/merchants_regret.tres (EnemyData: BOSS AI, ~200 HP, coin_shower AoE + desperate_bargain debuff). Trigger zone in Market stall cluster. Pre-battle 2-line dialogue. Flag: merchants_regret_encountered. compute_merchants_regret_can_trigger(flags) static helper. 3+ tests.
+
+### T-0214
+- Title: Add Research Quarter Resonance terminal puzzle — unlock Palace District path
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M1
+- Depends: T-0195, T-0191
+- Refs: docs/game-design/05-dungeon-designs.md, game/entities/interactable/
+- Notes: Player collects two Resonance Crystal key items (one from Market, one from Entertainment) and uses them on the terminal. ResonanceTerminalStrategy extends InteractionStrategy. Checks inventory for both crystals, on success sets research_terminal_activated flag. Create resonance_crystal_market.tres and resonance_crystal_entertainment.tres (ItemData, key item type). compute_terminal_can_activate(inventory) static helper. 5+ tests.
+
+### T-0215
+- Title: Add hidden VIP lounge in Entertainment District — legendary echo collectible
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Milestone: M1
+- Depends: T-0190, T-0211
+- Refs: docs/game-design/05-dungeon-designs.md, docs/lore/04-echo-catalog.md
+- Notes: Secret area accessible via hidden stage entrance in theater area. Create game/data/echoes/final_performance.tres (EchoData: LEGENDARY rarity, STORY echo_type, 3-line lore about a performer's last show before The Severance). MemorialEchoStrategy. Flag: vip_lounge_found. compute_vip_lounge_eligible(flags) helper. 3+ tests.
+
+### T-0216
+- Title: Add rooftop garden secret area to Residential Quarter — rare echo collectible
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Milestone: M1
+- Depends: T-0190, T-0211
+- Refs: docs/game-design/05-dungeon-designs.md, docs/lore/04-echo-catalog.md
+- Notes: Secret rooftop area accessible via collapsed building rubble path. Create game/data/echoes/rooftop_garden.tres (EchoData: RARE rarity, STORY echo_type, family tending a garden above the city). MemorialEchoStrategy with 2-3 line vision. Flag: rooftop_garden_found. 3+ tests.
+
+### T-0217
+- Title: Add hidden archives secret room in Government Center — Historical Records lore
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Milestone: M1
+- Depends: T-0190, T-0211
+- Refs: docs/game-design/05-dungeon-designs.md, game/entities/interactable/
+- Notes: Secret room in Government Center accessible via collapsed wall. Plain dialogue Interactable (one_time=true) with 3-line lore dump about pre-Severance political history. Flag: hidden_archives_found. compute_archives_lore_text() static helper. 2+ tests.
+
+### T-0218
+- Title: Add Survivor's Diary collectible in Residential Quarter — post-Severance survival lore
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M1
+- Depends: T-0190, T-0211
+- Refs: docs/game-design/05-dungeon-designs.md, docs/lore/02-main-story.md, game/entities/interactable/
+- Notes: Emotionally significant lore item in a Residential Quarter room. Interactable one_time=true, 4-5 line dialogue. Flag: survivors_diary_read. compute_diary_entries() static helper. 3+ tests.
+
+### T-0219
+- Title: Build skill tree UI screen — view and unlock nodes from pause menu
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Milestone: M1
+- Depends: T-0018, T-0184
+- Refs: docs/mechanics/character-abilities.md, game/resources/skill_tree_data.gd, docs/best-practices/08-ui-patterns.md
+- Notes: Script-only SkillTreeUI Control (same pattern as echo_journal.gd). Character tab per party member. Node list with name, SP cost, unlocked/locked/available state, parent dependency shown. Confirm button spends skill_points from CharacterData. compute_skill_tree_entries(char_data) and compute_node_state(node, char_data) static helpers for TDD. "Skill Tree" button added to pause menu. 8+ tests.
 
 ---
 

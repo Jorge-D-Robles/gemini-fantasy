@@ -1,0 +1,41 @@
+[gd_resource type="Resource" script_class="SkillTreeData" load_steps=6 format=3 uid="uid://blyra_scholar_path"]
+
+[ext_resource type="Script" path="res://resources/skill_tree_data.gd" id="1_std"]
+[ext_resource type="Script" path="res://resources/skill_tree_node_data.gd" id="2_stnd"]
+
+[sub_resource type="Resource" id="Node_lyra_scholar_study"]
+script = ExtResource("2_stnd")
+id = &"lyra_scholar_study"
+display_name = "Scholar's Study"
+description = "Entry node for the Scholar path"
+tier = 1
+ap_cost = 1
+required_node_ids = []
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_lyra_ancient_memory"]
+script = ExtResource("2_stnd")
+id = &"lyra_ancient_memory"
+display_name = "Ancient Memory"
+description = "Mid-tier Scholar path node"
+tier = 2
+ap_cost = 2
+required_node_ids = [&"lyra_scholar_study"]
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_lyra_echo_scholar"]
+script = ExtResource("2_stnd")
+id = &"lyra_echo_scholar"
+display_name = "Echo Scholar"
+description = "Scholar path capstone"
+tier = 3
+ap_cost = 3
+required_node_ids = [&"lyra_ancient_memory"]
+unlocks_ability = null
+
+[resource]
+script = ExtResource("1_std")
+id = &"lyra_scholar_path"
+display_name = "Scholar Path"
+description = "Focus: Ancient Knowledge and Echo Research"
+nodes = [SubResource("Node_lyra_scholar_study"), SubResource("Node_lyra_ancient_memory"), SubResource("Node_lyra_echo_scholar")]

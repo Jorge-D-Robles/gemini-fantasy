@@ -1,0 +1,71 @@
+[gd_resource type="Resource" script_class="SkillTreeData" load_steps=9 format=3 uid="uid://bkael_bridge_path"]
+
+[ext_resource type="Script" path="res://resources/skill_tree_data.gd" id="1_std"]
+[ext_resource type="Script" path="res://resources/skill_tree_node_data.gd" id="2_stnd"]
+
+[sub_resource type="Resource" id="Node_kael_empathic_bond"]
+script = ExtResource("2_stnd")
+id = &"kael_empathic_bond"
+display_name = "Empathic Bond"
+description = "Passively share Resonance with allies"
+tier = 1
+ap_cost = 1
+required_node_ids = []
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_kael_stabilizing_presence"]
+script = ExtResource("2_stnd")
+id = &"kael_stabilizing_presence"
+display_name = "Stabilizing Presence"
+description = "Allies near Kael have +10% all stats"
+tier = 1
+ap_cost = 1
+required_node_ids = []
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_kael_resonance_transfer"]
+script = ExtResource("2_stnd")
+id = &"kael_resonance_transfer"
+display_name = "Resonance Transfer"
+description = "Can give Resonance gauge % to allies"
+tier = 2
+ap_cost = 2
+required_node_ids = [&"kael_empathic_bond"]
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_kael_echo_share"]
+script = ExtResource("2_stnd")
+id = &"kael_echo_share"
+display_name = "Echo Share"
+description = "Used Echoes can be triggered again by allies"
+tier = 2
+ap_cost = 2
+required_node_ids = [&"kael_stabilizing_presence"]
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_kael_reality_weaver"]
+script = ExtResource("2_stnd")
+id = &"kael_reality_weaver"
+display_name = "Reality Weaver"
+description = "Manipulate turn order, push/pull ally or enemy turns"
+tier = 3
+ap_cost = 3
+required_node_ids = [&"kael_resonance_transfer"]
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_kael_between_worlds"]
+script = ExtResource("2_stnd")
+id = &"kael_between_worlds"
+display_name = "Between Worlds"
+description = "30% dodge chance, can move through enemies"
+tier = 3
+ap_cost = 3
+required_node_ids = [&"kael_echo_share"]
+unlocks_ability = null
+
+[resource]
+script = ExtResource("1_std")
+id = &"kael_bridge_path"
+display_name = "Bridge Path"
+description = "Focus: Party Support and Resonance Sharing"
+nodes = [SubResource("Node_kael_empathic_bond"), SubResource("Node_kael_stabilizing_presence"), SubResource("Node_kael_resonance_transfer"), SubResource("Node_kael_echo_share"), SubResource("Node_kael_reality_weaver"), SubResource("Node_kael_between_worlds")]

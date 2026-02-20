@@ -1,0 +1,71 @@
+[gd_resource type="Resource" script_class="SkillTreeData" load_steps=9 format=3 uid="uid://biris_cybernetics_path"]
+
+[ext_resource type="Script" path="res://resources/skill_tree_data.gd" id="1_std"]
+[ext_resource type="Script" path="res://resources/skill_tree_node_data.gd" id="2_stnd"]
+
+[sub_resource type="Resource" id="Node_iris_reinforced_plating"]
+script = ExtResource("2_stnd")
+id = &"iris_reinforced_plating"
+display_name = "Reinforced Plating"
+description = "+25% Defense, less damage from physical attacks"
+tier = 1
+ap_cost = 1
+required_node_ids = []
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_iris_power_arm"]
+script = ExtResource("2_stnd")
+id = &"iris_power_arm"
+display_name = "Power Arm"
+description = "Cybernetic arm attacks deal bonus damage"
+tier = 1
+ap_cost = 1
+required_node_ids = []
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_iris_grapple_hook"]
+script = ExtResource("2_stnd")
+id = &"iris_grapple_hook"
+display_name = "Grapple Hook"
+description = "Can pull enemies out of turn order or pull self to safety"
+tier = 2
+ap_cost = 2
+required_node_ids = [&"iris_reinforced_plating"]
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_iris_energy_blade"]
+script = ExtResource("2_stnd")
+id = &"iris_energy_blade"
+display_name = "Energy Blade"
+description = "Cybernetic arm can deal physical or magic damage"
+tier = 2
+ap_cost = 2
+required_node_ids = [&"iris_power_arm"]
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_iris_overcharge"]
+script = ExtResource("2_stnd")
+id = &"iris_overcharge"
+display_name = "Overcharge"
+description = "Transform arm into energy cannon for 3 turns"
+tier = 3
+ap_cost = 3
+required_node_ids = [&"iris_grapple_hook"]
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_iris_full_integration"]
+script = ExtResource("2_stnd")
+id = &"iris_full_integration"
+display_name = "Full Integration"
+description = "Can't be disarmed, immune to tech-based debuffs"
+tier = 3
+ap_cost = 3
+required_node_ids = [&"iris_energy_blade"]
+unlocks_ability = null
+
+[resource]
+script = ExtResource("1_std")
+id = &"iris_cybernetics_path"
+display_name = "Cybernetics Path"
+description = "Focus: Cybernetic Enhancement and Defense"
+nodes = [SubResource("Node_iris_reinforced_plating"), SubResource("Node_iris_power_arm"), SubResource("Node_iris_grapple_hook"), SubResource("Node_iris_energy_blade"), SubResource("Node_iris_overcharge"), SubResource("Node_iris_full_integration")]

@@ -1,0 +1,71 @@
+[gd_resource type="Resource" script_class="SkillTreeData" load_steps=9 format=3 uid="uid://bkael_hunter_path"]
+
+[ext_resource type="Script" path="res://resources/skill_tree_data.gd" id="1_std"]
+[ext_resource type="Script" path="res://resources/skill_tree_node_data.gd" id="2_stnd"]
+
+[sub_resource type="Resource" id="Node_kael_echo_sensitivity"]
+script = ExtResource("2_stnd")
+id = &"kael_echo_sensitivity"
+display_name = "Echo Sensitivity"
+description = "+25% chance to find rare Echoes"
+tier = 1
+ap_cost = 1
+required_node_ids = []
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_kael_quick_capture"]
+script = ExtResource("2_stnd")
+id = &"kael_quick_capture"
+display_name = "Quick Capture"
+description = "Echo abilities cost 10% less EE"
+tier = 1
+ap_cost = 1
+required_node_ids = []
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_kael_echo_mastery"]
+script = ExtResource("2_stnd")
+id = &"kael_echo_mastery"
+display_name = "Echo Mastery"
+description = "Can equip 7 Echoes instead of 6"
+tier = 2
+ap_cost = 2
+required_node_ids = [&"kael_echo_sensitivity"]
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_kael_adaptive_resonance"]
+script = ExtResource("2_stnd")
+id = &"kael_adaptive_resonance"
+display_name = "Adaptive Resonance"
+description = "Can use any Echo type at +20% effectiveness"
+tier = 2
+ap_cost = 2
+required_node_ids = [&"kael_quick_capture"]
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_kael_perfect_harmony"]
+script = ExtResource("2_stnd")
+id = &"kael_perfect_harmony"
+display_name = "Perfect Harmony"
+description = "Echo abilities can't be reflected or countered"
+tier = 3
+ap_cost = 3
+required_node_ids = [&"kael_echo_mastery"]
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_kael_infinite_echo"]
+script = ExtResource("2_stnd")
+id = &"kael_infinite_echo"
+display_name = "Infinite Echo"
+description = "Once per battle, use any collected Echo even if not equipped"
+tier = 3
+ap_cost = 3
+required_node_ids = [&"kael_adaptive_resonance"]
+unlocks_ability = null
+
+[resource]
+script = ExtResource("1_std")
+id = &"kael_hunter_path"
+display_name = "Hunter Path"
+description = "Focus: Echo Collection and Versatility"
+nodes = [SubResource("Node_kael_echo_sensitivity"), SubResource("Node_kael_quick_capture"), SubResource("Node_kael_echo_mastery"), SubResource("Node_kael_adaptive_resonance"), SubResource("Node_kael_perfect_harmony"), SubResource("Node_kael_infinite_echo")]

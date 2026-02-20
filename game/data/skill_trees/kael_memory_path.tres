@@ -1,0 +1,71 @@
+[gd_resource type="Resource" script_class="SkillTreeData" load_steps=9 format=3 uid="uid://bkael_memory_path"]
+
+[ext_resource type="Script" path="res://resources/skill_tree_data.gd" id="1_std"]
+[ext_resource type="Script" path="res://resources/skill_tree_node_data.gd" id="2_stnd"]
+
+[sub_resource type="Resource" id="Node_kael_memory_bank"]
+script = ExtResource("2_stnd")
+id = &"kael_memory_bank"
+display_name = "Memory Bank"
+description = "+30% max EE"
+tier = 1
+ap_cost = 1
+required_node_ids = []
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_kael_resonance_overflow"]
+script = ExtResource("2_stnd")
+id = &"kael_resonance_overflow"
+display_name = "Resonance Overflow"
+description = "Can exceed 100% Resonance gauge (up to 150%)"
+tier = 1
+ap_cost = 1
+required_node_ids = []
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_kael_crystalline_mind"]
+script = ExtResource("2_stnd")
+id = &"kael_crystalline_mind"
+display_name = "Crystalline Mind"
+description = "Resistance to mental status effects"
+tier = 2
+ap_cost = 2
+required_node_ids = [&"kael_memory_bank"]
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_kael_echo_amplification"]
+script = ExtResource("2_stnd")
+id = &"kael_echo_amplification"
+display_name = "Echo Amplification"
+description = "All magic damage +25%"
+tier = 2
+ap_cost = 2
+required_node_ids = [&"kael_resonance_overflow"]
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_kael_memory_storm"]
+script = ExtResource("2_stnd")
+id = &"kael_memory_storm"
+display_name = "Memory Storm"
+description = "Spend all Echoes at once for massive AoE damage"
+tier = 3
+ap_cost = 3
+required_node_ids = [&"kael_crystalline_mind"]
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_kael_perfect_recall"]
+script = ExtResource("2_stnd")
+id = &"kael_perfect_recall"
+display_name = "Perfect Recall"
+description = "Can reuse expended Echoes once per battle"
+tier = 3
+ap_cost = 3
+required_node_ids = [&"kael_echo_amplification"]
+unlocks_ability = null
+
+[resource]
+script = ExtResource("1_std")
+id = &"kael_memory_path"
+display_name = "Memory Path"
+description = "Focus: EE Capacity and Magic Power"
+nodes = [SubResource("Node_kael_memory_bank"), SubResource("Node_kael_resonance_overflow"), SubResource("Node_kael_crystalline_mind"), SubResource("Node_kael_echo_amplification"), SubResource("Node_kael_memory_storm"), SubResource("Node_kael_perfect_recall")]

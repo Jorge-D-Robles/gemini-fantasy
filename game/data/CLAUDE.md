@@ -12,6 +12,7 @@ data/
   enemies/       # EnemyData instances (enemy combatants)
   equipment/     # EquipmentData instances (weapons and armor)
   items/         # ItemData instances (consumables and key items)
+  skill_trees/   # SkillTreeData instances (character skill trees)
 ```
 
 ## Current Entries
@@ -27,12 +28,13 @@ data/
 | `purifying_light` | Purifying Light | Light element heal |
 | `resonance_pulse` | Resonance Pulse | Resonance cost ability |
 
-### characters/ (3)
+### characters/ (4)
 | ID | Display Name | Weapon Types | Notes |
 |----|-------------|-------------|-------|
 | `kael` | Kael Voss | SWORD, DAGGER | Protagonist, balanced |
-| `garrick` | Garrick | — | Tank archetype |
-| `iris` | Iris | — | Magic specialist |
+| `garrick` | Garrick Thorne | SHIELD, MACE | Tank/support archetype |
+| `iris` | Iris Mantle | HAMMER, RIFLE | Physical DPS/debuffer |
+| `lyra` | Lyra | TOME, WAND | Magic/heal specialist |
 
 ### echoes/ (4)
 | ID | Display Name | Element | Target |
@@ -74,6 +76,36 @@ data/
 | `phoenix_down` | Phoenix Down | REVIVE | — |
 | `potion` | Potion | HEAL_HP | 50 HP |
 | `resonance_tonic` | Resonance Tonic | — | — |
+
+### skill_trees/ (24)
+Three paths per character. Full 6-node trees for Kael/Iris/Garrick/Nyx; 3-stub trees for Lyra/Sienna/Cipher/Ash.
+
+| ID | Display Name | Character | Nodes |
+|----|-------------|-----------|-------|
+| `kael_hunter_path` | Hunter Path | Kael | 6 |
+| `kael_memory_path` | Memory Path | Kael | 6 |
+| `kael_bridge_path` | Bridge Path | Kael | 6 |
+| `iris_arsenal_path` | Arsenal Path | Iris | 6 |
+| `iris_engineering_path` | Engineering Path | Iris | 6 |
+| `iris_cybernetics_path` | Cybernetics Path | Iris | 6 |
+| `garrick_fortress_path` | Fortress Path | Garrick | 6 |
+| `garrick_redemption_path` | Redemption Path | Garrick | 6 |
+| `garrick_judgment_path` | Judgment Path | Garrick | 6 |
+| `nyx_chaos_path` | Chaos Path | Nyx | 6 |
+| `nyx_identity_path` | Identity Path | Nyx | 6 |
+| `nyx_hollows_path` | Hollows Path | Nyx | 6 |
+| `lyra_scholar_path` | Scholar Path | Lyra | 3 (stub) |
+| `lyra_warrior_path` | Warrior Path | Lyra | 3 (stub) |
+| `lyra_echo_path` | Echo Path | Lyra | 3 (stub) |
+| `sienna_research_path` | Research Path | Sienna | 3 (stub) |
+| `sienna_experimentation_path` | Experimentation Path | Sienna | 3 (stub) |
+| `sienna_redemption_path` | Redemption Path | Sienna | 3 (stub) |
+| `cipher_infiltration_path` | Infiltration Path | Cipher | 3 (stub) |
+| `cipher_combat_path` | Combat Path | Cipher | 3 (stub) |
+| `cipher_anchor_path` | Anchor Path | Cipher | 3 (stub) |
+| `ash_silence_path` | Silence Path | Ash | 3 (stub) |
+| `ash_harmony_path` | Harmony Path | Ash | 3 (stub) |
+| `ash_future_path` | Future Path | Ash | 3 (stub) |
 
 ## .tres File Format
 

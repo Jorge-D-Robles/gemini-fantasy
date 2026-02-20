@@ -1,0 +1,41 @@
+[gd_resource type="Resource" script_class="SkillTreeData" load_steps=6 format=3 uid="uid://bcipher_combat_path"]
+
+[ext_resource type="Script" path="res://resources/skill_tree_data.gd" id="1_std"]
+[ext_resource type="Script" path="res://resources/skill_tree_node_data.gd" id="2_stnd"]
+
+[sub_resource type="Resource" id="Node_cipher_quick_strike"]
+script = ExtResource("2_stnd")
+id = &"cipher_quick_strike"
+display_name = "Quick Strike"
+description = "Entry node for the Combat path"
+tier = 1
+ap_cost = 1
+required_node_ids = []
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_cipher_dual_wield"]
+script = ExtResource("2_stnd")
+id = &"cipher_dual_wield"
+display_name = "Dual Wield"
+description = "Mid-tier Combat path node"
+tier = 2
+ap_cost = 2
+required_node_ids = [&"cipher_quick_strike"]
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_cipher_assassinate"]
+script = ExtResource("2_stnd")
+id = &"cipher_assassinate"
+display_name = "Assassinate"
+description = "Combat path capstone"
+tier = 3
+ap_cost = 3
+required_node_ids = [&"cipher_dual_wield"]
+unlocks_ability = null
+
+[resource]
+script = ExtResource("1_std")
+id = &"cipher_combat_path"
+display_name = "Combat Path"
+description = "Focus: Swift Combat and Precision Strikes"
+nodes = [SubResource("Node_cipher_quick_strike"), SubResource("Node_cipher_dual_wield"), SubResource("Node_cipher_assassinate")]

@@ -1,0 +1,41 @@
+[gd_resource type="Resource" script_class="SkillTreeData" load_steps=6 format=3 uid="uid://bash_silence_path"]
+
+[ext_resource type="Script" path="res://resources/skill_tree_data.gd" id="1_std"]
+[ext_resource type="Script" path="res://resources/skill_tree_node_data.gd" id="2_stnd"]
+
+[sub_resource type="Resource" id="Node_ash_quiet_step"]
+script = ExtResource("2_stnd")
+id = &"ash_quiet_step"
+display_name = "Quiet Step"
+description = "Entry node for the Silence path"
+tier = 1
+ap_cost = 1
+required_node_ids = []
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_ash_inner_calm"]
+script = ExtResource("2_stnd")
+id = &"ash_inner_calm"
+display_name = "Inner Calm"
+description = "Mid-tier Silence path node"
+tier = 2
+ap_cost = 2
+required_node_ids = [&"ash_quiet_step"]
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_ash_perfect_silence"]
+script = ExtResource("2_stnd")
+id = &"ash_perfect_silence"
+display_name = "Perfect Silence"
+description = "Silence path capstone"
+tier = 3
+ap_cost = 3
+required_node_ids = [&"ash_inner_calm"]
+unlocks_ability = null
+
+[resource]
+script = ExtResource("1_std")
+id = &"ash_silence_path"
+display_name = "Silence Path"
+description = "Focus: Stillness and Quiet Power"
+nodes = [SubResource("Node_ash_quiet_step"), SubResource("Node_ash_inner_calm"), SubResource("Node_ash_perfect_silence")]

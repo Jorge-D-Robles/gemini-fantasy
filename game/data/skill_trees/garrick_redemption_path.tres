@@ -1,0 +1,71 @@
+[gd_resource type="Resource" script_class="SkillTreeData" load_steps=9 format=3 uid="uid://bgarrick_redemption_path"]
+
+[ext_resource type="Script" path="res://resources/skill_tree_data.gd" id="1_std"]
+[ext_resource type="Script" path="res://resources/skill_tree_node_data.gd" id="2_stnd"]
+
+[sub_resource type="Resource" id="Node_garrick_healing_hands"]
+script = ExtResource("2_stnd")
+id = &"garrick_healing_hands"
+display_name = "Healing Hands"
+description = "Basic healing ability unlocked (30 EE, moderate heal)"
+tier = 1
+ap_cost = 1
+required_node_ids = []
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_garrick_atonement"]
+script = ExtResource("2_stnd")
+id = &"garrick_atonement"
+display_name = "Atonement"
+description = "Heals are 30% more effective"
+tier = 1
+ap_cost = 1
+required_node_ids = []
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_garrick_protective_aura"]
+script = ExtResource("2_stnd")
+id = &"garrick_protective_aura"
+display_name = "Protective Aura"
+description = "Allies near Garrick regenerate HP slowly"
+tier = 2
+ap_cost = 2
+required_node_ids = [&"garrick_healing_hands"]
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_garrick_second_chance"]
+script = ExtResource("2_stnd")
+id = &"garrick_second_chance"
+display_name = "Second Chance"
+description = "Can revive fallen ally at 50% HP (60 EE, once per battle)"
+tier = 2
+ap_cost = 2
+required_node_ids = [&"garrick_atonement"]
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_garrick_sanctuary"]
+script = ExtResource("2_stnd")
+id = &"garrick_sanctuary"
+display_name = "Sanctuary"
+description = "Create safe zone preventing all status effects for 3 turns"
+tier = 3
+ap_cost = 3
+required_node_ids = [&"garrick_protective_aura"]
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_garrick_redemptions_light"]
+script = ExtResource("2_stnd")
+id = &"garrick_redemptions_light"
+display_name = "Redemption's Light"
+description = "Revive all fallen allies at full HP (once per battle)"
+tier = 3
+ap_cost = 3
+required_node_ids = [&"garrick_second_chance"]
+unlocks_ability = null
+
+[resource]
+script = ExtResource("1_std")
+id = &"garrick_redemption_path"
+display_name = "Redemption Path"
+description = "Focus: Healing and Revival"
+nodes = [SubResource("Node_garrick_healing_hands"), SubResource("Node_garrick_atonement"), SubResource("Node_garrick_protective_aura"), SubResource("Node_garrick_second_chance"), SubResource("Node_garrick_sanctuary"), SubResource("Node_garrick_redemptions_light")]

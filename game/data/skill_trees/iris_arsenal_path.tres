@@ -1,0 +1,71 @@
+[gd_resource type="Resource" script_class="SkillTreeData" load_steps=9 format=3 uid="uid://biris_arsenal_path"]
+
+[ext_resource type="Script" path="res://resources/skill_tree_data.gd" id="1_std"]
+[ext_resource type="Script" path="res://resources/skill_tree_node_data.gd" id="2_stnd"]
+
+[sub_resource type="Resource" id="Node_iris_weapon_specialist"]
+script = ExtResource("2_stnd")
+id = &"iris_weapon_specialist"
+display_name = "Weapon Specialist"
+description = "+20% damage with equipped weapon type"
+tier = 1
+ap_cost = 1
+required_node_ids = []
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_iris_heavy_hitter"]
+script = ExtResource("2_stnd")
+id = &"iris_heavy_hitter"
+display_name = "Heavy Hitter"
+description = "Critical hits deal 2.5x damage instead of 2x"
+tier = 1
+ap_cost = 1
+required_node_ids = []
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_iris_armor_piercer"]
+script = ExtResource("2_stnd")
+id = &"iris_armor_piercer"
+display_name = "Armor Piercer"
+description = "Ignore 30% of enemy Defense"
+tier = 2
+ap_cost = 2
+required_node_ids = [&"iris_weapon_specialist"]
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_iris_explosive_rounds"]
+script = ExtResource("2_stnd")
+id = &"iris_explosive_rounds"
+display_name = "Explosive Rounds"
+description = "All attacks have small AoE splash damage"
+tier = 2
+ap_cost = 2
+required_node_ids = [&"iris_heavy_hitter"]
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_iris_devastation"]
+script = ExtResource("2_stnd")
+id = &"iris_devastation"
+display_name = "Devastation"
+description = "Massive damage that destroys part of the environment"
+tier = 3
+ap_cost = 3
+required_node_ids = [&"iris_armor_piercer"]
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_iris_one_shot"]
+script = ExtResource("2_stnd")
+id = &"iris_one_shot"
+display_name = "One Shot"
+description = "Once per battle, guarantee critical hit with 3x damage"
+tier = 3
+ap_cost = 3
+required_node_ids = [&"iris_explosive_rounds"]
+unlocks_ability = null
+
+[resource]
+script = ExtResource("1_std")
+id = &"iris_arsenal_path"
+display_name = "Arsenal Path"
+description = "Focus: Weapon Mastery and Critical Damage"
+nodes = [SubResource("Node_iris_weapon_specialist"), SubResource("Node_iris_heavy_hitter"), SubResource("Node_iris_armor_piercer"), SubResource("Node_iris_explosive_rounds"), SubResource("Node_iris_devastation"), SubResource("Node_iris_one_shot")]

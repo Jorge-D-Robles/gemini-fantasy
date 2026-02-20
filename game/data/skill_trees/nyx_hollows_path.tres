@@ -1,0 +1,71 @@
+[gd_resource type="Resource" script_class="SkillTreeData" load_steps=9 format=3 uid="uid://bnyx_hollows_path"]
+
+[ext_resource type="Script" path="res://resources/skill_tree_data.gd" id="1_std"]
+[ext_resource type="Script" path="res://resources/skill_tree_node_data.gd" id="2_stnd"]
+
+[sub_resource type="Resource" id="Node_nyx_phase_master"]
+script = ExtResource("2_stnd")
+id = &"nyx_phase_master"
+display_name = "Phase Master"
+description = "Phase Shift costs 50% less EE, lasts 2 turns"
+tier = 1
+ap_cost = 1
+required_node_ids = []
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_nyx_between_worlds"]
+script = ExtResource("2_stnd")
+id = &"nyx_between_worlds"
+display_name = "Between Worlds"
+description = "+30% evasion, partially exists in multiple realities"
+tier = 1
+ap_cost = 1
+required_node_ids = []
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_nyx_time_skip"]
+script = ExtResource("2_stnd")
+id = &"nyx_time_skip"
+display_name = "Time Skip"
+description = "Can delay enemy turns"
+tier = 2
+ap_cost = 2
+required_node_ids = [&"nyx_phase_master"]
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_nyx_spatial_tear"]
+script = ExtResource("2_stnd")
+id = &"nyx_spatial_tear"
+display_name = "Spatial Tear"
+description = "Teleport anywhere, create hazard zones"
+tier = 2
+ap_cost = 2
+required_node_ids = [&"nyx_between_worlds"]
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_nyx_reality_weaver_skill"]
+script = ExtResource("2_stnd")
+id = &"nyx_reality_weaver_skill"
+display_name = "Reality Weaver"
+description = "Rewrite battle conditions (change terrain, remove hazards)"
+tier = 3
+ap_cost = 3
+required_node_ids = [&"nyx_time_skip"]
+unlocks_ability = null
+
+[sub_resource type="Resource" id="Node_nyx_hollows_heart"]
+script = ExtResource("2_stnd")
+id = &"nyx_hollows_heart"
+display_name = "Hollows Heart"
+description = "Transforms battlefield into mini-Hollows, all rules become flexible"
+tier = 3
+ap_cost = 3
+required_node_ids = [&"nyx_spatial_tear"]
+unlocks_ability = null
+
+[resource]
+script = ExtResource("1_std")
+id = &"nyx_hollows_path"
+display_name = "Hollows Path"
+description = "Focus: Phase Shifting and Dimensional Manipulation"
+nodes = [SubResource("Node_nyx_phase_master"), SubResource("Node_nyx_between_worlds"), SubResource("Node_nyx_time_skip"), SubResource("Node_nyx_spatial_tear"), SubResource("Node_nyx_reality_weaver_skill"), SubResource("Node_nyx_hollows_heart")]
