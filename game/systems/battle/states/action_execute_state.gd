@@ -3,6 +3,7 @@ extends State
 ## Executes the chosen action (attack, ability, item) and checks battle end.
 
 const UITheme = preload("res://ui/ui_theme.gd")
+const BP = preload("res://systems/battle/battle_particles.gd")
 
 var battle_scene: Node = null
 var _battle_ui: Node = null
@@ -77,6 +78,7 @@ func _execute_attack(attacker: Battler, target: Battler) -> void:
 		if not target.is_alive:
 			AudioManager.play_sfx(load(SfxLibrary.COMBAT_DEATH))
 		_show_critical_popup(target, actual)
+		_flash_crit_on_scene()
 		if _battle_ui:
 			_battle_ui.add_battle_log(
 				"CRITICAL HIT! %s attacks %s for %d damage!" % [
@@ -266,6 +268,17 @@ func _show_heal_number(target: Battler, amount: int) -> void:
 		visual.show_heal_number(amount)
 	elif visual and visual.has_method("play_heal_anim"):
 		visual.play_heal_anim()
+
+
+func _flash_crit_on_scene() -> void:
+	var scene_node := battle_scene as Node2D
+	if not scene_node:
+		return
+	var dur: float = BP.compute_crit_flash_duration()
+	var color: Color = BP.compute_crit_flash_color()
+	var tween := scene_node.create_tween()
+	tween.tween_property(scene_node, "modulate", color, dur * 0.4)
+	tween.tween_property(scene_node, "modulate", Color.WHITE, dur * 0.6)
 
 
 func _show_critical_popup(target: Battler, amount: int) -> void:

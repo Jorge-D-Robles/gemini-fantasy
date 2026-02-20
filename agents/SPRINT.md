@@ -335,8 +335,10 @@ Started: 2026-02-18
 
 ### T-0096
 - Title: Add particle effects for healing, resonance, and criticals
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: low
 - Depends: T-0094
 

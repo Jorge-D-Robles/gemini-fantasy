@@ -3,6 +3,7 @@
 Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[date] Description`.
 
 ---
+- [2026-02-20] T-0096: Particle effects for healing/resonance/crits — BattleParticles static module (resonance flash colors, crit flash color/duration), resonance_state_changed wired in PartyBattlerScene, scene-wide crit flash in ActionExecuteState; 11 new tests (1371 total) (claude)
 - [2026-02-20] T-0138: Scrollable battle log — BattleUILog.compute_log_entry() static helper extracted from battle_ui.gd; scroll_following=true already in .tscn; 7 new tests (1287 total) (claude)
 - [2026-02-20] T-0162: Verdant Forest traversal dialogue — VerdantForestDialogue static module (get_traversal_lines/flag/gate_flag), _maybe_trigger_traversal_dialogue via call_deferred in verdant_forest.gd, 4-line scene with Garrick/Iris/Kael; 9 new tests (1296 total) (claude)
 - [2026-02-20] T-0163: Party swap validation feedback — compute_swap_feedback_text() in party_ui_data.gd, _show_swap_error() tween flash + transient label in party_ui.gd; 5 new tests in test_party_ui_feedback.gd (1301 total) (claude)
