@@ -257,6 +257,20 @@ func _on_wren_finished() -> void:
 
 
 func _on_thessa_finished() -> void:
+	if EventFlags.has_flag("garrick_recruited") \
+			and not EventFlags.has_flag(Dialogue.get_thessa_briefing_flag()):
+		EventFlags.set_flag(Dialogue.get_thessa_briefing_flag())
+		var raw: Array = Dialogue.get_thessa_briefing_lines()
+		var lines: Array[DialogueLine] = []
+		for entry: Dictionary in raw:
+			lines.append(
+				DialogueLine.create(entry["speaker"], entry["text"]),
+			)
+		GameManager.push_state(GameManager.GameState.CUTSCENE)
+		DialogueManager.start_dialogue(lines)
+		await DialogueManager.dialogue_ended
+		GameManager.pop_state()
+		return
 	_check_quest_chain(_elder_quest, "Elder Thessa")
 
 

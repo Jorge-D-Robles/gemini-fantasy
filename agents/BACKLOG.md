@@ -6,6 +6,16 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ## M0 — Foundation
 
+### T-0162
+- Title: Add Verdant Forest traversal dialogue — party comments heading to Overgrown Capital
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Milestone: M0
+- Depends: T-0085
+- Refs: docs/story/act1/04-old-iron.md (End of Chapter hook), game/scenes/verdant_forest/verdant_forest.gd
+- Notes: After garrick_recruited flag is set, the three-person party crosses the Verdant Forest toward Overgrown Ruins. Add a 3-4 line on-entry dialogue gated by garrick_recruited (and forest_traversal_full_party flag to fire once only). Garrick notes crystal density, Iris assesses threat level, Kael orients the group. 3+ tests.
+
 ### T-0008
 - Title: Replace has_method/has_signal with proper typing in autoloads
 - Status: todo
