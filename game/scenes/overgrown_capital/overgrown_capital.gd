@@ -8,6 +8,7 @@ extends Node2D
 const SP = preload("res://systems/scene_paths.gd")
 const INTERACTABLE_SCENE := preload("res://entities/interactable/interactable.tscn")
 const LAST_GARDENER_ENCOUNTER_SCRIPT := preload("res://events/last_gardener_encounter.gd")
+const LEAVING_CAPITAL_SCRIPT := preload("res://events/leaving_capital.gd")
 const PURIFICATION_NODE_STRATEGY_SCRIPT := preload(
 	"res://entities/interactable/strategies/purification_node_strategy.gd"
 )
@@ -385,4 +386,17 @@ func _on_exit_to_ruins_entered(body: Node2D) -> void:
 		return
 	if BattleManager.is_in_battle():
 		return
+	if LeavingCapital.compute_can_trigger(EventFlags.get_all_flags()):
+		_exit_to_ruins.monitoring = false
+		_trigger_leaving_capital_and_exit.call_deferred()
+		return
+	GameManager.change_scene(SP.VERDANT_FOREST, GameManager.FADE_DURATION, "spawn_from_capital")
+
+
+func _trigger_leaving_capital_and_exit() -> void:
+	var event: Node = LEAVING_CAPITAL_SCRIPT.new()
+	add_child(event)
+	event.trigger()
+	await event.sequence_completed
+	event.queue_free()
 	GameManager.change_scene(SP.VERDANT_FOREST, GameManager.FADE_DURATION, "spawn_from_capital")
