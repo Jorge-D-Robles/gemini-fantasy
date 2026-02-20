@@ -51,9 +51,10 @@ Started: 2026-02-18
 
 ### T-0143
 - Title: Implement critical hit mechanic and wire CRITICAL_HIT SFX and popup
-- Status: in-progress
+- Status: done
 - Assigned: claude
 - Started: 2026-02-19
+- Completed: 2026-02-19
 - Priority: medium
 - Depends: T-0067
 - Refs: game/systems/battle/battler_damage.gd, game/systems/battle/states/action_execute_state.gd, game/entities/battle/damage_popup.gd
@@ -243,6 +244,14 @@ Started: 2026-02-18
 ---
 
 ## Done This Sprint
+
+### T-0143
+- Title: Implement critical hit mechanic and wire CRITICAL_HIT SFX and popup
+- Status: done
+- Assigned: claude
+- Started: 2026-02-19
+- Completed: 2026-02-19
+- Notes: compute_crit_chance/roll_crit/apply_crit in BattlerDamage; CRIT_BASE_CHANCE=0.05, CRIT_LUCK_BONUS=0.005, CRIT_DAMAGE_MULT=1.5 in GameBalance; crit branch in _execute_attack with CRITICAL_HIT SFX, death SFX if kill, CRITICAL popup; 12 tests.
 
 ### T-0136
 - Title: Add player-driven defeat screen with Load/Title recovery options

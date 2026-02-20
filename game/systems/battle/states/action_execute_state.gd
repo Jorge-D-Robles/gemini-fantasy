@@ -73,6 +73,8 @@ func _execute_attack(attacker: Battler, target: Battler) -> void:
 
 	if is_crit:
 		AudioManager.play_sfx(load(SfxLibrary.COMBAT_CRITICAL_HIT))
+		if not target.is_alive:
+			AudioManager.play_sfx(load(SfxLibrary.COMBAT_DEATH))
 		_show_critical_popup(target, actual)
 		if _battle_ui:
 			_battle_ui.add_battle_log(
