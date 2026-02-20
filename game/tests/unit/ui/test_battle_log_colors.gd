@@ -7,20 +7,6 @@ const UITheme = preload("res://ui/ui_theme.gd")
 
 # ---- LogType enum tests ----
 
-func test_log_type_info_is_zero() -> void:
-	assert_eq(UITheme.LogType.INFO, 0)
-
-
-func test_log_type_has_seven_values() -> void:
-	assert_eq(UITheme.LogType.INFO, 0)
-	assert_eq(UITheme.LogType.DAMAGE, 1)
-	assert_eq(UITheme.LogType.HEAL, 2)
-	assert_eq(UITheme.LogType.STATUS, 3)
-	assert_eq(UITheme.LogType.SYSTEM, 4)
-	assert_eq(UITheme.LogType.VICTORY, 5)
-	assert_eq(UITheme.LogType.DEFEAT, 6)
-
-
 func test_log_type_values_are_unique() -> void:
 	var values: Array[int] = [
 		UITheme.LogType.INFO,
@@ -92,10 +78,6 @@ func test_get_log_color_invalid_returns_default() -> void:
 
 
 # ---- Color constant validation tests ----
-
-func test_log_info_color_is_valid() -> void:
-	assert_true(UITheme.LOG_INFO is Color)
-
 
 func test_log_damage_color_is_distinct_from_info() -> void:
 	assert_ne(UITheme.LOG_DAMAGE, UITheme.LOG_INFO)

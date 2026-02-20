@@ -14,14 +14,6 @@ func before_each() -> void:
 	add_child_autofree(_am)
 
 
-func test_bgm_volume_field_default_is_zero_db() -> void:
-	assert_eq(
-		_am._bgm_volume_db,
-		0.0,
-		"Default BGM player volume should be 0.0 dB",
-	)
-
-
 func test_set_bgm_volume_updates_stored_field() -> void:
 	_am.set_bgm_volume(-20.0)
 	assert_eq(

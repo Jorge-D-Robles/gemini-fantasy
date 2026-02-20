@@ -1,45 +1,12 @@
 extends GutTest
 
-## Tests for EnemyData resource — defaults, enums, and inheritance.
+## Tests for EnemyData resource — inheritance, cross-enum parity, and field assignment.
 
 
 func test_inherits_battler_data() -> void:
 	var e := EnemyData.new()
 	assert_true(e is BattlerData)
 	assert_true(e is Resource)
-
-
-func test_default_values() -> void:
-	var e := EnemyData.new()
-	assert_eq(e.ai_type, EnemyData.AiType.BASIC)
-	assert_eq(e.exp_reward, 10)
-	assert_eq(e.gold_reward, 5)
-	assert_eq(e.weaknesses.size(), 0)
-	assert_eq(e.resistances.size(), 0)
-	assert_eq(e.sprite_path, "")
-	assert_eq(e.sprite_columns, 1)
-	assert_eq(e.sprite_rows, 1)
-	assert_almost_eq(e.battle_scale, 1.0, 0.001)
-	assert_eq(e.loot_table.size(), 0)
-
-
-func test_ai_type_enum_values() -> void:
-	assert_eq(EnemyData.AiType.BASIC, 0)
-	assert_eq(EnemyData.AiType.AGGRESSIVE, 1)
-	assert_eq(EnemyData.AiType.DEFENSIVE, 2)
-	assert_eq(EnemyData.AiType.SUPPORT, 3)
-	assert_eq(EnemyData.AiType.BOSS, 4)
-
-
-func test_element_enum_values() -> void:
-	assert_eq(EnemyData.Element.NONE, 0)
-	assert_eq(EnemyData.Element.FIRE, 1)
-	assert_eq(EnemyData.Element.ICE, 2)
-	assert_eq(EnemyData.Element.WATER, 3)
-	assert_eq(EnemyData.Element.WIND, 4)
-	assert_eq(EnemyData.Element.EARTH, 5)
-	assert_eq(EnemyData.Element.LIGHT, 6)
-	assert_eq(EnemyData.Element.DARK, 7)
 
 
 func test_element_enum_matches_ability_data_element() -> void:

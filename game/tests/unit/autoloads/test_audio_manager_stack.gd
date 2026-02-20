@@ -13,23 +13,6 @@ func before_each() -> void:
 	add_child_autofree(_am)
 
 
-# -- push_bgm / pop_bgm existence --
-
-
-func test_push_bgm_method_exists() -> void:
-	assert_true(
-		_am.has_method("push_bgm"),
-		"AudioManager should have push_bgm()",
-	)
-
-
-func test_pop_bgm_method_exists() -> void:
-	assert_true(
-		_am.has_method("pop_bgm"),
-		"AudioManager should have pop_bgm()",
-	)
-
-
 # -- stack state --
 
 

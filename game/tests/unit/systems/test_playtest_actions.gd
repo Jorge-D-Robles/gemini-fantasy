@@ -7,60 +7,15 @@ const PlaytestActions := preload("res://tools/playtest_actions.gd")
 
 # --- get_all_action_types ---
 
-func test_action_types_includes_wait() -> void:
-	assert_true("wait" in PlaytestActions.get_all_action_types())
-
-
-func test_action_types_includes_screenshot() -> void:
-	assert_true("screenshot" in PlaytestActions.get_all_action_types())
-
-
-func test_action_types_includes_move() -> void:
-	assert_true("move" in PlaytestActions.get_all_action_types())
-
-
-func test_action_types_includes_interact() -> void:
-	assert_true("interact" in PlaytestActions.get_all_action_types())
-
-
-func test_action_types_includes_cancel() -> void:
-	assert_true("cancel" in PlaytestActions.get_all_action_types())
-
-
-func test_action_types_includes_menu() -> void:
-	assert_true("menu" in PlaytestActions.get_all_action_types())
-
-
-func test_action_types_includes_advance_dialogue() -> void:
-	assert_true("advance_dialogue" in PlaytestActions.get_all_action_types())
-
-
-func test_action_types_includes_wait_dialogue() -> void:
-	assert_true("wait_dialogue" in PlaytestActions.get_all_action_types())
-
-
-func test_action_types_includes_select_choice() -> void:
-	assert_true("select_choice" in PlaytestActions.get_all_action_types())
-
-
-func test_action_types_includes_trigger_battle() -> void:
-	assert_true("trigger_battle" in PlaytestActions.get_all_action_types())
-
-
-func test_action_types_includes_wait_battle() -> void:
-	assert_true("wait_battle" in PlaytestActions.get_all_action_types())
-
-
-func test_action_types_includes_wait_state() -> void:
-	assert_true("wait_state" in PlaytestActions.get_all_action_types())
-
-
-func test_action_types_includes_set_flag() -> void:
-	assert_true("set_flag" in PlaytestActions.get_all_action_types())
-
-
-func test_action_types_includes_log() -> void:
-	assert_true("log" in PlaytestActions.get_all_action_types())
+func test_action_types_includes_core_types() -> void:
+	var types: Array = PlaytestActions.get_all_action_types()
+	for required in [
+		"wait", "screenshot", "move", "interact", "cancel", "menu",
+		"advance_dialogue", "wait_dialogue", "select_choice",
+		"trigger_battle", "wait_battle", "wait_state",
+		"set_flag", "log", "auto_play_battle",
+	]:
+		assert_true(required in types, "Missing action type: " + required)
 
 
 # --- validate_action ---
@@ -196,10 +151,6 @@ func test_advance_dialogue_maps_to_interact() -> void:
 
 
 # --- auto_play_battle ---
-
-func test_action_types_includes_auto_play_battle() -> void:
-	assert_true("auto_play_battle" in PlaytestActions.get_all_action_types())
-
 
 func test_auto_play_battle_valid_minimal() -> void:
 	var errors := PlaytestActions.validate_action({"type": "auto_play_battle"})

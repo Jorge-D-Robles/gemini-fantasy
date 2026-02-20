@@ -5,12 +5,6 @@ extends GutTest
 const Helpers = preload("res://tests/helpers/test_helpers.gd")
 
 
-func test_default_values() -> void:
-	var entry := EncounterPoolEntry.new()
-	assert_eq(entry.enemies.size(), 0)
-	assert_almost_eq(entry.weight, 1.0, 0.001)
-
-
 func test_create_with_enemies_and_default_weight() -> void:
 	var enemy_data := EnemyData.new()
 	enemy_data.id = &"test_enemy"

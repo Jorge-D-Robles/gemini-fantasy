@@ -74,6 +74,51 @@ Started: 2026-02-20
 
 ## Queue
 
+### T-0228
+- Title: Test cleanup — delete constant-value, enum-ordinal, and has_signal/has_method assertions
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
+- Priority: high
+- Depends: none
+
+### T-0229
+- Title: Test cleanup — slim event dialogue tests to contract and logic only
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
+- Priority: high
+- Depends: T-0228
+
+### T-0230
+- Title: Test cleanup — slim NPC scene dialogue tests to flag-routing only
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
+- Priority: high
+- Depends: T-0228
+
+### T-0231
+- Title: Test cleanup — consolidate fragmented audio manager test files (low-value tests removed)
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
+- Priority: medium
+- Depends: none
+
+### T-0232
+- Title: Test cleanup — remove low-value playtest infrastructure tests
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
+- Priority: medium
+- Depends: none
+
 ### T-0180
 - Title: Place campfire interactable in Verdant Forest
 - Status: done

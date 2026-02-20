@@ -1,17 +1,9 @@
 extends GutTest
 
-## Unit tests for LastGardenerEncounter — optional three-choice boss event.
-## Verifies flag gating, approach dialogue, outcome lines, and choice mapping.
+## Tests for LastGardenerEncounter — optional three-choice boss event.
+## Conditional trigger logic, choice mapping, and structural invariants only.
 
 const LastGardenerEncounterScript = preload("res://events/last_gardener_encounter.gd")
-
-
-func test_flag_name_is_gardener_encountered() -> void:
-	assert_eq(LastGardenerEncounterScript.FLAG_NAME, "gardener_encountered")
-
-
-func test_gate_flag_is_lyra_fragment_2_collected() -> void:
-	assert_eq(LastGardenerEncounterScript.GATE_FLAG, "lyra_fragment_2_collected")
 
 
 func test_compute_can_trigger_false_when_gate_flag_absent() -> void:
@@ -32,16 +24,6 @@ func test_compute_can_trigger_true_when_eligible() -> void:
 	assert_true(LastGardenerEncounterScript.compute_can_trigger(flags))
 
 
-func test_approach_lines_count() -> void:
-	var lines: Array = LastGardenerEncounterScript.compute_approach_lines()
-	assert_eq(lines.size(), 6)
-
-
-func test_approach_first_speaker_is_gardener() -> void:
-	var lines: Array = LastGardenerEncounterScript.compute_approach_lines()
-	assert_eq(lines[0].speaker, "The Last Gardener")
-
-
 func test_approach_last_line_has_three_choices() -> void:
 	var lines: Array = LastGardenerEncounterScript.compute_approach_lines()
 	var last: DialogueLine = lines[lines.size() - 1]
@@ -49,49 +31,19 @@ func test_approach_last_line_has_three_choices() -> void:
 	assert_eq(last.choices.size(), 3)
 
 
-func test_approach_kael_asks_about_lyra() -> void:
-	var lines: Array = LastGardenerEncounterScript.compute_approach_lines()
-	var found: bool = false
-	for line: DialogueLine in lines:
-		if line.speaker == "Kael" and "Lyra" in line.text:
-			found = true
-			break
-	assert_true(found)
-
-
 func test_peaceful_outcome_lines_not_empty() -> void:
 	var lines: Array = LastGardenerEncounterScript.compute_peaceful_outcome_lines()
 	assert_gt(lines.size(), 0)
 
 
-func test_peaceful_outcome_kael_notes_echoes_not_monsters() -> void:
-	var lines: Array = LastGardenerEncounterScript.compute_peaceful_outcome_lines()
-	var found: bool = false
-	for line: DialogueLine in lines:
-		if line.speaker == "Kael" and "Echoes" in line.text:
-			found = true
-			break
-	assert_true(found)
-
-
-func test_quest_outcome_gardener_mentions_seed() -> void:
+func test_quest_outcome_lines_not_empty() -> void:
 	var lines: Array = LastGardenerEncounterScript.compute_quest_outcome_lines()
-	var found: bool = false
-	for line: DialogueLine in lines:
-		if line.speaker == "The Last Gardener" and "seed" in line.text.to_lower():
-			found = true
-			break
-	assert_true(found)
+	assert_gt(lines.size(), 0)
 
 
-func test_defeated_outcome_gardener_says_tired_of_tending() -> void:
+func test_defeated_outcome_lines_not_empty() -> void:
 	var lines: Array = LastGardenerEncounterScript.compute_defeated_outcome_lines()
-	var found: bool = false
-	for line: DialogueLine in lines:
-		if line.speaker == "The Last Gardener" and "tired" in line.text.to_lower():
-			found = true
-			break
-	assert_true(found)
+	assert_gt(lines.size(), 0)
 
 
 func test_compute_choice_result_peaceful_for_0() -> void:

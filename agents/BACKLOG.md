@@ -958,6 +958,56 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 - Refs: game/autoloads/, game/systems/battle/battler.gd, game/systems/battle/battle_scene.gd
 - Notes: Combines T-0008, T-0010, T-0011. Single targeted sweep: (1) Replace has_method/has_signal duck-typing with typed references. (2) Add return type annotations on methods missing them. (3) Add doc comments to public signals and methods in autoloads and battle scripts. Run gdlint to verify no new warnings. No behavior changes — pure code quality. 0 new tests required (existing 1536 must stay green).
 
+### T-0228
+- Title: Test cleanup — delete constant-value, enum-ordinal, and has_signal/has_method assertions
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Milestone: M0
+- Depends: none
+- Refs: game/tests/unit/systems/battle/test_critical_hit.gd, game/tests/unit/resources/test_enemy_data.gd, game/tests/unit/resources/test_character_data.gd, game/tests/unit/events/test_garrick_recruitment.gd, game/tests/unit/events/test_opening_sequence.gd, game/tests/unit/autoloads/test_audio_manager_volume.gd
+- Notes: Delete tests that only assert a constant/enum equals its hardcoded literal (e.g. `assert_eq(GameBalance.CRIT_BASE_CHANCE, 0.05)`), or just check default field values on a freshly constructed Resource (e.g. `assert_eq(c.max_hp, 100)`), or use `has_signal()`/`has_method()` reflection (e.g. `test_has_sequence_completed_signal`). These tests verify the GDScript interpreter, not game behavior — they always pass unless the constant itself changes, in which case the fix is trivial. Affected patterns: test_critical_hit.gd (3 constant tests), test_enemy_data.gd (ai_type/element enum ordinal tests), test_character_data.gd (default field tests), test_garrick_recruitment.gd (path constants, has_signal, has_method), test_opening_sequence.gd (path constants, has_signal, has_method), and any similar tests found across the suite. Expected reduction: ~80-100 tests.
+
+### T-0229
+- Title: Test cleanup — slim event dialogue tests to contract and logic only
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Milestone: M0
+- Depends: T-0228
+- Refs: game/tests/unit/events/
+- Notes: Event test files (test_opening_sequence.gd, test_garrick_recruitment.gd, test_iris_recruitment.gd, test_garrick_meets_lyra.gd, test_garrick_night_scene.gd, test_camp_three_fires.gd, test_after_capital_camp.gd, test_leaving_capital.gd, test_last_gardener_encounter.gd, test_nyx_introduction.gd, test_demo_ending.gd, test_boss_encounter.gd) each have 8-12 tests that assert: exact speaker at position 0 or -1, exact speaker count, exact line count, or whether a specific keyword appears in dialogue text. These fail on any dialogue edit and provide no behavioral signal. Delete them. Keep only: non-empty array check, conditional helper logic (e.g. compute_should_auto_accept_*), and signal contracts that verify actual game mechanics. Expected reduction: ~100-120 tests.
+
+### T-0230
+- Title: Test cleanup — slim NPC scene dialogue tests to flag-routing only
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Milestone: M0
+- Depends: T-0228
+- Refs: game/tests/unit/scenes/test_roothollow_dialogue.gd, game/tests/unit/scenes/test_verdant_forest_dialogue.gd, game/tests/unit/scenes/test_roothollow_quests.gd
+- Notes: test_roothollow_dialogue.gd is 591 lines covering 6 NPCs across 4 flag states each. Most tests assert: `lines.size() == N` (exact count per flag state) and `lines[0].contains("specific phrase")` (exact text). These break on any dialogue edit. The valuable tests are: flag priority ordering (garrick > iris > lyra), slang verification (all states use Tangle slang), and routing changes (flag X produces different dialogue than flag Y). Delete line-count and exact-text assertions. Keep routing and meta-behavioral tests. Apply same pattern to verdant_forest_dialogue.gd and any similar file. Expected reduction: ~80-100 tests.
+
+### T-0231
+- Title: Test cleanup — consolidate fragmented audio manager test files
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M0
+- Depends: none
+- Refs: game/tests/unit/autoloads/test_audio_manager_pause.gd, game/tests/unit/autoloads/test_audio_manager_stack.gd, game/tests/unit/autoloads/test_audio_manager_volume.gd, game/tests/unit/autoloads/test_audio_manager_sfx_priority.gd
+- Notes: AudioManager is tested across 4 separate files (pause, stack, volume, sfx_priority) plus test_battle_manager_bgm.gd. Merge into a single test_audio_manager.gd. During the merge, audit each test: delete pure constant assertions (see T-0228), keep behavioral tests (volume persists across plays, stack push/pop restores BGM, process_mode_always invariant). Expected: net reduction of ~15-20 tests from duplicates and constant assertions, plus cleaner organization.
+
+### T-0232
+- Title: Test cleanup — remove playtest infrastructure tests that duplicate production behavior
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M0
+- Depends: none
+- Refs: game/tests/unit/systems/test_playtest_actions.gd, game/tests/unit/systems/test_playtest_capture.gd, game/tests/unit/systems/test_playtest_config.gd
+- Notes: The playtest runner has 74 tests across 3 files (actions=36, capture=17, config=21 approx). Audit each: delete tests that only assert a constant action name equals a string literal, or that a dictionary key exists, or default config values. Keep tests that verify validation logic (invalid actions rejected, required fields caught), merging behavior (CLI args override defaults), and filename generation logic. Expected reduction: ~25-35 tests.
+
 ---
 
 ## M1 — Act I: The Echo Thief
