@@ -4,6 +4,7 @@ Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[
 
 ---
 
+- [2026-02-19] T-0128: AudioManager BGM volume persistence — _bgm_volume_db field, set_bgm_volume() persists across crossfades and cold starts, 5 tests (claude)
 - [2026-02-19] T-0119: Quest log item reward display names — compute_item_display_name() static helper, ResourceLoader.exists() guard, fallback to ID string, items as Array[String] of display names, ", ".join() rendering, 3 new tests (claude)
 - [2026-02-19] T-0120: Quest accept/complete toast notification in HUD — compute_toast_text() static helper, _setup_quest_toast() Label at PRESET_CENTER_BOTTOM in gold, queue-based coroutine, fade-in/hold/fade-out, 7 tests (claude)
 - [2026-02-19] T-0143: Critical hit mechanic — compute_crit_chance/roll_crit/apply_crit in BattlerDamage; 5% base + luck*0.5% formula; ×1.5 damage, COMBAT_CRITICAL_HIT SFX, CRITICAL popup; death SFX on killing crit; 12 tests (claude)
