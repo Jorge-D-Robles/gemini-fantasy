@@ -246,7 +246,7 @@ func _on_lyra_zone_entered(body: Node2D) -> void:
 		_encounter_system.enabled = true
 		# Tutorial: zone travel hint after first major story event
 		UILayer.hud.show_tutorial_hint("zone_travel")
-	elif EventFlags.has_flag("garrick_recruited") \
+	elif EventFlags.has_flag(EventFlagRegistry.GARRICK_RECRUITED) \
 			and not EventFlags.has_flag(
 				GarrickMeetsLyra.FLAG_NAME,
 			):

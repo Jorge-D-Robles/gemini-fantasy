@@ -1050,23 +1050,23 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0237
 - Title: Code health — consolidate AudioManager crossfade duplication
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: high
 - Milestone: M0
 - Depends: none
 - Refs: game/autoloads/audio_manager.gd
-- Notes: `_crossfade_bgm()` (lines 167-184) and `_crossfade_bgm_at()` (lines 186-206) are near-identical 20-line functions — the only difference is the `start_pos` argument. Extract a private `_do_crossfade(stream: AudioStream, start_pos: float, fade_time: float) -> void` helper that both public methods delegate to. No behavior change. Run /run-tests after.
 
 ### T-0238
 - Title: Code health — break down enemy_turn_state.enter() 130-line god method
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: high
 - Milestone: M0
 - Depends: none
 - Refs: game/systems/battle/states/enemy_turn_state.gd
-- Notes: `enter()` is ~130 lines handling: state validation, array conversion, AI action selection, attack/ability/defend/wait execution, sound, UI logging, and state transitions. Extract focused methods: `_handle_attack_action(action, attacker, targets)`, `_handle_ability_action(action, attacker, targets)`, `_handle_defend_action(attacker)`, `_handle_wait_action(attacker)`. Also remove the unnecessary Array[Battler] copies at lines 24-30 — party_battlers and enemy_battlers are already typed correctly in battle_scene. No behavior change. All tests must remain green.
 
 ### T-0239
 - Title: Code health — deduplicate battle_scene._spawn_party and _spawn_enemies
@@ -1080,33 +1080,33 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0240
 - Title: Code health — extract equipment_manager.gd SLOT_KEYS constant
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: medium
 - Milestone: M0
 - Depends: none
 - Refs: game/autoloads/equipment_manager.gd
-- Notes: The slot key array `["weapon", "helmet", "chest", "accessory_0", "accessory_1"]` is hardcoded twice — once in `serialize()` (lines 166-167) and once in `deserialize()` (lines 180-181). Extract as `const SLOT_KEYS: Array[String] = ["weapon", "helmet", "chest", "accessory_0", "accessory_1"]` at file top level. Both methods reference the constant. No behavior change.
 
 ### T-0241
 - Title: Code health — split quest_manager.deserialize() into focused helpers
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: medium
 - Milestone: M0
 - Depends: none
 - Refs: game/autoloads/quest_manager.gd
-- Notes: `deserialize()` is ~47 lines mixing active/completed/failed quest restoration in one function. Split into: `_restore_active_quests(data, quest_resources)`, `_restore_completed_quests(data)`, `_restore_failed_quests(data)`. The public `deserialize()` calls all three. Each helper is under 20 lines. No behavior change. Existing serialization tests must remain green.
 
 ### T-0242
 - Title: Code health — extract pause_menu.gd open/close subscene boilerplate
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: medium
 - Milestone: M0
 - Depends: none
 - Refs: game/ui/pause_menu/pause_menu.gd
-- Notes: `_open_inventory`, `_open_quest_log`, `_open_echo_journal`, `_open_skill_tree_ui`, `_open_settings`, `_open_party_ui` all follow the same pattern: guard if already open, play sfx, hide menu_panel + pause_label, instantiate/assign, set process_mode, add_child, connect closed signal, call open(). The corresponding `_on_*_closed` handlers also follow the same pattern: free, nil, show menu_panel + pause_label, grab_focus. Extract `_open_subscene(var_ref: Control, script_or_scene, closed_signal_name: String, return_button: Button) -> Control` and `_close_subscene(var_ref: Control, return_button: Button)` helpers. No behavior change.
 
 ### T-0243
 - Title: Code health — extract hud.gd duplicate popup setup functions

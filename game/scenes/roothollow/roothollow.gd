@@ -136,7 +136,7 @@ func _ready() -> void:
 
 
 func _maybe_trigger_iris_arrival() -> void:
-	if not EventFlags.has_flag("iris_recruited"):
+	if not EventFlags.has_flag(EventFlagRegistry.IRIS_RECRUITED):
 		return
 	if EventFlags.has_flag(Dialogue.get_iris_arrival_flag()):
 		return
@@ -298,7 +298,7 @@ func _on_wren_finished() -> void:
 
 
 func _on_thessa_finished() -> void:
-	if EventFlags.has_flag("garrick_recruited") \
+	if EventFlags.has_flag(EventFlagRegistry.GARRICK_RECRUITED) \
 			and not EventFlags.has_flag(Dialogue.get_thessa_briefing_flag()):
 		EventFlags.set_flag(Dialogue.get_thessa_briefing_flag())
 		var raw: Array = Dialogue.get_thessa_briefing_lines()
@@ -412,7 +412,7 @@ static func _can_offer_quest(
 		return false
 	match qid:
 		&"herb_gathering", &"elder_wisdom":
-			return EventFlags.has_flag("opening_lyra_discovered")
+			return EventFlags.has_flag(EventFlagRegistry.OPENING_LYRA_DISCOVERED)
 	return true
 
 

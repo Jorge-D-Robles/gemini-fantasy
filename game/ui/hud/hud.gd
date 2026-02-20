@@ -336,25 +336,30 @@ func _on_game_state_changed(
 			pass
 
 
+func _create_popup_label(
+	font_size: int,
+	color: Color,
+	position: Vector2,
+) -> Label:
+	var label := Label.new()
+	label.add_theme_font_size_override("font_size", font_size)
+	label.add_theme_color_override("font_color", color)
+	label.add_theme_constant_override("shadow_offset_x", 1)
+	label.add_theme_constant_override("shadow_offset_y", 1)
+	label.position = position
+	add_child(label)
+	return label
+
+
 func _setup_area_name_popup() -> void:
-	_area_name_popup = Label.new()
+	_area_name_popup = _create_popup_label(20, UITheme.TEXT_PRIMARY, Vector2(-150, 40))
 	_area_name_popup.name = "AreaNamePopup"
 	_area_name_popup.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_area_name_popup.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_area_name_popup.anchors_preset = Control.PRESET_CENTER_TOP
-	_area_name_popup.position = Vector2(-150, 40)
 	_area_name_popup.custom_minimum_size = Vector2(300, 40)
-	_area_name_popup.add_theme_font_size_override("font_size", 20)
-	_area_name_popup.add_theme_color_override(
-		"font_color", UITheme.TEXT_PRIMARY,
-	)
-	_area_name_popup.add_theme_color_override(
-		"font_shadow_color", Color(0, 0, 0, 0.8),
-	)
-	_area_name_popup.add_theme_constant_override("shadow_offset_x", 1)
-	_area_name_popup.add_theme_constant_override("shadow_offset_y", 1)
+	_area_name_popup.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.8))
 	_area_name_popup.modulate.a = 0.0
-	add_child(_area_name_popup)
 
 
 func _show_area_name(area_name: String) -> void:
@@ -374,45 +379,25 @@ func _show_area_name(area_name: String) -> void:
 
 
 func _setup_quest_toast() -> void:
-	_quest_toast_label = Label.new()
+	_quest_toast_label = _create_popup_label(10, UITheme.TEXT_GOLD, Vector2(-150, -90))
 	_quest_toast_label.name = "QuestToastLabel"
 	_quest_toast_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_quest_toast_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_quest_toast_label.anchors_preset = Control.PRESET_CENTER_BOTTOM
-	_quest_toast_label.position = Vector2(-150, -90)
 	_quest_toast_label.custom_minimum_size = Vector2(300, 24)
-	_quest_toast_label.add_theme_font_size_override("font_size", 10)
-	_quest_toast_label.add_theme_color_override(
-		"font_color", UITheme.TEXT_GOLD,
-	)
-	_quest_toast_label.add_theme_color_override(
-		"font_shadow_color", Color(0, 0, 0, 0.9),
-	)
-	_quest_toast_label.add_theme_constant_override("shadow_offset_x", 1)
-	_quest_toast_label.add_theme_constant_override("shadow_offset_y", 1)
+	_quest_toast_label.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.9))
 	_quest_toast_label.modulate.a = 0.0
-	add_child(_quest_toast_label)
 
 
 func _setup_tutorial_popup() -> void:
-	_tutorial_popup = Label.new()
+	_tutorial_popup = _create_popup_label(10, UITheme.TEXT_PRIMARY, Vector2(-150, -60))
 	_tutorial_popup.name = "TutorialPopup"
 	_tutorial_popup.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_tutorial_popup.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_tutorial_popup.anchors_preset = Control.PRESET_CENTER_BOTTOM
-	_tutorial_popup.position = Vector2(-150, -60)
 	_tutorial_popup.custom_minimum_size = Vector2(300, 24)
-	_tutorial_popup.add_theme_font_size_override("font_size", 10)
-	_tutorial_popup.add_theme_color_override(
-		"font_color", UITheme.TEXT_PRIMARY,
-	)
-	_tutorial_popup.add_theme_color_override(
-		"font_shadow_color", Color(0, 0, 0, 0.9),
-	)
-	_tutorial_popup.add_theme_constant_override("shadow_offset_x", 1)
-	_tutorial_popup.add_theme_constant_override("shadow_offset_y", 1)
+	_tutorial_popup.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.9))
 	_tutorial_popup.modulate.a = 0.0
-	add_child(_tutorial_popup)
 
 
 func _show_tutorial_popup(text: String) -> void:
@@ -448,23 +433,13 @@ func _on_tutorial_dismissed() -> void:
 
 
 func _setup_fragment_tracker() -> void:
-	_fragment_tracker_label = Label.new()
+	_fragment_tracker_label = _create_popup_label(9, Color(0.5, 0.85, 1.0), Vector2(-80, 54))
 	_fragment_tracker_label.name = "FragmentTrackerLabel"
 	_fragment_tracker_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_fragment_tracker_label.anchors_preset = Control.PRESET_TOP_RIGHT
-	_fragment_tracker_label.position = Vector2(-80, 54)
 	_fragment_tracker_label.custom_minimum_size = Vector2(72, 16)
-	_fragment_tracker_label.add_theme_font_size_override("font_size", 9)
-	_fragment_tracker_label.add_theme_color_override(
-		"font_color", Color(0.5, 0.85, 1.0),
-	)
-	_fragment_tracker_label.add_theme_color_override(
-		"font_shadow_color", Color(0, 0, 0, 0.9),
-	)
-	_fragment_tracker_label.add_theme_constant_override("shadow_offset_x", 1)
-	_fragment_tracker_label.add_theme_constant_override("shadow_offset_y", 1)
+	_fragment_tracker_label.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.9))
 	_fragment_tracker_label.visible = false
-	add_child(_fragment_tracker_label)
 
 
 func update_compass(scene_path: String) -> void:
@@ -489,41 +464,21 @@ func update_fragment_tracker() -> void:
 
 
 func _setup_compass() -> void:
-	_compass_label = Label.new()
+	_compass_label = _create_popup_label(9, UITheme.TEXT_SECONDARY, Vector2(8.0, -24.0))
 	_compass_label.name = "ZoneCompass"
 	_compass_label.anchors_preset = Control.PRESET_BOTTOM_LEFT
-	_compass_label.position = Vector2(8.0, -24.0)
-	_compass_label.add_theme_font_size_override("font_size", 9)
-	_compass_label.add_theme_color_override(
-		"font_color", UITheme.TEXT_SECONDARY,
-	)
-	_compass_label.add_theme_color_override(
-		"font_shadow_color", Color(0.0, 0.0, 0.0, 0.85),
-	)
-	_compass_label.add_theme_constant_override("shadow_offset_x", 1)
-	_compass_label.add_theme_constant_override("shadow_offset_y", 1)
+	_compass_label.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 0.85))
 	_compass_label.visible = false
-	add_child(_compass_label)
 
 
 func _setup_echo_badge() -> void:
-	_echo_badge_label = Label.new()
+	_echo_badge_label = _create_popup_label(9, UITheme.TEXT_GOLD, Vector2(-80.0, -24.0))
 	_echo_badge_label.name = "EchoBadge"
 	_echo_badge_label.anchors_preset = Control.PRESET_BOTTOM_RIGHT
-	_echo_badge_label.position = Vector2(-80.0, -24.0)
 	_echo_badge_label.custom_minimum_size = Vector2(72.0, 16.0)
 	_echo_badge_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	_echo_badge_label.add_theme_font_size_override("font_size", 9)
-	_echo_badge_label.add_theme_color_override(
-		"font_color", UITheme.TEXT_GOLD,
-	)
-	_echo_badge_label.add_theme_color_override(
-		"font_shadow_color", Color(0.0, 0.0, 0.0, 0.85),
-	)
-	_echo_badge_label.add_theme_constant_override("shadow_offset_x", 1)
-	_echo_badge_label.add_theme_constant_override("shadow_offset_y", 1)
+	_echo_badge_label.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 0.85))
 	_echo_badge_label.visible = false
-	add_child(_echo_badge_label)
 
 
 ## Updates the echo count badge from EchoManager state.
