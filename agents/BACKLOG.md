@@ -686,13 +686,13 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0158
 - Title: Add hit flash animation on battler sprites when taking damage
-- Status: todo
+- Status: done
 - Assigned: unassigned
 - Priority: medium
 - Milestone: M0
 - Depends: none
 - Refs: game/entities/battle/party_battler_scene.gd, game/entities/battle/enemy_battler_scene.gd
-- Notes: When a battler takes damage, briefly modulate the sprite to white (0.15s flash, then fade back to normal over 0.1s). Add play_hit_flash() method to both party_battler_scene.gd and enemy_battler_scene.gd. Wire call from ActionExecuteState after damage is applied. Pairs with DamagePopup for tactile feedback. 4+ tests for flash timing, color values, and that the visual restores correctly.
+- Notes: SUPERSEDED — play_damage_anim() already implements white+red flash with position recoil shake in both battler scenes, wired to _on_damage_taken() via battler.damage_taken signal. Functionality fully present.
 
 ---
 

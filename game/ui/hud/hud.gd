@@ -13,6 +13,10 @@ const AREA_NAMES: Dictionary = {
 	SP.OVERGROWN_RUINS: "Overgrown Ruins",
 }
 
+const TOAST_SLIDE_DURATION: float = 0.3
+const TOAST_HOLD_DURATION: float = 2.0
+const TOAST_FADE_DURATION: float = 0.5
+
 @export var location_name: String = "" :
 	set(value):
 		location_name = value
@@ -25,6 +29,10 @@ var _area_popup_tween: Tween = null
 var _tutorial_popup: Label = null
 var _tutorial_tween: Tween = null
 var _tutorial_visible: bool = false
+var _quest_toast_label: Label = null
+var _quest_toast_tween: Tween = null
+var _quest_toast_queue: Array[String] = []
+var _toast_processing: bool = false
 
 @onready var _location_label: Label = %LocationLabel
 @onready var _gold_label: Label = %GoldLabel
@@ -44,6 +52,7 @@ func _ready() -> void:
 	update_party_display()
 	_setup_area_name_popup()
 	_setup_tutorial_popup()
+	_setup_quest_toast()
 
 	PartyManager.party_changed.connect(_on_party_changed)
 	PartyManager.party_state_changed.connect(_on_party_state_changed)
@@ -55,12 +64,12 @@ func _ready() -> void:
 		_gold = inv.gold
 		_update_gold_display()
 		inv.gold_changed.connect(_on_gold_changed)
-	# Connect QuestManager signals for objective tracker
+	# Connect QuestManager signals for objective tracker + toast notifications
 	var qm: Node = get_node_or_null("/root/QuestManager")
 	if qm:
-		qm.quest_accepted.connect(_on_quest_changed)
+		qm.quest_accepted.connect(_on_quest_accepted)
 		qm.quest_progressed.connect(_on_quest_progressed)
-		qm.quest_completed.connect(_on_quest_changed)
+		qm.quest_completed.connect(_on_quest_completed_event)
 		qm.quest_failed.connect(_on_quest_changed)
 		update_objective_tracker()
 
@@ -70,6 +79,8 @@ func _exit_tree() -> void:
 		_area_popup_tween.kill()
 	if _tutorial_tween and _tutorial_tween.is_valid():
 		_tutorial_tween.kill()
+	if _quest_toast_tween and _quest_toast_tween.is_valid():
+		_quest_toast_tween.kill()
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -155,6 +166,44 @@ static func compute_area_display_name(scene_path: String) -> String:
 	return AREA_NAMES.get(scene_path, "")
 
 
+## Returns the toast text for a quest event.
+## event: "accepted" or "completed"
+static func compute_toast_text(event: String, quest_name: String) -> String:
+	match event:
+		"accepted":
+			return "New Quest: %s" % quest_name
+		"completed":
+			return "Quest Complete: %s" % quest_name
+		_:
+			return quest_name
+
+
+func show_quest_toast(text: String) -> void:
+	_quest_toast_queue.append(text)
+	if not _toast_processing:
+		_process_quest_toasts()
+
+
+func _process_quest_toasts() -> void:
+	_toast_processing = true
+	while not _quest_toast_queue.is_empty():
+		var text: String = _quest_toast_queue.pop_front()
+		if _quest_toast_label:
+			_quest_toast_label.text = text
+		if _quest_toast_tween and _quest_toast_tween.is_valid():
+			_quest_toast_tween.kill()
+		_quest_toast_tween = create_tween()
+		_quest_toast_tween.tween_property(
+			_quest_toast_label, "modulate:a", 1.0, TOAST_SLIDE_DURATION,
+		)
+		_quest_toast_tween.tween_interval(TOAST_HOLD_DURATION)
+		_quest_toast_tween.tween_property(
+			_quest_toast_label, "modulate:a", 0.0, TOAST_FADE_DURATION,
+		)
+		await _quest_toast_tween.finished
+	_toast_processing = false
+
+
 func _update_gold_display() -> void:
 	_gold_label.text = "Gold: %d" % _gold
 
@@ -217,6 +266,26 @@ func _on_gold_changed() -> void:
 
 func _on_quest_changed(_quest_id: StringName) -> void:
 	update_objective_tracker()
+
+
+func _on_quest_accepted(quest_id: StringName) -> void:
+	update_objective_tracker()
+	var qm := get_node_or_null("/root/QuestManager")
+	if not qm:
+		return
+	var quest: Resource = qm.get_quest_data(quest_id)
+	var quest_name: String = quest.title if quest and quest.get("title") != null else String(quest_id)
+	show_quest_toast(compute_toast_text("accepted", quest_name))
+
+
+func _on_quest_completed_event(quest_id: StringName) -> void:
+	update_objective_tracker()
+	var qm := get_node_or_null("/root/QuestManager")
+	if not qm:
+		return
+	var quest: Resource = qm.get_quest_data(quest_id)
+	var quest_name: String = quest.title if quest and quest.get("title") != null else String(quest_id)
+	show_quest_toast(compute_toast_text("completed", quest_name))
 
 
 func _on_quest_progressed(
@@ -285,6 +354,27 @@ func _show_area_name(area_name: String) -> void:
 	_area_popup_tween.tween_property(
 		_area_name_popup, "modulate:a", 0.0, 0.5,
 	)
+
+
+func _setup_quest_toast() -> void:
+	_quest_toast_label = Label.new()
+	_quest_toast_label.name = "QuestToastLabel"
+	_quest_toast_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_quest_toast_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_quest_toast_label.anchors_preset = Control.PRESET_CENTER_BOTTOM
+	_quest_toast_label.position = Vector2(-150, -90)
+	_quest_toast_label.custom_minimum_size = Vector2(300, 24)
+	_quest_toast_label.add_theme_font_size_override("font_size", 10)
+	_quest_toast_label.add_theme_color_override(
+		"font_color", UITheme.TEXT_GOLD,
+	)
+	_quest_toast_label.add_theme_color_override(
+		"font_shadow_color", Color(0, 0, 0, 0.9),
+	)
+	_quest_toast_label.add_theme_constant_override("shadow_offset_x", 1)
+	_quest_toast_label.add_theme_constant_override("shadow_offset_y", 1)
+	_quest_toast_label.modulate.a = 0.0
+	add_child(_quest_toast_label)
 
 
 func _setup_tutorial_popup() -> void:
