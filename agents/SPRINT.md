@@ -286,12 +286,14 @@ Started: 2026-02-18
 
 ### T-0160
 - Title: Wire quest-NPC indicator refresh on QuestManager signals
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: low
 - Depends: T-0089, T-0090
 - Refs: game/scenes/roothollow/roothollow.gd, game/autoloads/quest_manager.gd, game/entities/npc/npc.gd
-- Notes: NPC indicator_type computed once at scene load; quest progress while in scene doesn't refresh indicators. Connect QuestManager.quest_accepted, quest_progressed, quest_completed signals to re-evaluate NPC indicators. Static compute_npc_indicator_type() helper for TDD. 4+ tests.
+- Notes: compute_npc_indicator_type() static helper in roothollow_quests.gd. _refresh_npc_indicators() wired to quest_accepted/progressed/completed signals in _ready(). 7 tests. PR #201 merged.
 
 ### T-0132
 - Title: Add "Defend" status badge on party battler panels during combat

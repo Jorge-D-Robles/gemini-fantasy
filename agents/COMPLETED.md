@@ -4,6 +4,7 @@ Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[
 
 ---
 
+- [2026-02-20] T-0160: Quest-NPC indicator refresh — compute_npc_indicator_type() in roothollow_quests.gd, QuestManager signal wiring in roothollow _ready(), 7 tests, PR #201 (claude)
 - [2026-02-20] T-0057: Turn order display — compute_turn_order_entries() static helper, [Active] brackets with ACTIVE_HIGHLIGHT, ally=blue enemy=red, 6 tests, PR #200 (claude)
 - [2026-02-20] T-0165: Party UI cross-column keyboard/gamepad focus nav — compute_cross_column_focus_index() helper, _setup_focus() two-column rewrite, 5 tests, PR #199 (claude)
 - [2026-02-20] T-0166: BUG defend stance persists through TurnEnd — removed is_defending=false from end_turn(), cleared in PlayerTurnState.enter(); 4 tests updated, PR #198 (claude)
