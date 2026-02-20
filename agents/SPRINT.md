@@ -224,8 +224,10 @@ Started: 2026-02-18
 
 ### T-0171
 - Title: Add Overgrown Capital entry scene — 3-person party gate dialogue on entry
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: medium
 - Depends: T-0085
 - Refs: docs/story/act1/05-into-the-capital.md (Scene 1), game/scenes/overgrown_ruins/overgrown_ruins.gd
