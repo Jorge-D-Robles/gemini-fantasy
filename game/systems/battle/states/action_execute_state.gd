@@ -3,7 +3,7 @@ extends State
 ## Executes the chosen action (attack, ability, item) and checks battle end.
 
 const UITheme = preload("res://ui/ui_theme.gd")
-const BP = preload("res://systems/battle/battle_particles.gd")
+const BAX = preload("res://systems/battle/battle_action_executor.gd")
 
 var battle_scene: Node = null
 var _battle_ui: Node = null
@@ -57,59 +57,7 @@ func enter() -> void:
 
 
 func _execute_attack(attacker: Battler, target: Battler) -> void:
-	if not target or not target.is_alive:
-		return
-
-	# Play attacker's attack animation
-	await _play_attacker_anim(attacker)
-
-	# Play impact VFX on target (fire-and-forget)
-	_play_vfx(target, AbilityData.Element.NONE)
-
-	var is_crit := BattlerDamage.roll_crit(attacker.luck)
-	var damage := attacker.deal_damage(attacker.attack)
-	if is_crit:
-		damage = BattlerDamage.apply_crit(damage)
-	var actual := target.take_damage(damage)
-	_maybe_shake_on_damage(target, actual)
-
-	if is_crit:
-		AudioManager.play_sfx(
-			load(SfxLibrary.COMBAT_CRITICAL_HIT),
-			AudioManager.SfxPriority.CRITICAL,
-		)
-		if not target.is_alive:
-			AudioManager.play_sfx(
-				load(SfxLibrary.COMBAT_DEATH),
-				AudioManager.SfxPriority.CRITICAL,
-			)
-		_show_critical_popup(target, actual)
-		_flash_crit_on_scene()
-		if _battle_ui:
-			_battle_ui.add_battle_log(
-				"CRITICAL HIT! %s attacks %s for %d damage!" % [
-					attacker.get_display_name(),
-					target.get_display_name(),
-					actual,
-				],
-				UITheme.LogType.DAMAGE,
-			)
-	else:
-		AudioManager.play_sfx(load(SfxLibrary.COMBAT_ATTACK_HIT))
-		if not target.is_alive:
-			AudioManager.play_sfx(
-				load(SfxLibrary.COMBAT_DEATH),
-				AudioManager.SfxPriority.CRITICAL,
-			)
-		if _battle_ui:
-			_battle_ui.add_battle_log(
-				"%s attacks %s for %d damage!" % [
-					attacker.get_display_name(),
-					target.get_display_name(),
-					actual,
-				],
-				UITheme.LogType.DAMAGE,
-			)
+	await BAX.execute_attack(attacker, target, battle_scene, _battle_ui)
 
 
 func _execute_ability(
@@ -129,50 +77,7 @@ func _execute_ability(
 			)
 		return false
 
-	var is_magical := ability.damage_stat == AbilityData.DamageStat.MAGIC
-
-	# Play attacker's attack animation
-	await _play_attacker_anim(attacker)
-
-	# Play element VFX on target (fire-and-forget)
-	if target and target.is_alive:
-		_play_vfx(target, ability.element)
-
-	if ability.damage_base > 0 and target and target.is_alive:
-		var damage := attacker.deal_damage(
-			ability.damage_base, is_magical, true
-		)
-		var actual := target.take_damage(damage, is_magical)
-		_maybe_shake_on_damage(target, actual)
-		AudioManager.play_sfx(load(SfxLibrary.COMBAT_MAGIC_CAST))
-		if not target.is_alive:
-			AudioManager.play_sfx(
-				load(SfxLibrary.COMBAT_DEATH),
-				AudioManager.SfxPriority.CRITICAL,
-			)
-		if _battle_ui:
-			_battle_ui.add_battle_log(
-				"%s uses %s on %s for %d damage!" % [
-					attacker.get_display_name(),
-					ability.display_name,
-					target.get_display_name(),
-					actual,
-				],
-				UITheme.LogType.DAMAGE,
-			)
-	else:
-		AudioManager.play_sfx(load(SfxLibrary.COMBAT_MAGIC_CAST))
-		if _battle_ui:
-			_battle_ui.add_battle_log(
-				"%s uses %s!" % [
-					attacker.get_display_name(),
-					ability.display_name,
-				],
-				UITheme.LogType.STATUS,
-			)
-
-	# Apply status effect with probability check
-	_try_apply_status(ability, target)
+	await BAX.execute_ability(attacker, ability, target, battle_scene, _battle_ui)
 	return true
 
 
@@ -221,50 +126,6 @@ func _execute_item(
 				)
 
 
-func _play_attacker_anim(attacker: Battler) -> void:
-	var visual: Node2D = battle_scene.get_visual_scene(attacker)
-	if visual and visual.has_method("play_attack_anim"):
-		await visual.play_attack_anim()
-
-
-func _maybe_shake_on_damage(target: Battler, actual: int) -> void:
-	if not BattleShake.is_heavy_hit(actual, target.max_hp):
-		return
-	var intensity := BattleShake.compute_intensity(actual, target.max_hp)
-	BattleShake.shake(battle_scene as Node2D, intensity, BattleShake.SHAKE_DURATION)
-
-
-func _try_apply_status(ability: AbilityData, target: Battler) -> void:
-	if not ability or not target or not target.is_alive:
-		return
-	if ability.status_effect.is_empty() or ability.status_chance <= 0.0:
-		return
-	if randf() < ability.status_chance:
-		var effect := StatusEffectData.new()
-		effect.id = StringName(ability.status_effect)
-		effect.display_name = ability.status_effect
-		effect.duration = ability.status_effect_duration
-		target.apply_status(effect)
-		AudioManager.play_sfx(load(SfxLibrary.COMBAT_STATUS_APPLY))
-		if _battle_ui:
-			_battle_ui.add_battle_log(
-				"%s is affected by %s!" % [
-					target.get_display_name(),
-					ability.status_effect,
-				],
-				UITheme.LogType.STATUS,
-			)
-
-
-func _play_vfx(target: Battler, element: AbilityData.Element) -> void:
-	var visual: Node2D = battle_scene.get_visual_scene(target)
-	if not visual:
-		return
-	var vfx := BattleVFX.new()
-	visual.add_child(vfx)
-	vfx.setup(element)
-
-
 func _play_heal_vfx(target: Battler) -> void:
 	var visual: Node2D = battle_scene.get_visual_scene(target)
 	if not visual:
@@ -282,21 +143,3 @@ func _show_heal_number(target: Battler, amount: int) -> void:
 		visual.play_heal_anim()
 
 
-func _flash_crit_on_scene() -> void:
-	var scene_node := battle_scene as Node2D
-	if not scene_node:
-		return
-	var dur: float = BP.compute_crit_flash_duration()
-	var color: Color = BP.compute_crit_flash_color()
-	var tween := scene_node.create_tween()
-	tween.tween_property(scene_node, "modulate", color, dur * 0.4)
-	tween.tween_property(scene_node, "modulate", Color.WHITE, dur * 0.6)
-
-
-func _show_critical_popup(target: Battler, amount: int) -> void:
-	var visual: Node2D = battle_scene.get_visual_scene(target)
-	if not visual:
-		return
-	var popup := DamagePopup.new()
-	visual.add_child(popup)
-	popup.setup(amount, DamagePopup.PopupType.CRITICAL)

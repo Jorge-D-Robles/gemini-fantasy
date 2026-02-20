@@ -140,13 +140,13 @@ func trigger() -> void:
 
 	match resolution:
 		"peaceful":
-			EventFlags.set_flag("gardener_resolution_peaceful")
+			EventFlags.set_flag(EventFlagRegistry.GARDENER_RESOLUTION_PEACEFUL)
 			DialogueManager.start_dialogue(compute_peaceful_outcome_lines())
 			await DialogueManager.dialogue_ended
 			GameManager.pop_state()
 			sequence_completed.emit()
 		"quest":
-			EventFlags.set_flag("gardener_resolution_quest")
+			EventFlags.set_flag(EventFlagRegistry.GARDENER_RESOLUTION_QUEST)
 			_unlock_greenhouse_quest()
 			DialogueManager.start_dialogue(compute_quest_outcome_lines())
 			await DialogueManager.dialogue_ended
@@ -187,7 +187,7 @@ func _start_gardener_battle() -> void:
 static func _on_gardener_battle_ended(victory: bool) -> void:
 	if not victory:
 		return
-	EventFlags.set_flag("gardener_resolution_defeated")
+	EventFlags.set_flag(EventFlagRegistry.GARDENER_RESOLUTION_DEFEATED)
 	GameManager.push_state(GameManager.GameState.CUTSCENE)
 	DialogueManager.start_dialogue(
 		LastGardenerEncounter.compute_defeated_outcome_lines()

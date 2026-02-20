@@ -115,11 +115,7 @@ func _spawn_party(party_data: Array[Resource]) -> void:
 			battler.position = slots[i]
 		party_node.add_child(battler)
 		party_battlers.append(battler)
-		battler.defeated.connect(_on_battler_defeated.bind(battler))
-		battler.resonance_state_changed.connect(
-			_on_resonance_state_changed.bind(battler)
-		)
-		# Instantiate visual scene and bind to logic battler
+		_connect_battler_signals(battler)
 		if visual_scene:
 			var visual: PartyBattlerScene = visual_scene.instantiate()
 			var char_data := party_data[i] as CharacterData
@@ -140,11 +136,7 @@ func _spawn_enemies(enemy_data_arr: Array[Resource]) -> void:
 			battler.position = slots[i]
 		enemy_node.add_child(battler)
 		enemy_battlers.append(battler)
-		battler.defeated.connect(_on_battler_defeated.bind(battler))
-		battler.resonance_state_changed.connect(
-			_on_resonance_state_changed.bind(battler)
-		)
-		# Instantiate visual scene and bind to logic battler
+		_connect_battler_signals(battler)
 		if visual_scene:
 			var visual: EnemyBattlerScene = visual_scene.instantiate()
 			var e_data := enemy_data_arr[i] as EnemyData
@@ -152,6 +144,13 @@ func _spawn_enemies(enemy_data_arr: Array[Resource]) -> void:
 				visual.enemy_data = e_data
 			battler.add_child(visual)
 			visual.bind_battler(battler)
+
+
+func _connect_battler_signals(battler: Battler) -> void:
+	battler.defeated.connect(_on_battler_defeated.bind(battler))
+	battler.resonance_state_changed.connect(
+		_on_resonance_state_changed.bind(battler)
+	)
 
 
 func _build_battler_list() -> void:
