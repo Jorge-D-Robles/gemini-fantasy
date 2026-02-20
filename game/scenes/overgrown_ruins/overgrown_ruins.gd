@@ -10,7 +10,7 @@ const MEMORY_BLOOM_PATH: String = "res://data/enemies/memory_bloom.tres"
 const CREEPING_VINE_PATH: String = "res://data/enemies/creeping_vine.tres"
 const LAST_GARDENER_PATH: String = "res://data/enemies/last_gardener.tres"
 const KAEL_DATA_PATH: String = "res://data/characters/kael.tres"
-const SCENE_BGM_PATH: String = "res://assets/music/Castle.ogg"
+const SCENE_BGM_PATH: String = "res://assets/music/Echoes of the Capital.ogg"
 
 # Source 0: FAIRY_FOREST_A5_A (opaque ground tiles)
 # Source 1: RUINS_A5 (ruins2 — opaque golden walls)
