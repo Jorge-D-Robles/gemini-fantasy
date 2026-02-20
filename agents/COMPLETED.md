@@ -4,6 +4,7 @@ Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[
 
 ---
 
+- [2026-02-19] T-0136: Player-driven defeat screen — defeat_action_chosen signal, compute_defeat_options(has_save), RetryButton hidden if no save, defeat_state awaits choice then loads save or title, 9 tests (claude)
 - [2026-02-19] T-0129: Player-driven victory screen dismissal — GRACE_PERIOD=0.5, show_victory_dismiss_prompt("interact"), victory_dismissed signal, 7 tests; fixed stale z_index test (tscn parsing); verdant forest ground/canopy improvements (claude)
 - [2026-02-19] T-0147: Add battle auto-play mode to playtest runner — auto_play_battle action type, polls BattleStateMachine states, emits attack/target signals automatically, captures outcome via BattleManager.battle_ended, logs HP balance data, 4 tests (claude)
 - [2026-02-19] T-0146: Create /playtest skill and preset configs — 7 preset JSON configs, /playtest SKILL.md, fixed runner scene loading to use call_deferred (runner persists across scene changes), end-to-end verified (claude)
