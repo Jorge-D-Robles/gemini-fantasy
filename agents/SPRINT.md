@@ -9,15 +9,6 @@ Started: 2026-02-18
 
 ## Active
 
-### T-0178
-- Title: Add read-only control bindings display to settings menu
-- Status: in-progress
-- Assigned: claude
-- Started: 2026-02-20
-- Priority: low
-- Depends: T-0068
-- Refs: game/ui/settings_menu/settings_menu.gd
-
 ---
 
 ## Queue
@@ -459,6 +450,14 @@ Started: 2026-02-18
 ---
 
 ## Done This Sprint
+
+### T-0178
+- Title: Add read-only control bindings display to settings menu
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
+- Notes: compute_control_bindings()/compute_action_label()/compute_action_key_label() in SettingsData; Controls section (GridContainer) in settings_menu.gd; panel expanded to 380px min height; 8 tests (1518 total passing). PR #240 merged.
 
 ### T-0175
 - Title: Add fade-in on BGM stack pop/restore to prevent audio snap
