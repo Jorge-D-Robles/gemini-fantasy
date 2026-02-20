@@ -6,6 +6,7 @@ extends CanvasLayer
 const SP = preload("res://systems/scene_paths.gd")
 const UITheme = preload("res://ui/ui_theme.gd")
 const TH = preload("res://ui/hud/tutorial_hints.gd")
+const FragmentTracker = preload("res://ui/hud/hud_fragment_tracker.gd")
 
 const AREA_NAMES: Dictionary = {
 	SP.ROOTHOLLOW: "Roothollow",
@@ -24,6 +25,8 @@ const TOAST_FADE_DURATION: float = 0.5
 			_location_label.text = value
 
 var _gold: int = 0
+var _current_scene_path: String = ""
+var _fragment_tracker_label: Label = null
 var _area_name_popup: Label = null
 var _area_popup_tween: Tween = null
 var _tutorial_popup: Label = null
@@ -53,6 +56,7 @@ func _ready() -> void:
 	_setup_area_name_popup()
 	_setup_tutorial_popup()
 	_setup_quest_toast()
+	_setup_fragment_tracker()
 
 	PartyManager.party_changed.connect(_on_party_changed)
 	PartyManager.party_state_changed.connect(_on_party_state_changed)
@@ -296,6 +300,7 @@ func _on_quest_progressed(
 
 
 func _on_scene_changed(scene_path: String) -> void:
+	_current_scene_path = scene_path
 	if "title_screen" in scene_path:
 		visible = false
 	else:
@@ -303,6 +308,7 @@ func _on_scene_changed(scene_path: String) -> void:
 		var area := compute_area_display_name(scene_path)
 		if not area.is_empty():
 			_show_area_name(area)
+	update_fragment_tracker()
 
 
 func _on_game_state_changed(
@@ -312,6 +318,7 @@ func _on_game_state_changed(
 	match new_state:
 		GameManager.GameState.OVERWORLD:
 			visible = true
+			update_fragment_tracker()
 		GameManager.GameState.BATTLE, GameManager.GameState.CUTSCENE:
 			_dismiss_tutorial_hint()
 			visible = false
@@ -428,3 +435,35 @@ func _dismiss_tutorial_hint() -> void:
 
 func _on_tutorial_dismissed() -> void:
 	_tutorial_visible = false
+
+
+func _setup_fragment_tracker() -> void:
+	_fragment_tracker_label = Label.new()
+	_fragment_tracker_label.name = "FragmentTrackerLabel"
+	_fragment_tracker_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_fragment_tracker_label.anchors_preset = Control.PRESET_TOP_RIGHT
+	_fragment_tracker_label.position = Vector2(-80, 54)
+	_fragment_tracker_label.custom_minimum_size = Vector2(72, 16)
+	_fragment_tracker_label.add_theme_font_size_override("font_size", 9)
+	_fragment_tracker_label.add_theme_color_override(
+		"font_color", Color(0.5, 0.85, 1.0),
+	)
+	_fragment_tracker_label.add_theme_color_override(
+		"font_shadow_color", Color(0, 0, 0, 0.9),
+	)
+	_fragment_tracker_label.add_theme_constant_override("shadow_offset_x", 1)
+	_fragment_tracker_label.add_theme_constant_override("shadow_offset_y", 1)
+	_fragment_tracker_label.visible = false
+	add_child(_fragment_tracker_label)
+
+
+func update_fragment_tracker() -> void:
+	if not _fragment_tracker_label:
+		return
+	var flags: Dictionary = EventFlags.get_all_flags()
+	var state: Dictionary = FragmentTracker.compute_tracker_display(
+		flags, _current_scene_path,
+	)
+	_fragment_tracker_label.visible = state["visible"]
+	if state["visible"]:
+		_fragment_tracker_label.text = state["label"]
