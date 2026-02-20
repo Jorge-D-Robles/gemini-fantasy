@@ -136,4 +136,7 @@ static func stat_abbreviation(stat_key: String) -> String:
 		"resistance": return "RES"
 		"speed": return "SPD"
 		"luck": return "LCK"
+		"hp": return "HP"
+		"ee": return "EE"
+		"skill_points": return "SP"
 		_: return stat_key.to_upper()

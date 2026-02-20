@@ -210,8 +210,10 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0018
 - Title: Build skill tree framework
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: medium
 - Milestone: M0
 - Depends: T-0019
