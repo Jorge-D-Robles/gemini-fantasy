@@ -396,3 +396,30 @@ func test_get_save_path_returns_correct_path() -> void:
 func test_get_save_path_slot_1() -> void:
 	var path: String = _save.get_save_path(1)
 	assert_eq(path, "user://saves/save_1.json")
+
+
+## --- playtime_seconds (T-0130) ---
+
+func test_gather_save_data_has_playtime_seconds_key() -> void:
+	var data: Dictionary = _save.gather_save_data(
+		_party, _inventory, _flags,
+		"res://scenes/test.tscn", Vector2.ZERO,
+	)
+	assert_true(data.has("playtime_seconds"), "Save data includes playtime_seconds key")
+
+
+func test_gather_save_data_playtime_defaults_to_zero() -> void:
+	var data: Dictionary = _save.gather_save_data(
+		_party, _inventory, _flags,
+		"res://scenes/test.tscn", Vector2.ZERO,
+	)
+	assert_almost_eq(float(data["playtime_seconds"]), 0.0, 0.0001, "Default playtime is 0.0")
+
+
+func test_gather_save_data_playtime_matches_param() -> void:
+	var data: Dictionary = _save.gather_save_data(
+		_party, _inventory, _flags,
+		"res://scenes/test.tscn", Vector2.ZERO,
+		null, null, 123.5,
+	)
+	assert_almost_eq(float(data["playtime_seconds"]), 123.5, 0.001, "Playtime matches passed value")

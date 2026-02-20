@@ -39,10 +39,11 @@ func save_game(
 	player_position: Vector2,
 	equipment: Node = null,
 	quests: Node = null,
+	playtime: float = 0.0,
 ) -> bool:
 	var data := gather_save_data(
 		party, inventory, flags,
-		scene_path, player_position, equipment, quests,
+		scene_path, player_position, equipment, quests, playtime,
 	)
 	return _write_save_file(slot, data)
 
@@ -102,10 +103,12 @@ func gather_save_data(
 	player_position: Vector2,
 	equipment: Node = null,
 	quests: Node = null,
+	playtime: float = 0.0,
 ) -> Dictionary:
 	var data := {
 		"version": SAVE_VERSION,
 		"timestamp": Time.get_unix_time_from_system(),
+		"playtime_seconds": playtime,
 		"scene_path": scene_path,
 		"player_position": {
 			"x": player_position.x,
