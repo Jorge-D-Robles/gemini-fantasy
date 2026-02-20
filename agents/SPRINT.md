@@ -443,6 +443,22 @@ Started: 2026-02-18
 
 ## Done This Sprint
 
+### T-0175
+- Title: Add fade-in on BGM stack pop/restore to prevent audio snap
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
+- Notes: BGM_RESTORE_FADE_TIME=0.5s constant; compute_bgm_restore_fade_duration() static helper; pop_bgm() cold-start else branch fades from -80.0 to _bgm_volume_db instead of snapping; 2 new tests (1402 total).
+
+### T-0164
+- Title: Wire party_changed signal from PartyManager into party_ui refresh
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
+- Notes: _connect_party_signals() / _disconnect_party_signals() extracted; idempotent is_connected guard; _on_party_changed() rebuilds UI; removed redundant manual _build_ui() after swap; 5 tests (1400 total). PR #222 merged.
+
 ### T-0128
 - Title: BUG — AudioManager BGM player volume resets on BGM change
 - Status: done

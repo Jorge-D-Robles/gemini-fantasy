@@ -8,8 +8,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0175
 - Title: Add fade-in on BGM stack pop/restore to prevent audio snap
-- Status: todo
-- Assigned: unassigned
+- Status: in-progress
+- Assigned: claude
+- Started: 2026-02-20
 - Priority: low
 - Milestone: M0
 - Depends: T-0117, T-0128
@@ -92,8 +93,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0164
 - Title: Wire party_changed signal from PartyManager into party_ui refresh
-- Status: todo
-- Assigned: unassigned
+- Status: in-progress
+- Assigned: claude
+- Started: 2026-02-20
 - Priority: low
 - Milestone: M0
 - Depends: T-0020
