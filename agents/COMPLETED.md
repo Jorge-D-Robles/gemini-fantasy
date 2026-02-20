@@ -7,6 +7,7 @@ Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[
 - [2026-02-20] T-0162: Verdant Forest traversal dialogue — VerdantForestDialogue static module (get_traversal_lines/flag/gate_flag), _maybe_trigger_traversal_dialogue via call_deferred in verdant_forest.gd, 4-line scene with Garrick/Iris/Kael; 9 new tests (1296 total) (claude)
 - [2026-02-20] T-0163: Party swap validation feedback — compute_swap_feedback_text() in party_ui_data.gd, _show_swap_error() tween flash + transient label in party_ui.gd; 5 new tests in test_party_ui_feedback.gd (1301 total) (claude)
 - [2026-02-20] T-0148: Camp scene "Three Around a Fire" — CampThreeFires event script (15-line Garrick/Iris/Kael campfire dialogue), wired into roothollow.gd innkeeper handler on garrick_recruited flag; 12 new tests (1313 total) (claude)
+- [2026-02-20] T-0135: Garrick night scene — GarrickNightScene event script (10-line quiet reflection at Roothollow: shield monologue, Kael comparison, Iris anger), gated by garrick_met_lyra flag; 12 new tests (1325 total) (claude)
 
 [2026-02-20] T-0098: Add overworld encounter warning — two-phase encounter_warning→encounter_triggered flow with 0.8s delay; yellow screen flash in Verdant Forest and Overgrown Ruins (claude)
 
