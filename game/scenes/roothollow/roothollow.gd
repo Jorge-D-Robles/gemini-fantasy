@@ -17,6 +17,7 @@ const Zone = preload("roothollow_zone.gd")
 const SP = preload("res://systems/scene_paths.gd")
 const CampThreeFiresScript = preload("res://events/camp_three_fires.gd")
 const GarrickNightSceneScript = preload("res://events/garrick_night_scene.gd")
+const NightEvents = preload("roothollow_night_events.gd")
 const SHOP_DATA_PATH: String = (
 	"res://data/shops/roothollow_general.tres"
 )
@@ -250,22 +251,22 @@ func _on_innkeeper_finished() -> void:
 	DialogueManager.start_dialogue(heal_lines)
 	await DialogueManager.dialogue_ended
 	_check_quest_chain(_herb_quest, "Maren")
-	# After resting with the full party assembled, trigger the campfire scene.
-	if EventFlags.has_flag("garrick_recruited") and \
-			not EventFlags.has_flag(CampThreeFires.FLAG_NAME):
-		var camp_event: Node = CampThreeFiresScript.new()
-		add_child(camp_event)
-		camp_event.trigger()
-		await camp_event.sequence_completed
-		camp_event.queue_free()
-	# After meeting Lyra in the ruins, trigger the quiet night reflection scene.
-	if EventFlags.has_flag("garrick_met_lyra") and \
-			not EventFlags.has_flag(GarrickNightScene.FLAG_NAME):
+	# Trigger the highest-priority eligible night event (one per rest).
+	var night_pick: StringName = NightEvents.compute_innkeeper_night_event(
+		EventFlags.get_all_flags()
+	)
+	if night_pick == NightEvents.EVENT_GARRICK_NIGHT:
 		var night_event: Node = GarrickNightSceneScript.new()
 		add_child(night_event)
 		night_event.trigger()
 		await night_event.sequence_completed
 		night_event.queue_free()
+	elif night_pick == NightEvents.EVENT_CAMP_THREE_FIRES:
+		var camp_event: Node = CampThreeFiresScript.new()
+		add_child(camp_event)
+		camp_event.trigger()
+		await camp_event.sequence_completed
+		camp_event.queue_free()
 
 
 func _on_shopkeeper_finished() -> void:
