@@ -1426,13 +1426,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0186
 - Title: Wire MemorialEchoStrategy to EchoManager.collect_echo() after T-0182
-- Status: todo
-- Assigned: unassigned
-- Priority: high
-- Milestone: M1
-- Depends: T-0182
-- Refs: game/entities/interactable/strategies/memorial_echo_strategy.gd, game/autoloads/echo_manager.gd, docs/lore/04-echo-catalog.md
-- Notes: MemorialEchoStrategy currently shows dialogue/lore text when interacted with. After T-0182 creates EchoManager, update MemorialEchoStrategy to call EchoManager.collect_echo(echo_id) on activation so the echo is tracked. Wire echo_collected signal to HUD badge update. 3+ tests: collect_called_on_activation, duplicate_collect_prevention, hud_badge_updates_on_echo_collected.
+- Status: superseded
+- Assigned: claude
+- Notes: Folded into T-0182. MemorialEchoStrategy echo_id export and EchoManager.collect_echo() wiring were delivered as part of T-0182 (PR #244). HUD echo badge signal wiring was also delivered in T-0182.
 
 ### T-0187
 - Title: Build Echo Collection Journal UI (view collected echoes in pause menu)
@@ -1456,6 +1452,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0189
 - Title: Wire EchoManager into all SaveManager call sites
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Status: todo
 - Assigned: unassigned
 - Priority: medium
@@ -1463,6 +1462,66 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 - Depends: T-0182
 - Refs: game/entities/interactable/strategies/save_point_strategy.gd, game/systems/battle/states/defeat_state.gd, game/ui/title_screen/title_screen.gd
 - Notes: Three save/load call sites do not yet pass EchoManager — save_point_strategy.gd (save_game), defeat_state.gd (apply_save_data), title_screen.gd (apply_save_data). Pass EchoManager as the trailing optional arg to ensure echo collection persists through save/load. 3+ tests verifying round-trip via each call site.
+
+### T-0190
+- Title: Implement Chapter 5 Overgrown Capital dungeon tilemap and navigation skeleton
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Milestone: M1
+- Depends: T-0103
+- Refs: docs/story/act1/05-into-the-capital.md, docs/game-design/05-dungeon-designs.md, game/scenes/
+- Notes: Create game/scenes/overgrown_capital/ with overgrown_capital.tscn + .gd. Multi-district layout: outer gate, Market District, Entertainment District, Research Quarter, Palace District approach. 40x32+ tilemap using Ruins A5 + Overgrown Ruins Objects. MapBuilder module split (OvergrownCapitalMap + OvergrownCapitalEncounters). Two save point interactables. Exit triggers south to OvergrownRuins. Visual verify /scene-preview --full-map. 8+ tests.
+
+### T-0191
+- Title: Add Lyra's Fragment 2 collectible and Chapter 5 Research Quarter vision sequence
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Milestone: M1
+- Depends: T-0190, T-0182
+- Refs: docs/story/act1/05-into-the-capital.md (Scene 4), docs/lore/04-echo-catalog.md, game/autoloads/echo_manager.gd
+- Notes: Scene 4 from Chapter 5 script. Create game/data/echoes/lyra_fragment_2.tres. Place MemorialEchoStrategy in Research Quarter. On collect: 8-10 line vision (Lyra's lab — Marcus Cole, 140-day countdown, "I'm sorry"); set flag lyra_fragment_2_collected. Also add 4-5 line gate dialogue (Iris reads nameplate). compute_research_quarter_lines() static helper. 6+ tests.
+
+### T-0192
+- Title: Add The Last Gardener encounter — optional boss with three-choice resolution
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M1
+- Depends: T-0190
+- Refs: docs/story/act1/05-into-the-capital.md (Scene 5), docs/game-design/02-enemy-design.md
+- Notes: Trigger zone after Research Quarter. Three choices: peaceful pass, Greenhouse Seed side-quest hook, boss battle. Wire to flag gardener_resolution ("peaceful"/"quest"/"defeated"). compute_gardener_choice_result() static helper. 5+ tests verifying all three branches.
+
+### T-0193
+- Title: Add Chapter 5 post-dungeon camp scene — "After the Capital" campfire dialogue
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M1
+- Depends: T-0191
+- Refs: docs/story/act1/05-into-the-capital.md (Camp Scene), game/events/
+- Notes: 10-line campfire dialogue: Iris and Garrick acknowledge past roles, Kael's "Neither of you is that person anymore" beat. New event file game/events/after_capital_camp.gd. Gated by lyra_fragment_2_collected AND NOT after_capital_camp_seen. compute_after_capital_lines() helper. 5+ tests.
+
+### T-0194
+- Title: Seed Story Echo .tres files for Act I Overgrown Capital collection spots
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M1
+- Depends: T-0182, T-0190
+- Refs: docs/lore/04-echo-catalog.md, game/data/echoes/
+- Notes: 3-4 Story Echo .tres files for Chapter 5 dungeon. Candidates: "Morning Commute" (Market District), "Family Dinner" (residential ruins), "Warning Ignored" (Research Quarter meeting room), "The First Crack" (Resonance Nexus stub). Each needs .tres + MemorialEchoStrategy interactable in the dungeon. 4+ tests verifying unique IDs and collectibility.
+
+### T-0195
+- Title: Implement Purification Node mechanic for crystal-blocked dungeon paths
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Milestone: M1
+- Depends: T-0190
+- Refs: docs/story/act1/05-into-the-capital.md (Scene 2-3), game/entities/interactable/
+- Notes: PurificationNodeStrategy (extends InteractionStrategy). One-time use. On activate: set flag node_<id>_cleared, emit node_cleared(node_id) signal, clear collision/visual. compute_node_active_state(flags, node_id) static helper. Placed at Market->Entertainment and Entertainment->Research exits. 4+ tests.
 
 ---
 
