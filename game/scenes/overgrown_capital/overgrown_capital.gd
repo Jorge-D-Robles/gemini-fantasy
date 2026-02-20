@@ -15,6 +15,9 @@ const PURIFICATION_NODE_STRATEGY_SCRIPT := preload(
 const MEMORIAL_ECHO_STRATEGY_SCRIPT := preload(
 	"res://entities/interactable/strategies/memorial_echo_strategy.gd"
 )
+const SAVE_POINT_STRATEGY_SCRIPT := preload(
+	"res://entities/interactable/strategies/save_point_strategy.gd"
+)
 const MEMORY_BLOOM_PATH: String = "res://data/enemies/memory_bloom.tres"
 const CREEPING_VINE_PATH: String = "res://data/enemies/creeping_vine.tres"
 const ECHO_NOMAD_PATH: String = "res://data/enemies/echo_nomad.tres"
@@ -53,6 +56,13 @@ static func compute_spawn_from_ruins_position() -> Vector2:
 static func compute_market_save_point_position() -> Vector2:
 	## Save point in the Market District entry area — col 10, row 23.
 	return Vector2(160.0, 368.0)
+
+
+static func compute_research_save_point_position() -> Vector2:
+	## Save point in the Research Quarter — col 28, row 7.
+	## One tile below Lyra Fragment 2 echo (row 6); gives players a chance
+	## to save before the Research Quarter vision and Last Gardener encounter.
+	return Vector2(448.0, 112.0)
 
 
 static func compute_purification_node_market_position() -> Vector2:
@@ -216,6 +226,7 @@ func _ready() -> void:
 	_setup_camera_limits()
 	_setup_encounters()
 	_setup_purification_nodes()
+	_setup_save_points()
 	_setup_lyra_fragment_echo()
 	_setup_market_echoes()
 	_setup_residential_echoes()
@@ -542,3 +553,25 @@ func _setup_residential_echoes() -> void:
 	school_interactable.indicator_type = Interactable.IndicatorType.INTERACT
 	school_interactable.position = positions[1]
 	$Entities.add_child(school_interactable)
+
+
+func _setup_save_points() -> void:
+	# Market District save point — col 10, row 23.
+	var market_strat := SAVE_POINT_STRATEGY_SCRIPT.new() as SavePointStrategy
+	var market_save := INTERACTABLE_SCENE.instantiate() as Interactable
+	market_save.name = "SavePointMarket"
+	market_save.strategy = market_strat
+	market_save.one_time = false
+	market_save.indicator_type = Interactable.IndicatorType.SAVE
+	market_save.position = compute_market_save_point_position()
+	$Entities.add_child(market_save)
+
+	# Research Quarter save point — col 28, row 5.
+	var research_strat := SAVE_POINT_STRATEGY_SCRIPT.new() as SavePointStrategy
+	var research_save := INTERACTABLE_SCENE.instantiate() as Interactable
+	research_save.name = "SavePointResearch"
+	research_save.strategy = research_strat
+	research_save.one_time = false
+	research_save.indicator_type = Interactable.IndicatorType.SAVE
+	research_save.position = compute_research_save_point_position()
+	$Entities.add_child(research_save)
