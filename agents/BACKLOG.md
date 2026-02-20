@@ -1807,6 +1807,46 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 - Refs: docs/mechanics/character-abilities.md (Nyx and Lyra sections), game/data/abilities/
 - Notes: Nyx: void_bolt, phase_shift, reality_break, shadow_bind (first 4 of 7). Lyra: echo_mend, memory_strike, resonance_shield, fragment_vision (matches existing ability refs in lyra.tres). 6+ tests.
 
+### T-0224
+- Title: Place save point interactable in Overgrown Capital Market District
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Milestone: M1
+- Depends: T-0190
+- Refs: game/scenes/overgrown_capital/overgrown_capital.gd (compute_market_save_point_position), game/entities/interactable/strategies/save_point_strategy.gd
+- Notes: overgrown_capital.gd declares compute_market_save_point_position() returning Vector2(160.0, 368.0) but no save point Interactable is instantiated in _ready(). Add _setup_save_point() creating an Interactable with SavePointStrategy at that position. indicator_type=SAVE. one_time=false. Also add compute_research_save_point_position() returning Vector2(448.0, 80.0) and a second save point at the Research Quarter entrance per dungeon design doc. 4+ tests.
+
+### T-0225
+- Title: Add Chapter 6 Nyx introduction scene — "Born from Nothing" Hollows border encounter
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Milestone: M1
+- Depends: T-0191
+- Refs: docs/story/act1/06-born-from-nothing.md, game/events/, game/scenes/verdant_forest/verdant_forest.gd
+- Notes: docs/story/act1/06-born-from-nothing.md has a complete script for Nyx's arrival. Create game/events/nyx_introduction.gd implementing Scenes 1-3 (~20-25 lines). Gate on garrick_recruited AND lyra_fragment_2_collected AND NOT nyx_introduction_seen. NyxIntroduction.compute_can_trigger(flags) static helper. Flags set: nyx_introduction_seen, nyx_met. 5+ tests.
+
+### T-0226
+- Title: Overgrown Capital playtest pass — end-to-end Chapter 5 flow verification
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Milestone: M1
+- Depends: T-0211, T-0224
+- Refs: game/tools/playtest_presets/, docs/story/act1/05-into-the-capital.md
+- Notes: Full Chapter 5 flow: enter from Verdant Forest, collect Market echoes, activate Market Purification Node, navigate Entertainment District, activate Entertainment Purification Node, collect Lyra Fragment 2, trigger Last Gardener, trigger Leaving Capital, exit to Verdant Forest. Create/update overgrown_capital playtest preset JSON. Verify save/load round-trip persists echo IDs and cleared purification flags. Log discovered bugs as new BACKLOG entries.
+
+### T-0227
+- Title: Place campfire interactable in Overgrown Capital Market District
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M1
+- Depends: T-0023, T-0190
+- Refs: game/scenes/overgrown_capital/overgrown_capital.gd, game/entities/interactable/strategies/camp_strategy.gd
+- Notes: Add _setup_campfire() in overgrown_capital.gd placing CampStrategy Interactable near market rest area. compute_capital_campfire_position() static helper returning Vector2(128.0, 352.0) (col 8, row 22, near save point). one_time=false. 3+ tests verifying in-bounds position and correct strategy type.
+
 ---
 
 ## M2 — Act II: The Weight of Echoes

@@ -9,6 +9,15 @@ Started: 2026-02-20
 
 ## Active
 
+### T-0224
+- Title: Place save point interactable in Overgrown Capital Market District
+- Status: in-progress
+- Assigned: claude
+- Started: 2026-02-20
+- Priority: high
+- Depends: T-0190
+- Refs: game/scenes/overgrown_capital/overgrown_capital.gd, game/entities/interactable/strategies/save_point_strategy.gd
+
 
 ### T-0205
 - Title: Seed and place Residential Quarter echo interactables in Overgrown Capital
