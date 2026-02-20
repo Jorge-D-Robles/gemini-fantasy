@@ -24,8 +24,9 @@ Started: 2026-02-18
 
 ### T-0121
 - Title: Add Roothollow Chapter 4 NPC dialogue updates (Iris arrival reactions)
-- Status: todo
-- Assigned: unassigned
+- Status: in-progress
+- Assigned: claude
+- Started: 2026-02-19
 - Priority: medium
 - Depends: T-0082
 - Refs: docs/story/act1/04-old-iron.md (Scene 1), game/scenes/roothollow/roothollow.gd
@@ -256,6 +257,51 @@ Started: 2026-02-18
 - Assigned: unassigned
 - Priority: low
 - Depends: none
+
+### T-0160
+- Title: Wire quest-NPC indicator refresh on QuestManager signals
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Depends: T-0089, T-0090
+- Refs: game/scenes/roothollow/roothollow.gd, game/autoloads/quest_manager.gd, game/entities/npc/npc.gd
+- Notes: NPC indicator_type computed once at scene load; quest progress while in scene doesn't refresh indicators. Connect QuestManager.quest_accepted, quest_progressed, quest_completed signals to re-evaluate NPC indicators. Static compute_npc_indicator_type() helper for TDD. 4+ tests.
+
+### T-0132
+- Title: Add "Defend" status badge on party battler panels during combat
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Depends: none
+- Refs: game/ui/battle_ui/battle_ui.gd, game/systems/battle/battler.gd
+- Notes: is_defending is tracked but battle UI shows no visual indicator. Add "DEF" badge (similar to T-0054 status effect badges) that appears when is_defending is true. 3+ tests.
+
+### T-0133
+- Title: Add save slot summary (location + timestamp) on Continue button
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Depends: none
+- Refs: game/ui/title_screen/title_screen.gd, game/autoloads/save_manager.gd
+- Notes: Continue button shows no save context. Add a label showing saved scene name and timestamp. Use compute_area_display_name() for location. 3+ tests.
+
+### T-0148
+- Title: Add camp scene "Three Around a Fire" — Garrick, Iris, Kael evening dialogue
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Depends: T-0085
+- Refs: docs/story/act1/04-old-iron.md (Camp Scene), game/events/
+- Notes: Campfire scene where Garrick cooks stew and party plans Overgrown Capital run. Triggers at Roothollow inn after garrick_met_lyra flag. 3 optional snippets + 15-line main sequence. EventFlags gate: camp_scene_three_fires. New event file game/events/camp_three_fires.gd. 5+ tests.
+
+### T-0149
+- Title: Add Spring Shrine interactable south of Roothollow — Garrick meeting location
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Depends: T-0082
+- Refs: docs/story/act1/04-old-iron.md (Scene 2), game/scenes/roothollow/roothollow.gd
+- Notes: Chapter 4 Scene 2 places Garrick recruitment at spring shrine. Add trigger zone in Roothollow scene activating garrick_recruitment event when approached (after iris_recruited, before garrick_recruited). 4+ tests.
 
 ---
 
