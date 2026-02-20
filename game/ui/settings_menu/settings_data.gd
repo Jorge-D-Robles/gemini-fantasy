@@ -13,6 +13,30 @@ const SETTINGS_VERSION := 1
 const SILENT_DB := -80.0
 const DEFAULT_VOLUME := 100
 
+## Ordered list of game actions shown in the Controls section.
+const CONTROL_ACTIONS: Array[String] = [
+	"interact",
+	"cancel",
+	"menu",
+	"move_up",
+	"move_down",
+	"move_left",
+	"move_right",
+	"run",
+]
+
+## Human-readable labels for each action name.
+const ACTION_LABELS: Dictionary = {
+	"interact": "Interact",
+	"cancel": "Cancel",
+	"menu": "Menu",
+	"move_up": "Move Up",
+	"move_down": "Move Down",
+	"move_left": "Move Left",
+	"move_right": "Move Right",
+	"run": "Run",
+}
+
 
 ## Converts a 0-100 percent to decibels.
 ## 0% maps to SILENT_DB floor (not -INF). Values clamped to 0-100.
@@ -130,3 +154,40 @@ static func apply_saved_settings() -> void:
 	apply_volume("Master", s["master_volume"])
 	apply_volume("BGM", s["bgm_volume"])
 	apply_volume("SFX", s["sfx_volume"])
+
+
+## Returns the display label for an action name.
+## Unknown actions are title-cased from their snake_case name.
+static func compute_action_label(action: String) -> String:
+	if ACTION_LABELS.has(action):
+		return ACTION_LABELS[action]
+	return action.replace("_", " ").capitalize()
+
+
+## Returns the primary keyboard key label for an action.
+## Returns "—" if the action is unknown or has no keyboard binding.
+static func compute_action_key_label(action: String) -> String:
+	if not InputMap.has_action(action):
+		return "—"
+	var events: Array[InputEvent] = InputMap.action_get_events(action)
+	for event: InputEvent in events:
+		if not event is InputEventKey:
+			continue
+		var key_event := event as InputEventKey
+		if key_event.keycode != KEY_NONE:
+			return OS.get_keycode_string(key_event.keycode)
+		if key_event.physical_keycode != KEY_NONE:
+			return OS.get_keycode_string(key_event.physical_keycode)
+	return "—"
+
+
+## Returns an ordered array of {label, key} dictionaries for display.
+## Each entry represents one game action and its primary keyboard binding.
+static func compute_control_bindings() -> Array[Dictionary]:
+	var result: Array[Dictionary] = []
+	for action: String in CONTROL_ACTIONS:
+		result.append({
+			"label": compute_action_label(action),
+			"key": compute_action_key_label(action),
+		})
+	return result

@@ -9,6 +9,15 @@ Started: 2026-02-18
 
 ## Active
 
+### T-0178
+- Title: Add read-only control bindings display to settings menu
+- Status: in-progress
+- Assigned: claude
+- Started: 2026-02-20
+- Priority: low
+- Depends: T-0068
+- Refs: game/ui/settings_menu/settings_menu.gd
+
 ---
 
 ## Queue

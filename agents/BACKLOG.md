@@ -1342,8 +1342,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0178
 - Title: Add read-only control bindings display to settings menu
-- Status: todo
-- Assigned: unassigned
+- Status: in-progress
+- Assigned: claude
+- Started: 2026-02-20
 - Priority: low
 - Milestone: M0
 - Depends: T-0068
