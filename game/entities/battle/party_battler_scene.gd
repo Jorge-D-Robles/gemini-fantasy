@@ -5,7 +5,7 @@ extends Node2D
 ## Connects to a PartyBattler logic node for stat/signal data.
 
 const UITheme = preload("res://ui/ui_theme.gd")
-const BATTLE_SPRITE_SCALE: float = 2.0
+const BATTLE_SPRITE_SCALE: float = 3.0
 
 @export var character_data: CharacterData
 
