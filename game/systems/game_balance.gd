@@ -45,6 +45,12 @@ const XP_CURVE_BASE: int = 100
 const MAX_ACTIVE_PARTY: int = 4
 const MAX_RESERVE_PARTY: int = 4
 
+# -- Critical hit --
+
+const CRIT_BASE_CHANCE: float = 0.05          # 5% baseline crit chance
+const CRIT_LUCK_BONUS_PER_POINT: float = 0.005 # +0.5% crit chance per luck point
+const CRIT_DAMAGE_MULT: float = 1.5           # ×1.5 damage on a critical hit
+
 # -- Enemy AI thresholds --
 
 const AI_DEFENSIVE_HP_THRESHOLD: float = 0.3
