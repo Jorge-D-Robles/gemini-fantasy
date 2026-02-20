@@ -267,10 +267,13 @@ Started: 2026-02-18
 
 ### T-0098
 - Title: Add overworld encounter warning (grass rustle before battle)
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: low
 - Depends: none
+- Notes: encounter_warning signal + warning_delay=0.8s export on EncounterSystem; _on_step() emits warning, sets _warning_in_progress, stores _pending_group, fires one-shot timer; _on_warning_timeout() clears state and emits encounter_triggered; both scenes wire flash tween (modulate Color(1.3,1.3,0.9)→WHITE). 6 new tests, 2 updated. 1248 total.
 
 ### T-0099
 - Title: Add transition animations between zones (beyond fade)

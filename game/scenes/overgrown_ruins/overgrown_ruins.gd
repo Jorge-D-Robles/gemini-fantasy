@@ -325,6 +325,7 @@ func _ready() -> void:
 
 	_encounter_system.setup(pool)
 	_encounter_system.encounter_triggered.connect(_on_encounter_triggered)
+	_encounter_system.encounter_warning.connect(_on_encounter_warning)
 
 	# Companion followers
 	if player_node:
@@ -486,6 +487,12 @@ func _on_boss_zone_entered(body: Node2D) -> void:
 func _schedule_menu_hint() -> void:
 	await get_tree().create_timer(4.0).timeout
 	UILayer.hud.show_tutorial_hint("menu")
+
+
+func _on_encounter_warning() -> void:
+	var tween := create_tween()
+	tween.tween_property(self, "modulate", Color(1.3, 1.3, 0.9), 0.15)
+	tween.tween_property(self, "modulate", Color.WHITE, 0.25)
 
 
 func _on_encounter_triggered(enemy_group: Array[Resource]) -> void:
