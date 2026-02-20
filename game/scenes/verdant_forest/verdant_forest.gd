@@ -5,6 +5,7 @@ extends Node2D
 ## scene transitions to both adjacent areas.
 
 const SP = preload("res://systems/scene_paths.gd")
+const Dialogue = preload("res://scenes/verdant_forest/verdant_forest_dialogue.gd")
 const CREEPING_VINE_PATH: String = "res://data/enemies/creeping_vine.tres"
 const ASH_STALKER_PATH: String = "res://data/enemies/ash_stalker.tres"
 const HOLLOW_SPECTER_PATH: String = "res://data/enemies/hollow_specter.tres"
@@ -83,6 +84,9 @@ func _ready() -> void:
 		var companion_ctrl := CompanionController.new()
 		companion_ctrl.setup(player_node)
 		$Entities.add_child(companion_ctrl)
+
+	# Full-party traversal dialogue (fires once after garrick_recruited)
+	_maybe_trigger_traversal_dialogue.call_deferred()
 
 
 func _spawn_zone_markers() -> void:
@@ -163,6 +167,19 @@ func _on_encounter_triggered(enemy_group: Array[Resource]) -> void:
 	if DialogueManager.is_active():
 		return
 	BattleManager.start_battle(enemy_group)
+
+
+func _maybe_trigger_traversal_dialogue() -> void:
+	if not EventFlags.has_flag(Dialogue.get_traversal_gate_flag()):
+		return
+	if EventFlags.has_flag(Dialogue.get_traversal_flag()):
+		return
+	EventFlags.set_flag(Dialogue.get_traversal_flag())
+	var raw: Array = Dialogue.get_traversal_lines()
+	var lines: Array[DialogueLine] = []
+	for entry: Dictionary in raw:
+		lines.append(DialogueLine.create(entry["speaker"], entry["text"]))
+	DialogueManager.start_dialogue(lines)
 
 
 func _start_scene_music() -> void:

@@ -13,6 +13,58 @@ Started: 2026-02-18
 
 ## Queue
 
+### T-0168
+- Title: Verify and fix enemy turn routing through ActionExecuteState for consistent crit behavior
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
+- Priority: low
+- Depends: T-0143, T-0156
+- Refs: game/systems/battle/states/enemy_turn_state.gd, game/systems/battle/states/action_execute_state.gd
+- Notes: Confirm whether EnemyTurnState routes through ActionExecuteState (crits already applied). If not, wire BattlerDamage.roll_crit(attacker.luck) and apply_crit() into the enemy damage path. Also confirm COMBAT_CRITICAL_HIT SFX plays on enemy crits. 3+ tests verifying enemy crit roll uses 5% + luck*0.5% formula.
+
+### T-0130
+- Title: Add live playtime accumulation to GameManager for save slot display
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
+- Priority: low
+- Depends: none
+- Refs: game/autoloads/game_manager.gd, game/autoloads/save_manager.gd
+- Notes: SaveManager accepts playtime param but nothing accumulates it. Add playtime_seconds to GameManager, increment in _process during OVERWORLD/MENU. Wire into save calls. Prerequisite for T-0127. 4+ tests.
+
+### T-0138
+- Title: Add scrollable battle log with history
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
+- Priority: low
+- Depends: none
+- Refs: game/ui/battle_ui/battle_ui.gd
+- Notes: Battle log currently shows fixed lines with oldest pushed off. Add ScrollContainer wrapping RichTextLabel. Auto-scroll to bottom on new entry. 3+ tests.
+
+### T-0162
+- Title: Add Verdant Forest traversal dialogue — party comments heading to Overgrown Capital
+- Status: in-progress
+- Assigned: claude
+- Started: 2026-02-20
+- Priority: low
+- Depends: T-0085
+- Refs: docs/story/act1/04-old-iron.md (End of Chapter hook), game/scenes/verdant_forest/verdant_forest.gd
+- Notes: After garrick_recruited flag is set, the three-person party crosses the Verdant Forest toward Overgrown Ruins. Add a 3-4 line on-entry dialogue gated by garrick_recruited (and forest_traversal_full_party flag to fire once only). Garrick notes crystal density, Iris assesses threat level, Kael orients the group. 3+ tests.
+
+### T-0163
+- Title: Add party swap validation feedback in party UI
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Depends: T-0020
+- Refs: game/ui/party_ui/party_ui.gd, game/ui/party_ui/party_ui_data.gd
+- Notes: compute_swap_valid() returns false for invalid swaps (edge cases like 0-size lists). Currently the UI silently ignores the action. Add a 0.3s red flash on the active member button and a transient status label. compute_swap_feedback_text() static helper for TDD. 3+ tests.
+
 ### T-0020
 - Title: Build party management UI
 - Status: done
