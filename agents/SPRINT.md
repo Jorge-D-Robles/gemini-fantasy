@@ -216,10 +216,13 @@ Started: 2026-02-18
 
 ### T-0058
 - Title: Add screen shake on heavy damage
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: low
 - Depends: none
+- Notes: BattleShake static utility (is_heavy_hit, compute_intensity, shake). Threshold=25% max HP, intensity 3–7px, duration 0.35s. Wired in action_execute_state.gd after attack and ability take_damage calls. 10 tests. PR merged.
 
 ### T-0061
 - Title: Overgrown Ruins — separate debris layer and fix z-index ambiguity
