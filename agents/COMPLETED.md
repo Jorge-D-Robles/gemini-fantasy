@@ -3,6 +3,7 @@
 Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[date] Description`.
 
 ---
+- [2026-02-20] T-0193: AfterCapitalCamp event (after_capital_camp.gd) — 15-line campfire scene compressing Chapter 5 Camp Scene; Iris/Garrick shared guilt, Kael "Neither of you is that person anymore"; gated by lyra_fragment_2_collected; wired in verdant_forest.gd via call_deferred; 15 tests (1691 total); PR #262 (claude)
 - [2026-02-20] T-0212: Wire Verdant Forest → Overgrown Capital transition — ExitToCapital Area2D (320,8) + SpawnFromCapital Marker2D (320,48) in Forest, spawn_from_forest group in Capital, fix Capital exit to SP.VERDANT_FOREST, ZoneMarker.UP; 10 tests; PR #257 (claude)
 - [2026-02-20] T-0209: Add Echo Nomad enemy to Overgrown Capital encounter pool — echo_nomad.tres (90 HP, magic-biased, AGGRESSIVE, ghost1.png), updated build_pool() with optional 3rd param, 4 new tests (9 total); PR #256 (claude)
 - [2026-02-20] T-0210: Wire Echoes of the Capital BGM for Overgrown Capital — replaced Castle.ogg placeholder, added 1 regression test + updated BGM coverage test; PR #255 (claude)

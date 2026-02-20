@@ -1495,8 +1495,8 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0193
 - Title: Add Chapter 5 post-dungeon camp scene — "After the Capital" campfire dialogue
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: medium
 - Milestone: M1
 - Depends: T-0191

@@ -9,6 +9,16 @@ Started: 2026-02-20
 
 ## Active
 
+### T-0193
+- Title: Add Chapter 5 post-dungeon camp scene — "After the Capital" campfire dialogue
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
+- Priority: medium
+- Depends: T-0191
+- Refs: docs/story/act1/05-into-the-capital.md (Camp Scene), game/events/
+
 ---
 
 ## Queue
