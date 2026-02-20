@@ -3,6 +3,8 @@
 Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[date] Description`.
 
 ---
+- [2026-02-20] T-0138: Scrollable battle log — BattleUILog.compute_log_entry() static helper extracted from battle_ui.gd; scroll_following=true already in .tscn; 7 new tests (1287 total) (claude)
+- [2026-02-20] T-0162: Verdant Forest traversal dialogue — VerdantForestDialogue static module (get_traversal_lines/flag/gate_flag), _maybe_trigger_traversal_dialogue via call_deferred in verdant_forest.gd, 4-line scene with Garrick/Iris/Kael; 9 new tests (1296 total) (claude)
 
 [2026-02-20] T-0098: Add overworld encounter warning — two-phase encounter_warning→encounter_triggered flow with 0.8s delay; yellow screen flash in Verdant Forest and Overgrown Ruins (claude)
 
@@ -163,3 +165,5 @@ These 26 fixes were completed before the ticket system was established:
 - [2026-02-19] T-0095: Add battler idle bob animation in combat — BOB_AMPLITUDE=3.0px/BOB_HALF_PERIOD=0.6s looping sine-wave tween on sprite.position.y for both PartyBattlerScene and EnemyBattlerScene; pauses during attack/damage, stops on defeat, _exit_tree cleanup, 8 tests (1134 total) (claude)
 - [2026-02-19] T-0097: Add save point visual markers in scenes — SavePointMarker script-only Node2D (ZoneMarker pattern): gold ★ Label with looping alpha pulse (0.4→1.0, PULSE_HALF_PERIOD=0.8s), z_index=1, _exit_tree cleanup; integrated into roothollow.gd with indicator_type=SAVE on SavePoint; 7 tests (1141 total) (claude)
 - [2026-02-20] T-0077: Split verdant_forest.gd and overgrown_ruins.gd into tilemap/encounter modules — VerdantForestMap, VerdantForestEncounters, OvergrownRuinsMap, OvergrownRuinsEncounters (RefCounted modules); updated scene files to delegate; 11 new tests (1265 total) (claude)
+- [2026-02-20] T-0168: Wire enemy crit routing — BattlerDamage.roll_crit(enemy.luck) in EnemyTurnState.ATTACK branch; 1.5x multiplier, CRITICAL_HIT SFX, DamagePopup.CRITICAL, "CRITICAL HIT!" log; 6 new tests (1271 total) (claude)
+- [2026-02-20] T-0130: Live playtime accumulation — GameManager.playtime_seconds, compute_should_tick_playtime() static (OVERWORLD/MENU only), SaveManager.gather_save_data/save_game playtime param, SavePointStrategy wired; 9 new tests (1280 total) (claude)
