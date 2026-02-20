@@ -6,6 +6,7 @@ signal bgm_changed(stream: AudioStream)
 
 const SFX_POOL_SIZE: int = 8
 const DEFAULT_FADE_TIME: float = 1.0
+const BGM_RESTORE_FADE_TIME: float = DEFAULT_FADE_TIME / 2.0
 const SD = preload("res://ui/settings_menu/settings_data.gd")
 
 var _bgm_player: AudioStreamPlayer
@@ -91,14 +92,24 @@ func pop_bgm(fade_time: float = DEFAULT_FADE_TIME) -> void:
 		_crossfade_bgm_at(stream, pos, fade_time)
 	else:
 		_bgm_player.stream = stream
-		_bgm_player.volume_db = _bgm_volume_db
+		_bgm_player.volume_db = -80.0
 		_bgm_player.play(pos)
+		var tween := create_tween()
+		tween.tween_property(
+			_bgm_player, "volume_db", _bgm_volume_db, BGM_RESTORE_FADE_TIME
+		)
 	bgm_changed.emit(stream)
 
 
 ## Returns true if there is a stacked BGM entry to restore.
 func has_stacked_bgm() -> bool:
 	return not _bgm_stack.is_empty()
+
+
+## Returns the fade-in duration used when restoring a cold-start stacked BGM.
+## Half of DEFAULT_FADE_TIME so the resume feels snappier than a full crossfade.
+static func compute_bgm_restore_fade_duration() -> float:
+	return DEFAULT_FADE_TIME / 2.0
 
 
 func set_bgm_volume(volume_db: float) -> void:

@@ -84,3 +84,22 @@ func test_multiple_push_pop_works() -> void:
 
 func test_get_current_bgm_path_empty_on_fresh_manager() -> void:
 	assert_eq(_am.get_current_bgm_path(), "")
+
+
+# -- BGM restore fade duration --
+
+
+func test_compute_bgm_restore_fade_duration_is_half_default() -> void:
+	assert_eq(
+		_am.compute_bgm_restore_fade_duration(),
+		_am.DEFAULT_FADE_TIME / 2.0,
+		"Restore fade should be half the default fade time",
+	)
+
+
+func test_compute_bgm_restore_fade_duration_is_less_than_default() -> void:
+	assert_lt(
+		_am.compute_bgm_restore_fade_duration(),
+		_am.DEFAULT_FADE_TIME,
+		"Restore fade should be shorter than default crossfade",
+	)
