@@ -173,8 +173,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0009
 - Title: Implement party healing at rest points in Roothollow
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: medium
 - Milestone: M0
 - Depends: none
@@ -1221,8 +1222,8 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0155
 - Title: Wire dismiss prompt text to InputMap for remappable key display
-- Status: todo
-- Assigned: unassigned
+- Status: in-progress
+- Assigned: claude
 - Priority: low
 - Milestone: M0
 - Depends: T-0129

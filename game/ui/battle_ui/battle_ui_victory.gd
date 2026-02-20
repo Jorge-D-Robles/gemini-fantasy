@@ -79,10 +79,50 @@ static func compute_level_up_callout_text(
 	return base + " " + ", ".join(parts)
 
 
+## Picks the first keyboard or joypad event from events and returns a
+## human-readable label. Returns fallback if no matching event is found.
+## Pure function — use this for tests; compute_dismiss_prompt_text() calls
+## this with live InputMap events.
+static func compute_dismiss_prompt_from_events(
+	events: Array[InputEvent],
+	fallback: String,
+) -> String:
+	for event: InputEvent in events:
+		if event is InputEventKey:
+			var key_event: InputEventKey = event as InputEventKey
+			var label: String = key_event.as_text_physical_keycode()
+			if label.is_empty():
+				label = key_event.as_text_keycode()
+			if not label.is_empty() and label != "None":
+				return label
+		elif event is InputEventJoypadButton:
+			var btn_event: InputEventJoypadButton = event as InputEventJoypadButton
+			return _joy_button_label(btn_event.button_index)
+	return fallback
+
+
 ## Returns the prompt text shown on the victory screen asking the
-## player to dismiss. action_name is the InputMap action to display.
+## player to dismiss. Reads live InputMap events so remapped keys display
+## correctly. action_name is the InputMap action to look up.
 static func compute_dismiss_prompt_text(action_name: String = "confirm") -> String:
-	return "Press [%s] to continue" % action_name
+	if not InputMap.has_action(action_name):
+		return "Press [%s] to continue" % action_name
+	var events: Array[InputEvent] = InputMap.action_get_events(action_name)
+	var label: String = compute_dismiss_prompt_from_events(events, action_name)
+	return "Press [%s] to continue" % label
+
+
+static func _joy_button_label(button_index: JoyButton) -> String:
+	match button_index:
+		JOY_BUTTON_A: return "A"
+		JOY_BUTTON_B: return "B"
+		JOY_BUTTON_X: return "X"
+		JOY_BUTTON_Y: return "Y"
+		JOY_BUTTON_START: return "Start"
+		JOY_BUTTON_BACK: return "Back"
+		JOY_BUTTON_LEFT_SHOULDER: return "LB"
+		JOY_BUTTON_RIGHT_SHOULDER: return "RB"
+		_: return "?"
 
 
 ## Converts a stat key to a short abbreviation for display.

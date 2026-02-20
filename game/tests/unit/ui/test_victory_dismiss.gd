@@ -48,11 +48,38 @@ func test_dismiss_prompt_text_has_continue_instruction() -> void:
 
 
 func test_dismiss_prompt_custom_action_name() -> void:
+	# "interact" is a registered action — prompt now shows actual key binding,
+	# not the raw action name string.
 	var text := BattleUIVictory.compute_dismiss_prompt_text("interact")
 	assert_true(
-		text.contains("interact"),
-		"Dismiss prompt should include the provided action name",
+		text.to_lower().contains("press") and text.to_lower().contains("continue"),
+		"Dismiss prompt should still have the 'Press [...] to continue' format",
 	)
+
+
+func test_dismiss_prompt_from_events_empty_returns_fallback() -> void:
+	var events: Array[InputEvent] = []
+	var text := BattleUIVictory.compute_dismiss_prompt_from_events(events, "fallback_key")
+	assert_eq(text, "fallback_key", "Empty events array should return the fallback string")
+
+
+func test_dismiss_prompt_from_events_keyboard_event_returns_key_name() -> void:
+	var event := InputEventKey.new()
+	event.physical_keycode = KEY_SPACE
+	var events: Array[InputEvent] = [event]
+	var text := BattleUIVictory.compute_dismiss_prompt_from_events(events, "fallback_key")
+	assert_true(
+		text.length() > 0 and text != "fallback_key",
+		"Keyboard event should return a key label, not the fallback",
+	)
+
+
+func test_dismiss_prompt_from_events_joypad_a_returns_label() -> void:
+	var event := InputEventJoypadButton.new()
+	event.button_index = JOY_BUTTON_A
+	var events: Array[InputEvent] = [event]
+	var text := BattleUIVictory.compute_dismiss_prompt_from_events(events, "fallback_key")
+	assert_eq(text, "A", "JOY_BUTTON_A should produce label 'A'")
 
 
 func test_apply_xp_rewards_regression_still_works() -> void:
