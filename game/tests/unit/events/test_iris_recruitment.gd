@@ -83,3 +83,29 @@ func test_post_battle_dialogue_mentions_lyra() -> void:
 			found = true
 			break
 	assert_true(found, "Post-battle should mention Lyra")
+
+
+# -- personal quest auto-accept helper --
+
+
+func test_iris_quest_path_constant() -> void:
+	assert_eq(
+		_recruitment.IRIS_QUEST_PATH,
+		"res://data/quests/iris_engineers_oath.tres",
+		"IRIS_QUEST_PATH should point to the personal quest .tres",
+	)
+
+
+func test_compute_should_auto_accept_true_when_recruited() -> void:
+	var flags := {"iris_recruited": true}
+	assert_true(
+		IrisRecruitment.compute_should_auto_accept_iris_quest(flags),
+		"Should auto-accept when iris_recruited flag is set",
+	)
+
+
+func test_compute_should_auto_accept_false_when_not_recruited() -> void:
+	assert_false(
+		IrisRecruitment.compute_should_auto_accept_iris_quest({}),
+		"Should not auto-accept when iris_recruited flag is missing",
+	)

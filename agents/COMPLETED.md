@@ -3,6 +3,8 @@
 Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[date] Description`.
 
 ---
+- [2026-02-20] T-0174: Iris personal quest stub — iris_engineers_oath.tres (QuestData "The Engineer's Oath: Pending", CHARACTER type), IRIS_QUEST_PATH constant + compute_should_auto_accept_iris_quest() static helper in iris_recruitment.gd, auto-accept after post-battle dialogue; 3 new tests (1408 total) (claude)
+- [2026-02-20] T-0167: Playtime accumulation gate — superseded by T-0130 (compute_should_tick_playtime() gates to OVERWORLD/MENU only) (claude)
 - [2026-02-20] T-0173: Garrick personal quest stub — garrick_three_burns.tres (QuestData "Something He Carries", CHARACTER type), GARRICK_QUEST_PATH constant + compute_should_auto_accept_garrick_quest() static helper in garrick_recruitment.gd, auto-accept on recruitment; 3 new tests (1405 total) (claude)
 - [2026-02-20] T-0175: BGM pop/restore fade-in — BGM_RESTORE_FADE_TIME=0.5s constant, compute_bgm_restore_fade_duration() static helper, pop_bgm() cold-start else branch tweens volume from -80.0 to _bgm_volume_db; 2 new tests (1402 total) (claude)
 - [2026-02-20] T-0164: Wire party_changed signal into party_ui — _connect/_disconnect_party_signals() with is_connected guard, _on_party_changed() live rebuild, removed redundant manual _build_ui() after swap; 5 new tests (1400 total) (claude)

@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="QuestData" load_steps=2 format=3 uid="uid://biris_engineers_oath"]
+
+[ext_resource type="Script" path="res://resources/quest_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"iris_engineers_oath"
+title = "The Engineer's Oath: Pending"
+description = "She built the tools they used to consume them. She saw what happened next, and walked out the door. Somewhere out there, her brother Dane stayed. Travel with Iris long enough, and the weight of that choice will surface."
+objectives = ["Understand why Iris left the Initiative."]
+reward_gold = 0
+reward_exp = 0
+reward_item_ids = []
+quest_type = 2
+prerequisites = []
