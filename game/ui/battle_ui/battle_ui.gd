@@ -556,6 +556,14 @@ func _create_party_row(battler: Battler) -> HBoxContainer:
 		badge_lbl.add_theme_color_override("font_color", badge["color"])
 		row.add_child(badge_lbl)
 
+	# Defend badge
+	for badge: Dictionary in BattleUIStatus.compute_defend_badge(battler.is_defending):
+		var badge_lbl := Label.new()
+		badge_lbl.text = badge["text"]
+		badge_lbl.add_theme_font_size_override("font_size", 6)
+		badge_lbl.add_theme_color_override("font_color", badge["color"])
+		row.add_child(badge_lbl)
+
 	return row
 
 

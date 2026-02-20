@@ -47,6 +47,7 @@ func _on_command_selected(command: String) -> void:
 			state_machine.transition_to("ActionSelect")
 		"defend":
 			battle_scene.current_battler.defend()
+			_battle_ui.update_party_status(battle_scene.get_living_party())
 			_battle_ui.add_battle_log(
 				"%s defends." % battle_scene.current_battler.get_display_name(),
 				UITheme.LogType.INFO,

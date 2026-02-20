@@ -69,6 +69,7 @@ const STATUS_DEBUFF := Color(0.85, 0.4, 0.4)
 const STATUS_DOT := Color(0.95, 0.6, 0.2)
 const STATUS_HOT := Color(0.3, 0.9, 0.8)
 const STATUS_STUN := Color(0.95, 0.75, 0.3)
+const DEFEND_BADGE_COLOR := Color(0.3, 0.7, 1.0)
 
 const LOG_COLORS: Dictionary = {
 	LogType.INFO: LOG_INFO,
