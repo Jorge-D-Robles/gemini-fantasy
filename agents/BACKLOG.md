@@ -70,8 +70,10 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0169
 - Title: Add Iris-Kael overworld banter — BOND-01 "Knife Lessons" post-Chapter-3 scene
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: low
 - Milestone: M0
 - Depends: T-0081

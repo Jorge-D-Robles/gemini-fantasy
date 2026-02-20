@@ -6,6 +6,7 @@ extends Node2D
 
 const SP = preload("res://systems/scene_paths.gd")
 const Dialogue = preload("res://scenes/verdant_forest/verdant_forest_dialogue.gd")
+const Bond01 = preload("res://scenes/verdant_forest/verdant_forest_bond01_dialogue.gd")
 const CREEPING_VINE_PATH: String = "res://data/enemies/creeping_vine.tres"
 const ASH_STALKER_PATH: String = "res://data/enemies/ash_stalker.tres"
 const HOLLOW_SPECTER_PATH: String = "res://data/enemies/hollow_specter.tres"
@@ -87,6 +88,8 @@ func _ready() -> void:
 
 	# Full-party traversal dialogue (fires once after garrick_recruited)
 	_maybe_trigger_traversal_dialogue.call_deferred()
+	# BOND-01: Iris-Kael knife lesson banter (fires once after iris_recruited)
+	_maybe_trigger_bond01_dialogue.call_deferred()
 
 
 func _spawn_zone_markers() -> void:
@@ -176,6 +179,20 @@ func _maybe_trigger_traversal_dialogue() -> void:
 		return
 	EventFlags.set_flag(Dialogue.get_traversal_flag())
 	var raw: Array = Dialogue.get_traversal_lines()
+	var lines: Array[DialogueLine] = []
+	for entry: Dictionary in raw:
+		lines.append(DialogueLine.create(entry["speaker"], entry["text"]))
+	DialogueManager.start_dialogue(lines)
+
+
+func _maybe_trigger_bond01_dialogue() -> void:
+	var party_ids: Array = []
+	for data: Resource in PartyManager.get_active_party():
+		party_ids.append(data.id)
+	if not Bond01.compute_bond01_eligible(EventFlags.get_all_flags(), party_ids):
+		return
+	EventFlags.set_flag(Bond01.get_bond01_flag())
+	var raw: Array = Bond01.get_bond01_lines()
 	var lines: Array[DialogueLine] = []
 	for entry: Dictionary in raw:
 		lines.append(DialogueLine.create(entry["speaker"], entry["text"]))
