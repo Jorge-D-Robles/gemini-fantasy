@@ -206,10 +206,13 @@ Started: 2026-02-18
 
 ### T-0057
 - Title: Improve turn order display with current actor highlight
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: low
 - Depends: none
+- Notes: compute_turn_order_entries() static helper in BattleUIStatus returns ordered entries with [ActiveBattler] brackets + ACTIVE_HIGHLIGHT, party=blue, enemy=red. update_turn_order() simplified to render from entries. 6 tests. PR #200 merged.
 
 ### T-0058
 - Title: Add screen shake on heavy damage

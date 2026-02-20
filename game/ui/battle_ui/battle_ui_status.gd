@@ -29,6 +29,55 @@ static func compute_status_badges(
 	return badges
 
 
+## Returns an ordered list of display entries for the turn order bar.
+## Each entry: {text: String, color: Color, is_active: bool, is_separator: bool}.
+## The [param active_battler] is shown first in "[Name]" brackets with ACTIVE_HIGHLIGHT.
+## [param queue] is the upcoming battlers from TurnQueue.peek_order().
+static func compute_turn_order_entries(
+	active_battler: Node,
+	queue: Array,
+) -> Array[Dictionary]:
+	const PARTY_COLOR := Color(0.7, 0.85, 1.0)
+	const ENEMY_COLOR := Color(1.0, 0.5, 0.5)
+	const SEP_COLOR := Color(0.4, 0.4, 0.5)
+	var entries: Array[Dictionary] = []
+
+	if (
+		is_instance_valid(active_battler)
+		and active_battler.has_method("get_display_name")
+		and "is_alive" in active_battler and active_battler.is_alive
+	):
+		entries.append({
+			"text": "[%s]" % active_battler.get_display_name().left(4),
+			"color": UITheme.ACTIVE_HIGHLIGHT,
+			"is_active": true,
+			"is_separator": false,
+		})
+
+	for battler: Node in queue:
+		if not entries.is_empty():
+			entries.append({
+				"text": ">",
+				"color": SEP_COLOR,
+				"is_active": false,
+				"is_separator": true,
+			})
+		var color: Color = ENEMY_COLOR
+		if battler is PartyBattler:
+			color = PARTY_COLOR
+		var display: String = ""
+		if battler.has_method("get_display_name"):
+			display = battler.get_display_name().left(4)
+		entries.append({
+			"text": display,
+			"color": color,
+			"is_active": false,
+			"is_separator": false,
+		})
+
+	return entries
+
+
 ## Returns {name: String, color: Color, is_enemy: bool} for a
 ## target battler.
 static func compute_target_info(battler: Node) -> Dictionary:

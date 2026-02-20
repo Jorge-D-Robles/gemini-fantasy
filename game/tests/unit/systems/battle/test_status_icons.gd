@@ -197,3 +197,68 @@ func test_defend_badge_color_matches_theme() -> void:
 		UITheme.DEFEND_BADGE_COLOR,
 		"Defend badge should use UITheme.DEFEND_BADGE_COLOR",
 	)
+
+
+# -- BattleUIStatus.compute_turn_order_entries() --
+
+func test_turn_order_active_battler_shown_first_with_brackets() -> void:
+	var pb := Helpers.make_party_battler({"display_name": "Kael"})
+	add_child_autofree(pb)
+	var result: Array = BattleUIScript.compute_turn_order_entries(pb, [])
+	assert_eq(result.size(), 1, "Active battler alone should produce one entry")
+	assert_true(result[0]["text"].begins_with("["), "Active entry should start with '['")
+	assert_true(result[0]["text"].ends_with("]"), "Active entry should end with ']'")
+
+
+func test_turn_order_active_battler_uses_active_highlight() -> void:
+	var pb := Helpers.make_party_battler()
+	add_child_autofree(pb)
+	var result: Array = BattleUIScript.compute_turn_order_entries(pb, [])
+	assert_eq(result[0]["color"], UITheme.ACTIVE_HIGHLIGHT, "Active battler uses ACTIVE_HIGHLIGHT")
+
+
+func test_turn_order_party_battler_in_queue_is_blue() -> void:
+	var pb := Helpers.make_party_battler()
+	add_child_autofree(pb)
+	var result: Array = BattleUIScript.compute_turn_order_entries(null, [pb])
+	# Filter out separators
+	var battler_entries: Array = result.filter(func(e: Dictionary) -> bool: return not e["is_separator"])
+	assert_eq(
+		battler_entries[0]["color"],
+		Color(0.7, 0.85, 1.0),
+		"Party battler queue entry should use blue tint",
+	)
+
+
+func test_turn_order_enemy_battler_in_queue_is_red() -> void:
+	var eb := Helpers.make_enemy_battler()
+	add_child_autofree(eb)
+	var result: Array = BattleUIScript.compute_turn_order_entries(null, [eb])
+	var battler_entries: Array = result.filter(func(e: Dictionary) -> bool: return not e["is_separator"])
+	assert_eq(
+		battler_entries[0]["color"],
+		Color(1.0, 0.5, 0.5),
+		"Enemy battler queue entry should use red tint",
+	)
+
+
+func test_turn_order_null_active_shows_only_queue() -> void:
+	var pb := Helpers.make_party_battler()
+	add_child_autofree(pb)
+	var result: Array = BattleUIScript.compute_turn_order_entries(null, [pb])
+	var battler_entries: Array = result.filter(func(e: Dictionary) -> bool: return not e["is_separator"])
+	assert_eq(battler_entries.size(), 1, "One queue entry shown with null active")
+	assert_false(
+		battler_entries[0]["text"].begins_with("["),
+		"Queue entry should not have brackets when active is null",
+	)
+
+
+func test_turn_order_separator_between_active_and_queue() -> void:
+	var pb := Helpers.make_party_battler()
+	var eb := Helpers.make_enemy_battler()
+	add_child_autofree(pb)
+	add_child_autofree(eb)
+	var result: Array = BattleUIScript.compute_turn_order_entries(pb, [eb])
+	assert_eq(result.size(), 3, "Active + separator + one queue entry = 3 elements")
+	assert_true(result[1]["is_separator"], "Middle element should be separator")

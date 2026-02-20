@@ -202,28 +202,17 @@ func update_party_status(party: Array[Battler]) -> void:
 
 func update_turn_order(queue: Array[Battler]) -> void:
 	UIHelpers.clear_children(_turn_order_container)
-
-	for battler in queue:
-		var icon := Label.new()
-		icon.text = battler.get_display_name().left(4)
-		icon.add_theme_font_size_override("font_size", 8)
-		if battler is PartyBattler:
-			icon.add_theme_color_override("font_color", Color(0.7, 0.85, 1.0))
-		else:
-			icon.add_theme_color_override("font_color", Color(1.0, 0.5, 0.5))
-
-		if battler == _active_battler:
-			icon.add_theme_color_override("font_color", UITheme.ACTIVE_HIGHLIGHT)
-
-		_turn_order_container.add_child(icon)
-
-		# Add separator arrow between entries
-		if battler != queue.back():
-			var sep := Label.new()
-			sep.text = ">"
-			sep.add_theme_font_size_override("font_size", 7)
-			sep.add_theme_color_override("font_color", Color(0.4, 0.4, 0.5))
-			_turn_order_container.add_child(sep)
+	var entries: Array[Dictionary] = BattleUIStatus.compute_turn_order_entries(
+		_active_battler, queue
+	)
+	for entry: Dictionary in entries:
+		var lbl := Label.new()
+		lbl.text = entry["text"]
+		lbl.add_theme_color_override("font_color", entry["color"])
+		lbl.add_theme_font_size_override(
+			"font_size", 7 if entry["is_separator"] else 8
+		)
+		_turn_order_container.add_child(lbl)
 
 
 func update_resonance(gauge_value: float, state: Battler.ResonanceState) -> void:

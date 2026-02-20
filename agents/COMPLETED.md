@@ -4,6 +4,7 @@ Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[
 
 ---
 
+- [2026-02-20] T-0057: Turn order display — compute_turn_order_entries() static helper, [Active] brackets with ACTIVE_HIGHLIGHT, ally=blue enemy=red, 6 tests, PR #200 (claude)
 - [2026-02-20] T-0165: Party UI cross-column keyboard/gamepad focus nav — compute_cross_column_focus_index() helper, _setup_focus() two-column rewrite, 5 tests, PR #199 (claude)
 - [2026-02-20] T-0166: BUG defend stance persists through TurnEnd — removed is_defending=false from end_turn(), cleared in PlayerTurnState.enter(); 4 tests updated, PR #198 (claude)
 - [2026-02-20] T-0133: Save slot summary on Continue button — timestamp in gather_save_data, compute_save_summary/format_save_timestamp static helpers, _show_save_label programmatic label below ContinueButton, 8 tests, PR #197 (claude)
