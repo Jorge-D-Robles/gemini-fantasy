@@ -34,7 +34,9 @@ GameManager.current_state  # GameState enum value
 ```gdscript
 AudioManager.play_bgm(stream)          # crossfades if already playing
 AudioManager.stop_bgm()
-AudioManager.play_sfx(stream)          # round-robin pool of 8
+AudioManager.play_sfx(stream)                                  # NORMAL priority (round-robin)
+AudioManager.play_sfx(stream, AudioManager.SfxPriority.CRITICAL)  # always plays; finds free player
+AudioManager.play_sfx(stream, AudioManager.SfxPriority.AMBIENT)   # skips if all 8 players busy
 ```
 Uses audio buses named `"BGM"` and `"SFX"`.
 

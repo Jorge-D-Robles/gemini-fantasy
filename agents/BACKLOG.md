@@ -1122,8 +1122,10 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0140
 - Title: Refactor AudioManager to support named SFX channels with priority
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: low
 - Milestone: M0
 - Depends: T-0139
@@ -1217,13 +1219,14 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0154
 - Title: Add camp/rest trigger zone at Roothollow inn entrance for T-0148 camp event
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: low
 - Milestone: M0
 - Depends: T-0148
 - Refs: game/scenes/roothollow/roothollow.gd, game/entities/interactable/strategies/innkeeper_strategy.gd
-- Notes: T-0148 Three Around a Fire camp scene triggers at the Roothollow inn after garrick_met_lyra flag. Add a trigger zone or second interaction option at the inn offering "Rest" (heal, existing) and "Spend the Evening" (camp scene, flag-gated). 3+ tests.
+- Notes: Already implemented — roothollow.gd _on_innkeeper_finished() calls NightEvents.compute_innkeeper_night_event() which auto-triggers CampThreeFires after innkeeper heal when garrick_recruited flag is set. No separate trigger zone needed.
 
 ### T-0155
 - Title: Wire dismiss prompt text to InputMap for remappable key display

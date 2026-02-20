@@ -1,8 +1,18 @@
 extends Node
 
 ## Manages BGM playback with crossfade and SFX via a pool of players.
+## SFX playback uses a priority system:
+##   CRITICAL — always plays; finds a free player, falls back to round-robin
+##   NORMAL   — round-robin (current behavior); always claims the next slot
+##   AMBIENT  — only plays if a free player is available; skips otherwise
 
 signal bgm_changed(stream: AudioStream)
+
+enum SfxPriority {
+	CRITICAL,
+	NORMAL,
+	AMBIENT,
+}
 
 const SFX_POOL_SIZE: int = 8
 const DEFAULT_FADE_TIME: float = 1.0
@@ -48,14 +58,50 @@ func stop_bgm(fade_time: float = DEFAULT_FADE_TIME) -> void:
 	tween.tween_callback(_bgm_player.stop)
 
 
-func play_sfx(stream: AudioStream, volume_db: float = 0.0) -> void:
+func play_sfx(
+	stream: AudioStream,
+	priority: SfxPriority = SfxPriority.NORMAL,
+	volume_db: float = 0.0,
+) -> void:
 	if not stream:
 		return
-	var player := _sfx_pool[_sfx_index]
+	var busy: Array[bool] = []
+	for p: AudioStreamPlayer in _sfx_pool:
+		busy.append(p.playing)
+	var idx: int = compute_sfx_player_index(SFX_POOL_SIZE, _sfx_index, busy, priority)
+	if idx == -1:
+		return  # AMBIENT priority — all players busy, skip
+	var player: AudioStreamPlayer = _sfx_pool[idx]
 	player.stream = stream
 	player.volume_db = volume_db
 	player.play()
-	_sfx_index = (_sfx_index + 1) % SFX_POOL_SIZE
+	if priority == SfxPriority.NORMAL:
+		_sfx_index = (_sfx_index + 1) % SFX_POOL_SIZE
+
+
+## Pure helper for testability. Returns the pool index to use for the next SFX
+## based on the priority and which players are currently busy.
+## Returns -1 only for AMBIENT priority when all players are playing.
+static func compute_sfx_player_index(
+	pool_size: int,
+	current_index: int,
+	busy_mask: Array[bool],
+	priority: SfxPriority,
+) -> int:
+	match priority:
+		SfxPriority.AMBIENT:
+			for i: int in pool_size:
+				if not busy_mask[i]:
+					return i
+			return -1
+		SfxPriority.CRITICAL:
+			for i: int in pool_size:
+				if not busy_mask[i]:
+					return i
+			# All busy — fall back to round-robin so critical sounds always play
+			return current_index
+		_:  # NORMAL
+			return current_index
 
 
 func get_current_bgm_path() -> String:
