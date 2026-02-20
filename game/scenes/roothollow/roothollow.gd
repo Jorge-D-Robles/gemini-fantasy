@@ -15,6 +15,7 @@ const Quests = preload("roothollow_quests.gd")
 const Zone = preload("roothollow_zone.gd")
 const SP = preload("res://systems/scene_paths.gd")
 const CampThreeFiresScript = preload("res://events/camp_three_fires.gd")
+const GarrickNightSceneScript = preload("res://events/garrick_night_scene.gd")
 const SHOP_DATA_PATH: String = (
 	"res://data/shops/roothollow_general.tres"
 )
@@ -256,6 +257,14 @@ func _on_innkeeper_finished() -> void:
 		camp_event.trigger()
 		await camp_event.sequence_completed
 		camp_event.queue_free()
+	# After meeting Lyra in the ruins, trigger the quiet night reflection scene.
+	if EventFlags.has_flag("garrick_met_lyra") and \
+			not EventFlags.has_flag(GarrickNightScene.FLAG_NAME):
+		var night_event: Node = GarrickNightSceneScript.new()
+		add_child(night_event)
+		night_event.trigger()
+		await night_event.sequence_completed
+		night_event.queue_free()
 
 
 func _on_shopkeeper_finished() -> void:
