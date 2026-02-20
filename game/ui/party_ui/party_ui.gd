@@ -44,6 +44,7 @@ func _unhandled_input(event: InputEvent) -> void:
 func open() -> void:
 	_build_ui()
 	visible = true
+	_connect_party_signals()
 	AudioManager.play_sfx(load(SfxLibrary.UI_MENU_OPEN))
 	if not _active_buttons.is_empty():
 		_active_buttons[0].grab_focus()
@@ -52,9 +53,38 @@ func open() -> void:
 
 
 func close() -> void:
+	_disconnect_party_signals()
 	AudioManager.play_sfx(load(SfxLibrary.UI_CANCEL))
 	visible = false
 	party_ui_closed.emit()
+
+
+func _connect_party_signals() -> void:
+	if _pm == null:
+		return
+	if not _pm.party_changed.is_connected(_on_party_changed):
+		_pm.party_changed.connect(_on_party_changed)
+	if not _pm.party_state_changed.is_connected(_on_party_changed):
+		_pm.party_state_changed.connect(_on_party_changed)
+
+
+func _disconnect_party_signals() -> void:
+	if _pm == null:
+		return
+	if _pm.party_changed.is_connected(_on_party_changed):
+		_pm.party_changed.disconnect(_on_party_changed)
+	if _pm.party_state_changed.is_connected(_on_party_changed):
+		_pm.party_state_changed.disconnect(_on_party_changed)
+
+
+func _on_party_changed() -> void:
+	if not visible:
+		return
+	_build_ui()
+	if not _active_buttons.is_empty():
+		_active_buttons[0].grab_focus()
+	elif _back_button != null:
+		_back_button.grab_focus()
 
 
 func _build_ui() -> void:
@@ -278,9 +308,7 @@ func _on_reserve_pressed(reserve_index: int) -> void:
 		return
 	_pm.swap_members(_selected_active_index, reserve_index)
 	AudioManager.play_sfx(load(SfxLibrary.UI_CONFIRM))
-	_build_ui()
-	if not _active_buttons.is_empty():
-		_active_buttons[0].grab_focus()
+	# party_changed signal from swap_members() triggers _on_party_changed -> _build_ui()
 
 
 func _show_swap_error(msg: String) -> void:
