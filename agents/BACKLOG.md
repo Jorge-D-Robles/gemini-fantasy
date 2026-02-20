@@ -55,8 +55,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0171
 - Title: Add Overgrown Capital entry scene — 3-person party gate dialogue on entry
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: medium
 - Milestone: M0
 - Depends: T-0085
@@ -260,8 +261,10 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0049
 - Title: BUG — Verdant Forest camera limit cuts off bottom row
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: critical
 - Milestone: M0
 - Depends: none
@@ -788,8 +791,8 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0099
 - Title: Add transition animations between zones (beyond fade)
-- Status: todo
-- Assigned: unassigned
+- Status: in-progress
+- Assigned: claude
 - Priority: low
 - Milestone: M0
 - Depends: none
