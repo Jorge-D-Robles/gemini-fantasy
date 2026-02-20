@@ -123,9 +123,10 @@ Started: 2026-02-20
 
 ### T-0210
 - Title: Wire dedicated Echoes of the Capital BGM for Overgrown Capital (replace Castle.ogg)
-- Status: in-progress
+- Status: done
 - Assigned: claude
 - Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: high
 - Depends: T-0190
 
