@@ -1,9 +1,13 @@
 extends State
 
 ## Handles battle victory: calculates rewards, shows victory screen.
+## Player must press [confirm] to dismiss — replaces the old 2.0s timer.
 
 const UITheme = preload("res://ui/ui_theme.gd")
 const FANFARE_PATH: String = "res://assets/music/Success!.ogg"
+
+## Seconds before the dismiss prompt appears (prevents instant accidental skip).
+const GRACE_PERIOD: float = 0.5
 
 var battle_scene: Node = null
 
@@ -68,8 +72,11 @@ func enter() -> void:
 				UITheme.LogType.VICTORY,
 			)
 
-	# Wait for player to dismiss victory screen
-	await get_tree().create_timer(2.0).timeout
+	# Wait for player to dismiss: 0.5s grace then prompt + input gate.
+	await get_tree().create_timer(GRACE_PERIOD).timeout
+	if battle_ui and battle_ui.has_signal("victory_dismissed"):
+		battle_ui.show_victory_dismiss_prompt()
+		await battle_ui.victory_dismissed
 	battle_scene.end_battle(true)
 
 

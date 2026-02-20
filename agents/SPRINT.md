@@ -85,15 +85,6 @@ Started: 2026-02-18
 - Refs: game/ui/quest_log/quest_log.gd
 - Notes: compute_quest_list() returns raw item ID strings. Resolve to display names via ItemData lookup. T-0090 done — unblocked.
 
-### T-0129
-- Title: Add player-driven victory screen dismissal (confirm input replaces 2.0s timer)
-- Status: todo
-- Assigned: unassigned
-- Priority: medium
-- Depends: none
-- Refs: game/systems/battle/states/victory_state.gd, game/ui/battle_ui/battle_ui.gd
-- Notes: Replace await create_timer(2.0) with "Press [confirm]" label + await interact input (0.5s grace). 4+ tests.
-
 ### T-0136
 - Title: Add player-driven defeat screen with Load/Title recovery options
 - Status: todo
@@ -249,6 +240,14 @@ Started: 2026-02-18
 ---
 
 ## Done This Sprint
+
+### T-0129
+- Title: Add player-driven victory screen dismissal (confirm input replaces 2.0s timer)
+- Status: done
+- Assigned: claude
+- Started: 2026-02-19
+- Completed: 2026-02-19
+- Notes: GRACE_PERIOD=0.5 const; await grace period then show_victory_dismiss_prompt() + await victory_dismissed signal; compute_dismiss_prompt_text("interact") static helper; _unhandled_input gate on "interact" key; 7 tests. Also fixed stale test_player_z_index.gd (tscn file parsing, z=0 design). Verdant forest muted green variant + canopy legend extension bundled.
 
 ### T-0147
 - Title: Add battle auto-play mode to playtest runner for combat balance testing

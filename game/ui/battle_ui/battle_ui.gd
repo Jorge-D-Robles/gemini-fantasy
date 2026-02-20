@@ -10,6 +10,7 @@ signal skill_selected(ability: Resource)
 signal item_selected(item: Resource)
 signal submenu_cancelled
 signal target_cancelled
+signal victory_dismissed
 
 enum Command {
 	ATTACK,
@@ -39,6 +40,8 @@ var _highlighted_target: Node = null
 var _original_modulate: Color = Color.WHITE
 var _name_label: Label = null
 var _victory_party_container: VBoxContainer = null
+var _waiting_for_victory_dismiss: bool = false
+var _victory_dismiss_label: Label = null
 
 @onready var _turn_order_container: HBoxContainer = %TurnOrderContainer
 @onready var _command_menu: PanelContainer = %CommandMenu
@@ -85,6 +88,12 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if _waiting_for_victory_dismiss:
+		if event.is_action_pressed("interact"):
+			_dismiss_victory()
+			get_viewport().set_input_as_handled()
+		return
+
 	if _target_selector.visible:
 		if event.is_action_pressed("move_up") or event.is_action_pressed("move_left"):
 			_change_target(-1)
@@ -295,8 +304,34 @@ func show_defeat() -> void:
 	_retry_button.grab_focus()
 
 
+func show_victory_dismiss_prompt() -> void:
+	var vbox: VBoxContainer = _victory_screen.get_node_or_null(
+		"MarginContainer/VBoxContainer"
+	)
+	if not vbox:
+		return
+	_victory_dismiss_label = Label.new()
+	_victory_dismiss_label.text = BattleUIVictory.compute_dismiss_prompt_text("interact")
+	_victory_dismiss_label.add_theme_font_size_override("font_size", 9)
+	_victory_dismiss_label.add_theme_color_override(
+		"font_color", UITheme.TEXT_SECONDARY,
+	)
+	_victory_dismiss_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	vbox.add_child(_victory_dismiss_label)
+	_waiting_for_victory_dismiss = true
+
+
 func clear_battle_log() -> void:
 	_battle_log.clear()
+
+
+func _dismiss_victory() -> void:
+	_waiting_for_victory_dismiss = false
+	if is_instance_valid(_victory_dismiss_label):
+		_victory_dismiss_label.queue_free()
+		_victory_dismiss_label = null
+	AudioManager.play_sfx(load(SfxLibrary.UI_CONFIRM))
+	victory_dismissed.emit()
 
 
 func _update_active_portrait(battler: Battler) -> void:
