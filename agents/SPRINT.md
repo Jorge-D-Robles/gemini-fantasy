@@ -150,9 +150,10 @@ Started: 2026-02-20
 
 ### T-0195
 - Title: Implement Purification Node mechanic for crystal-blocked dungeon paths
-- Status: in-progress
+- Status: done
 - Assigned: claude
 - Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: high
 - Depends: T-0190
 
