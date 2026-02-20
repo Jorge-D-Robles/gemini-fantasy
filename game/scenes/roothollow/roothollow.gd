@@ -110,6 +110,11 @@ func _ready() -> void:
 	# Set flag-reactive NPC dialogue
 	_setup_npc_dialogue()
 
+	# Refresh NPC indicators when quest state changes
+	QuestManager.quest_accepted.connect(_on_quest_changed)
+	QuestManager.quest_progressed.connect(_on_quest_progressed_refresh)
+	QuestManager.quest_completed.connect(_on_quest_changed)
+
 	# Companion followers
 	var player_node := get_tree().get_first_node_in_group(
 		"player",
@@ -412,14 +417,28 @@ func _spawn_shrine_marker() -> void:
 	add_child(label)
 
 
-static func _compute_quest_indicator(
-	quest_id: StringName,
-) -> NPC.IndicatorType:
-	if QuestManager.is_quest_completed(quest_id):
-		return NPC.IndicatorType.CHAT
-	if QuestManager.is_quest_active(quest_id):
-		return NPC.IndicatorType.QUEST_ACTIVE
-	return NPC.IndicatorType.QUEST
+func _refresh_npc_indicators() -> void:
+	var elder: StaticBody2D = $Entities/TownfolkNPC1
+	if elder:
+		elder.indicator_type = Quests.compute_npc_indicator_type(
+			&"thessa", QuestManager,
+		)
+	var scout: StaticBody2D = $Entities/TownfolkNPC2
+	if scout:
+		scout.indicator_type = Quests.compute_npc_indicator_type(
+			&"wren", QuestManager,
+		)
+
+
+func _on_quest_changed(_quest_id: StringName) -> void:
+	_refresh_npc_indicators()
+
+
+func _on_quest_progressed_refresh(
+	_quest_id: StringName,
+	_objective_index: int,
+) -> void:
+	_refresh_npc_indicators()
 
 
 func _setup_npc_dialogue() -> void:
@@ -447,16 +466,16 @@ func _setup_npc_dialogue() -> void:
 		elder.dialogue_lines = Dialogue.get_thessa_dialogue(
 			flags,
 		)
-		elder.indicator_type = _compute_quest_indicator(
-			&"elder_wisdom",
+		elder.indicator_type = Quests.compute_npc_indicator_type(
+			&"thessa", QuestManager,
 		)
 
 	var scout: StaticBody2D = $Entities/TownfolkNPC2
 	if scout:
 		scout.npc_name = "Wren"
 		scout.dialogue_lines = Dialogue.get_wren_dialogue(flags)
-		scout.indicator_type = _compute_quest_indicator(
-			&"scouts_report",
+		scout.indicator_type = Quests.compute_npc_indicator_type(
+			&"wren", QuestManager,
 		)
 
 	if _garrick_npc and _garrick_npc.visible:

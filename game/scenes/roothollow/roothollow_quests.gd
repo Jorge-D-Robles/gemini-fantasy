@@ -115,3 +115,28 @@ static func can_complete_scouts_quest(
 	ruins_visited: bool,
 ) -> bool:
 	return ruins_visited
+
+
+# -- NPC indicator helpers --
+
+
+## Maps [param npc_id] to the appropriate [enum NPC.IndicatorType] using
+## quest state from [param qm] (a QuestManager-compatible Node).
+## Returns CHAT for NPC IDs not associated with a tracked quest.
+## Testable without a scene — pass a fresh QuestManager instance as [param qm].
+static func compute_npc_indicator_type(
+	npc_id: StringName,
+	qm: Node,
+) -> NPC.IndicatorType:
+	const NPC_QUEST_MAP: Dictionary = {
+		&"thessa": &"elder_wisdom",
+		&"wren": &"scouts_report",
+	}
+	if not NPC_QUEST_MAP.has(npc_id):
+		return NPC.IndicatorType.CHAT
+	var quest_id: StringName = NPC_QUEST_MAP[npc_id]
+	if qm.is_quest_completed(quest_id):
+		return NPC.IndicatorType.CHAT
+	if qm.is_quest_active(quest_id):
+		return NPC.IndicatorType.QUEST_ACTIVE
+	return NPC.IndicatorType.QUEST
