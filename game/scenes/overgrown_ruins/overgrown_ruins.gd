@@ -6,6 +6,9 @@ extends Node2D
 ## an exit to the Verdant Forest.
 
 const SP = preload("res://systems/scene_paths.gd")
+const EntryDialogue = preload(
+	"res://scenes/overgrown_ruins/overgrown_ruins_entry_dialogue.gd"
+)
 const MEMORY_BLOOM_PATH: String = "res://data/enemies/memory_bloom.tres"
 const CREEPING_VINE_PATH: String = "res://data/enemies/creeping_vine.tres"
 const LAST_GARDENER_PATH: String = "res://data/enemies/last_gardener.tres"
@@ -129,6 +132,9 @@ func _ready() -> void:
 
 	# Tutorial: menu hint after 4s on first visit
 	_schedule_menu_hint()
+
+	# Entry dialogue fires once when Garrick is in the party
+	_maybe_trigger_entry_dialogue.call_deferred()
 
 
 func _spawn_zone_marker() -> void:
@@ -278,6 +284,19 @@ func _on_boss_zone_entered(body: Node2D) -> void:
 	_encounter_system.enabled = false
 	_boss_zone.monitoring = false
 	_boss_encounter.trigger()
+
+
+func _maybe_trigger_entry_dialogue() -> void:
+	if not EventFlags.has_flag(EntryDialogue.get_entry_gate_flag()):
+		return
+	if EventFlags.has_flag(EntryDialogue.get_entry_flag()):
+		return
+	EventFlags.set_flag(EntryDialogue.get_entry_flag())
+	var raw: Array = EntryDialogue.get_entry_lines()
+	var lines: Array[DialogueLine] = []
+	for entry: Dictionary in raw:
+		lines.append(DialogueLine.create(entry["speaker"], entry["text"]))
+	DialogueManager.start_dialogue(lines)
 
 
 func _schedule_menu_hint() -> void:
