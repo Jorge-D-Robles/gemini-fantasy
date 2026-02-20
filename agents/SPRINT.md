@@ -222,6 +222,15 @@ Started: 2026-02-18
 - Refs: docs/story/act1/04-old-iron.md (Scene 1), game/scenes/roothollow/roothollow_dialogue.gd
 - Notes: Flag-conditional item pool addition when iris_recruited is set. May need new ItemData resources. 3+ tests. T-0082 done — unblocked.
 
+### T-0171
+- Title: Add Overgrown Capital entry scene — 3-person party gate dialogue on entry
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Depends: T-0085
+- Refs: docs/story/act1/05-into-the-capital.md (Scene 1), game/scenes/overgrown_ruins/overgrown_ruins.gd
+- Notes: Chapter 5 Scene 1 gate dialogue (4-5 lines): Garrick reacts to scale of ruins, Iris reports crystal density, Kael quiet. Gated by garrick_recruited AND overgrown_capital_entry_seen flag (one-shot). Trigger on scene entry via call_deferred. Static module pattern from T-0162 (VerdantForestDialogue). 3+ tests.
+
 ### T-0095
 - Title: Add battler idle animations in combat
 - Status: done
