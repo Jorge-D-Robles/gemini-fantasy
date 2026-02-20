@@ -3,6 +3,7 @@
 Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[date] Description`.
 
 ---
+- [2026-02-20] T-0212: Wire Verdant Forest → Overgrown Capital transition — ExitToCapital Area2D (320,8) + SpawnFromCapital Marker2D (320,48) in Forest, spawn_from_forest group in Capital, fix Capital exit to SP.VERDANT_FOREST, ZoneMarker.UP; 10 tests; PR #257 (claude)
 - [2026-02-20] T-0209: Add Echo Nomad enemy to Overgrown Capital encounter pool — echo_nomad.tres (90 HP, magic-biased, AGGRESSIVE, ghost1.png), updated build_pool() with optional 3rd param, 4 new tests (9 total); PR #256 (claude)
 - [2026-02-20] T-0210: Wire Echoes of the Capital BGM for Overgrown Capital — replaced Castle.ogg placeholder, added 1 regression test + updated BGM coverage test; PR #255 (claude)
 - [2026-02-20] T-0184: Seed skill tree .tres files for all 8 party members — 24 SkillTreeData files (12 full 6-node trees for Kael/Iris/Garrick/Nyx, 12 stub 3-node trees for Lyra/Sienna/Cipher/Ash), 4 CharacterData .tres updated with skill_trees refs, 10 tests; PR #254 (claude)
