@@ -21,4 +21,6 @@ Started: 2026-02-20
 
 ## Done This Sprint
 
+- T-0249: Chapter 7 "A Village Burns" story event scaffold
+
 See `agents/COMPLETED.md` for the archive.

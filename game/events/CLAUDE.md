@@ -15,6 +15,8 @@ Story event scripts — one-shot cutscenes, recruitments, and story triggers. Ea
 | `camp_three_fires.gd` | `CampThreeFires` | Roothollow / innkeeper (garrick_recruited) | `camp_scene_three_fires` |
 | `garrick_night_scene.gd` | `GarrickNightScene` | Roothollow / innkeeper (garrick_met_lyra) | `garrick_night_scene` |
 | `demo_ending.gd` | `DemoEnding` | Overgrown Ruins / chained after GarrickMeetsLyra | `demo_complete` |
+| `nyx_introduction.gd` | `NyxIntroduction` | Verdant Forest / _maybe_trigger_nyx_introduction | `nyx_introduction_seen` |
+| `village_burns.gd` | `VillageBurns` | Roothollow (on return) | `village_burns_seen` |
 
 > **Note:** `event_flags.gd` lives here but is registered as the `EventFlags` autoload in `project.godot`. See `game/autoloads/CLAUDE.md` for the autoload inventory.
 
