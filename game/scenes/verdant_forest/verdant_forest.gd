@@ -11,6 +11,10 @@ const INTERACTABLE_SCENE := preload("res://entities/interactable/interactable.ts
 const CAMP_STRATEGY_SCRIPT := preload(
 	"res://entities/interactable/strategies/camp_strategy.gd"
 )
+const MEMORIAL_ECHO_STRATEGY_SCRIPT := preload(
+	"res://entities/interactable/strategies/memorial_echo_strategy.gd"
+)
+const CHILDS_LAUGHTER_ECHO_ID: StringName = &"childs_laughter"
 const CREEPING_VINE_PATH: String = "res://data/enemies/creeping_vine.tres"
 const ASH_STALKER_PATH: String = "res://data/enemies/ash_stalker.tres"
 const HOLLOW_SPECTER_PATH: String = "res://data/enemies/hollow_specter.tres"
@@ -47,6 +51,12 @@ static func compute_campfire_name() -> String:
 static func compute_campfire_position() -> Vector2:
 	## Clearing at col 20, row 13 — centre of the dirt path where trees part.
 	return Vector2(320.0, 208.0)
+
+
+static func compute_forest_echo_position() -> Vector2:
+	## Near the campfire clearing — col 22, row 12.
+	## Offset northeast so both objects are visible without overlap.
+	return Vector2(352.0, 192.0)
 
 
 func _ready() -> void:
@@ -98,6 +108,24 @@ func _ready() -> void:
 	campfire.indicator_type = Interactable.IndicatorType.INTERACT
 	campfire.position = compute_campfire_position()
 	$Entities.add_child(campfire)
+
+	# Child's Laughter echo — one-time pickup near the campfire clearing
+	var echo_strat := MEMORIAL_ECHO_STRATEGY_SCRIPT.new()
+	echo_strat.echo_id = CHILDS_LAUGHTER_ECHO_ID
+	echo_strat.require_quest_id = &""
+	echo_strat.vision_lines = [
+		"",
+		"Pure joy. A child chasing fireflies through a summer field, before The Severance.",
+		"Kael",
+		"This memory... it's so vivid. I can feel the warmth of a summer evening I never had.",
+	]
+	var echo_interactable := INTERACTABLE_SCENE.instantiate() as Interactable
+	echo_interactable.name = "ChildsLaughterEcho"
+	echo_interactable.strategy = echo_strat
+	echo_interactable.one_time = true
+	echo_interactable.indicator_type = Interactable.IndicatorType.INTERACT
+	echo_interactable.position = compute_forest_echo_position()
+	$Entities.add_child(echo_interactable)
 
 	# Companion followers
 	var player_node := get_tree().get_first_node_in_group(

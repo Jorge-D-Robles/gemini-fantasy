@@ -1062,7 +1062,7 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0182
 - Title: Implement EchoFragment Resource and EchoManager autoload — core collection system
-- Status: in-progress
+- Status: done
 - Assigned: claude
 - Priority: high
 - Milestone: M1
@@ -1432,8 +1432,8 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0187
 - Title: Build Echo Collection Journal UI (view collected echoes in pause menu)
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: medium
 - Milestone: M1
 - Depends: T-0182
@@ -1455,8 +1455,6 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 - Status: done
 - Assigned: claude
 - Completed: 2026-02-20
-- Status: todo
-- Assigned: unassigned
 - Priority: medium
 - Milestone: M1
 - Depends: T-0182
@@ -1505,8 +1503,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0194
 - Title: Seed Story Echo .tres files for Act I Overgrown Capital collection spots
-- Status: todo
+- Status: superseded
 - Assigned: unassigned
+- Notes: Superseded by T-0197 which seeded all four target echo .tres files (Morning Commute, Family Dinner, Warning Ignored, The First Crack). PR #250.
 - Priority: medium
 - Milestone: M1
 - Depends: T-0182, T-0190
@@ -1592,6 +1591,66 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 - Depends: none
 - Refs: agents/BACKLOG.md
 - Notes: T-0104 (Chapters 6-10) currently depends on T-0103 which is superseded. Update dependency to T-0191 (Lyra's Fragment 2 + Research Quarter vision) which is the actual narrative gate for Act I Chapter 5 completion. Doc-only change.
+
+### T-0203
+- Title: Mark T-0194 superseded by T-0197 in BACKLOG (done via T-0198 tracker update)
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
+- Priority: low
+- Milestone: M1
+- Depends: none
+- Notes: Applied as part of task planner recommendations. T-0194 now marked superseded in BACKLOG.md.
+
+### T-0204
+- Title: Update T-0183 dependency from T-0103 to T-0190 (Prismfall Approach needs Capital dungeon first)
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Milestone: M1
+- Depends: none
+- Refs: agents/BACKLOG.md
+- Notes: T-0183 (Prismfall Approach overworld scene) depends on T-0103 which is superseded. T-0190 (Overgrown Capital tilemap skeleton) is the real gate. Doc-only change, no code.
+
+### T-0205
+- Title: Seed and place Residential Quarter echo interactables in Overgrown Capital
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M1
+- Depends: T-0190, T-0197
+- Refs: docs/game-design/05-dungeon-designs.md (Residential Quarter), docs/lore/04-echo-catalog.md
+- Notes: Create 2 Story Echo .tres for personal home memories in Residential Quarter ruins (e.g., family_dinner.tres already exists; one new family-themed echo). Place MemorialEchoStrategy interactables in residential area. 4+ tests verifying unique IDs and placement.
+
+### T-0206
+- Title: Add The Performer mini-boss in Entertainment District of Overgrown Capital
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M1
+- Depends: T-0190
+- Refs: docs/game-design/05-dungeon-designs.md (Entertainment District), docs/game-design/02-enemy-design.md
+- Notes: Echo manifestation mini-boss in the theater. Create performer.tres EnemyData (BOSS AI, ~180 HP, dramatic_echo AoE magic + resonance drain ability). Trigger zone in theater area. Pre/post-battle 4-5 line dialogue. Flag: performer_encountered. 4+ tests.
+
+### T-0207
+- Title: Add Government Center sub-area to Overgrown Capital — political debate echoes and hidden bunker
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Milestone: M1
+- Depends: T-0190
+- Refs: docs/game-design/05-dungeon-designs.md (Government Center), docs/lore/04-echo-catalog.md
+- Notes: Capitol building area. Create 1-2 Story Echo .tres about political dissent re: Resonance regulation. Hidden bunker secret area with rare echo. 3+ tests.
+
+### T-0208
+- Title: Source or assign BGM for Overgrown Capital dungeon scene
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Milestone: M1
+- Depends: T-0190
+- Refs: docs/game-design/06-audio-design.md, game/assets/music/
+- Notes: Set SCENE_BGM_PATH constant in overgrown_capital.gd. Distinct from overgrown_ruins BGM (Castle.ogg). Import new OGG or repurpose unused track. Wire into _start_scene_music(). 1 test verifying path differs from ruins BGM.
 
 ---
 

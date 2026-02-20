@@ -78,11 +78,27 @@ Started: 2026-02-20
 
 ### T-0197
 - Title: Seed Story Echo .tres files (Morning Commute, Family Dinner, Warning Ignored, The First Crack)
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
+- Priority: high
+- Depends: T-0182
+
+### T-0201
+- Title: Place childs_laughter echo interactable in Verdant Forest
 - Status: in-progress
 - Assigned: claude
 - Started: 2026-02-20
-- Priority: high
-- Depends: T-0182
+- Priority: medium
+- Depends: T-0182, T-0198
+
+### T-0196
+- Title: Add OVERGROWN_CAPITAL constant to ScenePaths
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Depends: none
 
 ### T-0190
 - Title: Implement Chapter 5 Overgrown Capital dungeon tilemap and navigation skeleton
