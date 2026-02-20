@@ -63,6 +63,7 @@ func _physics_process(_delta: float) -> void:
 		_play_idle()
 
 	move_and_slide()
+	_update_interaction_prompt()
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -90,6 +91,9 @@ func set_movement_enabled(enabled: bool) -> void:
 	_can_move = enabled
 	if not enabled:
 		velocity = Vector2.ZERO
+		var hud := get_node_or_null("/root/UILayer/HUD")
+		if hud:
+			hud.hide_interaction_prompt()
 
 
 func _setup_animations() -> void:
@@ -218,6 +222,18 @@ func _try_interact() -> void:
 		var bus := get_node_or_null("/root/EventBus")
 		if bus:
 			bus.emit_player_interacted(collider)
+
+
+func _update_interaction_prompt() -> void:
+	var hud := get_node_or_null("/root/UILayer/HUD")
+	if not hud:
+		return
+	if interaction_ray.is_colliding():
+		var collider := interaction_ray.get_collider()
+		if collider and collider.has_method("interact"):
+			hud.show_interaction_prompt(InteractionHint.compute_interaction_hint_text("interact"))
+			return
+	hud.hide_interaction_prompt()
 
 
 func _on_game_state_changed(
