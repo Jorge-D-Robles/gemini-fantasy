@@ -36,6 +36,26 @@ static func calculate_outgoing(
 	return total
 
 
+## Returns the critical hit probability for a given luck value.
+## Formula: CRIT_BASE_CHANCE + luck * CRIT_LUCK_BONUS_PER_POINT, clamped to [0, 1].
+static func compute_crit_chance(luck: int) -> float:
+	return clampf(
+		GB.CRIT_BASE_CHANCE + luck * GB.CRIT_LUCK_BONUS_PER_POINT,
+		0.0,
+		1.0,
+	)
+
+
+## Returns true if a critical hit occurs for the given luck value.
+static func roll_crit(luck: int) -> bool:
+	return randf() < compute_crit_chance(luck)
+
+
+## Returns crit-multiplied damage (truncated to int).
+static func apply_crit(damage: int) -> int:
+	return int(damage * GB.CRIT_DAMAGE_MULT)
+
+
 ## Calculates incoming damage after defense, defend stance, and resonance.
 static func calculate_incoming(
 	base: int,

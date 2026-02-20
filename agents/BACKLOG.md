@@ -1002,6 +1002,36 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 - Refs: docs/story/act1/04-old-iron.md (Scene 2), game/scenes/roothollow/roothollow.gd
 - Notes: Chapter 4 Scene 2 places the Garrick recruitment at a spring shrine south of Roothollow. Add a trigger zone in Roothollow or Verdant Forest scene that activates garrick_recruitment event when approached (after iris_recruited, before garrick_recruited). Shrine should have a glowing crystal interactable. 4+ tests.
 
+### T-0153
+- Title: Seed luck stat in CharacterData .tres files for Kael, Iris, Garrick, Lyra
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M0
+- Depends: none
+- Refs: game/data/characters/, game/resources/character_data.gd
+- Notes: T-0143 critical hit formula uses luck * 0.5% but luck is 0 in all CharacterData .tres files. Set luck: Kael=8 (balanced), Iris=12 (sharp eye), Garrick=4 (heavy), Lyra=10 (attuned). If character_data.gd lacks a luck field, add it. 3+ tests verifying luck values load and feed crit formula. Do alongside T-0143.
+
+### T-0154
+- Title: Add camp/rest trigger zone at Roothollow inn entrance for T-0148 camp event
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Milestone: M0
+- Depends: T-0148
+- Refs: game/scenes/roothollow/roothollow.gd, game/entities/interactable/strategies/innkeeper_strategy.gd
+- Notes: T-0148 Three Around a Fire camp scene triggers at the Roothollow inn after garrick_met_lyra flag. Add a trigger zone or second interaction option at the inn offering "Rest" (heal, existing) and "Spend the Evening" (camp scene, flag-gated). 3+ tests.
+
+### T-0155
+- Title: Wire dismiss prompt text to InputMap for remappable key display
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Milestone: M0
+- Depends: T-0129
+- Refs: game/ui/battle_ui/battle_ui.gd, game/ui/battle_ui/battle_ui_victory.gd
+- Notes: compute_dismiss_prompt_text("interact") uses a static string. Wire to InputMap.action_get_events("interact") to dynamically show the actual key binding. Groundwork for future remapping feature. 2+ tests verifying prompt updates for keyboard vs joypad events.
+
 ---
 
 ## M2 — Act II: The Weight of Echoes

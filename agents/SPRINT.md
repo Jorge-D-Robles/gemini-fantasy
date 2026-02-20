@@ -51,8 +51,10 @@ Started: 2026-02-18
 
 ### T-0143
 - Title: Implement critical hit mechanic and wire CRITICAL_HIT SFX and popup
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-19
+- Completed: 2026-02-19
 - Priority: medium
 - Depends: T-0067
 - Refs: game/systems/battle/battler_damage.gd, game/systems/battle/states/action_execute_state.gd, game/entities/battle/damage_popup.gd
@@ -107,12 +109,12 @@ Started: 2026-02-18
 
 ### T-0125
 - Title: Improve game over / defeat screen with recovery options
-- Status: todo
+- Status: duplicate
 - Assigned: unassigned
 - Priority: medium
 - Depends: none
 - Refs: game/systems/battle/states/defeat_state.gd, game/ui/battle_ui/battle_ui.gd
-- Notes: Add styled "Game Over" panel with "Load Last Save" and "Return to Title" buttons. See also T-0136 (overlapping scope — consider merging).
+- Notes: DUPLICATE of T-0136 (completed 2026-02-19). T-0136 fully implements defeat screen dismiss flow with Load Last Save / Return to Title buttons, compute_defeat_options() helper, and signal-based state machine integration.
 
 ### T-0128
 - Title: BUG — AudioManager.play_bgm() resets volume_db to 0.0, ignoring user volume setting
@@ -242,6 +244,14 @@ Started: 2026-02-18
 ---
 
 ## Done This Sprint
+
+### T-0143
+- Title: Implement critical hit mechanic and wire CRITICAL_HIT SFX and popup
+- Status: done
+- Assigned: claude
+- Started: 2026-02-19
+- Completed: 2026-02-19
+- Notes: compute_crit_chance/roll_crit/apply_crit in BattlerDamage; CRIT_BASE_CHANCE=0.05, CRIT_LUCK_BONUS=0.005, CRIT_DAMAGE_MULT=1.5 in GameBalance; crit branch in _execute_attack with CRITICAL_HIT SFX, death SFX if kill, CRITICAL popup; 12 tests.
 
 ### T-0136
 - Title: Add player-driven defeat screen with Load/Title recovery options

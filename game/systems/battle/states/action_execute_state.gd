@@ -65,20 +65,39 @@ func _execute_attack(attacker: Battler, target: Battler) -> void:
 	# Play impact VFX on target (fire-and-forget)
 	_play_vfx(target, AbilityData.Element.NONE)
 
+	var is_crit := BattlerDamage.roll_crit(attacker.luck)
 	var damage := attacker.deal_damage(attacker.attack)
+	if is_crit:
+		damage = BattlerDamage.apply_crit(damage)
 	var actual := target.take_damage(damage)
-	AudioManager.play_sfx(load(SfxLibrary.COMBAT_ATTACK_HIT))
-	if not target.is_alive:
-		AudioManager.play_sfx(load(SfxLibrary.COMBAT_DEATH))
-	if _battle_ui:
-		_battle_ui.add_battle_log(
-			"%s attacks %s for %d damage!" % [
-				attacker.get_display_name(),
-				target.get_display_name(),
-				actual,
-			],
-			UITheme.LogType.DAMAGE,
-		)
+
+	if is_crit:
+		AudioManager.play_sfx(load(SfxLibrary.COMBAT_CRITICAL_HIT))
+		if not target.is_alive:
+			AudioManager.play_sfx(load(SfxLibrary.COMBAT_DEATH))
+		_show_critical_popup(target, actual)
+		if _battle_ui:
+			_battle_ui.add_battle_log(
+				"CRITICAL HIT! %s attacks %s for %d damage!" % [
+					attacker.get_display_name(),
+					target.get_display_name(),
+					actual,
+				],
+				UITheme.LogType.DAMAGE,
+			)
+	else:
+		AudioManager.play_sfx(load(SfxLibrary.COMBAT_ATTACK_HIT))
+		if not target.is_alive:
+			AudioManager.play_sfx(load(SfxLibrary.COMBAT_DEATH))
+		if _battle_ui:
+			_battle_ui.add_battle_log(
+				"%s attacks %s for %d damage!" % [
+					attacker.get_display_name(),
+					target.get_display_name(),
+					actual,
+				],
+				UITheme.LogType.DAMAGE,
+			)
 
 
 func _execute_ability(
@@ -238,3 +257,12 @@ func _show_heal_number(target: Battler, amount: int) -> void:
 		visual.show_heal_number(amount)
 	elif visual and visual.has_method("play_heal_anim"):
 		visual.play_heal_anim()
+
+
+func _show_critical_popup(target: Battler, amount: int) -> void:
+	var visual: Node2D = battle_scene.get_visual_scene(target)
+	if not visual:
+		return
+	var popup := DamagePopup.new()
+	visual.add_child(popup)
+	popup.setup(amount, DamagePopup.PopupType.CRITICAL)
