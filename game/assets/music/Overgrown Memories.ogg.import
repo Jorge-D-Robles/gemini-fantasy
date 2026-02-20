@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://b3nv8qp2m7xe1"
+path="res://.godot/imported/Overgrown Memories.ogg-765c62ea3cf13d4ba8d7bcc684fb46ae.oggvorbisstr"
+
+[deps]
+
+source_file="res://assets/music/Overgrown Memories.ogg"
+dest_files=["res://.godot/imported/Overgrown Memories.ogg-765c62ea3cf13d4ba8d7bcc684fb46ae.oggvorbisstr"]
+
+[params]
+
+loop=true
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
