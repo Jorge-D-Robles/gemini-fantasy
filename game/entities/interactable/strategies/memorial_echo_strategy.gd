@@ -6,6 +6,7 @@ extends InteractionStrategy
 ## completes it and shows special dialogue.
 
 @export_multiline var text: String = ""
+@export var echo_id: StringName = &""
 
 
 func execute(_owner: Node) -> void:
@@ -34,6 +35,8 @@ func execute(_owner: Node) -> void:
 		DialogueManager.start_dialogue(lines)
 		await DialogueManager.dialogue_ended
 		QuestManager.complete_objective(&"elder_wisdom", 0)
+		if echo_id != &"":
+			EchoManager.collect_echo(echo_id)
 	else:
 		var message: String = text if not text.is_empty() else (
 			"A weathered memorial stone, etched with the"

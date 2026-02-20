@@ -1,9 +1,9 @@
 # Current Sprint
 
-Sprint: S03-demo-polish
-Milestone: M0
-Goal: Polish demo to professional quality — fix tilemaps, add battle backgrounds, integrate audio, align dialogue with story scripts, add navigation markers, refactor monolithic code into reusable components
-Started: 2026-02-18
+Sprint: S04-m0-close-m1-begin
+Milestone: M0 close / M1 begin
+Goal: Close M0 with campfire placement and hygiene sweep; begin M1 with Echo system, Chapter 5 dungeon, and Prismfall Approach scene
+Started: 2026-02-20
 
 ---
 
@@ -12,6 +12,49 @@ Started: 2026-02-18
 ---
 
 ## Queue
+
+### T-0180
+- Title: Place campfire interactable in Verdant Forest
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
+- Priority: medium
+- Depends: T-0023
+- Refs: game/scenes/verdant_forest/verdant_forest.gd
+
+### T-0181
+- Title: M0 hygiene sweep — type hints, return types, and doc comments
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
+- Priority: low
+- Depends: none
+
+### T-0182
+- Title: Implement EchoFragment Resource and EchoManager autoload
+- Status: in-progress
+- Assigned: claude
+- Started: 2026-02-20
+- Priority: high
+- Depends: none
+
+### T-0103
+- Title: Implement Chapter 5 — The Overgrown Capital dungeon
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Depends: T-0085
+
+### T-0184
+- Title: Seed ability tree .tres files for all 8 party members
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Depends: T-0018
+
+---
 
 ### T-0168
 - Title: Verify and fix enemy turn routing through ActionExecuteState for consistent crit behavior
@@ -450,6 +493,14 @@ Started: 2026-02-18
 ---
 
 ## Done This Sprint
+
+### T-0026
+- Title: Build debug console
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
+- Notes: DebugCommands static class with compute_debug_command_result() and execute_command(); CanvasLayer UI with LineEdit/output label (layer=100); backtick toggle; 5 commands: heal_all/set_level/add_item/teleport/set_flag; OS.is_debug_build() guard in UILayer; 18 tests (1536 total). PR #241 merged.
 
 ### T-0178
 - Title: Add read-only control bindings display to settings menu
