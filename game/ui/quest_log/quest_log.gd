@@ -98,9 +98,9 @@ static func compute_quest_list(
 				"completed": completed,
 			})
 
-		var items: Array[StringName] = []
+		var items: Array[String] = []
 		for item_id: StringName in quest_data.reward_item_ids:
-			items.append(item_id)
+			items.append(compute_item_display_name(item_id))
 
 		result.append({
 			"id": qid,
@@ -116,6 +116,18 @@ static func compute_quest_list(
 		})
 
 	return result
+
+
+## Resolves an item ID to its display name via ItemData resource lookup.
+## Falls back to the raw ID string if the resource cannot be loaded.
+static func compute_item_display_name(item_id: StringName) -> String:
+	var path := "res://data/items/%s.tres" % item_id
+	if not ResourceLoader.exists(path):
+		return String(item_id)
+	var item: Resource = load(path)
+	if item and item.get("display_name") != null:
+		return item.display_name
+	return String(item_id)
 
 
 func _build_layout() -> void:
@@ -389,9 +401,7 @@ func _on_quest_selected(quest: Dictionary) -> void:
 	if rewards["exp"] > 0:
 		reward_parts.append("%d EXP" % rewards["exp"])
 	if rewards["items"].size() > 0:
-		reward_parts.append(
-			"%d Item(s)" % rewards["items"].size()
-		)
+		reward_parts.append(", ".join(rewards["items"]))
 	if reward_parts.is_empty():
 		_rewards_label.text = "No rewards"
 	else:
