@@ -58,8 +58,10 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0170
 - Title: Disambiguate innkeeper rest options — priority logic for night events
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: low
 - Milestone: M0
 - Depends: T-0148, T-0135
