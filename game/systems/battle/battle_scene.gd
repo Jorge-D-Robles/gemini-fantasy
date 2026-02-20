@@ -1,3 +1,4 @@
+class_name BattleScene
 extends Node2D
 
 ## Main battle scene. Orchestrates battlers, turn queue, and state machine.

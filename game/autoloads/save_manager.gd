@@ -83,9 +83,9 @@ func apply_save_data(
 	_apply_inventory(data.get("inventory", {}), inventory)
 	_apply_flags(data.get("event_flags", {}), flags)
 	_apply_character_state(data.get("character_state", {}), party)
-	if equipment and equipment.has_method("deserialize"):
+	if equipment:
 		equipment.deserialize(data.get("equipment", {}))
-	if quests and quests.has_method("deserialize"):
+	if quests:
 		quests.deserialize(data.get("quests", {}), [])
 
 
@@ -119,9 +119,9 @@ func gather_save_data(
 		"event_flags": flags.get_all_flags(),
 		"inventory": _serialize_inventory(inventory),
 	}
-	if equipment and equipment.has_method("serialize"):
+	if equipment:
 		data["equipment"] = equipment.serialize()
-	if quests and quests.has_method("serialize"):
+	if quests:
 		data["quests"] = quests.serialize()
 	return data
 
