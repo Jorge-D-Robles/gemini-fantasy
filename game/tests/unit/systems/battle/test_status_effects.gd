@@ -346,27 +346,6 @@ func test_non_stun_effect_does_not_prevent_action() -> void:
 	assert_false(_battler.is_action_prevented())
 
 
-# --- Backward Compatibility ---
-
-
-func test_legacy_apply_status_effect() -> void:
-	# The old StringName-based API should still work
-	_battler.apply_status_effect(&"poison")
-	assert_true(_battler.has_status_effect(&"poison"))
-	assert_true(_battler.has_status(&"poison"))
-
-
-func test_legacy_remove_status_effect() -> void:
-	_battler.apply_status_effect(&"burn")
-	_battler.remove_status_effect(&"burn")
-	assert_false(_battler.has_status_effect(&"burn"))
-
-
-func test_legacy_has_status_effect() -> void:
-	_battler.apply_status(_poison)
-	assert_true(_battler.has_status_effect(&"poison"))
-
-
 # --- Permanent Effects ---
 
 

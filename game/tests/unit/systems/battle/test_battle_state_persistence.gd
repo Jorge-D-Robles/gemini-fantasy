@@ -193,17 +193,17 @@ func test_status_effects_persist_across_turns() -> void:
 	var b := Helpers.make_battler()
 	add_child_autofree(b)
 
-	b.apply_status_effect(&"poison")
-	assert_true(b.has_status_effect(&"poison"))
+	b.apply_status(Helpers.make_status_effect({"id": &"poison"}))
+	assert_true(b.has_status(&"poison"))
 
 	b.end_turn()
 	assert_true(
-		b.has_status_effect(&"poison"),
+		b.has_status(&"poison"),
 		"Status effect should persist after end_turn"
 	)
 
 	b.end_turn()
 	assert_true(
-		b.has_status_effect(&"poison"),
+		b.has_status(&"poison"),
 		"Status effect should persist after multiple turns"
 	)

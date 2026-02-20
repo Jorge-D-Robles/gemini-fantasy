@@ -1008,6 +1008,46 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 - Refs: game/tests/unit/systems/test_playtest_actions.gd, game/tests/unit/systems/test_playtest_capture.gd, game/tests/unit/systems/test_playtest_config.gd
 - Notes: The playtest runner has 74 tests across 3 files (actions=36, capture=17, config=21 approx). Audit each: delete tests that only assert a constant action name equals a string literal, or that a dictionary key exists, or default config values. Keep tests that verify validation logic (invalid actions rejected, required fields caught), merging behavior (CLI args override defaults), and filename generation logic. Expected reduction: ~25-35 tests.
 
+### T-0233
+- Title: Code health — fix remaining gdlint violations
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Milestone: M0
+- Depends: none
+- Refs: game/entities/interactable/interaction_strategy.gd, game/tests/unit/systems/battle/test_status_icons.gd
+- Notes: Two categories. (1) interaction_strategy.gd:8 — `execute(owner: Node)` is a virtual method base stub; `owner` is used in the signature for subclass contract but not in the body. gdlint flags it as unused-argument. Fix: rename parameter to `_owner` (underscore prefix is the GDScript convention for intentionally unused params). (2) test_status_icons.gd:225,237,249 — three lambda filter lines exceed 100-char limit. Break each onto two lines. No behavior change. After fix, gdlint must show 0 new violations in non-addon game code.
+
+### T-0234
+- Title: Code health — remove dead legacy wrapper methods from Battler
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Milestone: M0
+- Depends: none
+- Refs: game/systems/battle/battler.gd, game/tests/unit/systems/battle/test_battle_actions.gd, game/tests/unit/systems/battle/test_status_icons.gd, game/tests/unit/systems/battle/test_status_effects.gd, game/tests/unit/systems/battle/test_battle_state_persistence.gd
+- Notes: battler.gd has 4 dead methods: `apply_status_effect(effect: StringName)` (wraps `apply_status`), `remove_status_effect(effect: StringName)` (wraps `remove_status`), `has_status_effect(effect: StringName)` (wraps `has_status`), and `check_resonance_state()` (trivial getter returning `resonance_state` directly, zero callers). The three `*_status_effect` wrappers are called in test files only — migrate those test call sites to the canonical `apply_status`/`remove_status`/`has_status` API. Then delete all four methods from battler.gd. No behavior change. All existing tests must remain green after migration.
+
+### T-0235
+- Title: Code health — eliminate ScenePaths duplication in game_manager.gd
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M0
+- Depends: none
+- Refs: game/autoloads/game_manager.gd, game/systems/scene_paths.gd
+- Notes: `compute_transition_type()` in game_manager.gd (lines 54-67) declares three local `const` strings — ROOTHOLLOW, VERDANT_FOREST, OVERGROWN_RUINS — that are exact duplicates of constants already defined in `ScenePaths`. Replace the local consts with `ScenePaths.ROOTHOLLOW`, `ScenePaths.VERDANT_FOREST`, and `ScenePaths.OVERGROWN_RUINS`. Also replace `Color(0.0, 0.0, 0.0, 0.0)` with `Color.TRANSPARENT` and `Color(0.0, 0.0, 0.0, 1.0)` with `Color.BLACK` in `_setup_transition_layer()`. No behavior change. Existing tests must remain green.
+
+### T-0236
+- Title: Code health — add resonance-state color constants to UITheme; replace magic Color values in battle_ui.gd
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M0
+- Depends: none
+- Refs: game/ui/ui_theme.gd, game/ui/battle_ui/battle_ui.gd
+- Notes: `update_resonance()` in battle_ui.gd uses 8 inline `Color()` literals (fill + text for each of FOCUSED/RESONANT/OVERLOAD/HOLLOW states). These should be named constants in UITheme. Add: `RESONANCE_FOCUSED_BAR`, `RESONANCE_FOCUSED_TEXT`, `RESONANCE_RESONANT_BAR`, `RESONANCE_RESONANT_TEXT`, `RESONANCE_OVERLOAD_BAR`, `RESONANCE_OVERLOAD_TEXT`, `RESONANCE_HOLLOW_BAR`, `RESONANCE_HOLLOW_TEXT`. Also add `BATTLE_PANEL_INNER_BG := Color(0.06, 0.06, 0.12, 0.7)` for the inner submenu panels. Update battle_ui.gd to use all new constants. No behavior change. No new tests required — existing battle UI tests must remain green.
+
 ---
 
 ## M1 — Act I: The Echo Thief

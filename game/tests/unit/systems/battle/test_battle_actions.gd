@@ -28,10 +28,10 @@ func test_ability_applies_status_effect() -> void:
 
 	# Apply status effect (this is the logic we're testing)
 	if ability.status_effect != "" and randf() < ability.status_chance:
-		target.apply_status_effect(StringName(ability.status_effect))
+		target.apply_status(Helpers.make_status_effect({"id": StringName(ability.status_effect)}))
 
 	assert_true(
-		target.has_status_effect(&"poison"),
+		target.has_status(&"poison"),
 		"Target should have poison after 100% chance ability"
 	)
 
@@ -47,10 +47,12 @@ func test_ability_zero_chance_no_status() -> void:
 
 	if ability.status_effect != "" and ability.status_chance > 0.0:
 		if randf() < ability.status_chance:
-			target.apply_status_effect(StringName(ability.status_effect))
+			target.apply_status(
+				Helpers.make_status_effect({"id": StringName(ability.status_effect)})
+			)
 
 	assert_false(
-		target.has_status_effect(&"burn"),
+		target.has_status(&"burn"),
 		"Zero chance should not apply status"
 	)
 
@@ -59,12 +61,12 @@ func test_status_from_ability_persists_across_turns() -> void:
 	var target := Helpers.make_battler()
 	add_child_autofree(target)
 
-	target.apply_status_effect(&"poison")
+	target.apply_status(Helpers.make_status_effect({"id": &"poison"}))
 	target.end_turn()
 	target.end_turn()
 
 	assert_true(
-		target.has_status_effect(&"poison"),
+		target.has_status(&"poison"),
 		"Status applied from ability should persist across turns"
 	)
 

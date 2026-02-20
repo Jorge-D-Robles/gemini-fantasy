@@ -229,35 +229,35 @@ func update_resonance(gauge_value: float, state: Battler.ResonanceState) -> void
 	match state:
 		Battler.ResonanceState.FOCUSED:
 			_resonance_bar.add_theme_stylebox_override(
-				"fill", _create_color_stylebox(Color(0.3, 0.5, 0.9))
+				"fill", _create_color_stylebox(UITheme.RESONANCE_FOCUSED_BAR)
 			)
 			_resonance_state_label.text = "Focused"
 			_resonance_state_label.add_theme_color_override(
-				"font_color", Color(0.5, 0.7, 1.0)
+				"font_color", UITheme.RESONANCE_FOCUSED_TEXT
 			)
 		Battler.ResonanceState.RESONANT:
 			_resonance_bar.add_theme_stylebox_override(
-				"fill", _create_color_stylebox(Color(0.9, 0.8, 0.2))
+				"fill", _create_color_stylebox(UITheme.RESONANCE_RESONANT_BAR)
 			)
 			_resonance_state_label.text = "Resonant"
 			_resonance_state_label.add_theme_color_override(
-				"font_color", Color(1.0, 0.9, 0.3)
+				"font_color", UITheme.RESONANCE_RESONANT_TEXT
 			)
 		Battler.ResonanceState.OVERLOAD:
 			_resonance_bar.add_theme_stylebox_override(
-				"fill", _create_color_stylebox(Color(0.9, 0.2, 0.2))
+				"fill", _create_color_stylebox(UITheme.RESONANCE_OVERLOAD_BAR)
 			)
 			_resonance_state_label.text = "Overload!"
 			_resonance_state_label.add_theme_color_override(
-				"font_color", Color(1.0, 0.3, 0.3)
+				"font_color", UITheme.RESONANCE_OVERLOAD_TEXT
 			)
 		Battler.ResonanceState.HOLLOW:
 			_resonance_bar.add_theme_stylebox_override(
-				"fill", _create_color_stylebox(Color(0.3, 0.3, 0.3))
+				"fill", _create_color_stylebox(UITheme.RESONANCE_HOLLOW_BAR)
 			)
 			_resonance_state_label.text = "Hollow"
 			_resonance_state_label.add_theme_color_override(
-				"font_color", Color(0.5, 0.5, 0.5)
+				"font_color", UITheme.RESONANCE_HOLLOW_TEXT
 			)
 
 
@@ -373,7 +373,7 @@ func _apply_panel_styles() -> void:
 
 	# Slightly different style for inner panels
 	var inner_style := UIHelpers.create_panel_style(
-		Color(0.06, 0.06, 0.12, 0.7), UITheme.BATTLE_PANEL_BORDER, 1, 2,
+		UITheme.BATTLE_PANEL_INNER_BG, UITheme.BATTLE_PANEL_BORDER, 1, 2,
 	)
 
 	if _command_menu:

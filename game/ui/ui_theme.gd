@@ -23,6 +23,17 @@ const PANEL_HOVER := Color(0.18, 0.12, 0.32, 0.9)
 # ---- Battle panel (slightly different tint) ----
 const BATTLE_PANEL_BG := Color(0.08, 0.08, 0.15, 0.9)
 const BATTLE_PANEL_BORDER := Color(0.35, 0.35, 0.5, 1.0)
+const BATTLE_PANEL_INNER_BG := Color(0.06, 0.06, 0.12, 0.7)
+
+# ---- Resonance state colors ----
+const RESONANCE_FOCUSED_BAR := Color(0.3, 0.5, 0.9)
+const RESONANCE_FOCUSED_TEXT := Color(0.5, 0.7, 1.0)
+const RESONANCE_RESONANT_BAR := Color(0.9, 0.8, 0.2)
+const RESONANCE_RESONANT_TEXT := Color(1.0, 0.9, 0.3)
+const RESONANCE_OVERLOAD_BAR := Color(0.9, 0.2, 0.2)
+const RESONANCE_OVERLOAD_TEXT := Color(1.0, 0.3, 0.3)
+const RESONANCE_HOLLOW_BAR := Color(0.3, 0.3, 0.3)
+const RESONANCE_HOLLOW_TEXT := Color(0.5, 0.5, 0.5)
 
 # ---- Text colors ----
 const TEXT_PRIMARY := Color(0.85, 0.75, 1.0)

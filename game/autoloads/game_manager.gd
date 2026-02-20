@@ -52,17 +52,13 @@ static func compute_should_tick_playtime(state: GameState) -> bool:
 ## Returns the transition type to use when moving between two scene paths.
 ## Adjacent overworld scenes slide; all others fade.
 static func compute_transition_type(from_scene: String, to_scene: String) -> TransitionType:
-	const ROOTHOLLOW := "res://scenes/roothollow/roothollow.tscn"
-	const VERDANT_FOREST := "res://scenes/verdant_forest/verdant_forest.tscn"
-	const OVERGROWN_RUINS := "res://scenes/overgrown_ruins/overgrown_ruins.tscn"
-
-	if from_scene == ROOTHOLLOW and to_scene == VERDANT_FOREST:
+	if from_scene == ScenePaths.ROOTHOLLOW and to_scene == ScenePaths.VERDANT_FOREST:
 		return TransitionType.SLIDE_RIGHT
-	if from_scene == VERDANT_FOREST and to_scene == ROOTHOLLOW:
+	if from_scene == ScenePaths.VERDANT_FOREST and to_scene == ScenePaths.ROOTHOLLOW:
 		return TransitionType.SLIDE_LEFT
-	if from_scene == VERDANT_FOREST and to_scene == OVERGROWN_RUINS:
+	if from_scene == ScenePaths.VERDANT_FOREST and to_scene == ScenePaths.OVERGROWN_RUINS:
 		return TransitionType.SLIDE_RIGHT
-	if from_scene == OVERGROWN_RUINS and to_scene == VERDANT_FOREST:
+	if from_scene == ScenePaths.OVERGROWN_RUINS and to_scene == ScenePaths.VERDANT_FOREST:
 		return TransitionType.SLIDE_LEFT
 	return TransitionType.FADE
 
@@ -196,13 +192,13 @@ func _setup_transition_layer() -> void:
 	_transition_layer.name = "TransitionLayer"
 	add_child(_transition_layer)
 
-	_fade_rect.color = Color(0.0, 0.0, 0.0, 0.0)
+	_fade_rect.color = Color.TRANSPARENT
 	_fade_rect.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_fade_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_transition_layer.add_child(_fade_rect)
 
 	_slide_rect = ColorRect.new()
-	_slide_rect.color = Color(0.0, 0.0, 0.0, 1.0)
+	_slide_rect.color = Color.BLACK
 	_slide_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_slide_rect.visible = false
 	_transition_layer.add_child(_slide_rect)
