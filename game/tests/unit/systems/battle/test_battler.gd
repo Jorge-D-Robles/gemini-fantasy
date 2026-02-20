@@ -165,11 +165,23 @@ func test_defend_reduces_damage() -> void:
 	assert_lt(defended_dmg, normal_dmg)
 
 
-func test_end_turn_clears_defend() -> void:
+func test_end_turn_does_not_clear_defend() -> void:
+	# Defend should persist through end_turn() so it protects against
+	# enemy attacks that happen before the battler's next player turn.
 	_battler.defend()
 	assert_true(_battler.is_defending)
 	_battler.end_turn()
-	assert_false(_battler.is_defending)
+	assert_true(_battler.is_defending, "is_defending must persist until next player turn")
+
+
+func test_defend_clears_only_at_new_player_turn() -> void:
+	# Simulates the correct lifecycle: defend -> end_turn -> (enemy attacks) -> new turn clears
+	_battler.defend()
+	_battler.end_turn()
+	assert_true(_battler.is_defending, "still defending after turn ends")
+	# On new player turn, is_defending is cleared by PlayerTurnState
+	_battler.is_defending = false
+	assert_false(_battler.is_defending, "cleared on next player turn start")
 
 
 # ---- Status Effects ----

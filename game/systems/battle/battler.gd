@@ -162,9 +162,10 @@ func defend() -> void:
 		add_resonance(GB.DEFEND_RESONANCE_BASE * GB.RESONANCE_GAIN_DEFENDING)
 
 
-## Clears defend stance and recalculates turn delay for the next round.
+## Recalculates turn delay for the next round.
+## NOTE: is_defending is NOT cleared here — it persists until the battler's
+## next player turn starts (see PlayerTurnState.enter).
 func end_turn() -> void:
-	is_defending = false
 	turn_delay = BattlerResonance.calculate_turn_delay(speed, resonance_state)
 
 

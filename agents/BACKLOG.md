@@ -46,6 +46,26 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 - Refs: game/systems/battle/battler.gd, game/systems/battle/states/turn_end_state.gd, game/systems/battle/states/player_turn_state.gd
 - Notes: end_turn() clears is_defending immediately in TurnEnd. Enemy attacks in subsequent EnemyTurn see is_defending=false so damage is not halved. JRPG-correct behavior: is_defending should persist until the player's next turn starts. Fix: clear is_defending in PlayerTurnState.enter() for the active battler, not in end_turn(). Requires removing is_defending=false from Battler.end_turn() and updating test_end_turn_clears_defend. Also update CLAUDE.md docs for battler.end_turn().
 
+### T-0167
+- Title: Add playtime accumulation gate — prevent ticking during battle or cutscene
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Milestone: M0
+- Depends: T-0130
+- Refs: game/autoloads/game_manager.gd
+- Notes: T-0130 adds playtime_seconds incremented in _process. Without a gate, playtime accumulates during BATTLE and CUTSCENE states, inflating reported time. Add compute_should_tick_playtime(state) static helper, gate increment to OVERWORLD state only. 2+ tests.
+
+### T-0168
+- Title: Verify and fix enemy turn routing through ActionExecuteState for consistent crit behavior
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Milestone: M0
+- Depends: T-0143, T-0156
+- Refs: game/systems/battle/states/enemy_turn_state.gd, game/systems/battle/states/action_execute_state.gd
+- Notes: Supersedes T-0156. Confirm whether EnemyTurnState routes through ActionExecuteState (crits already applied). If not, wire BattlerDamage.roll_crit(attacker.luck) and apply_crit() into the enemy damage path. Also confirm COMBAT_CRITICAL_HIT SFX plays on enemy crits. 3+ tests verifying enemy crit roll uses 5% + luck*0.5% formula.
+
 ### T-0162
 - Title: Add Verdant Forest traversal dialogue — party comments heading to Overgrown Capital
 - Status: todo
@@ -746,7 +766,7 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0156
 - Title: Verify and wire enemy crit attacks through ActionExecute state
-- Status: todo
+- Status: superseded
 - Assigned: unassigned
 - Priority: low
 - Milestone: M0
