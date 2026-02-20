@@ -46,8 +46,9 @@ Started: 2026-02-18
 
 ### T-0134
 - Title: Add Elder Morin briefing scene — tactical objective-setting for Overgrown Capital
-- Status: todo
-- Assigned: unassigned
+- Status: in-progress
+- Assigned: claude
+- Started: 2026-02-19
 - Priority: medium
 - Depends: T-0082
 - Refs: docs/story/act1/04-old-iron.md (Scene 3), game/scenes/roothollow/roothollow.gd

@@ -357,3 +357,52 @@ static func get_iris_arrival_lines() -> Array:
 
 static func get_iris_arrival_flag() -> String:
 	return "roothollow_iris_arrival_seen"
+
+
+static func get_thessa_briefing_lines() -> Array:
+	return [
+		{
+			"speaker": "Elder Thessa",
+			"text": "The Overgrown Capital is eight major areas."
+			+ " Your fragment tracker points to the research quarter"
+			+ " \u2014 that's where Lyra's work was.",
+		},
+		{
+			"speaker": "Elder Thessa",
+			"text": "A multi-day expedition into hostile territory."
+			+ " Corrupted wildlife, hostile Echoes, unstable structures."
+			+ " Not overgrown territory for the unprepared.",
+		},
+		{
+			"speaker": "Elder Thessa",
+			"text": "And the Reclamation Initiative has survey teams"
+			+ " active in the area. They'll use Resonance sensors"
+			+ " to sweep the sector.",
+		},
+		{
+			"speaker": "Elder Thessa",
+			"text": "If they reach Lyra's preserved room before you do,"
+			+ " we have a root deep time constraint. Move quickly.",
+		},
+		{
+			"speaker": "Elder Thessa",
+			"text": "Garrick's Shield-Bearer training is valuable."
+			+ " He knows how Shepherd and Initiative teams deploy."
+			+ " Use that knowledge.",
+		},
+		{
+			"speaker": "Elder Thessa",
+			"text": "The Council of Keepers must know what you've found."
+			+ " But Lyra's fragments come first. Retrieve them.",
+		},
+		{
+			"speaker": "Elder Thessa",
+			"text": "Go. And trust each other."
+			+ " Whatever waits in the Capital \u2014"
+			+ " you're root deep stronger together.",
+		},
+	]
+
+
+static func get_thessa_briefing_flag() -> String:
+	return "thessa_briefing_seen"

@@ -528,3 +528,64 @@ func test_iris_arrival_last_line_mentions_nice() -> void:
 func test_iris_arrival_flag_name_not_empty() -> void:
 	var flag: String = _rh.get_iris_arrival_flag()
 	assert_false(flag.is_empty(), "Arrival flag must not be empty")
+
+
+# -- Thessa Briefing (garrick_recruited one-time scene) --
+
+func _any_brief_line_contains(
+	lines: Array,
+	substring: String,
+) -> bool:
+	for line in lines:
+		if line["text"].contains(substring):
+			return true
+	return false
+
+
+func test_thessa_briefing_count() -> void:
+	var lines: Array = _rh.get_thessa_briefing_lines()
+	assert_eq(lines.size(), 7)
+
+
+func test_thessa_briefing_first_speaker() -> void:
+	var lines: Array = _rh.get_thessa_briefing_lines()
+	assert_eq(lines[0]["speaker"], "Elder Thessa")
+
+
+func test_thessa_briefing_mentions_capital() -> void:
+	var lines: Array = _rh.get_thessa_briefing_lines()
+	assert_true(
+		_any_brief_line_contains(lines, "Capital"),
+		"Briefing should mention the Overgrown Capital",
+	)
+
+
+func test_thessa_briefing_mentions_research_quarter() -> void:
+	var lines: Array = _rh.get_thessa_briefing_lines()
+	assert_true(
+		_any_brief_line_contains(lines, "research quarter"),
+		"Briefing should mention the research quarter",
+	)
+
+
+func test_thessa_briefing_mentions_time_constraint() -> void:
+	var lines: Array = _rh.get_thessa_briefing_lines()
+	assert_true(
+		_any_brief_line_contains(lines, "time")
+		or _any_brief_line_contains(lines, "constraint"),
+		"Briefing should establish a time constraint",
+	)
+
+
+func test_thessa_briefing_has_tangle_slang() -> void:
+	var lines: Array = _rh.get_thessa_briefing_lines()
+	assert_true(
+		_any_brief_line_contains(lines, "root deep")
+		or _any_brief_line_contains(lines, "overgrown"),
+		"Thessa should use Tangle slang in briefing",
+	)
+
+
+func test_thessa_briefing_flag_not_empty() -> void:
+	var flag: String = _rh.get_thessa_briefing_flag()
+	assert_false(flag.is_empty(), "Briefing flag must not be empty")
