@@ -12,6 +12,8 @@ Story event scripts — one-shot cutscenes, recruitments, and story triggers. Ea
 | `iris_recruitment.gd` | `IrisRecruitment` | Verdant Forest | `iris_recruited` |
 | `boss_encounter.gd` | `BossEncounter` | Overgrown Ruins / BossZone | `boss_defeated` |
 | `garrick_meets_lyra.gd` | `GarrickMeetsLyra` | Overgrown Ruins / LyraDiscoveryZone | `garrick_met_lyra` |
+| `camp_three_fires.gd` | `CampThreeFires` | Roothollow / innkeeper (garrick_recruited) | `camp_scene_three_fires` |
+| `garrick_night_scene.gd` | `GarrickNightScene` | Roothollow / innkeeper (garrick_met_lyra) | `garrick_night_scene` |
 | `demo_ending.gd` | `DemoEnding` | Overgrown Ruins / chained after GarrickMeetsLyra | `demo_complete` |
 
 > **Note:** `event_flags.gd` lives here but is registered as the `EventFlags` autoload in `project.godot`. See `game/autoloads/CLAUDE.md` for the autoload inventory.
