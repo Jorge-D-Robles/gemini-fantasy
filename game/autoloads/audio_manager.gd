@@ -13,6 +13,7 @@ var _bgm_fade_player: AudioStreamPlayer
 var _sfx_pool: Array[AudioStreamPlayer] = []
 var _sfx_index: int = 0
 var _bgm_stack: Array[Dictionary] = []
+var _bgm_volume_db: float = 0.0
 
 
 func _ready() -> void:
@@ -32,7 +33,7 @@ func play_bgm(stream: AudioStream, fade_time: float = DEFAULT_FADE_TIME) -> void
 		_crossfade_bgm(stream, fade_time)
 	else:
 		_bgm_player.stream = stream
-		_bgm_player.volume_db = 0.0
+		_bgm_player.volume_db = _bgm_volume_db
 		_bgm_player.play()
 
 	bgm_changed.emit(stream)
@@ -90,7 +91,7 @@ func pop_bgm(fade_time: float = DEFAULT_FADE_TIME) -> void:
 		_crossfade_bgm_at(stream, pos, fade_time)
 	else:
 		_bgm_player.stream = stream
-		_bgm_player.volume_db = 0.0
+		_bgm_player.volume_db = _bgm_volume_db
 		_bgm_player.play(pos)
 	bgm_changed.emit(stream)
 
@@ -101,6 +102,7 @@ func has_stacked_bgm() -> bool:
 
 
 func set_bgm_volume(volume_db: float) -> void:
+	_bgm_volume_db = volume_db
 	_bgm_player.volume_db = volume_db
 
 
@@ -117,7 +119,7 @@ func _crossfade_bgm(new_stream: AudioStream, fade_time: float) -> void:
 
 	var tween := create_tween()
 	tween.set_parallel(true)
-	tween.tween_property(_bgm_player, "volume_db", 0.0, fade_time)
+	tween.tween_property(_bgm_player, "volume_db", _bgm_volume_db, fade_time)
 	tween.tween_property(_bgm_fade_player, "volume_db", -80.0, fade_time)
 	tween.set_parallel(false)
 	tween.tween_callback(_bgm_fade_player.stop)
@@ -138,7 +140,7 @@ func _crossfade_bgm_at(
 
 	var tween := create_tween()
 	tween.set_parallel(true)
-	tween.tween_property(_bgm_player, "volume_db", 0.0, fade_time)
+	tween.tween_property(_bgm_player, "volume_db", _bgm_volume_db, fade_time)
 	tween.tween_property(
 		_bgm_fade_player, "volume_db", -80.0, fade_time
 	)

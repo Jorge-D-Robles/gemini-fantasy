@@ -674,6 +674,26 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 - Refs: game/ui/hud/hud.gd
 - Notes: No minimap/compass. Start with compass (simpler), upgrade to minimap later. Low priority for 3-scene demo.
 
+### T-0159
+- Title: Fix Verdant Forest south canopy gap — extend AbovePlayer layer to rows 15-24
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M0
+- Depends: none
+- Refs: game/scenes/verdant_forest/verdant_forest.gd (CANOPY_MAP), docs/best-practices/11-tilemaps-and-level-design.md
+- Notes: CANOPY_MAP has no entries in rows 15-24. The south forest has TREE_MAP tiles and TRUNK_MAP trunk placements (rows 17-23) but no AbovePlayer canopy overlay — breaking the walk-under depth effect that works in the north half. Extend CANOPY_MAP with 2x2 canopy tiles above each south-half trunk position using existing CANOPY_LEGEND keys. Run /scene-preview --full-map after. 2+ tests verifying south rows have non-empty CANOPY_MAP data.
+
+### T-0160
+- Title: Wire quest-NPC indicator refresh on QuestManager signals
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Milestone: M0
+- Depends: T-0089, T-0090
+- Refs: game/scenes/roothollow/roothollow.gd, game/autoloads/quest_manager.gd, game/entities/npc/npc.gd
+- Notes: Supersedes T-0112. NPC indicator_type computed once at scene load; quest progress while in scene doesn't refresh indicators. Connect QuestManager.quest_accepted, quest_progressed, quest_completed signals to re-evaluate NPC indicators in roothollow.gd. Static compute_npc_indicator_type(npc_id) helper for TDD. 4+ tests.
+
 ### T-0156
 - Title: Verify and wire enemy crit attacks through ActionExecute state
 - Status: todo
@@ -800,13 +820,13 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0112
 - Title: Wire quest-NPC indicator updates on quest state change
-- Status: todo
+- Status: done
 - Assigned: unassigned
 - Priority: low
 - Milestone: M0
 - Depends: T-0089
 - Refs: game/scenes/roothollow/roothollow.gd, game/autoloads/quest_manager.gd
-- Notes: NPC indicator_type is computed once at scene load. Returning after completing objectives may not update indicators. Connect QuestManager signals to re-compute.
+- Notes: SUPERSEDED by T-0160 (more specific, M0-scoped, includes TDD plan). T-0160 covers the same scope with explicit signal connections and static helper for testability.
 
 ### T-0113
 - Title: Add interaction prompt label near player when ray hits target
