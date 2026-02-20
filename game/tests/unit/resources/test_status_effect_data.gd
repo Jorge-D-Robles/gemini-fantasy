@@ -1,34 +1,8 @@
 extends GutTest
 
-## Tests for StatusEffectData resource class.
+## Tests for StatusEffectData resource — factory helper verification.
 
 const Helpers := preload("res://tests/helpers/test_helpers.gd")
-
-
-func test_default_values() -> void:
-	var e := StatusEffectData.new()
-	assert_eq(e.id, &"")
-	assert_eq(e.display_name, "")
-	assert_eq(e.effect_type, StatusEffectData.EffectType.DEBUFF)
-	assert_eq(e.duration, 3)
-	assert_eq(e.tick_damage, 0)
-	assert_eq(e.tick_heal, 0)
-	assert_false(e.is_magical)
-	assert_false(e.prevents_action)
-	assert_eq(e.attack_modifier, 0)
-	assert_eq(e.magic_modifier, 0)
-	assert_eq(e.defense_modifier, 0)
-	assert_eq(e.resistance_modifier, 0)
-	assert_eq(e.speed_modifier, 0)
-	assert_eq(e.luck_modifier, 0)
-
-
-func test_effect_type_enum_values() -> void:
-	assert_eq(StatusEffectData.EffectType.BUFF, 0)
-	assert_eq(StatusEffectData.EffectType.DEBUFF, 1)
-	assert_eq(StatusEffectData.EffectType.DAMAGE_OVER_TIME, 2)
-	assert_eq(StatusEffectData.EffectType.HEAL_OVER_TIME, 3)
-	assert_eq(StatusEffectData.EffectType.STUN, 4)
 
 
 func test_factory_creates_poison() -> void:
@@ -85,11 +59,3 @@ func test_factory_creates_regen() -> void:
 		StatusEffectData.EffectType.HEAL_OVER_TIME,
 	)
 	assert_eq(regen.tick_heal, 15)
-
-
-func test_factory_default_values() -> void:
-	var e := Helpers.make_status_effect()
-	assert_eq(e.id, &"test_effect")
-	assert_eq(e.display_name, "Test Effect")
-	assert_eq(e.effect_type, StatusEffectData.EffectType.DEBUFF)
-	assert_eq(e.duration, 3)

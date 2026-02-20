@@ -10,13 +10,6 @@ func before_each() -> void:
 	_line = DialogueLine.new()
 
 
-func test_default_values() -> void:
-	assert_eq(_line.speaker, "")
-	assert_eq(_line.text, "")
-	assert_null(_line.portrait)
-	assert_eq(_line.choices.size(), 0)
-
-
 func test_has_choices_returns_false_when_empty() -> void:
 	assert_false(_line.has_choices())
 

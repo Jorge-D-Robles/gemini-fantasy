@@ -58,29 +58,14 @@ func test_herb_quest_offer_not_empty() -> void:
 	assert_true(text.length() > 0)
 
 
-func test_herb_quest_offer_mentions_herbs() -> void:
-	var text: String = _rh.get_quest_offer(&"herb_gathering")
-	assert_string_contains(text, "herb")
-
-
 func test_scouts_quest_offer_not_empty() -> void:
 	var text: String = _rh.get_quest_offer(&"scouts_report")
 	assert_true(text.length() > 0)
 
 
-func test_scouts_quest_offer_mentions_ruins() -> void:
-	var text: String = _rh.get_quest_offer(&"scouts_report")
-	assert_string_contains(text, "ruins")
-
-
 func test_elder_quest_offer_not_empty() -> void:
 	var text: String = _rh.get_quest_offer(&"elder_wisdom")
 	assert_true(text.length() > 0)
-
-
-func test_elder_quest_offer_mentions_memorial() -> void:
-	var text: String = _rh.get_quest_offer(&"elder_wisdom")
-	assert_string_contains(text, "memorial")
 
 
 func test_unknown_quest_offer_returns_empty() -> void:

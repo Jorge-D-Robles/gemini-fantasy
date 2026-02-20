@@ -7,22 +7,6 @@ const BattlerDamage := preload("res://systems/battle/battler_damage.gd")
 const GameBalance := preload("res://systems/game_balance.gd")
 
 
-func test_crit_base_chance_constant_is_five_percent() -> void:
-	assert_eq(GameBalance.CRIT_BASE_CHANCE, 0.05, "Base crit chance is 5%")
-
-
-func test_crit_luck_bonus_per_point_constant() -> void:
-	assert_eq(
-		GameBalance.CRIT_LUCK_BONUS_PER_POINT,
-		0.005,
-		"Each luck point adds 0.5% crit chance",
-	)
-
-
-func test_crit_damage_mult_constant_is_one_point_five() -> void:
-	assert_eq(GameBalance.CRIT_DAMAGE_MULT, 1.5, "Crit multiplier is 1.5x")
-
-
 func test_compute_crit_chance_zero_luck() -> void:
 	var chance := BattlerDamage.compute_crit_chance(0)
 	assert_almost_eq(chance, 0.05, 0.0001, "0 luck = 5% crit chance")

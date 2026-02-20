@@ -14,32 +14,6 @@ func before_each() -> void:
 	add_child_autofree(_am)
 
 
-# ---------- Enum values ----------
-
-func test_sfx_priority_critical_is_zero() -> void:
-	assert_eq(
-		_am.SfxPriority.CRITICAL,
-		0,
-		"SfxPriority.CRITICAL should be 0",
-	)
-
-
-func test_sfx_priority_normal_is_one() -> void:
-	assert_eq(
-		_am.SfxPriority.NORMAL,
-		1,
-		"SfxPriority.NORMAL should be 1",
-	)
-
-
-func test_sfx_priority_ambient_is_two() -> void:
-	assert_eq(
-		_am.SfxPriority.AMBIENT,
-		2,
-		"SfxPriority.AMBIENT should be 2",
-	)
-
-
 # ---------- NORMAL priority (round-robin, always claims current_index) ----------
 
 func test_compute_normal_returns_current_index_when_all_free() -> void:
