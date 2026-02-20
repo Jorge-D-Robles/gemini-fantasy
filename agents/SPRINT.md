@@ -15,12 +15,14 @@ Started: 2026-02-18
 
 ### T-0020
 - Title: Build party management UI
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: medium
 - Depends: T-0013
 - Refs: docs/best-practices/08-ui-patterns.md
-- Notes: View party members, stats, equipment. Swap active/reserve members. Focus navigation for gamepad support. T-0013 done — unblocked.
+- Notes: party_ui_data.gd (3 static helpers), party_ui.gd (Control sub-screen, two-column active/reserve, swap), pause_menu wired. 15 tests. PR #194 merged.
 
 ### T-0121
 - Title: Add Roothollow Chapter 4 NPC dialogue updates (Iris arrival reactions)
@@ -183,10 +185,12 @@ Started: 2026-02-18
 
 ### T-0101
 - Title: Implement party formation and swap UI in pause menu
-- Status: todo
-- Assigned: unassigned
+- Status: in-progress
+- Assigned: claude
+- Started: 2026-02-20
 - Priority: medium
 - Depends: T-0020
+- Notes: T-0020 built party_ui.gd with basic swap and stats. T-0101 adds equipment display (via EquipmentManager) and a character detail side panel. Extend party_ui_data.compute_member_display to include equipped items. 5+ tests.
 
 ### T-0057
 - Title: Improve turn order display with current actor highlight
