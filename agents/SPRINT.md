@@ -165,10 +165,13 @@ Started: 2026-02-18
 
 ### T-0097
 - Title: Add save point visual markers in scenes
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-19
+- Completed: 2026-02-19
 - Priority: medium
 - Depends: none
+- Notes: SavePointMarker script-only Node2D (ZoneMarker pattern); gold ★ Label, looping alpha pulse (0.4→1.0, 0.8s half-period); integrated into roothollow._ready() with indicator_type=SAVE; 7 tests (1141 total).
 
 ### T-0101
 - Title: Implement party formation and swap UI in pause menu
