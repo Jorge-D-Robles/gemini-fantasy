@@ -42,19 +42,35 @@ AreaName (Node2D)
 
 ## Tilemap Setup Pattern
 
+Tilemap data (legends + map arrays) lives in a separate `<SceneName>Map` module file. Encounter
+pool building lives in `<SceneName>Encounters`. The scene script delegates to these modules.
+
 ```gdscript
+# <scene_name>_map.gd — pure data, no Node deps
+class_name SceneNameMap
+extends RefCounted
+
 const GROUND_LEGEND: Dictionary = { "G": Vector2i(col, row), ... }
 const GROUND_MAP: Array[String] = [ "GGGG...", ... ]
 
+# <scene_name>_encounters.gd — pool builder, testable without live scene
+class_name SceneNameEncounters
+extends RefCounted
+
+static func build_pool(enemy1: Resource, ...) -> Array[EncounterPoolEntry]:
+    ...
+
+# <scene_name>.gd — delegates to modules
 func _setup_tilemap() -> void:
     var atlas_paths: Array[String] = [MapBuilder.FAIRY_FOREST_A5_A]
     MapBuilder.apply_tileset(layers, atlas_paths, solid)
-    MapBuilder.build_layer(_ground, GROUND_MAP, GROUND_LEGEND)
-    MapBuilder.build_layer(_trees, TREE_MAP, TREE_LEGEND, 1)  # source_id=1 for B-sheet
+    MapBuilder.build_layer(_ground, SceneNameMap.GROUND_MAP, SceneNameMap.GROUND_LEGEND)
+    MapBuilder.build_layer(_trees, SceneNameMap.TREE_MAP, SceneNameMap.TREE_LEGEND, 1)
 ```
 
 - Source 0 = A5 sheet (terrain), Source 1+ = B sheets (objects — pass `source_id`)
 - Solid tiles declared in `solid: Dictionary = { source_id: [Vector2i, ...] }`
+- Module files use `class_name` + `extends RefCounted` — zero runtime cost, testable in isolation
 
 ## Scene Details
 
@@ -74,6 +90,7 @@ func _setup_tilemap() -> void:
 **Critical:** Ruins3 A5 tiles are TRANSPARENT overlays. Only Fairy Forest A5_A provides opaque ground.
 
 **Encounters:** Memory Bloom (common), Creeping Vine (uncommon), mixed
+**Modules:** `overgrown_ruins_map.gd` (`OvergrownRuinsMap`) — tilemap constants; `overgrown_ruins_encounters.gd` (`OvergrownRuinsEncounters`) — pool builder
 **Story:** `OpeningSequence` triggered by `LyraDiscoveryZone` — guarded by `EventFlags`
 **Init:** Adds Kael to `PartyManager` if roster is empty (game start)
 **Autoloads:** GameManager, BattleManager, DialogueManager, EventFlags, UILayer, PartyManager, MapBuilder
@@ -93,7 +110,8 @@ func _setup_tilemap() -> void:
 | 3 | `TREE_OBJECTS` | `tf_ff_tileB_trees.png` | Individual tree objects |
 
 **Layers:** Ground, GroundDetail, Trees, Paths, Objects, AbovePlayer
-**Encounters:** 10 entries — creeping_vine, ash_stalker, hollow_specter, ancient_sentinel, gale_harpy, ember_hound + mixed
+**Encounters:** 11 entries — creeping_vine, ash_stalker, hollow_specter, ancient_sentinel, gale_harpy, ember_hound + mixed
+**Modules:** `verdant_forest_map.gd` (`VerdantForestMap`) — tilemap constants; `verdant_forest_encounters.gd` (`VerdantForestEncounters`) — pool builder
 **Story:** `IrisRecruitment` triggered by `IrisEventZone` — disables encounters during sequence
 **Transitions:** ExitToRuins -> overgrown_ruins (`spawn_from_forest`); ExitToTown -> roothollow (`spawn_from_forest`)
 

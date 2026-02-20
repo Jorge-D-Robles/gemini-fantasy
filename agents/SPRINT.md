@@ -236,10 +236,13 @@ Started: 2026-02-18
 
 ### T-0077
 - Title: Split verdant_forest.gd and overgrown_ruins.gd into tilemap/encounter/dialogue modules
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: low
 - Depends: T-0073
+- Notes: Extracted VerdantForestMap, VerdantForestEncounters, OvergrownRuinsMap, OvergrownRuinsEncounters modules. 11 new tests. Scene files delegated to modules. 1265 tests passing.
 
 ### T-0078
 - Title: Create reusable asset loader helper with consistent null-check pattern

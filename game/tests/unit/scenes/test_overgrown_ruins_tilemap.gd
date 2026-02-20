@@ -10,7 +10,7 @@ var _script: GDScript
 
 
 func before_each() -> void:
-	_script = load("res://scenes/overgrown_ruins/overgrown_ruins.gd")
+	_script = load("res://scenes/overgrown_ruins/overgrown_ruins_map.gd")
 
 
 func test_ground_map_has_expected_dimensions() -> void:
