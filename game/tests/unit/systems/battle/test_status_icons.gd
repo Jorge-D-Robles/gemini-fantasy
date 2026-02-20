@@ -43,15 +43,15 @@ func test_battler_get_effect_data_not_found() -> void:
 	assert_null(result, "Should return null for unknown effect id")
 
 
-func test_battler_get_effect_data_legacy_defaults_debuff() -> void:
-	# Legacy apply_status_effect creates StatusEffectData with default DEBUFF
-	_battler.apply_status_effect(&"weakness")
+func test_battler_get_effect_data_debuff_type() -> void:
+	var effect := Helpers.make_status_effect({"id": &"weakness"})
+	_battler.apply_status(effect)
 	var result: StatusEffectData = _battler.get_effect_data(&"weakness")
 	assert_not_null(result)
 	assert_eq(
 		result.effect_type,
 		StatusEffectData.EffectType.DEBUFF,
-		"Legacy wrapper should default to DEBUFF",
+		"make_status_effect defaults to DEBUFF",
 	)
 
 
@@ -222,7 +222,9 @@ func test_turn_order_party_battler_in_queue_is_blue() -> void:
 	add_child_autofree(pb)
 	var result: Array = BattleUIScript.compute_turn_order_entries(null, [pb])
 	# Filter out separators
-	var battler_entries: Array = result.filter(func(e: Dictionary) -> bool: return not e["is_separator"])
+	var battler_entries: Array = result.filter(
+		func(e: Dictionary) -> bool: return not e["is_separator"]
+	)
 	assert_eq(
 		battler_entries[0]["color"],
 		Color(0.7, 0.85, 1.0),
@@ -234,7 +236,9 @@ func test_turn_order_enemy_battler_in_queue_is_red() -> void:
 	var eb := Helpers.make_enemy_battler()
 	add_child_autofree(eb)
 	var result: Array = BattleUIScript.compute_turn_order_entries(null, [eb])
-	var battler_entries: Array = result.filter(func(e: Dictionary) -> bool: return not e["is_separator"])
+	var battler_entries: Array = result.filter(
+		func(e: Dictionary) -> bool: return not e["is_separator"]
+	)
 	assert_eq(
 		battler_entries[0]["color"],
 		Color(1.0, 0.5, 0.5),
@@ -246,7 +250,9 @@ func test_turn_order_null_active_shows_only_queue() -> void:
 	var pb := Helpers.make_party_battler()
 	add_child_autofree(pb)
 	var result: Array = BattleUIScript.compute_turn_order_entries(null, [pb])
-	var battler_entries: Array = result.filter(func(e: Dictionary) -> bool: return not e["is_separator"])
+	var battler_entries: Array = result.filter(
+		func(e: Dictionary) -> bool: return not e["is_separator"]
+	)
 	assert_eq(battler_entries.size(), 1, "One queue entry shown with null active")
 	assert_false(
 		battler_entries[0]["text"].begins_with("["),

@@ -5,5 +5,5 @@ extends Resource
 ## behavior for different interactable types (sign, chest, door, etc.).
 
 
-func execute(owner: Node) -> void:
+func execute(_owner: Node) -> void:
 	push_warning("InteractionStrategy.execute() not overridden.")

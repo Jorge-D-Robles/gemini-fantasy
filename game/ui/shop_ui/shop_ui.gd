@@ -18,13 +18,11 @@ var _shop_data: ShopData = null
 var _item_buttons: Array[Button] = []
 var _selected_item: Resource = null
 
-@onready var _dim_overlay: ColorRect = %DimOverlay
 @onready var _main_panel: PanelContainer = %MainPanel
 @onready var _shop_name_label: Label = %ShopNameLabel
 @onready var _gold_label: Label = %GoldLabel
 @onready var _buy_tab: Button = %BuyTab
 @onready var _sell_tab: Button = %SellTab
-@onready var _item_scroll: ScrollContainer = %ItemScroll
 @onready var _item_list: VBoxContainer = %ItemList
 @onready var _detail_panel: PanelContainer = %DetailPanel
 @onready var _item_name_label: Label = %ItemNameLabel

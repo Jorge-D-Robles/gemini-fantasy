@@ -185,11 +185,6 @@ func add_resonance(amount: float) -> void:
 		resonance_state_changed.emit(old_state, resonance_state)
 
 
-## Returns the current resonance state.
-func check_resonance_state() -> ResonanceState:
-	return resonance_state
-
-
 ## Cures the HOLLOW state, resetting to FOCUSED with gauge at 0.
 ## No-op if not in HOLLOW state.
 func cure_hollow() -> void:
@@ -212,15 +207,6 @@ func apply_status(effect_data: StatusEffectData) -> void:
 		status_effect_applied.emit(new_id)
 
 
-## Legacy wrapper — applies a basic debuff with the given name.
-func apply_status_effect(effect: StringName) -> void:
-	var data_obj := StatusEffectData.new()
-	data_obj.id = effect
-	data_obj.display_name = String(effect)
-	data_obj.duration = 0  # permanent until removed
-	apply_status(data_obj)
-
-
 ## Removes a status effect by id.
 func remove_status(effect_id: StringName) -> void:
 	var removed := BattlerStatus.remove(_active_effects, effect_id)
@@ -228,19 +214,9 @@ func remove_status(effect_id: StringName) -> void:
 		status_effect_removed.emit(effect_id)
 
 
-## Legacy wrapper — removes a status effect by name.
-func remove_status_effect(effect: StringName) -> void:
-	remove_status(effect)
-
-
 ## Returns true if this battler has an active status effect with the given id.
 func has_status(effect_id: StringName) -> bool:
 	return BattlerStatus.has(_active_effects, effect_id)
-
-
-## Legacy wrapper.
-func has_status_effect(effect: StringName) -> bool:
-	return has_status(effect)
 
 
 ## Returns remaining turns for an effect, or -1 if not found.

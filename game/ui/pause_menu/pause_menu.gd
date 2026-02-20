@@ -28,7 +28,6 @@ var _settings_menu: Control = null
 var _party_ui: Control = null
 var _skill_tree_ui: Control = null
 
-@onready var _dim_overlay: ColorRect = %DimOverlay
 @onready var _menu_panel: PanelContainer = %MenuPanel
 @onready var _party_button: Button = %PartyButton
 @onready var _items_button: Button = %ItemsButton

@@ -356,7 +356,6 @@ func _on_node_selected(entry: Dictionary, char_data: Resource) -> void:
 	_node_desc_label.text = entry["description"] if not entry["description"].is_empty() \
 		else "(No description)"
 
-	var sp: int = int(char_data.get("skill_points")) if "skill_points" in char_data else 0
 	_node_cost_label.text = "Cost: %dSP" % entry["ap_cost"]
 	_node_cost_label.add_theme_color_override("font_color", UITheme.TEXT_SECONDARY)
 
