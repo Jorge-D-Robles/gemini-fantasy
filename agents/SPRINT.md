@@ -175,8 +175,9 @@ Started: 2026-02-20
 
 ### T-0221
 - Title: Seed AbilityData .tres files for Kael's full ability set (7 abilities)
-- Status: todo
-- Assigned: unassigned
+- Status: in-progress
+- Assigned: claude
+- Started: 2026-02-20
 - Priority: high
 - Depends: T-0018, T-0184
 

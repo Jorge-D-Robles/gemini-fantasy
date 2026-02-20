@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://bconvergence_touch"]
+
+[ext_resource type="Script" path="res://resources/ability_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"convergence_touch"
+display_name = "Convergence Touch"
+description = "Massive single-target magic attack. Heals Kael for a percentage of damage dealt. 25% chance to trigger Overload — a dangerous but powerful state."
+ee_cost = 60
+resonance_cost = 75.0
+damage_base = 200
+damage_stat = 1
+target_type = 0
+element = 0
+status_effect = "overload"
+status_chance = 0.25
+status_effect_duration = 3
+animation_name = "convergence_touch"
