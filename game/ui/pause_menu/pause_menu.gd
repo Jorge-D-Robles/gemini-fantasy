@@ -16,11 +16,13 @@ const QuestLogScript = preload("res://ui/quest_log/quest_log.gd")
 const SettingsMenuScript = preload(
 	"res://ui/settings_menu/settings_menu.gd"
 )
+const PartyUIScript = preload("res://ui/party_ui/party_ui.gd")
 
 var _is_open: bool = false
 var _inventory_ui: Control = null
 var _quest_log: Control = null
 var _settings_menu: Control = null
+var _party_ui: Control = null
 
 @onready var _dim_overlay: ColorRect = %DimOverlay
 @onready var _menu_panel: PanelContainer = %MenuPanel
@@ -93,6 +95,9 @@ func close() -> void:
 	if _settings_menu != null:
 		_settings_menu.queue_free()
 		_settings_menu = null
+	if _party_ui != null:
+		_party_ui.queue_free()
+		_party_ui = null
 	AudioManager.play_sfx(load(SfxLibrary.UI_CANCEL))
 	_is_open = false
 	visible = false
@@ -102,7 +107,7 @@ func close() -> void:
 
 
 func _connect_buttons() -> void:
-	_party_button.pressed.connect(_show_panel.bind("party"))
+	_party_button.pressed.connect(_open_party_ui)
 	_items_button.pressed.connect(_open_inventory)
 	_quests_button.pressed.connect(_open_quest_log)
 	_status_button.pressed.connect(_show_panel.bind("status"))
@@ -213,6 +218,28 @@ func _on_settings_closed() -> void:
 	_menu_panel.visible = true
 	_pause_label.visible = true
 	_settings_button.grab_focus()
+
+
+func _open_party_ui() -> void:
+	if _party_ui != null:
+		return
+	AudioManager.play_sfx(load(SfxLibrary.UI_CONFIRM))
+	_menu_panel.visible = false
+	_pause_label.visible = false
+	_party_ui = PartyUIScript.new()
+	_party_ui.process_mode = Node.PROCESS_MODE_ALWAYS
+	add_child(_party_ui)
+	_party_ui.party_ui_closed.connect(_on_party_ui_closed)
+	_party_ui.open()
+
+
+func _on_party_ui_closed() -> void:
+	if _party_ui != null:
+		_party_ui.queue_free()
+		_party_ui = null
+	_menu_panel.visible = true
+	_pause_label.visible = true
+	_party_button.grab_focus()
 
 
 func _create_member_info(member: Resource) -> VBoxContainer:
