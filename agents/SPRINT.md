@@ -123,16 +123,18 @@ Started: 2026-02-20
 
 ### T-0210
 - Title: Wire dedicated Echoes of the Capital BGM for Overgrown Capital (replace Castle.ogg)
-- Status: in-progress
+- Status: done
 - Assigned: claude
 - Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: high
 - Depends: T-0190
 
 ### T-0209
 - Title: Add Echo Nomad enemy to Overgrown Capital encounter pool
-- Status: todo
-- Assigned: unassigned
+- Status: in-progress
+- Assigned: claude
+- Started: 2026-02-20
 - Priority: high
 - Depends: T-0190
 
@@ -156,6 +158,20 @@ Started: 2026-02-20
 - Assigned: unassigned
 - Priority: high
 - Depends: T-0190
+
+### T-0219
+- Title: Build skill tree UI screen — view and unlock nodes from pause menu
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Depends: T-0018, T-0184
+
+### T-0221
+- Title: Seed AbilityData .tres files for Kael's full ability set (7 abilities)
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Depends: T-0018, T-0184
 
 ---
 

@@ -8,6 +8,7 @@ extends Node2D
 const SP = preload("res://systems/scene_paths.gd")
 const MEMORY_BLOOM_PATH: String = "res://data/enemies/memory_bloom.tres"
 const CREEPING_VINE_PATH: String = "res://data/enemies/creeping_vine.tres"
+const ECHO_NOMAD_PATH: String = "res://data/enemies/echo_nomad.tres"
 const SCENE_BGM_PATH: String = "res://assets/music/Echoes of the Capital.ogg"
 
 # Tilemap data (legends + maps) lives in OvergrownCapitalMap.
@@ -142,7 +143,8 @@ func _setup_camera_limits() -> void:
 func _setup_encounters() -> void:
 	var memory_bloom := load(MEMORY_BLOOM_PATH) as Resource
 	var creeping_vine := load(CREEPING_VINE_PATH) as Resource
-	var pool := OvergrownCapitalEncounters.build_pool(memory_bloom, creeping_vine)
+	var echo_nomad := load(ECHO_NOMAD_PATH) as Resource
+	var pool := OvergrownCapitalEncounters.build_pool(memory_bloom, creeping_vine, echo_nomad)
 	_encounter_system.setup(pool)
 
 

@@ -13,6 +13,7 @@ extends RefCounted
 static func build_pool(
 	memory_bloom: Resource,
 	creeping_vine: Resource,
+	echo_nomad: Resource = null,
 ) -> Array[EncounterPoolEntry]:
 	var pool: Array[EncounterPoolEntry] = []
 
@@ -30,6 +31,14 @@ static func build_pool(
 		if memory_bloom:
 			pool.append(EncounterPoolEntry.create(
 				[memory_bloom, creeping_vine] as Array[Resource], 1.0,
+			))
+	if echo_nomad:
+		pool.append(EncounterPoolEntry.create(
+			[echo_nomad] as Array[Resource], 1.5,
+		))
+		if memory_bloom:
+			pool.append(EncounterPoolEntry.create(
+				[memory_bloom, echo_nomad] as Array[Resource], 1.0,
 			))
 
 	return pool

@@ -3,6 +3,7 @@
 Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[date] Description`.
 
 ---
+- [2026-02-20] T-0210: Wire Echoes of the Capital BGM for Overgrown Capital — replaced Castle.ogg placeholder, added 1 regression test + updated BGM coverage test; PR #255 (claude)
 - [2026-02-20] T-0184: Seed skill tree .tres files for all 8 party members — 24 SkillTreeData files (12 full 6-node trees for Kael/Iris/Garrick/Nyx, 12 stub 3-node trees for Lyra/Sienna/Cipher/Ash), 4 CharacterData .tres updated with skill_trees refs, 10 tests; PR #254 (claude)
 - [2026-02-20] T-0196: Add OVERGROWN_CAPITAL constant to ScenePaths — Dungeon scenes section, path constant, 1 new test (1598 total). PR #252 (claude)
 - [2026-02-20] T-0201: Place childs_laughter echo interactable in Verdant Forest — CHILDS_LAUGHTER_ECHO_ID constant, compute_forest_echo_position() helper (352,192), MemorialEchoStrategy with vision_lines, one_time=true; 6 tests; 1597 total. PR #251 (claude)

@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3 uid="uid://becho_nomad"]
+
+[ext_resource type="Script" path="res://resources/enemy_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"echo_nomad"
+display_name = "Echo Nomad"
+description = "A translucent humanoid formed from the blended Echoes of countless travelers. Its features shift constantly as it mimics the combat patterns of those it faces."
+max_hp = 90
+attack = 10
+magic = 18
+defense = 6
+resistance = 12
+speed = 11
+exp_reward = 22
+gold_reward = 12
+abilities = []
+weaknesses = []
+resistances = []
+ai_type = 1
+sprite_path = "res://assets/sprites/enemies/ghost1.png"
+sprite_columns = 3
+sprite_rows = 4
+battle_scale = 2.0
+loot_table = [{"item_id": "wanderers_memory", "drop_chance": 0.35}, {"item_id": "identity_fragment", "drop_chance": 0.2}, {"item_id": "nomads_trinket", "drop_chance": 0.1}]
