@@ -11,9 +11,10 @@ Started: 2026-02-20
 
 ### T-0205
 - Title: Seed and place Residential Quarter echo interactables in Overgrown Capital
-- Status: in-progress
+- Status: done
 - Assigned: claude
 - Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: medium
 - Depends: T-0190, T-0197
 - Refs: docs/game-design/05-dungeon-designs.md (Residential Quarter), docs/lore/04-echo-catalog.md
