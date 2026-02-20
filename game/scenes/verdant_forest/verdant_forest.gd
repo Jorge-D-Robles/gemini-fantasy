@@ -7,6 +7,10 @@ extends Node2D
 const SP = preload("res://systems/scene_paths.gd")
 const Dialogue = preload("res://scenes/verdant_forest/verdant_forest_dialogue.gd")
 const Bond01 = preload("res://scenes/verdant_forest/verdant_forest_bond01_dialogue.gd")
+const INTERACTABLE_SCENE := preload("res://entities/interactable/interactable.tscn")
+const CAMP_STRATEGY_SCRIPT := preload(
+	"res://entities/interactable/strategies/camp_strategy.gd"
+)
 const CREEPING_VINE_PATH: String = "res://data/enemies/creeping_vine.tres"
 const ASH_STALKER_PATH: String = "res://data/enemies/ash_stalker.tres"
 const HOLLOW_SPECTER_PATH: String = "res://data/enemies/hollow_specter.tres"
@@ -34,6 +38,15 @@ const SCENE_BGM_PATH: String = "res://assets/music/Overgrown Memories.ogg"
 @onready var _exit_to_ruins: Area2D = $Triggers/ExitToRuins
 @onready var _exit_to_town: Area2D = $Triggers/ExitToTown
 @onready var _iris_zone: Area2D = $Triggers/IrisEventZone
+
+
+static func compute_campfire_name() -> String:
+	return "CampfireInteractable"
+
+
+static func compute_campfire_position() -> Vector2:
+	## Clearing at col 20, row 13 — centre of the dirt path where trees part.
+	return Vector2(320.0, 208.0)
 
 
 func _ready() -> void:
@@ -76,6 +89,15 @@ func _ready() -> void:
 	# Hide Iris event zone if already recruited
 	if EventFlags.has_flag(IrisRecruitment.FLAG_NAME):
 		_iris_zone.monitoring = false
+
+	# Campfire interactable — reusable rest point in the central clearing
+	var campfire := INTERACTABLE_SCENE.instantiate() as Interactable
+	campfire.name = compute_campfire_name()
+	campfire.strategy = CAMP_STRATEGY_SCRIPT.new()
+	campfire.one_time = false
+	campfire.indicator_type = Interactable.IndicatorType.INTERACT
+	campfire.position = compute_campfire_position()
+	$Entities.add_child(campfire)
 
 	# Companion followers
 	var player_node := get_tree().get_first_node_in_group(
