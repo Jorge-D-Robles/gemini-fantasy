@@ -1,14 +1,16 @@
 extends GutTest
 
-## Tests for T-0020: Party Management UI static helper functions.
+## Tests for T-0020/T-0101: Party Management UI static helper functions.
 ## Uses PartyUIData (RefCounted) which is testable without a live scene.
 
 const Helpers := preload("res://tests/helpers/test_helpers.gd")
 const PartyUIData := preload("res://ui/party_ui/party_ui_data.gd")
 const PartyManagerScript := preload("res://autoloads/party_manager.gd")
+const EquipmentManagerScript := preload("res://autoloads/equipment_manager.gd")
 
 
 func _make_pm(members: Array[Dictionary] = []) -> Node:
+
 	var pm: Node = PartyManagerScript.new()
 	add_child_autofree(pm)
 	for overrides in members:
@@ -167,3 +169,60 @@ func test_panel_sections_names_preserved() -> void:
 		sections["active"][0]["name"], "Kael",
 		"Member names should be preserved in sections",
 	)
+
+
+# -- compute_equipment_slots --
+
+func _make_em() -> Node:
+	var em: Node = EquipmentManagerScript.new()
+	add_child_autofree(em)
+	return em
+
+
+func test_equipment_slots_null_em_returns_dashes() -> void:
+	var slots: Dictionary = PartyUIData.compute_equipment_slots(&"kael", null)
+	assert_eq(slots["weapon"], "\u2014", "Null em should return em-dash for weapon")
+	assert_eq(slots["helmet"], "\u2014")
+	assert_eq(slots["chest"], "\u2014")
+	assert_eq(slots["accessory_0"], "\u2014")
+	assert_eq(slots["accessory_1"], "\u2014")
+
+
+func test_equipment_slots_no_equipment_all_dashes() -> void:
+	var em := _make_em()
+	var slots: Dictionary = PartyUIData.compute_equipment_slots(&"kael", em)
+	for key: String in ["weapon", "helmet", "chest", "accessory_0", "accessory_1"]:
+		assert_eq(slots[key], "\u2014", "Unequipped slot should show dash")
+
+
+func test_equipment_slots_weapon_shows_display_name() -> void:
+	var em := _make_em()
+	var sword := Helpers.make_equipment({
+		"display_name": "Iron Sword",
+		"slot_type": EquipmentData.SlotType.WEAPON,
+	})
+	em.equip(&"kael", sword)
+	var slots: Dictionary = PartyUIData.compute_equipment_slots(&"kael", em)
+	assert_eq(slots["weapon"], "Iron Sword", "Weapon slot should show equipped item name")
+
+
+func test_equipment_slots_empty_slot_shows_dash() -> void:
+	var em := _make_em()
+	var sword := Helpers.make_equipment({
+		"display_name": "Iron Sword",
+		"slot_type": EquipmentData.SlotType.WEAPON,
+	})
+	em.equip(&"kael", sword)
+	var slots: Dictionary = PartyUIData.compute_equipment_slots(&"kael", em)
+	assert_eq(slots["helmet"], "\u2014", "Unequipped helmet should show dash")
+
+
+func test_equipment_slots_accessory_shows_name() -> void:
+	var em := _make_em()
+	var ring := Helpers.make_equipment({
+		"display_name": "Speed Ring",
+		"slot_type": EquipmentData.SlotType.ACCESSORY,
+	})
+	em.equip_accessory(&"kael", ring, 0)
+	var slots: Dictionary = PartyUIData.compute_equipment_slots(&"kael", em)
+	assert_eq(slots["accessory_0"], "Speed Ring", "Accessory slot 0 should show item name")

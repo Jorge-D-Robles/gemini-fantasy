@@ -43,6 +43,33 @@ static func compute_swap_valid(
 	return true
 
 
+## Returns equipment slot display names for a character.
+## Each slot key maps to the equipped item's display_name, or an em-dash
+## if nothing is equipped. em is the EquipmentManager node (or null).
+static func compute_equipment_slots(
+	character_id: StringName,
+	em: Node,
+) -> Dictionary:
+	const EMPTY: String = "\u2014"
+	if em == null or not em.has_method("get_all_equipment"):
+		return {
+			"weapon": EMPTY,
+			"helmet": EMPTY,
+			"chest": EMPTY,
+			"accessory_0": EMPTY,
+			"accessory_1": EMPTY,
+		}
+	var raw: Dictionary = em.get_all_equipment(character_id)
+	var result: Dictionary = {}
+	for key: String in ["weapon", "helmet", "chest", "accessory_0", "accessory_1"]:
+		var item: Object = raw.get(key)
+		if item != null and "display_name" in item:
+			result[key] = item.display_name
+		else:
+			result[key] = EMPTY
+	return result
+
+
 ## Returns display sections for the party panel.
 ## Result keys: active (Array[Dictionary]), reserve (Array[Dictionary]),
 ## has_reserve (bool).

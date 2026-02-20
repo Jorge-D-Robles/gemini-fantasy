@@ -6,6 +6,36 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ## M0 — Foundation
 
+### T-0165
+- Title: Add keyboard and gamepad focus navigation to party_ui sub-screen
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M0
+- Depends: T-0020
+- Refs: game/ui/party_ui/party_ui.gd, docs/best-practices/08-ui-patterns.md
+- Notes: party_ui.gd wires UIHelpers.setup_focus_wrap but inter-column navigation (arrow keys to move between active and reserve panels, confirm to select, cancel to deselect) needs wiring. Match the pattern in inventory_ui.gd and shop_ui.gd. 5+ tests.
+
+### T-0164
+- Title: Wire party_changed signal from PartyManager into party_ui refresh
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Milestone: M0
+- Depends: T-0020
+- Refs: game/ui/party_ui/party_ui.gd, game/autoloads/party_manager.gd
+- Notes: party_ui builds its two-column display once at open time. If another system modifies the roster while the sub-screen is open, the display will be stale. Connect PartyManager.party_changed and party_state_changed to _refresh_display in open(), disconnect in close(). 3+ tests.
+
+### T-0163
+- Title: Add party swap validation feedback in party UI
+- Status: todo
+- Assigned: unassigned
+- Priority: low
+- Milestone: M0
+- Depends: T-0020
+- Refs: game/ui/party_ui/party_ui.gd, game/ui/party_ui/party_ui_data.gd
+- Notes: compute_swap_valid() returns false for invalid swaps (edge cases like 0-size lists). Currently the UI silently ignores the action. Add a 0.3s red flash on the active member button and a transient status label. compute_swap_feedback_text() static helper for TDD. 3+ tests.
+
 ### T-0162
 - Title: Add Verdant Forest traversal dialogue — party comments heading to Overgrown Capital
 - Status: todo
