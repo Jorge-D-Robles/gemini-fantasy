@@ -10,6 +10,7 @@ Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[
 - [2026-02-20] T-0135: Garrick night scene — GarrickNightScene event script (10-line quiet reflection at Roothollow: shield monologue, Kael comparison, Iris anger), gated by garrick_met_lyra flag; 12 new tests (1325 total) (claude)
 - [2026-02-20] T-0137: Roothollow market expansion — RootHollowShop.compute_item_paths() module, Forest Remedy (HEAL_HP 80) and Crystal Wick (HEAL_EE 30) unlock after iris_recruited; 7 new tests (1332 total) (claude)
 - [2026-02-20] T-0171: Overgrown Capital entry scene — OvergrownRuinsEntryDialogue static module (7-line gate dialogue: Kael awe, Iris crystal density, Garrick grief for two million, navigation call), gated by garrick_recruited, fires once via overgrown_capital_entry_seen; 13 new tests (1345 total) (claude)
+- [2026-02-20] T-0093: Fragment tracker compass UI — HudFragmentTracker static module (compute_signal_direction/compute_tracker_display), directional arrow label in HUD top-right gated by opening_lyra_discovered/garrick_met_lyra, refreshes on scene_changed and OVERWORLD state; 15 new tests (1360 total) (claude)
 
 [2026-02-20] T-0098: Add overworld encounter warning — two-phase encounter_warning→encounter_triggered flow with 0.8s delay; yellow screen flash in Verdant Forest and Overgrown Ruins (claude)
 

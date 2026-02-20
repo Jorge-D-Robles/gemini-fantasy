@@ -326,8 +326,10 @@ Started: 2026-02-18
 
 ### T-0093
 - Title: Add fragment tracker / compass UI for story objectives
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: low
 - Depends: T-0087
 
