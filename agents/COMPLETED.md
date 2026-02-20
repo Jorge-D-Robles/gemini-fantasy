@@ -4,6 +4,7 @@ Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[
 
 ---
 
+- [2026-02-20] T-0061: Overgrown Ruins debris layer & z-index fix — GroundDebris layer, Walls/Objects z_index 0 (was -1), walls now visible, 5 tests, PR merged (claude)
 - [2026-02-20] T-0058: Screen shake on heavy damage — BattleShake static utility (is_heavy_hit, compute_intensity, shake), 25% HP threshold, 3–7px intensity, wired in action_execute_state, 10 tests, PR merged (claude)
 - [2026-02-20] T-0160: Quest-NPC indicator refresh — compute_npc_indicator_type() in roothollow_quests.gd, QuestManager signal wiring in roothollow _ready(), 7 tests, PR #201 (claude)
 - [2026-02-20] T-0057: Turn order display — compute_turn_order_entries() static helper, [Active] brackets with ACTIVE_HIGHLIGHT, ally=blue enemy=red, 6 tests, PR #200 (claude)
