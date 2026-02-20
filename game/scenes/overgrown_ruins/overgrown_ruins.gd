@@ -30,7 +30,7 @@ const DETAIL_LEGEND: Dictionary = {
 	"O": Vector2i(0, 2),   # Ornate golden floor tile
 }
 
-# Ground debris — small rubble from B-sheet (source 2, on GroundDetail)
+# Ground debris — small rubble from B-sheet (source 2, on GroundDebris)
 const DEBRIS_LEGEND: Dictionary = {
 	"p": Vector2i(0, 2),   # Small pebbles
 	"r": Vector2i(1, 2),   # Scattered rocks
@@ -213,6 +213,8 @@ const OBJECTS_MAP: Array[String] = [
 	"                                        ",
 ]
 
+var _ground_debris_layer: TileMapLayer = null
+
 @onready var _ground_layer: TileMapLayer = $Ground
 @onready var _ground_detail_layer: TileMapLayer = $GroundDetail
 @onready var _walls_layer: TileMapLayer = $Walls
@@ -233,11 +235,23 @@ const OBJECTS_MAP: Array[String] = [
 
 
 func _ready() -> void:
-	# Force z_index at runtime — .tscn value may be stale in editor cache.
-	# Push walkable layers below z=0 so Entities (z=1) always renders on top.
-	$Walls.z_index = -1
-	$Objects.z_index = -1
+	# Explicit z-index hierarchy: all tile layers at 0 (tree order), Entities at 1
+	# so the player sprite always renders above tilemap content.
+	# Previously Walls/Objects were set to -1 (below ground), hiding them visually.
+	$Ground.z_index = 0
+	$GroundDetail.z_index = 0
+	$Walls.z_index = 0
+	$Objects.z_index = 0
 	$Entities.z_index = 1
+
+	# Dedicated debris layer — separates ground debris from ornate floor detail
+	# so tiles on each layer can coexist at overlapping cell positions.
+	_ground_debris_layer = TileMapLayer.new()
+	_ground_debris_layer.name = "GroundDebris"
+	_ground_debris_layer.z_index = 0
+	add_child(_ground_debris_layer)
+	move_child(_ground_debris_layer, $GroundDetail.get_index() + 1)
+
 	_setup_tilemap()
 	MapBuilder.create_boundary_walls(self, 640, 384)
 	_start_scene_music()
@@ -367,8 +381,8 @@ func _setup_tilemap() -> void:
 		],
 	}
 	MapBuilder.apply_tileset(
-		[_ground_layer, _ground_detail_layer, _walls_layer,
-		_objects_layer] as Array[TileMapLayer],
+		[_ground_layer, _ground_detail_layer, _ground_debris_layer,
+		_walls_layer, _objects_layer] as Array[TileMapLayer],
 		atlas_paths,
 		solid,
 	)
@@ -377,7 +391,7 @@ func _setup_tilemap() -> void:
 		_ground_detail_layer, DETAIL_MAP, DETAIL_LEGEND, 1
 	)
 	MapBuilder.build_layer(
-		_ground_detail_layer, DEBRIS_MAP, DEBRIS_LEGEND, 2
+		_ground_debris_layer, DEBRIS_MAP, DEBRIS_LEGEND, 2
 	)
 	MapBuilder.build_layer(_walls_layer, WALL_MAP, WALL_LEGEND, 1)
 	MapBuilder.build_layer(

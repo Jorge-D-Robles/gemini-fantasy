@@ -226,10 +226,13 @@ Started: 2026-02-18
 
 ### T-0061
 - Title: Overgrown Ruins — separate debris layer and fix z-index ambiguity
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: low
 - Depends: none
+- Notes: GroundDebris TileMapLayer created dynamically in _ready(); DEBRIS_MAP now built on it (was _ground_detail_layer). Fixed Walls/Objects z_index from -1 to 0 (walls were hidden under ground). 5 dimension-check tests. PR merged.
 
 ### T-0077
 - Title: Split verdant_forest.gd and overgrown_ruins.gd into tilemap/encounter/dialogue modules
