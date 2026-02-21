@@ -8,27 +8,29 @@ Godot 4.5 uses **TileMapLayer** nodes (one per layer). Stack multiple layers for
 
 ```
 Level (Node2D)
-├── Ground (TileMapLayer)          # z_index: -2 — base terrain fill
-├── GroundDetail (TileMapLayer)    # z_index: -1 — paths, transitions, accents
-├── Trees (TileMapLayer)           # z_index: 0  — forest borders (collision)
-├── Paths (TileMapLayer)           # z_index: -1 — walkway overlay
-├── Objects (TileMapLayer)         # z_index: 0  — rocks, buildings (collision)
-├── Entities (Node2D)              # Player, NPCs, interactables
-├── AbovePlayer (TileMapLayer)     # z_index: 2  — tree canopy, rooftops
-├── Triggers (Node2D)              # Scene transitions, event zones
-└── EncounterSystem (Node)         # Random battles
+├── Ground (TileMapLayer)          # drawn first — base terrain fill
+├── GroundDetail (TileMapLayer)    # drawn second — paths, transitions, accents
+├── Trees (TileMapLayer)           # forest borders (collision)
+├── Paths (TileMapLayer)           # walkway overlay
+├── Objects (TileMapLayer)         # rocks, buildings (collision)
+├── Entities (Node2D)              # Player, NPCs, interactables — drawn AFTER tiles
+├── AbovePlayer (TileMapLayer)     # tree canopy, rooftops — drawn AFTER entities
+├── Triggers (Node2D)              # Scene transitions, event zones (non-visual)
+└── EncounterSystem (Node)         # Random battles (non-visual)
 ```
+
+**Rendering uses scene tree order, not z_index.** Later siblings draw on top. Entities comes after all midground tile layers so the player renders above tiles. AbovePlayer comes after Entities so canopy renders above the player. Do NOT set z_index on tile layers or Entities.
 
 ### Layer Responsibilities
 
-| Layer | Z-Index | Collision | Source | Content |
-|-------|---------|-----------|--------|---------|
-| **Ground** | -2 | No | A5 (source 0) | Uniform grass/dirt/stone fill covering the entire map |
-| **GroundDetail** | -1 | No | A5 (source 0) | Sparse flower/foliage accents (5-15% coverage) |
-| **Paths** | -1 | No | A5 (source 0) | Walkway overlay (dirt path, stone road) |
-| **Trees** | 0 | Yes | B (source 1+) | Dense forest fill using canopy center tiles |
-| **Objects** | 0 | Yes | B (source 1+) | Rocks, buildings, fences, walls |
-| **AbovePlayer** | 2 | No | B (source 1+) | Tree canopy tops, roof overhangs |
+| Layer | Position | Collision | Source | Content |
+|-------|----------|-----------|--------|---------|
+| **Ground** | First (behind) | No | A5 (source 0) | Uniform grass/dirt/stone fill covering the entire map |
+| **GroundDetail** | After Ground | No | A5 (source 0) | Sparse flower/foliage accents (5-15% coverage) |
+| **Paths** | After GroundDetail | No | A5 (source 0) | Walkway overlay (dirt path, stone road) |
+| **Trees** | Midground | Yes | B (source 1+) | Dense forest fill using canopy center tiles |
+| **Objects** | Midground | Yes | B (source 1+) | Rocks, buildings, fences, walls |
+| **AbovePlayer** | After Entities | No | B (source 1+) | Tree canopy tops, roof overhangs |
 
 ### Key Rule: All Layers Share One TileSet
 

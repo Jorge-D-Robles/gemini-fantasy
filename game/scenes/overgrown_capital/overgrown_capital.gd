@@ -205,18 +205,10 @@ static func compute_research_quarter_lines() -> Array[String]:
 
 
 func _ready() -> void:
-	# Explicit z-index hierarchy matching existing scene pattern.
-	$Ground.z_index = 0
-	$GroundDetail.z_index = 0
-	$Walls.z_index = 0
-	$Objects.z_index = 0
-	$Entities.z_index = 1
-
 	# Dedicated debris layer — separates ground debris from ornate floor detail.
 	# Inserted between GroundDetail and Walls, matching Overgrown Ruins pattern.
 	_ground_debris_layer = TileMapLayer.new()
 	_ground_debris_layer.name = "GroundDebris"
-	_ground_debris_layer.z_index = 0
 	add_child(_ground_debris_layer)
 	move_child(_ground_debris_layer, $GroundDetail.get_index() + 1)
 

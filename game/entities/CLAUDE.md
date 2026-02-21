@@ -56,13 +56,14 @@ Player (CharacterBody2D) — class_name Player
 - Connects to `PartyManager.party_changed` and `GameManager.game_state_changed`
 - Rebuilds followers when party changes; pauses when not in OVERWORLD state
 - Filters Kael from followers by ID (`KAEL_ID = &"kael"`)
+- `_ready()` calls `parent.move_child(self, 0)` to ensure companions render behind player via tree order
 - Cleans up signal connections in `_exit_tree()`
 
 **CompanionFollower** (`class_name CompanionFollower`, `extends Node2D`):
 - Single follower entity with `AnimatedSprite2D` built at runtime from 3x4 sprite sheet
 - `setup(sprite_path, char_id)` — loads texture, builds 8 animations (walk/idle x 4 directions)
 - `set_facing(Facing)` / `set_moving(bool)` — driven by controller
-- `SPRITE_SCALE = Vector2(0.55, 0.75)`, `z_index = -1` (behind player)
+- `SPRITE_SCALE = Vector2(0.55, 0.75)`, renders behind player via tree order (CompanionController is first child of Entities)
 
 **Wiring in scene scripts** (added at end of `_ready()`):
 ```gdscript

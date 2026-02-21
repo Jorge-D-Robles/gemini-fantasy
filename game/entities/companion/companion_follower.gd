@@ -50,7 +50,6 @@ func setup(sprite_path: String, char_id: StringName) -> void:
 	_sprite.play("idle_down")
 	add_child(_sprite)
 	_animations_ready = true
-	z_index = -1
 
 
 func set_facing(new_facing: Facing) -> void:

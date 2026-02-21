@@ -22,7 +22,6 @@ const SCENE_BGM_PATH: String = "res://assets/music/Wandering Through Quiet Lands
 
 
 func _ready() -> void:
-	$Entities.z_index = 1
 	_setup_tilemap()
 	MapBuilder.create_boundary_walls(self, 640, 384)
 	_start_scene_music()

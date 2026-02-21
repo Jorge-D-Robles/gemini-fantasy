@@ -15,6 +15,14 @@ var _position_history: Array[Dictionary] = []
 var _is_active: bool = true
 
 
+func _ready() -> void:
+	# Ensure CompanionController (and its follower children) render behind
+	# the Player by being the first child of Entities (tree order: earlier = behind).
+	var parent := get_parent()
+	if parent:
+		parent.move_child(self, 0)
+
+
 func setup(player: Node2D) -> void:
 	_player = player
 	_reset_history()

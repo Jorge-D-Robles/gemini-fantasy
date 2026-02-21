@@ -12,30 +12,24 @@ script = ExtResource("1_capital")
 
 [node name="Ground" type="TileMapLayer" parent="."]
 collision_enabled = false
-z_index = -2
 
 [node name="GroundDetail" type="TileMapLayer" parent="."]
 collision_enabled = false
-z_index = -1
 
 [node name="Walls" type="TileMapLayer" parent="."]
-z_index = 0
 
 [node name="Objects" type="TileMapLayer" parent="."]
-z_index = 0
-
-[node name="AbovePlayer" type="TileMapLayer" parent="."]
-collision_enabled = false
-z_index = 2
 
 [node name="Entities" type="Node2D" parent="."]
-z_index = 1
 
 [node name="Player" parent="Entities" instance=ExtResource("2_player")]
 position = Vector2(320, 400)
 
 [node name="SpawnFromRuins" type="Marker2D" parent="Entities"]
 position = Vector2(320, 400)
+
+[node name="AbovePlayer" type="TileMapLayer" parent="."]
+collision_enabled = false
 
 [node name="Triggers" type="Node2D" parent="."]
 

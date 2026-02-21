@@ -16,22 +16,26 @@ See root `CLAUDE.md` for project-wide conventions and tilemap rules.
 
 **Script:** `extends Node2D` (no `class_name`)
 
-**Node tree layout:**
+**Node tree layout (tree order determines rendering — later siblings draw on top):**
 ```
 AreaName (Node2D)
-  Ground (TileMapLayer)
-  [GroundDetail] (TileMapLayer)
-  [Paths / Walls / Trees / Objects / AbovePlayer] (TileMapLayer)
-  EncounterSystem          # random encounters (combat areas only)
-  [EventNode]              # recruitment/sequence node
-  Entities (Node2D)
-    Player (CharacterBody2D)   # instance of entities/player/player.tscn
-    SpawnFrom* (Marker2D)      # one per entry point; added to named group in _ready()
-    [NPCName] (StaticBody2D)   # NPC instances
-  Triggers (Node2D)
-    ExitTo* (Area2D)           # scene transition triggers
-    [EventZone] (Area2D)       # story event activation zones
+  Ground (TileMapLayer)            # drawn first (behind everything)
+  [GroundDetail] (TileMapLayer)    # drawn second
+  [Paths / Walls / Trees / Objects] (TileMapLayer)  # midground layers
+  Entities (Node2D)                # drawn AFTER tiles = on top of tiles
+    CompanionController            # first child = drawn behind player
+    Player (CharacterBody2D)       # drawn after companions
+    SpawnFrom* (Marker2D)          # one per entry point; added to named group in _ready()
+    [NPCName] (StaticBody2D)       # NPC instances
+  [AbovePlayer] (TileMapLayer)    # drawn LAST = on top of player (canopy walk-under)
+  Triggers (Node2D)                # non-visual
+    ExitTo* (Area2D)               # scene transition triggers
+    [EventZone] (Area2D)           # story event activation zones
+  EncounterSystem                  # non-visual (random encounters, combat areas only)
+  [EventNode]                      # recruitment/sequence node
 ```
+
+**Tree order rule:** Scene tree order is the primary rendering mechanism. Do NOT set z_index on tile layers or Entities — use tree order instead. z_index is only acceptable for minor sibling adjustments (e.g., NPC indicators, battle scenes).
 
 **`_ready()` responsibilities:**
 1. Call `_setup_tilemap()` — applies atlas and fills layers via `MapBuilder`

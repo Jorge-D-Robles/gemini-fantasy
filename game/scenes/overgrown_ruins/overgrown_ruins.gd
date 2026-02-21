@@ -40,20 +40,10 @@ var _ground_debris_layer: TileMapLayer = null
 
 
 func _ready() -> void:
-	# Explicit z-index hierarchy: all tile layers at 0 (tree order), Entities at 1
-	# so the player sprite always renders above tilemap content.
-	# Previously Walls/Objects were set to -1 (below ground), hiding them visually.
-	$Ground.z_index = 0
-	$GroundDetail.z_index = 0
-	$Walls.z_index = 0
-	$Objects.z_index = 0
-	$Entities.z_index = 1
-
 	# Dedicated debris layer — separates ground debris from ornate floor detail
 	# so tiles on each layer can coexist at overlapping cell positions.
 	_ground_debris_layer = TileMapLayer.new()
 	_ground_debris_layer.name = "GroundDebris"
-	_ground_debris_layer.z_index = 0
 	add_child(_ground_debris_layer)
 	move_child(_ground_debris_layer, $GroundDetail.get_index() + 1)
 
