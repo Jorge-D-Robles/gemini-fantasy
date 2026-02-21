@@ -4,8 +4,8 @@ extends RefCounted
 ## Tilemap data constants for Overgrown Ruins.
 ## All legends and map arrays live here so overgrown_ruins.gd stays concise.
 
-# Source 0: FAIRY_FOREST_A5_A (opaque ground tiles)
-# Source 1: RUINS_A5 (ruins2 — opaque golden walls)
+# Source 0: TF_DUNGEON (flat 16x16 dungeon tiles — floor + walls)
+# Source 1: RUINS_OBJECTS (tf_B_ruins2.png — transparent detail scatter)
 # Source 2: OVERGROWN_RUINS_OBJECTS (B-sheet — objects)
 
 # Map dimensions
@@ -14,21 +14,29 @@ const ROWS: int = 24
 
 # ---------- PROCEDURAL GROUND CONFIG ----------
 
-# Ground noise — organic terrain distribution (source 0)
-# V = dense vegetation (noise > 0.3), D = dark earth (-0.2..0.3),
-# F = gray stone (catch-all, noise >= -1.0)
+# Noise seed — still used for detail/debris scatter derivation
 const GROUND_NOISE_SEED: int = 12345
-const GROUND_NOISE_FREQ: float = 0.05
-const GROUND_NOISE_OCTAVES: int = 3
-const GROUND_ENTRIES: Array[Dictionary] = [
-	{"threshold": 0.3,  "atlas": Vector2i(0, 8)},   # V = dense vegetation
-	{"threshold": -0.2, "atlas": Vector2i(0, 6)},   # D = dark earth/roots
-	{"threshold": -1.0, "atlas": Vector2i(0, 10)},  # F = gray stone (catch-all)
-]
 
-# Detail scatter — ornate golden floor accents (source 1, ~12% coverage)
+# Floor tiles — warm brown earth from TF_DUNGEON row 1, cols 2-5
+const FLOOR_TILES: Array[Vector2i] = [
+	Vector2i(2, 1), Vector2i(3, 1),
+	Vector2i(4, 1), Vector2i(5, 1),
+]
+const FLOOR_HASH_SEED: int = 31415
+
+# Wall tiles — cool blue-gray stone from TF_DUNGEON row 1, cols 6-8
+const WALL_TILES: Array[Vector2i] = [
+	Vector2i(6, 1), Vector2i(7, 1), Vector2i(8, 1),
+]
+const WALL_HASH_SEED: int = 54321
+const WALL_BORDER_TILE: Vector2i = Vector2i(6, 1)
+
+# Detail scatter — small transparent debris from RUINS_OBJECTS row 6 (source 1)
 const DETAIL_ENTRIES: Array[Dictionary] = [
-	{"atlas": Vector2i(0, 2), "source_id": 1, "density": 0.12},
+	{"atlas": Vector2i(8, 6), "source_id": 1, "density": 0.04},
+	{"atlas": Vector2i(9, 6), "source_id": 1, "density": 0.03},
+	{"atlas": Vector2i(13, 6), "source_id": 1, "density": 0.03},
+	{"atlas": Vector2i(14, 6), "source_id": 1, "density": 0.02},
 ]
 
 # Debris scatter — rubble, rocks, vines, moss (source 2)
@@ -38,12 +46,6 @@ const DEBRIS_ENTRIES: Array[Dictionary] = [
 	{"atlas": Vector2i(0, 6), "source_id": 2, "density": 0.03},  # vine fragment
 	{"atlas": Vector2i(1, 6), "source_id": 2, "density": 0.03},  # moss clump
 ]
-
-# Wall layer — structural walls (ruins2 source 1)
-const WALL_LEGEND: Dictionary = {
-	"W": Vector2i(0, 4),   # Golden Egyptian wall (opaque)
-	"G": Vector2i(0, 8),   # Dark ornamental border (opaque)
-}
 
 # Objects layer — B-sheet ruins objects (source 2)
 const OBJECTS_LEGEND: Dictionary = {
@@ -69,7 +71,7 @@ const OBJECTS_LEGEND: Dictionary = {
 }
 
 # ---------- STRUCTURAL MAP DATA (40 cols x 24 rows) ----------
-# Ground/detail/debris are now procedural — see noise configs above.
+# Ground/detail/debris are now procedural — see hash/noise configs above.
 
 # Sacred Chamber (north), Main Corridor (center), South Gallery
 const WALL_MAP: Array[String] = [
@@ -99,7 +101,7 @@ const WALL_MAP: Array[String] = [
 	"WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
 ]
 
-# B-sheet objects: face statues, stone blocks, bushes, vegetation (source 1)
+# B-sheet objects: face statues, stone blocks, bushes, vegetation (source 2)
 const OBJECTS_MAP: Array[String] = [
 	"                                        ",
 	"                                        ",
@@ -126,3 +128,16 @@ const OBJECTS_MAP: Array[String] = [
 	"                                        ",
 	"                                        ",
 ]
+
+
+# ---------- STATIC HELPERS ----------
+
+
+static func pick_floor_tile(x: int, y: int) -> Vector2i:
+	var idx: int = abs(x * 73 + y * 31 + FLOOR_HASH_SEED) % FLOOR_TILES.size()
+	return FLOOR_TILES[idx]
+
+
+static func pick_wall_tile(x: int, y: int) -> Vector2i:
+	var idx: int = abs(x * 73 + y * 31 + WALL_HASH_SEED) % WALL_TILES.size()
+	return WALL_TILES[idx]

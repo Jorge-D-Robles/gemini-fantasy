@@ -148,18 +148,18 @@ func _fill_ground_with_variants(layer: TileMapLayer, noise: FastNoiseLite) -> vo
 
 ### overgrown_ruins/
 
-**Theme:** Ancient golden ruins overgrown with vegetation. Starting area.
+**Theme:** Dungeon ruins with brown earth floors and blue-gray stone walls. Starting area.
 **Map:** 40 cols x 24 rows (640x384 px)
 
 **Atlas Sources:**
 
 | Source | Constant | Asset | Purpose |
 |--------|----------|-------|---------|
-| 0 | `FAIRY_FOREST_A5_A` | `tf_ff_tileA5_a.png` | Opaque ground (row 10 gray stone) |
-| 1 | `RUINS_A5` | `tf_A5_ruins2.png` | Golden walls (rows 4-5), dark borders (rows 8-9), ornate floor (row 2) |
+| 0 | `TF_DUNGEON` | `dungeon.png` | Flat 16x16: brown earth floor (row 1 cols 2-5), blue-gray stone walls (row 1 cols 6-8) |
+| 1 | `RUINS_OBJECTS` | `tf_B_ruins2.png` | Detail scatter: transparent floor debris (row 6) |
 | 2 | `OVERGROWN_RUINS_OBJECTS` | `tf_B_ruins3.png` | B-sheet: face statues, stone blocks, bushes, rubble |
 
-**Critical:** Ruins3 A5 tiles are TRANSPARENT overlays. Only Fairy Forest A5_A provides opaque ground.
+**Ground:** Position-hashed brown earth (4 variants, no noise). Walls: 3 blue-gray stone variants + fixed border accent. No A5 sheets.
 
 **Encounters:** Memory Bloom (common), Creeping Vine (uncommon), mixed
 **Modules:** `overgrown_ruins_map.gd` (`OvergrownRuinsMap`) — tilemap constants; `overgrown_ruins_encounters.gd` (`OvergrownRuinsEncounters`) — pool builder

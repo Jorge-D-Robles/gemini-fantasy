@@ -9,7 +9,10 @@ Started: 2026-02-20
 
 ## Active
 
-*(none — pick next from Queue)*
+- **T-0254**: Redo Overgrown Ruins tilemap — TF_DUNGEON + B-sheets, no A5
+  - Assigned: claude
+  - Status: in-progress
+  - Started: 2026-02-21
 
 ---
 

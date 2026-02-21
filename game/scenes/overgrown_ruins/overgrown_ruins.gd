@@ -148,20 +148,13 @@ func _start_scene_music() -> void:
 
 func _setup_tilemap() -> void:
 	var atlas_paths: Array[String] = [
-		MapBuilder.FAIRY_FOREST_A5_A,
-		MapBuilder.RUINS_A5,
+		MapBuilder.TF_DUNGEON,
+		MapBuilder.RUINS_OBJECTS,
 		MapBuilder.OVERGROWN_RUINS_OBJECTS,
 	]
 	var solid: Dictionary = {
-		1: [
-			Vector2i(0, 4), Vector2i(1, 4), Vector2i(2, 4), Vector2i(3, 4),
-			Vector2i(4, 4), Vector2i(5, 4), Vector2i(6, 4), Vector2i(7, 4),
-			Vector2i(0, 5), Vector2i(1, 5), Vector2i(2, 5), Vector2i(3, 5),
-			Vector2i(4, 5), Vector2i(5, 5), Vector2i(6, 5), Vector2i(7, 5),
-			Vector2i(0, 8), Vector2i(1, 8), Vector2i(2, 8), Vector2i(3, 8),
-			Vector2i(4, 8), Vector2i(5, 8), Vector2i(6, 8), Vector2i(7, 8),
-			Vector2i(0, 9), Vector2i(1, 9), Vector2i(2, 9), Vector2i(3, 9),
-			Vector2i(4, 9), Vector2i(5, 9), Vector2i(6, 9), Vector2i(7, 9),
+		0: [
+			Vector2i(6, 1), Vector2i(7, 1), Vector2i(8, 1),
 		],
 		2: [
 			Vector2i(0, 0), Vector2i(2, 0), Vector2i(4, 0),
@@ -179,19 +172,11 @@ func _setup_tilemap() -> void:
 		solid,
 	)
 
-	# Procedural ground — organic noise prevents carpet-bombing repetition
-	var ground_noise := FastNoiseLite.new()
-	ground_noise.seed = OvergrownRuinsMap.GROUND_NOISE_SEED
-	ground_noise.frequency = OvergrownRuinsMap.GROUND_NOISE_FREQ
-	ground_noise.fractal_octaves = OvergrownRuinsMap.GROUND_NOISE_OCTAVES
-	MapBuilder.build_noise_layer(
-		_ground_layer,
-		OvergrownRuinsMap.COLS, OvergrownRuinsMap.ROWS,
-		ground_noise, OvergrownRuinsMap.GROUND_ENTRIES,
-	)
+	# Ground — position-hashed brown earth floor (no noise needed)
+	_fill_ground_with_variants(_ground_layer)
 	MapBuilder.disable_collision(_ground_layer)
 
-	# Procedural floor detail — scattered ornate accents
+	# Procedural floor detail — scattered transparent debris
 	var detail_noise := FastNoiseLite.new()
 	detail_noise.seed = OvergrownRuinsMap.GROUND_NOISE_SEED + 1
 	detail_noise.frequency = 0.15
@@ -214,12 +199,33 @@ func _setup_tilemap() -> void:
 	MapBuilder.disable_collision(_ground_debris_layer)
 
 	# Structural layers — authored, gameplay-critical placement
-	MapBuilder.build_layer(
-		_walls_layer, OvergrownRuinsMap.WALL_MAP, OvergrownRuinsMap.WALL_LEGEND, 1
-	)
+	_fill_walls_with_variants(_walls_layer)
 	MapBuilder.build_layer(
 		_objects_layer, OvergrownRuinsMap.OBJECTS_MAP, OvergrownRuinsMap.OBJECTS_LEGEND, 2
 	)
+
+
+func _fill_ground_with_variants(layer: TileMapLayer) -> void:
+	for y: int in range(OvergrownRuinsMap.ROWS):
+		for x: int in range(OvergrownRuinsMap.COLS):
+			var atlas: Vector2i = OvergrownRuinsMap.pick_floor_tile(x, y)
+			layer.set_cell(Vector2i(x, y), 0, atlas)
+	layer.update_internals()
+
+
+func _fill_walls_with_variants(layer: TileMapLayer) -> void:
+	for y: int in range(OvergrownRuinsMap.WALL_MAP.size()):
+		var row: String = OvergrownRuinsMap.WALL_MAP[y]
+		for x: int in range(row.length()):
+			var ch: String = row[x]
+			if ch == "W":
+				var atlas: Vector2i = OvergrownRuinsMap.pick_wall_tile(x, y)
+				layer.set_cell(Vector2i(x, y), 0, atlas)
+			elif ch == "G":
+				layer.set_cell(
+					Vector2i(x, y), 0, OvergrownRuinsMap.WALL_BORDER_TILE,
+				)
+	layer.update_internals()
 
 
 func _setup_camera_limits() -> void:
