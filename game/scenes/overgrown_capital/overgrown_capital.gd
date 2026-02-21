@@ -243,20 +243,13 @@ func _ready() -> void:
 
 func _setup_tilemap() -> void:
 	var atlas_paths: Array[String] = [
-		MapBuilder.FAIRY_FOREST_A5_A,
-		MapBuilder.RUINS_A5,
+		MapBuilder.TF_DUNGEON,
+		MapBuilder.RUINS_OBJECTS,
 		MapBuilder.OVERGROWN_RUINS_OBJECTS,
 	]
 	var solid: Dictionary = {
-		1: [
-			Vector2i(0, 4), Vector2i(1, 4), Vector2i(2, 4), Vector2i(3, 4),
-			Vector2i(4, 4), Vector2i(5, 4), Vector2i(6, 4), Vector2i(7, 4),
-			Vector2i(0, 5), Vector2i(1, 5), Vector2i(2, 5), Vector2i(3, 5),
-			Vector2i(4, 5), Vector2i(5, 5), Vector2i(6, 5), Vector2i(7, 5),
-			Vector2i(0, 8), Vector2i(1, 8), Vector2i(2, 8), Vector2i(3, 8),
-			Vector2i(4, 8), Vector2i(5, 8), Vector2i(6, 8), Vector2i(7, 8),
-			Vector2i(0, 9), Vector2i(1, 9), Vector2i(2, 9), Vector2i(3, 9),
-			Vector2i(4, 9), Vector2i(5, 9), Vector2i(6, 9), Vector2i(7, 9),
+		0: [
+			Vector2i(6, 1), Vector2i(7, 1), Vector2i(8, 1),
 		],
 		2: [
 			Vector2i(0, 0), Vector2i(2, 0), Vector2i(4, 0),
@@ -274,22 +267,14 @@ func _setup_tilemap() -> void:
 		solid,
 	)
 
-	# Procedural ground — organic noise prevents carpet-bombing repetition
-	var ground_noise := FastNoiseLite.new()
-	ground_noise.seed = OvergrownCapitalMap.GROUND_NOISE_SEED
-	ground_noise.frequency = OvergrownCapitalMap.GROUND_NOISE_FREQ
-	ground_noise.fractal_octaves = OvergrownCapitalMap.GROUND_NOISE_OCTAVES
-	MapBuilder.build_noise_layer(
-		_ground_layer,
-		OvergrownCapitalMap.COLS, OvergrownCapitalMap.ROWS,
-		ground_noise, OvergrownCapitalMap.GROUND_ENTRIES,
-	)
+	# Ground — position-hashed brown earth floor (no noise needed)
+	_fill_ground_with_variants(_ground_layer)
 	MapBuilder.disable_collision(_ground_layer)
 
-	# Procedural floor detail — scattered ornate golden accents
+	# Procedural floor detail — scattered transparent debris
 	var detail_noise := FastNoiseLite.new()
 	detail_noise.seed = OvergrownCapitalMap.GROUND_NOISE_SEED + 1
-	detail_noise.frequency = 0.12
+	detail_noise.frequency = 0.15
 	MapBuilder.scatter_decorations(
 		_ground_detail_layer,
 		OvergrownCapitalMap.COLS, OvergrownCapitalMap.ROWS,
@@ -300,7 +285,7 @@ func _setup_tilemap() -> void:
 	# Procedural debris — scattered rubble, vines, moss
 	var debris_noise := FastNoiseLite.new()
 	debris_noise.seed = OvergrownCapitalMap.GROUND_NOISE_SEED + 2
-	debris_noise.frequency = 0.18
+	debris_noise.frequency = 0.2
 	MapBuilder.scatter_decorations(
 		_ground_debris_layer,
 		OvergrownCapitalMap.COLS, OvergrownCapitalMap.ROWS,
@@ -309,9 +294,7 @@ func _setup_tilemap() -> void:
 	MapBuilder.disable_collision(_ground_debris_layer)
 
 	# Structural layers — authored, gameplay-critical placement
-	MapBuilder.build_layer(
-		_walls_layer, OvergrownCapitalMap.WALL_MAP, OvergrownCapitalMap.WALL_LEGEND, 1
-	)
+	_fill_walls_with_variants(_walls_layer)
 	MapBuilder.build_layer(
 		_objects_layer, OvergrownCapitalMap.OBJECTS_MAP, OvergrownCapitalMap.OBJECTS_LEGEND, 2
 	)
@@ -319,6 +302,29 @@ func _setup_tilemap() -> void:
 		_above_player_layer, OvergrownCapitalMap.ABOVE_PLAYER_MAP,
 		OvergrownCapitalMap.ABOVE_LEGEND, 2,
 	)
+
+
+func _fill_ground_with_variants(layer: TileMapLayer) -> void:
+	for y: int in range(OvergrownCapitalMap.ROWS):
+		for x: int in range(OvergrownCapitalMap.COLS):
+			var atlas: Vector2i = OvergrownCapitalMap.pick_floor_tile(x, y)
+			layer.set_cell(Vector2i(x, y), 0, atlas)
+	layer.update_internals()
+
+
+func _fill_walls_with_variants(layer: TileMapLayer) -> void:
+	for y: int in range(OvergrownCapitalMap.WALL_MAP.size()):
+		var row: String = OvergrownCapitalMap.WALL_MAP[y]
+		for x: int in range(row.length()):
+			var ch: String = row[x]
+			if ch == "W":
+				var atlas: Vector2i = OvergrownCapitalMap.pick_wall_tile(x, y)
+				layer.set_cell(Vector2i(x, y), 0, atlas)
+			elif ch == "G":
+				layer.set_cell(
+					Vector2i(x, y), 0, OvergrownCapitalMap.WALL_BORDER_TILE,
+				)
+	layer.update_internals()
 
 
 func _start_scene_music() -> void:

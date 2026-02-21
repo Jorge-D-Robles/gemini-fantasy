@@ -10,6 +10,7 @@ See root `CLAUDE.md` for project-wide conventions and tilemap rules.
 | `overgrown_ruins/` | `overgrown_ruins.tscn` | Dungeon/ruins | Game start — Lyra discovery, Memory Bloom encounters |
 | `verdant_forest/` | `verdant_forest.tscn` | Overworld forest | Connects ruins <-> town, Iris recruitment, 6-enemy pool |
 | `roothollow/` | `roothollow.tscn` | Town hub | Safe zone, NPCs, Garrick recruitment, no encounters |
+| `overgrown_capital/` | `overgrown_capital.tscn` | Dungeon/capital | Ch5 dungeon — Market/Entertainment/Research districts, echoes, Purification Nodes |
 | `prismfall_approach/` | `prismfall_approach.tscn` | Overworld steppes | Crystalline Steppes south of Verdant Forest, 5-enemy pool |
 
 ## Standard Scene Pattern
@@ -166,6 +167,27 @@ func _fill_ground_with_variants(layer: TileMapLayer, noise: FastNoiseLite) -> vo
 **Story:** `OpeningSequence` triggered by `LyraDiscoveryZone` — guarded by `EventFlags`
 **Init:** Adds Kael to `PartyManager` if roster is empty (game start)
 **Autoloads:** GameManager, BattleManager, DialogueManager, EventFlags, UILayer, PartyManager, MapBuilder
+
+### overgrown_capital/
+
+**Theme:** Crystal-vine-overgrown pre-Severance capital. Chapter 5 dungeon with districts.
+**Map:** 40 cols x 28 rows (640x448 px)
+
+**Atlas Sources:**
+
+| Source | Constant | Asset | Purpose |
+|--------|----------|-------|---------|
+| 0 | `TF_DUNGEON` | `dungeon.png` | Flat 16x16: brown earth floor (row 1 cols 2-5), blue-gray stone walls (row 1 cols 6-8) |
+| 1 | `RUINS_OBJECTS` | `tf_B_ruins2.png` | Detail scatter: transparent floor debris (row 6) |
+| 2 | `OVERGROWN_RUINS_OBJECTS` | `tf_B_ruins3.png` | B-sheet: objects, rubble, vines, vine overhangs |
+
+**Ground:** Position-hashed brown earth (4 variants, no noise). Walls: 3 blue-gray stone variants + fixed border accent. No A5 sheets.
+
+**Districts:** Palace approach (rows 0-5), Research Quarter (rows 6-12 west), Entertainment (east), Residential (rows 13-18), Market (rows 19-27)
+**Encounters:** Memory Bloom, Creeping Vine, Echo Nomad
+**Modules:** `overgrown_capital_map.gd` (`OvergrownCapitalMap`) — tilemap constants; `overgrown_capital_encounters.gd` (`OvergrownCapitalEncounters`) — pool builder
+**Story:** Lyra Fragment 2 echo, 4 memorial echoes, 2 Purification Nodes, The Last Gardener encounter zone, Leaving Capital event
+**Autoloads:** GameManager, BattleManager, DialogueManager, EventFlags, UILayer, EchoManager, MapBuilder, AudioManager
 
 ### verdant_forest/
 
