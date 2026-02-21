@@ -30,6 +30,7 @@ size = Vector2(16, 64)
 radius = 24.0
 
 [node name="Roothollow" type="Node2D"]
+y_sort_enabled = true
 script = ExtResource("1_roothollow")
 
 [node name="Ground" type="TileMapLayer" parent="."]
@@ -49,8 +50,10 @@ z_index = -1
 collision_enabled = false
 
 [node name="Objects" type="TileMapLayer" parent="."]
+y_sort_enabled = true
 
 [node name="TreesBorder" type="TileMapLayer" parent="."]
+y_sort_enabled = true
 
 [node name="Entities" type="Node2D" parent="."]
 y_sort_enabled = true

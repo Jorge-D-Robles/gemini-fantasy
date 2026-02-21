@@ -179,7 +179,7 @@ func _setup_tilemap() -> void:
 	# Procedural floor detail — scattered transparent debris
 	var detail_noise := FastNoiseLite.new()
 	detail_noise.seed = OvergrownRuinsMap.GROUND_NOISE_SEED + 1
-	detail_noise.frequency = 0.15
+	detail_noise.frequency = 0.04
 	MapBuilder.scatter_decorations(
 		_ground_detail_layer,
 		OvergrownRuinsMap.COLS, OvergrownRuinsMap.ROWS,
@@ -190,7 +190,7 @@ func _setup_tilemap() -> void:
 	# Procedural debris — scattered rubble, vines, moss
 	var debris_noise := FastNoiseLite.new()
 	debris_noise.seed = OvergrownRuinsMap.GROUND_NOISE_SEED + 2
-	debris_noise.frequency = 0.2
+	debris_noise.frequency = 0.05
 	MapBuilder.scatter_decorations(
 		_ground_debris_layer,
 		OvergrownRuinsMap.COLS, OvergrownRuinsMap.ROWS,

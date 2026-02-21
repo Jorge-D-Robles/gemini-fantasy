@@ -23,8 +23,8 @@ See root `CLAUDE.md` for project-wide conventions.
 **Node hierarchy:**
 ```
 Player (CharacterBody2D) — class_name Player
-  CollisionShape2D
-  AnimatedSprite2D         ← built at runtime from kael_overworld.png
+  CollisionShape2D         ← position=(0, 4) — collision at lower body
+  AnimatedSprite2D         ← built at runtime from kael_overworld.png, offset=(0, -8) for foot-level Y-sort
   InteractionRay (RayCast2D) ← 24px forward cast, updates with facing
   Camera2D
 ```

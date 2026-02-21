@@ -11,6 +11,7 @@ size = Vector2(112, 16)
 size = Vector2(112, 16)
 
 [node name="PrismfallApproach" type="Node2D"]
+y_sort_enabled = true
 script = ExtResource("1_approach")
 
 [node name="Ground" type="TileMapLayer" parent="."]

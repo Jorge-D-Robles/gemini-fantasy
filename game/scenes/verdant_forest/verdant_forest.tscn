@@ -26,6 +26,7 @@ text = "A weathered memorial stone, etched with the names of Roothollow's founde
 require_quest_id = &"elder_wisdom"
 
 [node name="VerdantForest" type="Node2D"]
+y_sort_enabled = true
 script = ExtResource("1_forest")
 
 [node name="Ground" type="TileMapLayer" parent="."]
@@ -41,9 +42,11 @@ z_index = -1
 collision_enabled = false
 
 [node name="Trees" type="TileMapLayer" parent="."]
+y_sort_enabled = true
 collision_enabled = true
 
 [node name="Objects" type="TileMapLayer" parent="."]
+y_sort_enabled = true
 
 [node name="Entities" type="Node2D" parent="."]
 y_sort_enabled = true
