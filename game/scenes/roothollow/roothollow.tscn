@@ -8,12 +8,12 @@
 [ext_resource type="PackedScene" uid="uid://c4interact001" path="res://entities/interactable/interactable.tscn" id="5_interact"]
 [ext_resource type="Script" path="res://events/garrick_recruitment.gd" id="6_garrick"]
 [ext_resource type="Texture2D" path="res://assets/sprites/buildings/signpost.png" id="14_signpost"]
-[ext_resource type="Texture2D" path="res://assets/sprites/characters/npc_char2.png" id="16_npc2"]
-[ext_resource type="Texture2D" path="res://assets/sprites/characters/elder.png" id="20_elder"]
-[ext_resource type="Texture2D" path="res://assets/sprites/characters/knights.png" id="21_knights"]
-[ext_resource type="Texture2D" path="res://assets/sprites/characters/farmer.png" id="22_farmer"]
-[ext_resource type="Texture2D" path="res://assets/sprites/characters/children.png" id="23_children"]
-[ext_resource type="Texture2D" path="res://assets/sprites/characters/household.png" id="24_household"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/wren_overworld.png" id="16_wren"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/thessa_overworld.png" id="20_thessa"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/garrick_overworld.png" id="21_garrick"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/bram_overworld.png" id="22_bram"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/lina_overworld.png" id="23_lina"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/maren_overworld.png" id="24_maren"]
 
 [sub_resource type="Resource" id="save_point_strat"]
 script = ExtResource("17_save_strat")
@@ -75,7 +75,7 @@ npc_name = "Innkeeper"
 dialogue_lines = PackedStringArray("Welcome to the Roothollow Inn! You look exhausted. Let me tend to your wounds.")
 
 [node name="Sprite2D" type="Sprite2D" parent="Entities/InnkeeperNPC" index="1"]
-texture = ExtResource("24_household")
+texture = ExtResource("24_maren")
 hframes = 3
 vframes = 4
 frame = 1
@@ -87,7 +87,7 @@ npc_name = "Shopkeeper"
 dialogue_lines = PackedStringArray("Supplies are running low with the roads so dangerous. I'm afraid the shop is closed for now.")
 
 [node name="Sprite2D" type="Sprite2D" parent="Entities/ShopkeeperNPC" index="1"]
-texture = ExtResource("22_farmer")
+texture = ExtResource("22_bram")
 hframes = 3
 vframes = 4
 frame = 1
@@ -99,7 +99,7 @@ npc_name = "Elder"
 dialogue_lines = PackedStringArray("The Severance changed everything. The echoes... they used to be harmless memories. Now they hunger.", "Some say it started when the Great Resonance Crystal in the old capital shattered. But nobody knows for sure.")
 
 [node name="Sprite2D" type="Sprite2D" parent="Entities/TownfolkNPC1" index="1"]
-texture = ExtResource("20_elder")
+texture = ExtResource("20_thessa")
 hframes = 3
 vframes = 4
 frame = 1
@@ -111,7 +111,7 @@ npc_name = "Scout"
 dialogue_lines = PackedStringArray("I've seen strange lights in the ruins to the west. Echo Fragments are appearing more frequently.", "Be careful if you venture beyond the forest. The creatures there are getting bolder.")
 
 [node name="Sprite2D" type="Sprite2D" parent="Entities/TownfolkNPC2" index="1"]
-texture = ExtResource("16_npc2")
+texture = ExtResource("16_wren")
 hframes = 3
 vframes = 4
 frame = 1
@@ -123,7 +123,7 @@ npc_name = "Garrick"
 dialogue_lines = PackedStringArray("Hmm. Another traveler passing through. These roads aren't what they used to be.", "If you're heading toward the ruins, I'd advise caution. The echoes there are... restless.")
 
 [node name="Sprite2D" type="Sprite2D" parent="Entities/GarrickNPC" index="1"]
-texture = ExtResource("21_knights")
+texture = ExtResource("21_garrick")
 hframes = 3
 vframes = 4
 frame = 1
@@ -135,7 +135,7 @@ npc_name = "Lina"
 dialogue_lines = PackedStringArray("Kael! Kael! Look what I found by the river!")
 
 [node name="Sprite2D" type="Sprite2D" parent="Entities/LinaNPC" index="1"]
-texture = ExtResource("23_children")
+texture = ExtResource("23_lina")
 hframes = 3
 vframes = 4
 frame = 1

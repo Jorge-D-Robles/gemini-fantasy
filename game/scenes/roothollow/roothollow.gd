@@ -163,7 +163,6 @@ func _setup_tilemap() -> void:
 		MapBuilder.MUSHROOM_VILLAGE,
 		MapBuilder.FOREST_OBJECTS,
 		MapBuilder.STONE_OBJECTS,
-		MapBuilder.TREE_OBJECTS,
 	]
 	MapBuilder.apply_tileset(
 		[

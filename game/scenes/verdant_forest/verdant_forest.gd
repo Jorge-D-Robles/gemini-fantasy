@@ -109,6 +109,11 @@ func _ready() -> void:
 	campfire.one_time = false
 	campfire.indicator_type = Interactable.IndicatorType.INTERACT
 	campfire.position = compute_campfire_position()
+	var campfire_tex := load(
+		"res://assets/sprites/objects/campfire.png",
+	) as Texture2D
+	if campfire_tex:
+		campfire.get_node("Sprite2D").texture = campfire_tex
 	$Entities.add_child(campfire)
 
 	# Child's Laughter echo — one-time pickup near the campfire clearing
@@ -127,6 +132,15 @@ func _ready() -> void:
 	echo_interactable.one_time = true
 	echo_interactable.indicator_type = Interactable.IndicatorType.INTERACT
 	echo_interactable.position = compute_forest_echo_position()
+	var echo_sheet := load(MapBuilder.STONE_OBJECTS) as Texture2D
+	if echo_sheet:
+		var atlas := AtlasTexture.new()
+		atlas.atlas = echo_sheet
+		atlas.region = Rect2(0, 32, 16, 16)
+		echo_interactable.get_node("Sprite2D").texture = atlas
+		echo_interactable.get_node("Sprite2D").modulate = Color(
+			0.6, 0.8, 1.2, 0.9,
+		)
 	$Entities.add_child(echo_interactable)
 
 	# Companion followers
@@ -314,7 +328,6 @@ func _setup_tilemap() -> void:
 		MapBuilder.TF_TERRAIN,           # source 0 — flat 16×16 ground + path
 		MapBuilder.FOREST_OBJECTS,       # source 1 — trees, trunks, canopies
 		MapBuilder.STONE_OBJECTS,        # source 2 — detail: rocks, flowers
-		MapBuilder.TREE_OBJECTS,         # source 3 — individual tree objects
 	]
 	var solid: Dictionary = {
 		1: [
@@ -363,8 +376,8 @@ func _setup_tilemap() -> void:
 	MapBuilder.disable_collision(_ground_detail_layer)
 
 	# Structural layers — authored, gameplay/navigation critical
-	# Paths: dirt path overlay (source 0)
-	MapBuilder.build_layer(_paths_layer, VerdantForestMap.PATH_MAP, VerdantForestMap.PATH_LEGEND)
+	# Paths: dirt path overlay (source 0) — position-hashed 4 variants
+	_fill_paths_with_variants(_paths_layer)
 	MapBuilder.disable_collision(_paths_layer)
 	# Trees: dense canopy fill for impenetrable borders (source 1)
 	MapBuilder.build_layer(_trees_layer, VerdantForestMap.TREE_MAP, VerdantForestMap.TREE_LEGEND, 1)
@@ -377,6 +390,16 @@ func _setup_tilemap() -> void:
 		_above_player_layer, VerdantForestMap.CANOPY_MAP, VerdantForestMap.CANOPY_LEGEND, 1
 	)
 	MapBuilder.disable_collision(_above_player_layer)
+
+
+func _fill_paths_with_variants(layer: TileMapLayer) -> void:
+	for y: int in range(VerdantForestMap.PATH_MAP.size()):
+		var row: String = VerdantForestMap.PATH_MAP[y]
+		for x: int in range(row.length()):
+			if row[x] == "P":
+				var atlas: Vector2i = VerdantForestMap.pick_path_tile(x, y)
+				layer.set_cell(Vector2i(x, y), 0, atlas)
+	layer.update_internals()
 
 
 ## Fill ground layer using biome noise + position hash for tile variant selection.

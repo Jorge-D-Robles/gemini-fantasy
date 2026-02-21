@@ -42,9 +42,10 @@ const BIOME_TILES: Dictionary = {
 }
 
 # Noise thresholds — sorted high-to-low; first match wins.
+# Dirt threshold tightened from -0.15 to -0.25 so dirt patches stay at map edges.
 const OPEN_BIOME_THRESHOLDS: Array[Dictionary] = [
 	{"threshold": 0.15,  "biome": Biome.BRIGHT_GREEN},
-	{"threshold": -0.15, "biome": Biome.MUTED_GREEN},
+	{"threshold": -0.25, "biome": Biome.MUTED_GREEN},
 	{"threshold": -1.0,  "biome": Biome.DIRT},
 ]
 
@@ -66,10 +67,18 @@ const DETAIL_ENTRIES: Array[Dictionary] = [
 
 # ---------- TILE LEGENDS ----------
 
-# Path layer — sandy/tan dirt path tile from terrain.png row 9 (source 0)
+# Path layer — sandy/tan dirt path tiles from terrain.png row 9 (source 0)
+# Single-legend entry used by build_layer(); variant selection in _fill_paths.
 const PATH_LEGEND: Dictionary = {
 	"P": Vector2i(2, 9),
 }
+
+# 4 sandy/tan variants for position-hashed path variety.
+const PATH_TILES: Array[Vector2i] = [
+	Vector2i(1, 9), Vector2i(2, 9),
+	Vector2i(3, 9), Vector2i(4, 9),
+]
+const PATH_HASH_SEED: int = 77779
 
 # Dense forest fill — canopy center for impenetrable borders
 # (FOREST_OBJECTS, source 1)
@@ -281,3 +290,9 @@ static func pick_tile(noise_val: float, x: int, y: int) -> Vector2i:
 	var variants: Array = BIOME_TILES[biome]
 	var idx: int = abs(x * 73 + y * 31 + VARIANT_HASH_SEED) % variants.size()
 	return variants[idx]
+
+
+## Pick a path tile variant for (x, y) using position hash.
+static func pick_path_tile(x: int, y: int) -> Vector2i:
+	var idx: int = abs(x * 73 + y * 31 + PATH_HASH_SEED) % PATH_TILES.size()
+	return PATH_TILES[idx]
