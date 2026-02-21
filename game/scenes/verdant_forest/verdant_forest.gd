@@ -345,7 +345,15 @@ func _setup_tilemap() -> void:
 	)
 	MapBuilder.disable_collision(_ground_layer)
 
-	# Procedural detail — scattered rocks and flowers (source 2)
+	# Collect grass cells — detail scatter is biome-constrained to grass only,
+	# preventing rocks and flowers from appearing on dirt or dark earth.
+	var grass_cells: Array[Vector2i] = []
+	for cell: Vector2i in _ground_layer.get_used_cells():
+		var atlas: Vector2i = _ground_layer.get_cell_atlas_coords(cell)
+		if atlas == Vector2i(0, 8) or atlas == Vector2i(0, 9):
+			grass_cells.append(cell)
+
+	# Procedural detail — rocks and flowers only on grass biome cells (source 2)
 	var detail_noise := FastNoiseLite.new()
 	detail_noise.seed = VerdantForestMap.GROUND_NOISE_SEED + 1
 	detail_noise.frequency = 0.18
@@ -353,6 +361,7 @@ func _setup_tilemap() -> void:
 		_ground_detail_layer,
 		VerdantForestMap.COLS, VerdantForestMap.ROWS,
 		detail_noise, VerdantForestMap.DETAIL_ENTRIES,
+		grass_cells,
 	)
 	MapBuilder.disable_collision(_ground_detail_layer)
 

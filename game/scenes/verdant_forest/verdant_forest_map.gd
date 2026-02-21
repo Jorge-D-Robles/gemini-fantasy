@@ -17,10 +17,9 @@ const GROUND_NOISE_SEED: int = 77777
 const GROUND_NOISE_FREQ: float = 0.05
 const GROUND_NOISE_OCTAVES: int = 3
 const GROUND_ENTRIES: Array[Dictionary] = [
-	{"threshold": 0.2,  "atlas": Vector2i(0, 8), "foliage": true},   # G = bright green
-	{"threshold": 0.0,  "atlas": Vector2i(0, 9), "foliage": true},   # g = muted green
-	{"threshold": -0.3, "atlas": Vector2i(0, 2), "foliage": false},  # D = dirt/earth
-	{"threshold": -1.0, "atlas": Vector2i(0, 6), "foliage": false},  # E = dark earth (catch-all)
+	{"threshold": 0.1,  "atlas": Vector2i(0, 8), "foliage": true},   # G = bright green (~45%)
+	{"threshold": -0.4, "atlas": Vector2i(0, 9), "foliage": true},   # g = muted green (~25%)
+	{"threshold": -1.0, "atlas": Vector2i(0, 2), "foliage": false},  # D = dirt (catch-all ~30%)
 ]
 
 # Foliage noise — clustered grove placement on grass biomes
