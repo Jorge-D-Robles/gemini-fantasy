@@ -224,8 +224,10 @@ func _fill_ground_with_variants(layer: TileMapLayer, noise: FastNoiseLite) -> vo
 
 | Source | Constant | Asset | Purpose |
 |--------|----------|-------|---------|
-| 0 | `TF_TERRAIN` | `TimeFantasy_TILES/TILESETS/terrain.png` | Flat 16×16 ground: scrubland, bare earth, sandy path |
+| 0 | `TF_TERRAIN` | `TimeFantasy_TILES/TILESETS/terrain.png` | Flat 16×16: gray stone ground (row 8), amber earth (row 6), dark earth (row 11), sandy path (row 9) |
 | 1 | `STONE_OBJECTS` | `tf_ff_tileB_stone.png` | Scattered rocks (detail layer) |
+
+**Ground:** Biome noise (3 zones: AMBER_EARTH/GRAY_STONE/DARK_EARTH) + position hash for per-cell variety. Gray stone dominant, amber earth rare. Path uses position-hashed sandy/tan from row 9. No A5 sheets.
 
 **Layers:** Ground, GroundDetail, Paths (no trees/AbovePlayer — open steppe)
 **Encounters:** 10 entries — gale_harpy, cinder_wisp, hollow_specter, ancient_sentinel, ember_hound + mixed

@@ -9,7 +9,10 @@ Started: 2026-02-20
 
 ## Active
 
-*(none — picking next task)*
+- **T-0255**: Redo Prismfall Approach tilemap — complete TF_TERRAIN migration
+  - Assigned: claude
+  - Status: in-progress
+  - Started: 2026-02-21
 
 ---
 

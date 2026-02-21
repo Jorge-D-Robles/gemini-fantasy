@@ -101,8 +101,8 @@ func _start_scene_music() -> void:
 
 func _setup_tilemap() -> void:
 	var atlas_paths: Array[String] = [
-		MapBuilder.FAIRY_FOREST_A5_A,  # source 0 — ground, path
-		MapBuilder.STONE_OBJECTS,      # source 1 — scattered rocks (detail)
+		MapBuilder.TF_TERRAIN,    # source 0 — ground biomes, path
+		MapBuilder.STONE_OBJECTS, # source 1 — scattered rocks (detail)
 	]
 	MapBuilder.apply_tileset(
 		[_ground_layer, _ground_detail_layer, _paths_layer] as Array[TileMapLayer],
@@ -110,23 +110,15 @@ func _setup_tilemap() -> void:
 		{},
 	)
 
-	# Procedural ground — two-pass biome + foliage (no foliage on barren steppes)
+	# Procedural ground — biome noise + position hash (no foliage on barren steppes)
 	var ground_noise := FastNoiseLite.new()
 	ground_noise.seed = PrismfallApproachMap.GROUND_NOISE_SEED
 	ground_noise.frequency = PrismfallApproachMap.GROUND_NOISE_FREQ
 	ground_noise.fractal_octaves = PrismfallApproachMap.GROUND_NOISE_OCTAVES
-	var foliage_noise := FastNoiseLite.new()
-	foliage_noise.seed = PrismfallApproachMap.FOLIAGE_NOISE_SEED
-	foliage_noise.frequency = PrismfallApproachMap.FOLIAGE_NOISE_FREQ
-	MapBuilder.build_procedural_wilds(
-		_ground_layer, _ground_detail_layer,
-		PrismfallApproachMap.COLS, PrismfallApproachMap.ROWS,
-		ground_noise, foliage_noise,
-		PrismfallApproachMap.GROUND_ENTRIES, [],
-	)
+	_fill_ground_with_variants(_ground_layer, ground_noise)
 	MapBuilder.disable_collision(_ground_layer)
 
-	# Scattered rock detail over the steppe biome (biome-agnostic for steppes)
+	# Scattered rock detail over the steppe biome
 	var detail_noise := FastNoiseLite.new()
 	detail_noise.seed = PrismfallApproachMap.GROUND_NOISE_SEED + 1
 	detail_noise.frequency = 0.15
@@ -137,10 +129,27 @@ func _setup_tilemap() -> void:
 	)
 	MapBuilder.disable_collision(_ground_detail_layer)
 
-	# Authored path — amber cobble road (structural)
-	MapBuilder.build_layer(
-		_paths_layer,
-		PrismfallApproachMap.PATH_MAP,
-		PrismfallApproachMap.PATH_LEGEND,
-	)
+	# Path — sandy/tan road with position-hashed variety
+	_fill_paths_with_variants(_paths_layer)
 	MapBuilder.disable_collision(_paths_layer)
+
+
+func _fill_ground_with_variants(
+	layer: TileMapLayer, noise: FastNoiseLite,
+) -> void:
+	for y: int in range(PrismfallApproachMap.ROWS):
+		for x: int in range(PrismfallApproachMap.COLS):
+			var noise_val: float = noise.get_noise_2d(float(x), float(y))
+			var atlas: Vector2i = PrismfallApproachMap.pick_tile(noise_val, x, y)
+			layer.set_cell(Vector2i(x, y), 0, atlas)
+	layer.update_internals()
+
+
+func _fill_paths_with_variants(layer: TileMapLayer) -> void:
+	for y: int in range(PrismfallApproachMap.PATH_MAP.size()):
+		var row: String = PrismfallApproachMap.PATH_MAP[y]
+		for x: int in range(row.length()):
+			if row[x] == "P":
+				var atlas: Vector2i = PrismfallApproachMap.pick_path_tile(x, y)
+				layer.set_cell(Vector2i(x, y), 0, atlas)
+	layer.update_internals()
