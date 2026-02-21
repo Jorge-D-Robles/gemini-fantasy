@@ -9,7 +9,7 @@ Started: 2026-02-20
 
 ## Active
 
-*(none — picking next task)*
+*(none)*
 
 ---
 
@@ -17,7 +17,6 @@ Started: 2026-02-20
 
 ### Tilemap Overhaul — Top Priority Block
 
-- **T-0256**: Redo Overgrown Capital tilemap — TF_DUNGEON + B-sheets, no A5
 - **T-0257**: Final purge — remove all A5 constants from map_builder.gd after all scenes migrated
 
 ### Other
@@ -30,6 +29,7 @@ Started: 2026-02-20
 
 ## Done This Sprint
 
+- T-0256: Redo Overgrown Capital tilemap — TF_DUNGEON flat tiles + RUINS_OBJECTS B-sheet scatter, position-hashed floor/walls, 14 tests 153 assertions
 - T-0255: Redo Prismfall Approach tilemap — TF_TERRAIN 3-biome steppe ground (gray stone/amber earth/dark earth) + sandy path hash, 16 tests
 - T-0254: Redo Overgrown Ruins tilemap — TF_DUNGEON flat tiles + RUINS_OBJECTS B-sheet scatter, position-hashed floor/walls, 14 tests 91 assertions
 - T-0253: Redo Roothollow tilemap — TF_TERRAIN biome+hash ground, path variants, STONE_OBJECTS flowers, 10 tests

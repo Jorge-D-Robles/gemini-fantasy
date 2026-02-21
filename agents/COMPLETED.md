@@ -16,6 +16,7 @@ T-0223 | 2026-02-20 | Seed AbilityData .tres files for Nyx and Lyra (4-ability s
 T-0105 | 2026-02-20 | Build Prismfall Approach area (Crystalline Steppes) | _map.gd + _encounters.gd + .gd + .tscn + ScenePaths constant, 13 tests, 830 total passing
 T-0252 | 2026-02-21 | Enhance tilemap review workflow | Adversarial reviewer: JRPG reference search step + A5 instant-fail check + rule #8; build-tilemap skill: mandatory dual reviewer gate step (claude)
 T-0253 | 2026-02-21 | Redo Roothollow tilemap | TF_TERRAIN biome+hash ground, 4-variant path tiles, STONE_OBJECTS flowers/pebbles, organic canopy, 10 tests 80 assertions (claude)
+T-0256 | 2026-02-21 | Redo Overgrown Capital tilemap | TF_DUNGEON flat tiles (brown earth floor + blue-gray walls) + RUINS_OBJECTS B-sheet scatter, position-hashed variants, 14 tests 153 assertions (claude)
 T-0255 | 2026-02-21 | Redo Prismfall Approach tilemap | TF_TERRAIN 3-biome steppe (gray stone row 8 + amber earth row 6 + dark earth row 11) + sandy path hash row 9, 16 tests (claude)
 T-0254 | 2026-02-21 | Redo Overgrown Ruins tilemap | TF_DUNGEON flat tiles (brown earth floor + blue-gray walls) + RUINS_OBJECTS B-sheet scatter, position-hashed variants, 14 tests 91 assertions (claude)
 T-0251 | 2026-02-21 | Hard-ban A5 sheets | AGENT_RULES HARD BANS section + deprecation comments on all 15 A5 constants in map_builder.gd (claude)
