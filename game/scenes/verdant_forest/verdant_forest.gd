@@ -311,10 +311,10 @@ func _start_scene_music() -> void:
 
 func _setup_tilemap() -> void:
 	var atlas_paths: Array[String] = [
-		MapBuilder.FAIRY_FOREST_A5_A,   # source 0 — ground, path
+		MapBuilder.TF_TERRAIN,           # source 0 — flat 16×16 ground + path
 		MapBuilder.FOREST_OBJECTS,       # source 1 — trees, trunks, canopies
 		MapBuilder.STONE_OBJECTS,        # source 2 — detail: rocks, flowers
-		MapBuilder.TREE_OBJECTS,         # source 3 — reserved for pine trees
+		MapBuilder.TREE_OBJECTS,         # source 3 — individual tree objects
 	]
 	var solid: Dictionary = {
 		1: [
@@ -333,30 +333,27 @@ func _setup_tilemap() -> void:
 		solid,
 	)
 
-	# Procedural ground — organic noise prevents carpet-bombing repetition
+	# Procedural ground — biome noise + position hash variant selection.
+	# Uses TF_TERRAIN flat tiles: each variant is visually distinct, no seam artifacts.
 	var ground_noise := FastNoiseLite.new()
 	ground_noise.seed = VerdantForestMap.GROUND_NOISE_SEED
 	ground_noise.frequency = VerdantForestMap.GROUND_NOISE_FREQ
 	ground_noise.fractal_octaves = VerdantForestMap.GROUND_NOISE_OCTAVES
-	MapBuilder.build_noise_layer(
-		_ground_layer,
-		VerdantForestMap.COLS, VerdantForestMap.ROWS,
-		ground_noise, VerdantForestMap.GROUND_ENTRIES,
-	)
+	_fill_ground_with_variants(_ground_layer, ground_noise)
 	MapBuilder.disable_collision(_ground_layer)
 
-	# Collect grass cells — detail scatter is biome-constrained to grass only,
-	# preventing rocks and flowers from appearing on dirt or dark earth.
+	# Collect grass cells — detail scatter is biome-constrained to grass only.
+	# terrain.png: rows 1-2 are green grass biomes.
 	var grass_cells: Array[Vector2i] = []
 	for cell: Vector2i in _ground_layer.get_used_cells():
 		var atlas: Vector2i = _ground_layer.get_cell_atlas_coords(cell)
-		if atlas == Vector2i(0, 8) or atlas == Vector2i(0, 9):
+		if atlas.y == 1 or atlas.y == 2:
 			grass_cells.append(cell)
 
 	# Procedural detail — rocks and flowers only on grass biome cells (source 2)
 	var detail_noise := FastNoiseLite.new()
-	detail_noise.seed = VerdantForestMap.GROUND_NOISE_SEED + 1
-	detail_noise.frequency = 0.18
+	detail_noise.seed = VerdantForestMap.DETAIL_NOISE_SEED
+	detail_noise.frequency = VerdantForestMap.DETAIL_NOISE_FREQ
 	MapBuilder.scatter_decorations(
 		_ground_detail_layer,
 		VerdantForestMap.COLS, VerdantForestMap.ROWS,
@@ -380,3 +377,17 @@ func _setup_tilemap() -> void:
 		_above_player_layer, VerdantForestMap.CANOPY_MAP, VerdantForestMap.CANOPY_LEGEND, 1
 	)
 	MapBuilder.disable_collision(_above_player_layer)
+
+
+## Fill ground layer using biome noise + position hash for tile variant selection.
+##
+## Samples the noise value per cell, looks up the biome from OPEN_BIOME_THRESHOLDS,
+## then picks a column variant within BIOME_TILES using a deterministic hash of (x, y).
+## This produces organic patches with internal visual variety — no carpet-bombing.
+func _fill_ground_with_variants(layer: TileMapLayer, noise: FastNoiseLite) -> void:
+	for y: int in range(VerdantForestMap.ROWS):
+		for x: int in range(VerdantForestMap.COLS):
+			var noise_val: float = noise.get_noise_2d(float(x), float(y))
+			var atlas: Vector2i = VerdantForestMap.pick_tile(noise_val, x, y)
+			layer.set_cell(Vector2i(x, y), 0, atlas)
+	layer.update_internals()

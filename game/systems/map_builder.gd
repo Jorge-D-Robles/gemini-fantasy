@@ -9,7 +9,18 @@ extends RefCounted
 
 const TILE_SIZE: int = 16
 
+# --- TimeFantasy_TILES flat 16x16 sheets (NOT RPGMaker autotile format) ---
+# Use these for ground layers — every tile is a standalone variant, no seam artifacts.
+# Flat section: cols 0-20 approx; AUTO-TILES section cols 22+ — do not use.
+const TF_TERRAIN: String = "res://assets/TimeFantasy_TILES/TILESETS/terrain.png"
+const TF_OUTSIDE: String = "res://assets/TimeFantasy_TILES/TILESETS/outside.png"
+const TF_DUNGEON: String = "res://assets/TimeFantasy_TILES/TILESETS/dungeon.png"
+const TF_CASTLE: String = "res://assets/TimeFantasy_TILES/TILESETS/castle.png"
+const TF_INSIDE: String = "res://assets/TimeFantasy_TILES/TILESETS/inside.png"
+const TF_WORLD: String = "res://assets/TimeFantasy_TILES/TILESETS/world.png"
+
 # --- Fairy Forest ---
+# A5 sheets (legacy — RPGMaker autotile format; use TF_TERRAIN for ground instead)
 const FAIRY_FOREST_A5_A: String = "res://assets/tilesets/tf_ff_tileA5_a.png"
 const FAIRY_FOREST_A5_B: String = "res://assets/tilesets/tf_ff_tileA5_b.png"
 const FOREST_OBJECTS: String = "res://assets/tilesets/tf_ff_tileB_forest.png"

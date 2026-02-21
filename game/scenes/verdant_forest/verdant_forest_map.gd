@@ -3,6 +3,17 @@ extends RefCounted
 
 ## Tilemap data constants for Verdant Forest.
 ## All legends and map arrays live here so verdant_forest.gd stays concise.
+##
+## Ground uses TimeFantasy_TILES/TILESETS/terrain.png (flat 16×16 grid).
+## Each biome maps to a row in terrain.png with multiple column variants.
+## Variants are picked by position hash for organic, non-repeating coverage.
+
+# Biome zones — noise threshold → biome, position hash → column variant.
+# terrain.png flat-tile rows (avoid cols 22+ which are RPGMaker auto-tiles):
+#   Row 1: bright green grass     (cols 2-11)
+#   Row 2: muted/shaded green     (cols 1-11)
+#   Row 6: warm brown earth/dirt  (cols 1-8)
+enum Biome { BRIGHT_GREEN, MUTED_GREEN, DIRT }
 
 # Map dimensions
 const COLS: int = 40
@@ -10,37 +21,54 @@ const ROWS: int = 25
 
 # ---------- PROCEDURAL GROUND CONFIG ----------
 
-# Ground noise — organic terrain (source 0)
-# G = bright green (noise > 0.2), g = muted green (0.0..0.2),
-# D = dirt (-0.3..0.0), E = dark earth (catch-all)
+# Ground noise — organic terrain patches (source 0 = TF_TERRAIN).
 const GROUND_NOISE_SEED: int = 77777
-const GROUND_NOISE_FREQ: float = 0.05
-const GROUND_NOISE_OCTAVES: int = 3
-const GROUND_ENTRIES: Array[Dictionary] = [
-	{"threshold": 0.1,  "atlas": Vector2i(0, 8), "foliage": true},   # G = bright green (~45%)
-	{"threshold": -0.4, "atlas": Vector2i(0, 9), "foliage": true},   # g = muted green (~25%)
-	{"threshold": -1.0, "atlas": Vector2i(0, 2), "foliage": false},  # D = dirt (catch-all ~30%)
+const GROUND_NOISE_FREQ: float = 0.06
+const GROUND_NOISE_OCTAVES: int = 4
+
+const BIOME_TILES: Dictionary = {
+	Biome.BRIGHT_GREEN: [
+		Vector2i(2, 1), Vector2i(3, 1), Vector2i(4, 1), Vector2i(5, 1),
+		Vector2i(6, 1), Vector2i(7, 1), Vector2i(8, 1),
+	],
+	Biome.MUTED_GREEN: [
+		Vector2i(1, 2), Vector2i(2, 2), Vector2i(3, 2), Vector2i(4, 2),
+		Vector2i(5, 2), Vector2i(6, 2), Vector2i(7, 2),
+	],
+	Biome.DIRT: [
+		Vector2i(1, 6), Vector2i(2, 6), Vector2i(3, 6),
+		Vector2i(4, 6), Vector2i(5, 6), Vector2i(6, 6),
+	],
+}
+
+# Noise thresholds — sorted high-to-low; first match wins.
+const OPEN_BIOME_THRESHOLDS: Array[Dictionary] = [
+	{"threshold": 0.15,  "biome": Biome.BRIGHT_GREEN},
+	{"threshold": -0.15, "biome": Biome.MUTED_GREEN},
+	{"threshold": -1.0,  "biome": Biome.DIRT},
 ]
 
-# Foliage noise — clustered grove placement on grass biomes
-const FOLIAGE_NOISE_SEED: int = 99999
-const FOLIAGE_NOISE_FREQ: float = 0.15
-const FOLIAGE_THRESHOLD: float = 0.4
+# Position hash seed — mixed with (x, y) to pick column variant within a biome.
+const VARIANT_HASH_SEED: int = 31415
 
-# Detail scatter — rocks, flowers, leaves (source 2, ~26% total coverage)
+# Detail scatter — rocks, flowers, leaves (source 2 = STONE_OBJECTS).
+# Sparse: ~8% total coverage, biome-constrained to grass cells only.
+const DETAIL_NOISE_SEED: int = 77778
+const DETAIL_NOISE_FREQ: float = 0.22
 const DETAIL_ENTRIES: Array[Dictionary] = [
-	{"atlas": Vector2i(0, 0), "source_id": 2, "density": 0.07},  # small rock
-	{"atlas": Vector2i(1, 0), "source_id": 2, "density": 0.06},  # rock variant
-	{"atlas": Vector2i(0, 1), "source_id": 2, "density": 0.05},  # orange flower
-	{"atlas": Vector2i(2, 1), "source_id": 2, "density": 0.04},  # flower variant
-	{"atlas": Vector2i(0, 2), "source_id": 2, "density": 0.04},  # green leaf
+	{"atlas": Vector2i(0, 0), "source_id": 2, "density": 0.02},
+	{"atlas": Vector2i(1, 0), "source_id": 2, "density": 0.015},
+	{"atlas": Vector2i(0, 1), "source_id": 2, "density": 0.015},
+	{"atlas": Vector2i(2, 1), "source_id": 2, "density": 0.01},
+	{"atlas": Vector2i(0, 2), "source_id": 2, "density": 0.01},
+	{"atlas": Vector2i(1, 2), "source_id": 2, "density": 0.01},
 ]
 
 # ---------- TILE LEGENDS ----------
 
-# Path layer — single dirt path tile (A5_A row 4, source 0)
+# Path layer — sandy/tan dirt path tile from terrain.png row 9 (source 0)
 const PATH_LEGEND: Dictionary = {
-	"P": Vector2i(0, 4),
+	"P": Vector2i(2, 9),
 }
 
 # Dense forest fill — canopy center for impenetrable borders
@@ -119,17 +147,9 @@ const DETAIL_LEGEND: Dictionary = {
 }
 
 # ---------- MAP DATA (40 cols x 25 rows) ----------
-# Ground and detail are now procedural — see noise configs above.
+# Ground is procedural — see noise configs and BIOME_TILES above.
 
 # Dense forest borders with organic clearing and chokepoint exits
-# Rows 0-2:  solid forest wall (north border)
-# Rows 3-4:  forest thins — scattered gaps appear
-# Rows 5-8:  clearing for Iris zone — open interior, tree edges
-# Row 9:     scattered tree clusters below clearing
-# Rows 10-11: main east-west corridor (fully open, passage to edges)
-# Row 12:    scattered tree clusters above south forest
-# Rows 13-14: forest returns, dense transition
-# Rows 15-24: solid forest wall (south border)
 const TREE_MAP: Array[String] = [
 	"TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",
 	"TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",
@@ -159,8 +179,6 @@ const TREE_MAP: Array[String] = [
 ]
 
 # Individual tree trunks at clearing edges (FOREST_OBJECTS, source 1)
-# 4 variants (A-D) for visual variety. Collision blocks player.
-# Vertical alignment: trunk row Y sits below canopy rows Y-2, Y-1.
 const TRUNK_MAP: Array[String] = [
 	"                                        ",
 	"                                        ",
@@ -189,9 +207,7 @@ const TRUNK_MAP: Array[String] = [
 	"                                        ",
 ]
 
-# Tree canopies on AbovePlayer — 4 types (FOREST_OBJECTS, source 1)
-# Each 2x2 canopy sits 1-2 rows above its trunk position.
-# Player walks under these for depth effect.
+# Tree canopies on AbovePlayer — placed 1-2 rows above trunk (FOREST_OBJECTS, source 1)
 const CANOPY_MAP: Array[String] = [
 	"                                        ",
 	"                                        ",
@@ -249,4 +265,19 @@ const PATH_MAP: Array[String] = [
 	"                                        ",
 ]
 
-# Ground detail is now procedural — see DETAIL_ENTRIES above.
+# ---------- STATIC HELPERS ----------
+
+## Return the Biome int for a given noise value.
+static func get_biome_for_noise(noise_val: float) -> int:
+	for entry: Dictionary in OPEN_BIOME_THRESHOLDS:
+		if noise_val >= float(entry.get("threshold", -1.0)):
+			return int(entry.get("biome", Biome.DIRT))
+	return Biome.DIRT
+
+
+## Pick a tile atlas coord for (x, y) using noise + position hash.
+static func pick_tile(noise_val: float, x: int, y: int) -> Vector2i:
+	var biome: int = get_biome_for_noise(noise_val)
+	var variants: Array = BIOME_TILES[biome]
+	var idx: int = abs(x * 73 + y * 31 + VARIANT_HASH_SEED) % variants.size()
+	return variants[idx]
