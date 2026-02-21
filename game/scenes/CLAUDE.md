@@ -10,6 +10,7 @@ See root `CLAUDE.md` for project-wide conventions and tilemap rules.
 | `overgrown_ruins/` | `overgrown_ruins.tscn` | Dungeon/ruins | Game start — Lyra discovery, Memory Bloom encounters |
 | `verdant_forest/` | `verdant_forest.tscn` | Overworld forest | Connects ruins <-> town, Iris recruitment, 6-enemy pool |
 | `roothollow/` | `roothollow.tscn` | Town hub | Safe zone, NPCs, Garrick recruitment, no encounters |
+| `prismfall_approach/` | `prismfall_approach.tscn` | Overworld steppes | Crystalline Steppes south of Verdant Forest, 5-enemy pool |
 
 ## Standard Scene Pattern
 
@@ -136,6 +137,24 @@ func _setup_tilemap() -> void:
 **NPCs:** Maren (innkeeper, heals party), Bram (shop), Elder Thessa, Wren, Garrick (pre-recruit), Lina
 **Flag-reactive dialogue:** 4 states based on EventFlags — `default` -> `opening_lyra_discovered` -> `iris_recruited` -> `garrick_recruited`
 **Story:** `GarrickRecruitment` — requires `opening_lyra_discovered` AND `iris_recruited` flags
+
+### prismfall_approach/
+
+**Theme:** Open rocky Crystalline Steppes — steppe road leading south toward Prismfall canyon.
+**Map:** 40 cols x 24 rows (640x384 px)
+
+**Atlas Sources:**
+
+| Source | Constant | Asset | Purpose |
+|--------|----------|-------|---------|
+| 0 | `FAIRY_FOREST_A5_A` | `tf_ff_tileA5_a.png` | Ground (row 10 gray stone, row 2 amber, row 6 cliff), path (row 4) |
+| 1 | `STONE_OBJECTS` | `tf_ff_tileB_stone.png` | Scattered rocks (detail layer) |
+
+**Layers:** Ground, GroundDetail, Paths (no trees/AbovePlayer — open steppe)
+**Encounters:** 10 entries — gale_harpy, cinder_wisp, hollow_specter, ancient_sentinel, ember_hound + mixed
+**Modules:** `prismfall_approach_map.gd` (`PrismfallApproachMap`) — tilemap constants; `prismfall_approach_encounters.gd` (`PrismfallApproachEncounters`) — pool builder
+**BGM:** `Wandering Through Quiet Lands.ogg`
+**Transitions:** ExitToForest → verdant_forest (`spawn_from_prismfall`); ExitToPrismfall → future dungeon
 
 ## Scene Transition Protocol
 

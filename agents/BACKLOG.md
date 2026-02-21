@@ -1208,8 +1208,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0105
 - Title: Build Prismfall Approach area
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: high
 - Milestone: M1
 - Depends: T-0248

@@ -23,5 +23,6 @@ Started: 2026-02-20
 
 - T-0249: Chapter 7 "A Village Burns" story event scaffold
 - T-0223: Seed AbilityData .tres for Nyx (4) and Lyra (fragment_vision)
+- T-0105: Build Prismfall Approach area (Crystalline Steppes overworld scene)
 
 See `agents/COMPLETED.md` for the archive.

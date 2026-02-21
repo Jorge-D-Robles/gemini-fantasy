@@ -1,0 +1,65 @@
+[gd_scene load_steps=6 format=3 uid="uid://c4prism00001"]
+
+[ext_resource type="Script" path="res://scenes/prismfall_approach/prismfall_approach.gd" id="1_approach"]
+[ext_resource type="PackedScene" uid="uid://c4player00001" path="res://entities/player/player.tscn" id="2_player"]
+[ext_resource type="Script" path="res://systems/encounter/encounter_system.gd" id="3_encounter"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_exit_forest"]
+size = Vector2(112, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_exit_prismfall"]
+size = Vector2(112, 16)
+
+[node name="PrismfallApproach" type="Node2D"]
+script = ExtResource("1_approach")
+
+[node name="Ground" type="TileMapLayer" parent="."]
+collision_enabled = false
+z_index = -2
+
+[node name="GroundDetail" type="TileMapLayer" parent="."]
+collision_enabled = false
+z_index = -1
+
+[node name="Paths" type="TileMapLayer" parent="."]
+collision_enabled = false
+z_index = -1
+
+[node name="Entities" type="Node2D" parent="."]
+z_index = 1
+
+[node name="Player" parent="Entities" instance=ExtResource("2_player")]
+position = Vector2(320, 48)
+
+[node name="Camera2D" parent="Entities/Player" index="3"]
+limit_left = 0
+limit_top = 0
+limit_right = 640
+limit_bottom = 384
+
+[node name="SpawnFromForest" type="Marker2D" parent="Entities"]
+position = Vector2(320, 48)
+
+[node name="SpawnFromPrismfall" type="Marker2D" parent="Entities"]
+position = Vector2(320, 336)
+
+[node name="Triggers" type="Node2D" parent="."]
+
+[node name="ExitToForest" type="Area2D" parent="Triggers"]
+position = Vector2(320, 8)
+collision_layer = 0
+collision_mask = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Triggers/ExitToForest"]
+shape = SubResource("RectangleShape2D_exit_forest")
+
+[node name="ExitToPrismfall" type="Area2D" parent="Triggers"]
+position = Vector2(320, 376)
+collision_layer = 0
+collision_mask = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Triggers/ExitToPrismfall"]
+shape = SubResource("RectangleShape2D_exit_prismfall")
+
+[node name="EncounterSystem" type="Node" parent="."]
+script = ExtResource("3_encounter")

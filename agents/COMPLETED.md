@@ -12,3 +12,4 @@ Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[
 - [2026-02-20] T-0248: Nyx recruitment — nyx.tres CharacterData (magic=22, luck=18, STAFF+CRYSTAL), NYX_CHARACTER_PATH constant, PartyManager.add_character() in trigger(); 9 tests; PR #278 (claude)
 T-0249 | 2026-02-20 | Chapter 7 "A Village Burns" story event scaffold | VillageBurns.gd Scenes 1-2, 7 tests
 T-0223 | 2026-02-20 | Seed AbilityData .tres files for Nyx and Lyra (4-ability stubs each) | 5 new abilities + nyx.tres/lyra.tres wired, 6 tests
+T-0105 | 2026-02-20 | Build Prismfall Approach area (Crystalline Steppes) | _map.gd + _encounters.gd + .gd + .tscn + ScenePaths constant, 13 tests, 830 total passing
