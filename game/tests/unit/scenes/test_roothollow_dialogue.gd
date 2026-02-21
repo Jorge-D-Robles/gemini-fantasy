@@ -64,9 +64,9 @@ func test_bram_flag_priority_iris_over_lyra() -> void:
 
 
 func test_maren_changes_per_flag_state() -> void:
-	var default_lines := _rh.get_maren_dialogue(_flags())
-	var lyra_lines := _rh.get_maren_dialogue(_flags(["opening_lyra_discovered"]))
-	var iris_lines := _rh.get_maren_dialogue(
+	var default_lines: PackedStringArray = _rh.get_maren_dialogue(_flags())
+	var lyra_lines: PackedStringArray = _rh.get_maren_dialogue(_flags(["opening_lyra_discovered"]))
+	var iris_lines: PackedStringArray = _rh.get_maren_dialogue(
 		_flags(["opening_lyra_discovered", "iris_recruited"])
 	)
 	assert_ne(default_lines[0], lyra_lines[0])
@@ -74,8 +74,8 @@ func test_maren_changes_per_flag_state() -> void:
 
 
 func test_wren_changes_per_flag_state() -> void:
-	var default_lines := _rh.get_wren_dialogue(_flags())
-	var lyra_lines := _rh.get_wren_dialogue(_flags(["opening_lyra_discovered"]))
+	var default_lines: PackedStringArray = _rh.get_wren_dialogue(_flags())
+	var lyra_lines: PackedStringArray = _rh.get_wren_dialogue(_flags(["opening_lyra_discovered"]))
 	assert_ne(default_lines[0], lyra_lines[0])
 
 

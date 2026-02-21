@@ -7,8 +7,10 @@ const HUD := preload("res://ui/hud/hud.gd")
 
 
 func _make_hud() -> CanvasLayer:
+	# Create without add_child to avoid _ready() — @onready vars need the
+	# full .tscn tree which unit tests don't have.
 	var hud := HUD.new()
-	add_child_autofree(hud)
+	autofree(hud)
 	return hud
 
 

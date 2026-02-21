@@ -10,9 +10,10 @@ const BattleSceneScript = preload("res://systems/battle/battle_scene.gd")
 # ---- _connect_battler_signals ----
 
 func _make_minimal_battle_scene() -> Node:
-	# Create a minimal mock that exposes _connect_battler_signals
+	# Create without add_child to avoid _ready() — @onready vars need the
+	# full .tscn tree which unit tests don't have.
 	var scene := BattleSceneScript.new()
-	add_child_autofree(scene)
+	autofree(scene)
 	return scene
 
 

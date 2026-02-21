@@ -219,6 +219,25 @@ func has_status(effect_id: StringName) -> bool:
 	return BattlerStatus.has(_active_effects, effect_id)
 
 
+## Convenience wrapper — applies a basic status effect by name.
+func apply_status_effect(effect: StringName) -> void:
+	var data_obj := StatusEffectData.new()
+	data_obj.id = effect
+	data_obj.display_name = String(effect)
+	data_obj.duration = 0
+	apply_status(data_obj)
+
+
+## Convenience wrapper — removes a status effect by name.
+func remove_status_effect(effect: StringName) -> void:
+	remove_status(effect)
+
+
+## Convenience wrapper — checks for a status effect by name.
+func has_status_effect(effect: StringName) -> bool:
+	return has_status(effect)
+
+
 ## Returns remaining turns for an effect, or -1 if not found.
 func get_effect_remaining_turns(effect_id: StringName) -> int:
 	return BattlerStatus.get_remaining_turns(_active_effects, effect_id)
