@@ -14,4 +14,5 @@ Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[
 T-0249 | 2026-02-20 | Chapter 7 "A Village Burns" story event scaffold | VillageBurns.gd Scenes 1-2, 7 tests
 T-0223 | 2026-02-20 | Seed AbilityData .tres files for Nyx and Lyra (4-ability stubs each) | 5 new abilities + nyx.tres/lyra.tres wired, 6 tests
 T-0105 | 2026-02-20 | Build Prismfall Approach area (Crystalline Steppes) | _map.gd + _encounters.gd + .gd + .tscn + ScenePaths constant, 13 tests, 830 total passing
+T-0251 | 2026-02-21 | Hard-ban A5 sheets | AGENT_RULES HARD BANS section + deprecation comments on all 15 A5 constants in map_builder.gd (claude)
 T-0104 | 2026-02-20 | Chapters 6-10 story event scaffolds | crystal_city_arrival.gd (Ch8) + lyras_truth.gd (Ch9) + captured.gd (Ch10) + 5 EventFlagRegistry constants, 24 tests, 754 passing

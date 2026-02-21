@@ -35,6 +35,7 @@ Started: 2026-02-20
 
 ## Done This Sprint
 
+- T-0251: Hard-ban A5 sheets — AGENT_RULES HARD BANS section + map_builder.gd deprecation comments
 - T-0249: Chapter 7 "A Village Burns" story event scaffold
 - T-0223: Seed AbilityData .tres for Nyx (4) and Lyra (fragment_vision)
 - T-0105: Build Prismfall Approach area (Crystalline Steppes overworld scene)

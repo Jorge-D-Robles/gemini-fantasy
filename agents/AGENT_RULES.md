@@ -2,6 +2,16 @@
 
 2D JRPG built with Godot 4.5, GDScript, mobile renderer. Licensed GPLv3.
 
+## HARD BANS (never do these — no exceptions)
+
+- **Never use A5 autotile sheets** — any file matching `*A5*`, `*tileA5*`, or `*_A5_*` in its name
+  is an RPGMaker autotile sheet where columns within a row produce seam artifacts when mixed.
+  Use TF_TERRAIN (`TimeFantasy_TILES/TILESETS/terrain.png`) for outdoor ground,
+  TF_DUNGEON for dungeon/ruins ground, and B-sheets (`tf_*_tileB_*.png`) for objects.
+- **Never use `set_cells_terrain_connect()`** without pre-configured Terrain Sets (we don't have them).
+- **Never carpet-bomb decorations** — no percentage-based coverage, no noise-driven object scatter
+  that fires on every cell. Every decoration must be intentional and sparse.
+
 ## Git Workflow
 
 **Single-branch, direct-to-main workflow.** No feature branches, no PRs, no worktrees. One Claude Code instance runs at a time, committing directly to `main`.
