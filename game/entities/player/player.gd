@@ -102,11 +102,18 @@ func _setup_animations() -> void:
 		push_error("Player: failed to load '%s' — reopen Godot editor to import" % SPRITE_PATH)
 		return
 
-	# kael_overworld.png is a single-character sprite sheet: 144x192 px.
-	# Layout: 3 walk columns x 4 direction rows.
-	# Frame size: 144/3 = 48 x 192/4 = 48 px.
-	var frame_w: int = texture.get_width() / 3
-	var frame_h: int = texture.get_height() / 4
+	# kael_overworld.png is an RPG Maker MV/MZ character sheet: 144x192 px.
+	# Layout: 2 characters wide x 2 characters tall = 4 characters per sheet.
+	# Each character occupies 72x96 px with 3 walk columns x 4 direction rows.
+	# Frame size: 72/3 = 24 x 96/4 = 24 px.
+	# Kael is the top-left character (char_col=0, char_row=0).
+	var chars_per_row: int = 2
+	var chars_per_col: int = 2
+	var frame_w: int = texture.get_width() / (chars_per_row * 3)
+	var frame_h: int = texture.get_height() / (chars_per_col * 4)
+	# Pixel origin of the target character within the sheet (top-left character).
+	var char_origin_x: int = 0 * (frame_w * 3)
+	var char_origin_y: int = 0 * (frame_h * 4)
 
 	var frames := SpriteFrames.new()
 	frames.remove_animation("default")
@@ -132,8 +139,8 @@ func _setup_animations() -> void:
 			var atlas := AtlasTexture.new()
 			atlas.atlas = texture
 			atlas.region = Rect2(
-				col * frame_w,
-				row * frame_h,
+				char_origin_x + col * frame_w,
+				char_origin_y + row * frame_h,
 				frame_w,
 				frame_h,
 			)
@@ -147,8 +154,8 @@ func _setup_animations() -> void:
 		var idle_atlas := AtlasTexture.new()
 		idle_atlas.atlas = texture
 		idle_atlas.region = Rect2(
-			frame_w,
-			row * frame_h,
+			char_origin_x + frame_w,
+			char_origin_y + row * frame_h,
 			frame_w,
 			frame_h,
 		)

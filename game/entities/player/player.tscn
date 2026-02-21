@@ -16,7 +16,7 @@ shape = SubResource("RectangleShape2D_body")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 texture_filter = 0
-offset = Vector2(0, -16)
+offset = Vector2(0, -8)
 
 [node name="InteractionRay" type="RayCast2D" parent="."]
 target_position = Vector2(0, 24)

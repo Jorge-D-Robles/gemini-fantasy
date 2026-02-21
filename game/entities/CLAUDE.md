@@ -24,7 +24,7 @@ See root `CLAUDE.md` for project-wide conventions.
 ```
 Player (CharacterBody2D) — class_name Player
   CollisionShape2D         ← position=(0, 4) — collision at lower body
-  AnimatedSprite2D         ← built at runtime from kael_overworld.png, offset=(0, -16) for foot-level Y-sort
+  AnimatedSprite2D         ← built at runtime from kael_overworld.png, offset=(0, -8) for foot-level Y-sort
   InteractionRay (RayCast2D) ← 24px forward cast, updates with facing
   Camera2D
 ```
@@ -60,10 +60,10 @@ Player (CharacterBody2D) — class_name Player
 - Cleans up signal connections in `_exit_tree()`
 
 **CompanionFollower** (`class_name CompanionFollower`, `extends Node2D`):
-- Single follower entity with `AnimatedSprite2D` built at runtime from 3x4 sprite sheet
+- Single follower entity with `AnimatedSprite2D` built at runtime from 2x2 multi-character sprite sheet (24x24 px frames)
 - `setup(sprite_path, char_id)` — loads texture, builds 8 animations (walk/idle x 4 directions)
 - `set_facing(Facing)` / `set_moving(bool)` — driven by controller
-- `SPRITE_SCALE = Vector2(0.275, 0.375)`, renders behind player via tree order (CompanionController is first child of Entities)
+- `SPRITE_SCALE = Vector2(0.55, 0.75)`, renders behind player via tree order (CompanionController is first child of Entities)
 
 **Wiring in scene scripts** (added at end of `_ready()`):
 ```gdscript
@@ -77,7 +77,7 @@ if player_node:
 **Static helpers** (testable without scene tree):
 - `CompanionController.compute_followers_needed(party)` — filters Kael from party
 - `CompanionController.compute_history_index(idx, size, offset)` — history buffer lookup
-- `CompanionFollower.build_sprite_frames(texture)` — creates SpriteFrames from 3x4 sheet
+- `CompanionFollower.build_sprite_frames(texture)` — creates SpriteFrames from 2x2 multi-char sheet (24x24 frames)
 - `CompanionFollower.compute_facing_from_direction(dir)` — Vector2 to Facing enum
 
 ---
