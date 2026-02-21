@@ -4,6 +4,40 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ---
 
+## Bugs — High Priority
+
+### T-0250
+- Title: Fix EnemyBattler.choose_action() typed array mismatch (battle crash)
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Milestone: M0
+- Depends: —
+- Refs: game/systems/battle/states/enemy_turn_state.gd:25, game/systems/battle/enemy_battler.gd:25, game/systems/battle/battle_scene.gd:13-14
+
+**Error:**
+```
+Invalid type in function 'choose_action' in base 'Node2D (EnemyBattler)'.
+The array of argument 1 (Array[PartyBattler]) does not have the same element type
+as the expected typed array argument.
+```
+
+**Root cause:**
+`battle_scene.party_battlers` is `Array[PartyBattler]` and `battle_scene.enemy_battlers` is `Array[EnemyBattler]`. `EnemyBattler.choose_action()` declares its parameters as `Array[Battler]`. GDScript 4 typed arrays are invariant — `Array[PartyBattler]` cannot be passed where `Array[Battler]` is expected, even though `PartyBattler extends Battler`.
+
+**Fix options (pick one):**
+1. Convert at call site in `enemy_turn_state.gd` using `.assign()` before passing:
+   ```gdscript
+   var party: Array[Battler] = []; party.assign(battle_scene.party_battlers)
+   var allies: Array[Battler] = []; allies.assign(battle_scene.enemy_battlers)
+   var action := enemy.choose_action(party, allies)
+   ```
+2. Change `battle_scene.party_battlers` / `enemy_battlers` to `Array[Battler]` and downcast at use sites.
+
+Option 1 is the minimal, safe fix. Regression test: verify `choose_action` is called without error for each AI type (BASIC, AGGRESSIVE, DEFENSIVE, SUPPORT, BOSS).
+
+---
+
 ## M0 — Foundation
 
 ### T-0175

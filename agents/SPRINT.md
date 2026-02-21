@@ -15,6 +15,8 @@ Started: 2026-02-20
 
 ## Queue
 
+- **T-0250**: Fix EnemyBattler.choose_action() typed array mismatch (battle crash)
+
 *(pull next tasks from BACKLOG.md — T-0246, T-0249, T-0105, T-0104, T-0223)*
 
 ---
