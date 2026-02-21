@@ -76,7 +76,7 @@ timeout <TIMEOUT> /Applications/Godot.app/Contents/MacOS/Godot \
   --rendering-driver opengl3 \
   --windowed --resolution 640x360 \
   res://tools/playtest_runner.tscn \
-  -- --config=<PRESET_PATH> 2>&1
+  -- --config=<PRESET_PATH> 2>&1 | tee /tmp/godot_run.log
 ```
 
 **Inline mode**:
@@ -86,7 +86,7 @@ timeout <TIMEOUT> /Applications/Godot.app/Contents/MacOS/Godot \
   --rendering-driver opengl3 \
   --windowed --resolution 640x360 \
   res://tools/playtest_runner.tscn \
-  -- --config=/tmp/playtest_config.json 2>&1
+  -- --config=/tmp/playtest_config.json 2>&1 | tee /tmp/godot_run.log
 ```
 
 **TIMEOUT** = preset's timeout_seconds + 15 seconds buffer (or 75 for simple runs).
@@ -96,6 +96,17 @@ timeout <TIMEOUT> /Applications/Godot.app/Contents/MacOS/Godot \
 - Use `--rendering-driver opengl3` for reliable rendering
 - The runner exits 0 on success, 1 on errors/timeout
 - Screenshots and `report.json` land in the output directory (default: `/tmp/playtest/`)
+- Pipe output through `tee /tmp/godot_run.log` to capture engine errors
+
+## Step 4b — Check for Engine Errors
+
+After the Godot run, scan the log for errors and warnings:
+
+```bash
+grep -iE "ERROR|SCRIPT ERROR|Failed|push_error|push_warning|Cannot|null" /tmp/godot_run.log | grep -v "^$" | head -30
+```
+
+Report any engine-level errors alongside the playtest results in Step 7.
 
 ## Step 5 — Read Report
 

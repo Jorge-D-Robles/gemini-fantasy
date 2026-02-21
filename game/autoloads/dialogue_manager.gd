@@ -16,10 +16,10 @@ var _waiting_for_advance: bool = false
 var _waiting_for_choice: bool = false
 
 
-func start_dialogue(lines: Array[DialogueLine]) -> void:
+func start_dialogue(lines: Array[DialogueLine]) -> bool:
 	if _is_active:
 		push_warning("DialogueManager: dialogue already active.")
-		return
+		return false
 	_queue = lines
 	_current_index = -1
 	_is_active = true
@@ -29,6 +29,7 @@ func start_dialogue(lines: Array[DialogueLine]) -> void:
 	GameManager.push_state(GameManager.GameState.DIALOGUE)
 	dialogue_started.emit()
 	advance()
+	return true
 
 
 func advance() -> void:

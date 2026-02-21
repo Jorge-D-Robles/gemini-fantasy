@@ -143,7 +143,9 @@ func _maybe_trigger_iris_arrival() -> void:
 			DialogueLine.create(entry["speaker"], entry["text"]),
 		)
 	GameManager.push_state(GameManager.GameState.CUTSCENE)
-	DialogueManager.start_dialogue(lines)
+	if not DialogueManager.start_dialogue(lines):
+		GameManager.pop_state()
+		return
 	await DialogueManager.dialogue_ended
 	GameManager.pop_state()
 
@@ -278,7 +280,8 @@ func _on_innkeeper_finished() -> void:
 			"Rest well. Your party has been fully restored.",
 		),
 	]
-	DialogueManager.start_dialogue(heal_lines)
+	if not DialogueManager.start_dialogue(heal_lines):
+		return
 	await DialogueManager.dialogue_ended
 	_check_quest_chain(_herb_quest, "Maren")
 	# Trigger the highest-priority eligible night event (one per rest).
@@ -338,7 +341,9 @@ func _on_thessa_finished() -> void:
 				DialogueLine.create(entry["speaker"], entry["text"]),
 			)
 		GameManager.push_state(GameManager.GameState.CUTSCENE)
-		DialogueManager.start_dialogue(lines)
+		if not DialogueManager.start_dialogue(lines):
+			GameManager.pop_state()
+			return
 		await DialogueManager.dialogue_ended
 		GameManager.pop_state()
 		return
@@ -385,7 +390,8 @@ func _check_quest_chain(
 		func(index: int) -> void: accepted = (index == 0),
 		CONNECT_ONE_SHOT,
 	)
-	DialogueManager.start_dialogue([offer_line])
+	if not DialogueManager.start_dialogue([offer_line]):
+		return
 	await DialogueManager.dialogue_ended
 
 	if accepted:
@@ -409,7 +415,8 @@ func _do_quest_turnin(
 	var lines: Array[DialogueLine] = [
 		DialogueLine.create(speaker, turnin_text),
 	]
-	DialogueManager.start_dialogue(lines)
+	if not DialogueManager.start_dialogue(lines):
+		return
 	await DialogueManager.dialogue_ended
 
 	# Complete the final objective (turn-in) — auto-completes quest

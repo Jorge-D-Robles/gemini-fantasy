@@ -156,10 +156,14 @@ func interact() -> void:
 	for line_text in dialogue_lines:
 		lines.append(DialogueLine.create(npc_name, line_text, portrait))
 
-	DialogueManager.dialogue_ended.connect(
-		_on_dialogue_ended, CONNECT_ONE_SHOT
-	)
-	DialogueManager.start_dialogue(lines)
+	var started := DialogueManager.start_dialogue(lines)
+	if started:
+		DialogueManager.dialogue_ended.connect(
+			_on_dialogue_ended, CONNECT_ONE_SHOT
+		)
+	else:
+		_is_talking = false
+		start_idle_animation()
 
 
 func _update_indicator() -> void:

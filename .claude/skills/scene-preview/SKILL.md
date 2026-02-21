@@ -28,14 +28,14 @@ git -C /Users/robles/repos/games/gemini-fantasy pull 2>&1
 
 ## Step 3 — Run Godot Preview
 
-Run the scene preview tool. This opens a brief Godot window, captures a screenshot, and exits.
+Run the scene preview tool. This opens a brief Godot window, captures a screenshot, and exits. Pipe output to a log file for error capture.
 
 ```bash
 timeout 30 /Applications/Godot.app/Contents/MacOS/Godot \
   --path /Users/robles/repos/games/gemini-fantasy/game/ \
   --rendering-driver opengl3 \
   res://tools/scene_preview.tscn \
-  -- --preview-scene=<SCENE_PATH> --output=/tmp/scene_preview.png <FLAGS> 2>&1
+  -- --preview-scene=<SCENE_PATH> --output=/tmp/scene_preview.png <FLAGS> 2>&1 | tee /tmp/godot_run.log
 ```
 
 **Important:**
@@ -43,6 +43,16 @@ timeout 30 /Applications/Godot.app/Contents/MacOS/Godot \
 - Use `--rendering-driver opengl3` for reliable screenshot capture
 - The `timeout 30` prevents hangs — the tool should exit in under 5 seconds
 - Check exit code: 0 = success, 1 = error (check stderr for details)
+
+## Step 3b — Check for Errors
+
+After the Godot run, scan the log for errors and warnings:
+
+```bash
+grep -iE "ERROR|SCRIPT ERROR|Failed|push_error|push_warning|Cannot|null" /tmp/godot_run.log | grep -v "^$" | head -30
+```
+
+Report any errors found alongside the screenshot analysis in Step 5.
 
 ## Step 4 — Display the Screenshot
 

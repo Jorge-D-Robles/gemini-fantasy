@@ -22,17 +22,21 @@ func _ready() -> void:
 	if parent:
 		parent.move_child(self, 0)
 
+	# Autoload lookups require being in the scene tree (_ready runs after
+	# add_child), so all signal wiring and follower creation happens here.
+	if _player:
+		_reset_history()
+		_rebuild_followers()
+		var pm := _get_party_manager()
+		if pm:
+			pm.party_changed.connect(_on_party_changed)
+		var gm := _get_game_manager()
+		if gm:
+			gm.game_state_changed.connect(_on_state_changed)
+
 
 func setup(player: Node2D) -> void:
 	_player = player
-	_reset_history()
-	_rebuild_followers()
-	var pm := _get_party_manager()
-	if pm:
-		pm.party_changed.connect(_on_party_changed)
-	var gm := _get_game_manager()
-	if gm:
-		gm.game_state_changed.connect(_on_state_changed)
 
 
 func _physics_process(_delta: float) -> void:
