@@ -9,7 +9,7 @@ Started: 2026-02-20
 
 ## Active
 
-*(no tasks in progress)*
+*(none — pick next from Queue)*
 
 ---
 
@@ -17,9 +17,6 @@ Started: 2026-02-20
 
 ### Tilemap Overhaul — Top Priority Block
 
-- **T-0251**: Hard-ban A5 sheets — update AGENT_RULES + map_builder.gd deprecation warnings
-- **T-0252**: Enhance tilemap review workflow — web search comparison + A5 blocking check + mandate dual review gate in build-tilemap skill
-- **T-0253**: Redo Roothollow tilemap — TF_TERRAIN biome system, full dual-reviewer sign-off
 - **T-0254**: Redo Overgrown Ruins tilemap — TF_DUNGEON + B-sheets, no A5
 - **T-0255**: Redo Prismfall Approach tilemap — complete TF_TERRAIN migration (GROUND_ENTRIES still uses A5 coords)
 - **T-0256**: Redo Overgrown Capital tilemap — TF_DUNGEON + B-sheets, no A5
@@ -35,6 +32,7 @@ Started: 2026-02-20
 
 ## Done This Sprint
 
+- T-0253: Redo Roothollow tilemap — TF_TERRAIN biome+hash ground, path variants, STONE_OBJECTS flowers, 10 tests
 - T-0252: Enhance tilemap review workflow — JRPG reference search, A5 instant-fail check, dual reviewer gate in build-tilemap skill
 - T-0251: Hard-ban A5 sheets — AGENT_RULES HARD BANS section + map_builder.gd deprecation comments
 - T-0249: Chapter 7 "A Village Burns" story event scaffold

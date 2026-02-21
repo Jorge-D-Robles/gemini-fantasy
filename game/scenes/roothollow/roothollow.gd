@@ -159,7 +159,7 @@ func _start_scene_music() -> void:
 func _setup_tilemap() -> void:
 	var m := Maps
 	var atlas_paths: Array[String] = [
-		MapBuilder.FAIRY_FOREST_A5_A,
+		MapBuilder.TF_TERRAIN,
 		MapBuilder.MUSHROOM_VILLAGE,
 		MapBuilder.FOREST_OBJECTS,
 		MapBuilder.STONE_OBJECTS,
@@ -173,25 +173,21 @@ func _setup_tilemap() -> void:
 		atlas_paths,
 		m.SOLID_TILES,
 	)
-	# Procedural ground — organic grass/dirt/earth distribution
+	# Procedural ground — biome noise + position hash for per-cell variety
 	var ground_noise := FastNoiseLite.new()
 	ground_noise.seed = Maps.GROUND_NOISE_SEED
 	ground_noise.frequency = Maps.GROUND_NOISE_FREQ
 	ground_noise.fractal_octaves = Maps.GROUND_NOISE_OCTAVES
-	MapBuilder.build_noise_layer(
-		_ground,
-		Maps.MAP_COLS, Maps.MAP_ROWS,
-		ground_noise, Maps.GROUND_ENTRIES,
-	)
+	_fill_ground_with_variants(_ground, ground_noise)
 	MapBuilder.disable_collision(_ground)
 
-	# Paths (source 0) — authored, navigation-critical
-	MapBuilder.build_layer(_paths, m.PATH_MAP, m.PATH_LEGEND)
+	# Paths (source 0) — authored with position-hash tile variety
+	_fill_paths_with_variants(_paths)
 	MapBuilder.disable_collision(_paths)
 
-	# Ground detail flower accents (source 0) — authored, town-specific
+	# Ground detail flower accents (source 3 = STONE_OBJECTS) — authored
 	MapBuilder.build_layer(
-		_ground_detail, m.DECOR_MAP, m.DETAIL_LEGEND,
+		_ground_detail, m.DECOR_MAP, m.DETAIL_LEGEND, 3,
 	)
 	MapBuilder.disable_collision(_ground_detail)
 
@@ -225,6 +221,28 @@ func _setup_tilemap() -> void:
 		_decorations, m.DECOR_MAP,
 		m.STONE_DECOR_LEGEND, 3,
 	)
+
+
+func _fill_ground_with_variants(
+	layer: TileMapLayer,
+	noise: FastNoiseLite,
+) -> void:
+	for y: int in range(Maps.MAP_ROWS):
+		for x: int in range(Maps.MAP_COLS):
+			var noise_val: float = noise.get_noise_2d(float(x), float(y))
+			var atlas: Vector2i = Maps.pick_tile(noise_val, x, y)
+			layer.set_cell(Vector2i(x, y), 0, atlas)
+	layer.update_internals()
+
+
+func _fill_paths_with_variants(layer: TileMapLayer) -> void:
+	for y: int in range(Maps.PATH_MAP.size()):
+		var row: String = Maps.PATH_MAP[y]
+		for x: int in range(row.length()):
+			if row[x] == "S":
+				var atlas: Vector2i = Maps.pick_path_tile(x, y)
+				layer.set_cell(Vector2i(x, y), 0, atlas)
+	layer.update_internals()
 
 
 func _on_exit_to_forest_entered(body: Node2D) -> void:

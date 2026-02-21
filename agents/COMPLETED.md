@@ -15,5 +15,6 @@ T-0249 | 2026-02-20 | Chapter 7 "A Village Burns" story event scaffold | Village
 T-0223 | 2026-02-20 | Seed AbilityData .tres files for Nyx and Lyra (4-ability stubs each) | 5 new abilities + nyx.tres/lyra.tres wired, 6 tests
 T-0105 | 2026-02-20 | Build Prismfall Approach area (Crystalline Steppes) | _map.gd + _encounters.gd + .gd + .tscn + ScenePaths constant, 13 tests, 830 total passing
 T-0252 | 2026-02-21 | Enhance tilemap review workflow | Adversarial reviewer: JRPG reference search step + A5 instant-fail check + rule #8; build-tilemap skill: mandatory dual reviewer gate step (claude)
+T-0253 | 2026-02-21 | Redo Roothollow tilemap | TF_TERRAIN biome+hash ground, 4-variant path tiles, STONE_OBJECTS flowers/pebbles, organic canopy, 10 tests 80 assertions (claude)
 T-0251 | 2026-02-21 | Hard-ban A5 sheets | AGENT_RULES HARD BANS section + deprecation comments on all 15 A5 constants in map_builder.gd (claude)
 T-0104 | 2026-02-20 | Chapters 6-10 story event scaffolds | crystal_city_arrival.gd (Ch8) + lyras_truth.gd (Ch9) + captured.gd (Ch10) + 5 EventFlagRegistry constants, 24 tests, 754 passing

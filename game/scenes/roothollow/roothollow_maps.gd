@@ -3,6 +3,17 @@ extends RefCounted
 
 ## Tilemap data constants for Roothollow scene.
 ## Separated from roothollow.gd to stay under the 1000-line limit.
+##
+## Ground uses TimeFantasy_TILES/TILESETS/terrain.png (flat 16x16 grid).
+## Each biome maps to a row in terrain.png with multiple column variants.
+## Variants are picked by position hash for organic, non-repeating coverage.
+
+# Biome zones — noise threshold -> biome, position hash -> column variant.
+# terrain.png flat-tile rows (avoid cols 22+ which are RPGMaker auto-tiles):
+#   Row 1: bright green grass     (cols 2-8)
+#   Row 2: muted/shaded green     (cols 1-7)
+#   Row 6: warm brown earth/dirt  (cols 1-6)
+enum Biome { BRIGHT_GREEN, MUTED_GREEN, DIRT }
 
 # -- Map dimensions --
 const MAP_COLS: int = 40
@@ -10,29 +21,53 @@ const MAP_ROWS: int = 28
 
 # ---------- PROCEDURAL GROUND CONFIG ----------
 
-# Ground noise — organic terrain patches (source 0)
-# G = bright green grass (noise > 0.15), D = dirt/earth (-0.2..0.15),
-# E = dark earth/roots (catch-all — biases toward forest border edges via noise)
+# Ground noise — organic terrain patches (source 0 = TF_TERRAIN).
 const GROUND_NOISE_SEED: int = 55543
 const GROUND_NOISE_FREQ: float = 0.10
-const GROUND_NOISE_OCTAVES: int = 3
-const GROUND_ENTRIES: Array[Dictionary] = [
-	{"threshold": 0.15,  "atlas": Vector2i(0, 8)},  # G = bright green grass
-	{"threshold": -0.2,  "atlas": Vector2i(0, 2)},  # D = dirt/earth
-	{"threshold": -1.0,  "atlas": Vector2i(0, 6)},  # E = dark earth (catch-all)
-]
+const GROUND_NOISE_OCTAVES: int = 4
 
-# -- Paths: gray stone from A5_A row 10 --
-const PATH_LEGEND: Dictionary = {
-	"S": Vector2i(0, 10),
+const BIOME_TILES: Dictionary = {
+	Biome.BRIGHT_GREEN: [
+		Vector2i(2, 1), Vector2i(3, 1), Vector2i(4, 1), Vector2i(5, 1),
+		Vector2i(6, 1), Vector2i(7, 1), Vector2i(8, 1),
+	],
+	Biome.MUTED_GREEN: [
+		Vector2i(1, 2), Vector2i(2, 2), Vector2i(3, 2), Vector2i(4, 2),
+		Vector2i(5, 2), Vector2i(6, 2), Vector2i(7, 2),
+	],
+	Biome.DIRT: [
+		Vector2i(1, 6), Vector2i(2, 6), Vector2i(3, 6),
+		Vector2i(4, 6), Vector2i(5, 6), Vector2i(6, 6),
+	],
 }
 
-# -- Detail: flower accents from A5_A row 14 (source 0) --
+# Noise thresholds — sorted high-to-low; first match wins.
+const OPEN_BIOME_THRESHOLDS: Array[Dictionary] = [
+	{"threshold": 0.15,  "biome": Biome.BRIGHT_GREEN},
+	{"threshold": -0.15, "biome": Biome.MUTED_GREEN},
+	{"threshold": -1.0,  "biome": Biome.DIRT},
+]
+
+# Position hash seed — mixed with (x, y) to pick column variant within a biome.
+const VARIANT_HASH_SEED: int = 55544
+
+# -- Paths: sandy/tan variants from TF_TERRAIN row 9 --
+# Position hash picks among 4 column variants for per-tile variety.
+const PATH_TILES: Array[Vector2i] = [
+	Vector2i(1, 9), Vector2i(2, 9),
+	Vector2i(3, 9), Vector2i(4, 9),
+]
+const PATH_HASH_SEED: int = 55545
+const PATH_LEGEND: Dictionary = {
+	"S": Vector2i(2, 9),
+}
+
+# -- Detail: flower/pebble accents (source 3 = STONE_OBJECTS) --
 const DETAIL_LEGEND: Dictionary = {
-	"f": Vector2i(0, 14),
-	"F": Vector2i(1, 14),
-	"b": Vector2i(2, 14),
-	"B": Vector2i(3, 14),
+	"f": Vector2i(0, 1),
+	"F": Vector2i(1, 1),
+	"b": Vector2i(2, 1),
+	"B": Vector2i(2, 0),
 }
 
 # -- Mushroom ground decorations (source 1 = MUSHROOM_VILLAGE) --
@@ -135,7 +170,7 @@ const PATH_MAP: Array[String] = [
 ]
 
 # Combined ground decoration map — flower, mushroom, stone accents
-# Characters: f,F,b,B = flowers (source 0, _ground_detail)
+# Characters: f,F,b,B = flowers (source 3 = STONE_OBJECTS, _ground_detail)
 #             m,M,n   = mushroom decor (source 1, _decorations)
 #             r,R,o   = stone decor (source 3, _decorations)
 # Coverage: ~13% of visible open tiles (~89 decorations)
@@ -292,10 +327,10 @@ const CANOPY_MAP: Array[String] = [
 	"",
 	"",
 	"",
-	"    !@#! @!#! #!@! @!#!!@!#!@#!!@!#",
-	"   @  !          !    #    @   !  #",
-	"    @!                            #!",
-	"   @!                              !#",
+	"    @!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#",
+	"   @                               #",
+	"    @                              #",
+	"   @                                #",
 	"   @                                #",
 	"    @                               #",
 	"     @                            #",
@@ -312,8 +347,8 @@ const CANOPY_MAP: Array[String] = [
 	"   @                                 #",
 	"    @                               #",
 	"   @                               #",
-	"    #!@#! @!#! @!#! !@#!!@!#!@#!!@!",
-	"      @!#! @!#!!@!# !@!#!@#!",
+	"    @!   !!  !!!  !! !!!  !!  ! !!#",
+	"      @!!  !!  !!!  !! !!  !!#",
 	"",
 	"",
 	"",
@@ -338,3 +373,27 @@ const SOLID_TILES: Dictionary = {
 		Vector2i(1, 1),
 	],
 }
+
+# ---------- STATIC HELPERS ----------
+
+
+## Return the Biome int for a given noise value.
+static func get_biome_for_noise(noise_val: float) -> int:
+	for entry: Dictionary in OPEN_BIOME_THRESHOLDS:
+		if noise_val >= float(entry.get("threshold", -1.0)):
+			return int(entry.get("biome", Biome.DIRT))
+	return Biome.DIRT
+
+
+## Pick a tile atlas coord for (x, y) using noise + position hash.
+static func pick_tile(noise_val: float, x: int, y: int) -> Vector2i:
+	var biome: int = get_biome_for_noise(noise_val)
+	var variants: Array = BIOME_TILES[biome]
+	var idx: int = abs(x * 73 + y * 31 + VARIANT_HASH_SEED) % variants.size()
+	return variants[idx]
+
+
+## Pick a path tile variant for (x, y) using position hash.
+static func pick_path_tile(x: int, y: int) -> Vector2i:
+	var idx: int = abs(x * 73 + y * 31 + PATH_HASH_SEED) % PATH_TILES.size()
+	return PATH_TILES[idx]

@@ -198,10 +198,14 @@ func _fill_ground_with_variants(layer: TileMapLayer, noise: FastNoiseLite) -> vo
 
 | Source | Constant | Asset | Purpose |
 |--------|----------|-------|---------|
-| 0 | `FAIRY_FOREST_A5_A` | `tf_ff_tileA5_a.png` | Ground (row 8), paths (row 10), flowers (row 14) |
-| 1 | `MUSHROOM_VILLAGE` | `tf_ff_tileB_mushroomvillage.png` | Mushroom decorations |
+| 0 | `TF_TERRAIN` | `TimeFantasy_TILES/TILESETS/terrain.png` | Flat 16x16 ground: rows 1-2 (green grass), row 6 (dirt), row 9 (sandy path) |
+| 1 | `MUSHROOM_VILLAGE` | `tf_ff_tileB_mushroomvillage.png` | Mushroom buildings, decorations |
 | 2 | `FOREST_OBJECTS` | `tf_ff_tileB_forest.png` | Forest canopy border |
-| 3 | `STONE_OBJECTS` | `tf_ff_tileB_stone.png` | Rocks, flowers |
+| 3 | `STONE_OBJECTS` | `tf_ff_tileB_stone.png` | Rocks, flowers, pebbles |
+| 4 | `TREE_OBJECTS` | `tf_ff_tileB_trees.png` | Tree variant mixing |
+
+**Ground:** Biome noise (3 zones: BRIGHT_GREEN/MUTED_GREEN/DIRT) + position hash for per-cell variety. Implemented via `_fill_ground_with_variants()` using `RoothollowMaps.pick_tile()`.
+**Paths:** 4 sandy/tan variants from TF_TERRAIN row 9, position-hashed via `_fill_paths_with_variants()`.
 
 **Building Sprites (Sprite2D, NOT tilemap):** Inn=`lodge_clean.png`, Shop/Elder=`hut.png`
 **NPC Sprites:** `npc_char1.png`, `npc_char2.png` from `npc-animations/rpgmaker/1/`
@@ -244,7 +248,7 @@ func _on_exit_entered(body: Node2D) -> void:
 
 ## Cross-Scene Consistency Rules
 
-1. **`TF_TERRAIN` is the standard ground sheet for new/updated outdoor scenes** — flat 16×16 tiles from `TimeFantasy_TILES/TILESETS/terrain.png`. Freely mixable, no seam artifacts. Overgrown Ruins and Roothollow still use legacy `FAIRY_FOREST_A5_A` (migrate when redesigning).
+1. **`TF_TERRAIN` is the standard ground sheet for new/updated outdoor scenes** — flat 16×16 tiles from `TimeFantasy_TILES/TILESETS/terrain.png`. Freely mixable, no seam artifacts. Overgrown Ruins still uses legacy `FAIRY_FOREST_A5_A` (migrate when redesigning).
 2. **TF_TERRAIN row guide:** Row 1-2 = green grass. Row 6 = brown dirt. Row 9 = sandy/tan. Rows 22+ = RPGMaker auto-tiles — DO NOT USE.
 3. **Ruins tiles stay in ruins scenes** — golden walls break forest/steppe aesthetic
 4. **Organic ground** — use 2-3 biome types in large natural patches via noise + position hash. Never fill the entire map with one repeated tile. Flat tiles (TF_TERRAIN) can freely mix column variants — no seam restriction.
