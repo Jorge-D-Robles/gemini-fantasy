@@ -17,15 +17,15 @@ See root `CLAUDE.md` for project-wide conventions and tilemap rules.
 
 **Script:** `extends Node2D` (no `class_name`)
 
-**Node tree layout — belt-and-suspenders rendering (z_index groups + tree order):**
+**Node tree layout — z_index groups + tree order rendering:**
 ```
-AreaName (Node2D)                  y_sort_enabled=true  # root Y-sort for per-tile depth
+AreaName (Node2D)                  # NO y_sort — breaks z_index layering
   Ground (TileMapLayer)            z_index=-2   # always behind everything
   [GroundDetail] (TileMapLayer)    z_index=-1
   [GroundDebris] (TileMapLayer)    z_index=-1   # optional debris layer (ruins, capital)
   [Paths] (TileMapLayer)           z_index=-1
-  [Walls / Trees / Objects] (TileMapLayer)  z_index=0, y_sort_enabled=true  # per-tile depth
-  Entities (Node2D)                z_index=0, y_sort_enabled=true
+  [Walls / Trees / Objects] (TileMapLayer)  z_index=0   # tree order within z=0
+  Entities (Node2D)                z_index=0, y_sort_enabled=true  # ONLY here
     CompanionController            # first child = drawn behind player (tree order)
     Player (CharacterBody2D)       # AnimatedSprite2D offset=(0,-8) for foot-level sort
     SpawnFrom* (Marker2D)          # one per entry point; added to named group in _ready()
@@ -38,9 +38,9 @@ AreaName (Node2D)                  y_sort_enabled=true  # root Y-sort for per-ti
   [EventNode]                      # recruitment/sequence node
 ```
 
-**Rendering rule:** z_index (-2/-1/0/1) handles broad group separation. `y_sort_enabled=true` on the scene root + z=0 TileMapLayers (Walls/Objects/Trees) enables per-tile depth interleaving with entities. Godot 4.5 guarantees z_index takes absolute priority — tiles at z=-2 can never sort above z=0 items regardless of Y position. Only same-z items participate in Y-sort, which is exactly the desired behavior: individual wall/object tiles and individual entities all depth-sort together at z=0.
+**Rendering rule:** z_index (-2/-1/0/1) handles broad group separation. Within z=0, tree order determines draw order: Walls before Objects before Entities means entities render on top of tiles. Do NOT set `y_sort_enabled` on the scene root — this interferes with z_index layering and causes the player to render behind ground tiles.
 
-**Y-sort setup:** Scene root has `y_sort_enabled = true`. z=0 TileMapLayers (Walls, Objects, Trees, TreesBorder) have `y_sort_enabled = true` for per-tile sorting. Entities node has `y_sort_enabled = true` (was already set). z<0 and z>0 layers do NOT need y_sort (unnecessary, wastes performance). Player AnimatedSprite2D has `offset = Vector2(0, -8)` so the Y-sort origin sits at foot level.
+**Y-sort setup:** ONLY the Entities node has `y_sort_enabled = true` — for player/NPC depth sorting among themselves. Scene root and TileMapLayers must NOT have y_sort. Player AnimatedSprite2D has `offset = Vector2(0, -8)` so the Y-sort origin sits at foot level.
 
 **`_ready()` responsibilities:**
 1. Call `_setup_tilemap()` — applies atlas and fills layers via `MapBuilder`

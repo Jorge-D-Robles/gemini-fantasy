@@ -25,6 +25,7 @@ Started: 2026-02-20
 
 ## Done This Sprint
 
+- T-0262: Revert root y_sort — remove y_sort_enabled from all 5 scene roots + z=0 TileMapLayers, keep only on Entities; update regression tests + scenes/CLAUDE.md
 - T-0261: Update CLAUDE.md + scenes/CLAUDE.md + entities/CLAUDE.md rendering conventions — corrected y_sort guidance, documented sprite offset
 - T-0260: Lower scatter noise frequencies — detail 0.15→0.04, debris 0.2→0.05 in overgrown_ruins.gd + overgrown_capital.gd
 - T-0259: Enable per-tile Y-sort on all 5 scene roots + z=0 TileMapLayers, 4 new regression tests

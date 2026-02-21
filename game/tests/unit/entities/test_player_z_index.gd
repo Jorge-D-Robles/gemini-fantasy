@@ -100,9 +100,10 @@ func test_player_sprite_has_y_sort_offset() -> void:
 	)
 
 
-func test_scene_roots_have_y_sort_enabled() -> void:
-	## All 5 overworld scene roots must have y_sort_enabled = true for
-	## per-tile depth interleaving with entities.
+func test_scene_roots_do_not_have_y_sort() -> void:
+	## Scene roots must NOT have y_sort_enabled — it breaks z_index layering
+	## and causes the player to render behind ground tiles.
+	## y_sort belongs ONLY on the Entities node.
 	var scenes: Array[String] = [
 		"res://scenes/overgrown_ruins/overgrown_ruins.tscn",
 		"res://scenes/verdant_forest/verdant_forest.tscn",
@@ -113,18 +114,24 @@ func test_scene_roots_have_y_sort_enabled() -> void:
 	for scene_path: String in scenes:
 		var content := FileAccess.get_file_as_string(scene_path)
 		assert_false(content.is_empty(), scene_path + " must exist")
-		# The root node section must contain y_sort_enabled = true
-		assert_true(
-			content.contains("y_sort_enabled = true"),
-			scene_path + " must have y_sort_enabled = true on its root or entity nodes",
+		# Find root node section (first [node) and check it does NOT have y_sort
+		var root_start := content.find("[node name=")
+		assert_true(root_start >= 0, scene_path + " must have a root node")
+		var next_node := content.find("\n[node", root_start + 1)
+		var root_section: String
+		if next_node >= 0:
+			root_section = content.substr(root_start, next_node - root_start)
+		else:
+			root_section = content.substr(root_start)
+		assert_false(
+			root_section.contains("y_sort_enabled = true"),
+			scene_path + " root must NOT have y_sort_enabled (breaks z_index layering)",
 		)
 
 
-func test_z0_tilemaplayers_have_y_sort_enabled() -> void:
-	## z=0 TileMapLayers (Walls, Objects, Trees, TreesBorder) must have
-	## y_sort_enabled = true for per-tile depth sorting with the player.
-	## We check that for scenes with these layers, y_sort_enabled appears
-	## on TileMapLayer nodes that don't have a negative z_index.
+func test_z0_tilemaplayers_do_not_have_y_sort() -> void:
+	## z=0 TileMapLayers (Walls, Objects, Trees, TreesBorder) must NOT have
+	## y_sort_enabled. Depth is handled by tree order within z=0, not y_sort.
 	var scene_z0_layers: Dictionary = {
 		"res://scenes/overgrown_ruins/overgrown_ruins.tscn": ["Walls", "Objects"],
 		"res://scenes/verdant_forest/verdant_forest.tscn": ["Trees", "Objects"],
@@ -136,7 +143,6 @@ func test_z0_tilemaplayers_have_y_sort_enabled() -> void:
 		assert_false(content.is_empty(), scene_path + " must exist")
 		var layers: Array = scene_z0_layers[scene_path]
 		for layer_name: String in layers:
-			# Find the node section and check for y_sort_enabled
 			var node_marker := '[node name="' + layer_name + '"'
 			var idx := content.find(node_marker)
 			assert_true(
@@ -145,14 +151,43 @@ func test_z0_tilemaplayers_have_y_sort_enabled() -> void:
 			)
 			if idx < 0:
 				continue
-			# Get the section until the next [node or end
 			var next_node := content.find("\n[node", idx + 1)
 			var section: String
 			if next_node >= 0:
 				section = content.substr(idx, next_node - idx)
 			else:
 				section = content.substr(idx)
-			assert_true(
+			assert_false(
 				section.contains("y_sort_enabled = true"),
-				scene_path + " node " + layer_name + " must have y_sort_enabled = true",
+				scene_path + " node " + layer_name + " must NOT have y_sort_enabled",
 			)
+
+
+func test_entities_have_y_sort() -> void:
+	## Entities nodes MUST have y_sort_enabled — this is the only place
+	## where y_sort should be set, for player/NPC depth sorting.
+	var scenes: Array[String] = [
+		"res://scenes/overgrown_ruins/overgrown_ruins.tscn",
+		"res://scenes/verdant_forest/verdant_forest.tscn",
+		"res://scenes/roothollow/roothollow.tscn",
+		"res://scenes/overgrown_capital/overgrown_capital.tscn",
+		"res://scenes/prismfall_approach/prismfall_approach.tscn",
+	]
+	for scene_path: String in scenes:
+		var content := FileAccess.get_file_as_string(scene_path)
+		assert_false(content.is_empty(), scene_path + " must exist")
+		var node_marker := '[node name="Entities"'
+		var idx := content.find(node_marker)
+		assert_true(idx >= 0, scene_path + " must contain Entities node")
+		if idx < 0:
+			continue
+		var next_node := content.find("\n[node", idx + 1)
+		var section: String
+		if next_node >= 0:
+			section = content.substr(idx, next_node - idx)
+		else:
+			section = content.substr(idx)
+		assert_true(
+			section.contains("y_sort_enabled = true"),
+			scene_path + " Entities node must have y_sort_enabled = true",
+		)

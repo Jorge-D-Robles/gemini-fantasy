@@ -3,6 +3,7 @@
 Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[date] Description`.
 
 ---
+- [2026-02-21] T-0262: Revert root y_sort — remove y_sort_enabled from 5 scene roots + z=0 TileMapLayers (broke z_index layering, player rendered behind tiles); keep only on Entities; update regression tests + scenes/CLAUDE.md (claude)
 - [2026-02-21] T-0258/T-0259/T-0260/T-0261: Tilemap rendering fix — player sprite offset (0,-8), per-tile Y-sort on all 5 scenes + z=0 layers, scatter noise freq 0.15/0.2→0.04/0.05, CLAUDE.md convention corrections; 4 new regression tests (claude)
 - [2026-02-20] T-MBTM: MapBuilder overhaul — clear_layer(), build_procedural_wilds() (biome-constrained foliage, eliminates carpet-bombing), build_from_blueprint(), scatter_decorations() allowed_cells mask; lower noise freq 0.10→0.05 in all scenes; 8 new asset packs documented; 6 tests (claude)
 - [2026-02-20] T-0225: Nyx introduction cutscene — NyxIntroduction event, 24-line dialogue, gate flags garrick_recruited + lyra_fragment_2_collected; 14 tests (1785 total); PR #272 (claude)
