@@ -60,18 +60,49 @@ extends RefCounted
 const COLS: int = 40
 const ROWS: int = 24
 
-# Procedural ground config — visual layers use noise, not hand-crafted text maps
-const GROUND_NOISE_SEED: int = 12345
-const GROUND_NOISE_FREQ: float = 0.08
-const GROUND_NOISE_OCTAVES: int = 3
-const GROUND_ENTRIES: Array[Dictionary] = [
-    {"threshold": 0.3,  "atlas": Vector2i(0, 8)},  # dominant terrain
-    {"threshold": -1.0, "atlas": Vector2i(0, 6)},  # catch-all
+# Ground uses TF_TERRAIN (flat 16x16 — freely mixable, no seam artifacts)
+# Biome enum MUST come before constants (gdlint order requirement)
+enum Biome { BRIGHT_GREEN, MUTED_GREEN, DIRT }
+
+# Column variants per biome — picked by position hash for per-cell variety
+const BIOME_TILES: Dictionary = {
+    Biome.BRIGHT_GREEN: [
+        Vector2i(2, 1), Vector2i(3, 1), Vector2i(4, 1),
+        Vector2i(5, 1), Vector2i(6, 1), Vector2i(7, 1),
+    ],
+    Biome.MUTED_GREEN: [
+        Vector2i(1, 2), Vector2i(2, 2), Vector2i(3, 2), Vector2i(4, 2),
+    ],
+    Biome.DIRT: [
+        Vector2i(1, 6), Vector2i(2, 6), Vector2i(3, 6),
+    ],
+}
+
+const OPEN_BIOME_THRESHOLDS: Array[Dictionary] = [
+    {"threshold": 0.15,  "biome": Biome.BRIGHT_GREEN},
+    {"threshold": -0.15, "biome": Biome.MUTED_GREEN},
+    {"threshold": -1.0,  "biome": Biome.DIRT},
 ]
 
-# Structural layers — keep as authored maps (gameplay/story critical)
-const PATH_LEGEND: Dictionary = { "P": Vector2i(0, 4) }
+const GROUND_NOISE_SEED: int = 12345
+const GROUND_NOISE_FREQ: float = 0.06   # Low = large organic patches
+const GROUND_NOISE_OCTAVES: int = 4
+const VARIANT_HASH_SEED: int = 31415
+
+const PATH_LEGEND: Dictionary = { "P": Vector2i(2, 9) }  # sandy/tan, terrain.png row 9
 const PATH_MAP: Array[String] = [ "...", ... ]
+
+static func get_biome_for_noise(noise_val: float) -> int:
+    for entry: Dictionary in OPEN_BIOME_THRESHOLDS:
+        if noise_val >= float(entry.get("threshold", -1.0)):
+            return int(entry.get("biome", Biome.DIRT))
+    return Biome.DIRT
+
+static func pick_tile(noise_val: float, x: int, y: int) -> Vector2i:
+    var biome: int = get_biome_for_noise(noise_val)
+    var variants: Array = BIOME_TILES[biome]
+    var idx: int = abs(x * 73 + y * 31 + VARIANT_HASH_SEED) % variants.size()
+    return variants[idx]
 
 # <scene_name>_encounters.gd — pool builder, testable without live scene
 class_name SceneNameEncounters
@@ -82,20 +113,34 @@ static func build_pool(enemy1: Resource, ...) -> Array[EncounterPoolEntry]:
 
 # <scene_name>.gd — delegates to modules
 func _setup_tilemap() -> void:
+    var atlas_paths: Array[String] = [
+        MapBuilder.TF_TERRAIN,        # source 0 — flat 16x16 ground + path
+        MapBuilder.FOREST_OBJECTS,    # source 1 — trees, trunks, canopies
+        MapBuilder.STONE_OBJECTS,     # source 2 — detail: rocks, flowers
+    ]
     MapBuilder.apply_tileset(layers, atlas_paths, solid)
-    # Procedural ground — organic, no carpet-bombing
+    # Procedural ground — biome noise + position hash, organic, no carpet-bombing
     var noise := FastNoiseLite.new()
     noise.seed = SceneNameMap.GROUND_NOISE_SEED
     noise.frequency = SceneNameMap.GROUND_NOISE_FREQ
     noise.fractal_octaves = SceneNameMap.GROUND_NOISE_OCTAVES
-    MapBuilder.build_noise_layer(_ground, SceneNameMap.COLS, SceneNameMap.ROWS, noise, SceneNameMap.GROUND_ENTRIES)
+    _fill_ground_with_variants(_ground, noise)
     MapBuilder.disable_collision(_ground)
     # Structural layers — authored
     MapBuilder.build_layer(_paths, SceneNameMap.PATH_MAP, SceneNameMap.PATH_LEGEND)
     MapBuilder.disable_collision(_paths)
+
+func _fill_ground_with_variants(layer: TileMapLayer, noise: FastNoiseLite) -> void:
+    for y: int in range(SceneNameMap.ROWS):
+        for x: int in range(SceneNameMap.COLS):
+            var noise_val: float = noise.get_noise_2d(float(x), float(y))
+            var atlas: Vector2i = SceneNameMap.pick_tile(noise_val, x, y)
+            layer.set_cell(Vector2i(x, y), 0, atlas)
+    layer.update_internals()
 ```
 
-- Source 0 = A5 sheet (terrain), Source 1+ = B sheets (objects — pass `source_id`)
+- **Source 0 = `TF_TERRAIN`** (flat 16×16 — `TimeFantasy_TILES/TILESETS/terrain.png`), Source 1+ = B sheets (objects — pass `source_id`)
+- Flat tiles are freely mixable — no seam artifacts between column variants
 - Solid tiles declared in `solid: Dictionary = { source_id: [Vector2i, ...] }`
 - Module files use `class_name` + `extends RefCounted` — zero runtime cost, testable in isolation
 
@@ -131,10 +176,12 @@ func _setup_tilemap() -> void:
 
 | Source | Constant | Asset | Purpose |
 |--------|----------|-------|---------|
-| 0 | `FAIRY_FOREST_A5_A` | `tf_ff_tileA5_a.png` | Ground (row 8), paths (row 4) |
+| 0 | `TF_TERRAIN` | `TimeFantasy_TILES/TILESETS/terrain.png` | Flat 16×16 ground: rows 1-2 (green grass), row 6 (dirt), row 9 (sandy path) |
 | 1 | `FOREST_OBJECTS` | `tf_ff_tileB_forest.png` | Tree canopy, foliage details |
 | 2 | `STONE_OBJECTS` | `tf_ff_tileB_stone.png` | Rocks, flowers in clearing |
 | 3 | `TREE_OBJECTS` | `tf_ff_tileB_trees.png` | Individual tree objects |
+
+**Ground:** Biome noise (3 zones: BRIGHT_GREEN/MUTED_GREEN/DIRT) + position hash for per-cell variety. Implemented via `_fill_ground_with_variants()` in `verdant_forest.gd` using `VerdantForestMap.pick_tile()`.
 
 **Layers:** Ground, GroundDetail, Trees, Paths, Objects, AbovePlayer
 **Encounters:** 11 entries — creeping_vine, ash_stalker, hollow_specter, ancient_sentinel, gale_harpy, ember_hound + mixed
@@ -173,7 +220,7 @@ func _setup_tilemap() -> void:
 
 | Source | Constant | Asset | Purpose |
 |--------|----------|-------|---------|
-| 0 | `FAIRY_FOREST_A5_A` | `tf_ff_tileA5_a.png` | Ground (row 10 gray stone, row 2 amber, row 6 cliff), path (row 4) |
+| 0 | `TF_TERRAIN` | `TimeFantasy_TILES/TILESETS/terrain.png` | Flat 16×16 ground: scrubland, bare earth, sandy path |
 | 1 | `STONE_OBJECTS` | `tf_ff_tileB_stone.png` | Scattered rocks (detail layer) |
 
 **Layers:** Ground, GroundDetail, Paths (no trees/AbovePlayer — open steppe)
@@ -197,24 +244,32 @@ func _on_exit_entered(body: Node2D) -> void:
 
 ## Cross-Scene Consistency Rules
 
-1. **Fairy Forest A5_A is the universal ground sheet** — fully opaque at every row
-2. **Row 8** = bright green (forest/town). **Row 10** = gray stone (ruins/paths). **Row 4** = amber cobble (forest paths)
-3. **Ruins tiles stay in ruins scenes** — golden walls break fairy forest aesthetic
-4. **Organic ground** — use 2-3 terrain types in natural patches (grass, dirt, stone). Within each patch, use one A5 column consistently (different columns create seam artifacts). Never fill the entire map with one repeated tile.
-5. **B-sheet objects and ground decorations provide visual variety** — trees, rocks, flowers, barrels, fences. Ground detail coverage should be 15-30%, not sparse.
+1. **`TF_TERRAIN` is the standard ground sheet for new/updated outdoor scenes** — flat 16×16 tiles from `TimeFantasy_TILES/TILESETS/terrain.png`. Freely mixable, no seam artifacts. Overgrown Ruins and Roothollow still use legacy `FAIRY_FOREST_A5_A` (migrate when redesigning).
+2. **TF_TERRAIN row guide:** Row 1-2 = green grass. Row 6 = brown dirt. Row 9 = sandy/tan. Rows 22+ = RPGMaker auto-tiles — DO NOT USE.
+3. **Ruins tiles stay in ruins scenes** — golden walls break forest/steppe aesthetic
+4. **Organic ground** — use 2-3 biome types in large natural patches via noise + position hash. Never fill the entire map with one repeated tile. Flat tiles (TF_TERRAIN) can freely mix column variants — no seam restriction.
+5. **B-sheet objects and ground decorations provide visual variety** — trees, rocks, flowers, barrels, fences. Place decorations sparingly and intentionally — no percentage-based carpet bombing.
 6. **Search for JRPG reference images** before designing any tilemap — study how professional level designers create organic environments
-6. **Mixing packs is OK** for different purposes (e.g., Inn uses `tf_farmandfort`)
+7. **Mixing packs is OK** for different purposes (e.g., Inn uses `tf_farmandfort`)
 
 ## MapBuilder Constants Reference
 
 ```
-# A5 terrain sheets (128x256, 8 cols x 16 rows)
-FAIRY_FOREST_A5_A   = tf_ff_tileA5_a.png         # Universal opaque ground
-FAIRY_FOREST_A5_B   = tf_ff_tileA5_b.png         # Fairy forest variant B
-RUINS_A5            = tf_A5_ruins2.png            # Golden/Egyptian ruins
-OVERGROWN_RUINS_A5  = tf_A5_ruins3.png            # Semi-transparent overlays!
+# Flat 16x16 terrain sheets (PREFERRED for source 0 — freely mixable)
+TF_TERRAIN          = TimeFantasy_TILES/TILESETS/terrain.png  # Grass, dirt, stone, sandy path
+TF_OUTSIDE          = TimeFantasy_TILES/TILESETS/outside.png  # Outdoor cliffs, extra terrain
+TF_DUNGEON          = TimeFantasy_TILES/TILESETS/dungeon.png  # Dungeon floors/walls
+TF_CASTLE           = TimeFantasy_TILES/TILESETS/castle.png   # Castle interior
+TF_INSIDE           = TimeFantasy_TILES/TILESETS/inside.png   # Room interiors
+TF_WORLD            = TimeFantasy_TILES/TILESETS/world.png    # World map tiles
 
-# B object sheets (256x256, 16 cols x 16 rows)
+# Legacy A5 autotile sheets (columns NOT freely mixable — avoid for new scenes)
+FAIRY_FOREST_A5_A   = tf_ff_tileA5_a.png         # Legacy — still used in roothollow, overgrown_ruins
+FAIRY_FOREST_A5_B   = tf_ff_tileA5_b.png         # Legacy — fairy forest variant B
+RUINS_A5            = tf_A5_ruins2.png            # Legacy — Golden/Egyptian ruins
+OVERGROWN_RUINS_A5  = tf_A5_ruins3.png            # Legacy — Semi-transparent overlays!
+
+# B object sheets (256x256, 16 cols x 16 rows — still used for objects/canopy)
 FOREST_OBJECTS      = tf_ff_tileB_forest.png      # Tree canopy, bushes, trunks
 TREE_OBJECTS        = tf_ff_tileB_trees.png       # Individual trees, dead trees
 STONE_OBJECTS       = tf_ff_tileB_stone.png       # Rocks, flowers, gravestones

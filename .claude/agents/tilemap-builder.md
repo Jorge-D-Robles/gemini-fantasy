@@ -70,10 +70,16 @@ Use WebFetch on promising image results to study them. Note specifically:
 
 **MANDATORY: Read the tile sheet PNG files directly** before using any atlas coordinates. You are a multimodal AI — you can see images. The coordinate tables in documentation are approximations that may be wrong. The PNG is the only source of truth.
 
+**For ground layers, read the flat TimeFantasy_TILES sheets FIRST:**
 ```
-Read("game/assets/tilesets/tf_ff_tileA5_a.png")    # Fairy Forest terrain
-Read("game/assets/tilesets/tf_ff_tileB_forest.png") # Forest objects
-Read("game/assets/tilesets/tf_ff_tileB_stone.png")  # Stone objects
+Read("game/assets/TimeFantasy_TILES/TILESETS/terrain.png")  # Flat ground (preferred for source 0)
+Read("game/assets/TimeFantasy_TILES/TILESETS/outside.png")  # Flat outdoor objects + trees
+```
+
+**For object layers (B-sheets — unchanged):**
+```
+Read("game/assets/tilesets/tf_ff_tileB_forest.png") # Forest objects (canopies, trunks)
+Read("game/assets/tilesets/tf_ff_tileB_stone.png")  # Stone objects (rocks, flowers)
 Read("game/assets/tilesets/tf_B_ruins3.png")        # Ruins objects (if applicable)
 ```
 
@@ -209,25 +215,79 @@ After completing all layers and passing your own visual check, submit the tilema
 
 These are registered as constants in `game/systems/map_builder.gd`:
 
+**Flat 16×16 terrain sheets (PREFERRED for ground layers — source 0):**
+
 | Constant | Path | Format | Contents |
 |----------|------|--------|----------|
-| `FAIRY_FOREST_A5_A` | `tf_ff_tileA5_a.png` | A5 (8x16) | Fairy forest terrain |
-| `FAIRY_FOREST_A5_B` | `tf_ff_tileA5_b.png` | A5 (8x16) | Alternative terrain set |
-| `RUINS_A5` | `tf_A5_ruins2.png` | A5 (8x16) | Gold/Egyptian ruins terrain |
-| `OVERGROWN_RUINS_A5` | `tf_A5_ruins3.png` | A5 (8x16) | Brown/green overgrown ruins |
-| `FOREST_OBJECTS` | `tf_ff_tileB_forest.png` | B (16x16) | Tree canopies, trunks, bushes |
-| `TREE_OBJECTS` | `tf_ff_tileB_trees.png` | B (16x16) | Pine trees, dead trees |
-| `STONE_OBJECTS` | `tf_ff_tileB_stone.png` | B (16x16) | Rocks, flowers, gravestones |
-| `MUSHROOM_VILLAGE` | `tf_ff_tileB_mushroomvillage.png` | B (16x16) | Mushroom houses, fences |
-| `RUINS_OBJECTS` | `tf_B_ruins2.png` | B (16x16) | Egyptian-style objects |
-| `OVERGROWN_RUINS_OBJECTS` | `tf_B_ruins3.png` | B (16x16) | Overgrown ruin objects |
-| `GIANT_TREE` | `tf_B_gianttree_ext.png` | B (16x16) | Giant tree trunk/branches |
+| `TF_TERRAIN` | `TimeFantasy_TILES/TILESETS/terrain.png` | Flat 16×16 (39 cols × 38 rows) | Grass, dirt, stone, sand terrain variants. Freely mixable — no seam artifacts. |
+| `TF_OUTSIDE` | `TimeFantasy_TILES/TILESETS/outside.png` | Flat 16×16 (52 cols × 24 rows) | Outdoor terrain: cliffs, mountains, extra ground types |
+| `TF_DUNGEON` | `TimeFantasy_TILES/TILESETS/dungeon.png` | Flat 16×16 | Dungeon floor and wall tiles |
+| `TF_CASTLE` | `TimeFantasy_TILES/TILESETS/castle.png` | Flat 16×16 | Castle / fortress interior tiles |
+| `TF_INSIDE` | `TimeFantasy_TILES/TILESETS/inside.png` | Flat 16×16 | Interior room tiles |
+| `TF_WORLD` | `TimeFantasy_TILES/TILESETS/world.png` | Flat 16×16 | World map overland tiles |
+
+**Known terrain.png row layout (verified by pixel sampling):**
+
+| Row | Cols | Appearance | Use For |
+|-----|------|------------|---------|
+| 1 | 2–11 | Bright green grass | Dominant forest/meadow ground |
+| 2 | 1–11 | Muted/secondary green | Shaded grass, variety patch |
+| 6 | 1–8 | Warm brown earth/dirt | Bare earth, path edges |
+| 9 | 1–16 | Sandy/tan | Dirt paths, dry ground |
+| 22+ | — | RPGMaker AUTO-TILES | **DO NOT USE** — wrong format for Godot |
+
+**B-sheet object tiles (source 1+):**
+
+| Constant | Path | Format | Contents |
+|----------|------|--------|----------|
+| `FOREST_OBJECTS` | `tf_ff_tileB_forest.png` | B (16×16) | Tree canopies, trunks, bushes |
+| `TREE_OBJECTS` | `tf_ff_tileB_trees.png` | B (16×16) | Pine trees, dead trees |
+| `STONE_OBJECTS` | `tf_ff_tileB_stone.png` | B (16×16) | Rocks, flowers, gravestones |
+| `MUSHROOM_VILLAGE` | `tf_ff_tileB_mushroomvillage.png` | B (16×16) | Mushroom houses, fences |
+| `RUINS_OBJECTS` | `tf_B_ruins2.png` | B (16×16) | Egyptian-style objects |
+| `OVERGROWN_RUINS_OBJECTS` | `tf_B_ruins3.png` | B (16×16) | Overgrown ruin objects |
+| `GIANT_TREE` | `tf_B_gianttree_ext.png` | B (16×16) | Giant tree trunk/branches |
+
+**Legacy A5 autotile sheets (use ONLY for scenes already using them — e.g., overgrown_ruins):**
+
+| Constant | Path | Notes |
+|----------|------|-------|
+| `FAIRY_FOREST_A5_A` | `tf_ff_tileA5_a.png` | LEGACY — RPGMaker autotile format. Columns within a row are NOT freely mixable. |
+| `FAIRY_FOREST_A5_B` | `tf_ff_tileA5_b.png` | LEGACY — same restrictions |
+| `RUINS_A5` | `tf_A5_ruins2.png` | LEGACY — Gold/Egyptian ruins terrain |
+| `OVERGROWN_RUINS_A5` | `tf_A5_ruins3.png` | LEGACY — Brown/green overgrown ruins |
 
 **DO NOT trust the written descriptions above blindly.** Always READ the actual PNG to verify what each tile looks like before using it.
 
-### A5 Column Rule
+### Flat Tile Variant Selection (TF_TERRAIN and other flat sheets)
 
-Each column in an A5 row is a different visual variant. Variants do NOT tile seamlessly with each other. **Use ONE column per terrain patch** (e.g., all `(0, 8)` for a grass area, never mixing `(0, 8)` with `(1, 8)`).
+Flat 16×16 tiles like `TF_TERRAIN` can be **freely mixed** — any column next to any other column with no seam artifacts. This enables per-cell variety using a biome + position-hash pattern:
+
+```gdscript
+# Multiple column variants for each biome zone — pick by position hash
+const BIOME_TILES: Dictionary = {
+    Biome.BRIGHT_GREEN: [
+        Vector2i(2, 1), Vector2i(3, 1), Vector2i(4, 1),
+        Vector2i(5, 1), Vector2i(6, 1), Vector2i(7, 1),
+    ],
+    Biome.DIRT: [
+        Vector2i(1, 6), Vector2i(2, 6), Vector2i(3, 6),
+        Vector2i(4, 6), Vector2i(5, 6),
+    ],
+}
+
+static func pick_tile(noise_val: float, x: int, y: int) -> Vector2i:
+    var biome: int = get_biome_for_noise(noise_val)
+    var variants: Array = BIOME_TILES[biome]
+    var idx: int = abs(x * 73 + y * 31 + VARIANT_HASH_SEED) % variants.size()
+    return variants[idx]
+```
+
+Large-scale patch structure comes from low-frequency noise (freq ~0.05–0.08). Per-cell variety comes from the position hash selecting among column variants within the biome.
+
+### Legacy A5 Column Rule (applies ONLY to A5-format sheets)
+
+For `FAIRY_FOREST_A5_A`, `RUINS_A5`, `OVERGROWN_RUINS_A5`: each column in a row is a different visual variant, but variants do NOT tile seamlessly with each other. **Use ONE column per terrain patch** when using these legacy sheets. This restriction does NOT apply to flat `TF_TERRAIN` tiles.
 
 ### Additional Assets
 
@@ -265,12 +325,12 @@ Common causes of wrong tiles:
 4. **NEVER commit final tilemap changes without visual verification**
 5. **NEVER use percentage-based decoration coverage** — place decorations intentionally
 6. **Build organic ground** — multiple terrain types in natural patches, NOT uniform fill
-7. **Use multiple atlas sources** — A5 for terrain (source 0), B for objects (source 1+)
+7. **Use TF_TERRAIN for ground (source 0)** — flat 16×16 tiles from `TimeFantasy_TILES/TILESETS/terrain.png`; B-sheets for objects (source 1+). Do NOT use A5 autotile sheets for new ground layers.
 8. **Pass `source_id` parameter** for B-sheet layers
-9. **Within terrain patches, use one A5 column** — different columns create seams
+9. **Flat tiles are freely mixable** — mix any TF_TERRAIN column variants freely. For legacy A5 sheets only: use one column per terrain patch (different columns create seams).
 10. **Import entire tile packs** — copy ALL sheets from a pack, not just one file
 11. **Objects and AbovePlayer layers are mandatory** for outdoor scenes
 12. **Maintain gameplay clearances** — don't block spawn points, exits, NPC positions
 13. **Preserve all functional code** — transitions, encounters, events must keep working
-14. **Don't invent tile coordinates** — verify against the PNG (A5: cols 0-7, rows 0-15; B: cols 0-15, rows 0-15)
+14. **Don't invent tile coordinates** — verify against the PNG (TF_TERRAIN: cols 0–38, rows 0–37; B: cols 0–15, rows 0–15; avoid TF_TERRAIN cols 22+ which are RPGMaker auto-tiles)
 15. **Every scene must look hand-crafted** — if a screenshot looks procedural, redesign it

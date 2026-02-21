@@ -27,9 +27,9 @@ Level (Node2D)
 
 | Layer | z_index | Collision | Source | Content |
 |-------|---------|-----------|--------|---------|
-| **Ground** | -2 | No | A5 (source 0) | Procedural noise terrain (grass, dirt, stone) |
-| **GroundDetail** | -1 | No | A5 (source 0) | Procedural scatter or authored accents |
-| **Paths** | -1 | No | A5 (source 0) | Authored walkway overlay (structural) |
+| **Ground** | -2 | No | `TF_TERRAIN` (source 0) | Procedural noise terrain (grass, dirt, stone) — flat 16×16 tiles |
+| **GroundDetail** | -1 | No | `TF_TERRAIN` (source 0) | Procedural scatter or authored accents |
+| **Paths** | -1 | No | `TF_TERRAIN` (source 0) | Authored walkway overlay (structural) |
 | **Trees** | 0 | Yes | B (source 1+) | Authored dense forest fill (structural) |
 | **Objects** | 0 | Yes | B (source 1+) | Authored rocks, buildings, walls (structural) |
 | **Entities** | 0 | — | — | Player, NPCs — y_sort handles Y-depth |
@@ -43,33 +43,62 @@ All TileMapLayer nodes in a level reference the **same TileSet resource** create
 
 ### Available Tile Sheet Types
 
-Time Fantasy provides two types of tile sheets that work in Godot:
+Time Fantasy provides two types of tile sheets that work well in Godot:
 
 | Type | Dimensions (1x) | Grid | Contents |
 |------|-----------------|------|----------|
-| **A5** | 128x256 px | 8 cols x 16 rows | Flat terrain tiles (grass, dirt, stone, paths, accents) |
+| **Flat 16×16** (`TF_TERRAIN` etc.) | Varies | Large grid | Plain standalone tiles — freely mixable, no seam issues |
 | **B** | 256x256 px | 16 cols x 16 rows | Object tiles (trees, rocks, buildings, decorations) |
 
-### A5 Sheets (Terrain) — 128x256 px, 8 cols x 16 rows
+**Legacy RPGMaker format (A5) — avoid for new scenes:**
 
-Simple flat grid of 16x16 tiles. Each tile is referenced as `Vector2i(col, row)`.
+| Type | Dimensions (1x) | Grid | Contents |
+|------|-----------------|------|----------|
+| **A5** (legacy) | 128x256 px | 8 cols x 16 rows | Columns are NOT freely mixable — seam artifacts when columns are mixed |
 
-**Critical property of A5 columns:** Each column in a row is a DIFFERENT visual variant of the same terrain type. Columns 0-7 of row 0 are all "grass" but each has a unique blade/texture pattern. **The variants do NOT tile seamlessly with each other** — placing column 0 next to column 1 creates a visible seam because their internal patterns don't match at the edges.
+### Flat 16×16 Sheets (PREFERRED for Ground Layers)
 
-**Fairy Forest A5_A (`tf_ff_tileA5_a.png`) — verified by visual inspection:**
+`TF_TERRAIN` (`game/assets/TimeFantasy_TILES/TILESETS/terrain.png`) is the primary ground sheet. Every tile is a standalone 16×16 sprite — **any tile can be placed next to any other tile without seam artifacts**. This makes per-cell variety trivial: use position-hash or noise to pick among column variants freely.
 
-| Rows | Content | In-Game Appearance | Use For |
-|------|---------|-------------------|---------|
-| 0-1 | Grass variants (16 tiles) | Dark green, varied grass patterns | Ground fill (pick ONE column) |
-| 2-3 | Dirt/earth variants (16 tiles) | Brown earth/soil | Ground fill for dirt areas |
-| 4-5 | Stone path variants (16 tiles) | Golden/amber cobblestone | Path overlay |
-| 6-7 | Dark earth/roots (16 tiles) | Dark brown forest floor | Dungeon/dark forest ground |
-| 8-9 | Dense vegetation (16 tiles) | **Bright green** dense foliage | Green forest ground fill |
-| 10-11 | Gray stone (16 tiles) | Gray cobblestone | Town roads, stone floors |
-| 12-13 | Waterfall/dark texture (16 tiles) | Dark gray, water-like | Water features, cliff faces |
-| 14-15 | Foliage accents (16 tiles) | Flowers, small bushes | Sparse ground decoration |
+**terrain.png verified row layout (via pixel sampling):**
 
-**Overgrown Ruins A5 (`tf_A5_ruins3.png`):**
+| Row | Cols | Appearance | Use For |
+|-----|------|------------|---------|
+| 1 | 2–11 | Bright green grass | Dominant forest/meadow ground |
+| 2 | 1–11 | Muted/secondary green | Shaded grass, variety patch |
+| 6 | 1–8 | Warm brown earth/dirt | Bare earth, path edges |
+| 9 | 1–16 | Sandy/tan | Dirt paths, dry ground |
+| 22+ | — | RPGMaker AUTO-TILES section | **DO NOT USE** — wrong format |
+
+**Biome + position-hash pattern (correct approach for flat tiles):**
+
+```gdscript
+# terrain.png — multiple column variants per biome, picked by position hash
+enum Biome { BRIGHT_GREEN, MUTED_GREEN, DIRT }
+
+const BIOME_TILES: Dictionary = {
+    Biome.BRIGHT_GREEN: [
+        Vector2i(2, 1), Vector2i(3, 1), Vector2i(4, 1),
+        Vector2i(5, 1), Vector2i(6, 1), Vector2i(7, 1),
+    ],
+    Biome.MUTED_GREEN: [
+        Vector2i(1, 2), Vector2i(2, 2), Vector2i(3, 2), Vector2i(4, 2),
+    ],
+    Biome.DIRT: [
+        Vector2i(1, 6), Vector2i(2, 6), Vector2i(3, 6),
+    ],
+}
+
+static func pick_tile(noise_val: float, x: int, y: int) -> Vector2i:
+    var biome: int = get_biome_for_noise(noise_val)
+    var variants: Array = BIOME_TILES[biome]
+    var idx: int = abs(x * 73 + y * 31 + VARIANT_HASH_SEED) % variants.size()
+    return variants[idx]
+```
+
+Large-scale terrain patches come from low-frequency noise (freq ~0.05–0.08). Per-cell variety comes from the hash selecting among multiple column variants within the biome. No repeating grid pattern.
+
+**Overgrown Ruins A5 (`tf_A5_ruins3.png`) — legacy, still used in overgrown_ruins scene:**
 
 | Rows | Content | Use For |
 |------|---------|---------|
@@ -144,17 +173,24 @@ Filling the entire ground with one repeated tile creates an artificial, flat loo
 ### Correct Pattern
 
 ```gdscript
-# CORRECT: Multiple terrain types in organic patches
-const GROUND_LEGEND: Dictionary = {
-    "G": Vector2i(0, 8),   # Bright green — dominant terrain
-    "D": Vector2i(0, 2),   # Dirt — around buildings, path edges
-    "S": Vector2i(0, 10),  # Stone — plazas, under structures
+# CORRECT: Biome-based noise + position hash for organic, non-repeating ground
+# Uses TF_TERRAIN (flat 16x16) — freely mixable, no seam artifacts
+
+enum Biome { BRIGHT_GREEN, MUTED_GREEN, DIRT }
+
+const BIOME_TILES: Dictionary = {
+    Biome.BRIGHT_GREEN: [
+        Vector2i(2, 1), Vector2i(3, 1), Vector2i(4, 1), Vector2i(5, 1),
+    ],
+    Biome.MUTED_GREEN: [
+        Vector2i(1, 2), Vector2i(2, 2), Vector2i(3, 2),
+    ],
+    Biome.DIRT: [
+        Vector2i(1, 6), Vector2i(2, 6), Vector2i(3, 6),
+    ],
 }
-const DETAIL_LEGEND: Dictionary = {
-    "f": Vector2i(0, 14),  # Flower accent
-    "b": Vector2i(2, 14),  # Bush accent
-    "p": Vector2i(0, 0),   # Pebbles (from B stone sheet)
-}
+# PATH_LEGEND: sandy path tile from row 9
+const PATH_LEGEND: Dictionary = { "P": Vector2i(2, 9) }
 ```
 
 ### Anti-Pattern: Uniform Single-Tile Fill
@@ -167,14 +203,13 @@ const GROUND_MAP: Array[String] = [
 ]
 ```
 
-### Anti-Pattern: Column Alternation
+### Anti-Pattern: Using A5 Autotile Sheets for New Ground Layers
 
 ```gdscript
-# WRONG: Mixing columns from the same row creates visible stripes
-const GROUND_LEGEND: Dictionary = {
-    "G": Vector2i(0, 0), "g": Vector2i(1, 0),  # SEAM ARTIFACTS
-    "H": Vector2i(2, 0), "h": Vector2i(3, 0),
-}
+# WRONG: A5 sheets (tf_ff_tileA5_a.png) have the RPGMaker autotile format
+# where columns within a row are NOT freely mixable — creates seam artifacts.
+# Use TF_TERRAIN (flat 16x16) instead for all new scenes.
+atlas_paths = [MapBuilder.FAIRY_FOREST_A5_A, ...]  # Avoid for ground layer
 ```
 
 ## MapBuilder Usage Patterns
@@ -186,7 +221,7 @@ Visual layers (ground, detail/debris) use **FastNoiseLite** for organic distribu
 ```gdscript
 func _setup_tilemap() -> void:
     var atlas_paths: Array[String] = [
-        MapBuilder.FAIRY_FOREST_A5_A,   # Source 0: terrain
+        MapBuilder.TF_TERRAIN,           # Source 0: flat 16x16 terrain (grass, dirt, stone, paths)
         MapBuilder.FOREST_OBJECTS,       # Source 1: tree objects
         MapBuilder.STONE_OBJECTS,        # Source 2: ground decorations
     ]
@@ -208,11 +243,8 @@ func _setup_tilemap() -> void:
     ground_noise.seed = SceneMap.GROUND_NOISE_SEED
     ground_noise.frequency = SceneMap.GROUND_NOISE_FREQ
     ground_noise.fractal_octaves = SceneMap.GROUND_NOISE_OCTAVES
-    MapBuilder.build_noise_layer(
-        _ground_layer,
-        SceneMap.COLS, SceneMap.ROWS,
-        ground_noise, SceneMap.GROUND_ENTRIES,
-    )
+    # Procedural ground: use biome noise + position hash for organic, non-repeating fill
+    _fill_ground_with_variants(_ground_layer, ground_noise)
     MapBuilder.disable_collision(_ground_layer)
 
     var detail_noise := FastNoiseLite.new()
@@ -231,9 +263,17 @@ func _setup_tilemap() -> void:
     MapBuilder.build_layer(_objects_layer, SceneMap.TRUNK_MAP, SceneMap.TRUNK_LEGEND, 1)
     MapBuilder.build_layer(_above_player_layer, SceneMap.CANOPY_MAP, SceneMap.CANOPY_LEGEND, 1)
     MapBuilder.disable_collision(_above_player_layer)
+
+func _fill_ground_with_variants(layer: TileMapLayer, noise: FastNoiseLite) -> void:
+    for y: int in range(SceneMap.ROWS):
+        for x: int in range(SceneMap.COLS):
+            var noise_val: float = noise.get_noise_2d(float(x), float(y))
+            var atlas: Vector2i = SceneMap.pick_tile(noise_val, x, y)
+            layer.set_cell(Vector2i(x, y), 0, atlas)
+    layer.update_internals()
 ```
 
-The corresponding `<scene>_map.gd` module defines noise configs instead of text arrays for visual layers:
+The corresponding `<scene>_map.gd` module defines biome constants and a `pick_tile()` helper:
 
 ```gdscript
 class_name SceneMap
@@ -242,25 +282,55 @@ extends RefCounted
 const COLS: int = 40
 const ROWS: int = 24
 
-# Procedural ground config — noise thresholds high→low, first match wins
+# Biome zones — sampled from TF_TERRAIN (flat 16x16, freely mixable)
+enum Biome { BRIGHT_GREEN, MUTED_GREEN, DIRT }
+
+const BIOME_TILES: Dictionary = {
+    Biome.BRIGHT_GREEN: [
+        Vector2i(2, 1), Vector2i(3, 1), Vector2i(4, 1),
+        Vector2i(5, 1), Vector2i(6, 1), Vector2i(7, 1),
+    ],
+    Biome.MUTED_GREEN: [
+        Vector2i(1, 2), Vector2i(2, 2), Vector2i(3, 2), Vector2i(4, 2),
+    ],
+    Biome.DIRT: [
+        Vector2i(1, 6), Vector2i(2, 6), Vector2i(3, 6),
+    ],
+}
+
+# Noise thresholds — sorted high→low, first match wins
+const OPEN_BIOME_THRESHOLDS: Array[Dictionary] = [
+    {"threshold": 0.15,  "biome": Biome.BRIGHT_GREEN},
+    {"threshold": -0.15, "biome": Biome.MUTED_GREEN},
+    {"threshold": -1.0,  "biome": Biome.DIRT},
+]
+
 const GROUND_NOISE_SEED: int = 12345
-const GROUND_NOISE_FREQ: float = 0.08
-const GROUND_NOISE_OCTAVES: int = 3
-const GROUND_ENTRIES: Array[Dictionary] = [
-    {"threshold": 0.3,  "atlas": Vector2i(0, 8)},   # bright green (common)
-    {"threshold": -0.2, "atlas": Vector2i(0, 2)},   # dirt/earth
-    {"threshold": -1.0, "atlas": Vector2i(0, 6)},   # dark earth (catch-all)
-]
+const GROUND_NOISE_FREQ: float = 0.06   # Low frequency = large organic patches
+const GROUND_NOISE_OCTAVES: int = 4
+const VARIANT_HASH_SEED: int = 31415
 
-# Scatter decorations: each entry is placed where noise > (1.0 - density)
+# Scatter decorations — sparse, intentional
 const DETAIL_ENTRIES: Array[Dictionary] = [
-    {"atlas": Vector2i(0, 0), "source_id": 2, "density": 0.07},  # small rock
-    {"atlas": Vector2i(0, 1), "source_id": 2, "density": 0.05},  # flower
+    {"atlas": Vector2i(0, 0), "source_id": 2, "density": 0.02},  # small rock
+    {"atlas": Vector2i(0, 1), "source_id": 2, "density": 0.015}, # flower
 ]
 
-# Structural layers — keep as authored maps
-const PATH_LEGEND: Dictionary = {"P": Vector2i(0, 4)}
+# Structural layers — authored maps
+const PATH_LEGEND: Dictionary = {"P": Vector2i(2, 9)}  # sandy/tan path, terrain.png row 9
 const PATH_MAP: Array[String] = [...]
+
+static func get_biome_for_noise(noise_val: float) -> int:
+    for entry: Dictionary in OPEN_BIOME_THRESHOLDS:
+        if noise_val >= float(entry.get("threshold", -1.0)):
+            return int(entry.get("biome", Biome.DIRT))
+    return Biome.DIRT
+
+static func pick_tile(noise_val: float, x: int, y: int) -> Vector2i:
+    var biome: int = get_biome_for_noise(noise_val)
+    var variants: Array = BIOME_TILES[biome]
+    var idx: int = abs(x * 73 + y * 31 + VARIANT_HASH_SEED) % variants.size()
+    return variants[idx]
 ```
 
 ### For Indoor/Dungeon Scenes (A5 Only)
@@ -405,13 +475,14 @@ Then:
 
 ## Theme-to-Tileset Mapping
 
-| Location | A5 Sheet | B Sheet(s) | Ground Tile | Notes |
-|----------|----------|------------|-------------|-------|
-| Verdant Forest | `FAIRY_FOREST_A5_A` | `FOREST_OBJECTS` | (0, 8) green vegetation | Dense forest borders from B_forest canopy |
-| Roothollow (town) | `FAIRY_FOREST_A5_A` | `MUSHROOM_VILLAGE`, `FOREST_OBJECTS` | (0, 0) or (0, 8) grass | Mushroom buildings, stone roads row 10 |
-| Overgrown Ruins | `OVERGROWN_RUINS_A5` | `OVERGROWN_RUINS_OBJECTS` | (0, 0) mossy stone | Walls from rows 4, 8. Vine-covered areas row 2 |
-| Giant Tree | `FAIRY_FOREST_A5_A` | `GIANT_TREE`, `TREE_OBJECTS` | (0, 8) vegetation | Giant tree trunk/canopy objects |
-| Ancient Ruins | `RUINS_A5` | `RUINS_OBJECTS` | (0, 0) gold stone | Egyptian/gold theme, pyramids |
+| Location | Ground Sheet (source 0) | B Sheet(s) | Ground Tiles | Notes |
+|----------|------------------------|------------|--------------|-------|
+| Verdant Forest | `TF_TERRAIN` | `FOREST_OBJECTS`, `STONE_OBJECTS`, `TREE_OBJECTS` | Rows 1-2 (green), row 6 (dirt), row 9 (path) | Biome noise + position hash for organic variety |
+| Prismfall Approach | `TF_TERRAIN` | `STONE_OBJECTS` | Rows 1-2 (scrubland), row 6 (bare earth), row 9 (path) | Open steppe — no AbovePlayer layer needed |
+| Roothollow (town) | `FAIRY_FOREST_A5_A` (legacy) | `MUSHROOM_VILLAGE`, `FOREST_OBJECTS` | Row 8 (grass), row 10 (stone paths) | Mushroom buildings. Migrate to TF_TERRAIN when redesigning |
+| Overgrown Ruins | `FAIRY_FOREST_A5_A` + `OVERGROWN_RUINS_A5` (legacy) | `OVERGROWN_RUINS_OBJECTS` | Row 10 (gray stone) | Ruins3 A5 is transparent overlay; needs opaque base |
+| Giant Tree | `TF_TERRAIN` (new) or `FAIRY_FOREST_A5_A` (legacy) | `GIANT_TREE`, `TREE_OBJECTS` | Rows 1-2 vegetation | Use TF_TERRAIN for new giant tree scenes |
+| Ancient Ruins | `RUINS_A5` (legacy) | `RUINS_OBJECTS` | (0, 0) gold stone | Egyptian/gold theme. Migrate to TF tiles when available |
 
 ## Performance Tips
 
@@ -426,7 +497,8 @@ Then:
 | Anti-Pattern | Problem | Fix |
 |-------------|---------|-----|
 | Uniform single-tile ground fill | Flat, artificial, like a solid-color background | Use 2-3 terrain types in organic patches with ground decorations |
-| Alternating A5 columns in same row | Checkerboard/stripe seam artifacts | Within each patch, use ONE column consistently |
+| Using A5 autotile sheets for new ground layers | Columns within a row are NOT freely mixable — seam artifacts | Use `TF_TERRAIN` (flat 16×16) for all new ground layers |
+| Alternating A5 columns in same row (legacy) | Checkerboard/stripe seam artifacts | Within each patch, use ONE column consistently (legacy A5 only) |
 | Using A5 row 8 tiles as "trees" | Flat grid pattern, not tree-like | Use B-sheet canopy objects for trees |
 | Forgetting `source_id` parameter | B-sheet tiles placed from wrong atlas | Pass `source_id=1` for B-sheet layers |
 | No Objects/AbovePlayer layer | Map looks flat, no depth | Add B-sheet trees/buildings with above-player canopy |
