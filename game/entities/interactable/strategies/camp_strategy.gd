@@ -14,7 +14,12 @@ func execute(owner: Node) -> void:
 		push_warning("CampStrategy: UILayer autoload not found")
 		return
 
+	var canvas := CanvasLayer.new()
+	canvas.layer = 25
+	canvas.process_mode = Node.PROCESS_MODE_ALWAYS
+
 	var camp_menu: Control = CampMenuScript.new()
-	ui_layer.add_child(camp_menu)
-	camp_menu.camp_menu_closed.connect(camp_menu.queue_free, CONNECT_ONE_SHOT)
+	canvas.add_child(camp_menu)
+	ui_layer.add_child(canvas)
+	camp_menu.camp_menu_closed.connect(canvas.queue_free, CONNECT_ONE_SHOT)
 	camp_menu.open()
