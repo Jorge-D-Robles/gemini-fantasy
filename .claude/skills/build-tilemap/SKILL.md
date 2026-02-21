@@ -133,6 +133,22 @@ After all layers:
    - [ ] Scene looks hand-crafted, not procedural
 5. Fix any issues before final commit
 
+## Step 8 — MANDATORY: Dual Reviewer Sign-Off Before Committing
+
+**Do NOT commit the final tilemap without passing both reviewers.** Spawn them in parallel:
+
+```
+Task(subagent_type="tilemap-reviewer-adversarial", prompt="Review tilemap for <scene_name>: <what changed>")
+Task(subagent_type="tilemap-reviewer-neutral", prompt="Review tilemap for <scene_name>: <what changed>")
+```
+
+**Consensus rules:**
+- Both APPROVE → commit and push
+- Any REVISE → apply fixes, re-screenshot, re-review
+- Any REJECT → rework the offending layers, re-screenshot, re-review
+
+**You cannot merge a tilemap that has not passed both reviewers.** This is non-negotiable. If you are blocked by a reviewer, fix the specific issues they identified — do not argue or skip.
+
 ## Decoration Placement Rules
 
 **NEVER target a coverage percentage.** Place decorations individually:

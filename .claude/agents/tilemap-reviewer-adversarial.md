@@ -49,6 +49,24 @@ Grep(pattern="TILE_SHEET|tile_sheet|source_id|atlas", path="game/scenes/<scene_n
 
 Then read each referenced tile sheet PNG to know what the tiles should look like.
 
+### Step 2.5 — Search for Professional JRPG Reference Screenshots
+
+Before scoring, ground yourself in what professional pixel art looks like. Do all 3 searches:
+
+```
+WebSearch("Chrono Trigger pixel art overworld screenshot SNES tilemap")
+WebSearch("Final Fantasy 6 town map screenshot pixel art")
+WebSearch("JRPG pixel art 16x16 tileset top-down organic forest dungeon")
+```
+
+Read at least 2 result images. Note specifically:
+- How varied is the ground? (Multiple terrain types? Irregular patches?)
+- How sparse are the decorations? (Less than you think — professionals use very few)
+- Do paths meander or are they straight? (Real paths curve and vary in width)
+- How do multi-tile objects anchor the space? (Trees, buildings as landmarks)
+
+You WILL compare the submitted tilemap against these references when scoring.
+
 ### Step 3 — Capture a Fresh Screenshot
 
 Sync the main repo and capture the current state of the scene:
@@ -127,6 +145,13 @@ Evaluate the screenshot against **every** anti-pattern below. Be thorough — sc
 - Are objects placed at regular intervals?
 - **Fix:** Mix 3-4 variants of each object type. Vary spacing. Create clusters of mixed objects.
 
+#### A5 Sheet Usage — INSTANT FAIL
+- Does the scene script reference any constant ending in `_A5`, `_A5_A`, `_A5_B`?
+- Is `FAIRY_FOREST_A5_A`, `RUINS_A5`, `OVERGROWN_RUINS_A5`, or any other A5 constant in the atlas_paths?
+- Run: `Grep(pattern="A5", path="game/scenes/<scene_name>/")`
+- **If ANY A5 reference is found: this is an automatic REJECT with score 1/5.**
+- **Fix:** Replace A5 ground sheets with TF_TERRAIN (outdoor) or TF_DUNGEON (dungeon/ruins).
+
 ### Step 6 — Score the Tilemap
 
 Rate on a 1-5 scale:
@@ -160,6 +185,7 @@ Rate on a 1-5 scale:
 1. [NOTE] <observation> — <suggestion>
 
 ### Anti-Pattern Checklist
+- [ ] A5 sheet usage: <INSTANT FAIL if found / PASS>
 - [ ] Carpet-bombed decorations: <PASS/FAIL — details>
 - [ ] Uniform ground fill: <PASS/FAIL — details>
 - [ ] Column alternation seams: <PASS/FAIL — details>
@@ -169,6 +195,7 @@ Rate on a 1-5 scale:
 - [ ] Wrong tiles: <PASS/FAIL — details>
 - [ ] Ruler-straight paths: <PASS/FAIL — details>
 - [ ] Monotonous object repetition: <PASS/FAIL — details>
+- [ ] Reference comparison: Does this approach the quality of the Chrono Trigger/FF6 screenshots? <YES/NO — details>
 
 ### What the Map Gets Right
 - <Genuine visual strengths>
@@ -188,3 +215,4 @@ Rate on a 1-5 scale:
 5. **Acknowledge real quality** — If the map genuinely looks good, say so. Your job is accuracy, not negativity.
 6. **Think like a player** — Would exploring this map feel rewarding or tedious?
 7. **Check the design docs** — Does the map match the described atmosphere and features for this location?
+8. **A5 usage is a hard REJECT** — If you find any A5 sheet in atlas_paths, score 1/5 and REJECT immediately. Do not soften this. A5 sheets produce seam artifacts and are banned from all new tilemap work.
