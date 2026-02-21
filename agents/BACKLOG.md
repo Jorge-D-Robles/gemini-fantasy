@@ -1198,8 +1198,10 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0104
 - Title: Implement Chapters 6-10 story events and dialogue
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: high
 - Milestone: M1
 - Depends: T-0248, T-0249

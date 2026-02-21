@@ -17,6 +17,9 @@ Story event scripts — one-shot cutscenes, recruitments, and story triggers. Ea
 | `demo_ending.gd` | `DemoEnding` | Overgrown Ruins / chained after GarrickMeetsLyra | `demo_complete` |
 | `nyx_introduction.gd` | `NyxIntroduction` | Verdant Forest / _maybe_trigger_nyx_introduction | `nyx_introduction_seen` |
 | `village_burns.gd` | `VillageBurns` | Roothollow (on return) | `village_burns_seen` |
+| `crystal_city_arrival.gd` | `CrystalCityArrival` | Prismfall (on enter) | `prismfall_arrived` |
+| `lyras_truth.gd` | `LyrasTruth` | Crystal Canyon (post-Warden) | `lyras_truth_seen` |
+| `captured.gd` | `Captured` | Southern road (ambush) | `kael_anchor_revealed` |
 
 > **Note:** `event_flags.gd` lives here but is registered as the `EventFlags` autoload in `project.godot`. See `game/autoloads/CLAUDE.md` for the autoload inventory.
 

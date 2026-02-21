@@ -22,6 +22,19 @@ const AFTER_CAPITAL_CAMP_SEEN: String = "after_capital_camp_seen"
 const LEAVING_CAPITAL_SEEN: String = "leaving_capital_seen"
 const LYRA_FRAGMENT_2_COLLECTED: String = "lyra_fragment_2_collected"
 
+# --- Village Burns (Ch7) flags ---
+const VILLAGE_BURNS_SEEN: String = "village_burns_seen"
+const ROOTHOLLOW_BURNED: String = "roothollow_burned"
+
+# --- Crystal City (Ch8) flags ---
+const PRISMFALL_ARRIVED: String = "prismfall_arrived"
+
+# --- Beneath Prismfall (Ch9) flags ---
+const LYRAS_TRUTH_SEEN: String = "lyras_truth_seen"
+
+# --- Captured (Ch10) flags ---
+const KAEL_ANCHOR_REVEALED: String = "kael_anchor_revealed"
+
 # --- Gardener resolution flags ---
 const GARDENER_ENCOUNTERED: String = "gardener_encountered"
 const GARDENER_RESOLUTION_PEACEFUL: String = "gardener_resolution_peaceful"
