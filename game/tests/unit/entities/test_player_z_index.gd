@@ -95,8 +95,8 @@ func test_player_sprite_has_y_sort_offset() -> void:
 	var content := FileAccess.get_file_as_string("res://entities/player/player.tscn")
 	assert_false(content.is_empty(), "player.tscn must exist")
 	assert_true(
-		content.contains("offset = Vector2(0, -8)"),
-		"AnimatedSprite2D must have offset = Vector2(0, -8) for correct Y-sort origin",
+		content.contains("offset = Vector2(0, -16)"),
+		"AnimatedSprite2D must have offset = Vector2(0, -16) for correct Y-sort with 48px frames",
 	)
 
 
@@ -191,3 +191,42 @@ func test_entities_have_y_sort() -> void:
 			section.contains("y_sort_enabled = true"),
 			scene_path + " Entities node must have y_sort_enabled = true",
 		)
+
+
+func test_player_frame_size_is_48x48() -> void:
+	## Player sprite sheet is a single-character 3x4 grid.
+	## Frame size must be width/3 x height/4 = 48x48, NOT 24x24.
+	var source := FileAccess.get_file_as_string("res://entities/player/player.gd")
+	assert_false(source.is_empty(), "player.gd must exist")
+	assert_true(
+		source.contains("texture.get_width() / 3"),
+		"Player frame_w must use texture.get_width() / 3 (single-char sheet)",
+	)
+	assert_true(
+		source.contains("texture.get_height() / 4"),
+		"Player frame_h must use texture.get_height() / 4 (single-char sheet)",
+	)
+	assert_false(
+		source.contains("chars_per_row"),
+		"Player must not use multi-character sheet math (chars_per_row)",
+	)
+
+
+func test_companion_frame_size_is_48x48() -> void:
+	## CompanionFollower.build_sprite_frames uses the same single-char layout.
+	var source := FileAccess.get_file_as_string(
+		"res://entities/companion/companion_follower.gd"
+	)
+	assert_false(source.is_empty(), "companion_follower.gd must exist")
+	assert_true(
+		source.contains("texture.get_width() / 3"),
+		"Companion frame_w must use texture.get_width() / 3 (single-char sheet)",
+	)
+	assert_true(
+		source.contains("texture.get_height() / 4"),
+		"Companion frame_h must use texture.get_height() / 4 (single-char sheet)",
+	)
+	assert_false(
+		source.contains("2 * 3"),
+		"Companion must not use multi-character sheet math (2 * 3)",
+	)
