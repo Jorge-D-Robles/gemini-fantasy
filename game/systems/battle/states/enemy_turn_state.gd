@@ -22,9 +22,11 @@ func enter() -> void:
 		state_machine.transition_to("TurnQueueState")
 		return
 
-	var action := enemy.choose_action(
-		battle_scene.party_battlers, battle_scene.enemy_battlers,
-	)
+	var party: Array[Battler] = []
+	party.assign(battle_scene.party_battlers)
+	var allies: Array[Battler] = []
+	allies.assign(battle_scene.enemy_battlers)
+	var action := enemy.choose_action(party, allies)
 
 	match action.type:
 		BattleAction.Type.ATTACK:
@@ -74,5 +76,3 @@ func _handle_wait_action(enemy: EnemyBattler) -> void:
 		_battle_ui.add_battle_log(
 			"%s waits." % enemy.get_display_name(), UITheme.LogType.INFO,
 		)
-
-
