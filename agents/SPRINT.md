@@ -15,10 +15,6 @@ Started: 2026-02-20
 
 ## Queue
 
-### Tilemap Overhaul — Top Priority Block
-
-- **T-0257**: Final purge — remove all A5 constants from map_builder.gd after all scenes migrated
-
 ### Other
 
 - **T-0250**: Fix EnemyBattler.choose_action() typed array mismatch (battle crash)
@@ -29,6 +25,7 @@ Started: 2026-02-20
 
 ## Done This Sprint
 
+- T-0257: Final A5 purge — removed all 15 deprecated A5 constants from map_builder.gd, regression test added
 - T-0256: Redo Overgrown Capital tilemap — TF_DUNGEON flat tiles + RUINS_OBJECTS B-sheet scatter, position-hashed floor/walls, 14 tests 153 assertions
 - T-0255: Redo Prismfall Approach tilemap — TF_TERRAIN 3-biome steppe ground (gray stone/amber earth/dark earth) + sandy path hash, 16 tests
 - T-0254: Redo Overgrown Ruins tilemap — TF_DUNGEON flat tiles + RUINS_OBJECTS B-sheet scatter, position-hashed floor/walls, 14 tests 91 assertions
