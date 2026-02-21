@@ -14,14 +14,19 @@ const ROWS: int = 25
 # G = bright green (noise > 0.2), g = muted green (0.0..0.2),
 # D = dirt (-0.3..0.0), E = dark earth (catch-all)
 const GROUND_NOISE_SEED: int = 77777
-const GROUND_NOISE_FREQ: float = 0.10
+const GROUND_NOISE_FREQ: float = 0.05
 const GROUND_NOISE_OCTAVES: int = 3
 const GROUND_ENTRIES: Array[Dictionary] = [
-	{"threshold": 0.2,  "atlas": Vector2i(0, 8)},   # G = bright green
-	{"threshold": 0.0,  "atlas": Vector2i(0, 9)},   # g = muted green
-	{"threshold": -0.3, "atlas": Vector2i(0, 2)},   # D = dirt/earth
-	{"threshold": -1.0, "atlas": Vector2i(0, 6)},   # E = dark earth (catch-all)
+	{"threshold": 0.2,  "atlas": Vector2i(0, 8), "foliage": true},   # G = bright green
+	{"threshold": 0.0,  "atlas": Vector2i(0, 9), "foliage": true},   # g = muted green
+	{"threshold": -0.3, "atlas": Vector2i(0, 2), "foliage": false},  # D = dirt/earth
+	{"threshold": -1.0, "atlas": Vector2i(0, 6), "foliage": false},  # E = dark earth (catch-all)
 ]
+
+# Foliage noise — clustered grove placement on grass biomes
+const FOLIAGE_NOISE_SEED: int = 99999
+const FOLIAGE_NOISE_FREQ: float = 0.15
+const FOLIAGE_THRESHOLD: float = 0.4
 
 # Detail scatter — rocks, flowers, leaves (source 2, ~26% total coverage)
 const DETAIL_ENTRIES: Array[Dictionary] = [

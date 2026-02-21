@@ -275,6 +275,10 @@ static func build_noise_layer(
 ## different decoration types have non-overlapping organic distributions.
 ## A cell that already has a tile is skipped (first-match wins).
 ##
+## [param allowed_cells] — when non-empty, only cells in this list are
+## considered for scattering. Pass grass-cell positions to prevent trees
+## appearing on dirt or stone. Empty (default) = all cells allowed.
+##
 ## Entry format: [code]{"atlas": Vector2i, "source_id": int, "density": float}[/code]
 ## [code]density[/code] is in [0, 1]: 0.1 means ~10% coverage.
 static func scatter_decorations(
@@ -283,6 +287,7 @@ static func scatter_decorations(
 	rows: int,
 	noise: FastNoiseLite,
 	entries: Array[Dictionary],
+	allowed_cells: Array[Vector2i] = [],
 ) -> void:
 	for i: int in entries.size():
 		var entry: Dictionary = entries[i]
@@ -293,13 +298,139 @@ static func scatter_decorations(
 		var offset: float = float(i) * 100.0
 		for y: int in range(rows):
 			for x: int in range(cols):
+				var cell := Vector2i(x, y)
+				if allowed_cells.size() > 0 and not cell in allowed_cells:
+					continue
 				var noise_val: float = noise.get_noise_2d(
 					float(x) + offset, float(y) + offset
 				)
 				if noise_val > threshold:
-					if layer.get_cell_source_id(Vector2i(x, y)) == -1:
-						layer.set_cell(Vector2i(x, y), src_id, atlas)
+					if layer.get_cell_source_id(cell) == -1:
+						layer.set_cell(cell, src_id, atlas)
 	layer.update_internals()
+
+
+## Clear all tiles from a TileMapLayer.
+##
+## Convenience wrapper around [method TileMapLayer.clear] for use before
+## a procedural rebuild.
+static func clear_layer(layer: TileMapLayer) -> void:
+	layer.clear()
+
+
+## Two-pass procedural map: biome ground then foliage objects.
+##
+## Replaces the single-pass [method build_noise_layer] +
+## disconnected [method scatter_decorations] pattern to eliminate
+## "carpet bombing" — decorations now only appear on biomes that
+## declare [code]foliage: true[/code].
+##
+## **Pass 1 — biome ground:** samples [param biome_noise] per cell,
+## picks ground tile from [param biome_entries] by threshold (same
+## format as [method build_noise_layer]). Tracks which cells belong to
+## foliage-enabled biomes.
+##
+## **Pass 2 — foliage:** iterates only the foliage-cell set. Samples
+## [param foliage_noise] and places object tiles from [param foliage_entries]
+## if the noise value meets or exceeds the entry [code]threshold[/code].
+## Skips cells already occupied in [param object_layer].
+##
+## Biome entry format (superset of build_noise_layer):
+## [codeblock]
+## {"threshold": float, "atlas": Vector2i, "foliage": bool}
+## [/codeblock]
+## Foliage entry format:
+## [codeblock]
+## {"atlas": Vector2i, "source_id": int, "threshold": float}
+## [/codeblock]
+## All ground tiles use [param source_id] (default 0).
+## Foliage tiles use the [code]source_id[/code] in each foliage entry.
+static func build_procedural_wilds(
+	ground_layer: TileMapLayer,
+	object_layer: TileMapLayer,
+	cols: int,
+	rows: int,
+	biome_noise: FastNoiseLite,
+	foliage_noise: FastNoiseLite,
+	biome_entries: Array[Dictionary],
+	foliage_entries: Array[Dictionary],
+	source_id: int = 0,
+) -> void:
+	ground_layer.clear()
+	object_layer.clear()
+
+	var foliage_cells: Array[Vector2i] = []
+
+	# Pass 1: biome ground
+	for y: int in range(rows):
+		for x: int in range(cols):
+			var noise_val: float = biome_noise.get_noise_2d(float(x), float(y))
+			for entry: Dictionary in biome_entries:
+				if noise_val >= entry.get("threshold", -1.0):
+					ground_layer.set_cell(
+						Vector2i(x, y),
+						source_id,
+						entry.get("atlas", Vector2i.ZERO),
+					)
+					if entry.get("foliage", false):
+						foliage_cells.append(Vector2i(x, y))
+					break
+
+	# Pass 2: foliage (only on foliage-biome cells)
+	if foliage_entries.size() > 0 and foliage_cells.size() > 0:
+		for cell: Vector2i in foliage_cells:
+			var noise_val: float = foliage_noise.get_noise_2d(
+				float(cell.x), float(cell.y)
+			)
+			for entry: Dictionary in foliage_entries:
+				if noise_val >= entry.get("threshold", 0.4):
+					if object_layer.get_cell_source_id(cell) == -1:
+						object_layer.set_cell(
+							cell,
+							entry.get("source_id", 0),
+							entry.get("atlas", Vector2i.ZERO),
+						)
+					break
+
+	ground_layer.update_internals()
+	object_layer.update_internals()
+
+
+## Enhanced [method build_layer] that populates two layers from one blueprint.
+##
+## Clears both [param layer] and [param object_layer] first, then resolves
+## each character through [param legend] (→ [param layer]) and
+## [param object_legend] (→ [param object_layer]). Characters present in
+## [param legend] take priority; remaining characters are checked against
+## [param object_legend].
+##
+## [param source_id] applies to ground tiles; [param object_source_id]
+## applies to object tiles.
+static func build_from_blueprint(
+	layer: TileMapLayer,
+	object_layer: TileMapLayer,
+	blueprint: Array[String],
+	legend: Dictionary,
+	object_legend: Dictionary,
+	source_id: int = 0,
+	object_source_id: int = 0,
+) -> void:
+	layer.clear()
+	object_layer.clear()
+
+	for y: int in range(blueprint.size()):
+		var row: String = blueprint[y]
+		for x: int in range(row.length()):
+			var ch: String = row[x]
+			if legend.has(ch):
+				layer.set_cell(Vector2i(x, y), source_id, legend[ch])
+			elif object_legend.has(ch):
+				object_layer.set_cell(
+					Vector2i(x, y), object_source_id, object_legend[ch]
+				)
+
+	layer.update_internals()
+	object_layer.update_internals()
 
 
 static func _create_wall(

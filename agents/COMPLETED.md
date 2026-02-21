@@ -3,6 +3,7 @@
 Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[date] Description`.
 
 ---
+- [2026-02-20] T-MBTM: MapBuilder overhaul — clear_layer(), build_procedural_wilds() (biome-constrained foliage, eliminates carpet-bombing), build_from_blueprint(), scatter_decorations() allowed_cells mask; lower noise freq 0.10→0.05 in all scenes; 8 new asset packs documented; 6 tests (claude)
 - [2026-02-20] T-0225: Nyx introduction cutscene — NyxIntroduction event, 24-line dialogue, gate flags garrick_recruited + lyra_fragment_2_collected; 14 tests (1785 total); PR #272 (claude)
 - [2026-02-20] T-BGM-01: AudioManager BGM pause fix + full OST library wiring — PROCESS_MODE_ALWAYS; defeat/level-up/echo BGMs; character themes via push/pop; 49 tracks OGG-converted; 12 tests (1800 total); PR #273 (claude)
 - [2026-02-20] T-0233/T-0234/T-0235/T-0236: Code health sprint — fix gdlint violations, remove 4 dead Battler wrapper methods, eliminate ScenePaths const duplication, centralize resonance Color literals into UITheme; all tests pass (claude)

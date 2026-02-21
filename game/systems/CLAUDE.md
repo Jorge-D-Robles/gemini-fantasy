@@ -195,7 +195,20 @@ MapBuilder.create_tileset(atlas_paths: Array[String], solid_tiles: Dictionary) -
 MapBuilder.build_layer(layer: TileMapLayer, map_data: Array[String], legend: Dictionary, source_id: int) -> void
 MapBuilder.apply_tileset(layers: Array[TileMapLayer], atlas_paths: Array[String], solid_tiles: Dictionary) -> void
 MapBuilder.create_boundary_walls(parent: Node, width_px: int, height_px: int) -> void
+MapBuilder.clear_layer(layer: TileMapLayer) -> void
+MapBuilder.build_procedural_wilds(ground_layer, object_layer, cols, rows, biome_noise, foliage_noise, biome_entries, foliage_entries, source_id) -> void
+MapBuilder.build_from_blueprint(layer, object_layer, blueprint, legend, object_legend, source_id, object_source_id) -> void
+MapBuilder.scatter_decorations(layer, cols, rows, noise, entries, allowed_cells: Array[Vector2i] = []) -> void
 ```
+
+**`build_procedural_wilds()`** — Two-pass noise-based map generation. Pass 1 fills ground per biome_entries thresholds (same format as `build_noise_layer()`). Pass 2 places foliage objects only on cells whose biome entry has `"foliage": true`, using foliage_noise sampled per cell against each foliage_entry's `"threshold"`. Eliminates "carpet bombing" by keeping decorations biome-constrained.
+
+Biome entry format: `{"threshold": float, "atlas": Vector2i, "foliage": bool}`
+Foliage entry format: `{"atlas": Vector2i, "source_id": int, "threshold": float}`
+
+**`scatter_decorations()` — updated:** The new optional `allowed_cells` parameter (default `[]`) restricts scattering to a specific set of cell positions. Empty = all cells allowed (backward compatible). Pass grass-cell positions to prevent trees on dirt/stone.
+
+**`build_from_blueprint()`** — Enhanced `build_layer()` that populates two layers. Clears both first, then places ground tiles (from `legend`) in `layer` and object tiles (from `object_legend`) in `object_layer`. Useful when splitting a single authored map into ground + object layers.
 
 `create_boundary_walls()` adds 4 invisible `StaticBody2D` walls around the map edges on collision layer 2 (bitmask `0b10`). The player's `collision_mask = 6` (layers 2+3) detects these walls. Each wall is 32px thick with 16px corner extensions to prevent diagonal escape. Walls are grouped under a `Boundaries` node.
 

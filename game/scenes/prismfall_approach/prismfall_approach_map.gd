@@ -16,12 +16,12 @@ const ROWS: int = 24
 # A = amber earth (noise > 0.3, rare outcrops), S = gray stone (dominant),
 # D = dark cliff (catch-all — biases to dark at map edges via noise)
 const GROUND_NOISE_SEED: int = 99887
-const GROUND_NOISE_FREQ: float = 0.12
+const GROUND_NOISE_FREQ: float = 0.05
 const GROUND_NOISE_OCTAVES: int = 3
 const GROUND_ENTRIES: Array[Dictionary] = [
-	{"threshold": 0.3,  "atlas": Vector2i(0, 2)},   # A = amber earth (rare)
-	{"threshold": -0.4, "atlas": Vector2i(0, 10)},  # S = gray stone (dominant)
-	{"threshold": -1.0, "atlas": Vector2i(0, 6)},   # D = dark cliff (catch-all)
+	{"threshold": 0.3,  "atlas": Vector2i(0, 2), "foliage": false},  # A = amber earth (rare)
+	{"threshold": -0.4, "atlas": Vector2i(0, 10), "foliage": false}, # S = gray stone (dominant)
+	{"threshold": -1.0, "atlas": Vector2i(0, 6), "foliage": false},  # D = dark cliff (catch-all)
 ]
 
 # Detail scatter — scattered rocks flanking the path (source 1)
@@ -30,6 +30,11 @@ const DETAIL_ENTRIES: Array[Dictionary] = [
 	{"atlas": Vector2i(1, 0), "source_id": 1, "density": 0.05},  # rock variant
 	{"atlas": Vector2i(2, 0), "source_id": 1, "density": 0.04},  # pebble cluster
 ]
+
+# Foliage noise — no foliage on barren steppes (defined for API consistency)
+const FOLIAGE_NOISE_SEED: int = 88888
+const FOLIAGE_NOISE_FREQ: float = 0.15
+const FOLIAGE_THRESHOLD: float = 1.0  # threshold=1.0 means nothing fires
 
 # ---------- TILE LEGENDS (FAIRY_FOREST_A5_A, source 0) ----------
 

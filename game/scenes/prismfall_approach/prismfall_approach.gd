@@ -110,19 +110,23 @@ func _setup_tilemap() -> void:
 		{},
 	)
 
-	# Procedural ground — organic rocky steppe distribution
+	# Procedural ground — two-pass biome + foliage (no foliage on barren steppes)
 	var ground_noise := FastNoiseLite.new()
 	ground_noise.seed = PrismfallApproachMap.GROUND_NOISE_SEED
 	ground_noise.frequency = PrismfallApproachMap.GROUND_NOISE_FREQ
 	ground_noise.fractal_octaves = PrismfallApproachMap.GROUND_NOISE_OCTAVES
-	MapBuilder.build_noise_layer(
-		_ground_layer,
+	var foliage_noise := FastNoiseLite.new()
+	foliage_noise.seed = PrismfallApproachMap.FOLIAGE_NOISE_SEED
+	foliage_noise.frequency = PrismfallApproachMap.FOLIAGE_NOISE_FREQ
+	MapBuilder.build_procedural_wilds(
+		_ground_layer, _ground_detail_layer,
 		PrismfallApproachMap.COLS, PrismfallApproachMap.ROWS,
-		ground_noise, PrismfallApproachMap.GROUND_ENTRIES,
+		ground_noise, foliage_noise,
+		PrismfallApproachMap.GROUND_ENTRIES, [],
 	)
 	MapBuilder.disable_collision(_ground_layer)
 
-	# Procedural detail — scattered rock decorations (source 1)
+	# Scattered rock detail over the steppe biome (biome-agnostic for steppes)
 	var detail_noise := FastNoiseLite.new()
 	detail_noise.seed = PrismfallApproachMap.GROUND_NOISE_SEED + 1
 	detail_noise.frequency = 0.15

@@ -25,5 +25,6 @@ Started: 2026-02-20
 - T-0223: Seed AbilityData .tres for Nyx (4) and Lyra (fragment_vision)
 - T-0105: Build Prismfall Approach area (Crystalline Steppes overworld scene)
 - T-0104: Chapters 8-10 story event scaffolds (crystal_city_arrival, lyras_truth, captured)
+- T-MBTM: MapBuilder overhaul + asset pack documentation — clear_layer(), build_procedural_wilds() (biome-constrained foliage), build_from_blueprint(), scatter_decorations() allowed_cells mask; 8 new packs documented in CLAUDE.md; 6 tests
 
 See `agents/COMPLETED.md` for the archive.

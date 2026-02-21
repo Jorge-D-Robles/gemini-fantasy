@@ -18,7 +18,7 @@ const ROWS: int = 24
 # V = dense vegetation (noise > 0.3), D = dark earth (-0.2..0.3),
 # F = gray stone (catch-all, noise >= -1.0)
 const GROUND_NOISE_SEED: int = 12345
-const GROUND_NOISE_FREQ: float = 0.08
+const GROUND_NOISE_FREQ: float = 0.05
 const GROUND_NOISE_OCTAVES: int = 3
 const GROUND_ENTRIES: Array[Dictionary] = [
 	{"threshold": 0.3,  "atlas": Vector2i(0, 8)},   # V = dense vegetation
