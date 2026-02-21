@@ -3,7 +3,7 @@ extends GutTest
 ## Unit tests for MapBuilder static utility — new API additions.
 ##
 ## Tests: clear_layer, build_procedural_wilds, scatter_decorations (mask),
-## build_from_blueprint.
+## build_from_blueprint, A5 constant purge.
 
 var _layer_a: TileMapLayer
 var _layer_b: TileMapLayer
@@ -154,3 +154,19 @@ func test_build_from_blueprint_clears_existing_tiles() -> void:
 		_layer_a.get_cell_source_id(Vector2i(0, 0)), -1,
 		"Cell (0,0) 'A' should be placed by blueprint",
 	)
+
+
+# --- A5 constant purge (T-0257) ---
+
+func test_no_a5_constants_in_map_builder() -> void:
+	var script: GDScript = load("res://systems/map_builder.gd")
+	var source: String = script.source_code
+	var banned_patterns: Array[String] = [
+		"_A5_", "_A5 ", "A5_A", "A5_B", "A5_EXT", "A5_INT",
+		"A5_DUNGEON", "A5_TRAIN",
+	]
+	for pattern: String in banned_patterns:
+		assert_eq(
+			source.find(pattern), -1,
+			"MapBuilder should not contain A5 pattern: %s" % pattern,
+		)

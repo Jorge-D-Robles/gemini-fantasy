@@ -212,7 +212,7 @@ Foliage entry format: `{"atlas": Vector2i, "source_id": int, "threshold": float}
 
 `create_boundary_walls()` adds 4 invisible `StaticBody2D` walls around the map edges on collision layer 2 (bitmask `0b10`). The player's `collision_mask = 6` (layers 2+3) detects these walls. Each wall is 32px thick with 16px corner extensions to prevent diagonal escape. Walls are grouped under a `Boundaries` node.
 
-Pre-defined texture path constants: `FAIRY_FOREST_A5_A/B`, `RUINS_A5`, `OVERGROWN_RUINS_A5`, `FOREST_OBJECTS`, `TREE_OBJECTS`, `STONE_OBJECTS`, `MUSHROOM_VILLAGE`, `RUINS_OBJECTS`, `OVERGROWN_RUINS_OBJECTS`, `GIANT_TREE`.
+Pre-defined texture path constants: `TF_TERRAIN`, `TF_OUTSIDE`, `TF_DUNGEON`, `TF_CASTLE`, `TF_INSIDE`, `TF_WORLD` (flat 16x16 sheets for ground), plus B-sheet object constants: `FOREST_OBJECTS`, `TREE_OBJECTS`, `STONE_OBJECTS`, `MUSHROOM_VILLAGE`, `RUINS_OBJECTS`, `OVERGROWN_RUINS_OBJECTS`, `GIANT_TREE`, etc. All A5 autotile constants have been removed.
 
 See `docs/best-practices/11-tilemaps-and-level-design.md` for usage patterns.
 
