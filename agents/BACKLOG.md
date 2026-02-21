@@ -2025,8 +2025,10 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0223
 - Title: Seed AbilityData .tres files for Nyx and Lyra (4-ability stubs each)
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Started: 2026-02-20
+- Completed: 2026-02-20
 - Priority: medium
 - Milestone: M1
 - Depends: T-0018

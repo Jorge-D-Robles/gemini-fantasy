@@ -1,12 +1,13 @@
-[gd_resource type="Resource" script_class="CharacterData" load_steps=8 format=3 uid="uid://blyra"]
+[gd_resource type="Resource" script_class="CharacterData" load_steps=9 format=3 uid="uid://blyra"]
 
 [ext_resource type="Script" path="res://resources/character_data.gd" id="1_script"]
 [ext_resource type="Resource" uid="uid://bmemory_strike" path="res://data/abilities/memory_strike.tres" id="2_memory_strike"]
 [ext_resource type="Resource" uid="uid://becho_mend" path="res://data/abilities/echo_mend.tres" id="3_echo_mend"]
 [ext_resource type="Resource" uid="uid://bresonance_shield" path="res://data/abilities/resonance_shield.tres" id="4_resonance_shield"]
-[ext_resource type="Resource" uid="uid://blyra_scholar_path" path="res://data/skill_trees/lyra_scholar_path.tres" id="5_scholar"]
-[ext_resource type="Resource" uid="uid://blyra_warrior_path" path="res://data/skill_trees/lyra_warrior_path.tres" id="6_warrior"]
-[ext_resource type="Resource" uid="uid://blyra_echo_path" path="res://data/skill_trees/lyra_echo_path.tres" id="7_echo"]
+[ext_resource type="Resource" uid="uid://bfragment_vision" path="res://data/abilities/fragment_vision.tres" id="5_fragment_vision"]
+[ext_resource type="Resource" uid="uid://blyra_scholar_path" path="res://data/skill_trees/lyra_scholar_path.tres" id="6_scholar"]
+[ext_resource type="Resource" uid="uid://blyra_warrior_path" path="res://data/skill_trees/lyra_warrior_path.tres" id="7_warrior"]
+[ext_resource type="Resource" uid="uid://blyra_echo_path" path="res://data/skill_trees/lyra_echo_path.tres" id="8_echo"]
 
 [resource]
 script = ExtResource("1_script")
@@ -30,8 +31,8 @@ resistance_growth = 2.0
 speed_growth = 1.2
 luck_growth = 1.5
 allowed_weapon_types = [7, 8]
-abilities = [ExtResource("2_memory_strike"), ExtResource("3_echo_mend"), ExtResource("4_resonance_shield")]
+abilities = [ExtResource("2_memory_strike"), ExtResource("3_echo_mend"), ExtResource("4_resonance_shield"), ExtResource("5_fragment_vision")]
 portrait_path = "res://assets/portraits/lyra_portrait.png"
 sprite_path = ""
 battle_sprite_path = "res://assets/sprites/characters/battle/lyra_battle.png"
-skill_trees = [ExtResource("5_scholar"), ExtResource("6_warrior"), ExtResource("7_echo")]
+skill_trees = [ExtResource("6_scholar"), ExtResource("7_warrior"), ExtResource("8_echo")]

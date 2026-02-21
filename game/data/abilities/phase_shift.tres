@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://bphase_shift"]
+
+[ext_resource type="Script" path="res://resources/ability_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"phase_shift"
+display_name = "Phase Shift"
+description = "Nyx slips sideways out of reality for one turn, becoming untargetable. Their next attack deals double damage."
+ee_cost = 30
+resonance_cost = 0.0
+damage_base = 0
+damage_stat = 1
+target_type = 4
+element = 7
+status_effect = "phase"
+status_chance = 1.0
+animation_name = "phase_shift"

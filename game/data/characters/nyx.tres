@@ -1,9 +1,13 @@
-[gd_resource type="Resource" script_class="CharacterData" load_steps=5 format=3 uid="uid://bnyx"]
+[gd_resource type="Resource" script_class="CharacterData" load_steps=9 format=3 uid="uid://bnyx"]
 
 [ext_resource type="Script" path="res://resources/character_data.gd" id="1_script"]
-[ext_resource type="Resource" uid="uid://bnyx_chaos_path" path="res://data/skill_trees/nyx_chaos_path.tres" id="2_chaos"]
-[ext_resource type="Resource" uid="uid://bnyx_identity_path" path="res://data/skill_trees/nyx_identity_path.tres" id="3_identity"]
-[ext_resource type="Resource" uid="uid://bnyx_hollows_path" path="res://data/skill_trees/nyx_hollows_path.tres" id="4_hollows"]
+[ext_resource type="Resource" uid="uid://bvoid_bolt" path="res://data/abilities/void_bolt.tres" id="2_void_bolt"]
+[ext_resource type="Resource" uid="uid://bphase_shift" path="res://data/abilities/phase_shift.tres" id="3_phase_shift"]
+[ext_resource type="Resource" uid="uid://breality_break" path="res://data/abilities/reality_break.tres" id="4_reality_break"]
+[ext_resource type="Resource" uid="uid://bshadow_bind" path="res://data/abilities/shadow_bind.tres" id="5_shadow_bind"]
+[ext_resource type="Resource" uid="uid://bnyx_chaos_path" path="res://data/skill_trees/nyx_chaos_path.tres" id="6_chaos"]
+[ext_resource type="Resource" uid="uid://bnyx_identity_path" path="res://data/skill_trees/nyx_identity_path.tres" id="7_identity"]
+[ext_resource type="Resource" uid="uid://bnyx_hollows_path" path="res://data/skill_trees/nyx_hollows_path.tres" id="8_hollows"]
 
 [resource]
 script = ExtResource("1_script")
@@ -27,8 +31,8 @@ resistance_growth = 2.0
 speed_growth = 1.5
 luck_growth = 2.0
 allowed_weapon_types = [7, 13]
-abilities = []
+abilities = [ExtResource("2_void_bolt"), ExtResource("3_phase_shift"), ExtResource("4_reality_break"), ExtResource("5_shadow_bind")]
 portrait_path = "res://assets/portraits/nyx_portrait.png"
 sprite_path = "res://assets/sprites/characters/nyx_overworld.png"
 battle_sprite_path = "res://assets/sprites/characters/battle/nyx_battle.png"
-skill_trees = [ExtResource("2_chaos"), ExtResource("3_identity"), ExtResource("4_hollows")]
+skill_trees = [ExtResource("6_chaos"), ExtResource("7_identity"), ExtResource("8_hollows")]

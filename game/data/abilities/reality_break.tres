@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://breality_break"]
+
+[ext_resource type="Script" path="res://resources/ability_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"reality_break"
+display_name = "Reality Break"
+description = "Tears a hole in the fabric of reality, producing a random powerful effect: massive damage, full heal, HP/EE swap, turn shuffle, or stranger outcomes."
+ee_cost = 35
+resonance_cost = 40.0
+damage_base = 150
+damage_stat = 1
+target_type = 1
+element = 7
+status_effect = ""
+status_chance = 0.0
+animation_name = "reality_break"
