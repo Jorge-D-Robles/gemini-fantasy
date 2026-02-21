@@ -4,19 +4,35 @@ extends RefCounted
 ## Tilemap data constants for Verdant Forest.
 ## All legends and map arrays live here so verdant_forest.gd stays concise.
 
-# ---------- TILE LEGENDS ----------
+# Map dimensions
+const COLS: int = 40
+const ROWS: int = 25
 
-# Ground layer — organic multi-terrain patches (A5_A, source 0)
-# G = bright green vegetation (dominant ~50%), open clearings
-# g = muted green variant (row 9), adds variety without seam artifacts
-# D = dirt/earth (20%), flanking paths, around tree trunk bases
-# E = dark earth/roots (15%), under dense forest canopy, transition zones
-const GROUND_LEGEND: Dictionary = {
-	"G": Vector2i(0, 8),
-	"g": Vector2i(0, 9),
-	"D": Vector2i(0, 2),
-	"E": Vector2i(0, 6),
-}
+# ---------- PROCEDURAL GROUND CONFIG ----------
+
+# Ground noise — organic terrain (source 0)
+# G = bright green (noise > 0.2), g = muted green (0.0..0.2),
+# D = dirt (-0.3..0.0), E = dark earth (catch-all)
+const GROUND_NOISE_SEED: int = 77777
+const GROUND_NOISE_FREQ: float = 0.10
+const GROUND_NOISE_OCTAVES: int = 3
+const GROUND_ENTRIES: Array[Dictionary] = [
+	{"threshold": 0.2,  "atlas": Vector2i(0, 8)},   # G = bright green
+	{"threshold": 0.0,  "atlas": Vector2i(0, 9)},   # g = muted green
+	{"threshold": -0.3, "atlas": Vector2i(0, 2)},   # D = dirt/earth
+	{"threshold": -1.0, "atlas": Vector2i(0, 6)},   # E = dark earth (catch-all)
+]
+
+# Detail scatter — rocks, flowers, leaves (source 2, ~26% total coverage)
+const DETAIL_ENTRIES: Array[Dictionary] = [
+	{"atlas": Vector2i(0, 0), "source_id": 2, "density": 0.07},  # small rock
+	{"atlas": Vector2i(1, 0), "source_id": 2, "density": 0.06},  # rock variant
+	{"atlas": Vector2i(0, 1), "source_id": 2, "density": 0.05},  # orange flower
+	{"atlas": Vector2i(2, 1), "source_id": 2, "density": 0.04},  # flower variant
+	{"atlas": Vector2i(0, 2), "source_id": 2, "density": 0.04},  # green leaf
+]
+
+# ---------- TILE LEGENDS ----------
 
 # Path layer — single dirt path tile (A5_A row 4, source 0)
 const PATH_LEGEND: Dictionary = {
@@ -99,37 +115,7 @@ const DETAIL_LEGEND: Dictionary = {
 }
 
 # ---------- MAP DATA (40 cols x 25 rows) ----------
-
-# Ground: organic multi-terrain patches
-# G = bright green vegetation, D = dirt/earth, E = dark earth/roots
-# North/south forest edges = E, clearings = G, paths/dirt zones = D
-const GROUND_MAP: Array[String] = [
-	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
-	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
-	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
-	"EEEEEEEEEGGEEEEEEEEGGGGGGGEEEGGEEEEEEEEE",
-	"EEEEEEEGGGDGGGEEEGGGGGDGGGGGGGGGGEEEEEEE",
-	"EEEEEEDGGGGGGGGDGGGGGGGGGGGDGGGGGDEEEEEE",
-	"EEEEEGGGgGGGGGGGDDDDDDGGGGGGGGGgGGGGEEEE",
-	"EEEEGGGGGGGGgGGGDDDDDDGGGGgGGGGGGGGGEEEE",
-	"EEEEGDGGGGGGGGGGGDDDDDDGGGGGGGGGgDGGEEEE",
-	"EEEEEGGDGGGEEEGDDDDDDGGGEEEEDGGGgGEEEEEE",
-	"GDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDG",
-	"GDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDG",
-	"EEEEEGGDGGGEEEGGGGGGGGGGGGEEDGGGgGEEEEEE",
-	"EEEEEEEGGGEEEEEGGEEEEGGEEEEEGGGEEEEEEEEE",
-	"EEEEEEEEEDDEEEEEEEEEEEEEEEEEEDDEEEEEEEEE",
-	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
-	"EEEEEEEEEEEEGGGGGGGGGGGGGGGGEEEEEEEEEEEE",
-	"EEEEEEEEEEGGGgGGDDDDDDDDGGGGgGEEEEEEEEEE",
-	"EEEEEEEEEGGGgGGDDDDDDDDGGGgGGEEEEEEEEEEE",
-	"EEEEEEEEGGGgGGDDDDDDDDDDGGGgGGEEEEEEEEEE",
-	"EEEEEEEEGGGGgGGGGGGgGGGGGgGGGGEEEEEEEEEE",
-	"EEEEEEEEEEGGGGgGGGGgGGGGGEEEEEEEEEEEEEEE",
-	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
-	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
-	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
-]
+# Ground and detail are now procedural — see noise configs above.
 
 # Dense forest borders with organic clearing and chokepoint exits
 # Rows 0-2:  solid forest wall (north border)
@@ -259,32 +245,4 @@ const PATH_MAP: Array[String] = [
 	"                                        ",
 ]
 
-# Ground detail — scattered rocks, flowers, leaves (STONE_OBJECTS, source 2)
-# ~72 tiles for ~23% coverage in open areas — dense in clearings, sparse near edges
-const DETAIL_MAP: Array[String] = [
-	"                                        ",
-	"                                        ",
-	"                                        ",
-	"                    l  r     l          ",
-	"        F   r     l  f   R  l F         ",
-	"       f R  l F   r  f  p l   o r       ",
-	"      l f R  p l      F r  f l o R      ",
-	"     r F  l s f         L r F  p l      ",
-	"        f R l o        s F  l r f       ",
-	"      r   l           F pl     r f      ",
-	"                                        ",
-	"                                        ",
-	"      l   F    r f  p l Ro     f s      ",
-	"        r      l      f      R          ",
-	"         l                              ",
-	"                                        ",
-	"                                        ",
-	"                                        ",
-	"                                        ",
-	"                                        ",
-	"                                        ",
-	"                                        ",
-	"                                        ",
-	"                                        ",
-	"                                        ",
-]
+# Ground detail is now procedural — see DETAIL_ENTRIES above.

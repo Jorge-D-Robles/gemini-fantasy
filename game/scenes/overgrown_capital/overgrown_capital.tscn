@@ -11,9 +11,11 @@ size = Vector2(112, 16)
 script = ExtResource("1_capital")
 
 [node name="Ground" type="TileMapLayer" parent="."]
+z_index = -2
 collision_enabled = false
 
 [node name="GroundDetail" type="TileMapLayer" parent="."]
+z_index = -1
 collision_enabled = false
 
 [node name="Walls" type="TileMapLayer" parent="."]
@@ -21,6 +23,7 @@ collision_enabled = false
 [node name="Objects" type="TileMapLayer" parent="."]
 
 [node name="Entities" type="Node2D" parent="."]
+y_sort_enabled = true
 
 [node name="Player" parent="Entities" instance=ExtResource("2_player")]
 position = Vector2(320, 400)
@@ -29,6 +32,7 @@ position = Vector2(320, 400)
 position = Vector2(320, 400)
 
 [node name="AbovePlayer" type="TileMapLayer" parent="."]
+z_index = 1
 collision_enabled = false
 
 [node name="Triggers" type="Node2D" parent="."]

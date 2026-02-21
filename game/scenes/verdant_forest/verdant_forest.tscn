@@ -29,12 +29,15 @@ require_quest_id = &"elder_wisdom"
 script = ExtResource("1_forest")
 
 [node name="Ground" type="TileMapLayer" parent="."]
+z_index = -2
 collision_enabled = false
 
 [node name="GroundDetail" type="TileMapLayer" parent="."]
+z_index = -1
 collision_enabled = false
 
 [node name="Paths" type="TileMapLayer" parent="."]
+z_index = -1
 collision_enabled = false
 
 [node name="Trees" type="TileMapLayer" parent="."]
@@ -43,6 +46,7 @@ collision_enabled = true
 [node name="Objects" type="TileMapLayer" parent="."]
 
 [node name="Entities" type="Node2D" parent="."]
+y_sort_enabled = true
 
 [node name="Player" parent="Entities" instance=ExtResource("2_player")]
 position = Vector2(48, 176)
@@ -75,6 +79,7 @@ texture = ExtResource("8_signpost")
 texture_filter = 0
 
 [node name="AbovePlayer" type="TileMapLayer" parent="."]
+z_index = 1
 collision_enabled = false
 
 [node name="Triggers" type="Node2D" parent="."]

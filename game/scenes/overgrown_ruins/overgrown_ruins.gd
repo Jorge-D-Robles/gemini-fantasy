@@ -44,6 +44,7 @@ func _ready() -> void:
 	# so tiles on each layer can coexist at overlapping cell positions.
 	_ground_debris_layer = TileMapLayer.new()
 	_ground_debris_layer.name = "GroundDebris"
+	_ground_debris_layer.z_index = -1
 	add_child(_ground_debris_layer)
 	move_child(_ground_debris_layer, $GroundDetail.get_index() + 1)
 
@@ -177,16 +178,45 @@ func _setup_tilemap() -> void:
 		atlas_paths,
 		solid,
 	)
-	MapBuilder.build_layer(
-		_ground_layer, OvergrownRuinsMap.GROUND_MAP, OvergrownRuinsMap.GROUND_LEGEND, 0
+
+	# Procedural ground — organic noise prevents carpet-bombing repetition
+	var ground_noise := FastNoiseLite.new()
+	ground_noise.seed = OvergrownRuinsMap.GROUND_NOISE_SEED
+	ground_noise.frequency = OvergrownRuinsMap.GROUND_NOISE_FREQ
+	ground_noise.fractal_octaves = OvergrownRuinsMap.GROUND_NOISE_OCTAVES
+	MapBuilder.build_noise_layer(
+		_ground_layer,
+		OvergrownRuinsMap.COLS, OvergrownRuinsMap.ROWS,
+		ground_noise, OvergrownRuinsMap.GROUND_ENTRIES,
 	)
-	MapBuilder.build_layer(
-		_ground_detail_layer, OvergrownRuinsMap.DETAIL_MAP, OvergrownRuinsMap.DETAIL_LEGEND, 1
+	MapBuilder.disable_collision(_ground_layer)
+
+	# Procedural floor detail — scattered ornate accents
+	var detail_noise := FastNoiseLite.new()
+	detail_noise.seed = OvergrownRuinsMap.GROUND_NOISE_SEED + 1
+	detail_noise.frequency = 0.15
+	MapBuilder.scatter_decorations(
+		_ground_detail_layer,
+		OvergrownRuinsMap.COLS, OvergrownRuinsMap.ROWS,
+		detail_noise, OvergrownRuinsMap.DETAIL_ENTRIES,
 	)
-	MapBuilder.build_layer(
-		_ground_debris_layer, OvergrownRuinsMap.DEBRIS_MAP, OvergrownRuinsMap.DEBRIS_LEGEND, 2
+	MapBuilder.disable_collision(_ground_detail_layer)
+
+	# Procedural debris — scattered rubble, vines, moss
+	var debris_noise := FastNoiseLite.new()
+	debris_noise.seed = OvergrownRuinsMap.GROUND_NOISE_SEED + 2
+	debris_noise.frequency = 0.2
+	MapBuilder.scatter_decorations(
+		_ground_debris_layer,
+		OvergrownRuinsMap.COLS, OvergrownRuinsMap.ROWS,
+		debris_noise, OvergrownRuinsMap.DEBRIS_ENTRIES,
 	)
-	MapBuilder.build_layer(_walls_layer, OvergrownRuinsMap.WALL_MAP, OvergrownRuinsMap.WALL_LEGEND, 1)
+	MapBuilder.disable_collision(_ground_debris_layer)
+
+	# Structural layers — authored, gameplay-critical placement
+	MapBuilder.build_layer(
+		_walls_layer, OvergrownRuinsMap.WALL_MAP, OvergrownRuinsMap.WALL_LEGEND, 1
+	)
 	MapBuilder.build_layer(
 		_objects_layer, OvergrownRuinsMap.OBJECTS_MAP, OvergrownRuinsMap.OBJECTS_LEGEND, 2
 	)

@@ -332,21 +332,42 @@ func _setup_tilemap() -> void:
 		atlas_paths,
 		solid,
 	)
-	# Ground: organic multi-terrain patches (source 0)
-	MapBuilder.build_layer(_ground_layer, VerdantForestMap.GROUND_MAP, VerdantForestMap.GROUND_LEGEND)
+
+	# Procedural ground — organic noise prevents carpet-bombing repetition
+	var ground_noise := FastNoiseLite.new()
+	ground_noise.seed = VerdantForestMap.GROUND_NOISE_SEED
+	ground_noise.frequency = VerdantForestMap.GROUND_NOISE_FREQ
+	ground_noise.fractal_octaves = VerdantForestMap.GROUND_NOISE_OCTAVES
+	MapBuilder.build_noise_layer(
+		_ground_layer,
+		VerdantForestMap.COLS, VerdantForestMap.ROWS,
+		ground_noise, VerdantForestMap.GROUND_ENTRIES,
+	)
+	MapBuilder.disable_collision(_ground_layer)
+
+	# Procedural detail — scattered rocks and flowers (source 2)
+	var detail_noise := FastNoiseLite.new()
+	detail_noise.seed = VerdantForestMap.GROUND_NOISE_SEED + 1
+	detail_noise.frequency = 0.18
+	MapBuilder.scatter_decorations(
+		_ground_detail_layer,
+		VerdantForestMap.COLS, VerdantForestMap.ROWS,
+		detail_noise, VerdantForestMap.DETAIL_ENTRIES,
+	)
+	MapBuilder.disable_collision(_ground_detail_layer)
+
+	# Structural layers — authored, gameplay/navigation critical
 	# Paths: dirt path overlay (source 0)
 	MapBuilder.build_layer(_paths_layer, VerdantForestMap.PATH_MAP, VerdantForestMap.PATH_LEGEND)
+	MapBuilder.disable_collision(_paths_layer)
 	# Trees: dense canopy fill for impenetrable borders (source 1)
 	MapBuilder.build_layer(_trees_layer, VerdantForestMap.TREE_MAP, VerdantForestMap.TREE_LEGEND, 1)
 	# Objects: individual tree trunks with collision (source 1)
 	MapBuilder.build_layer(
 		_objects_layer, VerdantForestMap.TRUNK_MAP, VerdantForestMap.TRUNK_LEGEND, 1
 	)
-	# Ground detail: scattered rocks and flowers (source 2)
-	MapBuilder.build_layer(
-		_ground_detail_layer, VerdantForestMap.DETAIL_MAP, VerdantForestMap.DETAIL_LEGEND, 2
-	)
 	# Above player: tree canopies for walk-under depth (source 1)
 	MapBuilder.build_layer(
 		_above_player_layer, VerdantForestMap.CANOPY_MAP, VerdantForestMap.CANOPY_LEGEND, 1
 	)
+	MapBuilder.disable_collision(_above_player_layer)

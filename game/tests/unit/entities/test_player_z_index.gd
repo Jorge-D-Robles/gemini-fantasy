@@ -1,8 +1,10 @@
 extends GutTest
 
-## Regression tests: rendering order uses scene tree order, not z_index.
-## Player renders above tiles because Entities comes after TileMapLayers
-## in the scene tree. AbovePlayer comes after Entities for canopy walk-under.
+## Regression tests: belt-and-suspenders rendering hierarchy.
+## TileMapLayers use explicit z_index groups AND correct tree order:
+##   Ground=-2, GroundDetail/Paths/Debris=-1, Walls/Objects=0,
+##   Entities=0 (y_sort_enabled), AbovePlayer=1.
+## Player has no z_index — renders via tree order within Entities.
 ## Companion renders behind player because CompanionController is the first
 ## child of Entities (tree order: earlier = behind).
 
@@ -60,4 +62,29 @@ func test_enemy_battler_scene_z_index_is_one() -> void:
 	assert_true(
 		content.contains("z_index = 1"),
 		"EnemyBattlerScene must have z_index=1 to render above battle background",
+	)
+
+
+func test_ground_tilemaplayer_has_z_index_minus_two() -> void:
+	## Belt-and-suspenders: Ground must have z_index=-2 so it always
+	## renders behind Entities regardless of tree-order subtleties.
+	var content := FileAccess.get_file_as_string(
+		"res://scenes/overgrown_ruins/overgrown_ruins.tscn"
+	)
+	assert_false(content.is_empty(), "overgrown_ruins.tscn must exist")
+	assert_true(
+		content.contains("z_index = -2"),
+		"Ground TileMapLayer in overgrown_ruins.tscn must have z_index = -2",
+	)
+
+
+func test_above_player_tilemaplayer_has_z_index_one() -> void:
+	## AbovePlayer must have z_index=1 to always render above Entities.
+	var content := FileAccess.get_file_as_string(
+		"res://scenes/verdant_forest/verdant_forest.tscn"
+	)
+	assert_false(content.is_empty(), "verdant_forest.tscn must exist")
+	assert_true(
+		content.contains("z_index = 1"),
+		"AbovePlayer TileMapLayer in verdant_forest.tscn must have z_index = 1",
 	)

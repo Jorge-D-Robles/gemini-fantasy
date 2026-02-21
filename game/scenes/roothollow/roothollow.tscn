@@ -33,15 +33,19 @@ radius = 24.0
 script = ExtResource("1_roothollow")
 
 [node name="Ground" type="TileMapLayer" parent="."]
+z_index = -2
 collision_enabled = false
 
 [node name="Paths" type="TileMapLayer" parent="."]
+z_index = -1
 collision_enabled = false
 
 [node name="GroundDetail" type="TileMapLayer" parent="."]
+z_index = -1
 collision_enabled = false
 
 [node name="Decorations" type="TileMapLayer" parent="."]
+z_index = -1
 collision_enabled = false
 
 [node name="Objects" type="TileMapLayer" parent="."]
@@ -49,6 +53,7 @@ collision_enabled = false
 [node name="TreesBorder" type="TileMapLayer" parent="."]
 
 [node name="Entities" type="Node2D" parent="."]
+y_sort_enabled = true
 
 [node name="Player" parent="Entities" instance=ExtResource("2_player")]
 position = Vector2(304, 208)
@@ -150,6 +155,7 @@ texture = ExtResource("14_signpost")
 texture_filter = 0
 
 [node name="AbovePlayer" type="TileMapLayer" parent="."]
+z_index = 1
 collision_enabled = false
 
 [node name="Triggers" type="Node2D" parent="."]

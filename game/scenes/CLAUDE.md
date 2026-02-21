@@ -16,18 +16,20 @@ See root `CLAUDE.md` for project-wide conventions and tilemap rules.
 
 **Script:** `extends Node2D` (no `class_name`)
 
-**Node tree layout (tree order determines rendering — later siblings draw on top):**
+**Node tree layout — belt-and-suspenders rendering (z_index groups + tree order):**
 ```
 AreaName (Node2D)
-  Ground (TileMapLayer)            # drawn first (behind everything)
-  [GroundDetail] (TileMapLayer)    # drawn second
-  [Paths / Walls / Trees / Objects] (TileMapLayer)  # midground layers
-  Entities (Node2D)                # drawn AFTER tiles = on top of tiles
-    CompanionController            # first child = drawn behind player
-    Player (CharacterBody2D)       # drawn after companions
+  Ground (TileMapLayer)            z_index=-2   # always behind everything
+  [GroundDetail] (TileMapLayer)    z_index=-1
+  [GroundDebris] (TileMapLayer)    z_index=-1   # optional debris layer (ruins, capital)
+  [Paths] (TileMapLayer)           z_index=-1
+  [Walls / Trees / Objects] (TileMapLayer)  z_index=0  # midground (tree order within z=0)
+  Entities (Node2D)                z_index=0, y_sort_enabled=true
+    CompanionController            # first child = drawn behind player (tree order)
+    Player (CharacterBody2D)
     SpawnFrom* (Marker2D)          # one per entry point; added to named group in _ready()
-    [NPCName] (StaticBody2D)       # NPC instances
-  [AbovePlayer] (TileMapLayer)    # drawn LAST = on top of player (canopy walk-under)
+    [NPCName] (StaticBody2D)       # sorted by Y vs Player automatically
+  [AbovePlayer] (TileMapLayer)     z_index=1    # always above entities
   Triggers (Node2D)                # non-visual
     ExitTo* (Area2D)               # scene transition triggers
     [EventZone] (Area2D)           # story event activation zones
@@ -35,7 +37,7 @@ AreaName (Node2D)
   [EventNode]                      # recruitment/sequence node
 ```
 
-**Tree order rule:** Scene tree order is the primary rendering mechanism. Do NOT set z_index on tile layers or Entities — use tree order instead. z_index is only acceptable for minor sibling adjustments (e.g., NPC indicators, battle scenes).
+**Rendering rule:** z_index (-2/-1/0/1) handles broad group separation. Tree order within z=0 resolves Walls/Objects vs Entities. `y_sort_enabled=true` on Entities auto-sorts player vs NPCs by Y for depth. Do NOT set `y_sort_enabled` on the scene root — it would sort TileMapLayers against each other, breaking z_index.
 
 **`_ready()` responsibilities:**
 1. Call `_setup_tilemap()` — applies atlas and fills layers via `MapBuilder`
@@ -55,8 +57,21 @@ pool building lives in `<SceneName>Encounters`. The scene script delegates to th
 class_name SceneNameMap
 extends RefCounted
 
-const GROUND_LEGEND: Dictionary = { "G": Vector2i(col, row), ... }
-const GROUND_MAP: Array[String] = [ "GGGG...", ... ]
+const COLS: int = 40
+const ROWS: int = 24
+
+# Procedural ground config — visual layers use noise, not hand-crafted text maps
+const GROUND_NOISE_SEED: int = 12345
+const GROUND_NOISE_FREQ: float = 0.08
+const GROUND_NOISE_OCTAVES: int = 3
+const GROUND_ENTRIES: Array[Dictionary] = [
+    {"threshold": 0.3,  "atlas": Vector2i(0, 8)},  # dominant terrain
+    {"threshold": -1.0, "atlas": Vector2i(0, 6)},  # catch-all
+]
+
+# Structural layers — keep as authored maps (gameplay/story critical)
+const PATH_LEGEND: Dictionary = { "P": Vector2i(0, 4) }
+const PATH_MAP: Array[String] = [ "...", ... ]
 
 # <scene_name>_encounters.gd — pool builder, testable without live scene
 class_name SceneNameEncounters
@@ -67,10 +82,17 @@ static func build_pool(enemy1: Resource, ...) -> Array[EncounterPoolEntry]:
 
 # <scene_name>.gd — delegates to modules
 func _setup_tilemap() -> void:
-    var atlas_paths: Array[String] = [MapBuilder.FAIRY_FOREST_A5_A]
     MapBuilder.apply_tileset(layers, atlas_paths, solid)
-    MapBuilder.build_layer(_ground, SceneNameMap.GROUND_MAP, SceneNameMap.GROUND_LEGEND)
-    MapBuilder.build_layer(_trees, SceneNameMap.TREE_MAP, SceneNameMap.TREE_LEGEND, 1)
+    # Procedural ground — organic, no carpet-bombing
+    var noise := FastNoiseLite.new()
+    noise.seed = SceneNameMap.GROUND_NOISE_SEED
+    noise.frequency = SceneNameMap.GROUND_NOISE_FREQ
+    noise.fractal_octaves = SceneNameMap.GROUND_NOISE_OCTAVES
+    MapBuilder.build_noise_layer(_ground, SceneNameMap.COLS, SceneNameMap.ROWS, noise, SceneNameMap.GROUND_ENTRIES)
+    MapBuilder.disable_collision(_ground)
+    # Structural layers — authored
+    MapBuilder.build_layer(_paths, SceneNameMap.PATH_MAP, SceneNameMap.PATH_LEGEND)
+    MapBuilder.disable_collision(_paths)
 ```
 
 - Source 0 = A5 sheet (terrain), Source 1+ = B sheets (objects — pass `source_id`)

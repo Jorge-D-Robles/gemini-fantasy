@@ -8,29 +8,32 @@ Godot 4.5 uses **TileMapLayer** nodes (one per layer). Stack multiple layers for
 
 ```
 Level (Node2D)
-├── Ground (TileMapLayer)          # drawn first — base terrain fill
-├── GroundDetail (TileMapLayer)    # drawn second — paths, transitions, accents
-├── Trees (TileMapLayer)           # forest borders (collision)
-├── Paths (TileMapLayer)           # walkway overlay
-├── Objects (TileMapLayer)         # rocks, buildings (collision)
-├── Entities (Node2D)              # Player, NPCs, interactables — drawn AFTER tiles
-├── AbovePlayer (TileMapLayer)     # tree canopy, rooftops — drawn AFTER entities
-├── Triggers (Node2D)              # Scene transitions, event zones (non-visual)
-└── EncounterSystem (Node)         # Random battles (non-visual)
+├── Ground (TileMapLayer)          z_index=-2  # always behind everything
+├── GroundDetail (TileMapLayer)    z_index=-1  # behind entities, above ground
+├── [GroundDebris] (TileMapLayer)  z_index=-1  # optional debris/scatter layer
+├── Paths (TileMapLayer)           z_index=-1  # walkway overlay
+├── Trees (TileMapLayer)           z_index=0   # midground (tree order within z=0)
+├── Objects (TileMapLayer)         z_index=0   # midground
+├── Entities (Node2D)              z_index=0, y_sort_enabled=true  # player + NPCs
+│   └── Player / NPCs / Companions           # sorted by Y automatically
+├── AbovePlayer (TileMapLayer)     z_index=1   # always above entities
+├── Triggers (Node2D)              # non-visual
+└── EncounterSystem (Node)         # non-visual
 ```
 
-**Rendering uses scene tree order, not z_index.** Later siblings draw on top. Entities comes after all midground tile layers so the player renders above tiles. AbovePlayer comes after Entities so canopy renders above the player. Do NOT set z_index on tile layers or Entities.
+**Rendering uses belt-and-suspenders: z_index groups PLUS scene tree order.** z_index guarantees the broad layering (ground always behind, canopy always above), while tree order resolves within the same z_index group. `y_sort_enabled=true` on Entities automatically sorts the player vs. NPCs by Y position for proper depth when characters overlap. Do NOT set `y_sort_enabled` on the scene root — this would sort TileMapLayers against each other and break the z_index hierarchy.
 
 ### Layer Responsibilities
 
-| Layer | Position | Collision | Source | Content |
-|-------|----------|-----------|--------|---------|
-| **Ground** | First (behind) | No | A5 (source 0) | Uniform grass/dirt/stone fill covering the entire map |
-| **GroundDetail** | After Ground | No | A5 (source 0) | Sparse flower/foliage accents (5-15% coverage) |
-| **Paths** | After GroundDetail | No | A5 (source 0) | Walkway overlay (dirt path, stone road) |
-| **Trees** | Midground | Yes | B (source 1+) | Dense forest fill using canopy center tiles |
-| **Objects** | Midground | Yes | B (source 1+) | Rocks, buildings, fences, walls |
-| **AbovePlayer** | After Entities | No | B (source 1+) | Tree canopy tops, roof overhangs |
+| Layer | z_index | Collision | Source | Content |
+|-------|---------|-----------|--------|---------|
+| **Ground** | -2 | No | A5 (source 0) | Procedural noise terrain (grass, dirt, stone) |
+| **GroundDetail** | -1 | No | A5 (source 0) | Procedural scatter or authored accents |
+| **Paths** | -1 | No | A5 (source 0) | Authored walkway overlay (structural) |
+| **Trees** | 0 | Yes | B (source 1+) | Authored dense forest fill (structural) |
+| **Objects** | 0 | Yes | B (source 1+) | Authored rocks, buildings, walls (structural) |
+| **Entities** | 0 | — | — | Player, NPCs — y_sort handles Y-depth |
+| **AbovePlayer** | 1 | No | B (source 1+) | Authored canopy tops, roof overhangs |
 
 ### Key Rule: All Layers Share One TileSet
 
@@ -176,7 +179,9 @@ const GROUND_LEGEND: Dictionary = {
 
 ## MapBuilder Usage Patterns
 
-### Recommended: Organic A5 Ground + B-Sheet Objects
+### Recommended: Procedural Ground + Authored Structural Layers
+
+Visual layers (ground, detail/debris) use **FastNoiseLite** for organic distribution. Structural layers (walls, paths, objects, canopy) use **authored text maps** — story requires specific placement.
 
 ```gdscript
 func _setup_tilemap() -> void:
@@ -197,19 +202,65 @@ func _setup_tilemap() -> void:
         atlas_paths,
         solid,
     )
-    # Ground uses multiple terrain types in organic patches (source 0)
-    MapBuilder.build_layer(_ground_layer, GROUND_MAP, GROUND_LEGEND, 0)
-    MapBuilder.build_layer(_paths_layer, PATH_MAP, PATH_LEGEND, 0)
-    # Detail uses A5 accents (source 0) + B-sheet decorations (source 2)
-    MapBuilder.build_layer(
-        _ground_detail_layer, DETAIL_MAP, DETAIL_LEGEND, 0
+
+    # --- PROCEDURAL LAYERS (visual only, no carpet-bombing) ---
+    var ground_noise := FastNoiseLite.new()
+    ground_noise.seed = SceneMap.GROUND_NOISE_SEED
+    ground_noise.frequency = SceneMap.GROUND_NOISE_FREQ
+    ground_noise.fractal_octaves = SceneMap.GROUND_NOISE_OCTAVES
+    MapBuilder.build_noise_layer(
+        _ground_layer,
+        SceneMap.COLS, SceneMap.ROWS,
+        ground_noise, SceneMap.GROUND_ENTRIES,
     )
-    MapBuilder.build_layer(
-        _ground_detail_layer, DECOR_MAP, DECOR_LEGEND, 2
+    MapBuilder.disable_collision(_ground_layer)
+
+    var detail_noise := FastNoiseLite.new()
+    detail_noise.seed = SceneMap.GROUND_NOISE_SEED + 1
+    detail_noise.frequency = 0.15
+    MapBuilder.scatter_decorations(
+        _ground_detail_layer,
+        SceneMap.COLS, SceneMap.ROWS,
+        detail_noise, SceneMap.DETAIL_ENTRIES,
     )
-    # Trees use source 1 — objects for trunks, above-player for canopy
-    MapBuilder.build_layer(_objects_layer, TRUNK_MAP, TRUNK_LEGEND, 1)
-    MapBuilder.build_layer(_above_player_layer, CANOPY_MAP, CANOPY_LEGEND, 1)
+    MapBuilder.disable_collision(_ground_detail_layer)
+
+    # --- STRUCTURAL LAYERS (authored, gameplay/story critical) ---
+    MapBuilder.build_layer(_paths_layer, SceneMap.PATH_MAP, SceneMap.PATH_LEGEND)
+    MapBuilder.disable_collision(_paths_layer)
+    MapBuilder.build_layer(_objects_layer, SceneMap.TRUNK_MAP, SceneMap.TRUNK_LEGEND, 1)
+    MapBuilder.build_layer(_above_player_layer, SceneMap.CANOPY_MAP, SceneMap.CANOPY_LEGEND, 1)
+    MapBuilder.disable_collision(_above_player_layer)
+```
+
+The corresponding `<scene>_map.gd` module defines noise configs instead of text arrays for visual layers:
+
+```gdscript
+class_name SceneMap
+extends RefCounted
+
+const COLS: int = 40
+const ROWS: int = 24
+
+# Procedural ground config — noise thresholds high→low, first match wins
+const GROUND_NOISE_SEED: int = 12345
+const GROUND_NOISE_FREQ: float = 0.08
+const GROUND_NOISE_OCTAVES: int = 3
+const GROUND_ENTRIES: Array[Dictionary] = [
+    {"threshold": 0.3,  "atlas": Vector2i(0, 8)},   # bright green (common)
+    {"threshold": -0.2, "atlas": Vector2i(0, 2)},   # dirt/earth
+    {"threshold": -1.0, "atlas": Vector2i(0, 6)},   # dark earth (catch-all)
+]
+
+# Scatter decorations: each entry is placed where noise > (1.0 - density)
+const DETAIL_ENTRIES: Array[Dictionary] = [
+    {"atlas": Vector2i(0, 0), "source_id": 2, "density": 0.07},  # small rock
+    {"atlas": Vector2i(0, 1), "source_id": 2, "density": 0.05},  # flower
+]
+
+# Structural layers — keep as authored maps
+const PATH_LEGEND: Dictionary = {"P": Vector2i(0, 4)}
+const PATH_MAP: Array[String] = [...]
 ```
 
 ### For Indoor/Dungeon Scenes (A5 Only)

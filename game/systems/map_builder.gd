@@ -86,6 +86,7 @@ static func create_atlas_source(
 		return source
 	source.texture = tex
 	source.texture_region_size = Vector2i(TILE_SIZE, TILE_SIZE)
+	source.use_texture_padding = true
 
 	var tex_size := Vector2i(tex.get_size())
 	var cols: int = tex_size.x / TILE_SIZE
@@ -168,6 +169,7 @@ static func build_layer(
 				layer.set_cell(
 					Vector2i(x, y), source_id, atlas_coords
 				)
+	layer.update_internals()
 
 
 ## Create a tileset and apply it to every layer in the array.
@@ -224,6 +226,80 @@ static func create_boundary_walls(
 		Vector2(w + half_t, h / 2.0),
 		Vector2(thickness, h + thickness),
 	)
+
+
+## Disable physics collision on a TileMapLayer.
+##
+## Call on visual-only layers (ground, detail, path, debris, above-player)
+## after [method apply_tileset] to ensure the new TileSet's physics layer
+## does not block movement or raycasts on non-structural layers.
+static func disable_collision(layer: TileMapLayer) -> void:
+	layer.collision_enabled = false
+
+
+## Fill a TileMapLayer using FastNoiseLite thresholds.
+##
+## Each cell [code](x, y)[/code] samples [code]noise.get_noise_2d(x, y)[/code]
+## (range [-1, 1]) and picks the first entry whose [code]threshold[/code] the
+## value meets or exceeds. Entries must be sorted high-to-low threshold so the
+## most selective rule is tested first. The final entry should have
+## [code]threshold = -1.0[/code] to act as a catch-all.
+##
+## Entry format: [code]{"threshold": float, "atlas": Vector2i}[/code]
+## All entries use [param source_id] (default 0).
+static func build_noise_layer(
+	layer: TileMapLayer,
+	cols: int,
+	rows: int,
+	noise: FastNoiseLite,
+	entries: Array[Dictionary],
+	source_id: int = 0,
+) -> void:
+	for y: int in range(rows):
+		for x: int in range(cols):
+			var noise_val: float = noise.get_noise_2d(float(x), float(y))
+			for entry: Dictionary in entries:
+				if noise_val >= entry.get("threshold", -1.0):
+					layer.set_cell(
+						Vector2i(x, y),
+						source_id,
+						entry.get("atlas", Vector2i.ZERO),
+					)
+					break
+	layer.update_internals()
+
+
+## Scatter decoration tiles using noise-based density thresholds.
+##
+## Each entry is checked independently with a unique spatial offset so
+## different decoration types have non-overlapping organic distributions.
+## A cell that already has a tile is skipped (first-match wins).
+##
+## Entry format: [code]{"atlas": Vector2i, "source_id": int, "density": float}[/code]
+## [code]density[/code] is in [0, 1]: 0.1 means ~10% coverage.
+static func scatter_decorations(
+	layer: TileMapLayer,
+	cols: int,
+	rows: int,
+	noise: FastNoiseLite,
+	entries: Array[Dictionary],
+) -> void:
+	for i: int in entries.size():
+		var entry: Dictionary = entries[i]
+		var atlas: Vector2i = entry.get("atlas", Vector2i.ZERO)
+		var src_id: int = entry.get("source_id", 0)
+		var density: float = entry.get("density", 0.1)
+		var threshold: float = 1.0 - density
+		var offset: float = float(i) * 100.0
+		for y: int in range(rows):
+			for x: int in range(cols):
+				var noise_val: float = noise.get_noise_2d(
+					float(x) + offset, float(y) + offset
+				)
+				if noise_val > threshold:
+					if layer.get_cell_source_id(Vector2i(x, y)) == -1:
+						layer.set_cell(Vector2i(x, y), src_id, atlas)
+	layer.update_internals()
 
 
 static func _create_wall(

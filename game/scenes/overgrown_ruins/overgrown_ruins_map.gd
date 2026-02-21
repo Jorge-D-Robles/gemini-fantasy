@@ -8,27 +8,36 @@ extends RefCounted
 # Source 1: RUINS_A5 (ruins2 — opaque golden walls)
 # Source 2: OVERGROWN_RUINS_OBJECTS (B-sheet — objects)
 
-# Ground layer — organic terrain patches (fairy forest source 0)
-# F = gray stone floor (dominant ~60%), D = dark earth/roots (~25%),
-# V = dense vegetation (~15%)
-const GROUND_LEGEND: Dictionary = {
-	"F": Vector2i(0, 10),  # Gray stone floor (confirmed opaque)
-	"D": Vector2i(0, 6),   # Dark earth/roots — wall edges and corners
-	"V": Vector2i(0, 8),   # Dense vegetation — nature reclaiming ruins
-}
+# Map dimensions
+const COLS: int = 40
+const ROWS: int = 24
 
-# Ground detail — ornate golden floor (ruins2 source 1)
-const DETAIL_LEGEND: Dictionary = {
-	"O": Vector2i(0, 2),   # Ornate golden floor tile
-}
+# ---------- PROCEDURAL GROUND CONFIG ----------
 
-# Ground debris — small rubble from B-sheet (source 2, on GroundDebris)
-const DEBRIS_LEGEND: Dictionary = {
-	"p": Vector2i(0, 2),   # Small pebbles
-	"r": Vector2i(1, 2),   # Scattered rocks
-	"v": Vector2i(0, 6),   # Vine fragment
-	"m": Vector2i(1, 6),   # Moss clump
-}
+# Ground noise — organic terrain distribution (source 0)
+# V = dense vegetation (noise > 0.3), D = dark earth (-0.2..0.3),
+# F = gray stone (catch-all, noise >= -1.0)
+const GROUND_NOISE_SEED: int = 12345
+const GROUND_NOISE_FREQ: float = 0.08
+const GROUND_NOISE_OCTAVES: int = 3
+const GROUND_ENTRIES: Array[Dictionary] = [
+	{"threshold": 0.3,  "atlas": Vector2i(0, 8)},   # V = dense vegetation
+	{"threshold": -0.2, "atlas": Vector2i(0, 6)},   # D = dark earth/roots
+	{"threshold": -1.0, "atlas": Vector2i(0, 10)},  # F = gray stone (catch-all)
+]
+
+# Detail scatter — ornate golden floor accents (source 1, ~12% coverage)
+const DETAIL_ENTRIES: Array[Dictionary] = [
+	{"atlas": Vector2i(0, 2), "source_id": 1, "density": 0.12},
+]
+
+# Debris scatter — rubble, rocks, vines, moss (source 2)
+const DEBRIS_ENTRIES: Array[Dictionary] = [
+	{"atlas": Vector2i(0, 2), "source_id": 2, "density": 0.07},  # pebbles
+	{"atlas": Vector2i(1, 2), "source_id": 2, "density": 0.06},  # rocks
+	{"atlas": Vector2i(0, 6), "source_id": 2, "density": 0.03},  # vine fragment
+	{"atlas": Vector2i(1, 6), "source_id": 2, "density": 0.03},  # moss clump
+]
 
 # Wall layer — structural walls (ruins2 source 1)
 const WALL_LEGEND: Dictionary = {
@@ -59,97 +68,8 @@ const OBJECTS_LEGEND: Dictionary = {
 	"0": Vector2i(9, 3),   # Gold face bottom-right
 }
 
-# ---------- MAP DATA (40 cols x 24 rows) ----------
-
-# 40 cols x 24 rows — organic terrain patches
-# F = gray stone (corridors, open areas), D = dark earth (wall edges),
-# V = vegetation (nature reclaiming the ruins)
-# Under walls (W/G in WALL_MAP) the ground is invisible, so F is fine.
-const GROUND_MAP: Array[String] = [
-	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-	"FFFFFFFFFFFFFFFFFFDDDDDDDDDDDDFFFFFFFFFF",
-	"FFFFFFFFFFFFFFFFFDDDDDDDDDVVDDDFFFFFFFFF",
-	"FFFFFFFFFFFFFFFFFDDDFFFFFVVVVDDFFFFFFFFF",
-	"FFFFFFFFFFFFFFFFFDDDFFFFFVVVVVDFFFFFFFFF",
-	"FFFFFFFFFFFFFFFFFDDDDDFFDDVVVDDFFFFFFFFF",
-	"FFFFFFFFFFFFFFFFFFDDDDFFDDDDDDFFFFFFFFFF",
-	"FFFFFFFFFFFFFFFFFFFFDFFFFDFFFFFFFFFFFFFF",
-	"FFDDDVVDDDFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-	"FFDDDVVFFFFFFFFFFFFFFFFFFFFFFFFFFVDDFFFF",
-	"FFDDVVVVFFFFFFFFFFFFFFFFFFFFFFFFFVVVDDFF",
-	"FFDDDVVVFFFFFFFFFFFFFFFFFFFFFFFFFFVVDDFF",
-	"FFDDDVVFFFFFFFFFFFFFFFFFFFFFFFFFFVVDFFFF",
-	"FFDDDVVDDDFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-	"FFFFDDDDFFFFFFFFFFFFFFFFFFFFFFFFFFDDFFFF",
-	"FFDDDFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFDDDFF",
-	"FFDDVVFFFFFDFFDFFFFFFFFFFFFDFFDFFFVVDDFF",
-	"FFDVVVVFFFFFFFFFFFFFFFFFFFFFFFFFFVVVDDFF",
-	"FFDDVVVFFFFDFFDFFFFFFFFFFFFDFFDFFFVVDDFF",
-	"FFDDVVFFFFFFFFFFFFFFFFFFFFFFFFFFFVVDDDFF",
-	"FFDDDFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFDDDFF",
-	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-]
-
-# Ornate golden floor accents — ruins2 decorative tiles in key areas
-# Expanded coverage to ~20% — golden floor in sacred chamber, side alcoves,
-# gallery intersections
-const DETAIL_MAP: Array[String] = [
-	"                                        ",
-	"                                        ",
-	"                                        ",
-	"                  OOOOOOOO  OO          ",
-	"                  OOOOOOO    O          ",
-	"                  OOOOOOO               ",
-	"                  OOOOOOOO   O          ",
-	"                                        ",
-	"                     OOOO               ",
-	"   OOOO                                 ",
-	"   OO  OO                         OO    ",
-	"   OO                             OOOO  ",
-	"   OO                              OOO  ",
-	"   OO  OO                         OO    ",
-	"   OOOO                                 ",
-	"                                        ",
-	"   OOOOO      OOO       OOO      OOOO   ",
-	"   O                                OO  ",
-	"              OOO       OOO          O  ",
-	"   O                                OO  ",
-	"   O  OO      OOO       OOO        OO   ",
-	"   OOO                            OOO   ",
-	"                                        ",
-	"                                        ",
-]
-
-# Scattered debris from B-sheet (on GroundDebris layer)
-# 15-25% coverage in walkable areas — denser near walls and objects
-const DEBRIS_MAP: Array[String] = [
-	"                                        ",
-	"                                        ",
-	"                   mp   rrp             ",
-	"                              r         ",
-	"                            v r         ",
-	"                 m                      ",
-	"                                        ",
-	"                   p       mm           ",
-	"                         p              ",
-	"       r                 p              ",
-	"      p        r       rp r  r  v       ",
-	"  r      rp  v  m   r   p p   v r       ",
-	"      m v  v        p   p p  rrr        ",
-	"  r   v      m r  rrrr vm     r         ",
-	"  r     r                r              ",
-	"                      v                 ",
-	"  p     rp p      p    m    r        r  ",
-	"     ppp   p      v   p  p    m pr v    ",
-	"        p  p     rp        p            ",
-	"  r v     mr   r       p       p   m    ",
-	"         vp v      rm      p     m      ",
-	"        pv            r rpr             ",
-	"                                        ",
-	"                                        ",
-]
+# ---------- STRUCTURAL MAP DATA (40 cols x 24 rows) ----------
+# Ground/detail/debris are now procedural — see noise configs above.
 
 # Sacred Chamber (north), Main Corridor (center), South Gallery
 const WALL_MAP: Array[String] = [

@@ -15,17 +15,32 @@ func _make_enemy(id: StringName = &"test_enemy") -> Resource:
 
 # -- Map structure --
 
-func test_ground_map_has_24_rows() -> void:
-	assert_eq(MAP.GROUND_MAP.size(), MAP_ROWS, "GROUND_MAP must have 24 rows")
+func test_map_dimensions_match_constants() -> void:
+	assert_eq(MAP.COLS, MAP_COLS, "COLS constant must be 40")
+	assert_eq(MAP.ROWS, MAP_ROWS, "ROWS constant must be 24")
 
 
-func test_all_ground_map_rows_are_40_chars() -> void:
-	for row_idx: int in range(MAP.GROUND_MAP.size()):
-		assert_eq(
-			MAP.GROUND_MAP[row_idx].length(),
-			MAP_COLS,
-			"GROUND_MAP row %d must be 40 chars" % row_idx,
-		)
+func test_ground_noise_seed_defined() -> void:
+	assert_true(MAP.GROUND_NOISE_SEED != 0, "GROUND_NOISE_SEED must be non-zero")
+
+
+func test_ground_entries_nonempty() -> void:
+	assert_true(MAP.GROUND_ENTRIES.size() > 0, "GROUND_ENTRIES must have at least one entry")
+
+
+func test_ground_entries_have_threshold_and_atlas() -> void:
+	for entry: Dictionary in MAP.GROUND_ENTRIES:
+		assert_true(entry.has("threshold"), "Each GROUND_ENTRY must have a threshold key")
+		assert_true(entry.has("atlas"), "Each GROUND_ENTRY must have an atlas key")
+
+
+func test_ground_catchall_entry_is_minus_one() -> void:
+	var last: Dictionary = MAP.GROUND_ENTRIES[MAP.GROUND_ENTRIES.size() - 1]
+	assert_eq(last.get("threshold", 0.0), -1.0, "Last GROUND_ENTRY threshold must be -1.0 (catch-all)")
+
+
+func test_detail_entries_nonempty() -> void:
+	assert_true(MAP.DETAIL_ENTRIES.size() > 0, "DETAIL_ENTRIES must have at least one entry")
 
 
 func test_path_map_has_24_rows() -> void:
@@ -48,19 +63,6 @@ func test_path_present_in_interior_rows() -> void:
 			has_path = true
 			break
 	assert_true(has_path, "PATH_MAP rows 2-22 must contain path tiles")
-
-
-func test_detail_map_has_24_rows() -> void:
-	assert_eq(MAP.DETAIL_MAP.size(), MAP_ROWS, "DETAIL_MAP must have 24 rows")
-
-
-func test_all_detail_map_rows_are_40_chars() -> void:
-	for row_idx: int in range(MAP.DETAIL_MAP.size()):
-		assert_eq(
-			MAP.DETAIL_MAP[row_idx].length(),
-			MAP_COLS,
-			"DETAIL_MAP row %d must be 40 chars" % row_idx,
-		)
 
 
 # -- Encounter pool --

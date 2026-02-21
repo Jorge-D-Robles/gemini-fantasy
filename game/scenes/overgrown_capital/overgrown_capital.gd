@@ -209,6 +209,7 @@ func _ready() -> void:
 	# Inserted between GroundDetail and Walls, matching Overgrown Ruins pattern.
 	_ground_debris_layer = TileMapLayer.new()
 	_ground_debris_layer.name = "GroundDebris"
+	_ground_debris_layer.z_index = -1
 	add_child(_ground_debris_layer)
 	move_child(_ground_debris_layer, $GroundDetail.get_index() + 1)
 
@@ -272,15 +273,42 @@ func _setup_tilemap() -> void:
 		atlas_paths,
 		solid,
 	)
-	MapBuilder.build_layer(
-		_ground_layer, OvergrownCapitalMap.GROUND_MAP, OvergrownCapitalMap.GROUND_LEGEND, 0
+
+	# Procedural ground — organic noise prevents carpet-bombing repetition
+	var ground_noise := FastNoiseLite.new()
+	ground_noise.seed = OvergrownCapitalMap.GROUND_NOISE_SEED
+	ground_noise.frequency = OvergrownCapitalMap.GROUND_NOISE_FREQ
+	ground_noise.fractal_octaves = OvergrownCapitalMap.GROUND_NOISE_OCTAVES
+	MapBuilder.build_noise_layer(
+		_ground_layer,
+		OvergrownCapitalMap.COLS, OvergrownCapitalMap.ROWS,
+		ground_noise, OvergrownCapitalMap.GROUND_ENTRIES,
 	)
-	MapBuilder.build_layer(
-		_ground_detail_layer, OvergrownCapitalMap.DETAIL_MAP, OvergrownCapitalMap.DETAIL_LEGEND, 1
+	MapBuilder.disable_collision(_ground_layer)
+
+	# Procedural floor detail — scattered ornate golden accents
+	var detail_noise := FastNoiseLite.new()
+	detail_noise.seed = OvergrownCapitalMap.GROUND_NOISE_SEED + 1
+	detail_noise.frequency = 0.12
+	MapBuilder.scatter_decorations(
+		_ground_detail_layer,
+		OvergrownCapitalMap.COLS, OvergrownCapitalMap.ROWS,
+		detail_noise, OvergrownCapitalMap.DETAIL_ENTRIES,
 	)
-	MapBuilder.build_layer(
-		_ground_debris_layer, OvergrownCapitalMap.DEBRIS_MAP, OvergrownCapitalMap.DEBRIS_LEGEND, 2
+	MapBuilder.disable_collision(_ground_detail_layer)
+
+	# Procedural debris — scattered rubble, vines, moss
+	var debris_noise := FastNoiseLite.new()
+	debris_noise.seed = OvergrownCapitalMap.GROUND_NOISE_SEED + 2
+	debris_noise.frequency = 0.18
+	MapBuilder.scatter_decorations(
+		_ground_debris_layer,
+		OvergrownCapitalMap.COLS, OvergrownCapitalMap.ROWS,
+		debris_noise, OvergrownCapitalMap.DEBRIS_ENTRIES,
 	)
+	MapBuilder.disable_collision(_ground_debris_layer)
+
+	# Structural layers — authored, gameplay-critical placement
 	MapBuilder.build_layer(
 		_walls_layer, OvergrownCapitalMap.WALL_MAP, OvergrownCapitalMap.WALL_LEGEND, 1
 	)

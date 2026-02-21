@@ -13,16 +13,19 @@ func before_each() -> void:
 	_script = load("res://scenes/overgrown_capital/overgrown_capital_map.gd")
 
 
-func test_ground_map_has_expected_dimensions() -> void:
-	assert_eq(_script.GROUND_MAP.size(), EXPECTED_ROWS)
-	for row: String in _script.GROUND_MAP:
-		assert_eq(row.length(), EXPECTED_COLS)
+func test_map_dimensions_constants() -> void:
+	assert_eq(_script.COLS, EXPECTED_COLS, "COLS must be 40")
+	assert_eq(_script.ROWS, EXPECTED_ROWS, "ROWS must be 28")
 
 
-func test_detail_map_has_expected_dimensions() -> void:
-	assert_eq(_script.DETAIL_MAP.size(), EXPECTED_ROWS)
-	for row: String in _script.DETAIL_MAP:
-		assert_eq(row.length(), EXPECTED_COLS)
+func test_ground_entries_nonempty_with_catchall() -> void:
+	assert_true(_script.GROUND_ENTRIES.size() > 0, "GROUND_ENTRIES must have entries")
+	var last: Dictionary = _script.GROUND_ENTRIES[_script.GROUND_ENTRIES.size() - 1]
+	assert_eq(last.get("threshold", 0.0), -1.0, "Last GROUND_ENTRY must be catch-all (-1.0)")
+
+
+func test_detail_entries_nonempty() -> void:
+	assert_true(_script.DETAIL_ENTRIES.size() > 0, "DETAIL_ENTRIES must have entries")
 
 
 func test_wall_map_has_expected_dimensions() -> void:
@@ -38,56 +41,29 @@ func test_objects_map_has_expected_dimensions() -> void:
 
 
 func test_legend_keys_are_single_chars() -> void:
-	for key: String in _script.GROUND_LEGEND.keys():
-		assert_eq(key.length(), 1, "GROUND key must be 1 char: " + key)
-	for key: String in _script.DETAIL_LEGEND.keys():
-		assert_eq(key.length(), 1, "DETAIL key must be 1 char: " + key)
 	for key: String in _script.WALL_LEGEND.keys():
 		assert_eq(key.length(), 1, "WALL key must be 1 char: " + key)
 	for key: String in _script.OBJECTS_LEGEND.keys():
 		assert_eq(key.length(), 1, "OBJECTS key must be 1 char: " + key)
 
 
-func test_ground_map_is_fully_tiled() -> void:
-	## Every cell in GROUND_MAP must be a valid GROUND_LEGEND key (no '.' or unknown chars).
-	var valid_keys: Array = _script.GROUND_LEGEND.keys()
-	for row_idx: int in range(_script.GROUND_MAP.size()):
-		var row: String = _script.GROUND_MAP[row_idx]
-		for col_idx: int in range(row.length()):
-			var ch: String = row[col_idx]
-			assert_true(
-				ch != ".",
-				"GROUND_MAP row %d col %d is '.' (empty)" % [row_idx, col_idx],
-			)
-			assert_true(
-				valid_keys.has(ch),
-				"GROUND_MAP row %d col %d has '%s' not in GROUND_LEGEND" % [row_idx, col_idx, ch],
-			)
-
-
-func test_ground_map_has_terrain_variety() -> void:
-	## At least 2 terrain types, and the non-dominant type appears 10+ times.
-	var counts: Dictionary = {}
-	for row: String in _script.GROUND_MAP:
-		for col_idx: int in range(row.length()):
-			var ch: String = row[col_idx]
-			counts[ch] = counts.get(ch, 0) + 1
-	assert_true(counts.size() >= 2, "Need at least 2 terrain types, got %d" % counts.size())
-	# Find non-dominant types and check they appear meaningfully
-	var max_count: int = 0
-	var dominant_key: String = ""
-	for key: String in counts.keys():
-		if counts[key] > max_count:
-			max_count = counts[key]
-			dominant_key = key
-	var non_dominant_total: int = 0
-	for key: String in counts.keys():
-		if key != dominant_key:
-			non_dominant_total += counts[key]
+func test_ground_entries_have_multiple_terrain_types() -> void:
+	## Procedural ground must offer 2+ terrain variants for visual variety.
 	assert_true(
-		non_dominant_total >= 10,
-		"Non-dominant terrain must appear 10+ times, got %d" % non_dominant_total,
+		_script.GROUND_ENTRIES.size() >= 2,
+		"GROUND_ENTRIES must have 2+ entries for terrain variety",
 	)
+
+
+func test_ground_entries_thresholds_ordered_high_to_low() -> void:
+	## Thresholds must be in descending order (first-match wins).
+	for i: int in range(1, _script.GROUND_ENTRIES.size()):
+		var prev: float = _script.GROUND_ENTRIES[i - 1].get("threshold", 0.0)
+		var curr: float = _script.GROUND_ENTRIES[i].get("threshold", 0.0)
+		assert_true(
+			prev > curr,
+			"GROUND_ENTRIES threshold at index %d (%f) must be > index %d (%f)" % [i - 1, prev, i, curr],
+		)
 
 
 func test_wall_map_has_boundary_walls() -> void:
@@ -103,50 +79,20 @@ func test_wall_map_has_boundary_walls() -> void:
 	)
 
 
-func test_market_district_has_detail_tiles() -> void:
-	## Rows 19-27 in DETAIL_MAP must have at least 20 ornate tiles ('O').
-	var o_count: int = 0
-	for row_idx: int in range(19, 28):
-		var row: String = _script.DETAIL_MAP[row_idx]
-		for col_idx: int in range(row.length()):
-			if row[col_idx] == "O":
-				o_count += 1
-	assert_true(
-		o_count >= 20,
-		"Market district (rows 19-27) must have 20+ 'O' tiles, got %d" % o_count,
-	)
+func test_detail_entries_have_reasonable_density() -> void:
+	## Each DETAIL_ENTRY density must be between 0.01 and 0.30.
+	for entry: Dictionary in _script.DETAIL_ENTRIES:
+		var density: float = entry.get("density", 0.0)
+		assert_true(density >= 0.01, "DETAIL_ENTRY density must be >= 0.01")
+		assert_true(density <= 0.30, "DETAIL_ENTRY density must be <= 0.30 (no carpet-bombing)")
 
 
-func test_residential_quarter_has_vegetation() -> void:
-	## Cols 2-19, rows 10-18 in GROUND_MAP must have 10+ V or D chars.
-	var veg_count: int = 0
-	for row_idx: int in range(10, 19):
-		var row: String = _script.GROUND_MAP[row_idx]
-		for col_idx: int in range(2, 20):
-			var ch: String = row[col_idx]
-			if ch == "V" or ch == "D":
-				veg_count += 1
-	assert_true(
-		veg_count >= 10,
-		"Residential quarter (cols 2-19, rows 10-18) must have 10+ V/D tiles, got %d" % veg_count,
-	)
-
-
-func test_debris_map_has_organic_placement() -> void:
-	## Total debris tile count must be between 20 and 80 (sparse, intentional).
-	var debris_count: int = 0
-	for row: String in _script.DEBRIS_MAP:
-		for col_idx: int in range(row.length()):
-			if row[col_idx] != ".":
-				debris_count += 1
-	assert_true(
-		debris_count >= 20,
-		"Debris count must be >= 20, got %d" % debris_count,
-	)
-	assert_true(
-		debris_count <= 80,
-		"Debris count must be <= 80, got %d" % debris_count,
-	)
+func test_debris_entries_nonempty_with_reasonable_density() -> void:
+	assert_true(_script.DEBRIS_ENTRIES.size() > 0, "DEBRIS_ENTRIES must have entries")
+	for entry: Dictionary in _script.DEBRIS_ENTRIES:
+		var density: float = entry.get("density", 0.0)
+		assert_true(density >= 0.01, "DEBRIS_ENTRY density must be >= 0.01")
+		assert_true(density <= 0.20, "DEBRIS_ENTRY density must be <= 0.20")
 
 
 func test_echo_positions_are_navigable() -> void:
@@ -176,10 +122,9 @@ func test_echo_positions_are_navigable() -> void:
 		)
 
 
-func test_debris_map_has_expected_dimensions() -> void:
-	assert_eq(_script.DEBRIS_MAP.size(), EXPECTED_ROWS)
-	for row: String in _script.DEBRIS_MAP:
-		assert_eq(row.length(), EXPECTED_COLS)
+func test_debris_entries_have_source_id() -> void:
+	for entry: Dictionary in _script.DEBRIS_ENTRIES:
+		assert_true(entry.has("source_id"), "Each DEBRIS_ENTRY must have source_id")
 
 
 func test_above_player_map_has_expected_dimensions() -> void:

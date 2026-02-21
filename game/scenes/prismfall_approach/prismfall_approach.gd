@@ -109,19 +109,34 @@ func _setup_tilemap() -> void:
 		atlas_paths,
 		{},
 	)
-	MapBuilder.build_layer(
+
+	# Procedural ground — organic rocky steppe distribution
+	var ground_noise := FastNoiseLite.new()
+	ground_noise.seed = PrismfallApproachMap.GROUND_NOISE_SEED
+	ground_noise.frequency = PrismfallApproachMap.GROUND_NOISE_FREQ
+	ground_noise.fractal_octaves = PrismfallApproachMap.GROUND_NOISE_OCTAVES
+	MapBuilder.build_noise_layer(
 		_ground_layer,
-		PrismfallApproachMap.GROUND_MAP,
-		PrismfallApproachMap.GROUND_LEGEND,
+		PrismfallApproachMap.COLS, PrismfallApproachMap.ROWS,
+		ground_noise, PrismfallApproachMap.GROUND_ENTRIES,
 	)
+	MapBuilder.disable_collision(_ground_layer)
+
+	# Procedural detail — scattered rock decorations (source 1)
+	var detail_noise := FastNoiseLite.new()
+	detail_noise.seed = PrismfallApproachMap.GROUND_NOISE_SEED + 1
+	detail_noise.frequency = 0.15
+	MapBuilder.scatter_decorations(
+		_ground_detail_layer,
+		PrismfallApproachMap.COLS, PrismfallApproachMap.ROWS,
+		detail_noise, PrismfallApproachMap.DETAIL_ENTRIES,
+	)
+	MapBuilder.disable_collision(_ground_detail_layer)
+
+	# Authored path — amber cobble road (structural)
 	MapBuilder.build_layer(
 		_paths_layer,
 		PrismfallApproachMap.PATH_MAP,
 		PrismfallApproachMap.PATH_LEGEND,
 	)
-	MapBuilder.build_layer(
-		_ground_detail_layer,
-		PrismfallApproachMap.DETAIL_MAP,
-		PrismfallApproachMap.DETAIL_LEGEND,
-		1,
-	)
+	MapBuilder.disable_collision(_paths_layer)

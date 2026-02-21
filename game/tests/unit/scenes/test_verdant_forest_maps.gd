@@ -25,14 +25,14 @@ func test_canopy_map_south_half_has_tiles() -> void:
 	)
 
 
-## Regression guard for T-0049 (part 1): GROUND_MAP must have exactly 25 rows
+## Regression guard for T-0049 (part 1): ROWS must be exactly 25
 ## so the map is 400 px tall — matching Camera2D limit_bottom in the .tscn.
-func test_ground_map_has_25_rows_400px_tall() -> void:
-	var map_height_px: int = VerdantForest.GROUND_MAP.size() * TILE_SIZE_PX
+func test_rows_constant_is_25_matching_400px() -> void:
+	var map_height_px: int = VerdantForest.ROWS * TILE_SIZE_PX
 	assert_eq(
 		map_height_px,
 		EXPECTED_CAMERA_LIMIT_BOTTOM,
-		"GROUND_MAP must have 25 rows (400 px tall) to match Camera2D limit_bottom=400",
+		"ROWS must be 25 (400 px tall) to match Camera2D limit_bottom=400",
 	)
 
 

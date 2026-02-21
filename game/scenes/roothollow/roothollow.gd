@@ -173,36 +173,54 @@ func _setup_tilemap() -> void:
 		atlas_paths,
 		m.SOLID_TILES,
 	)
-	# Ground: organic terrain patches (grass, dirt, dark earth)
-	MapBuilder.build_layer(_ground, m.GROUND_MAP, m.GROUND_LEGEND)
-	# Paths (source 0)
+	# Procedural ground — organic grass/dirt/earth distribution
+	var ground_noise := FastNoiseLite.new()
+	ground_noise.seed = Maps.GROUND_NOISE_SEED
+	ground_noise.frequency = Maps.GROUND_NOISE_FREQ
+	ground_noise.fractal_octaves = Maps.GROUND_NOISE_OCTAVES
+	MapBuilder.build_noise_layer(
+		_ground,
+		Maps.MAP_COLS, Maps.MAP_ROWS,
+		ground_noise, Maps.GROUND_ENTRIES,
+	)
+	MapBuilder.disable_collision(_ground)
+
+	# Paths (source 0) — authored, navigation-critical
 	MapBuilder.build_layer(_paths, m.PATH_MAP, m.PATH_LEGEND)
-	# Ground detail flower accents (source 0)
+	MapBuilder.disable_collision(_paths)
+
+	# Ground detail flower accents (source 0) — authored, town-specific
 	MapBuilder.build_layer(
 		_ground_detail, m.DECOR_MAP, m.DETAIL_LEGEND,
 	)
-	# Forest border canopy (source 2)
+	MapBuilder.disable_collision(_ground_detail)
+
+	# Forest border canopy (source 2) — authored, collision provides walls
 	MapBuilder.build_layer(
 		_trees_border, m.BORDER_MAP, m.BORDER_LEGEND, 2,
 	)
-	# Mushroom building walls (source 1, Objects layer)
+
+	# Mushroom building walls (source 1, Objects layer) — authored, with collision
 	MapBuilder.build_layer(
 		_objects, m.BUILDING_MAP, m.BUILDING_LEGEND, 1,
 	)
-	# Mushroom caps / rooftops (source 1, AbovePlayer)
+
+	# Mushroom caps / rooftops (source 1, AbovePlayer) — authored
 	MapBuilder.build_layer(
 		_above_player, m.ROOF_MAP, m.ROOF_LEGEND, 1,
 	)
-	# Forest canopy overlay (source 2, AbovePlayer)
+	# Forest canopy overlay (source 2, AbovePlayer) — authored
 	MapBuilder.build_layer(
 		_above_player, m.CANOPY_MAP, m.CANOPY_LEGEND, 2,
 	)
-	# Mushroom ground decorations (source 1)
+	MapBuilder.disable_collision(_above_player)
+
+	# Mushroom ground decorations (source 1) — authored, decorative
 	MapBuilder.build_layer(
 		_decorations, m.DECOR_MAP,
 		m.MUSHROOM_DECOR_LEGEND, 1,
 	)
-	# Stone ground decorations (source 3)
+	# Stone ground decorations (source 3) — authored, decorative
 	MapBuilder.build_layer(
 		_decorations, m.DECOR_MAP,
 		m.STONE_DECOR_LEGEND, 3,

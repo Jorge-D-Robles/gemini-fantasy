@@ -9,26 +9,36 @@ extends RefCounted
 # Source 1: RUINS_A5 (ruins2 — golden walls and ornate floors)
 # Source 2: OVERGROWN_RUINS_OBJECTS (B-sheet — objects, rubble, vines)
 
-# Ground layer — gray stone throughout (fairy forest source 0)
-# F = gray stone floor (dominant), D = dark earth/roots, V = vegetation
-const GROUND_LEGEND: Dictionary = {
-	"F": Vector2i(0, 10),  # Gray stone floor (opaque, cross-scene consistent)
-	"D": Vector2i(0, 6),   # Dark earth/roots — district border texture
-	"V": Vector2i(0, 8),   # Dense vegetation — nature reclaiming the capital
-}
+# Map dimensions
+const COLS: int = 40
+const ROWS: int = 28
 
-# Ground detail — ornate golden floor accents (ruins2 source 1)
-const DETAIL_LEGEND: Dictionary = {
-	"O": Vector2i(0, 2),   # Ornate golden floor tile (market stalls, key areas)
-}
+# ---------- PROCEDURAL GROUND CONFIG ----------
 
-# Ground debris — small rubble at ground level (B-sheet source 2)
-const DEBRIS_LEGEND: Dictionary = {
-	"p": Vector2i(0, 2),   # Small pebbles / reddish rubble fragments
-	"r": Vector2i(1, 2),   # Scattered rocks
-	"v": Vector2i(0, 6),   # Green round vegetation clump
-	"m": Vector2i(1, 6),   # Green round vegetation variant
-}
+# Ground noise — organic terrain (source 0)
+# V = dense vegetation (noise > 0.35), D = dark earth (-0.15..0.35),
+# F = gray stone (catch-all, noise >= -1.0)
+const GROUND_NOISE_SEED: int = 54321
+const GROUND_NOISE_FREQ: float = 0.09
+const GROUND_NOISE_OCTAVES: int = 3
+const GROUND_ENTRIES: Array[Dictionary] = [
+	{"threshold": 0.35, "atlas": Vector2i(0, 8)},   # V = dense vegetation
+	{"threshold": -0.15, "atlas": Vector2i(0, 6)},  # D = dark earth/roots
+	{"threshold": -1.0,  "atlas": Vector2i(0, 10)}, # F = gray stone (catch-all)
+]
+
+# Detail scatter — ornate golden floor accents (source 1, ~10% coverage)
+const DETAIL_ENTRIES: Array[Dictionary] = [
+	{"atlas": Vector2i(0, 2), "source_id": 1, "density": 0.10},
+]
+
+# Debris scatter — rubble, rocks, vines, moss (source 2)
+const DEBRIS_ENTRIES: Array[Dictionary] = [
+	{"atlas": Vector2i(0, 2), "source_id": 2, "density": 0.05},  # pebbles
+	{"atlas": Vector2i(1, 2), "source_id": 2, "density": 0.04},  # rocks
+	{"atlas": Vector2i(0, 6), "source_id": 2, "density": 0.02},  # vine clump
+	{"atlas": Vector2i(1, 6), "source_id": 2, "density": 0.02},  # moss clump
+]
 
 # Wall layer — structural walls (ruins2 source 1)
 const WALL_LEGEND: Dictionary = {
@@ -65,106 +75,9 @@ const ABOVE_LEGEND: Dictionary = {
 #   Row  6-12: Research Quarter (west cols 2-22) + Entertainment (east)
 #   Row 13-18: Residential Quarter (west cols 2-19) + Entertainment (east)
 #   Row 19-27: Market District — broad stone streets, entry zone
+#
+# Ground/detail/debris are now procedural — see noise configs above.
 # --------------------------------------------------------------------------
-
-# Ground layer — fully tiled with organic terrain patches.
-# F=gray stone (corridors, open), D=dark earth (borders), V=vegetation (reclaimed)
-const GROUND_MAP: Array[String] = [
-	"FFFFFFDDDDDDDDDFFFFFFFFFFFFFFFFFDDDDFFFF",
-	"FFFFDDDVVDDDDDDFFFFFFFFFFFFFFFFFFDDVVFFF",
-	"FFFFDDDVVVDDDDFFFFFFFFFFFFFFFFFDDDVVVFFF",
-	"FFFFDDDVVVFFFFFFFFFFFFFFFFFFFFFFFDDVVDFF",
-	"FFFFFDDDDDDDDDFFFFFFFFFFFFFFFFFDDDDDDFFF",
-	"FFFFFDDDDDDDDFFFFFFFFFFFFFFFFFDDDDDDDFFF",
-	"FFDDDFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-	"FFDDDFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-	"FFDDDVVFFFFFFFFFFFFFFFFFFFFFFFDDFFDDDFFF",
-	"FFDDVVVFFFFFFFFFFFFFFFFFFFFFFFDDFFDDDFFF",
-	"FFDDDVVFFFFFFFFFFFFFFFFFFFFFFFDDFFDDDFFF",
-	"FFDDFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFDDDFF",
-	"FFDDDFFFFFFFFFFFFFFFFFFFFFFFFFFFFDDDFFFF",
-	"FFDDDVVDDDFFFFFFFFFFFFFFFFFFFFFFFDDDDFFF",
-	"FFDDDVVVDDFFFFFFFFFFFFFFFFFFFFFFFDDDDFFF",
-	"FFDDVVVVDDFFFFFFFFFFFFFFFFFFFFFFFDDDDFFF",
-	"FFDDDVVDDDFFFFFFFFFFFFFFFFFFFFFFFDDDDFFF",
-	"FFDDDDDDDDFFFFFFFFFFFFFFFFFFFFFFFDDDDFFF",
-	"FFDDDDDFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-]
-
-# Detail layer — ornate golden floor accents.
-# 'O' in Market stall areas, Entertainment theater floor, Research lab.
-const DETAIL_MAP: Array[String] = [
-	"........................................",
-	"........................................",
-	"........................................",
-	"........................................",
-	"........................................",
-	"........................................",
-	"........................................",
-	".....OOO....OOO.........................",
-	".....OO......OO.........................",
-	"........................................",
-	"........................OOO.....OO......",
-	"........................OO......OOO.....",
-	"........................OOO.....OOO.....",
-	"........................OOOO....OOO.....",
-	"........................OO......OO......",
-	"........................OOO.....OOO.....",
-	"........................OO......OO......",
-	"........................OOO.....OOO.....",
-	"........................................",
-	"...OOO......OOO.......OOO......OOO......",
-	"...OO........OO.......OO........OO......",
-	"...OOO......OOO.......OOO......OOO......",
-	"........................................",
-	"...OO.......OOO........OOO......OO......",
-	"...OOO.......OO........OO......OOO......",
-	"........................................",
-	"...OOO......OOO.......OOO......OOO......",
-	"........................................",
-]
-
-# Debris layer — ground-level rubble. Sparse (20-80 total).
-# Placed intentionally near walls, corners, and transitions.
-const DEBRIS_MAP: Array[String] = [
-	"........................................",
-	".....r.........p........................",
-	".....p..............................r...",
-	"........................................",
-	"..........p.................r...........",
-	"........................................",
-	"...r......m.................p.......r...",
-	"........................................",
-	"....v.........p...................r.....",
-	"........................................",
-	"...p..................................r.",
-	"........................................",
-	"...r.......v............................",
-	"....p...................................",
-	".....v.........r........................",
-	"........................................",
-	"....r.p.................................",
-	"........................................",
-	"........................................",
-	"....p.......r...........m.......r.......",
-	"........................................",
-	"..r..........p...........r..............",
-	"........................................",
-	"........................................",
-	"....r........m..................p.......",
-	"........................................",
-	"..p..........r...........p..............",
-	"........................................",
-]
 
 # Wall layer — structural walls forming dungeon boundaries.
 # 'W'=golden wall (solid), 'G'=dark ornamental border (solid), '.'=navigable

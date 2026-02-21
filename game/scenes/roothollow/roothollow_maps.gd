@@ -8,15 +8,19 @@ extends RefCounted
 const MAP_COLS: int = 40
 const MAP_ROWS: int = 28
 
-# -- Ground: organic terrain patches (all col 0 to avoid seams) --
-# G = Bright green grass (row 8) — dominant open areas ~60%
-# D = Dirt/earth (row 2) — around buildings, path edges ~20%
-# E = Dark earth/roots (row 6) — forest border transition ~20%
-const GROUND_LEGEND: Dictionary = {
-	"G": Vector2i(0, 8),
-	"D": Vector2i(0, 2),
-	"E": Vector2i(0, 6),
-}
+# ---------- PROCEDURAL GROUND CONFIG ----------
+
+# Ground noise — organic terrain patches (source 0)
+# G = bright green grass (noise > 0.15), D = dirt/earth (-0.2..0.15),
+# E = dark earth/roots (catch-all — biases toward forest border edges via noise)
+const GROUND_NOISE_SEED: int = 55543
+const GROUND_NOISE_FREQ: float = 0.10
+const GROUND_NOISE_OCTAVES: int = 3
+const GROUND_ENTRIES: Array[Dictionary] = [
+	{"threshold": 0.15,  "atlas": Vector2i(0, 8)},  # G = bright green grass
+	{"threshold": -0.2,  "atlas": Vector2i(0, 2)},  # D = dirt/earth
+	{"threshold": -1.0,  "atlas": Vector2i(0, 6)},  # E = dark earth (catch-all)
+]
 
 # -- Paths: gray stone from A5_A row 10 --
 const PATH_LEGEND: Dictionary = {
@@ -96,49 +100,7 @@ const BUILDING_LEGEND: Dictionary = {
 
 # ===== Text maps (40 cols x 28 rows) =====
 
-# Ground terrain — organic patches of grass, dirt, dark earth
-# G = bright green grass (dominant open areas)
-# D = dirt/earth (around buildings, path borders, well-trodden areas)
-# E = dark earth/roots (transition band at forest border edge)
-# Visible balance: G ~61%, D ~18%, E ~21% (under-canopy E not counted)
-# Row key:  0-3 = under canopy / forest edge transition (E)
-#           4-8 = Inn zone — dirt yard around building
-#           9   = scattered dirt above main road
-#          10-11 = main road (paths overlay, ground is green)
-#          12    = scattered dirt below main road
-#          13-18 = central area with paths, shop dirt yard (cols 27-33)
-#          19-23 = elder dirt yard (cols 11-18)
-#          24-27 = under canopy / forest edge (E)
-const GROUND_MAP: Array[String] = [
-	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
-	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
-	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
-	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
-	"EEEEEGGGGGGGGGGGGGDGGDGGGGGGGGGGGEEEEEEE",
-	"EEEEEGGGGGDDDDGGGGDGGGGGGGGGGGGGGGEEEEEE",
-	"EEEEEGGGDDDDDDDDGGDGGDGGGGGGGGGGGGEEEEEE",
-	"EEEEEGGGDDDDDDDDGGGGGDGGGGGGGGGGGGGEEEEE",
-	"EEEEEEGGGDDDDDDGGGGGGDGGGGGGGGGGGGEEEEEE",
-	"EEEEEEDDDGDDDDDDDGGGGGDDDDGGGGDDDGEEEEEE",
-	"EEEEEEGGGGGGGGGGGGGGGGGGGGGGGGGGGGEEEEEE",
-	"EEEEEGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGEEEEE",
-	"EEEEEDDDDDGGGGGGGGGGGGDDDGGGDDDGGGGEEEEE",
-	"EEEEEGGGGGGGGGGGGGDGGGGGGGGGGGGGGGGEEEEE",
-	"EEEEEGGGGGGGGGGGGGDGGDGGGGGGGGGGGGGEEEEE",
-	"EEEEEGDDDGGGGGGGGGDGGGGGGGGGGGGGGGEEEEEE",
-	"EEEEEGGDDGGGGGGGGGGGGDGGGGGGDDDDDGEEEEEE",
-	"EEEEEEGGGGGGGGGGGGDGGGGGGGGDDDDDDDEEEEEE",
-	"EEEEEEGGGGGGGGGGGGDGGDGGGGGDDDDDDGEEEEEE",
-	"EEEEEEGGGGGGGDDDDDDGGGGGGGGGDDDDGGEEEEEE",
-	"EEEEEGGGDDGGDDDDDDDGGDGGGGGGGGGGGGGEEEEE",
-	"EEEEEGGGGGGDDDDDDDDGGGGGGGGGGGGGGGEEEEEE",
-	"EEEEEGGGGGGGDDDDDDDGGGGGGGGGGGGGGEEEEEEE",
-	"EEEEEEEGGGGGGDDDDGDGGDGGGGGGGGGEEEEEEEEE",
-	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
-	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
-	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
-	"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
-]
+# Ground is now procedural — see GROUND_ENTRIES above.
 
 # Stone paths: main E-W road, N-S crossroad, plaza, approaches
 const PATH_MAP: Array[String] = [
