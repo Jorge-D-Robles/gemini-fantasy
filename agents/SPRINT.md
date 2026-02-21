@@ -15,6 +15,18 @@ Started: 2026-02-20
 
 ## Queue
 
+### Tilemap Overhaul — Top Priority Block
+
+- **T-0251**: Hard-ban A5 sheets — update AGENT_RULES + map_builder.gd deprecation warnings
+- **T-0252**: Enhance tilemap review workflow — web search comparison + A5 blocking check + mandate dual review gate in build-tilemap skill
+- **T-0253**: Redo Roothollow tilemap — TF_TERRAIN biome system, full dual-reviewer sign-off
+- **T-0254**: Redo Overgrown Ruins tilemap — TF_DUNGEON + B-sheets, no A5
+- **T-0255**: Redo Prismfall Approach tilemap — complete TF_TERRAIN migration (GROUND_ENTRIES still uses A5 coords)
+- **T-0256**: Redo Overgrown Capital tilemap — TF_DUNGEON + B-sheets, no A5
+- **T-0257**: Final purge — remove all A5 constants from map_builder.gd after all scenes migrated
+
+### Other
+
 - **T-0250**: Fix EnemyBattler.choose_action() typed array mismatch (battle crash)
 
 *(pull next tasks from BACKLOG.md — T-0246, T-0249, T-0105, T-0104, T-0223)*

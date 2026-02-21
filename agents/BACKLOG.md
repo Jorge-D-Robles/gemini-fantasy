@@ -4,6 +4,356 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ---
 
+## Tilemap Overhaul — Top Priority
+
+### T-0251
+- Title: Hard-ban A5 sheets — update AGENT_RULES + map_builder.gd deprecation warnings
+- Status: todo
+- Assigned: unassigned
+- Priority: critical
+- Milestone: M1
+- Depends: —
+- Refs: agents/AGENT_RULES.md, game/systems/map_builder.gd, .claude/agents/tilemap-builder.md, docs/best-practices/11-tilemaps-and-level-design.md
+
+**Goal:** Establish a project-wide, unbreakable ban on RPGMaker A5 autotile sheets (any `*A5*` or `*tileA5*` file). These sheets have a layout where columns within a row are NOT freely mixable — placing tiles from different columns of the same row produces visible seam artifacts. We have been unknowingly shipping broken-looking tilemaps because of this.
+
+**What to change:**
+
+1. **`agents/AGENT_RULES.md`** — Add a prominent `## HARD BANS` section at the top, before any other rules:
+   ```
+   ## HARD BANS (never do these — no exceptions)
+
+   - **Never use A5 autotile sheets** — any file matching `*A5*`, `*tileA5*`, or `*_A5_*` in its name
+     is an RPGMaker autotile sheet where columns within a row produce seam artifacts when mixed.
+     Use TF_TERRAIN (`TimeFantasy_TILES/TILESETS/terrain.png`) for outdoor ground,
+     TF_DUNGEON for dungeon/ruins ground, and B-sheets (`tf_*_tileB_*.png`) for objects.
+   - **Never use `set_cells_terrain_connect()`** without pre-configured Terrain Sets (we don't have them).
+   - **Never carpet-bomb decorations** — no percentage-based coverage, no noise-driven object scatter
+     that fires on every cell. Every decoration must be intentional and sparse.
+   ```
+
+2. **`game/systems/map_builder.gd`** — Add `@warning_ignore` comment and deprecation notice to every A5 constant:
+   ```gdscript
+   ## @deprecated Use TF_TERRAIN or TF_DUNGEON instead. A5 sheets are RPGMaker autotile
+   ## format — columns within a row produce seam artifacts when mixed in Godot.
+   const FAIRY_FOREST_A5_A: String = "res://assets/tilesets/tf_ff_tileA5_a.png"
+   ```
+   Add this `## @deprecated` doc comment above EVERY `*A5*` constant.
+
+3. **`.claude/agents/tilemap-builder.md`** — In the Tile Atlas Reference section, add a bold warning box:
+   ```
+   > ⛔ BANNED: Never use A5 sheets (any MapBuilder constant ending in _A5, _A5_A, _A5_B, etc.)
+   > These are RPGMaker autotile sheets. Using them produces seam artifacts in Godot.
+   > ALL ground layers must use TF_TERRAIN, TF_DUNGEON, TF_OUTSIDE, TF_CASTLE, or TF_INSIDE.
+   ```
+
+4. **`docs/best-practices/11-tilemaps-and-level-design.md`** — Add "A5 Usage" to the Anti-Patterns table as CRITICAL severity.
+
+**No code changes to scenes yet** — that's T-0253 through T-0256. This ticket is documentation + deprecation warnings only.
+
+**Tests:** None required — this is documentation only.
+
+---
+
+### T-0252
+- Title: Enhance tilemap review workflow — web search comparison + A5 blocking check + mandate dual review in build-tilemap skill
+- Status: todo
+- Assigned: unassigned
+- Priority: critical
+- Milestone: M1
+- Depends: T-0251
+- Refs: .claude/agents/tilemap-reviewer-adversarial.md, .claude/skills/build-tilemap/SKILL.md
+
+**Goal:** The adversarial tilemap reviewer must (a) do a web search for published JRPG reference screenshots before scoring, (b) auto-fail any map that uses A5 sheets, and (c) be a mandatory gate in the build-tilemap skill before any tilemap is allowed to commit.
+
+**Change 1 — `.claude/agents/tilemap-reviewer-adversarial.md`:**
+
+After Step 2 (View the Tile Sheets), add a new **Step 2.5 — Web Search for JRPG Reference**:
+
+```markdown
+### Step 2.5 — Search for Professional JRPG Reference Screenshots
+
+Before scoring, ground yourself in what professional pixel art looks like. Do all 3 searches:
+
+```
+WebSearch("Chrono Trigger pixel art overworld screenshot SNES tilemap")
+WebSearch("Final Fantasy 6 town map screenshot pixel art")
+WebSearch("JRPG pixel art 16x16 tileset top-down organic forest dungeon")
+```
+
+Read at least 2 result images. Note specifically:
+- How varied is the ground? (Multiple terrain types? Irregular patches?)
+- How sparse are the decorations? (Less than you think — professionals use very few)
+- Do paths meander or are they straight? (Real paths curve and vary in width)
+- How do multi-tile objects anchor the space? (Trees, buildings as landmarks)
+
+You WILL compare the submitted tilemap against these references when scoring.
+```
+
+Also add a new anti-pattern check to Step 5 — **A5 Sheet Usage (INSTANT FAIL)**:
+```markdown
+#### A5 Sheet Usage — INSTANT FAIL
+- Does the scene script reference any constant ending in `_A5`, `_A5_A`, `_A5_B`?
+- Is `FAIRY_FOREST_A5_A`, `RUINS_A5`, `OVERGROWN_RUINS_A5`, or any other A5 constant in the atlas_paths?
+- Run: `Grep(pattern="A5", path="game/scenes/<scene_name>/")`
+- **If ANY A5 reference is found: this is an automatic REJECT with score 1/5.**
+- **Fix:** Replace A5 ground sheets with TF_TERRAIN (outdoor) or TF_DUNGEON (dungeon/ruins).
+```
+
+Also update Rule #8 in the Rules section:
+```
+8. **A5 usage is a hard REJECT** — If you find any A5 sheet in atlas_paths, score 1/5 and REJECT immediately. Do not soften this. A5 sheets produce seam artifacts and are banned from all new tilemap work.
+```
+
+Update the Anti-Pattern Checklist in the output format to add:
+```
+- [ ] A5 sheet usage: <INSTANT FAIL if found / PASS>
+- [ ] Reference comparison: Does this approach the quality of the Chrono Trigger/FF6 screenshots? <YES/NO — details>
+```
+
+**Change 2 — `.claude/skills/build-tilemap/SKILL.md`:**
+
+After Step 7 (Final Visual Quality Check), add a new mandatory **Step 8 — Dual Reviewer Gate**:
+
+```markdown
+## Step 8 — MANDATORY: Dual Reviewer Sign-Off Before Committing
+
+**Do NOT commit the final tilemap without passing both reviewers.** Spawn them in parallel:
+
+```gdscript
+# In your agent, spawn both reviewers simultaneously:
+Task(subagent_type="tilemap-reviewer-adversarial", prompt="Review tilemap for <scene_name>: <what changed>")
+Task(subagent_type="tilemap-reviewer-neutral", prompt="Review tilemap for <scene_name>: <what changed>")
+```
+
+**Consensus rules:**
+- Both APPROVE → commit and push
+- Any REVISE → apply fixes, re-screenshot, re-review
+- Any REJECT → rework the offending layers, re-screenshot, re-review
+
+**You cannot merge a tilemap that has not passed both reviewers.** This is non-negotiable. If you are blocked by a reviewer, fix the specific issues they identified — do not argue or skip.
+```
+
+**Tests:** None required — documentation only.
+
+---
+
+### T-0253
+- Title: Redo Roothollow tilemap — TF_TERRAIN biome system, dual-reviewer sign-off required
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Milestone: M1
+- Depends: T-0251, T-0252
+- Refs: game/scenes/roothollow/roothollow.gd, game/scenes/roothollow/roothollow_maps.gd
+
+**Goal:** Roothollow is a cozy fairy forest village — the safe hub town. Its tilemap currently uses `FAIRY_FOREST_A5_A` for all ground tiles (rows 8, 2, 6, 10, 14 — all A5 format). Replace entirely with TF_TERRAIN flat 16×16 tiles using a proper biome+hash system. The village should look lived-in: grass paths, packed earth around buildings, flower patches near the inn, varied terrain around the forest border.
+
+**Architecture:**
+- Source 0: `TF_TERRAIN` (replaces `FAIRY_FOREST_A5_A`) — all ground and paths
+- Source 1: `MUSHROOM_VILLAGE` (keep — B-sheet, already correct format)
+- Source 2: `FOREST_OBJECTS` (keep — B-sheet)
+- Source 3: `STONE_OBJECTS` (keep — B-sheet)
+
+**Implementation:**
+
+1. **Read `terrain.png` visually** before choosing any coordinates. terrain.png layout reference (verify by reading the PNG):
+   - Row 1, cols 2–11: Bright green grass
+   - Row 2, cols 1–11: Muted/secondary green
+   - Row 6, cols 1–8: Warm brown earth/dirt
+   - Row 9, cols 1–16: Sandy/tan (good for cobble paths)
+   - Row 10+: Verify visually — may have stone path tiles
+   - **Cols 22+: BANNED — RPGMaker auto-tiles section**
+
+2. **`roothollow_maps.gd`** — Replace `GROUND_ENTRIES` format with the `BIOME_TILES` + `OPEN_BIOME_THRESHOLDS` + `pick_tile()` pattern from `VerdantForestMap`. Add `enum Biome` BEFORE the constants. Biomes for Roothollow:
+   - `BRIGHT_GREEN`: village square and inn garden (vibrant grass)
+   - `MUTED_GREEN`: forest border and shaded areas
+   - `DIRT`: well-worn earth around buildings, market stalls, paths
+   - Pick TF_TERRAIN coordinates by reading the PNG — confirm visually
+
+3. **Path legend** — Replace A5 row 10 path tiles with TF_TERRAIN equivalent. Row 9 (sandy/tan) is a good cobble path choice for a village. Confirm by reading terrain.png.
+
+4. **Detail legend** — Replace A5 row 14 flower tiles with TF_TERRAIN or STONE_OBJECTS equivalents. Read the PNG to confirm.
+
+5. **`roothollow.gd`** — Change `atlas_paths[0]` from `MapBuilder.FAIRY_FOREST_A5_A` to `MapBuilder.TF_TERRAIN`. Replace `build_noise_layer()` with `_fill_ground_with_variants()` pattern (same as verdant_forest.gd).
+
+**Process:**
+- Run `/run-tests` before starting to get a clean baseline
+- Build ground layer → `/scene-preview roothollow.tscn --full-map` → evaluate
+- Build paths → screenshot → evaluate
+- Build detail/mushrooms → screenshot → evaluate
+- Final: spawn both tilemap reviewers in parallel (T-0252 adds the mandatory gate to build-tilemap)
+- Both must APPROVE before committing
+- Run `/run-tests` — all tests pass before commit
+
+---
+
+### T-0254
+- Title: Redo Overgrown Ruins tilemap — TF_DUNGEON + B-sheets, no A5
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Milestone: M1
+- Depends: T-0251, T-0252
+- Refs: game/scenes/overgrown_ruins/overgrown_ruins.gd, game/scenes/overgrown_ruins/overgrown_ruins_map.gd
+
+**Goal:** Overgrown Ruins is the game's starting area — ancient golden ruins overgrown with vegetation. Its tilemap currently uses `FAIRY_FOREST_A5_A` for ground (A5 format, rows 8/6/10) and `RUINS_A5` for golden walls/floors (A5 format). Replace both with flat 16×16 equivalents. The scene should feel like crumbling stone dungeon floors with patches of overgrown vegetation forcing through the cracks.
+
+**Architecture:**
+- Source 0: `TF_DUNGEON` (replaces `FAIRY_FOREST_A5_A`) — stone dungeon floor tiles, flat 16×16
+- Source 1: `RUINS_OBJECTS` (`tf_B_ruins2.png`) — already B-sheet; golden ruins wall/object tiles (keep as source 1, verify which tiles in this sheet can serve as structural elements)
+- Source 2: `OVERGROWN_RUINS_OBJECTS` (`tf_B_ruins3.png`) — already B-sheet; overgrown objects (keep)
+
+**Implementation:**
+
+1. **Read `dungeon.png` visually** before choosing ground coordinates. Also read `tf_B_ruins2.png` to see what structural/wall tiles are available in B-sheet format.
+
+2. **`overgrown_ruins_map.gd`** — Replace `GROUND_ENTRIES` with the `BIOME_TILES` + `pick_tile()` pattern. Biomes for Overgrown Ruins:
+   - `STONE_FLOOR`: dominant — cracked dungeon stone (TF_DUNGEON coords — read PNG to identify)
+   - `DIRT_CRACKED`: overgrown earth pushing through (TF_DUNGEON or TF_TERRAIN row 6 coords)
+   - `VEGETATION`: patches of green overgrowth (TF_TERRAIN row 1 or 2 coords)
+
+   Use low noise frequency (0.05–0.07) for large organic patches. The ruins should feel like stone with vegetation bursting through in clusters, not uniform.
+
+3. **Remove `RUINS_A5` from atlas_paths** in `overgrown_ruins.gd`. If structural wall tiles are needed, find them in `tf_B_ruins2.png` (B-sheet) or `TF_DUNGEON` (flat tiles) — read both PNGs visually.
+
+4. The `OVERGROWN_RUINS_OBJECTS` B-sheet source stays — it provides decorative objects and is already the correct format.
+
+**Process:**
+- Run `/run-tests` for baseline
+- Iterate layer by layer with `/scene-preview --full-map` after each
+- Final: dual reviewer gate (both must APPROVE)
+- Run `/run-tests` — all pass before commit
+
+---
+
+### T-0255
+- Title: Redo Prismfall Approach tilemap — complete TF_TERRAIN migration (code still uses A5 coords)
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Milestone: M1
+- Depends: T-0251, T-0252
+- Refs: game/scenes/prismfall_approach/prismfall_approach.gd, game/scenes/prismfall_approach/prismfall_approach_map.gd
+
+**Goal:** The Prismfall Approach documentation was updated to say it uses TF_TERRAIN, but the actual code never got migrated. `prismfall_approach.gd` still passes `MapBuilder.FAIRY_FOREST_A5_A` as source 0, and `prismfall_approach_map.gd` has a GROUND_ENTRIES comment still labeled `(FAIRY_FOREST_A5_A, source 0)` with A5 atlas coordinates (`Vector2i(0, 2)`, `Vector2i(0, 10)`, `Vector2i(0, 6)` — these are A5 row indices, not TF_TERRAIN). Path legend also uses A5 coordinate `Vector2i(0, 4)`.
+
+The Prismfall Approach is the Crystalline Steppes — an open, arid rocky landscape with scrubland, bare earth, and a cobble road leading south. It should feel dry and desolate, distinct from Verdant Forest.
+
+**Architecture:**
+- Source 0: `TF_TERRAIN` (already declared as the plan, just needs the code to match)
+- Source 1: `STONE_OBJECTS` (keep — B-sheet, correct format)
+
+**Implementation:**
+
+1. **Read `terrain.png` visually** to find appropriate steppe/arid coords:
+   - Sandy/tan tiles (row 9) — the steppes feel dry, sandy
+   - Brown earth (row 6) — barren patches
+   - Possibly a rocky/gray variant — check if terrain.png has stone rows
+   - **Avoid bright green grass — this is NOT a forest**
+
+2. **`prismfall_approach_map.gd`** — Full migration:
+   - Remove the `GROUND_ENTRIES` approach entirely
+   - Add `enum Biome { SANDY, BROWN_EARTH, ROCKY }` BEFORE constants
+   - Add `BIOME_TILES` dictionary with TF_TERRAIN coordinates (read PNG to confirm)
+   - Add `OPEN_BIOME_THRESHOLDS`, `VARIANT_HASH_SEED`
+   - Add `pick_tile()` and `get_biome_for_noise()` static methods
+   - Rename comment from `# ---------- TILE LEGENDS (FAIRY_FOREST_A5_A, source 0) ----------` to `# ---------- TILE LEGENDS (TF_TERRAIN, source 0) ----------`
+   - Replace PATH_LEGEND coordinate `Vector2i(0, 4)` with actual TF_TERRAIN path tile (row 9 sandy cobble is likely correct — verify visually)
+   - Remove `FOLIAGE_NOISE_*` constants (no foliage on barren steppes)
+
+3. **`prismfall_approach.gd`** — Change `atlas_paths[0]` from `MapBuilder.FAIRY_FOREST_A5_A` to `MapBuilder.TF_TERRAIN`. Replace `build_noise_layer()` with `_fill_ground_with_variants()` pattern.
+
+**Process:**
+- Run `/run-tests` baseline
+- Build ground → `/scene-preview --full-map` → evaluate (should look dry, steppe-like)
+- Build paths → screenshot → evaluate
+- Final: dual reviewer gate (both must APPROVE)
+- Run `/run-tests` — all pass before commit
+
+---
+
+### T-0256
+- Title: Redo Overgrown Capital tilemap — TF_DUNGEON + B-sheets, no A5
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Milestone: M1
+- Depends: T-0251, T-0252
+- Refs: game/scenes/overgrown_capital/overgrown_capital.gd, game/scenes/overgrown_capital/overgrown_capital_map.gd
+
+**Goal:** The Overgrown Capital is a sprawling ruined city — the most complex dungeon scene. Its tilemap currently uses `FAIRY_FOREST_A5_A` (source 0 ground) and `RUINS_A5` (source 1 structural) — both A5 format. The capital should feel like a grand ancient city that has been reclaimed by nature: cracked stone plazas, collapsed archways, vines through golden walls, with distinct districts visible.
+
+**Architecture:**
+- Source 0: `TF_DUNGEON` (replaces `FAIRY_FOREST_A5_A`) — stone dungeon floor for urban ruins
+- Source 1: `RUINS_OBJECTS` (`tf_B_ruins2.png`) — already B-sheet (replaces `RUINS_A5` as structural source)
+- Source 2: `OVERGROWN_RUINS_OBJECTS` (`tf_B_ruins3.png`) — already B-sheet (keep)
+
+**Implementation:**
+
+1. **Read `dungeon.png` visually** for ground floor tiles. Read `tf_B_ruins2.png` to understand what structural tiles are available in B-sheet format. Also search:
+   ```
+   WebSearch("pixel art top-down ruins city tilemap JRPG")
+   WebSearch("Chrono Trigger Zeal ruins pixel art screenshot")
+   ```
+
+2. **`overgrown_capital_map.gd`** — Full migration to `BIOME_TILES` + `pick_tile()` pattern. Biomes for the Capital:
+   - `GRAND_STONE`: polished stone plaza floors (TF_DUNGEON fancy floor tiles)
+   - `CRACKED_STONE`: weathered/cracked stone (TF_DUNGEON worn variants)
+   - `OVERGROWN`: earth and vegetation reclaiming the streets (TF_TERRAIN row 1 or 6)
+
+3. **`overgrown_capital.gd`** — Change atlas_paths to use `MapBuilder.TF_DUNGEON` for source 0, `MapBuilder.RUINS_OBJECTS` for source 1, `MapBuilder.OVERGROWN_RUINS_OBJECTS` for source 2. Replace `build_noise_layer()` with `_fill_ground_with_variants()`.
+
+4. The authored structural map data (walls, corridors, district layouts) in the map arrays may need significant redesign if it referenced specific A5 row tiles. Read the existing map arrays in `overgrown_capital_map.gd` before deciding whether to keep the authored layout or redesign it.
+
+**Process:**
+- Run `/run-tests` baseline
+- Ground layer first → `/scene-preview --full-map`
+- Structural layer → screenshot → evaluate
+- Detail/debris → screenshot → evaluate
+- Final: dual reviewer gate (both must APPROVE)
+- Run `/run-tests` — all pass before commit
+
+---
+
+### T-0257
+- Title: Final purge — remove A5 constants from map_builder.gd after all scenes migrated
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M1
+- Depends: T-0253, T-0254, T-0255, T-0256
+- Refs: game/systems/map_builder.gd, game/systems/CLAUDE.md, game/scenes/CLAUDE.md
+
+**Goal:** After all existing scenes have been migrated off A5 sheets (T-0253 through T-0256), delete the A5 constants from `map_builder.gd` entirely. This makes the ban enforced at the code level — future agents cannot use A5 even accidentally since the constants no longer exist.
+
+**Scope:**
+1. **Verify zero A5 usage** before deleting:
+   ```bash
+   grep -r "A5" game/scenes/ game/events/ game/systems/ --include="*.gd"
+   ```
+   If any A5 reference remains, that scene must be migrated first (file a new ticket).
+
+2. **Delete from `map_builder.gd`** all constants matching `*A5*`:
+   - `FAIRY_FOREST_A5_A`, `FAIRY_FOREST_A5_B`
+   - `RUINS1_A5`, `RUINS_A5`, `OVERGROWN_RUINS_A5`
+   - `GIANT_TREE_A5_EXT`, `GIANT_TREE_A5_INT`
+   - `ASHLANDS_A5`
+   - `ATLANTIS_A5_A`, `ATLANTIS_A5_B`
+   - `DARK_DIMENSION_A5`
+   - `STEAMPUNK_A5_DUNGEON`, `STEAMPUNK_A5_INT`, `STEAMPUNK_A5_TRAIN`
+   - `SEWERS_A5`
+
+3. **Update `game/systems/CLAUDE.md`** — Remove A5 from the Pre-defined texture path constants list.
+
+4. **Update `game/scenes/CLAUDE.md`** — Remove the Legacy A5 entries from the MapBuilder Constants Reference.
+
+5. Run `/run-tests` — all tests pass. If any test fails because it referenced a deleted constant, update the test.
+
+**Do NOT delete this ticket early.** It must wait until T-0253, T-0254, T-0255, and T-0256 are all marked done.
+
+---
+
 ## Bugs — High Priority
 
 ### T-0250
