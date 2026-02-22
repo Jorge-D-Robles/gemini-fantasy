@@ -4,6 +4,41 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ---
 
+## Bug Fixes — Top Priority
+
+### T-0263
+- Title: Fix all 37 Godot editor debugger errors/warnings
+- Status: todo
+- Assigned: unassigned
+- Priority: critical
+- Milestone: M1
+- Depends: —
+- Refs: game/scenes/roothollow/roothollow.gd, game/scenes/verdant_forest/verdant_forest.gd, game/events/garrick_recruitment.gd, game/events/iris_recruitment.gd, game/ui/camp_menu/camp_menu.gd, game/entities/interactable.gd, game/ui/battle_ui/battle_ui.gd, game/systems/dialogue_manager.gd
+
+**Goal:** Eliminate all errors and warnings visible in the Godot editor Output/Debugger tab when running the game. The game currently emits 37 errors/warnings that make it harder to spot real bugs.
+
+**Known issues (from debug console):**
+
+1. **E roothollow.gd:267** — `set_monitoring()` called during in/out signal. Use `set_deferred("monitoring", false)` instead.
+2. **E verdant_forest.gd:249** — Same `set_monitoring()` locked error in `_on_iris_zone_entered()`.
+3. **W roothollow.gd:47** — Unused private class variable `_player`.
+4. **W dialogue_manager.gd:21** — "dialogue already active" warning fires because the area signal fires twice; guard or fix the zone entry logic.
+5. **W iris_recruitment.gd:10** — Signal `sequence_completed` declared but never explicitly used.
+6. **W camp_menu.gd:12** — Constant `CampMenuData` shadows global class of same name (use `preload` reference or rename the local const).
+7. **W interactable.gd:50** — Parameter `has_been_used` shadows already-declared variable at line 35.
+8. **W battle_ui.gd:598** — Local variable `tr` shadows built-in `Object.tr()` method.
+9. **W battle_ui.gd:272** — Function parameter `exp` shadows built-in `exp()` function.
+10. **W battle_ui.gd:35** — Constant `BattleUIVictory` shadows global class.
+11. **W battle_ui.gd:32** — Constant `BattleUILog` shadows global class.
+12. **+ ~26 more** — Investigate and fix all remaining errors/warnings in the Godot Debugger tab.
+
+**Acceptance criteria:**
+- Zero errors in the Godot Debugger tab when running the game through a normal play session (title → overworld → encounter)
+- Zero `SHADOWED_*`, `UNUSED_*` GDScript warnings at reload
+- All existing tests still pass (`/run-tests`)
+
+---
+
 ## Tilemap Overhaul — Top Priority
 
 ### T-0251

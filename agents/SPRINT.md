@@ -17,6 +17,7 @@ Started: 2026-02-20
 
 ### Other
 
+- **T-0263**: Fix all 37 Godot editor debugger errors/warnings (area_2d set_monitoring during signal, shadowed identifiers, unused vars/signals, DialogueManager guard)
 - **T-0250**: Fix EnemyBattler.choose_action() typed array mismatch (battle crash)
 
 *(pull next tasks from BACKLOG.md — T-0246, T-0249, T-0105, T-0104, T-0223)*
