@@ -7,6 +7,19 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ## M1 — Act I: The Echo Thief
 
+### T-0180
+- Title: Test suite de-bloat — remove redundant tests that don't test behaviors or contracts
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Milestone: M1
+- Tags: tests, code-health
+- Depends: —
+- Blocked-by: —
+- Refs: game/tests/
+- Notes: Audit entire test suite. Remove tests that verify trivial properties (non-empty strings, array lengths, type checks on constants) rather than actual behaviors/contracts. Keep tests that verify: computation logic, state transitions, edge cases, integration contracts, regressions. Delete tests that merely assert obvious truths about static data. Target: meaningful coverage of real behaviors, not inflated test counts. Previous cleanup (T-0228 thru T-0232) removed ~150 low-value tests — this pass should finish the job.
+
+
 ### T-0107
 - Title: Implement full character ability trees for all party members
 - Status: todo
@@ -30,13 +43,12 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0214
 - Title: Add Research Quarter Resonance terminal puzzle — unlock Palace District path
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: medium
 - Milestone: M1
 - Depends: T-0195, T-0191
-- Refs: docs/game-design/05-dungeon-designs.md, game/entities/interactable/
-- Notes: Player collects two Resonance Crystal key items (one from Market, one from Entertainment) and uses them on the terminal. ResonanceTerminalStrategy extends InteractionStrategy. Checks inventory for both crystals, on success sets research_terminal_activated flag. Create resonance_crystal_market.tres and resonance_crystal_entertainment.tres (ItemData, key item type). compute_terminal_can_activate(inventory) static helper. 5+ tests.
+- Completed: 2026-02-22
 
 
 ### T-0207

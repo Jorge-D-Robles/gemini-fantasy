@@ -7,7 +7,7 @@ Started: 2026-02-20
 Closed: —
 
 ## Velocity
-- Completed: 22
+- Completed: 23
 - Added mid-sprint: 0
 - Rolled over: 1
 
@@ -15,7 +15,7 @@ Closed: —
 
 ## Active
 
-*(none — pick next from Queue)*
+*(none — pick next from Queue or BACKLOG.md)*
 
 ---
 
@@ -29,6 +29,7 @@ Closed: —
 
 ## Done This Sprint
 
+- T-0214: Add Research Quarter Resonance terminal puzzle — ResonanceTerminalStrategy (3-state dialogue), 2 crystal key items, ItemPickupStrategy add_item bug fix, crystal pickup persistence, 12 tests
 - T-0206: Add The Performer mini-boss in Entertainment District — PerformerEncounter event, dramatic_echo + resonance_drain abilities, the_performer.tres (BOSS AI, 180 HP), trigger zone at col 28 row 14, 9 tests
 - T-0218: Add Survivor's Diary collectible in Residential Quarter — DiaryStrategy with 4 diary entries, compute_diary_lines()/compute_diary_position() helpers, survivors_diary_read flag, 8 tests
 - T-0188: Place campfire interactable in Overgrown Ruins — CampStrategy at col 20 row 12 with campfire sprite, compute_ruins_campfire_position() helper, one_time=false, 3 tests
