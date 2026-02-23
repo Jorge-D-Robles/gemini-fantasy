@@ -43,9 +43,9 @@ Do not ask for confirmation at any step. This applies to all tasks — bug fixes
 
 Every session, before writing any code:
 
-1. Read `agents/SPRINT.md`
+1. Read `agents/SPRINT.md`. Run `bash agents/check-backlog.sh` if the queue is empty.
 2. If you have a task `Assigned: [your-name]` with `Status: in-progress`, resume it
-3. Otherwise, pick the highest-priority `unassigned` task from Queue whose deps are met
+3. Otherwise, run `bash agents/next-ticket.sh` to find the next available task from Queue whose deps are met
 4. Claim it: set `Assigned: [your-name]`, `Status: in-progress`, `Started: [date]`
 5. **Research** — look up docs, read best practices, scan existing code (see below)
 6. **RED** — write failing tests that define the expected behavior
@@ -53,12 +53,60 @@ Every session, before writing any code:
 8. **REFACTOR** — clean up while keeping tests green
 9. Run `/run-tests` — all tests must pass before committing
 10. **VERIFY VISUALLY** — if the task touched any visual content (tilemaps, UI, entity placement, scenes), run `/scene-preview` on every affected scene and fix issues before committing
-11. When done: move ticket to "Done This Sprint", set `Status: done`, `Completed: [date]`
+11. When done: move ticket to "Done This Sprint", set `Status: done`, `Completed: [date]`; increment `Completed` in the sprint velocity block
 12. Append one-line entry to `agents/COMPLETED.md`
-13. If you discover new issues, add tickets to `agents/BACKLOG.md`
-14. Pick the next task (go to step 3)
+13. If you discover new issues, run `bash agents/new-ticket.sh` to scaffold new tickets and add to `agents/BACKLOG.md`; run `bash agents/validate-backlog.sh` before committing changes to BACKLOG.md
+14. Pick the next task (go to step 3). Run `bash agents/close-sprint.sh` when closing a sprint.
 
 Agent names: Use `claude` or `gemini` as the assignee value.
+
+### Ticket Format
+
+```markdown
+### T-XXXX
+- Title: <descriptive title>
+- Status: todo
+- Assigned: unassigned
+- Priority: high|medium|low
+- Milestone: M1
+- Tags: tag1, tag2
+- Depends: T-XXXX or —
+- Blocked-by: T-XXXX or —
+- Refs: path/to/file.gd:25
+```
+
+**Field definitions:**
+- `Tags`: comma-separated cross-cutting labels (e.g. `battle`, `ui`, `audio`, `tilemap`, `story`). Enables `grep`-based filtering.
+- `Depends`: logical prerequisite — this ticket cannot start until that one is done (set at creation time).
+- `Blocked-by`: ticket actively preventing this one from starting, discovered at claim-time. Distinct from `Depends` — set dynamically when a blocker is found while working.
+
+Tickets without a milestone assignment belong in `## Unscheduled` at the bottom of BACKLOG.md. Move to a milestone section when scheduled.
+
+### Sprint Header Format
+
+```markdown
+# Current Sprint
+
+Sprint: S04-m0-close-m1-begin
+Milestone: M0 close / M1 begin
+Goal: <one sentence>
+Started: YYYY-MM-DD
+Closed: —
+
+## Velocity
+- Completed: 0
+- Added mid-sprint: 0
+- Rolled over: 0
+```
+
+### Decisions
+
+Write an architectural decision record at `agents/decisions/YYYY-MM-DD-short-description.md` when:
+- Choosing between two or more valid technical approaches
+- Establishing a convention all agents must follow
+- Reversing or superseding a previous decision
+
+See `agents/decisions/README.md` for format. Unlike plan files (ephemeral), decision records are kept forever.
 
 ## Autonomous Loop
 
@@ -92,9 +140,9 @@ When running in autonomous mode (long unattended sessions), follow this loop for
 - The CLAUDE.md project instructions reload automatically after clear, so all rules and conventions are preserved
 
 #### 2. Pick Task
-- Read `agents/SPRINT.md`
+- Read `agents/SPRINT.md`. Run `bash agents/check-backlog.sh` if the queue is empty.
 - Resume any `in-progress` task assigned to you
-- Otherwise pick the highest-priority unassigned task whose dependencies are met
+- Otherwise run `bash agents/next-ticket.sh` to find the highest-priority unassigned task whose dependencies are met
 - Claim it: set `Assigned: [your-name]`, `Status: in-progress`, `Started: [date]`
 
 #### 3. Research
@@ -216,8 +264,9 @@ Task(subagent_type="pr-code-reviewer", prompt="Review changes for task T-XXXX: <
 2. `git add <specific changed files>`
 3. `git commit -m "..."`
 4. `git push origin main`
-5. Update SPRINT.md: set `Status: done`, `Completed: [date]`
+5. Update SPRINT.md: set `Status: done`, `Completed: [date]`; increment `Completed` in the velocity block
 6. Append to `agents/COMPLETED.md`
+7. If closing a sprint: run `bash agents/close-sprint.sh` to archive done tickets
 
 #### 12. Plan Next — Task Pipeline
 Spawn the task planner to keep the backlog healthy:
@@ -309,7 +358,17 @@ docs/              # All documentation
   story/           # Implementation-ready scene scripts (acts 1-3, character quests)
   mechanics/       # Character abilities and system mechanics
   best-practices/  # Godot best practices (11 topic files)
-agents/            # Sprint tracking (BACKLOG.md, SPRINT.md, COMPLETED.md)
+agents/            # Sprint tracking and tooling
+  BACKLOG.md        # All unstarted/future tickets
+  SPRINT.md         # Current sprint (active, queue, done)
+  COMPLETED.md      # Append-only archive
+  plans/            # Ephemeral task plan files (deleted after commit)
+  decisions/        # Permanent architectural decision records (ADRs)
+  check-backlog.sh  # Health check — counts, blockers, oldest high-pri
+  new-ticket.sh     # Scaffold next ticket with auto-incremented ID
+  next-ticket.sh    # Find next unblocked unassigned ticket
+  close-sprint.sh   # Archive sprint done items → COMPLETED.md
+  validate-backlog.sh # Lint BACKLOG for missing fields and broken deps
 assets/            # Asset index and sprite catalog (CLAUDE.md)
 ```
 

@@ -4,6 +4,12 @@ Sprint: S04-m0-close-m1-begin
 Milestone: M0 close / M1 begin
 Goal: Close M0 with campfire placement and hygiene sweep; begin M1 with Echo system, Chapter 5 dungeon, and Prismfall Approach scene
 Started: 2026-02-20
+Closed: —
+
+## Velocity
+- Completed: 16
+- Added mid-sprint: 0
+- Rolled over: 1
 
 ---
 

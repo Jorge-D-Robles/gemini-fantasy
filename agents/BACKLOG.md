@@ -231,3 +231,9 @@ Regression test: verify `choose_action` is called without error for each AI type
 ## M5 — Release Readiness
 
 *(Tickets will be created during M5 sprint planning.)*
+
+---
+
+## Unscheduled
+
+*(Tickets with no milestone assigned yet. Move to a milestone section when scheduled.)*
