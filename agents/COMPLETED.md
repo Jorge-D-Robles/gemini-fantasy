@@ -3,6 +3,7 @@
 Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[date] Description`.
 
 ---
+- [2026-02-22] T-0218: Add Survivor's Diary collectible in Residential Quarter — DiaryStrategy (multi-line dialogue + EventFlags), 4 diary entries at col 14 row 16, compute_diary_lines()/compute_diary_position() helpers, survivors_diary_read flag, 8 tests; 1695 total (claude)
 - [2026-02-22] T-0188: Place campfire interactable in Overgrown Ruins — CampStrategy at col 20 row 12 with campfire sprite texture, compute_ruins_campfire_position() helper, one_time=false, 3 tests; 1687 total (claude)
 - [2026-02-22] T-0227: Place campfire interactable in Overgrown Capital Market District — CampStrategy at col 8 row 22 near market save point, compute_capital_campfire_position() helper, one_time=false, 4 tests; 1684 total (claude)
 - [2026-02-22] T-0108: Build faction reputation system — ReputationManager autoload (Shepherds/Initiative/Free Resonants), 5 tiers (HOSTILE/UNFRIENDLY/NEUTRAL/FRIENDLY/ALLIED), price modifiers (0.8-1.5x), save/load integration (save_manager + title_screen + save_point_strategy + defeat_state), 29 tests; 1680 total (claude)

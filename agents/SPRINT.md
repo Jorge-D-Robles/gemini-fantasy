@@ -7,7 +7,7 @@ Started: 2026-02-20
 Closed: —
 
 ## Velocity
-- Completed: 20
+- Completed: 21
 - Added mid-sprint: 0
 - Rolled over: 1
 
@@ -29,6 +29,7 @@ Closed: —
 
 ## Done This Sprint
 
+- T-0218: Add Survivor's Diary collectible in Residential Quarter — DiaryStrategy with 4 diary entries, compute_diary_lines()/compute_diary_position() helpers, survivors_diary_read flag, 8 tests
 - T-0188: Place campfire interactable in Overgrown Ruins — CampStrategy at col 20 row 12 with campfire sprite, compute_ruins_campfire_position() helper, one_time=false, 3 tests
 - T-0227: Place campfire interactable in Overgrown Capital Market District — CampStrategy at col 8 row 22, compute_capital_campfire_position() helper, one_time=false, 4 tests
 - T-0108: Build faction reputation system — ReputationManager autoload with 3 factions (Shepherds/Initiative/Free Resonants), 5 tiers (HOSTILE→ALLIED), price modifiers, save/load integration across 3 call sites, 29 tests

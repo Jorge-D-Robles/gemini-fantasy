@@ -47,15 +47,6 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 - Refs: docs/game-design/05-dungeon-designs.md, game/entities/interactable/
 - Notes: Player collects two Resonance Crystal key items (one from Market, one from Entertainment) and uses them on the terminal. ResonanceTerminalStrategy extends InteractionStrategy. Checks inventory for both crystals, on success sets research_terminal_activated flag. Create resonance_crystal_market.tres and resonance_crystal_entertainment.tres (ItemData, key item type). compute_terminal_can_activate(inventory) static helper. 5+ tests.
 
-### T-0218
-- Title: Add Survivor's Diary collectible in Residential Quarter — post-Severance survival lore
-- Status: todo
-- Assigned: unassigned
-- Priority: medium
-- Milestone: M1
-- Depends: T-0190, T-0211
-- Refs: docs/game-design/05-dungeon-designs.md, docs/lore/02-main-story.md, game/entities/interactable/
-- Notes: Emotionally significant lore item in a Residential Quarter room. Interactable one_time=true, 4-5 line dialogue. Flag: survivors_diary_read. compute_diary_entries() static helper. 3+ tests.
 
 ### T-0207
 - Title: Add Government Center sub-area to Overgrown Capital — political debate echoes and hidden bunker
