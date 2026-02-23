@@ -288,11 +288,12 @@ func _on_save_slot_selected(slot: int) -> void:
 	var quest_mgr: Node = get_node_or_null("/root/QuestManager")
 	var echo_mgr: Node = get_node_or_null("/root/EchoManager")
 	var rep_mgr: Node = get_node_or_null("/root/ReputationManager")
+	var bond_mgr: Node = get_node_or_null("/root/BondManager")
 	var playtime: float = GameManager.playtime_seconds
 	SaveManager.save_game(
 		slot, PartyManager, InventoryManager, EventFlags,
 		scene_path, player_pos, equip_mgr, quest_mgr,
-		playtime, echo_mgr, rep_mgr,
+		playtime, echo_mgr, rep_mgr, bond_mgr,
 	)
 	if _save_dialog:
 		_save_dialog.close()

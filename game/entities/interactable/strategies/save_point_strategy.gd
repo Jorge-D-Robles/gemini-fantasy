@@ -22,11 +22,15 @@ func execute(owner: Node) -> void:
 	var rep_mgr: Node = owner.get_node_or_null(
 		"/root/ReputationManager"
 	)
+	var bond_mgr: Node = owner.get_node_or_null(
+		"/root/BondManager"
+	)
 	var ok: bool = SaveManager.save_game(
 		0,
 		PartyManager, InventoryManager, EventFlags,
 		scene_path, player_pos, equip_mgr, quest_mgr,
 		GameManager.playtime_seconds, echo_mgr, rep_mgr,
+		bond_mgr,
 	)
 	var msg: String = text if ok else fail_text
 	var lines: Array[DialogueLine] = [

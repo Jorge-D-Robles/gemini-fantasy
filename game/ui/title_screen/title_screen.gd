@@ -179,9 +179,12 @@ func _on_continue_pressed() -> void:
 	var rep_mgr: Node = get_node_or_null(
 		"/root/ReputationManager"
 	)
+	var bond_mgr: Node = get_node_or_null(
+		"/root/BondManager"
+	)
 	SaveManager.apply_save_data(
 		data, PartyManager, InventoryManager, EventFlags,
-		equip_mgr, quest_mgr, echo_mgr, rep_mgr,
+		equip_mgr, quest_mgr, echo_mgr, rep_mgr, bond_mgr,
 	)
 	var pos_data: Dictionary = data.get("player_position", {})
 	var pos := Vector2(
@@ -215,9 +218,10 @@ func _on_load_slot_selected(slot: int) -> void:
 	var quest_mgr: Node = get_node_or_null("/root/QuestManager")
 	var echo_mgr: Node = get_node_or_null("/root/EchoManager")
 	var rep_mgr: Node = get_node_or_null("/root/ReputationManager")
+	var bond_mgr: Node = get_node_or_null("/root/BondManager")
 	SaveManager.apply_save_data(
 		data, PartyManager, InventoryManager, EventFlags,
-		equip_mgr, quest_mgr, echo_mgr, rep_mgr,
+		equip_mgr, quest_mgr, echo_mgr, rep_mgr, bond_mgr,
 	)
 	var pos_data: Dictionary = data.get("player_position", {})
 	var pos := Vector2(pos_data.get("x", 0.0), pos_data.get("y", 0.0))

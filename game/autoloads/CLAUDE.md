@@ -18,6 +18,7 @@ Global singleton scripts registered in `project.godot`. All are autoloaded at st
 | `inventory_manager.gd` | `InventoryManager` | Item dictionary + gold; also emits `EventBus.item_acquired` |
 | `quest_manager.gd` | `QuestManager` | Quest accept/objective progress/complete/fail + serialize |
 | `reputation_manager.gd` | `ReputationManager` | Faction reputation tracking (Shepherds, Initiative, Free Resonants) + tiers + pricing + serialize |
+| `bond_manager.gd` | `BondManager` | Character bond levels (D-C-B-A-S), point awards from battles/camps, combat bonuses + serialize |
 
 ## Key APIs
 
@@ -126,11 +127,27 @@ ReputationManager.deserialize(data: Dictionary)
 **Tiers:** `HOSTILE` (-100..-50), `UNFRIENDLY` (-49..-10), `NEUTRAL` (-9..9), `FRIENDLY` (10..49), `ALLIED` (50..100)
 **Price modifiers:** HOSTILE=1.5, UNFRIENDLY=1.2, NEUTRAL=1.0, FRIENDLY=0.9, ALLIED=0.8
 
+### BondManager
+```gdscript
+BondManager.add_bond_points(char_a: StringName, char_b: StringName, amount: int)
+BondManager.get_bond_level(char_a, char_b) -> BondData.BondLevel  # D/C/B/A/S
+BondManager.get_bond_points(char_a, char_b) -> int
+BondManager.get_party_combat_bonus(party_ids: Array[StringName]) -> Dictionary  # {damage_bonus, defense_bonus}
+BondManager.award_battle_bond_points(party_ids)  # +2 per pair
+BondManager.award_camp_bond_points(party_ids)    # +3 per pair
+BondManager.serialize() -> Dictionary
+BondManager.deserialize(data: Dictionary)
+BondManager.reset_all()
+```
+**Signals:** `bond_level_changed(char_a, char_b, old_level, new_level)`
+**Auto-connects:** `BattleManager.battle_ended` in `_ready()` — awards +2 per pair on victory.
+**Combat bonus caps:** 40% max damage bonus, 25% max defense bonus across all active pairs.
+
 ### SaveManager
 ```gdscript
-SaveManager.save_game(slot, party, inventory, flags, scene_path, player_pos, equipment, quests, playtime, echo_mgr, rep_mgr)
+SaveManager.save_game(slot, party, inventory, flags, scene_path, player_pos, equipment, quests, playtime, echo_mgr, rep_mgr, bond_mgr)
 SaveManager.load_save_data(slot) -> Dictionary
-SaveManager.apply_save_data(data, party, inventory, flags, equipment, quests, echo_mgr, rep_mgr)
+SaveManager.apply_save_data(data, party, inventory, flags, equipment, quests, echo_mgr, rep_mgr, bond_mgr)
 SaveManager.has_save(slot) -> bool
 ```
 Format: JSON at `user://saves/save_N.json`, version field = `1`.
@@ -143,6 +160,8 @@ Format: JSON at `user://saves/save_N.json`, version field = `1`.
 - `InventoryManager` calls `EventBus.emit_item_acquired` on add
 - `QuestManager` reads `EventFlags.has_flag` for prerequisites
 - `SaveManager` calls `ReputationManager.serialize/deserialize` when `rep_mgr` is passed
+- `SaveManager` calls `BondManager.serialize/deserialize` when `bond_mgr` is passed
+- `BondManager` connects to `BattleManager.battle_ended` for auto-awarding bond points
 
 ## Conventions
 

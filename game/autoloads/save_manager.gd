@@ -65,11 +65,12 @@ func save_game(  # gdlint:ignore = function-arguments-number
 	playtime: float = 0.0,
 	echo_mgr: Node = null,
 	rep_mgr: Node = null,
+	bond_mgr: Node = null,
 ) -> bool:
 	var data := gather_save_data(
 		party, inventory, flags,
 		scene_path, player_position, equipment, quests,
-		playtime, echo_mgr, rep_mgr,
+		playtime, echo_mgr, rep_mgr, bond_mgr,
 	)
 	return _write_save_file(slot, data)
 
@@ -107,6 +108,7 @@ func apply_save_data(
 	quests: Node = null,
 	echo_mgr: Node = null,
 	rep_mgr: Node = null,
+	bond_mgr: Node = null,
 ) -> void:
 	_apply_inventory(data.get("inventory", {}), inventory)
 	_apply_flags(data.get("event_flags", {}), flags)
@@ -119,6 +121,8 @@ func apply_save_data(
 		echo_mgr.deserialize(data.get("echoes_save", {}))
 	if rep_mgr:
 		rep_mgr.deserialize(data.get("reputation", {}))
+	if bond_mgr:
+		bond_mgr.deserialize(data.get("bonds", {}))
 
 
 func delete_save(slot: int) -> void:
@@ -138,6 +142,7 @@ func gather_save_data(  # gdlint:ignore = function-arguments-number
 	playtime: float = 0.0,
 	echo_mgr: Node = null,
 	rep_mgr: Node = null,
+	bond_mgr: Node = null,
 ) -> Dictionary:
 	var data := {
 		"version": SAVE_VERSION,
@@ -161,6 +166,8 @@ func gather_save_data(  # gdlint:ignore = function-arguments-number
 		data["echoes_save"] = echo_mgr.serialize()
 	if rep_mgr:
 		data["reputation"] = rep_mgr.serialize()
+	if bond_mgr:
+		data["bonds"] = bond_mgr.serialize()
 	return data
 
 
@@ -346,6 +353,7 @@ func autosave() -> void:
 	var quests: Node = get_node_or_null("/root/QuestManager")
 	var echo_mgr: Node = get_node_or_null("/root/EchoManager")
 	var rep_mgr: Node = get_node_or_null("/root/ReputationManager")
+	var bond_mgr: Node = get_node_or_null("/root/BondManager")
 	var gm: Node = get_node_or_null("/root/GameManager")
 	var playtime: float = gm.playtime_seconds if gm else 0.0
 	if not party or not inventory or not flags:
@@ -355,7 +363,7 @@ func autosave() -> void:
 	var ok := save_game(
 		AUTOSAVE_SLOT, party, inventory, flags,
 		scene_path, player_pos, equipment, quests,
-		playtime, echo_mgr, rep_mgr,
+		playtime, echo_mgr, rep_mgr, bond_mgr,
 	)
 	autosave_completed.emit(ok)
 
