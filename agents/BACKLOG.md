@@ -32,8 +32,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0226
 - Title: Overgrown Capital playtest pass — end-to-end Chapter 5 flow verification
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M1
 - Depends: T-0211, T-0224
