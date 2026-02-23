@@ -15,7 +15,11 @@ Closed: —
 
 ## Active
 
-*(none)*
+### T-0025
+- Title: Build bonding system framework
+- Status: in-progress
+- Assigned: claude
+- Started: 2026-02-22
 
 ---
 

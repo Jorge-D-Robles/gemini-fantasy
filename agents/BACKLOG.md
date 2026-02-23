@@ -103,18 +103,18 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0024
 - Title: Implement fast travel system
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: low
 - Milestone: M1
 - Depends: none
 - Refs: docs/game-design/03-world-map-and-locations.md
-- Notes: Unlock fast travel points as discovered. World map selection UI. Transition animations.
+- Completed: 2026-02-22
 
 ### T-0025
 - Title: Build bonding system framework
-- Status: todo
-- Assigned: unassigned
+- Status: in-progress
+- Assigned: claude
 - Priority: low
 - Milestone: M1
 - Depends: none
