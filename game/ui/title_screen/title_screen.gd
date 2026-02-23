@@ -168,9 +168,12 @@ func _on_continue_pressed() -> void:
 	var echo_mgr: Node = get_node_or_null(
 		"/root/EchoManager"
 	)
+	var rep_mgr: Node = get_node_or_null(
+		"/root/ReputationManager"
+	)
 	SaveManager.apply_save_data(
 		data, PartyManager, InventoryManager, EventFlags,
-		equip_mgr, quest_mgr, echo_mgr,
+		equip_mgr, quest_mgr, echo_mgr, rep_mgr,
 	)
 	var pos_data: Dictionary = data.get("player_position", {})
 	var pos := Vector2(

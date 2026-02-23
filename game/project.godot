@@ -15,10 +15,6 @@ run/main_scene="res://ui/title_screen/title_screen.tscn"
 config/features=PackedStringArray("4.5", "Mobile")
 config/icon="res://icon.svg"
 
-[editor_plugins]
-
-enabled=PackedStringArray("res://addons/gut/plugin.cfg")
-
 [autoload]
 
 GameManager="*res://autoloads/game_manager.gd"
@@ -34,6 +30,7 @@ SaveManager="*res://autoloads/save_manager.gd"
 QuestManager="*res://autoloads/quest_manager.gd"
 EchoManager="*res://autoloads/echo_manager.gd"
 ShopManager="*res://autoloads/shop_manager.gd"
+ReputationManager="*res://autoloads/reputation_manager.gd"
 UILayer="*res://autoloads/ui_layer.tscn"
 
 [display]
@@ -43,6 +40,10 @@ window/size/viewport_height=360
 window/size/window_width_override=2560
 window/size/window_height_override=1440
 window/stretch/mode="canvas_items"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/gut/plugin.cfg")
 
 [input]
 
@@ -108,6 +109,6 @@ run={
 
 [rendering]
 
-2d/snap/snap_2d_transforms_to_pixel=true
-textures/canvas_textures/default_texture_filter=0
 renderer/rendering_method="mobile"
+textures/canvas_textures/default_texture_filter=0
+2d/snap/snap_2d_transforms_to_pixel=true

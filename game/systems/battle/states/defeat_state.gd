@@ -38,9 +38,12 @@ func enter() -> void:
 				var echo_mgr: Node = get_tree().root.get_node_or_null(
 					"EchoManager"
 				)
+				var rep_mgr: Node = get_tree().root.get_node_or_null(
+					"ReputationManager"
+				)
 				SaveManager.apply_save_data(
 					data, PartyManager, InventoryManager, EventFlags,
-					EquipmentManager, QuestManager, echo_mgr,
+					EquipmentManager, QuestManager, echo_mgr, rep_mgr,
 				)
 				var saved_scene: String = data.get("scene_path", SP.TITLE_SCREEN)
 				GameManager.change_scene(saved_scene)

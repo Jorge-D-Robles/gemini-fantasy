@@ -3,6 +3,7 @@
 Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[date] Description`.
 
 ---
+- [2026-02-22] T-0108: Build faction reputation system — ReputationManager autoload (Shepherds/Initiative/Free Resonants), 5 tiers (HOSTILE/UNFRIENDLY/NEUTRAL/FRIENDLY/ALLIED), price modifiers (0.8-1.5x), save/load integration (save_manager + title_screen + save_point_strategy + defeat_state), 29 tests; 1680 total (claude)
 - [2026-02-22] T-0250: Fix EnemyBattler.choose_action() typed array mismatch — call-site .assign() conversion already applied in enemy_turn_state.gd; added regression test covering all 5 AI types (BASIC/AGGRESSIVE/DEFENSIVE/SUPPORT/BOSS) with Array[PartyBattler]→Array[Battler] conversion; 1651 tests pass (claude)
 - [2026-02-22] T-0263: Fix all 37 Godot editor debugger errors/warnings — set_deferred for 8 monitoring-in-signal calls across 4 scenes, removed 7 shadowed class-name preload consts (shop_ui, inventory_ui, battle_ui, hud), removed 2 unused signals (battler.action_finished, demo_ending.sequence_completed), fixed integer division in enemy_battler_scene, added 3 DialogueManager.is_active() guards; 1650 tests pass (claude)
 - [2026-02-21] T-0262: Revert root y_sort — remove y_sort_enabled from 5 scene roots + z=0 TileMapLayers (broke z_index layering, player rendered behind tiles); keep only on Entities; update regression tests + scenes/CLAUDE.md (claude)

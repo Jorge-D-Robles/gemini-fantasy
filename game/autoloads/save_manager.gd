@@ -30,7 +30,7 @@ func has_save(slot: int) -> bool:
 	return FileAccess.file_exists(get_save_path(slot))
 
 
-func save_game(
+func save_game(  # gdlint:ignore = function-arguments-number
 	slot: int,
 	party: Node,
 	inventory: Node,
@@ -41,10 +41,12 @@ func save_game(
 	quests: Node = null,
 	playtime: float = 0.0,
 	echo_mgr: Node = null,
+	rep_mgr: Node = null,
 ) -> bool:
 	var data := gather_save_data(
 		party, inventory, flags,
-		scene_path, player_position, equipment, quests, playtime, echo_mgr,
+		scene_path, player_position, equipment, quests,
+		playtime, echo_mgr, rep_mgr,
 	)
 	return _write_save_file(slot, data)
 
@@ -81,6 +83,7 @@ func apply_save_data(
 	equipment: Node = null,
 	quests: Node = null,
 	echo_mgr: Node = null,
+	rep_mgr: Node = null,
 ) -> void:
 	_apply_inventory(data.get("inventory", {}), inventory)
 	_apply_flags(data.get("event_flags", {}), flags)
@@ -91,6 +94,8 @@ func apply_save_data(
 		quests.deserialize(data.get("quests", {}), [])
 	if echo_mgr:
 		echo_mgr.deserialize(data.get("echoes_save", {}))
+	if rep_mgr:
+		rep_mgr.deserialize(data.get("reputation", {}))
 
 
 func delete_save(slot: int) -> void:
@@ -99,7 +104,7 @@ func delete_save(slot: int) -> void:
 		DirAccess.remove_absolute(path)
 
 
-func gather_save_data(
+func gather_save_data(  # gdlint:ignore = function-arguments-number
 	party: Node,
 	inventory: Node,
 	flags: Node,
@@ -109,6 +114,7 @@ func gather_save_data(
 	quests: Node = null,
 	playtime: float = 0.0,
 	echo_mgr: Node = null,
+	rep_mgr: Node = null,
 ) -> Dictionary:
 	var data := {
 		"version": SAVE_VERSION,
@@ -130,6 +136,8 @@ func gather_save_data(
 		data["quests"] = quests.serialize()
 	if echo_mgr:
 		data["echoes_save"] = echo_mgr.serialize()
+	if rep_mgr:
+		data["reputation"] = rep_mgr.serialize()
 	return data
 
 

@@ -7,7 +7,7 @@ Started: 2026-02-20
 Closed: —
 
 ## Velocity
-- Completed: 17
+- Completed: 18
 - Added mid-sprint: 0
 - Rolled over: 1
 
@@ -29,6 +29,7 @@ Closed: —
 
 ## Done This Sprint
 
+- T-0108: Build faction reputation system — ReputationManager autoload with 3 factions (Shepherds/Initiative/Free Resonants), 5 tiers (HOSTILE→ALLIED), price modifiers, save/load integration across 3 call sites, 29 tests
 - T-0250: Fix EnemyBattler.choose_action() typed array mismatch — call-site .assign() fix already applied, added regression test covering all 5 AI types with Array[PartyBattler]→Array[Battler] conversion
 - T-0263: Fix all 37 Godot editor debugger errors/warnings — set_deferred for 8 monitoring-in-signal calls, removed 7 shadowed class-name consts, removed 2 unused signals, fixed integer division, added 3 DialogueManager guards
 - T-0262: Revert root y_sort — remove y_sort_enabled from all 5 scene roots + z=0 TileMapLayers, keep only on Entities; update regression tests + scenes/CLAUDE.md

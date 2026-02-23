@@ -27,16 +27,6 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 - Refs: game/tools/playtest_presets/, docs/story/act1/05-into-the-capital.md
 - Notes: Full Chapter 5 flow: enter from Verdant Forest, collect Market echoes, activate Market Purification Node, navigate Entertainment District, activate Entertainment Purification Node, collect Lyra Fragment 2, trigger Last Gardener, trigger Leaving Capital, exit to Verdant Forest. Create/update overgrown_capital playtest preset JSON. Verify save/load round-trip persists echo IDs and cleared purification flags. Log discovered bugs as new BACKLOG entries.
 
-### T-0108
-- Title: Build faction reputation system
-- Status: todo
-- Assigned: unassigned
-- Priority: medium
-- Milestone: M1
-- Depends: none
-- Refs: docs/game-design/04-side-quests.md, docs/lore/01-world-overview.md
-- Notes: Track reputation with Shepherds, Initiative, factions. Affects dialogue, prices, quest availability.
-
 ### T-0206
 - Title: Add The Performer mini-boss in Entertainment District of Overgrown Capital
 - Status: todo

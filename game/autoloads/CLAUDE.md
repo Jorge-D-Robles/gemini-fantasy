@@ -17,6 +17,7 @@ Global singleton scripts registered in `project.godot`. All are autoloaded at st
 | `event_bus.gd` | `EventBus` | Central signal hub — decoupled relay for gameplay events |
 | `inventory_manager.gd` | `InventoryManager` | Item dictionary + gold; also emits `EventBus.item_acquired` |
 | `quest_manager.gd` | `QuestManager` | Quest accept/objective progress/complete/fail + serialize |
+| `reputation_manager.gd` | `ReputationManager` | Faction reputation tracking (Shepherds, Initiative, Free Resonants) + tiers + pricing + serialize |
 
 ## Key APIs
 
@@ -107,11 +108,29 @@ EquipmentManager.deserialize(data)
 ```
 Slots: `weapon`, `helmet`, `chest`, `accessory_0`, `accessory_1`.
 
+### ReputationManager
+```gdscript
+ReputationManager.add_reputation(faction_id: StringName, amount: int)
+ReputationManager.get_reputation(faction_id: StringName) -> int
+ReputationManager.set_reputation(faction_id: StringName, value: int)
+ReputationManager.get_tier(faction_id: StringName) -> Tier
+ReputationManager.get_price_modifier(faction_id: StringName) -> float
+ReputationManager.has_tier(faction_id: StringName, min_tier: Tier) -> bool
+ReputationManager.get_all_reputations() -> Dictionary
+ReputationManager.reset_all()
+ReputationManager.serialize() -> Dictionary
+ReputationManager.deserialize(data: Dictionary)
+```
+**Signals:** `reputation_changed(faction_id, old_value, new_value)`
+**Faction IDs:** `SHEPHERDS`, `INITIATIVE`, `FREE_RESONANTS` (StringName constants)
+**Tiers:** `HOSTILE` (-100..-50), `UNFRIENDLY` (-49..-10), `NEUTRAL` (-9..9), `FRIENDLY` (10..49), `ALLIED` (50..100)
+**Price modifiers:** HOSTILE=1.5, UNFRIENDLY=1.2, NEUTRAL=1.0, FRIENDLY=0.9, ALLIED=0.8
+
 ### SaveManager
 ```gdscript
-SaveManager.save_game(slot, party, inventory, flags, scene_path, player_pos, equipment, quests)
+SaveManager.save_game(slot, party, inventory, flags, scene_path, player_pos, equipment, quests, playtime, echo_mgr, rep_mgr)
 SaveManager.load_save_data(slot) -> Dictionary
-SaveManager.apply_save_data(data, party, inventory, flags, equipment, quests)
+SaveManager.apply_save_data(data, party, inventory, flags, equipment, quests, echo_mgr, rep_mgr)
 SaveManager.has_save(slot) -> bool
 ```
 Format: JSON at `user://saves/save_N.json`, version field = `1`.
@@ -123,6 +142,7 @@ Format: JSON at `user://saves/save_N.json`, version field = `1`.
 - `BattleManager` calls `GameManager`, `DialogueManager`, `PartyManager`
 - `InventoryManager` calls `EventBus.emit_item_acquired` on add
 - `QuestManager` reads `EventFlags.has_flag` for prerequisites
+- `SaveManager` calls `ReputationManager.serialize/deserialize` when `rep_mgr` is passed
 
 ## Conventions
 
