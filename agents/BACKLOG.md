@@ -113,7 +113,7 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0025
 - Title: Build bonding system framework
-- Status: in-progress
+- Status: done
 - Assigned: claude
 - Priority: low
 - Milestone: M1

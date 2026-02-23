@@ -7,7 +7,7 @@ Started: 2026-02-20
 Closed: —
 
 ## Velocity
-- Completed: 28
+- Completed: 29
 - Added mid-sprint: 0
 - Rolled over: 1
 
@@ -15,11 +15,7 @@ Closed: —
 
 ## Active
 
-### T-0025
-- Title: Build bonding system framework
-- Status: in-progress
-- Assigned: claude
-- Started: 2026-02-22
+*(none)*
 
 ---
 
@@ -33,6 +29,7 @@ Closed: —
 
 ## Done This Sprint
 
+- T-0025: Build bonding system framework — BondData Resource (static helpers), BondManager autoload (D-C-B-A-S levels, battle/camp awards, combat bonus caps), SaveManager integration (5 call sites), 18 tests
 - T-0024: Implement fast travel system — FastTravelBeaconStrategy (unlock + dialogue), FastTravelUI (script-only destination picker), pause menu Travel button, 4 beacon flag constants, 9 unit tests
 - T-0226: Overgrown Capital playtest pass — Chapter 5 flow verified: scene loads, spawn correct, HUD shows location/party/gold, crystal walls block progression (by design), all interactables visible, 0 errors/warnings. Created chapter_5_capital.json playtest preset.
 - T-0264: Implement save/load system with 3 save slots and autosave — SaveManager autosave on scene_changed (slot 0), SaveSlotDialog (SAVE/LOAD modes), pause menu Save button, title screen Load Game button, HUD "Saved" indicator, 16 tests
