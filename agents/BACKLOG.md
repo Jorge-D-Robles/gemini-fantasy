@@ -27,15 +27,6 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 - Refs: game/tools/playtest_presets/, docs/story/act1/05-into-the-capital.md
 - Notes: Full Chapter 5 flow: enter from Verdant Forest, collect Market echoes, activate Market Purification Node, navigate Entertainment District, activate Entertainment Purification Node, collect Lyra Fragment 2, trigger Last Gardener, trigger Leaving Capital, exit to Verdant Forest. Create/update overgrown_capital playtest preset JSON. Verify save/load round-trip persists echo IDs and cleared purification flags. Log discovered bugs as new BACKLOG entries.
 
-### T-0206
-- Title: Add The Performer mini-boss in Entertainment District of Overgrown Capital
-- Status: todo
-- Assigned: unassigned
-- Priority: medium
-- Milestone: M1
-- Depends: T-0190
-- Refs: docs/game-design/05-dungeon-designs.md (Entertainment District), docs/game-design/02-enemy-design.md
-- Notes: Echo manifestation mini-boss in the theater. Create performer.tres EnemyData (BOSS AI, ~180 HP, dramatic_echo AoE magic + resonance drain ability). Trigger zone in theater area. Pre/post-battle 4-5 line dialogue. Flag: performer_encountered. 4+ tests.
 
 ### T-0214
 - Title: Add Research Quarter Resonance terminal puzzle — unlock Palace District path
