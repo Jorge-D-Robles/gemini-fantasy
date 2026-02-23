@@ -19,7 +19,7 @@ Started: 2026-02-20
 
 - **T-0250**: Fix EnemyBattler.choose_action() typed array mismatch (battle crash)
 
-*(pull next tasks from BACKLOG.md — T-0246, T-0249, T-0105, T-0104, T-0223)*
+*(pull next tasks from BACKLOG.md — T-0107, T-0226, T-0206, T-0214, T-0108)*
 
 ---
 

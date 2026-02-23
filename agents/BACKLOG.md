@@ -8,8 +8,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0263
 - Title: Fix all 37 Godot editor debugger errors/warnings
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-22
 - Priority: critical
 - Milestone: M1
 - Depends: —
@@ -43,8 +44,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0251
 - Title: Hard-ban A5 sheets — update AGENT_RULES + map_builder.gd deprecation warnings
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-21
 - Priority: critical
 - Milestone: M1
 - Depends: —
@@ -92,8 +94,9 @@ All tickets not in the current sprint. Sorted by milestone, then priority.
 
 ### T-0252
 - Title: Enhance tilemap review workflow — web search comparison + A5 blocking check + mandate dual review in build-tilemap skill
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-21
 - Priority: critical
 - Milestone: M1
 - Depends: T-0251
@@ -175,8 +178,9 @@ Task(subagent_type="tilemap-reviewer-neutral", prompt="Review tilemap for <scene
 
 ### T-0253
 - Title: Redo Roothollow tilemap — TF_TERRAIN biome system, dual-reviewer sign-off required
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-21
 - Priority: high
 - Milestone: M1
 - Depends: T-0251, T-0252
@@ -225,8 +229,9 @@ Task(subagent_type="tilemap-reviewer-neutral", prompt="Review tilemap for <scene
 
 ### T-0254
 - Title: Redo Overgrown Ruins tilemap — TF_DUNGEON + B-sheets, no A5
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-21
 - Priority: high
 - Milestone: M1
 - Depends: T-0251, T-0252
@@ -264,8 +269,9 @@ Task(subagent_type="tilemap-reviewer-neutral", prompt="Review tilemap for <scene
 
 ### T-0255
 - Title: Redo Prismfall Approach tilemap — complete TF_TERRAIN migration (code still uses A5 coords)
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-21
 - Priority: high
 - Milestone: M1
 - Depends: T-0251, T-0252
@@ -310,8 +316,9 @@ The Prismfall Approach is the Crystalline Steppes — an open, arid rocky landsc
 
 ### T-0256
 - Title: Redo Overgrown Capital tilemap — TF_DUNGEON + B-sheets, no A5
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-21
 - Priority: high
 - Milestone: M1
 - Depends: T-0251, T-0252
@@ -353,8 +360,9 @@ The Prismfall Approach is the Crystalline Steppes — an open, arid rocky landsc
 
 ### T-0257
 - Title: Final purge — remove A5 constants from map_builder.gd after all scenes migrated
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-21
 - Priority: medium
 - Milestone: M1
 - Depends: T-0253, T-0254, T-0255, T-0256
@@ -588,13 +596,14 @@ Option 1 is the minimal, safe fix. Regression test: verify `choose_action` is ca
 
 ### T-0008
 - Title: Replace has_method/has_signal with proper typing in autoloads
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: low
 - Milestone: M0
 - Depends: none
 - Refs: game/autoloads/battle_manager.gd, game/autoloads/dialogue_manager.gd
-- Notes: Uses duck-typing instead of specific class types. Low priority — works but not type-safe.
+- Notes: Superseded by T-0181 (M0 hygiene sweep). Uses duck-typing instead of specific class types. Low priority — works but not type-safe.
 
 ### T-0009
 - Title: Implement party healing at rest points in Roothollow
@@ -609,23 +618,25 @@ Option 1 is the minimal, safe fix. Regression test: verify `choose_action` is ca
 
 ### T-0010
 - Title: Add return type hints to all methods
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: low
 - Milestone: M0
 - Depends: none
 - Refs: game/entities/battle/enemy_battler.gd, game/systems/battle/battle_scene.gd, game/autoloads/battle_manager.gd
-- Notes: Numerous methods missing explicit -> void or return type hints.
+- Notes: Superseded by T-0181 (M0 hygiene sweep). Numerous methods missing explicit -> void or return type hints.
 
 ### T-0011
 - Title: Add doc comments to signals and public methods
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-20
 - Priority: low
 - Milestone: M0
 - Depends: none
 - Refs: game/systems/battle/battle_scene.gd, game/systems/battle/battler.gd
-- Notes: Many signals and public methods lack ## doc comments.
+- Notes: Superseded by T-0181 (M0 hygiene sweep). Many signals and public methods lack ## doc comments.
 
 ### T-0018
 - Title: Build skill tree framework
@@ -1718,11 +1729,12 @@ Option 1 is the minimal, safe fix. Regression test: verify `choose_action` is ca
 
 ### T-0183
 - Title: Build Prismfall Approach overworld scene — ruined road connecting forest to Capital
-- Status: todo
+- Status: superseded
 - Assigned: unassigned
 - Priority: high
 - Milestone: M1
 - Depends: T-0103
+- Notes: Superseded by T-0105 (completed 2026-02-20) which built the Prismfall Approach area with _map.gd, _encounters.gd, .gd, .tscn, and ScenePaths constant.
 - Refs: docs/game-design/03-world-map-and-locations.md, docs/game-design/05-dungeon-designs.md, docs/story/act1/05-into-the-capital.md
 - Notes: New overworld area. Ruined approach road with crystallized vegetation. 40x25 tilemap using Fairy Forest A5_A + Ruins A5 accent tiles. 4-5 enemy encounter pool (harder than Verdant Forest). Two exit triggers: south to OvergrownRuins, north to OvgrCapitalDungeon (stub). At least 2 NPCs with lore flavor. Standard module split (PrismfallMap + PrismfallEncounters). Visual verification with /scene-preview --full-map required. 8+ tests.
 
@@ -2236,13 +2248,14 @@ Option 1 is the minimal, safe fix. Regression test: verify `choose_action` is ca
 
 ### T-0202
 - Title: Update T-0104 dependency from T-0103 to T-0191 (narrative pivot is Lyra Fragment 2)
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-22
 - Priority: low
 - Milestone: M1
 - Depends: none
 - Refs: agents/BACKLOG.md
-- Notes: T-0104 (Chapters 6-10) currently depends on T-0103 which is superseded. Update dependency to T-0191 (Lyra's Fragment 2 + Research Quarter vision) which is the actual narrative gate for Act I Chapter 5 completion. Doc-only change.
+- Notes: Moot — T-0104 is already completed (2026-02-20). Dependency update no longer needed.
 
 ### T-0203
 - Title: Mark T-0194 superseded by T-0197 in BACKLOG (done via T-0198 tracker update)
@@ -2256,13 +2269,14 @@ Option 1 is the minimal, safe fix. Regression test: verify `choose_action` is ca
 
 ### T-0204
 - Title: Update T-0183 dependency from T-0103 to T-0190 (Prismfall Approach needs Capital dungeon first)
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-22
 - Priority: low
 - Milestone: M1
 - Depends: none
 - Refs: agents/BACKLOG.md
-- Notes: T-0183 (Prismfall Approach overworld scene) depends on T-0103 which is superseded. T-0190 (Overgrown Capital tilemap skeleton) is the real gate. Doc-only change, no code.
+- Notes: Moot — T-0183 is now superseded by T-0105. Dependency update no longer needed.
 
 ### T-0205
 - Title: Seed and place Residential Quarter echo interactables in Overgrown Capital
@@ -2416,12 +2430,13 @@ Option 1 is the minimal, safe fix. Regression test: verify `choose_action` is ca
 
 ### T-0220
 - Title: Mark T-0008, T-0010, T-0011 as done — superseded by T-0181 hygiene sweep
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
+- Completed: 2026-02-22
 - Priority: low
 - Milestone: M0
 - Depends: none
-- Notes: T-0181 (M0 hygiene sweep) explicitly combined and addressed T-0008 (replace has_method duck-typing), T-0010 (add return type hints), T-0011 (add doc comments). Update their Status to done with Superseded note pointing to T-0181. Doc-only change, 0 tests required.
+- Notes: Applied — T-0008, T-0010, T-0011 now marked done with superseded-by-T-0181 notes in BACKLOG.md.
 
 ### T-0221
 - Title: Seed AbilityData .tres files for Kael's full ability set (7 abilities)
