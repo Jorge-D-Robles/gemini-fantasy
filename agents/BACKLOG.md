@@ -141,6 +141,18 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 - Refs: docs/game-design/01-core-mechanics.md
 - Notes: Combine materials into items. Recipe system, crafting UI, material gathering.
 
+### T-0264
+- Title: Implement save/load system with 3 save slots and autosave on scene change
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Milestone: M1
+- Tags: save, core
+- Depends: —
+- Blocked-by: —
+- Refs: docs/best-practices/09-save-load.md
+- Notes: 3 manual save slots + autosave slot. Autosave triggers on every scene change. Save data includes party state, inventory, quest flags, current scene. Title screen shows Continue/New Game/Load. Critical for playtesting.
+
 ---
 
 ## M2 — Act II: The Weight of Echoes
