@@ -57,16 +57,6 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 - Refs: docs/game-design/05-dungeon-designs.md, docs/lore/02-main-story.md, game/entities/interactable/
 - Notes: Emotionally significant lore item in a Residential Quarter room. Interactable one_time=true, 4-5 line dialogue. Flag: survivors_diary_read. compute_diary_entries() static helper. 3+ tests.
 
-### T-0227
-- Title: Place campfire interactable in Overgrown Capital Market District
-- Status: todo
-- Assigned: unassigned
-- Priority: medium
-- Milestone: M1
-- Depends: T-0023, T-0190
-- Refs: game/scenes/overgrown_capital/overgrown_capital.gd, game/entities/interactable/strategies/camp_strategy.gd
-- Notes: Add _setup_campfire() in overgrown_capital.gd placing CampStrategy Interactable near market rest area. compute_capital_campfire_position() static helper returning Vector2(128.0, 352.0) (col 8, row 22, near save point). one_time=false. 3+ tests verifying in-bounds position and correct strategy type.
-
 ### T-0188
 - Title: Place campfire interactable in Overgrown Ruins
 - Status: todo

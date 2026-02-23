@@ -7,7 +7,7 @@ Started: 2026-02-20
 Closed: —
 
 ## Velocity
-- Completed: 18
+- Completed: 19
 - Added mid-sprint: 0
 - Rolled over: 1
 
@@ -15,7 +15,7 @@ Closed: —
 
 ## Active
 
-*(none)*
+*(none — pick next from Queue)*
 
 ---
 
@@ -23,12 +23,13 @@ Closed: —
 
 ### Other
 
-*(pull next tasks from BACKLOG.md — T-0107, T-0226, T-0206, T-0214, T-0108)*
+*(pull next tasks from BACKLOG.md — T-0107, T-0226, T-0206, T-0214)*
 
 ---
 
 ## Done This Sprint
 
+- T-0227: Place campfire interactable in Overgrown Capital Market District — CampStrategy at col 8 row 22, compute_capital_campfire_position() helper, one_time=false, 4 tests
 - T-0108: Build faction reputation system — ReputationManager autoload with 3 factions (Shepherds/Initiative/Free Resonants), 5 tiers (HOSTILE→ALLIED), price modifiers, save/load integration across 3 call sites, 29 tests
 - T-0250: Fix EnemyBattler.choose_action() typed array mismatch — call-site .assign() fix already applied, added regression test covering all 5 AI types with Array[PartyBattler]→Array[Battler] conversion
 - T-0263: Fix all 37 Godot editor debugger errors/warnings — set_deferred for 8 monitoring-in-signal calls, removed 7 shadowed class-name consts, removed 2 unused signals, fixed integer division, added 3 DialogueManager guards
