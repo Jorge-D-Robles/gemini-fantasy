@@ -9,6 +9,10 @@ const SP = preload("res://systems/scene_paths.gd")
 const EntryDialogue = preload(
 	"res://scenes/overgrown_ruins/overgrown_ruins_entry_dialogue.gd"
 )
+const INTERACTABLE_SCENE := preload("res://entities/interactable/interactable.tscn")
+const CAMP_STRATEGY_SCRIPT := preload(
+	"res://entities/interactable/strategies/camp_strategy.gd"
+)
 const MEMORY_BLOOM_PATH: String = "res://data/enemies/memory_bloom.tres"
 const CREEPING_VINE_PATH: String = "res://data/enemies/creeping_vine.tres"
 const LAST_GARDENER_PATH: String = "res://data/enemies/last_gardener.tres"
@@ -39,6 +43,12 @@ var _ground_debris_layer: TileMapLayer = null
 @onready var _demo_ending: DemoEnding = $DemoEnding
 
 
+static func compute_ruins_campfire_position() -> Vector2:
+	## Campfire in the main clearing — col 20, row 12.
+	## Center of the wide east-west corridor, easily accessible.
+	return Vector2(320.0, 192.0)
+
+
 func _ready() -> void:
 	# Dedicated debris layer — separates ground debris from ornate floor detail
 	# so tiles on each layer can coexist at overlapping cell positions.
@@ -52,6 +62,7 @@ func _ready() -> void:
 	MapBuilder.create_boundary_walls(self, 640, 384)
 	_start_scene_music()
 	_setup_camera_limits()
+	_setup_campfire()
 
 	# Initialize Kael in party if not already there
 	if PartyManager.get_roster().is_empty():
@@ -344,3 +355,19 @@ func _on_encounter_triggered(enemy_group: Array[Resource]) -> void:
 	if DialogueManager.is_active():
 		return
 	BattleManager.start_battle(enemy_group)
+
+
+func _setup_campfire() -> void:
+	var strat := CAMP_STRATEGY_SCRIPT.new() as CampStrategy
+	var campfire := INTERACTABLE_SCENE.instantiate() as Interactable
+	campfire.name = "CampfireRuins"
+	campfire.strategy = strat
+	campfire.one_time = false
+	campfire.indicator_type = Interactable.IndicatorType.INTERACT
+	campfire.position = compute_ruins_campfire_position()
+	var campfire_tex := load(
+		"res://assets/sprites/objects/campfire.png",
+	) as Texture2D
+	if campfire_tex:
+		campfire.get_node("Sprite2D").texture = campfire_tex
+	$Entities.add_child(campfire)
