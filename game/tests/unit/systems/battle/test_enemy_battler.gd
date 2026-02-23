@@ -267,3 +267,41 @@ func test_boss_ai_targets_lowest_hp() -> void:
 	var action := enemy.choose_action(party, allies)
 
 	assert_eq(action.target, injured, "Boss AI should target lowest HP")
+
+
+# ---- Typed array conversion regression (T-0250) ----
+
+func test_choose_action_with_party_battler_array_assign() -> void:
+	# Regression: GDScript typed arrays are invariant — Array[PartyBattler]
+	# cannot pass where Array[Battler] is expected. The call site must use
+	# .assign() to convert. This test mirrors the BattleScene call pattern.
+	var ai_types: Array[int] = [
+		EnemyData.AiType.BASIC,
+		EnemyData.AiType.AGGRESSIVE,
+		EnemyData.AiType.DEFENSIVE,
+		EnemyData.AiType.SUPPORT,
+		EnemyData.AiType.BOSS,
+	]
+	for ai_type in ai_types:
+		var enemy := Helpers.make_enemy_battler({"ai_type": ai_type})
+		add_child_autofree(enemy)
+
+		# Build typed sub-arrays like BattleScene does
+		var party_battlers: Array[PartyBattler] = []
+		var target := Helpers.make_party_battler()
+		add_child_autofree(target)
+		party_battlers.append(target)
+
+		var enemy_battlers: Array[EnemyBattler] = [enemy]
+
+		# Convert via .assign() — the exact pattern from enemy_turn_state.gd
+		var party: Array[Battler] = []
+		party.assign(party_battlers)
+		var allies: Array[Battler] = []
+		allies.assign(enemy_battlers)
+
+		var action := enemy.choose_action(party, allies)
+		assert_not_null(
+			action,
+			"AI type %d should return an action after array conversion" % ai_type,
+		)
