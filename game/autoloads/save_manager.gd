@@ -2,12 +2,35 @@ extends Node
 
 ## Manages saving and loading game state to JSON files.
 ## Serializes party, inventory, event flags, and player position.
+## Supports autosave on scene change (slot 0) and manual saves (slots 1-3).
+
+signal autosave_completed(success: bool)
 
 const SAVE_DIR: String = "user://saves/"
 const SAVE_VERSION: int = 1
+const AUTOSAVE_SLOT: int = 0
+const MAX_MANUAL_SLOTS: int = 3
+const TOTAL_SLOTS: int = 4
+
+const _AUTOSAVE_EXCLUDED_SCENES: Array[String] = [
+	"res://ui/title_screen/title_screen.tscn",
+	"res://ui/demo_end_screen/demo_end_screen.tscn",
+]
+
+const _AREA_NAMES: Dictionary = {
+	"res://scenes/roothollow/roothollow.tscn": "Roothollow",
+	"res://scenes/verdant_forest/verdant_forest.tscn": "Verdant Forest",
+	"res://scenes/overgrown_ruins/overgrown_ruins.tscn": "Overgrown Ruins",
+	"res://scenes/overgrown_capital/overgrown_capital.tscn": "Overgrown Capital",
+	"res://scenes/prismfall_approach/prismfall_approach.tscn": "Prismfall Approach",
+}
 
 var _pending_position: Vector2 = Vector2.ZERO
 var _has_pending_position: bool = false
+
+
+func _ready() -> void:
+	GameManager.scene_changed.connect(_on_scene_changed_for_autosave)
 
 
 func set_pending_position(pos: Vector2) -> void:
@@ -244,6 +267,130 @@ func _apply_character_state(
 				cd.level = level
 				cd.current_xp = xp
 				break
+
+
+## Returns true if the given scene path should not trigger autosave.
+func is_autosave_excluded(scene_path: String) -> bool:
+	return scene_path in _AUTOSAVE_EXCLUDED_SCENES
+
+
+## Returns a summary dictionary for a save slot.
+## {empty, location, playtime_str, time_str, timestamp}
+func get_slot_summary(slot: int) -> Dictionary:
+	if not has_save(slot):
+		return {
+			"empty": true,
+			"location": "",
+			"playtime_str": "",
+			"time_str": "",
+			"timestamp": 0,
+		}
+	var data := load_save_data(slot)
+	if data.is_empty():
+		return {
+			"empty": true,
+			"location": "",
+			"playtime_str": "",
+			"time_str": "",
+			"timestamp": 0,
+		}
+	var scene_path: String = data.get("scene_path", "")
+	var location: String = _AREA_NAMES.get(scene_path, scene_path.get_file().get_basename())
+	var playtime_seconds: float = float(data.get("playtime_seconds", 0.0))
+	var playtime_str := _format_playtime(playtime_seconds)
+	var timestamp: int = int(data.get("timestamp", 0))
+	var time_str := _format_timestamp(timestamp)
+	return {
+		"empty": false,
+		"location": location,
+		"playtime_str": playtime_str,
+		"time_str": time_str,
+		"timestamp": timestamp,
+	}
+
+
+## Returns summaries for all save slots (0=autosave, 1-3=manual).
+func get_all_slot_summaries() -> Array[Dictionary]:
+	var result: Array[Dictionary] = []
+	for i in TOTAL_SLOTS:
+		result.append(get_slot_summary(i))
+	return result
+
+
+## Returns true if any save file exists across all slots.
+func any_save_exists() -> bool:
+	for i in TOTAL_SLOTS:
+		if has_save(i):
+			return true
+	return false
+
+
+## Triggers an autosave to slot 0 using current game state.
+func autosave() -> void:
+	var player := get_tree().get_first_node_in_group("player")
+	if not player:
+		push_warning("SaveManager: autosave skipped — no player node found")
+		autosave_completed.emit(false)
+		return
+	var scene := get_tree().current_scene
+	if not scene:
+		push_warning("SaveManager: autosave skipped — no current scene")
+		autosave_completed.emit(false)
+		return
+	var scene_path: String = scene.scene_file_path
+	var player_pos: Vector2 = player.global_position
+	var party: Node = get_node_or_null("/root/PartyManager")
+	var inventory: Node = get_node_or_null("/root/InventoryManager")
+	var flags: Node = get_node_or_null("/root/EventFlags")
+	var equipment: Node = get_node_or_null("/root/EquipmentManager")
+	var quests: Node = get_node_or_null("/root/QuestManager")
+	var echo_mgr: Node = get_node_or_null("/root/EchoManager")
+	var rep_mgr: Node = get_node_or_null("/root/ReputationManager")
+	var gm: Node = get_node_or_null("/root/GameManager")
+	var playtime: float = gm.playtime_seconds if gm else 0.0
+	if not party or not inventory or not flags:
+		push_warning("SaveManager: autosave skipped — missing core managers")
+		autosave_completed.emit(false)
+		return
+	var ok := save_game(
+		AUTOSAVE_SLOT, party, inventory, flags,
+		scene_path, player_pos, equipment, quests,
+		playtime, echo_mgr, rep_mgr,
+	)
+	autosave_completed.emit(ok)
+
+
+func _on_scene_changed_for_autosave(scene_path: String) -> void:
+	if is_autosave_excluded(scene_path):
+		return
+	call_deferred("autosave")
+
+
+static func _format_playtime(playtime_seconds: float) -> String:
+	if playtime_seconds < 60.0:
+		return ""
+	var total_minutes: int = int(playtime_seconds) / int(60)
+	var hours: int = total_minutes / int(60)
+	var minutes: int = total_minutes % 60
+	return "%02d:%02d" % [hours, minutes]
+
+
+static func _format_timestamp(unix_time: int) -> String:
+	if unix_time <= 0:
+		return ""
+	var dt: Dictionary = Time.get_datetime_dict_from_unix_time(unix_time)
+	const MONTHS: Array[String] = [
+		"", "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+		"Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+	]
+	var month_idx: int = dt.get("month", 0)
+	var month_str: String = MONTHS[month_idx] if month_idx in range(1, 13) else ""
+	return "%02d %s, %02d:%02d" % [
+		dt.get("day", 0),
+		month_str,
+		dt.get("hour", 0),
+		dt.get("minute", 0),
+	]
 
 
 func _on_scene_changed_restore_position(

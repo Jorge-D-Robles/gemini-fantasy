@@ -95,8 +95,8 @@ func test_player_sprite_has_y_sort_offset() -> void:
 	var content := FileAccess.get_file_as_string("res://entities/player/player.tscn")
 	assert_false(content.is_empty(), "player.tscn must exist")
 	assert_true(
-		content.contains("offset = Vector2(0, -8)"),
-		"AnimatedSprite2D must have offset = Vector2(0, -8) for correct Y-sort origin",
+		content.contains("offset = Vector2(0, -14)"),
+		"AnimatedSprite2D must have offset = Vector2(0, -14) for correct Y-sort with 26x36 TF frames",
 	)
 
 

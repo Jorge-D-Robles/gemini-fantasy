@@ -19,6 +19,9 @@ const SettingsMenuScript = preload(
 )
 const PartyUIScript = preload("res://ui/party_ui/party_ui.gd")
 const SkillTreeUIScript = preload("res://ui/skill_tree_ui/skill_tree_ui.gd")
+const SaveSlotDialogScript = preload(
+	"res://ui/save_slot_dialog/save_slot_dialog.gd"
+)
 
 var _is_open: bool = false
 var _inventory_ui: Control = null
@@ -27,6 +30,7 @@ var _echo_journal: Control = null
 var _settings_menu: Control = null
 var _party_ui: Control = null
 var _skill_tree_ui: Control = null
+var _save_dialog: Control = null
 
 @onready var _menu_panel: PanelContainer = %MenuPanel
 @onready var _party_button: Button = %PartyButton
@@ -35,6 +39,7 @@ var _skill_tree_ui: Control = null
 @onready var _echoes_button: Button = %EchoesButton
 @onready var _skill_tree_button: Button = %SkillTreeButton
 @onready var _status_button: Button = %StatusButton
+@onready var _save_button: Button = %SaveButton
 @onready var _settings_button: Button = %SettingsButton
 @onready var _quit_button: Button = %QuitButton
 @onready var _party_panel: VBoxContainer = %PartyPanel
@@ -109,6 +114,9 @@ func close() -> void:
 	if _skill_tree_ui != null:
 		_skill_tree_ui.queue_free()
 		_skill_tree_ui = null
+	if _save_dialog != null:
+		_save_dialog.queue_free()
+		_save_dialog = null
 	AudioManager.play_sfx(load(SfxLibrary.UI_CANCEL))
 	_is_open = false
 	visible = false
@@ -124,6 +132,7 @@ func _connect_buttons() -> void:
 	_echoes_button.pressed.connect(_open_echo_journal)
 	_skill_tree_button.pressed.connect(_open_skill_tree_ui)
 	_status_button.pressed.connect(_show_panel.bind("status"))
+	_save_button.pressed.connect(_open_save_dialog)
 	_settings_button.pressed.connect(_open_settings)
 	_quit_button.pressed.connect(_on_quit_pressed)
 
@@ -136,6 +145,7 @@ func _setup_focus_navigation() -> void:
 		_echoes_button,
 		_skill_tree_button,
 		_status_button,
+		_save_button,
 		_settings_button,
 		_quit_button,
 	])
@@ -245,6 +255,44 @@ func _on_skill_tree_ui_closed() -> void:
 		_skill_tree_ui.queue_free()
 		_skill_tree_ui = null
 	_restore_from_subscene(_skill_tree_button)
+
+
+func _open_save_dialog() -> void:
+	if _save_dialog != null:
+		return
+	_hide_for_subscene()
+	_save_dialog = SaveSlotDialogScript.new()
+	_save_dialog.process_mode = Node.PROCESS_MODE_ALWAYS
+	add_child(_save_dialog)
+	_save_dialog.slot_selected.connect(_on_save_slot_selected)
+	_save_dialog.dialog_closed.connect(_on_save_dialog_closed)
+	_save_dialog.open(SaveSlotDialogScript.Mode.SAVE, false)
+
+
+func _on_save_slot_selected(slot: int) -> void:
+	var scene := get_tree().current_scene
+	var scene_path: String = scene.scene_file_path if scene else ""
+	var player := get_tree().get_first_node_in_group("player")
+	var player_pos: Vector2 = player.global_position if player else Vector2.ZERO
+	var equip_mgr: Node = get_node_or_null("/root/EquipmentManager")
+	var quest_mgr: Node = get_node_or_null("/root/QuestManager")
+	var echo_mgr: Node = get_node_or_null("/root/EchoManager")
+	var rep_mgr: Node = get_node_or_null("/root/ReputationManager")
+	var playtime: float = GameManager.playtime_seconds
+	SaveManager.save_game(
+		slot, PartyManager, InventoryManager, EventFlags,
+		scene_path, player_pos, equip_mgr, quest_mgr,
+		playtime, echo_mgr, rep_mgr,
+	)
+	if _save_dialog:
+		_save_dialog.close()
+
+
+func _on_save_dialog_closed() -> void:
+	if _save_dialog != null:
+		_save_dialog.queue_free()
+		_save_dialog = null
+	_restore_from_subscene(_save_button)
 
 
 func _open_settings() -> void:

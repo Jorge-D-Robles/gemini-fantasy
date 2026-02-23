@@ -143,8 +143,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0264
 - Title: Implement save/load system with 3 save slots and autosave on scene change
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M1
 - Tags: save, core

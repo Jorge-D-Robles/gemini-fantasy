@@ -39,6 +39,8 @@ var _quest_toast_label: Label = null
 var _quest_toast_tween: Tween = null
 var _quest_toast_queue: Array[String] = []
 var _toast_processing: bool = false
+var _autosave_label: Label = null
+var _autosave_tween: Tween = null
 
 @onready var _location_label: Label = %LocationLabel
 @onready var _gold_label: Label = %GoldLabel
@@ -62,6 +64,9 @@ func _ready() -> void:
 	_setup_fragment_tracker()
 	_setup_compass()
 	_setup_echo_badge()
+	_setup_autosave_indicator()
+	# Connect SaveManager for autosave indicator
+	SaveManager.autosave_completed.connect(_on_autosave_completed)
 	# Connect EchoManager for live badge updates
 	var em: Node = get_node_or_null("/root/EchoManager")
 	if em:
@@ -94,6 +99,8 @@ func _exit_tree() -> void:
 		_tutorial_tween.kill()
 	if _quest_toast_tween and _quest_toast_tween.is_valid():
 		_quest_toast_tween.kill()
+	if _autosave_tween and _autosave_tween.is_valid():
+		_autosave_tween.kill()
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -504,3 +511,27 @@ static func compute_echo_badge_text(count: int) -> String:
 
 func _on_echo_collected(_id: StringName) -> void:
 	update_echo_badge()
+
+
+func _setup_autosave_indicator() -> void:
+	_autosave_label = _create_popup_label(9, UITheme.TEXT_SECONDARY, Vector2(-80.0, 8.0))
+	_autosave_label.name = "AutosaveLabel"
+	_autosave_label.anchors_preset = Control.PRESET_TOP_RIGHT
+	_autosave_label.custom_minimum_size = Vector2(72.0, 16.0)
+	_autosave_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_autosave_label.text = "Saved"
+	_autosave_label.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 0.85))
+	_autosave_label.modulate.a = 0.0
+
+
+func _on_autosave_completed(success: bool) -> void:
+	if not success:
+		return
+	if not _autosave_label:
+		return
+	if _autosave_tween and _autosave_tween.is_valid():
+		_autosave_tween.kill()
+	_autosave_tween = create_tween()
+	_autosave_tween.tween_property(_autosave_label, "modulate:a", 1.0, 0.2)
+	_autosave_tween.tween_interval(1.5)
+	_autosave_tween.tween_property(_autosave_label, "modulate:a", 0.0, 0.5)

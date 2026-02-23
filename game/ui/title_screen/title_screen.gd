@@ -4,12 +4,16 @@ extends Control
 
 signal new_game_pressed
 signal continue_pressed
+signal load_game_pressed
 signal settings_pressed
 
 const UIHelpers = preload("res://ui/ui_helpers.gd")
 const SP = preload("res://systems/scene_paths.gd")
 const SettingsMenuScript = preload(
 	"res://ui/settings_menu/settings_menu.gd"
+)
+const SaveSlotDialogScript = preload(
+	"res://ui/save_slot_dialog/save_slot_dialog.gd"
 )
 const UITheme = preload("res://ui/ui_theme.gd")
 const TITLE_BGM_PATH: String = "res://assets/music/Welcoming Heart Piano.ogg"
@@ -21,12 +25,14 @@ const AREA_NAMES: Dictionary = {
 }
 
 var _settings_menu: Control = null
+var _load_dialog: Control = null
 var _save_label: Label = null
 
 @onready var title_label: Label = %TitleLabel
 @onready var subtitle_label: Label = %SubtitleLabel
 @onready var new_game_button: Button = %NewGameButton
 @onready var continue_button: Button = %ContinueButton
+@onready var load_game_button: Button = %LoadGameButton
 @onready var settings_button: Button = %SettingsButton
 @onready var menu_container: VBoxContainer = %MenuContainer
 @onready var version_label: Label = %VersionLabel
@@ -52,19 +58,21 @@ func _start_title_music() -> void:
 func _connect_buttons() -> void:
 	new_game_button.pressed.connect(_on_new_game_pressed)
 	continue_button.pressed.connect(_on_continue_pressed)
+	load_game_button.pressed.connect(_on_load_game_pressed)
 	settings_button.pressed.connect(_on_settings_pressed)
 
 
 func _setup_focus_navigation() -> void:
 	UIHelpers.setup_focus_wrap([
-		new_game_button, continue_button, settings_button,
+		new_game_button, continue_button, load_game_button, settings_button,
 	])
 
 
 func _check_save_data() -> void:
-	var has_save: bool = SaveManager.has_save(0)
-	continue_button.disabled = not has_save
-	if has_save:
+	var has_autosave: bool = SaveManager.has_save(0)
+	continue_button.disabled = not has_autosave
+	load_game_button.disabled = not SaveManager.any_save_exists()
+	if has_autosave:
 		var data: Dictionary = SaveManager.load_save_data(0)
 		var summary: Dictionary = compute_save_summary(data)
 		_show_save_label(summary)
@@ -185,6 +193,46 @@ func _on_continue_pressed() -> void:
 	if scene_path.is_empty():
 		return
 	GameManager.change_scene(scene_path)
+
+
+func _on_load_game_pressed() -> void:
+	AudioManager.play_sfx(load(SfxLibrary.UI_CONFIRM))
+	load_game_pressed.emit()
+	if _load_dialog != null:
+		return
+	_load_dialog = SaveSlotDialogScript.new()
+	add_child(_load_dialog)
+	_load_dialog.slot_selected.connect(_on_load_slot_selected)
+	_load_dialog.dialog_closed.connect(_on_load_dialog_closed)
+	_load_dialog.open(SaveSlotDialogScript.Mode.LOAD, true)
+
+
+func _on_load_slot_selected(slot: int) -> void:
+	var data: Dictionary = SaveManager.load_save_data(slot)
+	if data.is_empty():
+		return
+	var equip_mgr: Node = get_node_or_null("/root/EquipmentManager")
+	var quest_mgr: Node = get_node_or_null("/root/QuestManager")
+	var echo_mgr: Node = get_node_or_null("/root/EchoManager")
+	var rep_mgr: Node = get_node_or_null("/root/ReputationManager")
+	SaveManager.apply_save_data(
+		data, PartyManager, InventoryManager, EventFlags,
+		equip_mgr, quest_mgr, echo_mgr, rep_mgr,
+	)
+	var pos_data: Dictionary = data.get("player_position", {})
+	var pos := Vector2(pos_data.get("x", 0.0), pos_data.get("y", 0.0))
+	SaveManager.set_pending_position(pos)
+	var scene_path: String = data.get("scene_path", "")
+	if scene_path.is_empty():
+		return
+	GameManager.change_scene(scene_path)
+
+
+func _on_load_dialog_closed() -> void:
+	if _load_dialog != null:
+		_load_dialog.queue_free()
+		_load_dialog = null
+	load_game_button.grab_focus()
 
 
 func _on_settings_pressed() -> void:
