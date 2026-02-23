@@ -22,13 +22,13 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0107
 - Title: Implement full character ability trees for all party members
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M1
 - Depends: T-0018
 - Refs: docs/mechanics/character-abilities.md
-- Notes: 8 characters x 10-15 abilities = 80-120 definitions.
+- Completed: 2026-02-22
 
 ### T-0226
 - Title: Overgrown Capital playtest pass — end-to-end Chapter 5 flow verification

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://bblade_of_memory"]
+
+[ext_resource type="Script" path="res://resources/ability_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"blade_of_memory"
+display_name = "Blade of Memory"
+description = "Lyra manifests a blade from crystallized memory — powerful single-target magic attack"
+ee_cost = 35
+resonance_cost = 0.0
+damage_base = 180
+damage_stat = 1
+target_type = 0
+element = 6
+status_effect = ""
+status_chance = 0.0
+animation_name = ""

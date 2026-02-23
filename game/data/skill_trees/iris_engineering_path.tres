@@ -1,7 +1,8 @@
-[gd_resource type="Resource" script_class="SkillTreeData" load_steps=9 format=3 uid="uid://biris_engineering_path"]
+[gd_resource type="Resource" script_class="SkillTreeData" load_steps=10 format=3 uid="uid://biris_engineering_path"]
 
 [ext_resource type="Script" path="res://resources/skill_tree_data.gd" id="1_std"]
 [ext_resource type="Script" path="res://resources/skill_tree_node_data.gd" id="2_stnd"]
+[ext_resource type="Resource" uid="uid://bsabotage" path="res://data/abilities/sabotage.tres" id="3_ability"]
 
 [sub_resource type="Resource" id="Node_iris_field_repairs"]
 script = ExtResource("2_stnd")
@@ -51,7 +52,7 @@ description = "Permanently reduce enemy attack/defense by 20%"
 tier = 3
 ap_cost = 3
 required_node_ids = [&"iris_tactical_analysis"]
-unlocks_ability = null
+unlocks_ability = ExtResource("3_ability")
 
 [sub_resource type="Resource" id="Node_iris_master_engineer"]
 script = ExtResource("2_stnd")

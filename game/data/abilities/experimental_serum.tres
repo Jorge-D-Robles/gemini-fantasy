@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://bexperimental_serum"]
+
+[ext_resource type="Script" path="res://resources/ability_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"experimental_serum"
+display_name = "Experimental Serum"
+description = "Inject an experimental serum that massively boosts one ally's attack and speed for 2 turns"
+ee_cost = 50
+resonance_cost = 0.0
+damage_base = 0
+damage_stat = 1
+target_type = 2
+element = 0
+status_effect = "berserk_boost"
+status_chance = 1.0
+status_effect_duration = 2
+animation_name = ""

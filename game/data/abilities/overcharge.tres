@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://bovercharge"]
+
+[ext_resource type="Script" path="res://resources/ability_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"overcharge"
+display_name = "Overcharge"
+description = "Transform cybernetic arm into energy cannon for 3 turns — massive power boost"
+ee_cost = 50
+resonance_cost = 0.0
+damage_base = 0
+damage_stat = 0
+target_type = 4
+element = 0
+status_effect = "overcharged"
+status_chance = 1.0
+status_effect_duration = 3
+animation_name = ""

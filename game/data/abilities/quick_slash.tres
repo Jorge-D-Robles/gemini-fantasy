@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://bquick_slash"]
+
+[ext_resource type="Script" path="res://resources/ability_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"quick_slash"
+display_name = "Quick Slash"
+description = "A lightning-fast blade strike that hits before the enemy can react"
+ee_cost = 12
+resonance_cost = 0.0
+damage_base = 90
+damage_stat = 0
+target_type = 0
+element = 0
+status_effect = ""
+status_chance = 0.0
+animation_name = ""

@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://btoxic_injection"]
+
+[ext_resource type="Script" path="res://resources/ability_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"toxic_injection"
+display_name = "Toxic Injection"
+description = "Inject a corrosive compound that deals damage and poisons the target"
+ee_cost = 22
+resonance_cost = 0.0
+damage_base = 60
+damage_stat = 1
+target_type = 0
+element = 5
+status_effect = "poison"
+status_chance = 0.8
+status_effect_duration = 3
+animation_name = ""

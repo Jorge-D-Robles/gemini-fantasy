@@ -1,12 +1,16 @@
-[gd_resource type="Resource" script_class="CharacterData" load_steps=8 format=3 uid="uid://biris"]
+[gd_resource type="Resource" script_class="CharacterData" load_steps=12 format=3 uid="uid://biris"]
 
 [ext_resource type="Script" path="res://resources/character_data.gd" id="1_script"]
 [ext_resource type="Resource" uid="uid://bheavy_strike" path="res://data/abilities/heavy_strike.tres" id="2_heavy_strike"]
 [ext_resource type="Resource" uid="uid://bemp_burst" path="res://data/abilities/emp_burst.tres" id="3_emp_burst"]
-[ext_resource type="Resource" uid="uid://bprecision_shot" path="res://data/abilities/precision_shot.tres" id="4_precision_shot"]
-[ext_resource type="Resource" uid="uid://biris_arsenal_path" path="res://data/skill_trees/iris_arsenal_path.tres" id="5_arsenal"]
-[ext_resource type="Resource" uid="uid://biris_engineering_path" path="res://data/skill_trees/iris_engineering_path.tres" id="6_engineering"]
-[ext_resource type="Resource" uid="uid://biris_cybernetics_path" path="res://data/skill_trees/iris_cybernetics_path.tres" id="7_cybernetics"]
+[ext_resource type="Resource" uid="uid://boverclockability" path="res://data/abilities/overclock.tres" id="4_overclock"]
+[ext_resource type="Resource" uid="uid://bshrapnelshotability" path="res://data/abilities/shrapnel_shot.tres" id="5_shrapnel_shot"]
+[ext_resource type="Resource" uid="uid://bprototypedeployability" path="res://data/abilities/prototype_deploy.tres" id="6_prototype_deploy"]
+[ext_resource type="Resource" uid="uid://bresonancedisruptorability" path="res://data/abilities/resonance_disruptor.tres" id="7_resonance_disruptor"]
+[ext_resource type="Resource" uid="uid://brailgunability" path="res://data/abilities/railgun.tres" id="8_railgun"]
+[ext_resource type="Resource" uid="uid://biris_arsenal_path" path="res://data/skill_trees/iris_arsenal_path.tres" id="9_arsenal"]
+[ext_resource type="Resource" uid="uid://biris_engineering_path" path="res://data/skill_trees/iris_engineering_path.tres" id="10_engineering"]
+[ext_resource type="Resource" uid="uid://biris_cybernetics_path" path="res://data/skill_trees/iris_cybernetics_path.tres" id="11_cybernetics"]
 
 [resource]
 script = ExtResource("1_script")
@@ -30,8 +34,8 @@ resistance_growth = 0.8
 speed_growth = 1.2
 luck_growth = 1.0
 allowed_weapon_types = [3, 4]
-abilities = [ExtResource("2_heavy_strike"), ExtResource("3_emp_burst"), ExtResource("4_precision_shot")]
+abilities = [ExtResource("2_heavy_strike"), ExtResource("3_emp_burst"), ExtResource("4_overclock"), ExtResource("5_shrapnel_shot"), ExtResource("6_prototype_deploy"), ExtResource("7_resonance_disruptor"), ExtResource("8_railgun")]
 portrait_path = "res://assets/portraits/iris_portrait.png"
 sprite_path = "res://assets/sprites/characters/iris_overworld.png"
 battle_sprite_path = "res://assets/sprites/characters/battle/iris_battle.png"
-skill_trees = [ExtResource("5_arsenal"), ExtResource("6_engineering"), ExtResource("7_cybernetics")]
+skill_trees = [ExtResource("9_arsenal"), ExtResource("10_engineering"), ExtResource("11_cybernetics")]

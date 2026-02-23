@@ -1,0 +1,41 @@
+[gd_resource type="Resource" script_class="CharacterData" load_steps=12 format=3 uid="uid://bsienna"]
+
+[ext_resource type="Script" path="res://resources/character_data.gd" id="1_script"]
+[ext_resource type="Resource" uid="uid://banalyze_weakness" path="res://data/abilities/analyze_weakness.tres" id="2_analyze_weakness"]
+[ext_resource type="Resource" uid="uid://btoxic_injection" path="res://data/abilities/toxic_injection.tres" id="3_toxic_injection"]
+[ext_resource type="Resource" uid="uid://bneural_disrupt" path="res://data/abilities/neural_disrupt.tres" id="4_neural_disrupt"]
+[ext_resource type="Resource" uid="uid://bdata_extraction" path="res://data/abilities/data_extraction.tres" id="5_data_extraction"]
+[ext_resource type="Resource" uid="uid://bchemical_burn" path="res://data/abilities/chemical_burn.tres" id="6_chemical_burn"]
+[ext_resource type="Resource" uid="uid://bexperimental_serum" path="res://data/abilities/experimental_serum.tres" id="7_experimental_serum"]
+[ext_resource type="Resource" uid="uid://bmind_break" path="res://data/abilities/mind_break.tres" id="8_mind_break"]
+[ext_resource type="Resource" uid="uid://bsienna_research_path" path="res://data/skill_trees/sienna_research_path.tres" id="9_research"]
+[ext_resource type="Resource" uid="uid://bsienna_experimentation_path" path="res://data/skill_trees/sienna_experimentation_path.tres" id="10_experimentation"]
+[ext_resource type="Resource" uid="uid://bsienna_redemption_path" path="res://data/skill_trees/sienna_redemption_path.tres" id="11_redemption"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"sienna"
+display_name = "Dr. Sienna Vex"
+description = "A brilliant but guilt-ridden scientist who once worked for the Reclamation Initiative. She uses her knowledge of Resonance to analyze and exploit enemy weaknesses."
+max_hp = 85
+max_ee = 110
+attack = 6
+magic = 20
+defense = 7
+resistance = 14
+speed = 10
+luck = 14
+hp_growth = 9.0
+ee_growth = 10.0
+attack_growth = 0.8
+magic_growth = 2.8
+defense_growth = 1.0
+resistance_growth = 1.8
+speed_growth = 1.2
+luck_growth = 1.5
+allowed_weapon_types = [9, 10]
+abilities = [ExtResource("2_analyze_weakness"), ExtResource("3_toxic_injection"), ExtResource("4_neural_disrupt"), ExtResource("5_data_extraction"), ExtResource("6_chemical_burn"), ExtResource("7_experimental_serum"), ExtResource("8_mind_break")]
+portrait_path = ""
+sprite_path = ""
+battle_sprite_path = ""
+skill_trees = [ExtResource("9_research"), ExtResource("10_experimentation"), ExtResource("11_redemption")]

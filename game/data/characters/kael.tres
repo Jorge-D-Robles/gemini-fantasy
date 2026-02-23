@@ -1,13 +1,16 @@
-[gd_resource type="Resource" script_class="CharacterData" load_steps=9 format=3 uid="uid://bkael"]
+[gd_resource type="Resource" script_class="CharacterData" load_steps=12 format=3 uid="uid://bkael"]
 
 [ext_resource type="Script" path="res://resources/character_data.gd" id="1_script"]
 [ext_resource type="Resource" uid="uid://becho_strike" path="res://data/abilities/echo_strike.tres" id="2_echo_strike"]
 [ext_resource type="Resource" uid="uid://bresonance_pulse" path="res://data/abilities/resonance_pulse.tres" id="3_resonance_pulse"]
-[ext_resource type="Resource" uid="uid://bflame_blade" path="res://data/abilities/flame_blade.tres" id="4_flame_blade"]
-[ext_resource type="Resource" uid="uid://bmemory_weave" path="res://data/abilities/memory_weave.tres" id="5_memory_weave"]
-[ext_resource type="Resource" uid="uid://bkael_hunter_path" path="res://data/skill_trees/kael_hunter_path.tres" id="6_hunter"]
-[ext_resource type="Resource" uid="uid://bkael_memory_path" path="res://data/skill_trees/kael_memory_path.tres" id="7_memory"]
-[ext_resource type="Resource" uid="uid://bkael_bridge_path" path="res://data/skill_trees/kael_bridge_path.tres" id="8_bridge"]
+[ext_resource type="Resource" uid="uid://bmemory_weave" path="res://data/abilities/memory_weave.tres" id="4_memory_weave"]
+[ext_resource type="Resource" uid="uid://badaptive_strike" path="res://data/abilities/adaptive_strike.tres" id="5_adaptive_strike"]
+[ext_resource type="Resource" uid="uid://becho_fusion" path="res://data/abilities/echo_fusion.tres" id="6_echo_fusion"]
+[ext_resource type="Resource" uid="uid://breality_anchor" path="res://data/abilities/reality_anchor.tres" id="7_reality_anchor"]
+[ext_resource type="Resource" uid="uid://bconvergence_touch" path="res://data/abilities/convergence_touch.tres" id="8_convergence_touch"]
+[ext_resource type="Resource" uid="uid://bkael_hunter_path" path="res://data/skill_trees/kael_hunter_path.tres" id="9_hunter"]
+[ext_resource type="Resource" uid="uid://bkael_memory_path" path="res://data/skill_trees/kael_memory_path.tres" id="10_memory"]
+[ext_resource type="Resource" uid="uid://bkael_bridge_path" path="res://data/skill_trees/kael_bridge_path.tres" id="11_bridge"]
 
 [resource]
 script = ExtResource("1_script")
@@ -31,8 +34,8 @@ resistance_growth = 1.5
 speed_growth = 1.5
 luck_growth = 1.2
 allowed_weapon_types = [1, 2]
-abilities = [ExtResource("2_echo_strike"), ExtResource("3_resonance_pulse"), ExtResource("4_flame_blade"), ExtResource("5_memory_weave")]
+abilities = [ExtResource("2_echo_strike"), ExtResource("3_resonance_pulse"), ExtResource("4_memory_weave"), ExtResource("5_adaptive_strike"), ExtResource("6_echo_fusion"), ExtResource("7_reality_anchor"), ExtResource("8_convergence_touch")]
 portrait_path = "res://assets/portraits/kael_portrait.png"
-sprite_path = ""
+sprite_path = "res://assets/sprites/characters/kael_overworld.png"
 battle_sprite_path = "res://assets/sprites/characters/battle/kael_battle.png"
-skill_trees = [ExtResource("6_hunter"), ExtResource("7_memory"), ExtResource("8_bridge")]
+skill_trees = [ExtResource("9_hunter"), ExtResource("10_memory"), ExtResource("11_bridge")]

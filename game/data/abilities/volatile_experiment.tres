@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://bvolatile_experiment"]
+
+[ext_resource type="Script" path="res://resources/ability_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"volatile_experiment"
+display_name = "Volatile Experiment"
+description = "Unleash an unstable experimental compound — massive fire AoE with unpredictable side effects"
+ee_cost = 50
+resonance_cost = 0.0
+damage_base = 200
+damage_stat = 1
+target_type = 1
+element = 1
+status_effect = ""
+status_chance = 0.0
+animation_name = ""

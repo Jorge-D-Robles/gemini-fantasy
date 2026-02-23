@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://banalyze_weakness"]
+
+[ext_resource type="Script" path="res://resources/ability_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"analyze_weakness"
+display_name = "Analyze Weakness"
+description = "Scan an enemy to reveal stats and reduce their defense for 3 turns"
+ee_cost = 15
+resonance_cost = 0.0
+damage_base = 0
+damage_stat = 1
+target_type = 0
+element = 0
+status_effect = "defense_down"
+status_chance = 1.0
+status_effect_duration = 3
+animation_name = ""

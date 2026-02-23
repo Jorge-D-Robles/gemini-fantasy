@@ -7,7 +7,7 @@ Started: 2026-02-20
 Closed: —
 
 ## Velocity
-- Completed: 24
+- Completed: 25
 - Added mid-sprint: 0
 - Rolled over: 1
 
@@ -15,7 +15,7 @@ Closed: —
 
 ## Active
 
-*(empty — pull next from BACKLOG.md)*
+*(pull next task from BACKLOG.md)*
 
 ---
 
@@ -23,12 +23,13 @@ Closed: —
 
 ### Other
 
-*(pull next tasks from BACKLOG.md — T-0107, T-0226)*
+*(pull next tasks from BACKLOG.md — T-0226)*
 
 ---
 
 ## Done This Sprint
 
+- T-0107: Implement full character ability trees — 48 new AbilityData .tres, 3 new CharacterData (Sienna/Cipher/Ash), 5 edited CharacterData (Kael/Iris/Garrick/Nyx/Lyra), 23 skill tree tier-3 nodes wired with unlocks_ability, 2 new test files; 1646 tests all passing
 - T-0180: Test suite de-bloat — removed 79 trivial tests (property assignments, type checks, non-empty checks, signal existence, enum values, constant values) across 35 files (6 deleted, 29 edited); 1639 tests remain, all passing
 - T-0214: Add Research Quarter Resonance terminal puzzle — ResonanceTerminalStrategy (3-state dialogue), 2 crystal key items, ItemPickupStrategy add_item bug fix, crystal pickup persistence, 12 tests
 - T-0206: Add The Performer mini-boss in Entertainment District — PerformerEncounter event, dramatic_echo + resonance_drain abilities, the_performer.tres (BOSS AI, 180 HP), trigger zone at col 28 row 14, 9 tests

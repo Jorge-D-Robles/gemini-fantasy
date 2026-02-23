@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://banchor_point"]
+
+[ext_resource type="Script" path="res://resources/ability_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"anchor_point"
+display_name = "Anchor Point"
+description = "Set a temporal anchor point — party can rewind to this state once"
+ee_cost = 35
+resonance_cost = 0.0
+damage_base = 0
+damage_stat = 0
+target_type = 3
+element = 0
+status_effect = "anchored"
+status_chance = 1.0
+status_effect_duration = 5
+animation_name = ""

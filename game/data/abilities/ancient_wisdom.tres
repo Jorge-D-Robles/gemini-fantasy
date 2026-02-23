@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://bancient_wisdom"]
+
+[ext_resource type="Script" path="res://resources/ability_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"ancient_wisdom"
+display_name = "Ancient Wisdom"
+description = "Lyra shares pre-Severance knowledge, buffing party magic and resistance for 3 turns"
+ee_cost = 30
+resonance_cost = 0.0
+damage_base = 0
+damage_stat = 1
+target_type = 3
+element = 6
+status_effect = "magic_up"
+status_chance = 1.0
+status_effect_duration = 3
+animation_name = ""

@@ -3,6 +3,7 @@
 Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[date] Description`.
 
 ---
+- [2026-02-22] T-0107: Implement full character ability trees — 48 new AbilityData .tres (25 base + 23 skill-tree-unlocked), 3 new CharacterData (Sienna/Cipher/Ash), 5 edited CharacterData (Kael/Iris/Garrick/Nyx/Lyra wired to design-doc abilities), 23 skill tree tier-3 nodes wired with unlocks_ability, 2 new test files; 1646 tests all passing (claude)
 - [2026-02-22] T-0180: Test suite de-bloat — removed 79 trivial tests (property assignments, type checks, non-empty array/string checks, signal existence, enum values, constant values) across 35 files (6 deleted entirely, 29 edited); kept all behavioral tests, factory contracts, balance guardrails, data integrity, regression guards; 1639 tests remain, all passing (claude)
 - [2026-02-22] T-0214: Add Research Quarter Resonance terminal puzzle — ResonanceTerminalStrategy (3-state dialogue: missing crystals/activate/already-active), Market+Entertainment crystal key items (.tres), ItemPickupStrategy add_item() bug fix, crystal pickup persistence via EventFlags, 3 new registry constants, 12 new tests; 1718 total (claude)
 - [2026-02-22] T-0206: Add The Performer mini-boss in Entertainment District — PerformerEncounter event (pre/post-battle dialogue, forced battle), dramatic_echo AoE LIGHT + resonance_drain DARK abilities, the_performer.tres (BOSS AI 180 HP), trigger zone col 28 row 14, EventFlagRegistry PERFORMER_ENCOUNTERED, 9 new tests; 1704 total (claude)

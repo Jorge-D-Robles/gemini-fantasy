@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://bi_am_real"]
+
+[ext_resource type="Script" path="res://resources/ability_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"i_am_real"
+display_name = "I Am Real"
+description = "Prove existence through sheer force of will — damage based on Nyx's belief in self"
+ee_cost = 50
+resonance_cost = 0.4
+damage_base = 220
+damage_stat = 1
+target_type = 0
+element = 7
+status_effect = ""
+status_chance = 0.0
+animation_name = ""

@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://bcalming_presence"]
+
+[ext_resource type="Script" path="res://resources/ability_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"calming_presence"
+display_name = "Calming Presence"
+description = "Ash's gentle presence soothes the party, removing fear and confusion status effects"
+ee_cost = 15
+resonance_cost = 0.0
+damage_base = 0
+damage_stat = 1
+target_type = 3
+element = 6
+status_effect = "cleanse"
+status_chance = 1.0
+status_effect_duration = 0
+animation_name = ""

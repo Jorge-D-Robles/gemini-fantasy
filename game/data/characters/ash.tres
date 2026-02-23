@@ -1,0 +1,39 @@
+[gd_resource type="Resource" script_class="CharacterData" load_steps=10 format=3 uid="uid://bash"]
+
+[ext_resource type="Script" path="res://resources/character_data.gd" id="1_script"]
+[ext_resource type="Resource" uid="uid://bcalming_presence" path="res://data/abilities/calming_presence.tres" id="2_calming_presence"]
+[ext_resource type="Resource" uid="uid://bemotional_wave" path="res://data/abilities/emotional_wave.tres" id="3_emotional_wave"]
+[ext_resource type="Resource" uid="uid://bsilent_scream" path="res://data/abilities/silent_scream.tres" id="4_silent_scream"]
+[ext_resource type="Resource" uid="uid://bempathic_shield" path="res://data/abilities/empathic_shield.tres" id="5_empathic_shield"]
+[ext_resource type="Resource" uid="uid://bharmonic_burst" path="res://data/abilities/harmonic_burst.tres" id="6_harmonic_burst"]
+[ext_resource type="Resource" uid="uid://bash_silence_path" path="res://data/skill_trees/ash_silence_path.tres" id="7_silence"]
+[ext_resource type="Resource" uid="uid://bash_harmony_path" path="res://data/skill_trees/ash_harmony_path.tres" id="8_harmony"]
+[ext_resource type="Resource" uid="uid://bash_future_path" path="res://data/skill_trees/ash_future_path.tres" id="9_future"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"ash"
+display_name = "Ash"
+description = "A non-verbal child with an extraordinary connection to emotional Resonance. Ash communicates through feelings and affects the entire battlefield with raw emotional energy."
+max_hp = 75
+max_ee = 100
+attack = 5
+magic = 18
+defense = 6
+resistance = 16
+speed = 10
+luck = 20
+hp_growth = 8.0
+ee_growth = 10.0
+attack_growth = 0.5
+magic_growth = 2.5
+defense_growth = 0.8
+resistance_growth = 2.2
+speed_growth = 1.2
+luck_growth = 2.5
+allowed_weapon_types = [15, 16]
+abilities = [ExtResource("2_calming_presence"), ExtResource("3_emotional_wave"), ExtResource("4_silent_scream"), ExtResource("5_empathic_shield"), ExtResource("6_harmonic_burst")]
+portrait_path = ""
+sprite_path = ""
+battle_sprite_path = ""
+skill_trees = [ExtResource("7_silence"), ExtResource("8_harmony"), ExtResource("9_future")]
