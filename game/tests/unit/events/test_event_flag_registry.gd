@@ -25,6 +25,10 @@ func test_story_flags_are_non_empty() -> void:
 	assert_false(Registry.LYRA_FRAGMENT_2_COLLECTED.is_empty())
 
 
+func test_performer_flag_is_non_empty() -> void:
+	assert_false(Registry.PERFORMER_ENCOUNTERED.is_empty())
+
+
 func test_gardener_flags_are_non_empty() -> void:
 	assert_false(Registry.GARDENER_ENCOUNTERED.is_empty())
 	assert_false(Registry.GARDENER_RESOLUTION_PEACEFUL.is_empty())
@@ -48,6 +52,11 @@ func test_registry_matches_event_class_flag_names() -> void:
 	assert_eq(Registry.BOSS_DEFEATED, Boss.FLAG_NAME)
 
 
+func test_registry_matches_performer_flag_name() -> void:
+	const PerformerEnc = preload("res://events/performer_encounter.gd")
+	assert_eq(Registry.PERFORMER_ENCOUNTERED, PerformerEnc.FLAG_NAME)
+
+
 func test_all_flags_are_unique() -> void:
 	var all_flags: Array[String] = [
 		Registry.OPENING_LYRA_DISCOVERED,
@@ -63,6 +72,7 @@ func test_all_flags_are_unique() -> void:
 		Registry.AFTER_CAPITAL_CAMP_SEEN,
 		Registry.LEAVING_CAPITAL_SEEN,
 		Registry.LYRA_FRAGMENT_2_COLLECTED,
+		Registry.PERFORMER_ENCOUNTERED,
 		Registry.GARDENER_ENCOUNTERED,
 		Registry.GARDENER_RESOLUTION_PEACEFUL,
 		Registry.GARDENER_RESOLUTION_QUEST,

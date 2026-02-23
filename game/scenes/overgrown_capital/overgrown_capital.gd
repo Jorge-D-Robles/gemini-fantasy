@@ -24,6 +24,7 @@ const CAMP_STRATEGY_SCRIPT := preload(
 const DIARY_STRATEGY_SCRIPT := preload(
 	"res://entities/interactable/strategies/diary_strategy.gd"
 )
+const PERFORMER_ENCOUNTER_SCRIPT := preload("res://events/performer_encounter.gd")
 const SURVIVORS_DIARY_FLAG: String = "survivors_diary_read"
 const MEMORY_BLOOM_PATH: String = "res://data/enemies/memory_bloom.tres"
 const CREEPING_VINE_PATH: String = "res://data/enemies/creeping_vine.tres"
@@ -42,6 +43,7 @@ const FIRST_DAY_OF_SCHOOL_ECHO_ID: StringName = &"first_day_of_school"
 var _ground_debris_layer: TileMapLayer = null
 var _crystal_walls: Dictionary = {}
 var _gardener_zone: Area2D = null
+var _performer_zone: Area2D = null
 
 @onready var _ground_layer: TileMapLayer = $Ground
 @onready var _ground_detail_layer: TileMapLayer = $GroundDetail
@@ -176,6 +178,12 @@ static func compute_diary_lines() -> Array[String]:
 	]
 
 
+static func compute_performer_zone_position() -> Vector2:
+	## The Performer mini-boss trigger zone — Entertainment District theater.
+	## Positioned at col 28, row 14 — east-center, between the two purification nodes.
+	return Vector2(448.0, 224.0)
+
+
 static func compute_market_echo_positions() -> Array:
 	## Two echo positions in the Market District.
 	## [0] Morning Commute — transit bench area, col 6, row 20.
@@ -266,6 +274,7 @@ func _ready() -> void:
 	_setup_market_echoes()
 	_setup_residential_echoes()
 	_setup_diary()
+	_setup_performer_zone()
 
 	UILayer.hud.location_name = "Overgrown Capital"
 
@@ -670,3 +679,42 @@ func _setup_diary() -> void:
 	diary.indicator_type = Interactable.IndicatorType.INTERACT
 	diary.position = compute_diary_position()
 	$Entities.add_child(diary)
+
+
+func _setup_performer_zone() -> void:
+	if not PerformerEncounter.compute_can_trigger(EventFlags.get_all_flags()):
+		return
+	_performer_zone = Area2D.new()
+	_performer_zone.name = "PerformerZone"
+	var shape := CollisionShape2D.new()
+	var rect := RectangleShape2D.new()
+	rect.size = Vector2(64.0, 32.0)
+	shape.shape = rect
+	_performer_zone.add_child(shape)
+	_performer_zone.position = compute_performer_zone_position()
+	_performer_zone.body_entered.connect(_on_performer_zone_entered)
+	$Triggers.add_child(_performer_zone)
+
+
+func _on_performer_zone_entered(body: Node2D) -> void:
+	if not body.is_in_group("player"):
+		return
+	if GameManager.is_transitioning():
+		return
+	if DialogueManager.is_active():
+		return
+	if BattleManager.is_in_battle():
+		return
+	if _performer_zone:
+		_performer_zone.set_deferred("monitoring", false)
+	_trigger_performer_encounter.call_deferred()
+
+
+func _trigger_performer_encounter() -> void:
+	if not PerformerEncounter.compute_can_trigger(EventFlags.get_all_flags()):
+		return
+	var encounter: Node = PERFORMER_ENCOUNTER_SCRIPT.new()
+	add_child(encounter)
+	encounter.trigger()
+	await encounter.sequence_completed
+	encounter.queue_free()

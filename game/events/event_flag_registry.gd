@@ -35,6 +35,9 @@ const LYRAS_TRUTH_SEEN: String = "lyras_truth_seen"
 # --- Captured (Ch10) flags ---
 const KAEL_ANCHOR_REVEALED: String = "kael_anchor_revealed"
 
+# --- Performer encounter flag ---
+const PERFORMER_ENCOUNTERED: String = "performer_encountered"
+
 # --- Gardener resolution flags ---
 const GARDENER_ENCOUNTERED: String = "gardener_encountered"
 const GARDENER_RESOLUTION_PEACEFUL: String = "gardener_resolution_peaceful"
