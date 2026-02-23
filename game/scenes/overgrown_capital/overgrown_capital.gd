@@ -21,6 +21,10 @@ const SAVE_POINT_STRATEGY_SCRIPT := preload(
 const CAMP_STRATEGY_SCRIPT := preload(
 	"res://entities/interactable/strategies/camp_strategy.gd"
 )
+const DIARY_STRATEGY_SCRIPT := preload(
+	"res://entities/interactable/strategies/diary_strategy.gd"
+)
+const SURVIVORS_DIARY_FLAG: String = "survivors_diary_read"
 const MEMORY_BLOOM_PATH: String = "res://data/enemies/memory_bloom.tres"
 const CREEPING_VINE_PATH: String = "res://data/enemies/creeping_vine.tres"
 const ECHO_NOMAD_PATH: String = "res://data/enemies/echo_nomad.tres"
@@ -144,6 +148,34 @@ static func compute_first_day_of_school_vision_lines() -> Array[String]:
 	]
 
 
+static func compute_diary_position() -> Vector2:
+	## Survivor's Diary — Residential Quarter, col 14, row 16.
+	## A desk in an apartment room, between the two residential echoes.
+	return Vector2(224.0, 256.0)
+
+
+static func compute_diary_lines() -> Array[String]:
+	## Survivor's Diary entries — alternating speaker/text pairs.
+	## Written by an unnamed resident who survived alone after the Severance.
+	return [
+		"",
+		("Day 1. The sky split. Half the building just... emptied."
+			+ " Doors left open. Meals on tables. I keep checking the halls."),
+		"",
+		("Day 47. The crystals are growing through the walls now."
+			+ " I moved everything to the top floor."
+			+ " Found a patch of soil on the roof. Something green."),
+		"",
+		("Day 312. I talk to the echoes. They don't answer, but I see them —"
+			+ " fragments of people going about lives that ended a year ago."
+			+ " It's almost company."),
+		"",
+		("The last entry is smudged. Only fragments remain:"
+			+ " '...garden still grows... enough for one...'"
+			+ " The rest of the page is blank."),
+	]
+
+
 static func compute_market_echo_positions() -> Array:
 	## Two echo positions in the Market District.
 	## [0] Morning Commute — transit bench area, col 6, row 20.
@@ -233,6 +265,7 @@ func _ready() -> void:
 	_setup_lyra_fragment_echo()
 	_setup_market_echoes()
 	_setup_residential_echoes()
+	_setup_diary()
 
 	UILayer.hud.location_name = "Overgrown Capital"
 
@@ -622,3 +655,18 @@ func _setup_campfire() -> void:
 	campfire.indicator_type = Interactable.IndicatorType.INTERACT
 	campfire.position = compute_capital_campfire_position()
 	$Entities.add_child(campfire)
+
+
+func _setup_diary() -> void:
+	if EventFlags.has_flag(SURVIVORS_DIARY_FLAG):
+		return
+	var strat := DIARY_STRATEGY_SCRIPT.new() as DiaryStrategy
+	strat.diary_lines = compute_diary_lines()
+	strat.flag_name = SURVIVORS_DIARY_FLAG
+	var diary := INTERACTABLE_SCENE.instantiate() as Interactable
+	diary.name = "SurvivorsDiary"
+	diary.strategy = strat
+	diary.one_time = true
+	diary.indicator_type = Interactable.IndicatorType.INTERACT
+	diary.position = compute_diary_position()
+	$Entities.add_child(diary)
