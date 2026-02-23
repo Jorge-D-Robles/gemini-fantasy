@@ -7,7 +7,7 @@ const SP = preload("res://systems/scene_paths.gd")
 const UITheme = preload("res://ui/ui_theme.gd")
 const TH = preload("res://ui/hud/tutorial_hints.gd")
 const FragmentTracker = preload("res://ui/hud/hud_fragment_tracker.gd")
-const HudCompass = preload("res://ui/hud/hud_compass.gd")
+# HudCompass is a registered global class — accessed directly by class name.
 
 const AREA_NAMES: Dictionary = {
 	SP.ROOTHOLLOW: "Roothollow",

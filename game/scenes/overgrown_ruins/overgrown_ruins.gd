@@ -266,7 +266,7 @@ func _on_lyra_zone_entered(body: Node2D) -> void:
 	if not EventFlags.has_flag(OpeningSequence.FLAG_NAME):
 		# Opening sequence — Kael discovers Lyra
 		_encounter_system.enabled = false
-		_lyra_zone.monitoring = false
+		_lyra_zone.set_deferred("monitoring", false)
 		_opening_sequence.trigger()
 		await _opening_sequence.sequence_completed
 		_encounter_system.enabled = true
@@ -278,7 +278,7 @@ func _on_lyra_zone_entered(body: Node2D) -> void:
 			):
 		# Garrick meets Lyra — Chapter 4 Scene 5
 		_encounter_system.enabled = false
-		_lyra_zone.monitoring = false
+		_lyra_zone.set_deferred("monitoring", false)
 		_garrick_meets_lyra.trigger()
 		await _garrick_meets_lyra.sequence_completed
 		# Chain demo ending (encounters stay disabled — scene changes)
@@ -290,7 +290,7 @@ func _on_lyra_zone_entered(body: Node2D) -> void:
 		# Save-reload edge case: garrick_met_lyra set but
 		# demo_complete not set — re-trigger demo ending
 		_encounter_system.enabled = false
-		_lyra_zone.monitoring = false
+		_lyra_zone.set_deferred("monitoring", false)
 		_demo_ending.trigger()
 
 
@@ -308,11 +308,13 @@ func _on_boss_zone_entered(body: Node2D) -> void:
 	if GameManager.is_transitioning():
 		return
 	_encounter_system.enabled = false
-	_boss_zone.monitoring = false
+	_boss_zone.set_deferred("monitoring", false)
 	_boss_encounter.trigger()
 
 
 func _maybe_trigger_entry_dialogue() -> void:
+	if DialogueManager.is_active():
+		return
 	if not EventFlags.has_flag(EntryDialogue.get_entry_gate_flag()):
 		return
 	if EventFlags.has_flag(EntryDialogue.get_entry_flag()):

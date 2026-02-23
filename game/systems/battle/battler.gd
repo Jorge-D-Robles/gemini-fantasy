@@ -23,8 +23,6 @@ signal resonance_state_changed(old_state: ResonanceState, new_state: ResonanceSt
 signal status_effect_applied(effect: StringName)
 ## Emitted when a status effect is removed from this battler.
 signal status_effect_removed(effect: StringName)
-## Emitted when this battler finishes executing an action.
-signal action_finished
 ## Emitted when this battler receives damage after defense calculation.
 signal damage_taken(amount: int)
 

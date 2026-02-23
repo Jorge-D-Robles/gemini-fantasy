@@ -39,7 +39,7 @@ func _ready() -> void:
 		if cols > 1 or rows > 1:
 			var frame_w: float = tex.get_width() / float(cols)
 			var frame_h: float = tex.get_height() / float(rows)
-			var center_col: int = cols / 2
+			var center_col: int = int(float(cols) / 2.0)
 			var atlas := AtlasTexture.new()
 			atlas.atlas = tex
 			atlas.region = Rect2(

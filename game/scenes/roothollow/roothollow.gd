@@ -264,7 +264,7 @@ func _on_garrick_zone_entered(body: Node2D) -> void:
 	var flags := EventFlags.get_all_flags()
 	if not Zone.compute_garrick_zone_can_trigger(flags):
 		return
-	_garrick_zone.monitoring = false
+	_garrick_zone.set_deferred("monitoring", false)
 	_garrick_event.trigger()
 	await _garrick_event.sequence_completed
 	# Hide Garrick NPC after he joins party

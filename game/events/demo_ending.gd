@@ -5,8 +5,6 @@ extends Node
 ## the demo end screen. Does NOT emit sequence_completed — the scene
 ## changes instead.
 
-signal sequence_completed  # Declared for pattern consistency; not emitted (scene changes instead)
-
 const FLAG_NAME: String = "demo_complete"
 const SP = preload("res://systems/scene_paths.gd")
 

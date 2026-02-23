@@ -246,7 +246,7 @@ func _on_iris_zone_entered(body: Node2D) -> void:
 	if DialogueManager.is_active():
 		return
 	_encounter_system.enabled = false
-	_iris_zone.monitoring = false
+	_iris_zone.set_deferred("monitoring", false)
 	_iris_event.trigger()
 	await _iris_event.sequence_completed
 	_encounter_system.enabled = true
@@ -267,6 +267,8 @@ func _on_encounter_triggered(enemy_group: Array[Resource]) -> void:
 
 
 func _maybe_trigger_traversal_dialogue() -> void:
+	if DialogueManager.is_active():
+		return
 	if not EventFlags.has_flag(Dialogue.get_traversal_gate_flag()):
 		return
 	if EventFlags.has_flag(Dialogue.get_traversal_flag()):
@@ -280,6 +282,8 @@ func _maybe_trigger_traversal_dialogue() -> void:
 
 
 func _maybe_trigger_bond01_dialogue() -> void:
+	if DialogueManager.is_active():
+		return
 	var party_ids: Array = []
 	for data: Resource in PartyManager.get_active_party():
 		party_ids.append(data.id)

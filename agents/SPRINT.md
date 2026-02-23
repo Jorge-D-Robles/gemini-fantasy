@@ -17,7 +17,6 @@ Started: 2026-02-20
 
 ### Other
 
-- **T-0263**: Fix all 37 Godot editor debugger errors/warnings (area_2d set_monitoring during signal, shadowed identifiers, unused vars/signals, DialogueManager guard)
 - **T-0250**: Fix EnemyBattler.choose_action() typed array mismatch (battle crash)
 
 *(pull next tasks from BACKLOG.md — T-0246, T-0249, T-0105, T-0104, T-0223)*
@@ -26,6 +25,7 @@ Started: 2026-02-20
 
 ## Done This Sprint
 
+- T-0263: Fix all 37 Godot editor debugger errors/warnings — set_deferred for 8 monitoring-in-signal calls, removed 7 shadowed class-name consts, removed 2 unused signals, fixed integer division, added 3 DialogueManager guards
 - T-0262: Revert root y_sort — remove y_sort_enabled from all 5 scene roots + z=0 TileMapLayers, keep only on Entities; update regression tests + scenes/CLAUDE.md
 - T-0261: Update CLAUDE.md + scenes/CLAUDE.md + entities/CLAUDE.md rendering conventions — corrected y_sort guidance, documented sprite offset
 - T-0260: Lower scatter noise frequencies — detail 0.15→0.04, debris 0.2→0.05 in overgrown_ruins.gd + overgrown_capital.gd

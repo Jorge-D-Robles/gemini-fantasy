@@ -482,7 +482,7 @@ func _on_gardener_zone_entered(body: Node2D) -> void:
 	if BattleManager.is_in_battle():
 		return
 	if _gardener_zone:
-		_gardener_zone.monitoring = false
+		_gardener_zone.set_deferred("monitoring", false)
 	_trigger_gardener_encounter.call_deferred()
 
 
@@ -506,7 +506,7 @@ func _on_exit_to_ruins_entered(body: Node2D) -> void:
 	if BattleManager.is_in_battle():
 		return
 	if LeavingCapital.compute_can_trigger(EventFlags.get_all_flags()):
-		_exit_to_ruins.monitoring = false
+		_exit_to_ruins.set_deferred("monitoring", false)
 		_trigger_leaving_capital_and_exit.call_deferred()
 		return
 	GameManager.change_scene(SP.VERDANT_FOREST, GameManager.FADE_DURATION, "spawn_from_capital")

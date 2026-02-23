@@ -14,12 +14,7 @@ enum Category {
 
 const UIHelpers = preload("res://ui/ui_helpers.gd")
 const UITheme = preload("res://ui/ui_theme.gd")
-const InventoryUIFilter = preload(
-	"res://ui/inventory_ui/inventory_ui_filter.gd"
-)
-const InventoryUIDetail = preload(
-	"res://ui/inventory_ui/inventory_ui_detail.gd"
-)
+# InventoryUIFilter and InventoryUIDetail are registered global classes — accessed directly by class name.
 
 var _is_open: bool = false
 var _current_category: Category = Category.ALL

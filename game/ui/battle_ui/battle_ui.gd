@@ -23,17 +23,9 @@ enum Command {
 	FLEE,
 }
 
-const BattleUIStatus = preload(
-	"res://ui/battle_ui/battle_ui_status.gd"
-)
+# BattleUIStatus, BattleUILog, BattleUIVictory are registered global classes — accessed by class name.
 const BattleUIDefeat = preload(
 	"res://ui/battle_ui/battle_ui_defeat.gd"
-)
-const BattleUILog = preload(
-	"res://ui/battle_ui/battle_ui_log.gd"
-)
-const BattleUIVictory = preload(
-	"res://ui/battle_ui/battle_ui_victory.gd"
 )
 const GameBalance = preload("res://systems/game_balance.gd")
 const SP = preload("res://systems/scene_paths.gd")

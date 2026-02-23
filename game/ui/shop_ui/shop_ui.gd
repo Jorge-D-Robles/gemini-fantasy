@@ -9,8 +9,7 @@ enum Mode { BUY, SELL }
 
 const UIHelpers = preload("res://ui/ui_helpers.gd")
 const UITheme = preload("res://ui/ui_theme.gd")
-const ShopUIDetail = preload("res://ui/shop_ui/shop_ui_detail.gd")
-const ShopUIList = preload("res://ui/shop_ui/shop_ui_list.gd")
+# ShopUIDetail and ShopUIList are registered global classes — accessed directly by class name.
 
 var _is_open: bool = false
 var _mode: Mode = Mode.BUY
