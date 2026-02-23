@@ -283,7 +283,7 @@ func _on_innkeeper_finished() -> void:
 	if not DialogueManager.start_dialogue(heal_lines):
 		return
 	await DialogueManager.dialogue_ended
-	_check_quest_chain(_herb_quest, "Maren")
+	await _check_quest_chain(_herb_quest, "Maren")
 	# Trigger the highest-priority eligible night event (one per rest).
 	var night_pick: StringName = NightEvents.compute_innkeeper_night_event(
 		EventFlags.get_all_flags()
@@ -327,7 +327,7 @@ func _on_shopkeeper_finished() -> void:
 
 
 func _on_wren_finished() -> void:
-	_check_quest_chain(_scouts_quest, "Wren")
+	await _check_quest_chain(_scouts_quest, "Wren")
 
 
 func _on_thessa_finished() -> void:
@@ -347,7 +347,7 @@ func _on_thessa_finished() -> void:
 		await DialogueManager.dialogue_ended
 		GameManager.pop_state()
 		return
-	_check_quest_chain(_elder_quest, "Elder Thessa")
+	await _check_quest_chain(_elder_quest, "Elder Thessa")
 
 
 func _check_quest_chain(
@@ -363,14 +363,15 @@ func _check_quest_chain(
 
 	if QuestManager.is_quest_active(qid):
 		if _is_turnin_ready(qid):
-			_do_quest_turnin(qid, quest_data, speaker)
+			await _do_quest_turnin(qid, quest_data, speaker)
 		else:
 			var reminder := Quests.get_quest_reminder(qid)
 			if not reminder.is_empty():
 				var lines: Array[DialogueLine] = [
 					DialogueLine.create(speaker, reminder),
 				]
-				DialogueManager.start_dialogue(lines)
+				if DialogueManager.start_dialogue(lines):
+					await DialogueManager.dialogue_ended
 		return
 
 	if not _can_offer_quest(qid, quest_data):
@@ -401,7 +402,8 @@ func _check_quest_chain(
 			var lines: Array[DialogueLine] = [
 				DialogueLine.create(speaker, accept_text),
 			]
-			DialogueManager.start_dialogue(lines)
+			if DialogueManager.start_dialogue(lines):
+				await DialogueManager.dialogue_ended
 
 
 func _do_quest_turnin(

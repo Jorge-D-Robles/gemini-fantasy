@@ -12,6 +12,7 @@ const SLIDE_DURATION: float = 0.2
 
 var _is_typing: bool = false
 var _current_tween: Tween = null
+var _slide_tween: Tween = null
 var _choice_buttons: Array[Button] = []
 
 @onready var _panel: PanelContainer = $Panel
@@ -52,18 +53,28 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 
+func _exit_tree() -> void:
+	if _slide_tween and _slide_tween.is_valid():
+		_slide_tween.kill()
+	_stop_tween()
+
+
 func _on_dialogue_started() -> void:
+	if _slide_tween and _slide_tween.is_valid():
+		_slide_tween.kill()
 	_panel.visible = true
 	_panel.position.y = _panel.size.y
-	var tween := create_tween()
-	tween.tween_property(_panel, "position:y", 0.0, SLIDE_DURATION)
+	_slide_tween = create_tween()
+	_slide_tween.tween_property(_panel, "position:y", 0.0, SLIDE_DURATION)
 
 
 func _on_dialogue_ended() -> void:
 	_stop_tween()
-	var tween := create_tween()
-	tween.tween_property(_panel, "position:y", _panel.size.y, SLIDE_DURATION)
-	tween.tween_callback(func() -> void: _panel.visible = false)
+	if _slide_tween and _slide_tween.is_valid():
+		_slide_tween.kill()
+	_slide_tween = create_tween()
+	_slide_tween.tween_property(_panel, "position:y", _panel.size.y, SLIDE_DURATION)
+	_slide_tween.tween_callback(func() -> void: _panel.visible = false)
 	dialogue_complete.emit()
 
 
