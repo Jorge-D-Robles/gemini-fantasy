@@ -81,3 +81,35 @@ func test_research_save_point_in_research_quarter() -> void:
 	assert_gt(pos.x, 0.0, "research save point x must be > 0")
 	assert_lte(pos.y, 192.0, "research save point must be in research quarter (row 0-12)")
 	assert_gte(pos.y, 96.0, "research save point must be south of row 5 wall area (row 6+)")
+
+
+# --- Campfire tests (T-0227) ---
+
+
+func test_campfire_position_returns_vector2() -> void:
+	var pos: Vector2 = _scene.compute_capital_campfire_position()
+	assert_true(pos is Vector2, "campfire position must be a Vector2")
+
+
+func test_campfire_position_within_map_bounds() -> void:
+	var pos: Vector2 = _scene.compute_capital_campfire_position()
+	assert_gt(pos.x, 0.0, "campfire x must be > 0")
+	assert_lt(pos.x, 640.0, "campfire x must be < 640 (map width)")
+	assert_gt(pos.y, 0.0, "campfire y must be > 0")
+	assert_lt(pos.y, 448.0, "campfire y must be < 448 (map height)")
+
+
+func test_campfire_in_market_district() -> void:
+	# Market district is rows 19-27 (y = 304-432).
+	var pos: Vector2 = _scene.compute_capital_campfire_position()
+	assert_gte(pos.y, 304.0, "campfire must be in market district (row 19+)")
+	assert_lte(pos.y, 432.0, "campfire must be in market district (row 27-)")
+
+
+func test_campfire_near_save_point() -> void:
+	var campfire: Vector2 = _scene.compute_capital_campfire_position()
+	var save_pt: Vector2 = _scene.compute_market_save_point_position()
+	var dist: float = campfire.distance_to(save_pt)
+	# Near the save point but not overlapping — within 5 tiles (80px).
+	assert_gte(dist, 16.0, "campfire must not overlap save point")
+	assert_lte(dist, 80.0, "campfire must be near save point (within 5 tiles)")

@@ -18,6 +18,9 @@ const MEMORIAL_ECHO_STRATEGY_SCRIPT := preload(
 const SAVE_POINT_STRATEGY_SCRIPT := preload(
 	"res://entities/interactable/strategies/save_point_strategy.gd"
 )
+const CAMP_STRATEGY_SCRIPT := preload(
+	"res://entities/interactable/strategies/camp_strategy.gd"
+)
 const MEMORY_BLOOM_PATH: String = "res://data/enemies/memory_bloom.tres"
 const CREEPING_VINE_PATH: String = "res://data/enemies/creeping_vine.tres"
 const ECHO_NOMAD_PATH: String = "res://data/enemies/echo_nomad.tres"
@@ -63,6 +66,12 @@ static func compute_research_save_point_position() -> Vector2:
 	## One tile below Lyra Fragment 2 echo (row 6); gives players a chance
 	## to save before the Research Quarter vision and Last Gardener encounter.
 	return Vector2(448.0, 112.0)
+
+
+static func compute_capital_campfire_position() -> Vector2:
+	## Campfire in Market District rest area — col 8, row 22.
+	## Near the market save point (col 10, row 23) so players can save and rest.
+	return Vector2(128.0, 352.0)
 
 
 static func compute_purification_node_market_position() -> Vector2:
@@ -220,6 +229,7 @@ func _ready() -> void:
 	_setup_encounters()
 	_setup_purification_nodes()
 	_setup_save_points()
+	_setup_campfire()
 	_setup_lyra_fragment_echo()
 	_setup_market_echoes()
 	_setup_residential_echoes()
@@ -601,3 +611,14 @@ func _setup_save_points() -> void:
 	research_save.indicator_type = Interactable.IndicatorType.SAVE
 	research_save.position = compute_research_save_point_position()
 	$Entities.add_child(research_save)
+
+
+func _setup_campfire() -> void:
+	var strat := CAMP_STRATEGY_SCRIPT.new() as CampStrategy
+	var campfire := INTERACTABLE_SCENE.instantiate() as Interactable
+	campfire.name = "CampfireMarket"
+	campfire.strategy = strat
+	campfire.one_time = false
+	campfire.indicator_type = Interactable.IndicatorType.INTERACT
+	campfire.position = compute_capital_campfire_position()
+	$Entities.add_child(campfire)
