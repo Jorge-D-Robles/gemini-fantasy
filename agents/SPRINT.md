@@ -7,7 +7,7 @@ Started: 2026-02-20
 Closed: —
 
 ## Velocity
-- Completed: 27
+- Completed: 28
 - Added mid-sprint: 0
 - Rolled over: 1
 
@@ -29,6 +29,7 @@ Closed: —
 
 ## Done This Sprint
 
+- T-0024: Implement fast travel system — FastTravelBeaconStrategy (unlock + dialogue), FastTravelUI (script-only destination picker), pause menu Travel button, 4 beacon flag constants, 9 unit tests
 - T-0226: Overgrown Capital playtest pass — Chapter 5 flow verified: scene loads, spawn correct, HUD shows location/party/gold, crystal walls block progression (by design), all interactables visible, 0 errors/warnings. Created chapter_5_capital.json playtest preset.
 - T-0264: Implement save/load system with 3 save slots and autosave — SaveManager autosave on scene_changed (slot 0), SaveSlotDialog (SAVE/LOAD modes), pause menu Save button, title screen Load Game button, HUD "Saved" indicator, 16 tests
 - T-0107: Implement full character ability trees — 48 new AbilityData .tres, 3 new CharacterData (Sienna/Cipher/Ash), 5 edited CharacterData (Kael/Iris/Garrick/Nyx/Lyra), 23 skill tree tier-3 nodes wired with unlocks_ability, 2 new test files; 1646 tests all passing

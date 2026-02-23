@@ -36,3 +36,4 @@ T-0254 | 2026-02-21 | Redo Overgrown Ruins tilemap | TF_DUNGEON flat tiles (brow
 T-0257 | 2026-02-21 | Final A5 purge | Removed all 15 deprecated A5 constants from map_builder.gd, regression test scanning source for banned patterns, updated systems/CLAUDE.md (claude)
 T-0251 | 2026-02-21 | Hard-ban A5 sheets | AGENT_RULES HARD BANS section + deprecation comments on all 15 A5 constants in map_builder.gd (claude)
 T-0104 | 2026-02-20 | Chapters 6-10 story event scaffolds | crystal_city_arrival.gd (Ch8) + lyras_truth.gd (Ch9) + captured.gd (Ch10) + 5 EventFlagRegistry constants, 24 tests, 754 passing
+T-0024 | 2026-02-22 | Implement fast travel system | FastTravelBeaconStrategy + FastTravelUI + pause menu Travel button, 4 beacon flags, 9 tests (claude)
