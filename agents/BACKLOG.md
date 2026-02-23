@@ -57,16 +57,6 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 - Refs: docs/game-design/05-dungeon-designs.md, docs/lore/02-main-story.md, game/entities/interactable/
 - Notes: Emotionally significant lore item in a Residential Quarter room. Interactable one_time=true, 4-5 line dialogue. Flag: survivors_diary_read. compute_diary_entries() static helper. 3+ tests.
 
-### T-0188
-- Title: Place campfire interactable in Overgrown Ruins
-- Status: todo
-- Assigned: unassigned
-- Priority: low
-- Milestone: M1
-- Depends: T-0023
-- Refs: game/scenes/overgrown_ruins/overgrown_ruins.gd, game/entities/interactable/strategies/camp_strategy.gd
-- Notes: Place a CampStrategy-powered Interactable in the Overgrown Ruins clearing. one_time=false. compute_ruins_campfire_name() and compute_ruins_campfire_position() static helpers. 3+ tests.
-
 ### T-0207
 - Title: Add Government Center sub-area to Overgrown Capital — political debate echoes and hidden bunker
 - Status: todo

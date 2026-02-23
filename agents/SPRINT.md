@@ -7,7 +7,7 @@ Started: 2026-02-20
 Closed: —
 
 ## Velocity
-- Completed: 19
+- Completed: 20
 - Added mid-sprint: 0
 - Rolled over: 1
 
@@ -29,6 +29,7 @@ Closed: —
 
 ## Done This Sprint
 
+- T-0188: Place campfire interactable in Overgrown Ruins — CampStrategy at col 20 row 12 with campfire sprite, compute_ruins_campfire_position() helper, one_time=false, 3 tests
 - T-0227: Place campfire interactable in Overgrown Capital Market District — CampStrategy at col 8 row 22, compute_capital_campfire_position() helper, one_time=false, 4 tests
 - T-0108: Build faction reputation system — ReputationManager autoload with 3 factions (Shepherds/Initiative/Free Resonants), 5 tiers (HOSTILE→ALLIED), price modifiers, save/load integration across 3 call sites, 29 tests
 - T-0250: Fix EnemyBattler.choose_action() typed array mismatch — call-site .assign() fix already applied, added regression test covering all 5 AI types with Array[PartyBattler]→Array[Battler] conversion
