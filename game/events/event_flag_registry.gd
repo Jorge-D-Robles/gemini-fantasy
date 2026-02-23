@@ -48,3 +48,9 @@ const GARDENER_ENCOUNTERED: String = "gardener_encountered"
 const GARDENER_RESOLUTION_PEACEFUL: String = "gardener_resolution_peaceful"
 const GARDENER_RESOLUTION_QUEST: String = "gardener_resolution_quest"
 const GARDENER_RESOLUTION_DEFEATED: String = "gardener_resolution_defeated"
+
+# --- Fast travel beacon flags ---
+const FAST_TRAVEL_ROOTHOLLOW: String = "fast_travel_roothollow"
+const FAST_TRAVEL_VERDANT_FOREST: String = "fast_travel_verdant_forest"
+const FAST_TRAVEL_OVERGROWN_RUINS: String = "fast_travel_overgrown_ruins"
+const FAST_TRAVEL_PRISMFALL_APPROACH: String = "fast_travel_prismfall_approach"

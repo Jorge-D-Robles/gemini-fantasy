@@ -22,6 +22,9 @@ const SkillTreeUIScript = preload("res://ui/skill_tree_ui/skill_tree_ui.gd")
 const SaveSlotDialogScript = preload(
 	"res://ui/save_slot_dialog/save_slot_dialog.gd"
 )
+const FastTravelUIScript = preload(
+	"res://ui/fast_travel_ui/fast_travel_ui.gd"
+)
 
 var _is_open: bool = false
 var _inventory_ui: Control = null
@@ -31,6 +34,7 @@ var _settings_menu: Control = null
 var _party_ui: Control = null
 var _skill_tree_ui: Control = null
 var _save_dialog: Control = null
+var _fast_travel_ui: Control = null
 
 @onready var _menu_panel: PanelContainer = %MenuPanel
 @onready var _party_button: Button = %PartyButton
@@ -38,6 +42,7 @@ var _save_dialog: Control = null
 @onready var _quests_button: Button = %QuestsButton
 @onready var _echoes_button: Button = %EchoesButton
 @onready var _skill_tree_button: Button = %SkillTreeButton
+@onready var _travel_button: Button = %TravelButton
 @onready var _status_button: Button = %StatusButton
 @onready var _save_button: Button = %SaveButton
 @onready var _settings_button: Button = %SettingsButton
@@ -117,6 +122,9 @@ func close() -> void:
 	if _save_dialog != null:
 		_save_dialog.queue_free()
 		_save_dialog = null
+	if _fast_travel_ui != null:
+		_fast_travel_ui.queue_free()
+		_fast_travel_ui = null
 	AudioManager.play_sfx(load(SfxLibrary.UI_CANCEL))
 	_is_open = false
 	visible = false
@@ -131,6 +139,7 @@ func _connect_buttons() -> void:
 	_quests_button.pressed.connect(_open_quest_log)
 	_echoes_button.pressed.connect(_open_echo_journal)
 	_skill_tree_button.pressed.connect(_open_skill_tree_ui)
+	_travel_button.pressed.connect(_open_fast_travel)
 	_status_button.pressed.connect(_show_panel.bind("status"))
 	_save_button.pressed.connect(_open_save_dialog)
 	_settings_button.pressed.connect(_open_settings)
@@ -144,6 +153,7 @@ func _setup_focus_navigation() -> void:
 		_quests_button,
 		_echoes_button,
 		_skill_tree_button,
+		_travel_button,
 		_status_button,
 		_save_button,
 		_settings_button,
@@ -293,6 +303,34 @@ func _on_save_dialog_closed() -> void:
 		_save_dialog.queue_free()
 		_save_dialog = null
 	_restore_from_subscene(_save_button)
+
+
+func _open_fast_travel() -> void:
+	if _fast_travel_ui != null:
+		return
+	_hide_for_subscene()
+	_fast_travel_ui = FastTravelUIScript.new()
+	_fast_travel_ui.process_mode = Node.PROCESS_MODE_ALWAYS
+	add_child(_fast_travel_ui)
+	_fast_travel_ui.destination_selected.connect(
+		_on_fast_travel_destination_selected,
+	)
+	_fast_travel_ui.fast_travel_closed.connect(_on_fast_travel_closed)
+	_fast_travel_ui.open()
+
+
+func _on_fast_travel_destination_selected(
+	scene_path: String, spawn_point: String,
+) -> void:
+	close()
+	GameManager.change_scene(scene_path, 0.5, spawn_point)
+
+
+func _on_fast_travel_closed() -> void:
+	if _fast_travel_ui != null:
+		_fast_travel_ui.queue_free()
+		_fast_travel_ui = null
+	_restore_from_subscene(_travel_button)
 
 
 func _open_settings() -> void:
