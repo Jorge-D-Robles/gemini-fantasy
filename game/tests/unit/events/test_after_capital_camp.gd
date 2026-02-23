@@ -39,6 +39,3 @@ func test_compute_can_trigger_true_when_eligible() -> void:
 	)
 
 
-func test_compute_after_capital_lines_returns_array() -> void:
-	var lines: Array[DialogueLine] = AfterCapitalCamp.compute_after_capital_lines()
-	assert_gt(lines.size(), 0, "Should return dialogue lines")

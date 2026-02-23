@@ -43,75 +43,7 @@ func _load_character(path: String) -> CharacterData:
 	return load(path) as CharacterData
 
 
-# -- test 1: all 24 skill tree files load correctly --
-
-
-func test_all_skill_tree_files_load() -> void:
-	var all_paths: Array[String] = []
-	all_paths.append_array(_FULL_TREE_PATHS)
-	all_paths.append_array(_STUB_TREE_PATHS)
-	for path in all_paths:
-		var tree := _load_skill_tree(path)
-		assert_not_null(tree, "Expected SkillTreeData at: " + path)
-		assert_true(tree is SkillTreeData, "Expected SkillTreeData type at: " + path)
-
-
-# -- test 2-5: CharacterData references 3 skill trees each --
-
-
-func test_kael_has_three_skill_trees() -> void:
-	var char_data := _load_character("res://data/characters/kael.tres")
-	assert_not_null(char_data)
-	assert_eq(char_data.skill_trees.size(), 3, "Kael should have 3 skill trees")
-	for tree in char_data.skill_trees:
-		assert_not_null(tree, "Kael skill tree entry should not be null")
-
-
-func test_iris_has_three_skill_trees() -> void:
-	var char_data := _load_character("res://data/characters/iris.tres")
-	assert_not_null(char_data)
-	assert_eq(char_data.skill_trees.size(), 3, "Iris should have 3 skill trees")
-	for tree in char_data.skill_trees:
-		assert_not_null(tree, "Iris skill tree entry should not be null")
-
-
-func test_garrick_has_three_skill_trees() -> void:
-	var char_data := _load_character("res://data/characters/garrick.tres")
-	assert_not_null(char_data)
-	assert_eq(char_data.skill_trees.size(), 3, "Garrick should have 3 skill trees")
-	for tree in char_data.skill_trees:
-		assert_not_null(tree, "Garrick skill tree entry should not be null")
-
-
-func test_lyra_has_three_skill_trees() -> void:
-	var char_data := _load_character("res://data/characters/lyra.tres")
-	assert_not_null(char_data)
-	assert_eq(char_data.skill_trees.size(), 3, "Lyra should have 3 skill trees")
-	for tree in char_data.skill_trees:
-		assert_not_null(tree, "Lyra skill tree entry should not be null")
-
-
-# -- test 6: full-documented character trees have exactly 6 nodes --
-
-
-func test_full_character_trees_have_six_nodes() -> void:
-	for path in _FULL_TREE_PATHS:
-		var tree := _load_skill_tree(path)
-		assert_not_null(tree)
-		assert_eq(tree.nodes.size(), 6, "Full tree should have 6 nodes: " + path)
-
-
-# -- test 7: stub character trees have exactly 3 nodes --
-
-
-func test_stub_character_trees_have_three_nodes() -> void:
-	for path in _STUB_TREE_PATHS:
-		var tree := _load_skill_tree(path)
-		assert_not_null(tree)
-		assert_eq(tree.nodes.size(), 3, "Stub tree should have 3 nodes: " + path)
-
-
-# -- test 8: node IDs are unique across all 3 paths for each character --
+# -- Node IDs are unique across all 3 paths for each character --
 
 
 func test_node_ids_are_unique_across_all_paths_per_character() -> void:

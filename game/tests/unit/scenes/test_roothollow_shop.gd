@@ -60,14 +60,6 @@ func test_base_paths_still_present_with_flag() -> void:
 		)
 
 
-func test_returns_array_of_strings() -> void:
-	var result: Array[String] = RootHollowShop.compute_item_paths(
-		BASE_PATHS, {},
-	)
-	assert_true(result is Array, "Should return an Array")
-	assert_gt(result.size(), 0, "Should not be empty")
-
-
 func test_empty_base_paths_with_no_flag() -> void:
 	var result: Array[String] = RootHollowShop.compute_item_paths(
 		[], {},

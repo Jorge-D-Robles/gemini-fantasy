@@ -8,12 +8,6 @@ const EntryDialogue = preload(
 )
 
 
-func test_entry_flag_is_string() -> void:
-	var flag: String = EntryDialogue.get_entry_flag()
-	assert_true(flag is String, "Entry flag must be a String")
-	assert_gt(flag.length(), 0, "Entry flag must not be empty")
-
-
 func test_entry_flag_value() -> void:
 	assert_eq(
 		EntryDialogue.get_entry_flag(),
@@ -22,23 +16,12 @@ func test_entry_flag_value() -> void:
 	)
 
 
-func test_gate_flag_is_string() -> void:
-	var flag: String = EntryDialogue.get_entry_gate_flag()
-	assert_true(flag is String, "Gate flag must be a String")
-	assert_gt(flag.length(), 0, "Gate flag must not be empty")
-
-
 func test_gate_flag_value() -> void:
 	assert_eq(
 		EntryDialogue.get_entry_gate_flag(),
 		"garrick_recruited",
 		"Gate flag must be garrick_recruited",
 	)
-
-
-func test_get_entry_lines_returns_array() -> void:
-	var lines: Array = EntryDialogue.get_entry_lines()
-	assert_true(lines is Array, "get_entry_lines must return an Array")
 
 
 func test_entry_lines_has_minimum_count() -> void:

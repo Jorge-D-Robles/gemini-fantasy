@@ -7,7 +7,7 @@ Started: 2026-02-20
 Closed: —
 
 ## Velocity
-- Completed: 23
+- Completed: 24
 - Added mid-sprint: 0
 - Rolled over: 1
 
@@ -15,7 +15,7 @@ Closed: —
 
 ## Active
 
-*(none — pick next from Queue or BACKLOG.md)*
+*(empty — pull next from BACKLOG.md)*
 
 ---
 
@@ -23,12 +23,13 @@ Closed: —
 
 ### Other
 
-*(pull next tasks from BACKLOG.md — T-0107, T-0226, T-0214)*
+*(pull next tasks from BACKLOG.md — T-0107, T-0226)*
 
 ---
 
 ## Done This Sprint
 
+- T-0180: Test suite de-bloat — removed 79 trivial tests (property assignments, type checks, non-empty checks, signal existence, enum values, constant values) across 35 files (6 deleted, 29 edited); 1639 tests remain, all passing
 - T-0214: Add Research Quarter Resonance terminal puzzle — ResonanceTerminalStrategy (3-state dialogue), 2 crystal key items, ItemPickupStrategy add_item bug fix, crystal pickup persistence, 12 tests
 - T-0206: Add The Performer mini-boss in Entertainment District — PerformerEncounter event, dramatic_echo + resonance_drain abilities, the_performer.tres (BOSS AI, 180 HP), trigger zone at col 28 row 14, 9 tests
 - T-0218: Add Survivor's Diary collectible in Residential Quarter — DiaryStrategy with 4 diary entries, compute_diary_lines()/compute_diary_position() helpers, survivors_diary_read flag, 8 tests

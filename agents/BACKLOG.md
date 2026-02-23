@@ -9,8 +9,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0180
 - Title: Test suite de-bloat — remove redundant tests that don't test behaviors or contracts
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M1
 - Tags: tests, code-health

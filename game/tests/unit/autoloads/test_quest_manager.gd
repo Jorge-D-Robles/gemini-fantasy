@@ -44,17 +44,6 @@ func _make_quest(overrides: Dictionary = {}) -> Resource:
 # --- QuestData Resource Tests ---
 
 
-func test_quest_data_default_values() -> void:
-	var q := QuestDataScript.new()
-	assert_eq(q.id, &"")
-	assert_eq(q.title, "")
-	assert_eq(q.description, "")
-	assert_eq(q.objectives.size(), 0)
-	assert_eq(q.reward_gold, 0)
-	assert_eq(q.reward_exp, 0)
-	assert_eq(q.reward_item_ids.size(), 0)
-	assert_eq(q.quest_type, 0)
-	assert_eq(q.prerequisites.size(), 0)
 
 
 func test_quest_data_custom_values() -> void:

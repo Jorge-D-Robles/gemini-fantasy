@@ -10,11 +10,6 @@ func before_each() -> void:
 	add_child_autofree(_event)
 
 
-func test_build_dialogue_returns_non_empty() -> void:
-	var lines: Array[DialogueLine] = _event._build_dialogue()
-	assert_gt(lines.size(), 0, "Should have dialogue lines")
-
-
 func test_all_speakers_are_valid() -> void:
 	var lines: Array[DialogueLine] = _event._build_dialogue()
 	var valid_speakers: Array[String] = [

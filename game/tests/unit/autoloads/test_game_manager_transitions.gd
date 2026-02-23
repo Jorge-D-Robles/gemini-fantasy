@@ -12,11 +12,7 @@ func before_each() -> void:
 	add_child_autofree(_gm)
 
 
-func test_slide_duration_is_positive() -> void:
-	assert_true(
-		_gm.SLIDE_DURATION > 0.0,
-		"SLIDE_DURATION must be positive",
-	)
+
 
 
 func test_compute_transition_roothollow_to_verdant_is_slide_right() -> void:

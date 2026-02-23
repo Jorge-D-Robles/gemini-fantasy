@@ -13,10 +13,6 @@ func before_each() -> void:
 	add_child_autofree(_dm)
 
 
-func test_initial_state_inactive() -> void:
-	assert_false(_dm.is_active())
-
-
 func test_advance_while_inactive_does_nothing() -> void:
 	watch_signals(_dm)
 	_dm.advance()

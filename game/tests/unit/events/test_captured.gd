@@ -27,11 +27,6 @@ func test_compute_can_trigger_true_when_eligible() -> void:
 	)
 
 
-func test_compute_director_lines_returns_nonempty() -> void:
-	var lines := Captured.compute_director_lines()
-	assert_gt(lines.size(), 0, "Director scene must have dialogue lines")
-
-
 func test_director_scene_includes_resonance_anchor_revelation() -> void:
 	var lines := Captured.compute_director_lines()
 	var has_anchor: bool = false
@@ -52,11 +47,6 @@ func test_director_scene_has_kael_refusal() -> void:
 	assert_true(has_refusal, "Kael must refuse Vex's offer in the director scene")
 
 
-func test_compute_escape_lines_returns_nonempty() -> void:
-	var lines := Captured.compute_escape_lines()
-	assert_gt(lines.size(), 0, "Escape scene must have dialogue lines")
-
-
 func test_escape_scene_includes_convergence_epitaph() -> void:
 	var lines := Captured.compute_escape_lines()
 	var has_epitaph: bool = false
@@ -67,5 +57,3 @@ func test_escape_scene_includes_convergence_epitaph() -> void:
 	assert_true(has_epitaph, "Escape scene must include the Convergence's final words")
 
 
-func test_flag_name_is_correct() -> void:
-	assert_eq(Captured.FLAG_NAME, "kael_anchor_revealed", "FLAG_NAME must match the flag string")

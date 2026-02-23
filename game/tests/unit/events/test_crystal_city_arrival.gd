@@ -27,16 +27,6 @@ func test_compute_can_trigger_true_when_eligible() -> void:
 	)
 
 
-func test_compute_scene1_lines_returns_nonempty() -> void:
-	var lines := CrystalCityArrival.compute_scene1_lines()
-	assert_gt(lines.size(), 0, "Scene 1 must have dialogue lines")
-
-
-func test_compute_scene3_lines_returns_nonempty() -> void:
-	var lines := CrystalCityArrival.compute_scene3_lines()
-	assert_gt(lines.size(), 0, "Scene 3 must have dialogue lines")
-
-
 func test_scene3_includes_lyra_confession_content() -> void:
 	var lines := CrystalCityArrival.compute_scene3_lines()
 	var has_anchor_mention: bool = false
@@ -47,5 +37,3 @@ func test_scene3_includes_lyra_confession_content() -> void:
 	assert_true(has_anchor_mention, "Scene 3 must reference Lyra's anchoring points confession")
 
 
-func test_flag_name_is_correct() -> void:
-	assert_eq(CrystalCityArrival.FLAG_NAME, "prismfall_arrived", "FLAG_NAME must match the flag string")

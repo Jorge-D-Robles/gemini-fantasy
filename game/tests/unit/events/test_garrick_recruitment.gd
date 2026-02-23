@@ -10,11 +10,6 @@ func before_each() -> void:
 	add_child_autofree(_recruitment)
 
 
-func test_build_dialogue_returns_array() -> void:
-	var lines: Array[DialogueLine] = _recruitment._build_dialogue()
-	assert_gt(lines.size(), 0, "Should have dialogue lines")
-
-
 func test_compute_should_auto_accept_true_when_recruited() -> void:
 	var flags := {"garrick_recruited": true}
 	assert_true(

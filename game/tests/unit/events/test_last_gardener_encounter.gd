@@ -31,21 +31,6 @@ func test_approach_last_line_has_three_choices() -> void:
 	assert_eq(last.choices.size(), 3)
 
 
-func test_peaceful_outcome_lines_not_empty() -> void:
-	var lines: Array = LastGardenerEncounterScript.compute_peaceful_outcome_lines()
-	assert_gt(lines.size(), 0)
-
-
-func test_quest_outcome_lines_not_empty() -> void:
-	var lines: Array = LastGardenerEncounterScript.compute_quest_outcome_lines()
-	assert_gt(lines.size(), 0)
-
-
-func test_defeated_outcome_lines_not_empty() -> void:
-	var lines: Array = LastGardenerEncounterScript.compute_defeated_outcome_lines()
-	assert_gt(lines.size(), 0)
-
-
 func test_compute_choice_result_peaceful_for_0() -> void:
 	assert_eq(LastGardenerEncounterScript.compute_choice_result(0), "peaceful")
 

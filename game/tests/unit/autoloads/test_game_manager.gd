@@ -11,10 +11,6 @@ func before_each() -> void:
 	add_child_autofree(_gm)
 
 
-func test_initial_state_is_overworld() -> void:
-	assert_eq(_gm.current_state, _gm.GameState.OVERWORLD)
-
-
 func test_push_state_updates_current() -> void:
 	_gm.push_state(_gm.GameState.BATTLE)
 	assert_eq(_gm.current_state, _gm.GameState.BATTLE)
@@ -58,10 +54,6 @@ func test_pop_emits_game_state_changed() -> void:
 		_gm, "game_state_changed",
 		[_gm.GameState.CUTSCENE, _gm.GameState.OVERWORLD],
 	)
-
-
-func test_is_transitioning_default_false() -> void:
-	assert_false(_gm.is_transitioning())
 
 
 ## --- playtime accumulation (T-0130) ---

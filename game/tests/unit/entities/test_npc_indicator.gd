@@ -76,12 +76,6 @@ func test_indicator_positioned_above_sprite() -> void:
 	assert_lt(_npc._indicator.position.y, 0.0)
 
 
-func test_indicator_z_index_is_one() -> void:
-	_npc.indicator_type = NPC.IndicatorType.CHAT
-	add_child(_npc)
-	assert_eq(_npc._indicator.z_index, 1)
-
-
 func test_indicator_tween_starts() -> void:
 	_npc.indicator_type = NPC.IndicatorType.QUEST
 	add_child(_npc)
@@ -103,11 +97,3 @@ func test_indicator_type_changed_after_ready() -> void:
 	_npc.indicator_type = NPC.IndicatorType.SHOP
 	assert_not_null(_npc._indicator)
 	assert_eq(_npc._indicator.text, "$")
-
-
-func test_enum_values() -> void:
-	assert_eq(NPC.IndicatorType.NONE, 0)
-	assert_eq(NPC.IndicatorType.CHAT, 1)
-	assert_eq(NPC.IndicatorType.QUEST, 2)
-	assert_eq(NPC.IndicatorType.QUEST_ACTIVE, 3)
-	assert_eq(NPC.IndicatorType.SHOP, 4)

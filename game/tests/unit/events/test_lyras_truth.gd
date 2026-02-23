@@ -27,11 +27,6 @@ func test_compute_can_trigger_true_when_eligible() -> void:
 	)
 
 
-func test_compute_scene5_lines_returns_nonempty() -> void:
-	var lines := LyrasTruth.compute_scene5_lines()
-	assert_gt(lines.size(), 0, "Scene 5 must have dialogue lines")
-
-
 func test_scene5_includes_eight_hundred_million() -> void:
 	var lines := LyrasTruth.compute_scene5_lines()
 	var has_count: bool = false
@@ -40,11 +35,6 @@ func test_scene5_includes_eight_hundred_million() -> void:
 			has_count = true
 			break
 	assert_true(has_count, "Scene 5 must reference the eight hundred million death toll")
-
-
-func test_compute_camp_lines_returns_nonempty() -> void:
-	var lines := LyrasTruth.compute_camp_lines()
-	assert_gt(lines.size(), 0, "Camp scene must have dialogue lines")
 
 
 func test_camp_includes_nyx_splinter_line() -> void:
@@ -57,5 +47,3 @@ func test_camp_includes_nyx_splinter_line() -> void:
 	assert_true(has_nyx, "Camp scene must include Nyx's line about the Convergence")
 
 
-func test_flag_name_is_correct() -> void:
-	assert_eq(LyrasTruth.FLAG_NAME, "lyras_truth_seen", "FLAG_NAME must match the flag string")

@@ -12,37 +12,6 @@ func before_each() -> void:
 	add_child_autofree(_bus)
 
 
-# --- Signal Existence Tests ---
-
-
-func test_has_player_interacted_signal() -> void:
-	assert_true(_bus.has_signal("player_interacted"))
-
-
-func test_has_npc_talked_to_signal() -> void:
-	assert_true(_bus.has_signal("npc_talked_to"))
-
-
-func test_has_npc_interaction_ended_signal() -> void:
-	assert_true(_bus.has_signal("npc_interaction_ended"))
-
-
-func test_has_interactable_used_signal() -> void:
-	assert_true(_bus.has_signal("interactable_used"))
-
-
-func test_has_enemy_defeated_signal() -> void:
-	assert_true(_bus.has_signal("enemy_defeated"))
-
-
-func test_has_item_acquired_signal() -> void:
-	assert_true(_bus.has_signal("item_acquired"))
-
-
-func test_has_area_entered_signal() -> void:
-	assert_true(_bus.has_signal("area_entered"))
-
-
 # --- Emission Tests ---
 
 

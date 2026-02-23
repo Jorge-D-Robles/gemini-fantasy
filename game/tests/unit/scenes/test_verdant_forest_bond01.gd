@@ -8,24 +8,6 @@ const Bond01 = preload(
 )
 
 
-# ---------- flag helpers ----------
-
-func test_get_bond01_flag_is_bond_01_knife_lessons() -> void:
-	assert_eq(
-		Bond01.get_bond01_flag(),
-		"bond_01_knife_lessons",
-		"One-shot flag should be bond_01_knife_lessons",
-	)
-
-
-func test_get_bond01_gate_flag_is_iris_recruited() -> void:
-	assert_eq(
-		Bond01.get_bond01_gate_flag(),
-		"iris_recruited",
-		"Gate flag should be iris_recruited",
-	)
-
-
 # ---------- eligibility ----------
 
 func test_eligible_when_iris_recruited_and_both_in_party() -> void:

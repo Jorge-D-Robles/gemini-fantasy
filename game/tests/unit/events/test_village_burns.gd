@@ -46,19 +46,3 @@ func test_compute_can_trigger_true_when_eligible() -> void:
 	)
 
 
-func test_compute_scene1_lines_returns_nonempty() -> void:
-	var lines: Array[DialogueLine] = VillageBurns.compute_scene1_lines()
-	assert_gt(lines.size(), 0, "Scene 1 dialogue should have at least one line")
-
-
-func test_compute_scene2_lines_returns_nonempty() -> void:
-	var lines: Array[DialogueLine] = VillageBurns.compute_scene2_lines()
-	assert_gt(lines.size(), 0, "Scene 2 commander dialogue should have at least one line")
-
-
-func test_flag_name_is_correct() -> void:
-	assert_eq(
-		VillageBurns.FLAG_NAME,
-		"village_burns_seen",
-		"FLAG_NAME must be 'village_burns_seen'",
-	)

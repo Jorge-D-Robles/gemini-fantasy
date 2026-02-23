@@ -29,10 +29,6 @@ func test_all_paths_start_with_res_prefix() -> void:
 		)
 
 
-func test_all_paths_count_is_ten() -> void:
-	assert_eq(SfxLib.ALL_PATHS.size(), 10)
-
-
 func test_no_duplicate_paths() -> void:
 	var seen := {}
 	for path: String in SfxLib.ALL_PATHS:

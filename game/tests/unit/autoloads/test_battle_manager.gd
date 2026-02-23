@@ -30,12 +30,6 @@ func _make_enemy_group() -> Array[Resource]:
 	return [Helpers.make_enemy_data()] as Array[Resource]
 
 
-# -- Basic state --
-
-func test_is_in_battle_initially_false() -> void:
-	assert_false(_bm.is_in_battle())
-
-
 # -- Dialogue blocking --
 
 func test_start_battle_blocked_when_dialogue_active() -> void:

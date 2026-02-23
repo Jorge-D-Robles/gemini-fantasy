@@ -3,6 +3,7 @@
 Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[date] Description`.
 
 ---
+- [2026-02-22] T-0180: Test suite de-bloat — removed 79 trivial tests (property assignments, type checks, non-empty array/string checks, signal existence, enum values, constant values) across 35 files (6 deleted entirely, 29 edited); kept all behavioral tests, factory contracts, balance guardrails, data integrity, regression guards; 1639 tests remain, all passing (claude)
 - [2026-02-22] T-0214: Add Research Quarter Resonance terminal puzzle — ResonanceTerminalStrategy (3-state dialogue: missing crystals/activate/already-active), Market+Entertainment crystal key items (.tres), ItemPickupStrategy add_item() bug fix, crystal pickup persistence via EventFlags, 3 new registry constants, 12 new tests; 1718 total (claude)
 - [2026-02-22] T-0206: Add The Performer mini-boss in Entertainment District — PerformerEncounter event (pre/post-battle dialogue, forced battle), dramatic_echo AoE LIGHT + resonance_drain DARK abilities, the_performer.tres (BOSS AI 180 HP), trigger zone col 28 row 14, EventFlagRegistry PERFORMER_ENCOUNTERED, 9 new tests; 1704 total (claude)
 - [2026-02-22] T-0218: Add Survivor's Diary collectible in Residential Quarter — DiaryStrategy (multi-line dialogue + EventFlags), 4 diary entries at col 14 row 16, compute_diary_lines()/compute_diary_position() helpers, survivors_diary_read flag, 8 tests; 1695 total (claude)

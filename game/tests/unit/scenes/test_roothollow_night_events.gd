@@ -127,9 +127,3 @@ func test_garrick_night_requires_garrick_met_lyra_gate() -> void:
 		NightEvents.EVENT_CAMP_THREE_FIRES,
 		"garrick_met_lyra=false — GarrickNightScene ineligible, CampThreeFires fires",
 	)
-
-
-func test_event_constants_are_distinct() -> void:
-	assert_ne(NightEvents.EVENT_GARRICK_NIGHT, NightEvents.EVENT_CAMP_THREE_FIRES)
-	assert_ne(NightEvents.EVENT_GARRICK_NIGHT, NightEvents.EVENT_NONE)
-	assert_ne(NightEvents.EVENT_CAMP_THREE_FIRES, NightEvents.EVENT_NONE)
