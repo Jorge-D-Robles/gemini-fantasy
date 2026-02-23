@@ -10,6 +10,8 @@ extends InteractionStrategy
 func execute(owner: Node) -> void:
 	if "has_been_used" in owner:
 		owner.has_been_used = true
+	if not item_id.is_empty():
+		InventoryManager.add_item(StringName(item_id), 1)
 	var message: String = text if not text.is_empty() else "Picked up %s!" % item_id
 	var lines: Array[DialogueLine] = [
 		DialogueLine.create("", message),

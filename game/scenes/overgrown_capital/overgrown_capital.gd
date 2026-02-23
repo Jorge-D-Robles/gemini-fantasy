@@ -25,7 +25,17 @@ const DIARY_STRATEGY_SCRIPT := preload(
 	"res://entities/interactable/strategies/diary_strategy.gd"
 )
 const PERFORMER_ENCOUNTER_SCRIPT := preload("res://events/performer_encounter.gd")
+const ITEM_PICKUP_STRATEGY_SCRIPT := preload(
+	"res://entities/interactable/strategies/item_pickup_strategy.gd"
+)
+const RESONANCE_TERMINAL_STRATEGY_SCRIPT := preload(
+	"res://entities/interactable/strategies/resonance_terminal_strategy.gd"
+)
 const SURVIVORS_DIARY_FLAG: String = "survivors_diary_read"
+const MARKET_CRYSTAL_ID: String = "resonance_crystal_market"
+const ENTERTAINMENT_CRYSTAL_ID: String = "resonance_crystal_entertainment"
+const MARKET_CRYSTAL_PICKUP_FLAG: String = "market_crystal_picked_up"
+const ENTERTAINMENT_CRYSTAL_PICKUP_FLAG: String = "entertainment_crystal_picked_up"
 const MEMORY_BLOOM_PATH: String = "res://data/enemies/memory_bloom.tres"
 const CREEPING_VINE_PATH: String = "res://data/enemies/creeping_vine.tres"
 const ECHO_NOMAD_PATH: String = "res://data/enemies/echo_nomad.tres"
@@ -184,6 +194,22 @@ static func compute_performer_zone_position() -> Vector2:
 	return Vector2(448.0, 224.0)
 
 
+static func compute_market_crystal_position() -> Vector2:
+	## Resonance Crystal pickup in Market District — col 14, row 22.
+	return Vector2(224.0, 352.0)
+
+
+static func compute_entertainment_crystal_position() -> Vector2:
+	## Resonance Crystal pickup in Entertainment District — col 32, row 10.
+	return Vector2(512.0, 160.0)
+
+
+static func compute_terminal_position() -> Vector2:
+	## Resonance terminal in the Palace Approach corridor — col 24, row 4.
+	## Activating this terminal with both crystals unlocks the Palace District path.
+	return Vector2(384.0, 64.0)
+
+
 static func compute_market_echo_positions() -> Array:
 	## Two echo positions in the Market District.
 	## [0] Morning Commute — transit bench area, col 6, row 20.
@@ -275,6 +301,8 @@ func _ready() -> void:
 	_setup_residential_echoes()
 	_setup_diary()
 	_setup_performer_zone()
+	_setup_crystal_pickups()
+	_setup_resonance_terminal()
 
 	UILayer.hud.location_name = "Overgrown Capital"
 
@@ -718,3 +746,52 @@ func _trigger_performer_encounter() -> void:
 	encounter.trigger()
 	await encounter.sequence_completed
 	encounter.queue_free()
+
+
+func _setup_crystal_pickups() -> void:
+	# Market Resonance Crystal — col 14, row 22.
+	if not EventFlags.has_flag(MARKET_CRYSTAL_PICKUP_FLAG):
+		var market_strat := ITEM_PICKUP_STRATEGY_SCRIPT.new() as ItemPickupStrategy
+		market_strat.item_id = MARKET_CRYSTAL_ID
+		market_strat.text = (
+			"Found a Resonance Crystal attuned to the Market District's frequency."
+		)
+		var market_pickup := INTERACTABLE_SCENE.instantiate() as Interactable
+		market_pickup.name = "MarketCrystalPickup"
+		market_pickup.strategy = market_strat
+		market_pickup.one_time = true
+		market_pickup.indicator_type = Interactable.IndicatorType.INTERACT
+		market_pickup.position = compute_market_crystal_position()
+		market_pickup.interacted.connect(
+			func() -> void: EventFlags.set_flag(MARKET_CRYSTAL_PICKUP_FLAG)
+		)
+		$Entities.add_child(market_pickup)
+
+	# Entertainment Resonance Crystal — col 32, row 10.
+	if not EventFlags.has_flag(ENTERTAINMENT_CRYSTAL_PICKUP_FLAG):
+		var ent_strat := ITEM_PICKUP_STRATEGY_SCRIPT.new() as ItemPickupStrategy
+		ent_strat.item_id = ENTERTAINMENT_CRYSTAL_ID
+		ent_strat.text = (
+			"Found a Resonance Crystal attuned to the Entertainment District's frequency."
+		)
+		var ent_pickup := INTERACTABLE_SCENE.instantiate() as Interactable
+		ent_pickup.name = "EntertainmentCrystalPickup"
+		ent_pickup.strategy = ent_strat
+		ent_pickup.one_time = true
+		ent_pickup.indicator_type = Interactable.IndicatorType.INTERACT
+		ent_pickup.position = compute_entertainment_crystal_position()
+		ent_pickup.interacted.connect(
+			func() -> void: EventFlags.set_flag(ENTERTAINMENT_CRYSTAL_PICKUP_FLAG)
+		)
+		$Entities.add_child(ent_pickup)
+
+
+func _setup_resonance_terminal() -> void:
+	var strat := RESONANCE_TERMINAL_STRATEGY_SCRIPT.new() as ResonanceTerminalStrategy
+	var terminal := INTERACTABLE_SCENE.instantiate() as Interactable
+	terminal.name = "ResonanceTerminal"
+	terminal.strategy = strat
+	terminal.one_time = false
+	terminal.indicator_type = Interactable.IndicatorType.INTERACT
+	terminal.position = compute_terminal_position()
+	$Entities.add_child(terminal)

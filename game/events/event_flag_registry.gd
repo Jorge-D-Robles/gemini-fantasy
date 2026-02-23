@@ -38,6 +38,11 @@ const KAEL_ANCHOR_REVEALED: String = "kael_anchor_revealed"
 # --- Performer encounter flag ---
 const PERFORMER_ENCOUNTERED: String = "performer_encountered"
 
+# --- Resonance terminal puzzle flags ---
+const RESEARCH_TERMINAL_ACTIVATED: String = "research_terminal_activated"
+const MARKET_CRYSTAL_PICKED_UP: String = "market_crystal_picked_up"
+const ENTERTAINMENT_CRYSTAL_PICKED_UP: String = "entertainment_crystal_picked_up"
+
 # --- Gardener resolution flags ---
 const GARDENER_ENCOUNTERED: String = "gardener_encountered"
 const GARDENER_RESOLUTION_PEACEFUL: String = "gardener_resolution_peaceful"
