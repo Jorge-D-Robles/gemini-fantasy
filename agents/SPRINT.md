@@ -7,7 +7,7 @@ Started: 2026-03-06
 Closed: —
 
 ## Velocity
-- Completed: 8
+- Completed: 9
 - Added mid-sprint: 0
 - Rolled over: 0
 
@@ -15,11 +15,7 @@ Closed: —
 
 ## Active
 
-### T-0319
-- Title: Implement Limit Break abilities — Overload-state ultimate attacks
-- Status: in-progress
-- Assigned: claude
-- Started: 2026-03-06
+*(none)*
 
 ---
 
@@ -37,6 +33,7 @@ Closed: —
 
 ## Done This Sprint
 
+- T-0319: Implement Limit Break abilities — is_limit_break flag, limit_break field, 4 LB .tres files (Kael/Iris/Garrick/Nyx), 23 tests
 - T-0312: Implement Chapter 16 "The Weight of Choice" event — 6 scenes, 68 dialogue lines, character moments + departure, 18 tests
 - T-0311: Implement Chapter 15 "Siege of Emberhearth" event — 6 scenes, 71 dialogue lines, Hale parley + siege + aftermath, 22 tests
 - T-0321: Create Ironcoast/Initiative enemy set — Initiative Soldier (BASIC), Initiative Agent (AGGRESSIVE), Security Drone (DEFENSIVE), Initiative Scientist (SUPPORT), 12 abilities, 26 tests

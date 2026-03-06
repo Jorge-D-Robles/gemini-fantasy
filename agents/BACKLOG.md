@@ -613,7 +613,7 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0319
 - Title: Implement Limit Break abilities — Overload-state ultimate attacks
-- Status: in-progress
+- Status: done
 - Assigned: claude
 - Priority: medium
 - Milestone: M2
