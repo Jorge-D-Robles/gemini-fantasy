@@ -7,7 +7,7 @@ Started: 2026-03-05
 Closed: —
 
 ## Velocity
-- Completed: 4
+- Completed: 5
 - Added mid-sprint: 0
 - Rolled over: 0
 
@@ -15,7 +15,7 @@ Closed: —
 
 ## Active
 
-- T-0268: De-duplicate quest restore functions in QuestManager (Assigned: claude, Started: 2026-03-05)
+- T-0270: Simplify BattleActionExecutor.execute_attack() — extract crit/non-crit branches (Assigned: claude, Started: 2026-03-05)
 
 ---
 
@@ -44,3 +44,4 @@ Closed: —
 - T-0266: Remove dead functions — get_failed_quests() and compute_echo_count() — zero production callers, 2 tests removed
 - T-0267: Consolidate duplicated dialogue pair-builder into DialogueLine.build_from_pairs() — replaced 4 implementations with 1 static method, 3 new tests
 - T-0269: Test suite de-bloat round 2 — removed 72 trivial tests across 12 files (1682→1610), 1 file deleted
+- T-0268: De-duplicate quest restore functions in QuestManager — merged 2 identical restore funcs into 1 parameterized _restore_quests_by_state()

@@ -30,43 +30,34 @@ static func execute_attack(
 	var actual := target.take_damage(damage)
 	_maybe_shake(target, actual, scene)
 
+	# Audio
 	if is_crit:
 		AudioManager.play_sfx(
 			load(SfxLibrary.COMBAT_CRITICAL_HIT),
 			AudioManager.SfxPriority.CRITICAL,
 		)
-		if not target.is_alive:
-			AudioManager.play_sfx(
-				load(SfxLibrary.COMBAT_DEATH),
-				AudioManager.SfxPriority.CRITICAL,
-			)
 		_show_critical_popup(target, actual, scene)
 		_flash_crit(scene)
-		if battle_ui:
-			battle_ui.add_battle_log(
-				"CRITICAL HIT! %s attacks %s for %d damage!" % [
-					attacker.get_display_name(),
-					target.get_display_name(),
-					actual,
-				],
-				UITheme.LogType.DAMAGE,
-			)
 	else:
 		AudioManager.play_sfx(load(SfxLibrary.COMBAT_ATTACK_HIT))
-		if not target.is_alive:
-			AudioManager.play_sfx(
-				load(SfxLibrary.COMBAT_DEATH),
-				AudioManager.SfxPriority.CRITICAL,
-			)
-		if battle_ui:
-			battle_ui.add_battle_log(
-				"%s attacks %s for %d damage!" % [
-					attacker.get_display_name(),
-					target.get_display_name(),
-					actual,
-				],
-				UITheme.LogType.DAMAGE,
-			)
+	if not target.is_alive:
+		AudioManager.play_sfx(
+			load(SfxLibrary.COMBAT_DEATH),
+			AudioManager.SfxPriority.CRITICAL,
+		)
+
+	# Log
+	if battle_ui:
+		var prefix: String = "CRITICAL HIT! " if is_crit else ""
+		battle_ui.add_battle_log(
+			"%s%s attacks %s for %d damage!" % [
+				prefix,
+				attacker.get_display_name(),
+				target.get_display_name(),
+				actual,
+			],
+			UITheme.LogType.DAMAGE,
+		)
 
 
 ## Execute an ability from [param attacker] against [param target].
