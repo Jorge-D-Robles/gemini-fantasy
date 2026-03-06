@@ -7,7 +7,7 @@ Started: 2026-03-06
 Closed: —
 
 ## Velocity
-- Completed: 10
+- Completed: 11
 - Added mid-sprint: 0
 - Rolled over: 0
 
@@ -33,6 +33,7 @@ Closed: —
 
 ## Done This Sprint
 
+- T-0323: Implement Kael's "Fragments of Self" character quest — 5-stage event (55 dialogue lines), quest .tres, stage gating, trigger_stage(), 31 tests
 - T-0318: Implement Resonance Tuning — tuning_slots + tuned_echoes on EquipmentData, 4 helper methods, 14 tests
 - T-0319: Implement Limit Break abilities — is_limit_break flag, limit_break field, 4 LB .tres files (Kael/Iris/Garrick/Nyx), 23 tests
 - T-0312: Implement Chapter 16 "The Weight of Choice" event — 6 scenes, 68 dialogue lines, character moments + departure, 18 tests

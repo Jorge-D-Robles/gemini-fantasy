@@ -691,8 +691,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0323
 - Title: Implement Kael's "Fragments of Self" character quest chain
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: medium
 - Milestone: M2
 - Tags: quest, story, character

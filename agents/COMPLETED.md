@@ -127,3 +127,4 @@ T-0025 | 2026-02-22 | Build bonding system framework | BondData Resource + BondM
 - [2026-03-06] T-0312: Implement Chapter 16 "The Weight of Choice" event — 6 scenes, 68 dialogue lines, character moments + departure, 18 tests (claude)
 - [2026-03-06] T-0319: Implement Limit Break abilities — is_limit_break flag, limit_break field, 4 LB .tres files (Kael/Iris/Garrick/Nyx), 23 tests (claude)
 - [2026-03-06] T-0318: Implement Resonance Tuning — tuning_slots + tuned_echoes on EquipmentData, 4 helper methods, 14 tests (claude)
+- [2026-03-06] T-0323: Implement Kael's "Fragments of Self" character quest — 5-stage event (55 dialogue lines), quest .tres, stage gating, trigger_stage(), 31 tests (claude)
