@@ -44,17 +44,20 @@ data/
 | `mothers_comfort` | Mother's Comfort | — | — |
 | `soldiers_fear` | Soldier's Fear | — | — |
 
-### enemies/ (8)
+### enemies/ (11)
 | ID | Display Name | AI Type | Weaknesses |
 |----|-------------|---------|-----------|
 | `ancient_sentinel` | Ancient Sentinel | — | — |
 | `ash_stalker` | Ash Stalker | — | — |
 | `cinder_wisp` | Cinder Wisp | — | — |
 | `creeping_vine` | Creeping Vine | — | — |
+| `crystal_sentinel` | Crystal Sentinel | DEFENSIVE | FIRE (weak), EARTH (resists) |
 | `ember_hound` | Ember Hound | — | — |
 | `gale_harpy` | Gale Harpy | — | — |
 | `hollow_specter` | Hollow Specter | BASIC | LIGHT (weak), DARK (resists) |
 | `memory_bloom` | Memory Bloom | — | — |
+| `prism_guardian` | Prism Guardian | BOSS | EARTH (weak), LIGHT (resists) |
+| `resonance_wisp` | Resonance Wisp | SUPPORT | DARK (weak), LIGHT (resists) |
 
 ### equipment/ (6)
 | ID | Display Name | Slot | Weapon Type |

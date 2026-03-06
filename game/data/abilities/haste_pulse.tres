@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://bhaste_pulse"]
+
+[ext_resource type="Script" path="res://resources/ability_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"haste_pulse"
+display_name = "Haste Pulse"
+description = "Emits a pulse of accelerating Resonance, boosting an ally's speed."
+ee_cost = 6
+resonance_cost = 0.0
+damage_base = 0
+damage_stat = 1
+target_type = 2
+element = 0
+status_effect = "haste"
+status_chance = 1.0
+status_effect_duration = 3

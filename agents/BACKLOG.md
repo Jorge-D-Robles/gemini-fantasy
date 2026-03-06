@@ -233,8 +233,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0290
 - Title: Create crystal dungeon enemy set for Beneath Prismfall
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: medium
 - Milestone: M1
 - Tags: battle, data, enemy
