@@ -18,6 +18,7 @@ extends Node
 signal sequence_completed
 
 const FLAG_NAME: String = "sienna_defected"
+const SIENNA_DATA_PATH: String = "res://data/characters/sienna.tres"
 
 
 static func compute_can_trigger(flags: Dictionary) -> bool:
@@ -624,6 +625,16 @@ func trigger() -> void:
 	# Scene 7: Outside — Sienna joins
 	DialogueManager.start_dialogue(compute_outside_lines())
 	await DialogueManager.dialogue_ended
+
+	# Sienna joins the party
+	var sienna_data := load(SIENNA_DATA_PATH) as CharacterData
+	if sienna_data:
+		PartyManager.add_character(sienna_data)
+	else:
+		push_warning(
+			"SistersShadow: could not load "
+			+ SIENNA_DATA_PATH
+		)
 
 	# Camp: The Space Between Sisters
 	DialogueManager.start_dialogue(compute_camp_lines())

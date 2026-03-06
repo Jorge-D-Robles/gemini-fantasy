@@ -18,6 +18,7 @@ extends Node
 signal sequence_completed
 
 const FLAG_NAME: String = "ash_found"
+const ASH_DATA_PATH: String = "res://data/characters/ash.tres"
 
 
 static func compute_can_trigger(flags: Dictionary) -> bool:
@@ -470,6 +471,15 @@ func trigger() -> void:
 	# Scene 4: Ash — meeting the child
 	DialogueManager.start_dialogue(compute_meeting_lines())
 	await DialogueManager.dialogue_ended
+
+	# Ash joins the party
+	var ash_data := load(ASH_DATA_PATH) as CharacterData
+	if ash_data:
+		PartyManager.add_character(ash_data)
+	else:
+		push_warning(
+			"FireAndAsh: could not load " + ASH_DATA_PATH
+		)
 
 	# Scene 5: The Warning — Shepherd army
 	DialogueManager.start_dialogue(compute_warning_lines())

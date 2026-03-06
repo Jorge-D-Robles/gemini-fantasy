@@ -587,8 +587,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0317
 - Title: Implement Cipher recruitment — hacker Resonance Anchor
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M2
 - Tags: story, recruitment

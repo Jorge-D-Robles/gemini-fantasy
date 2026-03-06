@@ -19,6 +19,7 @@ extends Node
 signal sequence_completed
 
 const FLAG_NAME: String = "cipher_recruited"
+const CIPHER_DATA_PATH: String = "res://data/characters/cipher.tres"
 
 
 ## Returns true when the event is eligible to fire:
@@ -735,6 +736,15 @@ func trigger() -> void:
 	# Scene 5: Harbor Water — post-escape
 	DialogueManager.start_dialogue(compute_harbor_lines())
 	await DialogueManager.dialogue_ended
+
+	# Cipher joins the party
+	var cipher_data := load(CIPHER_DATA_PATH) as CharacterData
+	if cipher_data:
+		PartyManager.add_character(cipher_data)
+	else:
+		push_warning(
+			"IronCoast: could not load " + CIPHER_DATA_PATH
+		)
 
 	# Scene 6: The Full Picture — intelligence briefing
 	DialogueManager.start_dialogue(compute_briefing_lines())
