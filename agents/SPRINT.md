@@ -7,7 +7,7 @@ Started: 2026-03-06
 Closed: —
 
 ## Velocity
-- Completed: 11
+- Completed: 12
 - Added mid-sprint: 3
 - Rolled over: 0
 
@@ -34,3 +34,4 @@ Closed: —
 - T-0280: Wire Prismfall Approach → Prismfall town transition — ExitToPrismfall handler, south zone marker, 6 bidirectional transition tests
 - T-0279: Build Beneath Prismfall dungeon scene — crystal canyon with floor/wall ground, crystal pillar formations, encounter system, LyrasTruth event, save point, town transition, 22 tests
 - T-0287: Complete Chapter 10 "Captured" event — Act I ending, 8 scenes (running, road, ambush, director, cells, breakout, escape, camp), 87 dialogue lines, 22 tests
+- T-0291: Act I critical path flow test — 34 integration tests verifying scene graph, event flag chains, character/enemy data, event-scene wiring

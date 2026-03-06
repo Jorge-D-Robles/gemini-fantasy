@@ -247,8 +247,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0291
 - Title: Act I critical path flow test — verify title screen to Act I ending
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M1
 - Tags: integration, test, flow

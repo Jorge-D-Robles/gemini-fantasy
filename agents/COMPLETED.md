@@ -104,3 +104,4 @@ T-0025 | 2026-02-22 | Build bonding system framework | BondData Resource + BondM
 - T-0280: Wire Prismfall Approach → Prismfall town transition — exit handler, zone marker, 6 tests (2026-03-06)
 - T-0279: Build Beneath Prismfall dungeon scene — crystal canyon, encounter system, LyrasTruth event, save point, 22 tests (2026-03-06)
 - T-0287: Complete Chapter 10 "Captured" event — 8 scenes, 87 dialogue lines, 22 tests (2026-03-06)
+- T-0291: Act I critical path flow test — 34 integration tests, scene graph, event flags, data files (2026-03-06)
