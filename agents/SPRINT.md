@@ -7,7 +7,7 @@ Started: 2026-03-05
 Closed: —
 
 ## Velocity
-- Completed: 1
+- Completed: 2
 - Added mid-sprint: 0
 - Rolled over: 0
 
@@ -15,7 +15,7 @@ Closed: —
 
 ## Active
 
-- T-0266: Remove dead functions — get_failed_quests() and compute_echo_count() (Assigned: claude, Started: 2026-03-05)
+- T-0267: Consolidate duplicated dialogue pair-builder into DialogueLine.build_from_pairs() (Assigned: claude, Started: 2026-03-05)
 
 ---
 
@@ -40,4 +40,5 @@ Closed: —
 
 ## Done This Sprint
 
-- T-0265: Remove unused signals from EventBus and PartyManager — removed 5 signals (player_interacted, npc_talked_to, character_added, character_removed, line_finished) + emit helpers + call sites, updated 8 files, 7 tests removed
+- T-0265: Remove unused signals from EventBus and PartyManager — removed 5 signals + emit helpers + call sites, 7 tests removed
+- T-0266: Remove dead functions — get_failed_quests() and compute_echo_count() — zero production callers, 2 tests removed

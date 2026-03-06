@@ -71,10 +71,8 @@ func execute(owner: Node) -> void:
 
 
 func _show_dialogue(raw_lines: Array[String]) -> void:
-	var lines: Array[DialogueLine] = []
-	var i := 0
-	while i + 1 < raw_lines.size():
-		lines.append(DialogueLine.create(raw_lines[i], raw_lines[i + 1]))
-		i += 2
+	var lines: Array[DialogueLine] = DialogueLine.build_from_pairs(
+		raw_lines, "ResonanceTerminalStrategy"
+	)
 	if not lines.is_empty():
 		DialogueManager.start_dialogue(lines)

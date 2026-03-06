@@ -11,7 +11,9 @@ extends InteractionStrategy
 func execute(owner: Node) -> void:
 	if owner.has_been_used:
 		return
-	var lines: Array[DialogueLine] = _build_lines()
+	var lines: Array[DialogueLine] = DialogueLine.build_from_pairs(
+		diary_lines, "DiaryStrategy"
+	)
 	if lines.is_empty():
 		return
 	DialogueManager.start_dialogue(lines)
@@ -19,17 +21,3 @@ func execute(owner: Node) -> void:
 	if not flag_name.is_empty():
 		EventFlags.set_flag(flag_name)
 	owner.has_been_used = true
-
-
-func _build_lines() -> Array[DialogueLine]:
-	if diary_lines.size() % 2 != 0:
-		push_warning(
-			"DiaryStrategy: diary_lines has odd count (%d); last entry ignored."
-			% diary_lines.size()
-		)
-	var result: Array[DialogueLine] = []
-	var i := 0
-	while i + 1 < diary_lines.size():
-		result.append(DialogueLine.create(diary_lines[i], diary_lines[i + 1]))
-		i += 2
-	return result

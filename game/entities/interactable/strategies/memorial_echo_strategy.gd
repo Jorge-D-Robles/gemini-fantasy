@@ -86,17 +86,7 @@ func execute(owner: Node) -> void:
 
 func _build_vision_lines() -> Array[DialogueLine]:
 	if not vision_lines.is_empty():
-		if vision_lines.size() % 2 != 0:
-			push_warning(
-				"MemorialEchoStrategy: vision_lines has odd count (%d); last entry ignored."
-				% vision_lines.size()
-			)
-		var result: Array[DialogueLine] = []
-		var i := 0
-		while i + 1 < vision_lines.size():
-			result.append(DialogueLine.create(vision_lines[i], vision_lines[i + 1]))
-			i += 2
-		return result
+		return DialogueLine.build_from_pairs(vision_lines, "MemorialEchoStrategy")
 	# Fallback: original memorial text
 	return [
 		DialogueLine.create(

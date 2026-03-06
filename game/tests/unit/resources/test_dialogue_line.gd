@@ -45,3 +45,29 @@ func test_create_returns_new_instance_each_call() -> void:
 	assert_ne(a, b)
 	assert_eq(a.speaker, "A")
 	assert_eq(b.speaker, "B")
+
+
+# --- build_from_pairs ---
+
+
+func test_build_from_pairs_even_count() -> void:
+	var raw: Array[String] = ["Kael", "Hello.", "Iris", "Hi there."]
+	var lines := DialogueLine.build_from_pairs(raw)
+	assert_eq(lines.size(), 2)
+	assert_eq(lines[0].speaker, "Kael")
+	assert_eq(lines[0].text, "Hello.")
+	assert_eq(lines[1].speaker, "Iris")
+	assert_eq(lines[1].text, "Hi there.")
+
+
+func test_build_from_pairs_odd_count_ignores_last() -> void:
+	var raw: Array[String] = ["Kael", "Hello.", "Orphan"]
+	var lines := DialogueLine.build_from_pairs(raw, "TestSource")
+	assert_eq(lines.size(), 1)
+	assert_eq(lines[0].speaker, "Kael")
+
+
+func test_build_from_pairs_empty_returns_empty() -> void:
+	var raw: Array[String] = []
+	var lines := DialogueLine.build_from_pairs(raw)
+	assert_eq(lines.size(), 0)

@@ -34,20 +34,8 @@ func execute(owner: Node) -> void:
 	owner.has_been_used = true
 	if activation_lines.is_empty():
 		return
-	var lines: Array[DialogueLine] = _build_activation_lines()
+	var lines: Array[DialogueLine] = DialogueLine.build_from_pairs(
+		activation_lines, "PurificationNodeStrategy '%s'" % node_id
+	)
 	DialogueManager.start_dialogue(lines)
 	await DialogueManager.dialogue_ended
-
-
-func _build_activation_lines() -> Array[DialogueLine]:
-	if activation_lines.size() % 2 != 0:
-		push_warning(
-			"PurificationNodeStrategy '%s': activation_lines has odd count; last entry ignored."
-			% node_id
-		)
-	var result: Array[DialogueLine] = []
-	var i := 0
-	while i + 1 < activation_lines.size():
-		result.append(DialogueLine.create(activation_lines[i], activation_lines[i + 1]))
-		i += 2
-	return result
