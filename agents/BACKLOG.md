@@ -195,8 +195,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0287
 - Title: Complete Chapter 10 "Captured" event — Act I ending
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M1
 - Tags: story, event, climax
