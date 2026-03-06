@@ -28,6 +28,11 @@ const OVERLOAD_OUTGOING_DAMAGE_MULT: float = 2.0
 const RESONANT_ABILITY_BONUS: float = 1.2
 const STAT_DAMAGE_SCALING: float = 0.5
 
+# -- Elemental modifiers --
+
+const ELEMENTAL_WEAKNESS_MULT: float = 1.5   # x1.5 damage when hitting a weakness
+const ELEMENTAL_RESISTANCE_MULT: float = 0.5 # x0.5 damage when hitting a resistance
+
 # -- Turn order --
 
 const TURN_DELAY_BASE: float = 100.0

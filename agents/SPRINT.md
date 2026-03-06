@@ -7,7 +7,7 @@ Started: 2026-03-05
 Closed: —
 
 ## Velocity
-- Completed: 0
+- Completed: 1
 - Added mid-sprint: 0
 - Rolled over: 0
 
@@ -22,18 +22,6 @@ Closed: —
 ## Queue
 
 ### Battle System (high priority)
-
-### T-0272
-- Title: Implement elemental weakness/resistance in damage calculation
-- Status: todo
-- Assigned: unassigned
-- Priority: high
-- Milestone: M1
-- Tags: battle, core
-- Depends: —
-- Blocked-by: —
-- Refs: game/systems/battle/battler_damage.gd, game/resources/enemy_data.gd, game/resources/ability_data.gd
-- Notes: EnemyData already has `weaknesses` and `resistances` (Array[Element]) fields, and AbilityData has `element`. But BattlerDamage formulas don't factor in elemental matchups. Add `compute_elemental_modifier(element, weaknesses, resistances) -> float` (e.g., 1.5x weak, 0.5x resist, 1.0x neutral). Wire into `BattleActionExecutor.execute_ability()`. Show "Weak!" or "Resist!" in battle log. 5+ tests.
 
 ### T-0273
 - Title: Implement AoE ability targeting (ALL_ENEMIES, ALL_ALLIES)
@@ -153,4 +141,4 @@ Closed: —
 
 ## Done This Sprint
 
-*(none yet)*
+- T-0272: Implement elemental weakness/resistance in damage calculation — compute_elemental_modifier() in BattlerDamage, wired into BattleActionExecutor, "Weak!"/"Resist!" battle log tags, ELEMENTAL_WEAKNESS_MULT (1.5x) and ELEMENTAL_RESISTANCE_MULT (0.5x) in GameBalance, 8 new tests

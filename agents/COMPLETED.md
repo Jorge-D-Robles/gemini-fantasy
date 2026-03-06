@@ -69,3 +69,4 @@ T-0025 | 2026-02-22 | Build bonding system framework | BondData Resource + BondM
 - [2026-03-05] T-0105: Build Prismfall Approach area (Crystalline Steppes overworld scene) (agent)
 - [2026-03-05] T-0104: Chapters 8-10 story event scaffolds (crystal_city_arrival, lyras_truth, captured) (agent)
 - [2026-03-05] S05 closed — Sprint S05-code-health: 7 tickets completed (T-0265 thru T-0271). Removed dead code, consolidated duplicated logic, de-bloated test suite. (claude)
+- [2026-03-05] T-0272: Implement elemental weakness/resistance in damage calculation — compute_elemental_modifier() in BattlerDamage, wired into BattleActionExecutor, "Weak!"/"Resist!" tags, 1.5x/0.5x multipliers, 8 tests (claude)

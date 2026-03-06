@@ -56,6 +56,25 @@ static func apply_crit(damage: int) -> int:
 	return int(damage * GB.CRIT_DAMAGE_MULT)
 
 
+## Returns the elemental damage multiplier for an ability element against
+## a target's weaknesses and resistances. NONE element always returns 1.0.
+## Weakness takes priority if element appears in both arrays.
+static func compute_elemental_modifier(
+	ability_element: int,
+	weaknesses: Array,
+	resistances: Array,
+) -> float:
+	if ability_element == 0:  # AbilityData.Element.NONE
+		return 1.0
+	for w in weaknesses:
+		if int(w) == ability_element:
+			return GB.ELEMENTAL_WEAKNESS_MULT
+	for r in resistances:
+		if int(r) == ability_element:
+			return GB.ELEMENTAL_RESISTANCE_MULT
+	return 1.0
+
+
 ## Calculates incoming damage after defense, defend stance, and resonance.
 static func calculate_incoming(
 	base: int,

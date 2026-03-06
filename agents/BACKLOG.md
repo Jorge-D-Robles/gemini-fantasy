@@ -11,8 +11,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0272
 - Title: Implement elemental weakness/resistance in damage calculation
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M1
 - Tags: battle, core

@@ -81,6 +81,16 @@ static func execute_ability(
 
 	if ability.damage_base > 0 and target and target.is_alive:
 		var damage := attacker.deal_damage(ability.damage_base, is_magical, true)
+
+		# Apply elemental weakness/resistance modifier
+		var elem_mod := 1.0
+		if target.data is EnemyData:
+			var enemy_data := target.data as EnemyData
+			elem_mod = BattlerDamageClass.compute_elemental_modifier(
+				ability.element, enemy_data.weaknesses, enemy_data.resistances,
+			)
+			damage = maxi(int(damage * elem_mod), 1)
+
 		var actual := target.take_damage(damage, is_magical)
 		_maybe_shake(target, actual, scene)
 		AudioManager.play_sfx(load(SfxLibrary.COMBAT_MAGIC_CAST))
@@ -90,12 +100,14 @@ static func execute_ability(
 				AudioManager.SfxPriority.CRITICAL,
 			)
 		if battle_ui:
+			var elem_tag := _elemental_tag(elem_mod)
 			battle_ui.add_battle_log(
-				"%s uses %s on %s for %d damage!" % [
+				"%s uses %s on %s for %d damage!%s" % [
 					attacker.get_display_name(),
 					ability.display_name,
 					target.get_display_name(),
 					actual,
+					elem_tag,
 				],
 				UITheme.LogType.DAMAGE,
 			)
@@ -177,6 +189,15 @@ static func _show_critical_popup(
 	var popup := DamagePopup.new()
 	visual.add_child(popup)
 	popup.setup(amount, DamagePopup.PopupType.CRITICAL)
+
+
+## Returns a battle log suffix for elemental effectiveness.
+static func _elemental_tag(elem_mod: float) -> String:
+	if elem_mod > 1.0:
+		return " Weak!"
+	if elem_mod < 1.0:
+		return " Resist!"
+	return ""
 
 
 static func _flash_crit(scene: Node) -> void:
