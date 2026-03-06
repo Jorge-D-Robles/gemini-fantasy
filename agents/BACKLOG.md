@@ -133,8 +133,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0282
 - Title: Wire Verdant Forest → Prismfall Approach transition
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: medium
 - Milestone: M1
 - Tags: scene, flow
