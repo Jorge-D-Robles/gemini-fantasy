@@ -102,3 +102,4 @@ T-0025 | 2026-02-22 | Build bonding system framework | BondData Resource + BondM
 - [2026-03-06] T-0286: Complete Chapter 9 "Beneath Prismfall" event — 88 dialogue lines across 7 scenes (descent, gallery, deep, warden, Lyra's Truth, camp, watchers), 25 tests (claude)
 - T-0278: Build Prismfall town scene — 5 NPCs, flag-reactive dialogue, procedural stone ground, crystal buildings, save point, 21 tests (2026-03-06)
 - T-0280: Wire Prismfall Approach → Prismfall town transition — exit handler, zone marker, 6 tests (2026-03-06)
+- T-0279: Build Beneath Prismfall dungeon scene — crystal canyon, encounter system, LyrasTruth event, save point, 22 tests (2026-03-06)
