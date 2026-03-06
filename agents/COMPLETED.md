@@ -99,3 +99,4 @@ T-0025 | 2026-02-22 | Build bonding system framework | BondData Resource + BondM
 - [2026-03-06] T-0284: Complete Chapter 7 "A Village Burns" — 56 dialogue lines across 5 scenes (approach, Sera, aftermath, goodbyes, camp), BattleChoice enum, 16 tests (claude)
 - [2026-03-06] T-0285: Complete Chapter 8 "The Crystal City" — 59 dialogue lines, evening dinner/Garrick-Mara/Lorne agent, camp Iris-Kael half-truths, 14 tests (claude)
 - [2026-03-06] T-0320: Create Cindral Wastes enemy set — Magma Crawler (DEFENSIVE), Lava Elemental (AGGRESSIVE), Ash Stalker upgraded, 9 abilities, 13 tests (claude)
+- [2026-03-06] T-0286: Complete Chapter 9 "Beneath Prismfall" event — 88 dialogue lines across 7 scenes (descent, gallery, deep, warden, Lyra's Truth, camp, watchers), 25 tests (claude)

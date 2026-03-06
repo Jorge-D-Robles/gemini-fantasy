@@ -7,7 +7,7 @@ Started: 2026-03-06
 Closed: —
 
 ## Velocity
-- Completed: 6
+- Completed: 7
 - Added mid-sprint: 3
 - Rolled over: 0
 
@@ -15,17 +15,7 @@ Closed: —
 
 ## Active
 
-### T-0286
-- Title: Complete Chapter 9 "Beneath Prismfall" event — Lyra's truth and Convergence reveal
-- Status: in-progress
-- Assigned: claude
-- Priority: high
-- Milestone: M1
-- Tags: story, events
-- Depends: —
-- Blocked-by: —
-- Refs: docs/story/act1/09-beneath-prismfall.md
-- Started: 2026-03-06
+*(none)*
 
 ---
 
@@ -73,4 +63,5 @@ Closed: —
 - T-0283: Complete Chapter 6 "Born from Nothing" — nyx_born_from_nothing.gd with 52 dialogue lines across 3 scenes (discoveries, campfire lore, Garrick/Nyx night bonding), 10 tests
 - T-0284: Complete Chapter 7 "A Village Burns" — expanded village_burns.gd with 56 dialogue lines across 5 scenes (approach, Sera confrontation, aftermath/Morin, leaving/goodbyes, camp/Kael-Iris), BattleChoice enum, 16 tests
 - T-0285: Complete Chapter 8 "The Crystal City" — expanded crystal_city_arrival.gd with 59 dialogue lines across 4 scenes (arrival, Archives/Lyra, evening dinner/Garrick-Mara/Lorne, camp/Iris-Kael), 14 tests
+- T-0286: Complete Chapter 9 "Beneath Prismfall" event — lyras_truth.gd expanded to 7 scenes (descent, gallery, deep, warden, scene5/Lyra's Truth, camp, watchers), 88 dialogue lines, 25 tests
 - T-0320: Create Cindral Wastes enemy set — Magma Crawler (DEFENSIVE, crush/harden/heat_wave), Lava Elemental (AGGRESSIVE, magma_blast/eruption/flame_shield), Ash Stalker upgraded with bite/ember_breath/howl, 9 new abilities, 13 tests
