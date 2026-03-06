@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=5 format=3 uid="uid://blava_elemental"]
+
+[ext_resource type="Script" path="res://resources/enemy_data.gd" id="1_script"]
+[ext_resource type="Resource" uid="uid://bmagma_blast" path="res://data/abilities/magma_blast.tres" id="2_magma_blast"]
+[ext_resource type="Resource" uid="uid://beruption" path="res://data/abilities/eruption.tres" id="3_eruption"]
+[ext_resource type="Resource" uid="uid://bflame_shield" path="res://data/abilities/flame_shield.tres" id="4_flame_shield"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"lava_elemental"
+display_name = "Lava Elemental"
+description = "A humanoid mass of molten rock and living flame, born from the volcanic vents beneath the Cindral Wastes. Aggressive and relentless."
+max_hp = 90
+max_ee = 45
+attack = 14
+magic = 22
+defense = 10
+resistance = 14
+speed = 10
+luck = 5
+exp_reward = 28
+gold_reward = 18
+abilities = [ExtResource("2_magma_blast"), ExtResource("3_eruption"), ExtResource("4_flame_shield")]
+weaknesses = [2, 3]
+resistances = [1]
+ai_type = 1
+sprite_path = "res://assets/sprites/enemies/lava_elemental.png"
+sprite_columns = 3
+sprite_rows = 4
+battle_scale = 2.0
+loot_table = [{"item_id": "ember_essence", "drop_chance": 0.4}, {"item_id": "volcanic_core", "drop_chance": 0.2}, {"item_id": "fire_echo_fragment", "drop_chance": 0.1}]

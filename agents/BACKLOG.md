@@ -627,8 +627,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0320
 - Title: Create Cindral Wastes enemy set — volcanic/desert creatures
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: medium
 - Milestone: M2
 - Tags: battle, data, enemy

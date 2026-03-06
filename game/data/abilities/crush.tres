@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://bcrush"]
+
+[ext_resource type="Script" path="res://resources/ability_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"crush"
+display_name = "Crush"
+description = "Coils around the target and constricts with searing lava segments, inflicting burns."
+ee_cost = 8
+resonance_cost = 0.0
+damage_base = 35
+damage_stat = 0
+target_type = 0
+element = 1
+status_effect = "burn"
+status_chance = 0.3
+status_effect_duration = 3

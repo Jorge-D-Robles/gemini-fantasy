@@ -1,6 +1,9 @@
-[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3 uid="uid://bash_stalker"]
+[gd_resource type="Resource" script_class="EnemyData" load_steps=5 format=3 uid="uid://bash_stalker"]
 
 [ext_resource type="Script" path="res://resources/enemy_data.gd" id="1_script"]
+[ext_resource type="Resource" uid="uid://bbite" path="res://data/abilities/bite.tres" id="2_bite"]
+[ext_resource type="Resource" uid="uid://bember_breath" path="res://data/abilities/ember_breath.tres" id="3_ember_breath"]
+[ext_resource type="Resource" uid="uid://bhowl" path="res://data/abilities/howl.tres" id="4_howl"]
 
 [resource]
 script = ExtResource("1_script")
@@ -8,14 +11,16 @@ id = &"ash_stalker"
 display_name = "Ash Stalker"
 description = "A canine creature with volcanic stone skin and embers in its eye sockets. Once a domesticated dog, mutated by volcanic Resonance. Fast, aggressive, hunts in packs."
 max_hp = 55
+max_ee = 25
 attack = 16
 magic = 4
 defense = 8
 resistance = 6
 speed = 14
+luck = 6
 exp_reward = 25
 gold_reward = 15
-abilities = []
+abilities = [ExtResource("2_bite"), ExtResource("3_ember_breath"), ExtResource("4_howl")]
 weaknesses = [3, 2]
 resistances = [1]
 ai_type = 1

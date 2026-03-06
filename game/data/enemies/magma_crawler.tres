@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=5 format=3 uid="uid://bmagma_crawler"]
+
+[ext_resource type="Script" path="res://resources/enemy_data.gd" id="1_script"]
+[ext_resource type="Resource" uid="uid://bcrush" path="res://data/abilities/crush.tres" id="2_crush"]
+[ext_resource type="Resource" uid="uid://bharden" path="res://data/abilities/harden.tres" id="3_harden"]
+[ext_resource type="Resource" uid="uid://bheat_wave" path="res://data/abilities/heat_wave.tres" id="4_heat_wave"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"magma_crawler"
+display_name = "Magma Crawler"
+description = "A centipede-like creature made of cooled lava segments. Slow but incredibly durable, it coils around targets and constricts with searing heat."
+max_hp = 130
+max_ee = 40
+attack = 20
+magic = 14
+defense = 18
+resistance = 10
+speed = 4
+luck = 3
+exp_reward = 30
+gold_reward = 20
+abilities = [ExtResource("2_crush"), ExtResource("3_harden"), ExtResource("4_heat_wave")]
+weaknesses = [2]
+resistances = [1]
+ai_type = 2
+sprite_path = "res://assets/sprites/enemies/magma_crawler.png"
+sprite_columns = 3
+sprite_rows = 4
+battle_scale = 2.5
+loot_table = [{"item_id": "volcanic_core", "drop_chance": 0.35}, {"item_id": "heat_shard", "drop_chance": 0.25}, {"item_id": "obsidian_plate", "drop_chance": 0.1}]
