@@ -715,8 +715,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0325
 - Title: Implement Garrick's "Three Burns" character quest chain
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: medium
 - Milestone: M2
 - Tags: quest, story, character
