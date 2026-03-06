@@ -159,8 +159,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0284
 - Title: Complete Chapter 7 "A Village Burns" event — full dialogue and branching
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M1
 - Tags: story, event

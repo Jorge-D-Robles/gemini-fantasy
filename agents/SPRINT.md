@@ -7,7 +7,7 @@ Started: 2026-03-06
 Closed: —
 
 ## Velocity
-- Completed: 3
+- Completed: 4
 - Added mid-sprint: 0
 - Rolled over: 0
 
@@ -20,17 +20,6 @@ Closed: —
 ---
 
 ## Queue
-
-### T-0284
-- Title: Complete Chapter 7 "A Village Burns" event — full dialogue and branching
-- Status: todo
-- Assigned: unassigned
-- Priority: high
-- Milestone: M1
-- Tags: story, events
-- Depends: —
-- Blocked-by: —
-- Refs: docs/story/, game/events/
 
 ### T-0278
 - Title: Build Prismfall town scene — Act I hub
@@ -72,3 +61,4 @@ Closed: —
 - T-0290: Create crystal dungeon enemy set — Crystal Sentinel (DEFENSIVE, crystal_slam/crystal_shell/shard_barrage), Resonance Wisp (SUPPORT, resonance_mend/resonance_bolt/haste_pulse), Prism Guardian (BOSS, crushing_blow/prismatic_beam/refract), 9 abilities, 22 tests
 - T-0292: Create Prismfall town shop — steel_hammer, steel_mace, iron_helm (3 new equipment), prismfall_arms.tres (14 items: weapons, armor, consumables), 14 tests
 - T-0283: Complete Chapter 6 "Born from Nothing" — nyx_born_from_nothing.gd with 52 dialogue lines across 3 scenes (discoveries, campfire lore, Garrick/Nyx night bonding), 10 tests
+- T-0284: Complete Chapter 7 "A Village Burns" — expanded village_burns.gd with 56 dialogue lines across 5 scenes (approach, Sera confrontation, aftermath/Morin, leaving/goodbyes, camp/Kael-Iris), BattleChoice enum, 16 tests
