@@ -21,6 +21,11 @@ const PRISMFALL_APPROACH: String = (
 	"res://scenes/prismfall_approach/prismfall_approach.tscn"
 )
 
+# -- Town scenes --
+const PRISMFALL: String = (
+	"res://scenes/prismfall/prismfall.tscn"
+)
+
 # -- Dungeon scenes --
 const OVERGROWN_CAPITAL: String = (
 	"res://scenes/overgrown_capital/overgrown_capital.tscn"
