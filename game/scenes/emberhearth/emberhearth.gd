@@ -205,8 +205,6 @@ func _on_exit_to_scorched_road_entered(body: Node2D) -> void:
 		return
 	if DialogueManager.is_active():
 		return
-	if not ResourceLoader.exists(SP.SCORCHED_ROAD):
-		return
 	GameManager.change_scene(
 		SP.SCORCHED_ROAD,
 		GameManager.FADE_DURATION,
