@@ -37,51 +37,51 @@ static func compute_should_collect(
 func execute(owner: Node) -> void:
 	if owner.has_been_used:
 		return
+
+	if not _should_collect():
+		_show_fallback_text()
+		return
+
+	# Collect the echo
+	var lines: Array[DialogueLine] = _build_vision_lines()
+	DialogueManager.start_dialogue(lines)
+	await DialogueManager.dialogue_ended
+	if require_quest_id != &"":
+		QuestManager.complete_objective(require_quest_id, 0)
+	if echo_id != &"":
+		EchoManager.collect_echo(echo_id)
+	owner.has_been_used = true
+	await _play_echo_sting(owner)
+
+
+func _should_collect() -> bool:
 	var quest_active := false
 	var obj_done := false
 	if require_quest_id != &"":
 		quest_active = QuestManager.is_quest_active(require_quest_id)
 		var objectives := QuestManager.get_objective_status(require_quest_id)
 		obj_done = not objectives.is_empty() and objectives[0]
-
-	var echo_already_collected := (
-		echo_id != &""
-		and EchoManager.has_echo(echo_id)
+	var echo_already_collected := echo_id != &"" and EchoManager.has_echo(echo_id)
+	return compute_should_collect(
+		echo_id, require_quest_id, echo_already_collected, quest_active, obj_done,
 	)
 
-	var should_collect := compute_should_collect(
-		echo_id,
-		require_quest_id,
-		echo_already_collected,
-		quest_active,
-		obj_done,
-	)
 
-	if should_collect:
-		var lines: Array[DialogueLine] = _build_vision_lines()
-		DialogueManager.start_dialogue(lines)
-		await DialogueManager.dialogue_ended
-		if require_quest_id != &"":
-			QuestManager.complete_objective(require_quest_id, 0)
-		if echo_id != &"":
-			EchoManager.collect_echo(echo_id)
-		owner.has_been_used = true
-		# Play echo capture sting, then restore area BGM after it finishes.
-		AudioManager.push_bgm()
-		var echo_bgm := load(ECHO_BGM_PATH) as AudioStream
-		if echo_bgm:
-			AudioManager.play_bgm(echo_bgm, 0.5)
-			await owner.get_tree().create_timer(ECHO_BGM_DURATION).timeout
-		AudioManager.pop_bgm(1.0)
-	else:
-		var message: String = text if not text.is_empty() else (
-			"A weathered memorial stone, etched with the"
-			+ " names of Roothollow's founders."
-		)
-		var lines: Array[DialogueLine] = [
-			DialogueLine.create("", message),
-		]
-		DialogueManager.start_dialogue(lines)
+func _show_fallback_text() -> void:
+	var message: String = text if not text.is_empty() else (
+		"A weathered memorial stone, etched with the"
+		+ " names of Roothollow's founders."
+	)
+	DialogueManager.start_dialogue([DialogueLine.create("", message)])
+
+
+func _play_echo_sting(owner: Node) -> void:
+	AudioManager.push_bgm()
+	var echo_bgm := load(ECHO_BGM_PATH) as AudioStream
+	if echo_bgm:
+		AudioManager.play_bgm(echo_bgm, 0.5)
+		await owner.get_tree().create_timer(ECHO_BGM_DURATION).timeout
+	AudioManager.pop_bgm(1.0)
 
 
 func _build_vision_lines() -> Array[DialogueLine]:
