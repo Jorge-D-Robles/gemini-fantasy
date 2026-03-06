@@ -53,9 +53,42 @@ enum WeaponType {
 @export var element: AbilityData.Element = AbilityData.Element.NONE
 @export var crit_rate_bonus: float = 0.0
 
+@export_group("Resonance Tuning")
+## Number of Echo Fragment slots (0-3). Common: 1, Rare: 2, Legendary: 3.
+@export_range(0, 3) var tuning_slots: int = 0
+## Echo Fragments currently tuned into this equipment.
+@export var tuned_echoes: Array[Resource] = []
+
 @export_group("Economy")
 @export var buy_price: int = 0
 @export var sell_price: int = 0
 
 @export_group("Visuals")
 @export var icon_path: String = ""
+
+
+func can_tune() -> bool:
+	return tuned_echoes.size() < tuning_slots
+
+
+func tune_echo(echo: Resource) -> bool:
+	if not can_tune():
+		return false
+	tuned_echoes.append(echo)
+	return true
+
+
+func replace_echo(slot_index: int, echo: Resource) -> Resource:
+	if slot_index < 0 or slot_index >= tuned_echoes.size():
+		return null
+	var old := tuned_echoes[slot_index]
+	tuned_echoes[slot_index] = echo
+	return old
+
+
+func remove_echo(slot_index: int) -> Resource:
+	if slot_index < 0 or slot_index >= tuned_echoes.size():
+		return null
+	var old := tuned_echoes[slot_index]
+	tuned_echoes.remove_at(slot_index)
+	return old

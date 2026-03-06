@@ -160,6 +160,7 @@ static func make_equipment(
 	e.element = overrides.get(
 		"element", AbilityData.Element.NONE
 	)
+	e.tuning_slots = overrides.get("tuning_slots", 0)
 	e.buy_price = overrides.get("buy_price", 0)
 	e.sell_price = overrides.get("sell_price", 0)
 	return e
