@@ -6,12 +6,13 @@ extends RefCounted
 ## Testable without a live scene — pass null for absent enemies.
 
 
-static func build_pool(
+static func build_pool(  # gdlint:ignore = function-arguments-number
 	gale_harpy: Resource,
 	cinder_wisp: Resource,
 	hollow_specter: Resource,
 	ancient_sentinel: Resource,
 	ember_hound: Resource,
+	shard_serpent: Resource = null,
 ) -> Array[EncounterPoolEntry]:
 	var pool: Array[EncounterPoolEntry] = []
 
@@ -58,5 +59,15 @@ static func build_pool(
 		pool.append(EncounterPoolEntry.create(
 			[ember_hound, cinder_wisp] as Array[Resource], 0.6,
 		))
+
+	# Rare — crystalline construct
+	if shard_serpent:
+		pool.append(EncounterPoolEntry.create(
+			[shard_serpent] as Array[Resource], 0.8,
+		))
+		if cinder_wisp:
+			pool.append(EncounterPoolEntry.create(
+				[shard_serpent, cinder_wisp] as Array[Resource], 0.4,
+			))
 
 	return pool

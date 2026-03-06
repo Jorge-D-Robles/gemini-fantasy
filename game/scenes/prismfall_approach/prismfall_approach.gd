@@ -11,6 +11,7 @@ const CINDER_WISP_PATH: String = "res://data/enemies/cinder_wisp.tres"
 const HOLLOW_SPECTER_PATH: String = "res://data/enemies/hollow_specter.tres"
 const ANCIENT_SENTINEL_PATH: String = "res://data/enemies/ancient_sentinel.tres"
 const EMBER_HOUND_PATH: String = "res://data/enemies/ember_hound.tres"
+const SHARD_SERPENT_PATH: String = "res://data/enemies/shard_serpent.tres"
 const SCENE_BGM_PATH: String = "res://assets/music/Wandering Through Quiet Lands.ogg"
 
 @onready var _ground_layer: TileMapLayer = $Ground
@@ -41,6 +42,7 @@ func _ready() -> void:
 		load(HOLLOW_SPECTER_PATH) as Resource,
 		load(ANCIENT_SENTINEL_PATH) as Resource,
 		load(EMBER_HOUND_PATH) as Resource,
+		load(SHARD_SERPENT_PATH) as Resource,
 	)
 	_encounter_system.setup(pool)
 	_encounter_system.encounter_triggered.connect(_on_encounter_triggered)

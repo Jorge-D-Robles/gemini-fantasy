@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=5 format=3 uid="uid://bshard_serpent"]
+
+[ext_resource type="Script" path="res://resources/enemy_data.gd" id="1_script"]
+[ext_resource type="Resource" uid="uid://bcrystal_strike" path="res://data/abilities/crystal_strike.tres" id="2_crystal_strike"]
+[ext_resource type="Resource" uid="uid://bburrow" path="res://data/abilities/burrow.tres" id="3_burrow"]
+[ext_resource type="Resource" uid="uid://bshatter" path="res://data/abilities/shatter.tres" id="4_shatter"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"shard_serpent"
+display_name = "Shard Serpent"
+description = "A serpentine construct of interlocking crystal segments. Not hostile by nature, but fiercely territorial when its domain is crossed."
+max_hp = 80
+max_ee = 30
+attack = 16
+magic = 12
+defense = 10
+resistance = 6
+speed = 14
+luck = 6
+exp_reward = 25
+gold_reward = 15
+abilities = [ExtResource("2_crystal_strike"), ExtResource("3_burrow"), ExtResource("4_shatter")]
+weaknesses = [5]
+resistances = []
+ai_type = 0
+sprite_path = "res://assets/sprites/enemies/shard_serpent.png"
+sprite_columns = 3
+sprite_rows = 4
+battle_scale = 2.0
+loot_table = [{"item_id": "pure_crystal", "drop_chance": 0.35}, {"item_id": "serpent_core", "drop_chance": 0.2}, {"item_id": "prism_scale", "drop_chance": 0.1}]
