@@ -73,26 +73,44 @@ func _on_cancelled() -> void:
 
 func _get_valid_targets() -> Array[Battler]:
 	var action: BattleAction = battle_scene.current_action
-	if action and action.ability:
-		match action.ability.target_type:
-			AbilityData.TargetType.SINGLE_ALLY, AbilityData.TargetType.ALL_ALLIES:
-				return battle_scene.get_living_party()
-			AbilityData.TargetType.SELF:
-				var self_list: Array[Battler] = []
-				if battle_scene.current_battler and battle_scene.current_battler.is_alive:
-					self_list.append(battle_scene.current_battler)
-				return self_list
-	if action and action.echo:
-		match action.echo.target_type:
-			EchoData.TargetType.SINGLE_ALLY:
-				return battle_scene.get_living_party()
-			EchoData.TargetType.SELF:
-				var self_list: Array[Battler] = []
-				if battle_scene.current_battler and battle_scene.current_battler.is_alive:
-					self_list.append(battle_scene.current_battler)
-				return self_list
-	if action and action.item:
-		match action.item.target_type:
-			ItemData.TargetType.SINGLE_ALLY, ItemData.TargetType.ALL_ALLIES:
-				return battle_scene.get_living_party()
+	if not action:
+		return battle_scene.get_living_enemies()
+	var ally_targets := _get_ally_targets_for_action(action)
+	if not ally_targets.is_empty():
+		return ally_targets
 	return battle_scene.get_living_enemies()
+
+
+func _get_ally_targets_for_action(
+	action: BattleAction,
+) -> Array[Battler]:
+	if action.type == BattleAction.Type.GROUND:
+		return _hollow_party_members()
+	var tt: int = -1
+	if action.ability:
+		tt = action.ability.target_type
+	elif action.echo:
+		tt = action.echo.target_type
+	elif action.item:
+		tt = action.item.target_type
+	if tt == AbilityData.TargetType.SINGLE_ALLY or tt == AbilityData.TargetType.ALL_ALLIES:
+		return battle_scene.get_living_party()
+	if tt == AbilityData.TargetType.SELF:
+		return _self_target_list()
+	var empty: Array[Battler] = []
+	return empty
+
+
+func _self_target_list() -> Array[Battler]:
+	var result: Array[Battler] = []
+	if battle_scene.current_battler and battle_scene.current_battler.is_alive:
+		result.append(battle_scene.current_battler)
+	return result
+
+
+func _hollow_party_members() -> Array[Battler]:
+	var result: Array[Battler] = []
+	for member: Battler in battle_scene.get_living_party():
+		if member.resonance_state == Battler.ResonanceState.HOLLOW:
+			result.append(member)
+	return result

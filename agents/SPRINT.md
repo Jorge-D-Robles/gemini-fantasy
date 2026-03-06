@@ -7,7 +7,7 @@ Started: 2026-03-05
 Closed: —
 
 ## Velocity
-- Completed: 5
+- Completed: 6
 - Added mid-sprint: 0
 - Rolled over: 0
 
@@ -22,20 +22,6 @@ Closed: —
 ## Queue
 
 ### Battle System (high priority)
-
-### Battle Data (medium priority)
-
-### T-0275
-- Title: Add Ground command to battle — cure Hollow ally
-- Status: todo
-- Assigned: unassigned
-- Priority: medium
-- Milestone: M1
-- Tags: battle, resonance
-- Depends: —
-- Blocked-by: —
-- Refs: game/systems/battle/states/player_turn_state.gd, docs/game-design/01-core-mechanics.md
-- Notes: "Ground" command costs user's turn + 25% Resonance Gauge. Removes Hollow, restores 25% HP. Only visible when a party member is Hollow. 4+ tests.
 
 ### Scene & Flow (medium priority)
 
@@ -98,3 +84,4 @@ Closed: —
 - T-0276: Create status effect .tres data files — poison, burn, stun, haste, slow, shield, weakness, regen; 8 new tests validating all fields
 - T-0274: Implement Echo combat system — equip/unequip (max 6 slots) in EchoManager, per-battle use tracking, "echo" command in PlayerTurnState, echo mode in ActionSelectState, echo execution (DAMAGE/HEAL/BUFF/DEBUFF) in ActionExecuteState, BattleAction.ECHO type, auto-target for AoE/SELF echoes, serialize equipped echoes, 10 new tests
 - T-0277: Implement heal-targeting for support abilities — is_ally_target() helper in BAX, execute_ability() heals allies instead of damaging, 6 new tests
+- T-0275: Add Ground command — BattleAction.GROUND type, "ground" command in PlayerTurnState, Hollow ally targeting in TargetSelectState, _execute_ground in ActionExecuteState (25% resonance cost, cure Hollow, 25% HP heal), GROUND_RESONANCE_COST/GROUND_HEAL_PERCENT constants, 6 new tests

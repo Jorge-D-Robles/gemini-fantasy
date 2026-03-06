@@ -10,6 +10,7 @@ enum Type {
 	WAIT,
 	ITEM,
 	ECHO,
+	GROUND,
 }
 
 var type: Type = Type.WAIT
@@ -61,6 +62,13 @@ static func create_echo(
 	var action := BattleAction.new()
 	action.type = Type.ECHO
 	action.echo = p_echo
+	action.target = p_target
+	return action
+
+
+static func create_ground(p_target: Battler) -> BattleAction:
+	var action := BattleAction.new()
+	action.type = Type.GROUND
 	action.target = p_target
 	return action
 

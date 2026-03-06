@@ -47,8 +47,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0275
 - Title: Add Ground command to battle — cure Hollow ally
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: medium
 - Milestone: M1
 - Tags: battle, resonance

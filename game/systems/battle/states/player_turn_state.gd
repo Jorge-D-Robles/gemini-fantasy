@@ -54,6 +54,10 @@ func _on_command_selected(command: String) -> void:
 		"echo":
 			battle_scene.pending_command = "echo"
 			state_machine.transition_to("ActionSelect")
+		"ground":
+			battle_scene.pending_command = "ground"
+			battle_scene.current_action = BattleAction.create_ground(null)
+			state_machine.transition_to("TargetSelect")
 		"defend":
 			battle_scene.current_battler.defend()
 			_battle_ui.update_party_status(battle_scene.get_living_party())

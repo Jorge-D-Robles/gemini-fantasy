@@ -4,6 +4,7 @@ extends State
 
 const UITheme = preload("res://ui/ui_theme.gd")
 const BAX = preload("res://systems/battle/battle_action_executor.gd")
+const GB = preload("res://systems/game_balance.gd")
 
 var battle_scene: Node = null
 var _battle_ui: Node = null
@@ -43,6 +44,8 @@ func enter() -> void:
 			await _execute_item(battler, action.target, action.item)
 		BattleAction.Type.ECHO:
 			success = await _execute_echo(battler, action.echo, action.target)
+		BattleAction.Type.GROUND:
+			success = _execute_ground(battler, action.target)
 
 	battle_scene.current_action = null
 
@@ -292,3 +295,41 @@ func _apply_echo_effect(
 					],
 					UITheme.LogType.STATUS,
 				)
+
+
+func _execute_ground(user: Battler, target: Battler) -> bool:
+	if not target or not target.is_alive:
+		return false
+	if target.resonance_state != Battler.ResonanceState.HOLLOW:
+		if _battle_ui:
+			_battle_ui.add_battle_log(
+				"%s is not Hollow!" % target.get_display_name(),
+				UITheme.LogType.SYSTEM,
+			)
+		return false
+
+	# Cost: 25% of user's resonance gauge
+	var cost: float = GB.GROUND_RESONANCE_COST
+	user.resonance_gauge = maxf(user.resonance_gauge - cost, 0.0)
+
+	# Cure Hollow
+	target.cure_hollow()
+
+	# Restore 25% HP
+	var heal_amount: int = int(target.max_hp * GB.GROUND_HEAL_PERCENT)
+	target.heal(heal_amount)
+
+	AudioManager.play_sfx(load(SfxLibrary.COMBAT_HEAL_CHIME))
+	_play_heal_vfx(target)
+	_show_heal_number(target, heal_amount)
+
+	if _battle_ui:
+		_battle_ui.add_battle_log(
+			"%s grounds %s! Hollow cured, %d HP restored." % [
+				user.get_display_name(),
+				target.get_display_name(),
+				heal_amount,
+			],
+			UITheme.LogType.HEAL,
+		)
+	return true

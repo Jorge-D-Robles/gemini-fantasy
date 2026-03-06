@@ -3,6 +3,7 @@
 Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[date] Description`.
 
 ---
+- [2026-03-05] T-0275: Add Ground command to cure Hollow ally — BattleAction.GROUND, target select for Hollow allies, 25% resonance cost + 25% HP heal; 6 tests (claude)
 - [2026-03-05] T-0277: Implement heal-targeting for support abilities — is_ally_target() in BAX, ally abilities heal instead of damage; 6 tests (claude)
 - [2026-03-05] T-0274: Implement Echo combat system — equip/unequip (max 6), per-battle uses, echo command/select/execute in battle, BattleAction.ECHO, auto-targeting, serialize; 10 tests (claude)
 - [2026-03-05] T-0276: Create status effect .tres data files — poison, burn, stun, haste, slow, shield, weakness, regen; 8 tests (claude)

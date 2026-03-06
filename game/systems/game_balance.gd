@@ -33,6 +33,11 @@ const STAT_DAMAGE_SCALING: float = 0.5
 const ELEMENTAL_WEAKNESS_MULT: float = 1.5   # x1.5 damage when hitting a weakness
 const ELEMENTAL_RESISTANCE_MULT: float = 0.5 # x0.5 damage when hitting a resistance
 
+# -- Ground command --
+
+const GROUND_RESONANCE_COST: float = 25.0  # gauge points spent by the user
+const GROUND_HEAL_PERCENT: float = 0.25    # % of max HP restored to target
+
 # -- Turn order --
 
 const TURN_DELAY_BASE: float = 100.0
