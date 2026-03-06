@@ -10,3 +10,4 @@ tab-characters: 4
 disable:
   - function-name
   - class-name
+  - max-public-methods

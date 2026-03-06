@@ -15,22 +15,21 @@ Closed: —
 
 ## Active
 
-*(none)*
-
----
-
-## Queue
-
 ### T-0286
 - Title: Complete Chapter 9 "Beneath Prismfall" event — Lyra's truth and Convergence reveal
-- Status: todo
-- Assigned: unassigned
+- Status: in-progress
+- Assigned: claude
 - Priority: high
 - Milestone: M1
 - Tags: story, events
 - Depends: —
 - Blocked-by: —
 - Refs: docs/story/act1/09-beneath-prismfall.md
+- Started: 2026-03-06
+
+---
+
+## Queue
 
 ### T-0278
 - Title: Build Prismfall town scene — Act I hub
