@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="QuestData" load_steps=2 format=3 uid="uid://bsienna_book_of_names"]
+
+[ext_resource type="Script" path="res://resources/quest_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"sienna_book_of_names"
+title = "The Book of Names"
+description = "Sienna carries a leather notebook with the names of every person she converted into a Resonance battery. Fifty-three names. The quest takes her across the Ironcoast to find the survivors still alive in their crystal prisons and attempt a reversal protocol that has never been tested on a living subject."
+objectives = ["Discover Sienna's notebook and the 53 names.", "Find Marcus Theel (Subject 14) in Greywell.", "Locate the holding facility and attempt the reversal protocol.", "Confront the guilt and decide the fate of the research."]
+reward_gold = 0
+reward_exp = 500
+reward_item_ids = []
+quest_type = 2
+prerequisites = []
