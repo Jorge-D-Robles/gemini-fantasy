@@ -489,8 +489,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0309
 - Title: Implement Chapter 13 "Sister's Shadow" event — Sienna's defection
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M2
 - Tags: story, event, recruitment
