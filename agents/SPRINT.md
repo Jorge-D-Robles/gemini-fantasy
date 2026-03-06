@@ -7,7 +7,7 @@ Started: 2026-03-06
 Closed: —
 
 ## Velocity
-- Completed: 8
+- Completed: 9
 - Added mid-sprint: 3
 - Rolled over: 0
 
@@ -18,17 +18,6 @@ Closed: —
 ---
 
 ## Queue
-
-### T-0280
-- Title: Wire Prismfall Approach → Prismfall town scene transition
-- Status: todo
-- Assigned: unassigned
-- Priority: high
-- Milestone: M1
-- Tags: scene, wiring
-- Depends: T-0278
-- Blocked-by: —
-- Refs: game/scenes/prismfall_approach/
 
 ### T-0279
 - Title: Build Beneath Prismfall dungeon scene — Act I climax location
@@ -53,3 +42,4 @@ Closed: —
 - T-0286: Complete Chapter 9 "Beneath Prismfall" event — lyras_truth.gd expanded to 7 scenes (descent, gallery, deep, warden, scene5/Lyra's Truth, camp, watchers), 88 dialogue lines, 25 tests
 - T-0320: Create Cindral Wastes enemy set — Magma Crawler (DEFENSIVE, crush/harden/heat_wave), Lava Elemental (AGGRESSIVE, magma_blast/eruption/flame_shield), Ash Stalker upgraded with bite/ember_breath/howl, 9 new abilities, 13 tests
 - T-0278: Build Prismfall town scene — 5 NPCs (innkeeper/shop/archivist/trader/canyon resident), flag-reactive dialogue, procedural stone ground, crystal buildings, save point, two zone transitions, CrystalCityArrival event, 21 tests
+- T-0280: Wire Prismfall Approach → Prismfall town transition — ExitToPrismfall handler, south zone marker, 6 bidirectional transition tests
