@@ -135,3 +135,4 @@ T-0025 | 2026-02-22 | Build bonding system framework | BondData Resource + BondM
 [2026-03-06] T-0344: Implement Cipher's "Ghost in the Machine" character quest — 5-stage event, 75 dialogue lines, quest .tres, 34 tests (claude)
 [2026-03-06] T-0343: Implement Sienna's "Book of Names" character quest — 4-stage event, 47 dialogue lines, quest .tres, 30 tests (claude)
 [2026-03-06] T-0346: Implement Ash's "The Drawing" character quest — 4-stage event, 43 dialogue lines (Ash silent), quest .tres, 34 tests (claude)
+[2026-03-06] T-0300: Build Emberhearth city scene — volcanic caldera hub, procedural ground (3 biomes), steampunk buildings, ashlands border, 5 flag-reactive NPCs, forge shop (15 items), inn healing, save point, 31 tests (claude)

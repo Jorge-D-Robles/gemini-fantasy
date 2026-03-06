@@ -375,13 +375,14 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0300
 - Title: Build Emberhearth city scene — Cindral Wastes major hub
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M2
 - Tags: scene, tilemap
 - Depends: —
 - Blocked-by: —
+- Completed: 2026-03-06
 - Refs: docs/game-design/03-world-map-and-locations.md (Emberhearth)
 - Notes: City inside dormant volcanic caldera. Districts: The Rim (refugees, markets), Forge Quarter (blacksmiths), The Deep (old city), Ash Walker Territory (nomads). Services: inn "The Cooling Stone", weapons/armor/general shops, Echo trader, master blacksmith, Resonance Beacon. Use volcanic/desert tileset assets. Multiple NPCs, shop, inn rest. Add to ScenePaths. 8+ tests.
 

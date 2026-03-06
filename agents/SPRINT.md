@@ -7,7 +7,7 @@ Started: 2026-03-06
 Closed: —
 
 ## Velocity
-- Completed: 18
+- Completed: 19
 - Added mid-sprint: 0
 - Rolled over: 0
 
@@ -15,15 +15,11 @@ Closed: —
 
 ## Active
 
-*(none)*
+(none)
 
 ---
 
 ## Queue
-
-### T-0300
-- Title: Build Emberhearth city scene — Cindral Wastes major hub
-- Priority: high
 
 ### T-0301
 - Title: Build The Scorched Road route scene — Cindral Wastes overworld
@@ -33,6 +29,7 @@ Closed: —
 
 ## Done This Sprint
 
+- T-0300: Build Emberhearth city scene — Cindral Wastes volcanic hub with procedural ground, steampunk buildings, 5 NPCs, shop, inn, save point, 31 tests
 - T-0346: Implement Ash's "The Drawing" character quest — 4-stage event (43 dialogue lines, Ash never speaks), quest .tres, stage gating, trigger_stage(), 34 tests
 - T-0343: Implement Sienna's "Book of Names" character quest — 4-stage event (47 dialogue lines), quest .tres, stage gating, trigger_stage(), 30 tests
 - T-0344: Implement Cipher's "Ghost in the Machine" character quest — 5-stage event (75 dialogue lines), quest .tres, stage gating, trigger_stage(), 34 tests
