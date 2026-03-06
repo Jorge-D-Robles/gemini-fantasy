@@ -25,6 +25,14 @@ const PRISMFALL_APPROACH: String = (
 const PRISMFALL: String = (
 	"res://scenes/prismfall/prismfall.tscn"
 )
+const EMBERHEARTH: String = (
+	"res://scenes/emberhearth/emberhearth.tscn"
+)
+
+# -- Cindral Wastes routes --
+const SCORCHED_ROAD: String = (
+	"res://scenes/scorched_road/scorched_road.tscn"
+)
 
 # -- Dungeon scenes --
 const OVERGROWN_CAPITAL: String = (
