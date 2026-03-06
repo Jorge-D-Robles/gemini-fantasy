@@ -85,8 +85,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0278
 - Title: Build Prismfall town scene — Act I hub
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M1
 - Tags: scene, tilemap, story
@@ -97,8 +97,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0279
 - Title: Build Beneath Prismfall dungeon scene — Act I climax location
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M1
 - Tags: scene, tilemap, dungeon, story
@@ -109,8 +109,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0280
 - Title: Wire Prismfall Approach → Prismfall town scene transition
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M1
 - Tags: scene, flow
@@ -183,8 +183,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0286
 - Title: Complete Chapter 9 "Beneath Prismfall" event — Lyra's truth and Convergence reveal
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M1
 - Tags: story, event, climax
