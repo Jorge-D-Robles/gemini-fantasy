@@ -912,14 +912,15 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0344
 - Title: Implement Cipher's "Ghost in the Machine" character quest
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: medium
 - Milestone: M3
 - Tags: quest, story, character
 - Depends: T-0317
 - Blocked-by: —
 - Refs: docs/story/character-quests/cipher-ghost-in-machine.md
+- Completed: 2026-03-06
 
 ### T-0345
 - Title: Implement Lyra's "Before the Breaking" character quest
