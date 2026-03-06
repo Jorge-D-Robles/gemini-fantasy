@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="QuestData" load_steps=2 format=3 uid="uid://bcipher_ghost_in_machine"]
+
+[ext_resource type="Script" path="res://resources/quest_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"cipher_ghost_in_machine"
+title = "Ghost in the Machine"
+description = "Cipher discovers the Initiative's Anchor Control Protocol -- a device that can remotely hijack an Anchor's body. After infiltrating the facility where test subjects are kept, Cipher is hijacked by Director Vex. Breaking free requires entering their own mindscape to purge the Protocol's embedded code, then returning to destroy the device for good."
+objectives = ["Investigate the hidden Initiative facility north of Gearhaven.", "Infiltrate the facility and discover the Anchor Control Protocol.", "Survive the hijacking and break free of Vex's control.", "Enter Cipher's mindscape and purge the three Protocol nodes.", "Return to the facility and destroy the Protocol device."]
+reward_gold = 0
+reward_exp = 500
+reward_item_ids = []
+quest_type = 2
+prerequisites = []
