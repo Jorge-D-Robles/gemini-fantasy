@@ -936,13 +936,14 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0346
 - Title: Implement Ash's "The Drawing" character quest
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: medium
 - Milestone: M3
 - Tags: quest, story, character
 - Depends: T-0310
 - Blocked-by: —
+- Completed: 2026-03-06
 - Refs: docs/story/character-quests/ash-the-drawing.md
 
 ---

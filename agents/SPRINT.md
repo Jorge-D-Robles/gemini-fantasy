@@ -7,7 +7,7 @@ Started: 2026-03-06
 Closed: —
 
 ## Velocity
-- Completed: 17
+- Completed: 18
 - Added mid-sprint: 0
 - Rolled over: 0
 
@@ -33,6 +33,7 @@ Closed: —
 
 ## Done This Sprint
 
+- T-0346: Implement Ash's "The Drawing" character quest — 4-stage event (43 dialogue lines, Ash never speaks), quest .tres, stage gating, trigger_stage(), 34 tests
 - T-0343: Implement Sienna's "Book of Names" character quest — 4-stage event (47 dialogue lines), quest .tres, stage gating, trigger_stage(), 30 tests
 - T-0344: Implement Cipher's "Ghost in the Machine" character quest — 5-stage event (75 dialogue lines), quest .tres, stage gating, trigger_stage(), 34 tests
 - T-0213: Add Merchant's Regret mini-boss — BOSS AI enemy + coin_shower AoE + desperate_bargain debuff, 13 tests
