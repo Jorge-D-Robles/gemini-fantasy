@@ -7,7 +7,7 @@ Started: 2026-03-05
 Closed: —
 
 ## Velocity
-- Completed: 4
+- Completed: 5
 - Added mid-sprint: 0
 - Rolled over: 0
 
@@ -22,18 +22,6 @@ Closed: —
 ## Queue
 
 ### Battle System (high priority)
-
-### T-0277
-- Title: Implement heal-targeting for support abilities (SINGLE_ALLY, SELF)
-- Status: todo
-- Assigned: unassigned
-- Priority: medium
-- Milestone: M1
-- Tags: battle, core
-- Depends: T-0273
-- Blocked-by: —
-- Refs: game/systems/battle/states/target_select_state.gd, game/systems/battle/battle_action_executor.gd
-- Notes: Abilities with target_type SINGLE_ALLY or SELF should target party members, not enemies. Currently TargetSelectState likely only shows enemies. Add ally-targeting mode. Execute heal in ActionExecuteState using ability damage_base as heal amount. 5+ tests.
 
 ### Battle Data (medium priority)
 
@@ -109,3 +97,4 @@ Closed: —
 - T-0273: Implement AoE ability targeting — is_aoe()/is_auto_target() helpers in BAX, _execute_aoe_ability() in ActionExecuteState (EE once, damage per target), TargetSelectState auto-skips for AoE/SELF, 8 new tests
 - T-0276: Create status effect .tres data files — poison, burn, stun, haste, slow, shield, weakness, regen; 8 new tests validating all fields
 - T-0274: Implement Echo combat system — equip/unequip (max 6 slots) in EchoManager, per-battle use tracking, "echo" command in PlayerTurnState, echo mode in ActionSelectState, echo execution (DAMAGE/HEAL/BUFF/DEBUFF) in ActionExecuteState, BattleAction.ECHO type, auto-target for AoE/SELF echoes, serialize equipped echoes, 10 new tests
+- T-0277: Implement heal-targeting for support abilities — is_ally_target() helper in BAX, execute_ability() heals allies instead of damaging, 6 new tests

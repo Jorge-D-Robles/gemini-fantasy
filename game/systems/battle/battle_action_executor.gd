@@ -19,6 +19,17 @@ static func is_aoe(ability: AbilityData) -> bool:
 	)
 
 
+## Returns true if the ability targets allies (SINGLE_ALLY, ALL_ALLIES, SELF).
+static func is_ally_target(ability: AbilityData) -> bool:
+	if not ability:
+		return false
+	return (
+		ability.target_type == AbilityData.TargetType.SINGLE_ALLY
+		or ability.target_type == AbilityData.TargetType.ALL_ALLIES
+		or ability.target_type == AbilityData.TargetType.SELF
+	)
+
+
 ## Returns true if the ability needs no manual target selection (AoE or SELF).
 static func is_auto_target(ability: AbilityData) -> bool:
 	if not ability:
@@ -100,37 +111,56 @@ static func execute_ability(
 		_play_vfx(target, ability.element, scene)
 
 	if ability.damage_base > 0 and target and target.is_alive:
-		var damage := attacker.deal_damage(ability.damage_base, is_magical, true)
+		if is_ally_target(ability):
+			# Ally-targeted abilities heal instead of damage
+			var healed := target.heal(ability.damage_base)
+			AudioManager.play_sfx(load(SfxLibrary.COMBAT_HEAL_CHIME))
+			if battle_ui:
+				battle_ui.add_battle_log(
+					"%s uses %s — %s healed for %d HP!" % [
+						attacker.get_display_name(),
+						ability.display_name,
+						target.get_display_name(),
+						healed,
+					],
+					UITheme.LogType.HEAL,
+				)
+		else:
+			var damage := attacker.deal_damage(
+				ability.damage_base, is_magical, true,
+			)
 
-		# Apply elemental weakness/resistance modifier
-		var elem_mod := 1.0
-		if target.data is EnemyData:
-			var enemy_data := target.data as EnemyData
-			elem_mod = BattlerDamageClass.compute_elemental_modifier(
-				ability.element, enemy_data.weaknesses, enemy_data.resistances,
-			)
-			damage = maxi(int(damage * elem_mod), 1)
+			# Apply elemental weakness/resistance modifier
+			var elem_mod := 1.0
+			if target.data is EnemyData:
+				var enemy_data := target.data as EnemyData
+				elem_mod = BattlerDamageClass.compute_elemental_modifier(
+					ability.element,
+					enemy_data.weaknesses,
+					enemy_data.resistances,
+				)
+				damage = maxi(int(damage * elem_mod), 1)
 
-		var actual := target.take_damage(damage, is_magical)
-		_maybe_shake(target, actual, scene)
-		AudioManager.play_sfx(load(SfxLibrary.COMBAT_MAGIC_CAST))
-		if not target.is_alive:
-			AudioManager.play_sfx(
-				load(SfxLibrary.COMBAT_DEATH),
-				AudioManager.SfxPriority.CRITICAL,
-			)
-		if battle_ui:
-			var elem_tag := _elemental_tag(elem_mod)
-			battle_ui.add_battle_log(
-				"%s uses %s on %s for %d damage!%s" % [
-					attacker.get_display_name(),
-					ability.display_name,
-					target.get_display_name(),
-					actual,
-					elem_tag,
-				],
-				UITheme.LogType.DAMAGE,
-			)
+			var actual := target.take_damage(damage, is_magical)
+			_maybe_shake(target, actual, scene)
+			AudioManager.play_sfx(load(SfxLibrary.COMBAT_MAGIC_CAST))
+			if not target.is_alive:
+				AudioManager.play_sfx(
+					load(SfxLibrary.COMBAT_DEATH),
+					AudioManager.SfxPriority.CRITICAL,
+				)
+			if battle_ui:
+				var elem_tag := _elemental_tag(elem_mod)
+				battle_ui.add_battle_log(
+					"%s uses %s on %s for %d damage!%s" % [
+						attacker.get_display_name(),
+						ability.display_name,
+						target.get_display_name(),
+						actual,
+						elem_tag,
+					],
+					UITheme.LogType.DAMAGE,
+				)
 	else:
 		AudioManager.play_sfx(load(SfxLibrary.COMBAT_MAGIC_CAST))
 		if battle_ui:

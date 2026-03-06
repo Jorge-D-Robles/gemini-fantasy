@@ -3,6 +3,7 @@
 Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[date] Description`.
 
 ---
+- [2026-03-05] T-0277: Implement heal-targeting for support abilities — is_ally_target() in BAX, ally abilities heal instead of damage; 6 tests (claude)
 - [2026-03-05] T-0274: Implement Echo combat system — equip/unequip (max 6), per-battle uses, echo command/select/execute in battle, BattleAction.ECHO, auto-targeting, serialize; 10 tests (claude)
 - [2026-03-05] T-0276: Create status effect .tres data files — poison, burn, stun, haste, slow, shield, weakness, regen; 8 tests (claude)
 - [2026-02-22] T-0226: Overgrown Capital playtest pass — Chapter 5 flow verified, chapter_5_capital.json preset created, 0 bugs found (claude)

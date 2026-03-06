@@ -71,8 +71,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0277
 - Title: Implement heal-targeting for support abilities (SINGLE_ALLY, SELF)
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: medium
 - Milestone: M1
 - Tags: battle, core
