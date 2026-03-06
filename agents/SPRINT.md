@@ -7,7 +7,7 @@ Started: 2026-03-06
 Closed: —
 
 ## Velocity
-- Completed: 19
+- Completed: 20
 - Added mid-sprint: 0
 - Rolled over: 0
 
@@ -21,14 +21,13 @@ Closed: —
 
 ## Queue
 
-### T-0301
-- Title: Build The Scorched Road route scene — Cindral Wastes overworld
-- Priority: medium
+(empty)
 
 ---
 
 ## Done This Sprint
 
+- T-0301: Build Scorched Road route scene — volcanic highway, 3 biomes, ashlands borders, Cindral Wastes encounters, 20 tests
 - T-0300: Build Emberhearth city scene — Cindral Wastes volcanic hub with procedural ground, steampunk buildings, 5 NPCs, shop, inn, save point, 31 tests
 - T-0346: Implement Ash's "The Drawing" character quest — 4-stage event (43 dialogue lines, Ash never speaks), quest .tres, stage gating, trigger_stage(), 34 tests
 - T-0343: Implement Sienna's "Book of Names" character quest — 4-stage event (47 dialogue lines), quest .tres, stage gating, trigger_stage(), 30 tests

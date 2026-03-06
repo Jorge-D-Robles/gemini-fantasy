@@ -388,8 +388,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0301
 - Title: Build The Scorched Road route scene — Cindral Wastes overworld
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: medium
 - Milestone: M2
 - Tags: scene, tilemap
