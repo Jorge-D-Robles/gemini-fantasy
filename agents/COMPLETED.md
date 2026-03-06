@@ -97,3 +97,4 @@ T-0025 | 2026-02-22 | Build bonding system framework | BondData Resource + BondM
 - [2026-03-06] T-0292: Create Prismfall town shop — steel_hammer, steel_mace, iron_helm, prismfall_arms.tres with 14 items, 14 tests (claude)
 - [2026-03-06] T-0283: Complete Chapter 6 "Born from Nothing" — nyx_born_from_nothing.gd, 52 dialogue lines (discoveries, campfire lore, Garrick/Nyx bonding), 10 tests (claude)
 - [2026-03-06] T-0284: Complete Chapter 7 "A Village Burns" — 56 dialogue lines across 5 scenes (approach, Sera, aftermath, goodbyes, camp), BattleChoice enum, 16 tests (claude)
+- [2026-03-06] T-0285: Complete Chapter 8 "The Crystal City" — 59 dialogue lines, evening dinner/Garrick-Mara/Lorne agent, camp Iris-Kael half-truths, 14 tests (claude)

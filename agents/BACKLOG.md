@@ -171,8 +171,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0285
 - Title: Complete Chapter 8 "The Crystal City" event — Prismfall arrival
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M1
 - Tags: story, event

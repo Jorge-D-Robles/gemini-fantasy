@@ -7,8 +7,8 @@ Started: 2026-03-06
 Closed: —
 
 ## Velocity
-- Completed: 4
-- Added mid-sprint: 0
+- Completed: 5
+- Added mid-sprint: 3
 - Rolled over: 0
 
 ---
@@ -20,6 +20,28 @@ Closed: —
 ---
 
 ## Queue
+
+### T-0286
+- Title: Complete Chapter 9 "Beneath Prismfall" event — Lyra's truth and Convergence reveal
+- Status: todo
+- Assigned: unassigned
+- Priority: high
+- Milestone: M1
+- Tags: story, events
+- Depends: —
+- Blocked-by: —
+- Refs: docs/story/act1/09-beneath-prismfall.md
+
+### T-0320
+- Title: Create Cindral Wastes enemy set — volcanic/desert creatures
+- Status: todo
+- Assigned: unassigned
+- Priority: medium
+- Milestone: M1
+- Tags: battle, data
+- Depends: —
+- Blocked-by: —
+- Refs: docs/game-design/02-enemy-design.md, game/data/enemies/
 
 ### T-0278
 - Title: Build Prismfall town scene — Act I hub
@@ -62,3 +84,4 @@ Closed: —
 - T-0292: Create Prismfall town shop — steel_hammer, steel_mace, iron_helm (3 new equipment), prismfall_arms.tres (14 items: weapons, armor, consumables), 14 tests
 - T-0283: Complete Chapter 6 "Born from Nothing" — nyx_born_from_nothing.gd with 52 dialogue lines across 3 scenes (discoveries, campfire lore, Garrick/Nyx night bonding), 10 tests
 - T-0284: Complete Chapter 7 "A Village Burns" — expanded village_burns.gd with 56 dialogue lines across 5 scenes (approach, Sera confrontation, aftermath/Morin, leaving/goodbyes, camp/Kael-Iris), BattleChoice enum, 16 tests
+- T-0285: Complete Chapter 8 "The Crystal City" — expanded crystal_city_arrival.gd with 59 dialogue lines across 4 scenes (arrival, Archives/Lyra, evening dinner/Garrick-Mara/Lorne, camp/Iris-Kael), 14 tests
