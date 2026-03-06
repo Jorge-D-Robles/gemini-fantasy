@@ -131,3 +131,4 @@ T-0025 | 2026-02-22 | Build bonding system framework | BondData Resource + BondM
 - [2026-03-06] T-0325: Implement Garrick's "Three Burns" character quest — 3-stage event (43 dialogue lines), updated quest .tres, stage gating, trigger_stage(), 27 tests (claude)
 - [2026-03-06] T-0317: Wire Cipher/Sienna/Ash recruitment — PartyManager.add_character() calls in iron_coast, sisters_shadow, fire_and_ash events, 12 tests (claude)
 - [2026-03-06] T-0322b: Implement hacking puzzle mechanics — HackingPuzzleData resource, HackingSystem (sequence generation, Mastermind-style checking, difficulty scaling), 19 tests (claude)
+- [2026-03-06] T-0213: Add Merchant's Regret mini-boss — BOSS AI enemy + coin_shower AoE + desperate_bargain debuff, 13 tests (claude)

@@ -309,8 +309,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0213
 - Title: Add Merchant's Regret optional mini-boss to Overgrown Capital Market District
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: low
 - Milestone: M1
 - Depends: —
