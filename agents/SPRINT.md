@@ -7,7 +7,7 @@ Started: 2026-03-05
 Closed: —
 
 ## Velocity
-- Completed: 6
+- Completed: 7
 - Added mid-sprint: 0
 - Rolled over: 0
 
@@ -15,7 +15,7 @@ Closed: —
 
 ## Active
 
-- T-0271: Simplify MemorialEchoStrategy.execute() with early returns (Assigned: claude, Started: 2026-03-05)
+*(none)*
 
 ---
 
@@ -46,3 +46,4 @@ Closed: —
 - T-0269: Test suite de-bloat round 2 — removed 72 trivial tests across 12 files (1682→1610), 1 file deleted
 - T-0268: De-duplicate quest restore functions in QuestManager — merged 2 identical restore funcs into 1 parameterized _restore_quests_by_state()
 - T-0270: Simplify BattleActionExecutor.execute_attack() — extracted duplicated crit/non-crit branches, 56→42 lines
+- T-0271: Simplify MemorialEchoStrategy.execute() — extracted 3 helpers, early returns for cleaner flow

@@ -155,8 +155,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0266
 - Title: Remove dead functions — get_failed_quests() and compute_echo_count()
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M1
 - Tags: code-health, cleanup
@@ -167,8 +167,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0267
 - Title: Consolidate duplicated dialogue pair-builder into DialogueLine.build_from_pairs()
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M1
 - Tags: code-health, refactor
@@ -179,8 +179,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0268
 - Title: De-duplicate quest restore functions in QuestManager
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: medium
 - Milestone: M1
 - Tags: code-health, refactor
@@ -191,8 +191,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0269
 - Title: Test suite de-bloat round 2 — remove ~78 trivial/redundant test functions
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M1
 - Tags: tests, code-health
@@ -203,8 +203,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0270
 - Title: Simplify BattleActionExecutor.execute_attack() — extract crit/non-crit branches
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: medium
 - Milestone: M1
 - Tags: code-health, refactor, battle
@@ -215,8 +215,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0271
 - Title: Simplify MemorialEchoStrategy.execute() with early returns
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: low
 - Milestone: M1
 - Tags: code-health, refactor
