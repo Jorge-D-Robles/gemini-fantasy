@@ -121,8 +121,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0281
 - Title: Wire Overgrown Capital → Verdant Forest return path
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: medium
 - Milestone: M1
 - Tags: scene, flow

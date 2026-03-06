@@ -7,7 +7,7 @@ Started: 2026-03-05
 Closed: —
 
 ## Velocity
-- Completed: 9
+- Completed: 10
 - Added mid-sprint: 0
 - Rolled over: 0
 
@@ -37,10 +37,10 @@ Closed: —
 - Refs: game/scenes/verdant_forest/verdant_forest.gd, game/scenes/prismfall_approach/prismfall_approach.gd
 - Notes: Add zone marker on south edge of Verdant Forest connecting to Prismfall Approach. Add corresponding north entry zone. Add transition type to GameManager. 3+ tests.
 
-### T-0281
+### T-0281 (done)
 - Title: Wire Overgrown Capital → Verdant Forest return path
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: medium
 - Milestone: M1
 - Tags: scene, flow
@@ -72,6 +72,7 @@ Closed: —
 - T-0276: Create status effect .tres data files — poison, burn, stun, haste, slow, shield, weakness, regen; 8 new tests validating all fields
 - T-0274: Implement Echo combat system — equip/unequip (max 6 slots) in EchoManager, per-battle use tracking, "echo" command in PlayerTurnState, echo mode in ActionSelectState, echo execution (DAMAGE/HEAL/BUFF/DEBUFF) in ActionExecuteState, BattleAction.ECHO type, auto-target for AoE/SELF echoes, serialize equipped echoes, 10 new tests
 - T-0277: Implement heal-targeting for support abilities — is_ally_target() helper in BAX, execute_ability() heals allies instead of damaging, 6 new tests
+- T-0281: Verify Overgrown Capital → Verdant Forest return path — already wired (ExitToRuins → SP.VERDANT_FOREST, spawn_from_capital), 3 verification tests
 - T-0282: Wire Verdant Forest → Prismfall Approach transition — ExitToPrismfall Area2D + SpawnFromPrismfall Marker2D in Forest, zone marker, bidirectional wiring verified, 8 new tests
 - T-0289: Create Shard Serpent enemy — 80 HP BASIC AI, crystal_strike (stun)/burrow (self def)/shatter (AoE earth), weak to EARTH, added to Prismfall Approach encounters, 10 new tests
 - T-0288: Create Thornback Bear enemy — 120 HP AGGRESSIVE AI, maul/thorn_volley/roar abilities, weak to FIRE resists EARTH, added to Verdant Forest + Overgrown Ruins as rare encounter, 9 new tests
