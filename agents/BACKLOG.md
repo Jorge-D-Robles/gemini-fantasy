@@ -501,8 +501,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0310
 - Title: Implement Chapter 14 "Fire and Ash" event — finding Ash in Emberhearth
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M2
 - Tags: story, event, recruitment

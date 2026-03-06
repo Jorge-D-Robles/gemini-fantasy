@@ -122,3 +122,4 @@ T-0025 | 2026-02-22 | Build bonding system framework | BondData Resource + BondM
 - T-0307: Implement Chapter 11 "Rogue" event — 7 scenes, 120 dialogue lines, Act II opening, 22 tests (2026-03-06)
 - T-0308: Implement Chapter 12 "The Iron Coast" event — 8 scenes, 120 dialogue lines, Cipher recruitment, 22 tests (2026-03-06)
 - T-0309: Implement Chapter 13 "Sister's Shadow" event — 8 scenes, 106 dialogue lines, Sienna defection, 21 tests (2026-03-06)
+- T-0310: Implement Chapter 14 "Fire and Ash" event — 8 scenes, 68 dialogue lines, Ash introduction, 22 tests (2026-03-06)
