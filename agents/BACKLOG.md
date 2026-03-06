@@ -677,8 +677,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0322b
 - Title: Implement hacking puzzle mechanics — Cipher's special ability
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: medium
 - Milestone: M2
 - Tags: system, gameplay, puzzle
