@@ -285,8 +285,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0294
 - Title: Add party management UI — swap active and reserve members
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: medium
 - Milestone: M1
 - Tags: ui

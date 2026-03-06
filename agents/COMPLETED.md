@@ -3,6 +3,7 @@
 Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[date] Description`.
 
 ---
+- [2026-03-05] T-0294: Party management UI already implemented — party_ui.gd with active/reserve swap, detail panel, equipment display (claude)
 - [2026-03-05] T-0281: Verify Overgrown Capital → Verdant Forest return path — already wired, added 3 verification tests (claude)
 - [2026-03-05] T-0282: Wire Verdant Forest → Prismfall Approach transition — ExitToPrismfall + SpawnFromPrismfall + zone marker, bidirectional; 8 tests (claude)
 - [2026-03-05] T-0289: Create Shard Serpent enemy — 80 HP BASIC, crystal_strike/burrow/shatter, weak EARTH, Prismfall Approach encounters; 10 tests (claude)
