@@ -5,7 +5,6 @@ extends Node
 signal dialogue_started
 signal dialogue_ended
 signal line_displayed(speaker: String, text: String, portrait: Texture2D)
-signal line_finished
 signal choice_presented(choices: Array[String])
 signal choice_selected(index: int)
 
@@ -69,10 +68,7 @@ func select_choice(index: int) -> void:
 
 
 func skip() -> void:
-	if not _is_active:
-		return
-	if _waiting_for_advance:
-		line_finished.emit()
+	pass
 
 
 func on_line_display_complete() -> void:

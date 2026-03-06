@@ -3,8 +3,6 @@ extends Node
 ## Manages the player's party roster and active party members.
 
 signal party_changed
-signal character_added(data: Resource)
-signal character_removed(data: Resource)
 signal party_state_changed
 
 const GB = preload("res://systems/game_balance.gd")
@@ -34,7 +32,6 @@ func add_character(data: Resource) -> void:
 		active_party.append(data)
 	else:
 		reserve_party.append(data)
-	character_added.emit(data)
 	party_changed.emit()
 
 
@@ -58,7 +55,6 @@ func remove_character(data: Resource) -> void:
 		if reserve_idx >= 0:
 			reserve_party.remove_at(reserve_idx)
 
-	character_removed.emit(data)
 	party_changed.emit()
 
 

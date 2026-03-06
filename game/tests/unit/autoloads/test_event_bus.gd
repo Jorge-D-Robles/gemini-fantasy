@@ -15,20 +15,6 @@ func before_each() -> void:
 # --- Emission Tests ---
 
 
-func test_emit_player_interacted() -> void:
-	watch_signals(_bus)
-	var target := Node.new()
-	add_child_autofree(target)
-	_bus.emit_player_interacted(target)
-	assert_signal_emitted(_bus, "player_interacted")
-
-
-func test_emit_npc_talked_to() -> void:
-	watch_signals(_bus)
-	_bus.emit_npc_talked_to("Elder Thessa")
-	assert_signal_emitted(_bus, "npc_talked_to")
-
-
 func test_emit_npc_interaction_ended() -> void:
 	watch_signals(_bus)
 	_bus.emit_npc_interaction_ended("Elder Thessa")
@@ -62,24 +48,6 @@ func test_emit_area_entered() -> void:
 # --- Signal Parameter Tests ---
 # GDScript lambdas don't update captured outer-scope variables,
 # so use GUT's assert_signal_emitted_with_parameters instead.
-
-
-func test_player_interacted_passes_target() -> void:
-	watch_signals(_bus)
-	var target := Node.new()
-	add_child_autofree(target)
-	_bus.emit_player_interacted(target)
-	assert_signal_emitted_with_parameters(
-		_bus, "player_interacted", [target]
-	)
-
-
-func test_npc_talked_to_passes_name() -> void:
-	watch_signals(_bus)
-	_bus.emit_npc_talked_to("Garrick")
-	assert_signal_emitted_with_parameters(
-		_bus, "npc_talked_to", ["Garrick"]
-	)
 
 
 func test_npc_interaction_ended_passes_name() -> void:
@@ -129,12 +97,12 @@ func test_area_entered_passes_area_name() -> void:
 
 func test_multiple_listeners_all_receive() -> void:
 	var counts := [0, 0]
-	_bus.npc_talked_to.connect(
+	_bus.npc_interaction_ended.connect(
 		func(_n: String) -> void: counts[0] += 1
 	)
-	_bus.npc_talked_to.connect(
+	_bus.npc_interaction_ended.connect(
 		func(_n: String) -> void: counts[1] += 1
 	)
-	_bus.emit_npc_talked_to("Iris")
+	_bus.emit_npc_interaction_ended("Iris")
 	assert_eq(counts[0], 1)
 	assert_eq(counts[1], 1)

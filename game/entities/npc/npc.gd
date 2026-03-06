@@ -139,9 +139,6 @@ func interact() -> void:
 	if _indicator:
 		_indicator.visible = false
 	interaction_started.emit()
-	var bus := get_node_or_null("/root/EventBus")
-	if bus:
-		bus.emit_npc_talked_to(npc_name)
 
 	var lines: Array[DialogueLine] = []
 	var portrait: Texture2D = null

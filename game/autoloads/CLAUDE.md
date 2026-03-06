@@ -50,7 +50,7 @@ DialogueManager.select_choice(index)
 DialogueManager.is_active() -> bool
 await DialogueManager.dialogue_ended
 ```
-**Signals:** `dialogue_started`, `dialogue_ended`, `line_displayed(speaker, text, portrait)`, `choice_presented(choices)`, `choice_selected(index)`
+**Signals:** `dialogue_started`, `dialogue_ended`, `line_displayed(speaker, text, portrait)`, `choice_presented(choices: Array[String])`, `choice_selected(index: int)`
 
 ### PartyManager
 ```gdscript
@@ -72,8 +72,8 @@ Guards: blocked if dialogue active, not in OVERWORLD state, or transitioning.
 
 ### EventBus
 ```gdscript
-EventBus.emit_player_interacted(target)
-EventBus.emit_npc_talked_to(npc_name)
+EventBus.emit_npc_interaction_ended(npc_name)
+EventBus.emit_interactable_used(interactable_name)
 EventBus.emit_enemy_defeated(enemy_id)
 EventBus.emit_item_acquired(item_id, quantity)
 EventBus.emit_area_entered(area_name)   # auto-called on scene_changed

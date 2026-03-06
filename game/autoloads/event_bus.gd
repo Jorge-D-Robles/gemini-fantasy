@@ -5,12 +5,6 @@ extends Node
 ## AND relay through EventBus so decoupled systems (QuestManager, UI,
 ## analytics) can listen without knowing the source.
 
-## Emitted when the player interacts with any target (NPC, chest, sign).
-signal player_interacted(target: Node)
-
-## Emitted when an NPC's dialogue starts.
-signal npc_talked_to(npc_name: String)
-
 ## Emitted when an NPC's dialogue ends.
 signal npc_interaction_ended(npc_name: String)
 
@@ -25,14 +19,6 @@ signal item_acquired(item_id: StringName, quantity: int)
 
 ## Emitted when the player enters a new area/scene.
 signal area_entered(area_name: String)
-
-
-func emit_player_interacted(target: Node) -> void:
-	player_interacted.emit(target)
-
-
-func emit_npc_talked_to(npc_name_val: String) -> void:
-	npc_talked_to.emit(npc_name_val)
 
 
 func emit_npc_interaction_ended(npc_name_val: String) -> void:

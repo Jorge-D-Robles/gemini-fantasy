@@ -19,12 +19,6 @@ func test_advance_while_inactive_does_nothing() -> void:
 	assert_signal_not_emitted(_dm, "line_displayed")
 
 
-func test_skip_while_inactive_does_nothing() -> void:
-	watch_signals(_dm)
-	_dm.skip()
-	assert_signal_not_emitted(_dm, "line_finished")
-
-
 func test_select_choice_while_not_waiting_does_nothing() -> void:
 	watch_signals(_dm)
 	_dm.select_choice(0)

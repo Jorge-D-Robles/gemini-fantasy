@@ -1,64 +1,44 @@
 # Current Sprint
 
-Sprint: S04-m0-close-m1-begin
-Milestone: M0 close / M1 begin
-Goal: Close M0 with campfire placement and hygiene sweep; begin M1 with Echo system, Chapter 5 dungeon, and Prismfall Approach scene
-Started: 2026-02-20
+Sprint: S05-code-health
+Milestone: M1
+Goal: Code health sweep — remove dead code, consolidate duplicated logic, de-bloat test suite
+Started: 2026-03-05
 Closed: —
 
 ## Velocity
-- Completed: 29
+- Completed: 0
 - Added mid-sprint: 0
-- Rolled over: 1
+- Rolled over: 0
 
 ---
 
 ## Active
 
-*(none)*
+- T-0265: Remove unused signals from EventBus and PartyManager (Assigned: claude, Started: 2026-03-05)
 
 ---
 
 ## Queue
 
-### Other
+### Code Health (high priority)
 
-*(pull next tasks from BACKLOG.md — T-0226)*
+- T-0265: Remove unused signals from EventBus and PartyManager
+- T-0266: Remove dead functions — get_failed_quests() and compute_echo_count()
+- T-0267: Consolidate duplicated dialogue pair-builder into DialogueLine.build_from_pairs()
+- T-0269: Test suite de-bloat round 2 — remove ~78 trivial/redundant test functions
+
+### Code Health (medium priority)
+
+- T-0268: De-duplicate quest restore functions in QuestManager
+- T-0270: Simplify BattleActionExecutor.execute_attack() — extract crit/non-crit branches
+
+### Code Health (low priority)
+
+- T-0271: Simplify MemorialEchoStrategy.execute() with early returns
 
 ---
 
 ## Done This Sprint
 
-- T-0025: Build bonding system framework — BondData Resource (static helpers), BondManager autoload (D-C-B-A-S levels, battle/camp awards, combat bonus caps), SaveManager integration (5 call sites), 18 tests
-- T-0024: Implement fast travel system — FastTravelBeaconStrategy (unlock + dialogue), FastTravelUI (script-only destination picker), pause menu Travel button, 4 beacon flag constants, 9 unit tests
-- T-0226: Overgrown Capital playtest pass — Chapter 5 flow verified: scene loads, spawn correct, HUD shows location/party/gold, crystal walls block progression (by design), all interactables visible, 0 errors/warnings. Created chapter_5_capital.json playtest preset.
-- T-0264: Implement save/load system with 3 save slots and autosave — SaveManager autosave on scene_changed (slot 0), SaveSlotDialog (SAVE/LOAD modes), pause menu Save button, title screen Load Game button, HUD "Saved" indicator, 16 tests
-- T-0107: Implement full character ability trees — 48 new AbilityData .tres, 3 new CharacterData (Sienna/Cipher/Ash), 5 edited CharacterData (Kael/Iris/Garrick/Nyx/Lyra), 23 skill tree tier-3 nodes wired with unlocks_ability, 2 new test files; 1646 tests all passing
-- T-0180: Test suite de-bloat — removed 79 trivial tests (property assignments, type checks, non-empty checks, signal existence, enum values, constant values) across 35 files (6 deleted, 29 edited); 1639 tests remain, all passing
-- T-0214: Add Research Quarter Resonance terminal puzzle — ResonanceTerminalStrategy (3-state dialogue), 2 crystal key items, ItemPickupStrategy add_item bug fix, crystal pickup persistence, 12 tests
-- T-0206: Add The Performer mini-boss in Entertainment District — PerformerEncounter event, dramatic_echo + resonance_drain abilities, the_performer.tres (BOSS AI, 180 HP), trigger zone at col 28 row 14, 9 tests
-- T-0218: Add Survivor's Diary collectible in Residential Quarter — DiaryStrategy with 4 diary entries, compute_diary_lines()/compute_diary_position() helpers, survivors_diary_read flag, 8 tests
-- T-0188: Place campfire interactable in Overgrown Ruins — CampStrategy at col 20 row 12 with campfire sprite, compute_ruins_campfire_position() helper, one_time=false, 3 tests
-- T-0227: Place campfire interactable in Overgrown Capital Market District — CampStrategy at col 8 row 22, compute_capital_campfire_position() helper, one_time=false, 4 tests
-- T-0108: Build faction reputation system — ReputationManager autoload with 3 factions (Shepherds/Initiative/Free Resonants), 5 tiers (HOSTILE→ALLIED), price modifiers, save/load integration across 3 call sites, 29 tests
-- T-0250: Fix EnemyBattler.choose_action() typed array mismatch — call-site .assign() fix already applied, added regression test covering all 5 AI types with Array[PartyBattler]→Array[Battler] conversion
-- T-0263: Fix all 37 Godot editor debugger errors/warnings — set_deferred for 8 monitoring-in-signal calls, removed 7 shadowed class-name consts, removed 2 unused signals, fixed integer division, added 3 DialogueManager guards
-- T-0262: Revert root y_sort — remove y_sort_enabled from all 5 scene roots + z=0 TileMapLayers, keep only on Entities; update regression tests + scenes/CLAUDE.md
-- T-0261: Update CLAUDE.md + scenes/CLAUDE.md + entities/CLAUDE.md rendering conventions — corrected y_sort guidance, documented sprite offset
-- T-0260: Lower scatter noise frequencies — detail 0.15→0.04, debris 0.2→0.05 in overgrown_ruins.gd + overgrown_capital.gd
-- T-0259: Enable per-tile Y-sort on all 5 scene roots + z=0 TileMapLayers, 4 new regression tests
-- T-0258: Fix player sprite Y-sort origin — AnimatedSprite2D offset=(0,-8), regression test
-- T-0257: Final A5 purge — removed all 15 deprecated A5 constants from map_builder.gd, regression test added
-- T-0256: Redo Overgrown Capital tilemap — TF_DUNGEON flat tiles + RUINS_OBJECTS B-sheet scatter, position-hashed floor/walls, 14 tests 153 assertions
-- T-0255: Redo Prismfall Approach tilemap — TF_TERRAIN 3-biome steppe ground (gray stone/amber earth/dark earth) + sandy path hash, 16 tests
-- T-0254: Redo Overgrown Ruins tilemap — TF_DUNGEON flat tiles + RUINS_OBJECTS B-sheet scatter, position-hashed floor/walls, 14 tests 91 assertions
-- T-0253: Redo Roothollow tilemap — TF_TERRAIN biome+hash ground, path variants, STONE_OBJECTS flowers, 10 tests
-- T-0252: Enhance tilemap review workflow — JRPG reference search, A5 instant-fail check, dual reviewer gate in build-tilemap skill
-- T-0251: Hard-ban A5 sheets — AGENT_RULES HARD BANS section + map_builder.gd deprecation comments
-- T-0249: Chapter 7 "A Village Burns" story event scaffold
-- T-0223: Seed AbilityData .tres for Nyx (4) and Lyra (fragment_vision)
-- T-0105: Build Prismfall Approach area (Crystalline Steppes overworld scene)
-- T-0104: Chapters 8-10 story event scaffolds (crystal_city_arrival, lyras_truth, captured)
-- T-MBTM: MapBuilder overhaul + asset pack documentation — clear_layer(), build_procedural_wilds() (biome-constrained foliage), build_from_blueprint(), scatter_decorations() allowed_cells mask; 8 new packs documented in CLAUDE.md; 6 tests
-
-See `agents/COMPLETED.md` for the archive.
+*(none)*

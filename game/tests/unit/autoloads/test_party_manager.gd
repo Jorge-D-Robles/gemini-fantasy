@@ -77,23 +77,6 @@ func test_party_changed_signal() -> void:
 	assert_signal_emitted(_pm, "party_changed")
 
 
-func test_character_added_signal() -> void:
-	watch_signals(_pm)
-	_pm.add_character(_chars[0])
-	assert_signal_emitted_with_parameters(
-		_pm, "character_added", [_chars[0]]
-	)
-
-
-func test_character_removed_signal() -> void:
-	_pm.add_character(_chars[0])
-	watch_signals(_pm)
-	_pm.remove_character(_chars[0])
-	assert_signal_emitted_with_parameters(
-		_pm, "character_removed", [_chars[0]]
-	)
-
-
 func test_remove_nonexistent_no_crash() -> void:
 	_pm.remove_character(_chars[0])
 	assert_eq(_pm.roster.size(), 0)
