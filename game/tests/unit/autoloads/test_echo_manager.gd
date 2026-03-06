@@ -73,27 +73,6 @@ func test_get_echo_count_increments_on_collect() -> void:
 	assert_eq(_mgr.get_echo_count(), 2, "Echo count should be 2 after two collects")
 
 
-# -- compute_echo_count static --
-
-
-func test_compute_echo_count_empty_array() -> void:
-	var empty: Array[StringName] = []
-	assert_eq(
-		EchoManagerScript.compute_echo_count(empty),
-		0,
-		"compute_echo_count([]) should return 0",
-	)
-
-
-func test_compute_echo_count_returns_array_size() -> void:
-	var ids: Array[StringName] = [&"burning_village", &"childs_laughter"]
-	assert_eq(
-		EchoManagerScript.compute_echo_count(ids),
-		2,
-		"compute_echo_count should return array size",
-	)
-
-
 # -- serialize / deserialize --
 
 

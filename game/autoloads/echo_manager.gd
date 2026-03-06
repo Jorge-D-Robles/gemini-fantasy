@@ -53,8 +53,3 @@ func deserialize(data: Dictionary) -> void:
 		var sn := StringName(str(entry))
 		if not _collected.has(sn):
 			_collected[sn] = true
-
-
-## Returns the count of echo IDs in [param collected] — pure static helper.
-static func compute_echo_count(collected: Array[StringName]) -> int:
-	return collected.size()

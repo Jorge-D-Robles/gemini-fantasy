@@ -131,15 +131,6 @@ func get_completed_quests() -> Array[StringName]:
 	return result
 
 
-## Returns all failed quest ids.
-func get_failed_quests() -> Array[StringName]:
-	var result: Array[StringName] = []
-	for qid: StringName in _states:
-		if _states[qid] == State.FAILED:
-			result.append(qid)
-	return result
-
-
 ## Checks whether a quest's prerequisites are met.
 func can_accept_quest(quest: Resource) -> bool:
 	if quest == null:

@@ -7,7 +7,7 @@ Started: 2026-03-05
 Closed: —
 
 ## Velocity
-- Completed: 0
+- Completed: 1
 - Added mid-sprint: 0
 - Rolled over: 0
 
@@ -15,7 +15,7 @@ Closed: —
 
 ## Active
 
-- T-0265: Remove unused signals from EventBus and PartyManager (Assigned: claude, Started: 2026-03-05)
+- T-0266: Remove dead functions — get_failed_quests() and compute_echo_count() (Assigned: claude, Started: 2026-03-05)
 
 ---
 
@@ -23,7 +23,6 @@ Closed: —
 
 ### Code Health (high priority)
 
-- T-0265: Remove unused signals from EventBus and PartyManager
 - T-0266: Remove dead functions — get_failed_quests() and compute_echo_count()
 - T-0267: Consolidate duplicated dialogue pair-builder into DialogueLine.build_from_pairs()
 - T-0269: Test suite de-bloat round 2 — remove ~78 trivial/redundant test functions
@@ -41,4 +40,4 @@ Closed: —
 
 ## Done This Sprint
 
-*(none)*
+- T-0265: Remove unused signals from EventBus and PartyManager — removed 5 signals (player_interacted, npc_talked_to, character_added, character_removed, line_finished) + emit helpers + call sites, updated 8 files, 7 tests removed

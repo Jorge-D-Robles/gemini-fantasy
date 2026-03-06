@@ -143,7 +143,7 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0265
 - Title: Remove unused signals from EventBus and PartyManager
-- Status: in-progress
+- Status: done
 - Assigned: claude
 - Priority: high
 - Milestone: M1
