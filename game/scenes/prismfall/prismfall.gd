@@ -195,8 +195,11 @@ func _on_exit_to_dungeon_entered(body: Node2D) -> void:
 		return
 	if DialogueManager.is_active():
 		return
-	# Beneath Prismfall dungeon — not yet built, placeholder path
-	push_warning("Beneath Prismfall dungeon not yet implemented")
+	GameManager.change_scene(
+		SP.BENEATH_PRISMFALL,
+		GameManager.FADE_DURATION,
+		"spawn_from_dungeon",
+	)
 
 
 func _on_innkeeper_finished() -> void:

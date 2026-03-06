@@ -30,6 +30,9 @@ const PRISMFALL: String = (
 const OVERGROWN_CAPITAL: String = (
 	"res://scenes/overgrown_capital/overgrown_capital.tscn"
 )
+const BENEATH_PRISMFALL: String = (
+	"res://scenes/beneath_prismfall/beneath_prismfall.tscn"
+)
 
 # -- UI scenes --
 const TITLE_SCREEN: String = (
