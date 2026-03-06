@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="QuestData" load_steps=2 format=3 uid="uid://bash_the_drawing"]
+
+[ext_resource type="Script" path="res://resources/quest_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"ash_the_drawing"
+title = "The Drawing"
+description = "One morning, Ash draws a precise architectural blueprint of a pre-Severance laboratory buried in the Cindral Wastes. The party follows the drawing to the Chrysalis Facility and discovers that Ash is the first new life the Resonance has ever created -- not a memory, not a copy, but something that never existed before."
+objectives = ["Investigate Ash's mysterious blueprint drawing.", "Follow the drawing to the Chrysalis Facility in the Glass Flats.", "Process the revelation of Ash's true nature with the party.", "Decide how to handle the truth about Ash."]
+reward_gold = 0
+reward_exp = 500
+reward_item_ids = []
+quest_type = 2
+prerequisites = []
