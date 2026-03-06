@@ -513,8 +513,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0311
 - Title: Implement Chapter 15 "Siege of Emberhearth" event — major battle sequence
-- Status: todo
-- Assigned: unassigned
+- Status: in-progress
+- Assigned: claude
 - Priority: high
 - Milestone: M2
 - Tags: story, event, battle
@@ -525,8 +525,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0312
 - Title: Implement Chapter 16 "The Weight of Choice" event
-- Status: todo
-- Assigned: unassigned
+- Status: in-progress
+- Assigned: claude
 - Priority: high
 - Milestone: M2
 - Tags: story, event

@@ -15,7 +15,11 @@ Closed: —
 
 ## Active
 
-*(none)*
+### T-0312
+- Title: Implement Chapter 16 "The Weight of Choice" event
+- Status: in-progress
+- Assigned: claude
+- Started: 2026-03-06
 
 ---
 
