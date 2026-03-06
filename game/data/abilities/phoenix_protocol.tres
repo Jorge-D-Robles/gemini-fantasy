@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://bphoenix_protocol"]
+
+[ext_resource type="Script" path="res://resources/ability_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"phoenix_protocol"
+display_name = "Phoenix Protocol"
+description = "Iris's cybernetics fully activate, granting extreme combat mode. +100% all stats for 5 turns. All attacks hit entire enemy party. Immune to status effects. Exhaustion follows."
+ee_cost = 0
+resonance_cost = 100.0
+damage_base = 0
+damage_stat = 0
+target_type = 4
+element = 0
+status_effect = ""
+status_chance = 0.0
+status_effect_duration = 5
+is_limit_break = true
+animation_name = "phoenix_protocol"

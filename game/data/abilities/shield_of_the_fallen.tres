@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://bshield_of_the_fallen"]
+
+[ext_resource type="Script" path="res://resources/ability_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"shield_of_the_fallen"
+display_name = "Shield of the Fallen"
+description = "Garrick channels the memories of all those he failed to save. Become immortal for 5 turns. All party members gain +50% Defense. Attacks heal party. Ends with full party heal."
+ee_cost = 0
+resonance_cost = 100.0
+damage_base = 200
+damage_stat = 0
+target_type = 3
+element = 6
+status_effect = ""
+status_chance = 0.0
+status_effect_duration = 5
+is_limit_break = true
+animation_name = "shield_of_the_fallen"

@@ -50,5 +50,8 @@ enum Element {
 ## Duration in turns for the status effect. 0 = permanent.
 @export var status_effect_duration: int = 3
 
+@export_group("Limit Break")
+@export var is_limit_break: bool = false
+
 @export_group("Visuals")
 @export var animation_name: String = ""

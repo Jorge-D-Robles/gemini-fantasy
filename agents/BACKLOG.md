@@ -513,7 +513,7 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0311
 - Title: Implement Chapter 15 "Siege of Emberhearth" event — major battle sequence
-- Status: in-progress
+- Status: done
 - Assigned: claude
 - Priority: high
 - Milestone: M2
@@ -613,8 +613,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0319
 - Title: Implement Limit Break abilities — Overload-state ultimate attacks
-- Status: todo
-- Assigned: unassigned
+- Status: in-progress
+- Assigned: claude
 - Priority: medium
 - Milestone: M2
 - Tags: battle, resonance

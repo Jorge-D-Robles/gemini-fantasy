@@ -3,6 +3,9 @@ extends BattlerData
 
 ## Defines a playable character's growth rates and visual metadata.
 
+@export_group("Limit Break")
+@export var limit_break: Resource = null
+
 @export_group("Equipment")
 @export var allowed_weapon_types: Array[int] = []
 

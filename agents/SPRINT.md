@@ -15,7 +15,11 @@ Closed: —
 
 ## Active
 
-*(none)*
+### T-0319
+- Title: Implement Limit Break abilities — Overload-state ultimate attacks
+- Status: in-progress
+- Assigned: claude
+- Started: 2026-03-06
 
 ---
 
