@@ -7,7 +7,7 @@ Started: 2026-03-05
 Closed: —
 
 ## Velocity
-- Completed: 1
+- Completed: 2
 - Added mid-sprint: 0
 - Rolled over: 0
 
@@ -22,18 +22,6 @@ Closed: —
 ## Queue
 
 ### Battle System (high priority)
-
-### T-0273
-- Title: Implement AoE ability targeting (ALL_ENEMIES, ALL_ALLIES)
-- Status: todo
-- Assigned: unassigned
-- Priority: high
-- Milestone: M1
-- Tags: battle, core
-- Depends: —
-- Blocked-by: —
-- Refs: game/systems/battle/states/action_execute_state.gd, game/resources/ability_data.gd
-- Notes: AbilityData defines TargetType enum (SINGLE_ENEMY, ALL_ENEMIES, SINGLE_ALLY, ALL_ALLIES, SELF) but ActionExecuteState only handles single-target execution. When target_type is ALL_ENEMIES, iterate `battle_scene.get_living_enemies()` and apply damage/status to each. Same for ALL_ALLIES with `get_living_party()`. SELF targets the caster. Update TargetSelectState to auto-select all valid targets for AoE. Update BattleUI to show AoE indicator. 6+ tests.
 
 ### T-0274
 - Title: Implement Echo combat system — equip and use echoes in battle
@@ -142,3 +130,4 @@ Closed: —
 ## Done This Sprint
 
 - T-0272: Implement elemental weakness/resistance in damage calculation — compute_elemental_modifier() in BattlerDamage, wired into BattleActionExecutor, "Weak!"/"Resist!" battle log tags, ELEMENTAL_WEAKNESS_MULT (1.5x) and ELEMENTAL_RESISTANCE_MULT (0.5x) in GameBalance, 8 new tests
+- T-0273: Implement AoE ability targeting — is_aoe()/is_auto_target() helpers in BAX, _execute_aoe_ability() in ActionExecuteState (EE once, damage per target), TargetSelectState auto-skips for AoE/SELF, 8 new tests

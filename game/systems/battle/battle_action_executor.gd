@@ -9,6 +9,26 @@ const BP = preload("res://systems/battle/battle_particles.gd")
 const BattlerDamageClass = preload("res://systems/battle/battler_damage.gd")
 
 
+## Returns true if the ability targets all enemies or all allies.
+static func is_aoe(ability: AbilityData) -> bool:
+	if not ability:
+		return false
+	return (
+		ability.target_type == AbilityData.TargetType.ALL_ENEMIES
+		or ability.target_type == AbilityData.TargetType.ALL_ALLIES
+	)
+
+
+## Returns true if the ability needs no manual target selection (AoE or SELF).
+static func is_auto_target(ability: AbilityData) -> bool:
+	if not ability:
+		return false
+	return (
+		is_aoe(ability)
+		or ability.target_type == AbilityData.TargetType.SELF
+	)
+
+
 ## Execute a physical attack from [param attacker] against [param target].
 ## Handles crit roll, damage, audio, UI log, and visual feedback.
 static func execute_attack(

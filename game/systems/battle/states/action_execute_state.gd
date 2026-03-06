@@ -27,9 +27,18 @@ func enter() -> void:
 		BattleAction.Type.ATTACK:
 			await _execute_attack(battler, action.target)
 		BattleAction.Type.ABILITY:
-			success = await _execute_ability(
-				battler, action.target, action.ability
-			)
+			if BAX.is_aoe(action.ability):
+				success = await _execute_aoe_ability(
+					battler, action.ability,
+				)
+			elif action.ability.target_type == AbilityData.TargetType.SELF:
+				success = await _execute_ability(
+					battler, battler, action.ability,
+				)
+			else:
+				success = await _execute_ability(
+					battler, action.target, action.ability,
+				)
 		BattleAction.Type.ITEM:
 			await _execute_item(battler, action.target, action.item)
 
@@ -78,6 +87,34 @@ func _execute_ability(
 		return false
 
 	await BAX.execute_ability(attacker, ability, target, battle_scene, _battle_ui)
+	return true
+
+
+func _execute_aoe_ability(
+	attacker: Battler,
+	ability: AbilityData,
+) -> bool:
+	if not ability:
+		return false
+
+	if not attacker.use_ee(ability.ee_cost):
+		if _battle_ui:
+			_battle_ui.add_battle_log(
+				"Not enough EE!", UITheme.LogType.SYSTEM,
+			)
+		return false
+
+	var targets: Array[Battler] = []
+	match ability.target_type:
+		AbilityData.TargetType.ALL_ENEMIES:
+			targets = battle_scene.get_living_enemies()
+		AbilityData.TargetType.ALL_ALLIES:
+			targets = battle_scene.get_living_party()
+
+	for target: Battler in targets:
+		await BAX.execute_ability(
+			attacker, ability, target, battle_scene, _battle_ui,
+		)
 	return true
 
 

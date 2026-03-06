@@ -23,8 +23,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0273
 - Title: Implement AoE ability targeting (ALL_ENEMIES, ALL_ALLIES)
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M1
 - Tags: battle, core

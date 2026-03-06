@@ -1,6 +1,9 @@
 extends State
 
 ## Handles target selection for attacks and abilities.
+## AoE and SELF abilities skip manual selection and go straight to execute.
+
+const BAX = preload("res://systems/battle/battle_action_executor.gd")
 
 var battle_scene: Node = null
 var _battle_ui: Node = null
@@ -14,6 +17,12 @@ func enter() -> void:
 	_battle_ui = battle_scene.get_node_or_null("BattleUI")
 	if not _battle_ui:
 		state_machine.transition_to("PlayerTurn")
+		return
+
+	# AoE and SELF abilities skip manual target selection
+	var action: BattleAction = battle_scene.current_action
+	if action and action.ability and BAX.is_auto_target(action.ability):
+		state_machine.transition_to("ActionExecute")
 		return
 
 	# Determine targets based on ability target_type
