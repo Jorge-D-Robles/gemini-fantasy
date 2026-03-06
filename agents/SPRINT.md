@@ -7,7 +7,7 @@ Started: 2026-03-06
 Closed: —
 
 ## Velocity
-- Completed: 2
+- Completed: 3
 - Added mid-sprint: 0
 - Rolled over: 0
 
@@ -49,3 +49,4 @@ Closed: —
 
 - T-0321: Create Ironcoast/Initiative enemy set — Initiative Soldier (BASIC), Initiative Agent (AGGRESSIVE), Security Drone (DEFENSIVE), Initiative Scientist (SUPPORT), 12 abilities, 26 tests
 - T-0322: Create The Hollows enemy set — Time Wraith (AGGRESSIVE), Void Spawn (BASIC), Memory Phantom (BOSS), 9 abilities, 25 tests
+- T-0307: Implement Chapter 11 "Rogue" event — 7 scenes, 120 dialogue lines, Act II opening, 22 tests

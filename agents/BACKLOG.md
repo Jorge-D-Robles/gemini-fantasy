@@ -465,15 +465,15 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0307
 - Title: Implement Chapter 11 "Rogue" event — party goes rogue after escape
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M2
 - Tags: story, event
 - Depends: T-0287
 - Blocked-by: —
 - Refs: docs/story/act2/11-rogue.md
-- Notes: After escaping the Initiative (Ch10), party decides to go rogue. Seek other two Resonance Anchors before either faction claims them. New direction for the story. Full dialogue from story script. Set Act II progression flags.
+- Completed: 2026-03-06
 
 ### T-0308
 - Title: Implement Chapter 12 "The Iron Coast" event — arrival at Gearhaven
