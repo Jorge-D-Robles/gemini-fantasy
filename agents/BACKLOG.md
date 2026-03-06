@@ -273,8 +273,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0293
 - Title: Create Roothollow tutorial quests — help villagers
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: medium
 - Milestone: M1
 - Tags: quest, data, story

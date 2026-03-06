@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="QuestData" load_steps=2 format=3 uid="uid://belders_request"]
+
+[ext_resource type="Script" path="res://resources/quest_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"elders_request"
+title = "Elder's Request"
+description = "Elder Thessa needs a bundle of dried sage delivered to the memorial stone in the Verdant Forest. It's a tradition to honor those lost in The Severance."
+objectives = ["Collect Dried Sage from Thessa", "Place the sage at the memorial stone in Verdant Forest", "Return to Thessa in Roothollow"]
+reward_gold = 40
+reward_exp = 30
+reward_item_ids = [&"antidote"]
+quest_type = 1
+prerequisites = []

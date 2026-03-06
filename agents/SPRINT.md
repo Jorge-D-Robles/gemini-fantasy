@@ -7,7 +7,7 @@ Started: 2026-03-05
 Closed: —
 
 ## Velocity
-- Completed: 11
+- Completed: 12
 - Added mid-sprint: 0
 - Rolled over: 0
 
@@ -23,6 +23,11 @@ Closed: —
 
 ### T-0294 (already implemented)
 - Title: Add party management UI — swap active and reserve members
+- Status: done
+- Assigned: claude
+
+### T-0293 (done)
+- Title: Create Roothollow tutorial quests — help villagers
 - Status: done
 - Assigned: claude
 - Priority: medium
@@ -42,6 +47,7 @@ Closed: —
 - T-0276: Create status effect .tres data files — poison, burn, stun, haste, slow, shield, weakness, regen; 8 new tests validating all fields
 - T-0274: Implement Echo combat system — equip/unequip (max 6 slots) in EchoManager, per-battle use tracking, "echo" command in PlayerTurnState, echo mode in ActionSelectState, echo execution (DAMAGE/HEAL/BUFF/DEBUFF) in ActionExecuteState, BattleAction.ECHO type, auto-target for AoE/SELF echoes, serialize equipped echoes, 10 new tests
 - T-0277: Implement heal-targeting for support abilities — is_ally_target() helper in BAX, execute_ability() heals allies instead of damaging, 6 new tests
+- T-0293: Create Roothollow tutorial quests — lost_pendant.tres (Wren's Lost Pendant) + elders_request.tres (Elder's Request), 8 tests
 - T-0294: Party management UI already implemented — party_ui.gd with swap, detail panel, equipment display, error feedback, focus navigation, data helpers
 - T-0281: Verify Overgrown Capital → Verdant Forest return path — already wired (ExitToRuins → SP.VERDANT_FOREST, spawn_from_capital), 3 verification tests
 - T-0282: Wire Verdant Forest → Prismfall Approach transition — ExitToPrismfall Area2D + SpawnFromPrismfall Marker2D in Forest, zone marker, bidirectional wiring verified, 8 new tests
