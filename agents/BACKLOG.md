@@ -147,8 +147,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0283
 - Title: Complete Chapter 6 "Born from Nothing" event — full Nyx origin dialogue
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M1
 - Tags: story, event
