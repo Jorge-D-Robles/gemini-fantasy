@@ -120,3 +120,4 @@ T-0025 | 2026-02-22 | Build bonding system framework | BondData Resource + BondM
 - T-0321: Create Ironcoast/Initiative enemy set — 4 enemies, 12 abilities, 26 tests (2026-03-06)
 - T-0322: Create The Hollows enemy set — 3 enemies, 9 abilities, 25 tests (2026-03-06)
 - T-0307: Implement Chapter 11 "Rogue" event — 7 scenes, 120 dialogue lines, Act II opening, 22 tests (2026-03-06)
+- T-0308: Implement Chapter 12 "The Iron Coast" event — 8 scenes, 120 dialogue lines, Cipher recruitment, 22 tests (2026-03-06)
