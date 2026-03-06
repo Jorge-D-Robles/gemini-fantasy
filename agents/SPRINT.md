@@ -7,7 +7,7 @@ Started: 2026-03-05
 Closed: —
 
 ## Velocity
-- Completed: 2
+- Completed: 3
 - Added mid-sprint: 0
 - Rolled over: 0
 
@@ -48,18 +48,6 @@ Closed: —
 - Notes: Abilities with target_type SINGLE_ALLY or SELF should target party members, not enemies. Currently TargetSelectState likely only shows enemies. Add ally-targeting mode. Execute heal in ActionExecuteState using ability damage_base as heal amount. 5+ tests.
 
 ### Battle Data (medium priority)
-
-### T-0276
-- Title: Create status effect .tres data files for core effects
-- Status: todo
-- Assigned: unassigned
-- Priority: medium
-- Milestone: M1
-- Tags: battle, data
-- Depends: —
-- Blocked-by: —
-- Refs: game/resources/status_effect_data.gd, game/data/
-- Notes: Create: poison.tres, burn.tres, stun.tres, haste.tres, slow.tres, shield.tres, weakness.tres, regen.tres. Wire abilities that reference these. 4+ tests.
 
 ### T-0275
 - Title: Add Ground command to battle — cure Hollow ally
@@ -131,3 +119,4 @@ Closed: —
 
 - T-0272: Implement elemental weakness/resistance in damage calculation — compute_elemental_modifier() in BattlerDamage, wired into BattleActionExecutor, "Weak!"/"Resist!" battle log tags, ELEMENTAL_WEAKNESS_MULT (1.5x) and ELEMENTAL_RESISTANCE_MULT (0.5x) in GameBalance, 8 new tests
 - T-0273: Implement AoE ability targeting — is_aoe()/is_auto_target() helpers in BAX, _execute_aoe_ability() in ActionExecuteState (EE once, damage per target), TargetSelectState auto-skips for AoE/SELF, 8 new tests
+- T-0276: Create status effect .tres data files — poison, burn, stun, haste, slow, shield, weakness, regen; 8 new tests validating all fields

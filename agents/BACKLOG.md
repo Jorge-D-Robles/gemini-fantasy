@@ -59,8 +59,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0276
 - Title: Create status effect .tres data files for core effects
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: medium
 - Milestone: M1
 - Tags: battle, data

@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="StatusEffectData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/status_effect_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"stun"
+display_name = "Stun"
+description = "Unable to act this turn."
+effect_type = 4
+duration = 1
+prevents_action = true

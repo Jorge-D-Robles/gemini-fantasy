@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="StatusEffectData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/status_effect_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"weakness"
+display_name = "Weakness"
+description = "Defenses are compromised, taking more damage."
+effect_type = 1
+duration = 3
+defense_modifier = -5

@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="StatusEffectData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/status_effect_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"poison"
+display_name = "Poison"
+description = "Takes damage each turn from toxins."
+effect_type = 2
+duration = 3
+tick_damage = 5
