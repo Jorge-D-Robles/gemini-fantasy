@@ -7,7 +7,7 @@ Started: 2026-03-05
 Closed: —
 
 ## Velocity
-- Completed: 3
+- Completed: 4
 - Added mid-sprint: 0
 - Rolled over: 0
 
@@ -22,18 +22,6 @@ Closed: —
 ## Queue
 
 ### Battle System (high priority)
-
-### T-0274
-- Title: Implement Echo combat system — equip and use echoes in battle
-- Status: todo
-- Assigned: unassigned
-- Priority: high
-- Milestone: M1
-- Tags: battle, echo, ui
-- Depends: —
-- Blocked-by: —
-- Refs: game/resources/echo_data.gd, game/autoloads/echo_manager.gd, game/systems/battle/states/player_turn_state.gd
-- Notes: Design doc specifies 6 shared Echo Slots the party equips before battle. EchoData already has `uses_per_battle`, `effect_type`, `effect_value`, `element`, `target_type`. Implementation: (1) Add `equipped_echoes: Array[EchoData]` (max 6) to EchoManager with equip/unequip methods. (2) Add "echo" command to PlayerTurnState command menu. (3) Create EchoSelectState or reuse ActionSelect to show equipped echoes. (4) Execute echo effects in ActionExecuteState (DAMAGE, HEAL, BUFF, DEBUFF). (5) Track per-battle uses remaining. (6) Serialize equipped echoes in SaveManager. 8+ tests.
 
 ### T-0277
 - Title: Implement heal-targeting for support abilities (SINGLE_ALLY, SELF)
@@ -120,3 +108,4 @@ Closed: —
 - T-0272: Implement elemental weakness/resistance in damage calculation — compute_elemental_modifier() in BattlerDamage, wired into BattleActionExecutor, "Weak!"/"Resist!" battle log tags, ELEMENTAL_WEAKNESS_MULT (1.5x) and ELEMENTAL_RESISTANCE_MULT (0.5x) in GameBalance, 8 new tests
 - T-0273: Implement AoE ability targeting — is_aoe()/is_auto_target() helpers in BAX, _execute_aoe_ability() in ActionExecuteState (EE once, damage per target), TargetSelectState auto-skips for AoE/SELF, 8 new tests
 - T-0276: Create status effect .tres data files — poison, burn, stun, haste, slow, shield, weakness, regen; 8 new tests validating all fields
+- T-0274: Implement Echo combat system — equip/unequip (max 6 slots) in EchoManager, per-battle use tracking, "echo" command in PlayerTurnState, echo mode in ActionSelectState, echo execution (DAMAGE/HEAL/BUFF/DEBUFF) in ActionExecuteState, BattleAction.ECHO type, auto-target for AoE/SELF echoes, serialize equipped echoes, 10 new tests

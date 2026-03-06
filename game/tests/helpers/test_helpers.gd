@@ -197,6 +197,23 @@ static func make_character_data(
 	return c
 
 
+static func make_echo(overrides: Dictionary = {}) -> EchoData:
+	var e := EchoData.new()
+	e.id = overrides.get("id", &"test_echo")
+	e.display_name = overrides.get("display_name", "Test Echo")
+	e.description = overrides.get("description", "A test echo.")
+	e.rarity = overrides.get("rarity", EchoData.Rarity.COMMON)
+	e.echo_type = overrides.get("echo_type", EchoData.EchoType.ATTACK)
+	e.effect_type = overrides.get("effect_type", EchoData.EffectType.DAMAGE)
+	e.effect_value = overrides.get("effect_value", 50)
+	e.element = overrides.get("element", EchoData.Element.FIRE)
+	e.target_type = overrides.get(
+		"target_type", EchoData.TargetType.SINGLE_ENEMY
+	)
+	e.uses_per_battle = overrides.get("uses_per_battle", 1)
+	return e
+
+
 static func make_quest(overrides: Dictionary = {}) -> QuestData:
 	var q := QuestData.new()
 	q.id = overrides.get("id", &"test_quest")

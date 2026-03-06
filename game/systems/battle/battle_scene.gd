@@ -42,6 +42,7 @@ func setup_battle(
 	_spawn_party(party_data)
 	_spawn_enemies(enemy_data)
 	_build_battler_list()
+	_reset_echo_battle_uses()
 	turn_queue.initialize(all_battlers)
 	state_machine.transition_to("BattleStart")
 
@@ -202,6 +203,12 @@ func _setup_background() -> void:
 	if _background and _background.has_method("setup"):
 		var area: int = _background.area_from_scene_path(area_scene_path)
 		_background.setup(area)
+
+
+func _reset_echo_battle_uses() -> void:
+	var echo_mgr: Node = get_node_or_null("/root/EchoManager")
+	if echo_mgr and echo_mgr.has_method("reset_battle_uses"):
+		echo_mgr.reset_battle_uses()
 
 
 func _on_battler_defeated(battler: Battler) -> void:

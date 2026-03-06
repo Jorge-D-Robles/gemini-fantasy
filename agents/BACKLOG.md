@@ -35,8 +35,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0274
 - Title: Implement Echo combat system — equip and use echoes in battle
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M1
 - Tags: battle, echo, ui

@@ -51,6 +51,9 @@ func _on_command_selected(command: String) -> void:
 		"item":
 			battle_scene.pending_command = "item"
 			state_machine.transition_to("ActionSelect")
+		"echo":
+			battle_scene.pending_command = "echo"
+			state_machine.transition_to("ActionSelect")
 		"defend":
 			battle_scene.current_battler.defend()
 			_battle_ui.update_party_status(battle_scene.get_living_party())

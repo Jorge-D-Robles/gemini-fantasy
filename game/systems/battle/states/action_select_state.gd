@@ -37,6 +37,31 @@ func enter() -> void:
 			_battle_ui.item_selected.connect(_on_item_selected)
 		if not _battle_ui.submenu_cancelled.is_connected(_on_cancelled):
 			_battle_ui.submenu_cancelled.connect(_on_cancelled)
+	elif _mode == "echo":
+		var echo_mgr: Node = battle_scene.get_node_or_null(
+			"/root/EchoManager"
+		)
+		if not echo_mgr or not echo_mgr.has_method("get_available_echoes"):
+			_battle_ui.add_battle_log(
+				"No echoes available!", UITheme.LogType.SYSTEM,
+			)
+			state_machine.transition_to("PlayerTurn")
+			return
+		var available: Array = echo_mgr.get_available_echoes()
+		if available.is_empty():
+			_battle_ui.add_battle_log(
+				"No echoes available!", UITheme.LogType.SYSTEM,
+			)
+			state_machine.transition_to("PlayerTurn")
+			return
+		var echoes_as_resource: Array[Resource] = []
+		for echo in available:
+			echoes_as_resource.append(echo)
+		_battle_ui.show_skill_submenu(echoes_as_resource)
+		if not _battle_ui.skill_selected.is_connected(_on_echo_selected):
+			_battle_ui.skill_selected.connect(_on_echo_selected)
+		if not _battle_ui.submenu_cancelled.is_connected(_on_cancelled):
+			_battle_ui.submenu_cancelled.connect(_on_cancelled)
 	else:
 		var battler: Battler = battle_scene.current_battler
 		if battler is PartyBattler:
@@ -62,6 +87,8 @@ func exit() -> void:
 	if _battle_ui:
 		if _battle_ui.skill_selected.is_connected(_on_skill_selected):
 			_battle_ui.skill_selected.disconnect(_on_skill_selected)
+		if _battle_ui.skill_selected.is_connected(_on_echo_selected):
+			_battle_ui.skill_selected.disconnect(_on_echo_selected)
 		if _battle_ui.item_selected.is_connected(_on_item_selected):
 			_battle_ui.item_selected.disconnect(_on_item_selected)
 		if _battle_ui.submenu_cancelled.is_connected(_on_cancelled):
@@ -71,6 +98,12 @@ func exit() -> void:
 func _on_skill_selected(ability: Resource) -> void:
 	var ability_data := ability as AbilityData
 	battle_scene.current_action = BattleAction.create_ability(ability_data, null)
+	state_machine.transition_to("TargetSelect")
+
+
+func _on_echo_selected(echo_resource: Resource) -> void:
+	var echo_data := echo_resource as EchoData
+	battle_scene.current_action = BattleAction.create_echo(echo_data, null)
 	state_machine.transition_to("TargetSelect")
 
 

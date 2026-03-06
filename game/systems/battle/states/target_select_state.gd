@@ -25,6 +25,17 @@ func enter() -> void:
 		state_machine.transition_to("ActionExecute")
 		return
 
+	# Echo auto-targeting for AoE/SELF echoes
+	if action and action.echo:
+		var tt: int = action.echo.target_type
+		if (
+			tt == EchoData.TargetType.ALL_ENEMIES
+			or tt == EchoData.TargetType.ALL_ALLIES
+			or tt == EchoData.TargetType.SELF
+		):
+			state_machine.transition_to("ActionExecute")
+			return
+
 	# Determine targets based on ability target_type
 	var targets: Array[Battler] = _get_valid_targets()
 	if targets.is_empty():
@@ -67,6 +78,15 @@ func _get_valid_targets() -> Array[Battler]:
 			AbilityData.TargetType.SINGLE_ALLY, AbilityData.TargetType.ALL_ALLIES:
 				return battle_scene.get_living_party()
 			AbilityData.TargetType.SELF:
+				var self_list: Array[Battler] = []
+				if battle_scene.current_battler and battle_scene.current_battler.is_alive:
+					self_list.append(battle_scene.current_battler)
+				return self_list
+	if action and action.echo:
+		match action.echo.target_type:
+			EchoData.TargetType.SINGLE_ALLY:
+				return battle_scene.get_living_party()
+			EchoData.TargetType.SELF:
 				var self_list: Array[Battler] = []
 				if battle_scene.current_battler and battle_scene.current_battler.is_alive:
 					self_list.append(battle_scene.current_battler)

@@ -41,6 +41,8 @@ func enter() -> void:
 				)
 		BattleAction.Type.ITEM:
 			await _execute_item(battler, action.target, action.item)
+		BattleAction.Type.ECHO:
+			success = await _execute_echo(battler, action.echo, action.target)
 
 	battle_scene.current_action = null
 
@@ -180,3 +182,113 @@ func _show_heal_number(target: Battler, amount: int) -> void:
 		visual.play_heal_anim()
 
 
+func _execute_echo(
+	user: Battler,
+	echo: EchoData,
+	single_target: Battler,
+) -> bool:
+	if not echo:
+		return false
+
+	# Consume a use via EchoManager
+	var echo_mgr: Node = battle_scene.get_node_or_null("/root/EchoManager")
+	if echo_mgr and echo_mgr.has_method("consume_use"):
+		if not echo_mgr.consume_use(echo.id):
+			if _battle_ui:
+				_battle_ui.add_battle_log(
+					"No uses remaining!", UITheme.LogType.SYSTEM,
+				)
+			return false
+
+	# Determine targets
+	var targets: Array[Battler] = []
+	match echo.target_type:
+		EchoData.TargetType.ALL_ENEMIES:
+			targets = battle_scene.get_living_enemies()
+		EchoData.TargetType.ALL_ALLIES:
+			targets = battle_scene.get_living_party()
+		EchoData.TargetType.SELF:
+			targets = [user]
+		_:
+			if single_target:
+				targets = [single_target]
+
+	for target: Battler in targets:
+		await _apply_echo_effect(user, echo, target)
+	return true
+
+
+func _apply_echo_effect(
+	user: Battler,
+	echo: EchoData,
+	target: Battler,
+) -> void:
+	if not target or not target.is_alive:
+		return
+
+	match echo.effect_type:
+		EchoData.EffectType.DAMAGE:
+			var damage := maxi(echo.effect_value, 1)
+			var actual := target.take_damage(damage)
+			AudioManager.play_sfx(load(SfxLibrary.COMBAT_MAGIC_CAST))
+			if _battle_ui:
+				_battle_ui.add_battle_log(
+					"%s invokes %s on %s for %d damage!" % [
+						user.get_display_name(),
+						echo.display_name,
+						target.get_display_name(),
+						actual,
+					],
+					UITheme.LogType.DAMAGE,
+				)
+		EchoData.EffectType.HEAL:
+			var healed := target.heal(echo.effect_value)
+			AudioManager.play_sfx(load(SfxLibrary.COMBAT_HEAL_CHIME))
+			_play_heal_vfx(target)
+			_show_heal_number(target, healed)
+			if _battle_ui:
+				_battle_ui.add_battle_log(
+					"%s invokes %s — %s healed for %d HP!" % [
+						user.get_display_name(),
+						echo.display_name,
+						target.get_display_name(),
+						healed,
+					],
+					UITheme.LogType.HEAL,
+				)
+		EchoData.EffectType.BUFF:
+			var effect := StatusEffectData.new()
+			effect.id = echo.id
+			effect.display_name = echo.display_name
+			effect.effect_type = StatusEffectData.EffectType.BUFF
+			effect.duration = 3
+			effect.attack_modifier = echo.effect_value
+			target.apply_status(effect)
+			AudioManager.play_sfx(load(SfxLibrary.COMBAT_STATUS_APPLY))
+			if _battle_ui:
+				_battle_ui.add_battle_log(
+					"%s invokes %s — %s is buffed!" % [
+						user.get_display_name(),
+						echo.display_name,
+						target.get_display_name(),
+					],
+					UITheme.LogType.STATUS,
+				)
+		EchoData.EffectType.DEBUFF:
+			var effect := StatusEffectData.new()
+			effect.id = echo.id
+			effect.display_name = echo.display_name
+			effect.effect_type = StatusEffectData.EffectType.DEBUFF
+			effect.duration = 3
+			effect.defense_modifier = -echo.effect_value
+			target.apply_status(effect)
+			AudioManager.play_sfx(load(SfxLibrary.COMBAT_STATUS_APPLY))
+			if _battle_ui:
+				_battle_ui.add_battle_log(
+					"%s invokes %s — %s is weakened!" % [
+						user.get_display_name(),
+						echo.display_name,
+						target.get_display_name(),
+					],
+					UITheme.LogType.STATUS,
+				)

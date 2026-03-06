@@ -3,6 +3,7 @@
 Append-only archive. Each entry: `[date] T-XXXX: Title (agent)` or historical `[date] Description`.
 
 ---
+- [2026-03-05] T-0274: Implement Echo combat system — equip/unequip (max 6), per-battle uses, echo command/select/execute in battle, BattleAction.ECHO, auto-targeting, serialize; 10 tests (claude)
 - [2026-03-05] T-0276: Create status effect .tres data files — poison, burn, stun, haste, slow, shield, weakness, regen; 8 tests (claude)
 - [2026-02-22] T-0226: Overgrown Capital playtest pass — Chapter 5 flow verified, chapter_5_capital.json preset created, 0 bugs found (claude)
 - [2026-02-22] T-0264: Implement save/load system with 3 save slots and autosave — SaveManager autosave on scene_changed (slot 0), SaveSlotDialog (SAVE/LOAD modes), pause menu Save button, title screen Load Game button, HUD "Saved" indicator, 16 tests (claude)
