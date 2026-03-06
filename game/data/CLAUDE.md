@@ -59,15 +59,23 @@ data/
 | `prism_guardian` | Prism Guardian | BOSS | EARTH (weak), LIGHT (resists) |
 | `resonance_wisp` | Resonance Wisp | SUPPORT | DARK (weak), LIGHT (resists) |
 
-### equipment/ (6)
+### equipment/ (11)
 | ID | Display Name | Slot | Weapon Type |
 |----|-------------|------|-------------|
+| `chain_mail` | Chain Mail | CHEST | — |
+| `crystal_staff` | Crystal Staff | WEAPON | STAFF |
 | `iron_hammer` | Iron Hammer | WEAPON | HAMMER |
+| `iron_helm` | Iron Helm | HELMET | — |
+| `iron_shield` | Iron Shield | WEAPON | SHIELD |
 | `iron_sword` | Iron Sword | WEAPON | SWORD |
 | `leather_cap` | Leather Cap | HELMET | — |
 | `leather_vest` | Leather Vest | CHEST | — |
+| `mystic_ring` | Mystic Ring | ACCESSORY | — |
 | `oak_staff` | Oak Staff | WEAPON | STAFF |
 | `speed_ring` | Speed Ring | ACCESSORY | — |
+| `steel_hammer` | Steel Hammer | WEAPON | HAMMER |
+| `steel_mace` | Steel Mace | WEAPON | MACE |
+| `steel_sword` | Steel Sword | WEAPON | SWORD |
 
 ### items/ (7)
 | ID | Display Name | Effect | Value |

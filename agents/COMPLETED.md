@@ -94,3 +94,4 @@ T-0025 | 2026-02-22 | Build bonding system framework | BondData Resource + BondM
 - [2026-03-06] T-0288: Create Thornback Bear enemy — 120 HP AGGRESSIVE AI, maul/thorn_volley/roar abilities, weak to FIRE resists EARTH, added to Verdant Forest + Overgrown Ruins as rare encounter, 9 new tests (agent)
 - [2026-03-06] T-0275: Add Ground command — BattleAction.GROUND type, "ground" command in PlayerTurnState, Hollow ally targeting in TargetSelectState, _execute_ground in ActionExecuteState (25% resonance cost, cure Hollow, 25% HP heal), GROUND_RESONANCE_COST/GROUND_HEAL_PERCENT constants, 6 new tests (agent)
 - [2026-03-06] T-0290: Create crystal dungeon enemy set — Crystal Sentinel (DEFENSIVE), Resonance Wisp (SUPPORT), Prism Guardian (BOSS mini-boss), 9 new abilities, 22 tests (claude)
+- [2026-03-06] T-0292: Create Prismfall town shop — steel_hammer, steel_mace, iron_helm, prismfall_arms.tres with 14 items, 14 tests (claude)

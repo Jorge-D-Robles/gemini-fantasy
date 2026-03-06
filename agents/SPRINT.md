@@ -7,7 +7,7 @@ Started: 2026-03-06
 Closed: —
 
 ## Velocity
-- Completed: 1
+- Completed: 2
 - Added mid-sprint: 0
 - Rolled over: 0
 
@@ -20,17 +20,6 @@ Closed: —
 ---
 
 ## Queue
-
-### T-0292
-- Title: Create Prismfall town shop — mid-tier equipment and items
-- Status: todo
-- Assigned: unassigned
-- Priority: medium
-- Milestone: M1
-- Tags: data, ui
-- Depends: —
-- Blocked-by: —
-- Refs: game/data/items/, game/ui/shop_ui/
 
 ### T-0283
 - Title: Complete Chapter 6 "Born from Nothing" event — full Nyx origin dialogue
@@ -92,3 +81,4 @@ Closed: —
 ## Done This Sprint
 
 - T-0290: Create crystal dungeon enemy set — Crystal Sentinel (DEFENSIVE, crystal_slam/crystal_shell/shard_barrage), Resonance Wisp (SUPPORT, resonance_mend/resonance_bolt/haste_pulse), Prism Guardian (BOSS, crushing_blow/prismatic_beam/refract), 9 abilities, 22 tests
+- T-0292: Create Prismfall town shop — steel_hammer, steel_mace, iron_helm (3 new equipment), prismfall_arms.tres (14 items: weapons, armor, consumables), 14 tests

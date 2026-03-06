@@ -261,8 +261,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0292
 - Title: Create Prismfall town shop — mid-tier equipment and items
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: medium
 - Milestone: M1
 - Tags: data, shop
