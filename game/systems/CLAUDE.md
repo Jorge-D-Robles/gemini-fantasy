@@ -199,6 +199,7 @@ MapBuilder.clear_layer(layer: TileMapLayer) -> void
 MapBuilder.build_procedural_wilds(ground_layer, object_layer, cols, rows, biome_noise, foliage_noise, biome_entries, foliage_entries, source_id) -> void
 MapBuilder.build_from_blueprint(layer, object_layer, blueprint, legend, object_legend, source_id, object_source_id) -> void
 MapBuilder.scatter_decorations(layer, cols, rows, noise, entries, allowed_cells: Array[Vector2i] = []) -> void
+MapBuilder.fill_layer_with_variants(layer, map_data, variant_legend, source_id, hash_seed) -> void
 ```
 
 **`build_procedural_wilds()`** — Two-pass noise-based map generation. Pass 1 fills ground per biome_entries thresholds (same format as `build_noise_layer()`). Pass 2 places foliage objects only on cells whose biome entry has `"foliage": true`, using foliage_noise sampled per cell against each foliage_entry's `"threshold"`. Eliminates "carpet bombing" by keeping decorations biome-constrained.
@@ -207,6 +208,8 @@ Biome entry format: `{"threshold": float, "atlas": Vector2i, "foliage": bool}`
 Foliage entry format: `{"atlas": Vector2i, "source_id": int, "threshold": float}`
 
 **`scatter_decorations()` — updated:** The new optional `allowed_cells` parameter (default `[]`) restricts scattering to a specific set of cell positions. Empty = all cells allowed (backward compatible). Pass grass-cell positions to prevent trees on dirt/stone.
+
+**`fill_layer_with_variants()`** — Like `build_layer()`, but each legend character maps to an **Array of tile variants** instead of a single tile. A deterministic position hash (`abs(x*73 + y*31 + hash_seed) % N`) selects among variants per cell, producing organic visual variety from text maps. **Use this for forest borders, wall fills, and any repeated-tile area** to eliminate the monotone carpet-bombing look. Variant legend format: `{"T": [Vector2i(1,1), Vector2i(3,1), ...]}`.
 
 **`build_from_blueprint()`** — Enhanced `build_layer()` that populates two layers. Clears both first, then places ground tiles (from `legend`) in `layer` and object tiles (from `object_legend`) in `object_layer`. Useful when splitting a single authored map into ground + object layers.
 

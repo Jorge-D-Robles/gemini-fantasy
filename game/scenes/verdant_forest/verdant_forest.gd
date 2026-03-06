@@ -335,7 +335,12 @@ func _setup_tilemap() -> void:
 	]
 	var solid: Dictionary = {
 		1: [
-			Vector2i(1, 1),    # Dense canopy fill (tree borders)
+			# Dense canopy fill variants (tree borders) — all 8 need collision
+			Vector2i(1, 1), Vector2i(3, 1),
+			Vector2i(5, 1), Vector2i(7, 1),
+			Vector2i(1, 3), Vector2i(3, 3),
+			Vector2i(5, 3), Vector2i(7, 3),
+			# Individual tree trunks
 			Vector2i(8, 7),    # Tree A trunk base
 			Vector2i(10, 7),   # Tree B trunk base
 			Vector2i(8, 5),    # Tree C trunk segment
@@ -383,8 +388,12 @@ func _setup_tilemap() -> void:
 	# Paths: dirt path overlay (source 0) — position-hashed 4 variants
 	_fill_paths_with_variants(_paths_layer)
 	MapBuilder.disable_collision(_paths_layer)
-	# Trees: dense canopy fill for impenetrable borders (source 1)
-	MapBuilder.build_layer(_trees_layer, VerdantForestMap.TREE_MAP, VerdantForestMap.TREE_LEGEND, 1)
+	# Trees: dense canopy fill with 8 variants for organic borders (source 1)
+	MapBuilder.fill_layer_with_variants(
+		_trees_layer, VerdantForestMap.TREE_MAP,
+		VerdantForestMap.TREE_VARIANT_LEGEND, 1,
+		VerdantForestMap.TREE_BORDER_HASH_SEED,
+	)
 	# Objects: individual tree trunks with collision (source 1)
 	MapBuilder.build_layer(
 		_objects_layer, VerdantForestMap.TRUNK_MAP, VerdantForestMap.TRUNK_LEGEND, 1

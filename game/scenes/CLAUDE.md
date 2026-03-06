@@ -278,7 +278,8 @@ func _on_exit_entered(body: Node2D) -> void:
 2. **TF_TERRAIN row guide:** Row 1-2 = green grass. Row 6 = brown dirt. Row 9 = sandy/tan. Rows 22+ = RPGMaker auto-tiles — DO NOT USE.
 3. **Ruins tiles stay in ruins scenes** — golden walls break forest/steppe aesthetic
 4. **Organic ground** — use 2-3 biome types in large natural patches via noise + position hash. Never fill the entire map with one repeated tile. Flat tiles (TF_TERRAIN) can freely mix column variants — no seam restriction.
-5. **B-sheet objects and ground decorations provide visual variety** — trees, rocks, flowers, barrels, fences. Place decorations sparingly and intentionally — no percentage-based carpet bombing.
+5. **Forest borders MUST use `fill_layer_with_variants()`** with 8+ canopy variants from FOREST_OBJECTS rows 0-3. NEVER use `build_layer()` with a single canopy tile — this creates the #1 visual problem (monotone green wall). All variants must be registered in `solid_tiles`.
+6. **B-sheet objects and ground decorations provide visual variety** — trees, rocks, flowers, barrels, fences. Place decorations sparingly and intentionally — no percentage-based carpet bombing.
 6. **Search for JRPG reference images** before designing any tilemap — study how professional level designers create organic environments
 7. **Mixing packs is OK** for different purposes (e.g., Inn uses `tf_farmandfort`)
 

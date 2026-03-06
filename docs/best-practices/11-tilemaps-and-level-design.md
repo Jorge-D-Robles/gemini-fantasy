@@ -399,25 +399,52 @@ The object map and above-player map must be spatially aligned:
 # X positions MUST match across maps
 ```
 
-### Forest Design: Clusters, Not Walls
+### Forest Design: Variant Fills, Not Uniform Walls
 
-Dense forest borders should use **multiple tree types** in organic clusters, not a single tile repeated as a uniform wall. Mix 3-4 canopy variants and trunk types to create natural-looking forest edges:
+Dense forest borders **MUST use `MapBuilder.fill_layer_with_variants()`** with 8+ canopy tile variants. A single tile repeated as a border creates the most obvious visual problem — a flat green wall.
+
+**Correct pattern (variant-based fill):**
 
 ```gdscript
-# Use multiple canopy types for variety
-const CANOPY_LEGEND: Dictionary = {
-    "1": Vector2i(0, 0), "2": Vector2i(1, 0),   # Tree type A canopy (2x2)
-    "3": Vector2i(0, 1), "4": Vector2i(1, 1),
-    "5": Vector2i(2, 0), "6": Vector2i(3, 0),   # Tree type B canopy (2x2)
-    "7": Vector2i(2, 1), "8": Vector2i(3, 1),
+# 8 canopy variants from FOREST_OBJECTS rows 0-3 (bottom tile of each 2x2 canopy type)
+# Verified against tf_ff_tileB_forest.png — all are solid green fills with subtle texture differences
+const TREE_VARIANT_LEGEND: Dictionary = {
+    "T": [
+        Vector2i(1, 1), Vector2i(3, 1),   # Dark canopy bottoms (row 1)
+        Vector2i(5, 1), Vector2i(7, 1),
+        Vector2i(1, 3), Vector2i(3, 3),   # Lighter canopy bottoms (row 3)
+        Vector2i(5, 3), Vector2i(7, 3),
+    ],
 }
-const TRUNK_LEGEND: Dictionary = {
-    "A": Vector2i(8, 7),   # Tree type A trunk
-    "B": Vector2i(10, 7),  # Tree type B trunk
+const TREE_BORDER_HASH_SEED: int = 77780
+
+# In _setup_tilemap():
+MapBuilder.fill_layer_with_variants(
+    _trees_layer, SceneMap.TREE_MAP,
+    SceneMap.TREE_VARIANT_LEGEND, 1,  # source_id=1 for B-sheet
+    SceneMap.TREE_BORDER_HASH_SEED,
+)
+```
+
+**CRITICAL:** All variant tiles must also be registered in `solid_tiles` for collision:
+```gdscript
+var solid: Dictionary = {
+    1: [
+        Vector2i(1, 1), Vector2i(3, 1), Vector2i(5, 1), Vector2i(7, 1),
+        Vector2i(1, 3), Vector2i(3, 3), Vector2i(5, 3), Vector2i(7, 3),
+    ],
 }
 ```
 
-Place trees in natural clusters of 2-5 with varied spacing. Mix tree types within each cluster. Leave irregular gaps. The forest edge should be ragged and organic — thicker in some places, thinner in others.
+**Anti-pattern (single-tile border):**
+
+```gdscript
+# WRONG: One tile for the entire border — creates a flat, artificial green wall
+const TREE_LEGEND: Dictionary = { "T": Vector2i(1, 1) }
+MapBuilder.build_layer(layer, TREE_MAP, TREE_LEGEND, 1)
+```
+
+For individual trees within clearings, use 2x2 canopy blocks (CANOPY_LEGEND) with matching trunk tiles (TRUNK_LEGEND). Mix 3-4 tree types. Place in natural clusters of 2-5 with varied spacing.
 
 ## Collision Setup
 
@@ -505,7 +532,7 @@ Then:
 | Ground fill with A5 row 0 col 0 | Renders dark gray in fairy forest theme | Use row 8 col 0 (bright green) for forest ground |
 | Rectangular clearings | Artificial, game-y look | Offset edges 1-2 tiles per row for organic shapes |
 | Path 1 tile wide | Hard to see, player clips edges | Minimum 2-3 tiles wide |
-| One tree type repeated uniformly | Looks like a green wall, not a forest | Mix 3-4 tree variants in organic clusters |
+| One tree type repeated uniformly | Looks like a green wall, not a forest | Use `fill_layer_with_variants()` with 8+ canopy tile variants |
 | Carpet-bombing identical decorations | Repeating grid pattern, looks worse than no detail | Place decorations sparingly and intentionally, mix 3-4 types |
 | Using atlas coordinates from docs without verifying | Wrong tiles rendered (e.g., "pebbles" renders as golden chests) | Always Read the tile sheet PNG and visually verify coordinates |
 | Importing only one tileset file | Missing tiles when building the scene | Import ALL tile sheets from the asset pack |

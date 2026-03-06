@@ -428,6 +428,43 @@ static func build_from_blueprint(
 	object_layer.update_internals()
 
 
+## Populate a TileMapLayer from a text map using position-hashed tile variants.
+##
+## Like [method build_layer], each character in [param map_data] is looked up
+## in [param variant_legend] — but instead of mapping to a single Vector2i,
+## each character maps to an Array of Vector2i variants. A deterministic
+## position hash selects among them, producing organic visual variety without
+## any repeating grid pattern.
+##
+## [param variant_legend] format:
+## [codeblock]
+## { "T": [Vector2i(1,1), Vector2i(3,1), Vector2i(5,1), ...] }
+## [/codeblock]
+## Characters not in the legend (including spaces) are skipped.
+static func fill_layer_with_variants(
+	layer: TileMapLayer,
+	map_data: Array[String],
+	variant_legend: Dictionary,
+	source_id: int = 0,
+	hash_seed: int = 48271,
+) -> void:
+	for y: int in range(map_data.size()):
+		var row: String = map_data[y]
+		for x: int in range(row.length()):
+			var ch: String = row[x]
+			if variant_legend.has(ch):
+				var variants: Array = variant_legend[ch]
+				if variants.size() == 0:
+					continue
+				var idx: int = abs(
+					x * 73 + y * 31 + hash_seed
+				) % variants.size()
+				layer.set_cell(
+					Vector2i(x, y), source_id, variants[idx]
+				)
+	layer.update_internals()
+
+
 static func _create_wall(
 	parent: Node, wall_name: String,
 	pos: Vector2, size: Vector2,

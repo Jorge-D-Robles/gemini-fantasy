@@ -192,9 +192,10 @@ func _setup_tilemap() -> void:
 	)
 	MapBuilder.disable_collision(_ground_detail)
 
-	# Forest border canopy (source 2) — authored, collision provides walls
-	MapBuilder.build_layer(
-		_trees_border, m.BORDER_MAP, m.BORDER_LEGEND, 2,
+	# Forest border canopy (source 2) — 8 variants for organic look
+	MapBuilder.fill_layer_with_variants(
+		_trees_border, m.BORDER_MAP,
+		m.BORDER_VARIANT_LEGEND, 2, m.BORDER_HASH_SEED,
 	)
 
 	# Mushroom building walls (source 1, Objects layer) — authored, with collision

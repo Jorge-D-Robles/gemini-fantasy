@@ -85,7 +85,21 @@ const STONE_DECOR_LEGEND: Dictionary = {
 }
 
 # -- Forest border canopy (source 2 = FOREST_OBJECTS) --
-# Single canopy center tile for uniform fill — avoids checkerboard
+# 8 canopy variants from rows 0-3 for organic forest fill.
+# Position-hash picks among them for per-cell variety.
+# Tiles verified against tf_ff_tileB_forest.png:
+#   Row 1 (dark canopy bottoms): (1,1) (3,1) (5,1) (7,1)
+#   Row 3 (lighter canopy bottoms): (1,3) (3,3) (5,3) (7,3)
+const BORDER_VARIANT_LEGEND: Dictionary = {
+	"T": [
+		Vector2i(1, 1), Vector2i(3, 1),
+		Vector2i(5, 1), Vector2i(7, 1),
+		Vector2i(1, 3), Vector2i(3, 3),
+		Vector2i(5, 3), Vector2i(7, 3),
+	],
+}
+const BORDER_HASH_SEED: int = 55546
+# Legacy single-tile legend kept for backward compat
 const BORDER_LEGEND: Dictionary = {
 	"T": Vector2i(1, 1),
 }
@@ -120,17 +134,28 @@ const ROOF_LEGEND: Dictionary = {
 }
 
 # -- Mushroom building walls (source 1, Objects layer) --
-# Collision-enabled stem/wall tiles (left side of sheet)
+# Collision-enabled stem/wall tiles. Two rows per building for
+# visible building presence. Door tiles from right side of sheet.
+# Verified against tf_ff_tileB_mushroomvillage.png.
 const BUILDING_LEGEND: Dictionary = {
-	# Inn stem: row 11, cols 2-5
+	# Inn stem row 1 (upper): row 11, cols 2-5
 	"1": Vector2i(2, 11), "2": Vector2i(3, 11),
 	"3": Vector2i(4, 11), "4": Vector2i(5, 11),
-	# Shop stem: row 5, cols 2-4
+	# Inn stem row 2 (lower, door): repeat stem + door tile
+	"5": Vector2i(2, 11), "6": Vector2i(3, 11),
+	"7": Vector2i(4, 11), "8": Vector2i(5, 11),
+	# Shop stem row 1: row 5, cols 2-4
 	"a": Vector2i(2, 5), "b": Vector2i(3, 5),
 	"c": Vector2i(4, 5),
-	# Elder stem: row 14, cols 4-7
+	# Shop stem row 2 (lower): repeat stem
+	"d": Vector2i(2, 5), "e": Vector2i(3, 5),
+	"f": Vector2i(4, 5),
+	# Elder stem row 1: row 14, cols 4-7
 	"g": Vector2i(4, 14), "h": Vector2i(5, 14),
 	"i": Vector2i(6, 14), "j": Vector2i(7, 14),
+	# Elder stem row 2 (lower): repeat stem
+	"G": Vector2i(4, 14), "H": Vector2i(5, 14),
+	"I": Vector2i(6, 14), "J": Vector2i(7, 14),
 }
 
 # ===== Text maps (40 cols x 28 rows) =====
@@ -138,6 +163,7 @@ const BUILDING_LEGEND: Dictionary = {
 # Ground is now procedural — see GROUND_ENTRIES above.
 
 # Stone paths: main E-W road, N-S crossroad, plaza, approaches
+# Paths route AROUND building stems (not through them).
 const PATH_MAP: Array[String] = [
 	"",
 	"",
@@ -146,9 +172,9 @@ const PATH_MAP: Array[String] = [
 	"                   SS                   ",
 	"                   SS                   ",
 	"                   SS                   ",
-	"          SS       SS                   ",
-	"          SS       SS                   ",
-	"          SSSSSSSSSSS                   ",
+	"        SSS        SS                   ",
+	"        SSS        SS                   ",
+	"        SSSSSSSSSSSSS                   ",
 	"     SSSSSSSSSSSSSSSSSSSSSSSSSSSSSS     ",
 	"     SSSSSSSSSSSSSSSSSSSSSSSSSSSSSS     ",
 	"              SS   SSSS        SS       ",
@@ -157,8 +183,8 @@ const PATH_MAP: Array[String] = [
 	"              SS   SS          SS       ",
 	"              SS   SS          SS       ",
 	"              SS   SS          SS       ",
-	"              SS   SS                   ",
-	"              SS   SS                   ",
+	"              SS   SS          SS       ",
+	"              SS   SS          SS       ",
 	"              SS   SS                   ",
 	"              SS   SS                   ",
 	"              SSSSSSSS                  ",
@@ -274,9 +300,9 @@ const ROOF_MAP: Array[String] = [
 ]
 
 # Mushroom house walls/stems (source 1, Objects with collision)
-# Inn stem: rows 7-7, cols 10-13 (4 wide)
-# Shop stem: rows 18-18, cols 28-30 (3 wide)
-# Elder stem: rows 22-22, cols 13-16 (4 wide)
+# Inn: 2-row stem at rows 7-8, cols 10-13
+# Shop: 2-row stem at rows 18-19, cols 28-30
+# Elder: 2-row stem at rows 22-23, cols 13-16
 const BUILDING_MAP: Array[String] = [
 	"",
 	"",
@@ -286,7 +312,7 @@ const BUILDING_MAP: Array[String] = [
 	"",
 	"",
 	"          1234                          ",
-	"",
+	"          5678                          ",
 	"",
 	"",
 	"",
@@ -297,11 +323,11 @@ const BUILDING_MAP: Array[String] = [
 	"",
 	"",
 	"                            abc         ",
-	"",
+	"                            def         ",
 	"",
 	"",
 	"             ghij                       ",
-	"",
+	"             GHIJ                       ",
 	"",
 	"",
 	"",
@@ -369,8 +395,11 @@ const SOLID_TILES: Dictionary = {
 		Vector2i(6, 14), Vector2i(7, 14),
 	],
 	2: [
-		# Forest canopy fill
-		Vector2i(1, 1),
+		# Forest canopy fill — all 8 variants need collision
+		Vector2i(1, 1), Vector2i(3, 1),
+		Vector2i(5, 1), Vector2i(7, 1),
+		Vector2i(1, 3), Vector2i(3, 3),
+		Vector2i(5, 3), Vector2i(7, 3),
 	],
 }
 

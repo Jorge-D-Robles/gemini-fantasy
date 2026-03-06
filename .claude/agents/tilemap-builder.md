@@ -319,7 +319,8 @@ Common causes of wrong tiles:
 
 ## Rules
 
-1. **ALWAYS view tile sheet PNGs** before using any atlas coordinate
+1. **ALWAYS use `fill_layer_with_variants()` for forest borders and any repeated-fill area** — never use `build_layer()` with a single tile for areas larger than 3x3. Use 8+ tile variants from the B-sheet (rows 0-3 bottom tiles for canopy). Register ALL variants in `solid_tiles`.
+2. **ALWAYS view tile sheet PNGs** before using any atlas coordinate
 2. **ALWAYS search for JRPG pixel art reference images** before designing
 3. **ALWAYS run `/scene-preview` and READ the screenshot** after each layer change
 4. **NEVER commit final tilemap changes without visual verification**

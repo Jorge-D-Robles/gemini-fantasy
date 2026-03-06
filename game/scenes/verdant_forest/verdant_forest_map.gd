@@ -80,10 +80,36 @@ const PATH_TILES: Array[Vector2i] = [
 ]
 const PATH_HASH_SEED: int = 77779
 
-# Dense forest fill — canopy center for impenetrable borders
-# (FOREST_OBJECTS, source 1)
+# Dense forest fill — multiple canopy variants for organic borders
+# (FOREST_OBJECTS, source 1). Position-hash picks from 8 variants.
+# Tiles verified against tf_ff_tileB_forest.png:
+#   (1,1) solid dark canopy center — the original single tile
+#   (3,1) broader canopy, slightly different leaf shading
+#   (5,1) lighter round canopy fill
+#   (7,1) dense leaf cluster fill
+#   (1,3) medium-shade canopy (row 2-3 set)
+#   (3,3) lighter broad fill
+#   (1,5) large bush/canopy darker
+#   (3,5) large bush/canopy lighter variant
+const TREE_BORDER_VARIANTS: Array[Vector2i] = [
+	Vector2i(1, 1), Vector2i(3, 1),
+	Vector2i(5, 1), Vector2i(7, 1),
+	Vector2i(1, 3), Vector2i(3, 3),
+	Vector2i(5, 3), Vector2i(7, 3),
+]
+const TREE_BORDER_HASH_SEED: int = 77780
+# Keep single-tile legend for any remaining build_layer() calls
 const TREE_LEGEND: Dictionary = {
 	"T": Vector2i(1, 1),
+}
+# Variant legend for fill_layer_with_variants()
+const TREE_VARIANT_LEGEND: Dictionary = {
+	"T": [
+		Vector2i(1, 1), Vector2i(3, 1),
+		Vector2i(5, 1), Vector2i(7, 1),
+		Vector2i(1, 3), Vector2i(3, 3),
+		Vector2i(5, 3), Vector2i(7, 3),
+	],
 }
 
 # Individual tree trunks — 4 variants (FOREST_OBJECTS, source 1)
