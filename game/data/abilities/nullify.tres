@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://bnullify"]
+
+[ext_resource type="Script" path="res://resources/ability_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"nullify"
+display_name = "Nullify"
+description = "Erases beneficial effects from the target by denying their existence."
+ee_cost = 8
+resonance_cost = 0.0
+damage_base = 0
+damage_stat = 0
+target_type = 0
+element = 7
+status_effect = "dispel"
+status_chance = 1.0

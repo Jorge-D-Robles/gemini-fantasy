@@ -118,3 +118,4 @@ T-0025 | 2026-02-22 | Build bonding system framework | BondData Resource + BondM
 - [2026-03-06] T-0287: Complete Chapter 10 "Captured" event — Act I ending, 8 scenes (running, road, ambush, director, cells, breakout, escape, camp), 87 dialogue lines, 22 tests (agent)
 - [2026-03-06] T-0291: Act I critical path flow test — 34 integration tests verifying scene graph, event flag chains, character/enemy data, event-scene wiring (agent)
 - T-0321: Create Ironcoast/Initiative enemy set — 4 enemies, 12 abilities, 26 tests (2026-03-06)
+- T-0322: Create The Hollows enemy set — 3 enemies, 9 abilities, 25 tests (2026-03-06)

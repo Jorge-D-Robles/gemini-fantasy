@@ -651,8 +651,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0322
 - Title: Create The Hollows enemy set — aberrations and reality-breaks
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: medium
 - Milestone: M2
 - Tags: battle, data, enemy

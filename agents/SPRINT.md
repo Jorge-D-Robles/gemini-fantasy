@@ -7,7 +7,7 @@ Started: 2026-03-06
 Closed: —
 
 ## Velocity
-- Completed: 1
+- Completed: 2
 - Added mid-sprint: 0
 - Rolled over: 0
 
@@ -27,8 +27,8 @@ Closed: —
 - Title: Build The Scorched Road route scene — Cindral Wastes overworld
 - Priority: medium
 
-### T-0321
-- Title: Create Ironcoast/Initiative enemy set — soldiers and tech enemies
+### T-0322
+- Title: Create The Hollows enemy set — aberrations and reality-breaks
 - Priority: medium
 
 ### T-0308
@@ -48,3 +48,4 @@ Closed: —
 ## Done This Sprint
 
 - T-0321: Create Ironcoast/Initiative enemy set — Initiative Soldier (BASIC), Initiative Agent (AGGRESSIVE), Security Drone (DEFENSIVE), Initiative Scientist (SUPPORT), 12 abilities, 26 tests
+- T-0322: Create The Hollows enemy set — Time Wraith (AGGRESSIVE), Void Spawn (BASIC), Memory Phantom (BOSS), 9 abilities, 25 tests
