@@ -525,7 +525,7 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0312
 - Title: Implement Chapter 16 "The Weight of Choice" event
-- Status: in-progress
+- Status: done
 - Assigned: claude
 - Priority: high
 - Milestone: M2

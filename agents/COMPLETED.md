@@ -124,3 +124,4 @@ T-0025 | 2026-02-22 | Build bonding system framework | BondData Resource + BondM
 - T-0309: Implement Chapter 13 "Sister's Shadow" event — 8 scenes, 106 dialogue lines, Sienna defection, 21 tests (2026-03-06)
 - T-0310: Implement Chapter 14 "Fire and Ash" event — 8 scenes, 68 dialogue lines, Ash introduction, 22 tests (2026-03-06)
 - [2026-03-06] T-0311: Implement Chapter 15 "Siege of Emberhearth" event — 6 scenes, 71 dialogue lines, Hale parley + siege + aftermath, 22 tests (claude)
+- [2026-03-06] T-0312: Implement Chapter 16 "The Weight of Choice" event — 6 scenes, 68 dialogue lines, character moments + departure, 18 tests (claude)
