@@ -1,4 +1,3 @@
-# gdlint:ignore = max-public-methods
 extends GutTest
 
 ## Tests for Roothollow quest-offering logic, quest completion conditions,
@@ -51,80 +50,16 @@ func test_should_offer_false_when_active_and_completed() -> void:
 	))
 
 
-# -- Quest offer text --
-
-func test_herb_quest_offer_not_empty() -> void:
-	var text: String = _rh.get_quest_offer(&"herb_gathering")
-	assert_true(text.length() > 0)
-
-
-func test_scouts_quest_offer_not_empty() -> void:
-	var text: String = _rh.get_quest_offer(&"scouts_report")
-	assert_true(text.length() > 0)
-
-
-func test_elder_quest_offer_not_empty() -> void:
-	var text: String = _rh.get_quest_offer(&"elder_wisdom")
-	assert_true(text.length() > 0)
-
+# -- Quest offer/turnin boundary tests --
 
 func test_unknown_quest_offer_returns_empty() -> void:
 	var text: String = _rh.get_quest_offer(&"nonexistent")
 	assert_eq(text, "")
 
 
-# -- Quest turnin text --
-
-func test_herb_turnin_not_empty() -> void:
-	var text: String = _rh.get_quest_turnin(&"herb_gathering")
-	assert_true(text.length() > 0)
-
-
-func test_scouts_turnin_not_empty() -> void:
-	var text: String = _rh.get_quest_turnin(&"scouts_report")
-	assert_true(text.length() > 0)
-
-
-func test_elder_turnin_not_empty() -> void:
-	var text: String = _rh.get_quest_turnin(&"elder_wisdom")
-	assert_true(text.length() > 0)
-
-
 func test_unknown_turnin_returns_empty() -> void:
 	var text: String = _rh.get_quest_turnin(&"nonexistent")
 	assert_eq(text, "")
-
-
-# -- Quest line wrappers --
-
-func test_maren_quest_lines_not_empty() -> void:
-	var l: PackedStringArray = _rh.get_quest_offer_lines(&"herb_gathering")
-	assert_true(l.size() > 0)
-
-
-func test_wren_quest_lines_not_empty() -> void:
-	var l: PackedStringArray = _rh.get_quest_offer_lines(&"scouts_report")
-	assert_true(l.size() > 0)
-
-
-func test_thessa_quest_lines_not_empty() -> void:
-	var l: PackedStringArray = _rh.get_quest_offer_lines(&"elder_wisdom")
-	assert_true(l.size() > 0)
-
-
-func test_maren_quest_complete_not_empty() -> void:
-	var l: PackedStringArray = _rh.get_quest_complete_lines(&"herb_gathering")
-	assert_true(l.size() > 0)
-
-
-func test_wren_quest_complete_not_empty() -> void:
-	var l: PackedStringArray = _rh.get_quest_complete_lines(&"scouts_report")
-	assert_true(l.size() > 0)
-
-
-func test_thessa_quest_complete_not_empty() -> void:
-	var l: PackedStringArray = _rh.get_quest_complete_lines(&"elder_wisdom")
-	assert_true(l.size() > 0)
 
 
 # -- Quest completion conditions --

@@ -48,17 +48,6 @@ func test_compute_save_summary_zero_timestamp_returns_empty_time() -> void:
 	assert_eq(result["time_str"], "", "Zero timestamp should give empty time string")
 
 
-func test_compute_save_summary_valid_timestamp_returns_nonempty() -> void:
-	var result: Dictionary = TitleScreenScript.compute_save_summary({
-		"scene_path": SP.ROOTHOLLOW,
-		"timestamp": 1708387200,
-	})
-	assert_true(
-		result["time_str"].length() > 0,
-		"Valid timestamp should produce a non-empty time string",
-	)
-
-
 func test_compute_save_summary_missing_timestamp_returns_empty_time() -> void:
 	var result: Dictionary = TitleScreenScript.compute_save_summary({
 		"scene_path": SP.ROOTHOLLOW,

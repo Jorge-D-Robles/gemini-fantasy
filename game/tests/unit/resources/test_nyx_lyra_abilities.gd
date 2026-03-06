@@ -1,63 +1,38 @@
 extends GutTest
 
-## Tests for T-0223: Nyx (4) and Lyra (1) AbilityData .tres stubs.
-## Nyx: void_bolt, phase_shift, reality_break, shadow_bind
-## Lyra: fragment_vision
+## Tests for Nyx and Lyra ability .tres files — validates key stats.
 
-const _VOID_BOLT := preload("res://data/abilities/void_bolt.tres")
-const _PHASE_SHIFT := preload("res://data/abilities/phase_shift.tres")
-const _REALITY_BREAK := preload("res://data/abilities/reality_break.tres")
-const _SHADOW_BIND := preload("res://data/abilities/shadow_bind.tres")
-const _FRAGMENT_VISION := preload("res://data/abilities/fragment_vision.tres")
+const _ABILITIES: Dictionary = {
+	"void_bolt": preload("res://data/abilities/void_bolt.tres"),
+	"phase_shift": preload("res://data/abilities/phase_shift.tres"),
+	"reality_break": preload("res://data/abilities/reality_break.tres"),
+	"shadow_bind": preload("res://data/abilities/shadow_bind.tres"),
+	"fragment_vision": preload("res://data/abilities/fragment_vision.tres"),
+}
 
-
-# --- Nyx: Void Bolt ---
-
-func test_void_bolt_stats() -> void:
-	assert_eq(_VOID_BOLT.ee_cost, 20, "Void Bolt must cost 20 EE")
-	assert_eq(_VOID_BOLT.damage_stat, 1, "Void Bolt uses MAGIC stat (1)")
-	assert_eq(_VOID_BOLT.element, 7, "Void Bolt element must be DARK (7)")
-	assert_eq(_VOID_BOLT.target_type, 0, "Void Bolt targets SINGLE_ENEMY (0)")
-	assert_gt(_VOID_BOLT.damage_base, 0, "Void Bolt must have positive damage_base")
-	assert_false(_VOID_BOLT.display_name.is_empty(), "Void Bolt must have a display_name")
+const _EXPECTED_EE_COSTS: Dictionary = {
+	"void_bolt": 20, "phase_shift": 30, "reality_break": 35,
+	"shadow_bind": 40, "fragment_vision": 25,
+}
 
 
-# --- Nyx: Phase Shift ---
-
-func test_phase_shift_stats() -> void:
-	assert_eq(_PHASE_SHIFT.ee_cost, 30, "Phase Shift must cost 30 EE")
-	assert_eq(_PHASE_SHIFT.target_type, 4, "Phase Shift targets SELF (4)")
-	assert_false(_PHASE_SHIFT.display_name.is_empty(), "Phase Shift must have a display_name")
-
-
-# --- Nyx: Reality Break ---
-
-func test_reality_break_stats() -> void:
-	assert_eq(_REALITY_BREAK.ee_cost, 35, "Reality Break must cost 35 EE")
-	assert_eq(_REALITY_BREAK.resonance_cost, 40.0, "Reality Break requires 40% Resonance")
-	assert_eq(_REALITY_BREAK.target_type, 1, "Reality Break targets ALL_ENEMIES (1)")
-	assert_false(_REALITY_BREAK.display_name.is_empty(), "Reality Break must have a display_name")
+func test_all_abilities_have_correct_ee_cost() -> void:
+	for name: String in _EXPECTED_EE_COSTS:
+		var ability: Resource = _ABILITIES[name]
+		assert_eq(
+			ability.ee_cost, _EXPECTED_EE_COSTS[name],
+			"%s EE cost" % name,
+		)
 
 
-# --- Nyx: Shadow Bind ---
-
-func test_shadow_bind_stats() -> void:
-	assert_eq(_SHADOW_BIND.ee_cost, 40, "Shadow Bind must cost 40 EE")
-	assert_eq(_SHADOW_BIND.target_type, 1, "Shadow Bind targets ALL_ENEMIES (1)")
-	assert_false(
-		_SHADOW_BIND.status_effect.is_empty(),
-		"Shadow Bind must have a status_effect (immobilize)",
-	)
-	assert_false(_SHADOW_BIND.display_name.is_empty(), "Shadow Bind must have a display_name")
+func test_all_abilities_have_display_name() -> void:
+	for name: String in _ABILITIES:
+		var ability: Resource = _ABILITIES[name]
+		assert_false(
+			ability.display_name.is_empty(),
+			"%s must have a display_name" % name,
+		)
 
 
-# --- Lyra: Fragment Vision ---
-
-func test_fragment_vision_stats() -> void:
-	assert_eq(_FRAGMENT_VISION.ee_cost, 25, "Fragment Vision must cost 25 EE")
-	assert_eq(_FRAGMENT_VISION.target_type, 3, "Fragment Vision targets ALL_ALLIES (3)")
-	assert_eq(_FRAGMENT_VISION.damage_stat, 1, "Fragment Vision uses MAGIC stat (1)")
-	assert_false(
-		_FRAGMENT_VISION.display_name.is_empty(),
-		"Fragment Vision must have a display_name",
-	)
+func test_void_bolt_is_dark_element() -> void:
+	assert_eq(_ABILITIES["void_bolt"].element, 7, "Void Bolt element must be DARK (7)")

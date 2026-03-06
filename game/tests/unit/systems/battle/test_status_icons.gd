@@ -92,39 +92,17 @@ func test_battler_get_status_effect_list_safe_copy() -> void:
 # -- UITheme.get_status_color() --
 
 
-func test_get_status_color_buff() -> void:
-	var color: Color = UITheme.get_status_color(
-		StatusEffectData.EffectType.BUFF,
-	)
-	assert_eq(color, UITheme.STATUS_BUFF)
-
-
-func test_get_status_color_debuff() -> void:
-	var color: Color = UITheme.get_status_color(
-		StatusEffectData.EffectType.DEBUFF,
-	)
-	assert_eq(color, UITheme.STATUS_DEBUFF)
-
-
-func test_get_status_color_dot() -> void:
-	var color: Color = UITheme.get_status_color(
-		StatusEffectData.EffectType.DAMAGE_OVER_TIME,
-	)
-	assert_eq(color, UITheme.STATUS_DOT)
-
-
-func test_get_status_color_hot() -> void:
-	var color: Color = UITheme.get_status_color(
-		StatusEffectData.EffectType.HEAL_OVER_TIME,
-	)
-	assert_eq(color, UITheme.STATUS_HOT)
-
-
-func test_get_status_color_stun() -> void:
-	var color: Color = UITheme.get_status_color(
-		StatusEffectData.EffectType.STUN,
-	)
-	assert_eq(color, UITheme.STATUS_STUN)
+func test_get_status_color_returns_correct_color_for_each_type() -> void:
+	var cases: Dictionary = {
+		StatusEffectData.EffectType.BUFF: UITheme.STATUS_BUFF,
+		StatusEffectData.EffectType.DEBUFF: UITheme.STATUS_DEBUFF,
+		StatusEffectData.EffectType.DAMAGE_OVER_TIME: UITheme.STATUS_DOT,
+		StatusEffectData.EffectType.HEAL_OVER_TIME: UITheme.STATUS_HOT,
+		StatusEffectData.EffectType.STUN: UITheme.STATUS_STUN,
+	}
+	for effect_type: int in cases:
+		var color: Color = UITheme.get_status_color(effect_type)
+		assert_eq(color, cases[effect_type], "Status color for type %d" % effect_type)
 
 
 # -- BattleUI.compute_status_badges() --

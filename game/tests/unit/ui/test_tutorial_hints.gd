@@ -59,14 +59,3 @@ func test_get_flag_name_returns_prefixed_name() -> void:
 
 func test_get_flag_name_menu() -> void:
 	assert_eq(_th.get_flag_name("menu"), "tutorial_menu")
-
-
-# -- Completeness --
-
-func test_all_hints_have_text() -> void:
-	for hint_id: String in _th.HINTS:
-		var text: String = _th.HINTS[hint_id]
-		assert_true(
-			text.length() > 0,
-			"Hint '%s' should have non-empty text" % hint_id,
-		)

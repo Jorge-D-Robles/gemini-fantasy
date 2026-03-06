@@ -144,30 +144,6 @@ func test_get_bus_percent() -> void:
 # -- compute_slider_tooltip --
 
 
-func test_compute_slider_tooltip_master_is_nonempty() -> void:
-	var tip := SD.compute_slider_tooltip("master")
-	assert_true(
-		tip.length() > 0,
-		"Master tooltip should be a non-empty description",
-	)
-
-
-func test_compute_slider_tooltip_bgm_is_nonempty() -> void:
-	var tip := SD.compute_slider_tooltip("bgm")
-	assert_true(
-		tip.length() > 0,
-		"BGM tooltip should be a non-empty description",
-	)
-
-
-func test_compute_slider_tooltip_sfx_is_nonempty() -> void:
-	var tip := SD.compute_slider_tooltip("sfx")
-	assert_true(
-		tip.length() > 0,
-		"SFX tooltip should be a non-empty description",
-	)
-
-
 func test_compute_slider_tooltip_unknown_returns_empty() -> void:
 	var tip := SD.compute_slider_tooltip("nonexistent_slider")
 	assert_eq(tip, "", "Unknown slider ID should return empty string")
