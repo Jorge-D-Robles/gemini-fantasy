@@ -901,13 +901,14 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0343
 - Title: Implement Sienna's "Book of Names" character quest
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: medium
 - Milestone: M3
 - Tags: quest, story, character
 - Depends: T-0309
 - Blocked-by: —
+- Completed: 2026-03-06
 - Refs: docs/story/character-quests/sienna-book-of-names.md
 
 ### T-0344

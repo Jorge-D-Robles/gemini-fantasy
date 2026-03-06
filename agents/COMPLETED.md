@@ -133,3 +133,4 @@ T-0025 | 2026-02-22 | Build bonding system framework | BondData Resource + BondM
 - [2026-03-06] T-0322b: Implement hacking puzzle mechanics — HackingPuzzleData resource, HackingSystem (sequence generation, Mastermind-style checking, difficulty scaling), 19 tests (claude)
 - [2026-03-06] T-0213: Add Merchant's Regret mini-boss — BOSS AI enemy + coin_shower AoE + desperate_bargain debuff, 13 tests (claude)
 [2026-03-06] T-0344: Implement Cipher's "Ghost in the Machine" character quest — 5-stage event, 75 dialogue lines, quest .tres, 34 tests (claude)
+[2026-03-06] T-0343: Implement Sienna's "Book of Names" character quest — 4-stage event, 47 dialogue lines, quest .tres, 30 tests (claude)
