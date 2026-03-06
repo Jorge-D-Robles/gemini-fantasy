@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://bbarrier_field"]
+
+[ext_resource type="Script" path="res://resources/ability_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"barrier_field"
+display_name = "Barrier Field"
+description = "Projects a protective barrier around all allies, reducing incoming damage."
+ee_cost = 14
+resonance_cost = 0.0
+damage_base = 0
+damage_stat = 0
+target_type = 3
+element = 0
+status_effect = "shield"
+status_chance = 1.0

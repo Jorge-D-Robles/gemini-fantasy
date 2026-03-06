@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://blaser_blast"]
+
+[ext_resource type="Script" path="res://resources/ability_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"laser_blast"
+display_name = "Laser Blast"
+description = "Fires a concentrated beam of energy from the drone's weapon mount."
+ee_cost = 8
+resonance_cost = 0.0
+damage_base = 30
+damage_stat = 1
+target_type = 0
+element = 1
+status_effect = ""
+status_chance = 0.0

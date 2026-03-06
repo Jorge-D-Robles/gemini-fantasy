@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=5 format=3 uid="uid://bsecurity_drone"]
+
+[ext_resource type="Script" path="res://resources/enemy_data.gd" id="1_script"]
+[ext_resource type="Resource" uid="uid://blaser_blast" path="res://data/abilities/laser_blast.tres" id="2_laser_blast"]
+[ext_resource type="Resource" uid="uid://bscan_target" path="res://data/abilities/scan_target.tres" id="3_scan_target"]
+[ext_resource type="Resource" uid="uid://balert_pulse" path="res://data/abilities/alert_pulse.tres" id="4_alert_pulse"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"security_drone"
+display_name = "Security Drone"
+description = "Mass-produced hovering security unit with weapon mounts and the Initiative logo. Patrols facilities and coordinates with other units."
+max_hp = 100
+max_ee = 40
+attack = 14
+magic = 20
+defense = 20
+resistance = 16
+speed = 7
+luck = 3
+exp_reward = 35
+gold_reward = 25
+abilities = [ExtResource("2_laser_blast"), ExtResource("3_scan_target"), ExtResource("4_alert_pulse")]
+weaknesses = [4]
+resistances = [1]
+ai_type = 2
+sprite_path = "res://assets/sprites/enemies/security_drone.png"
+sprite_columns = 3
+sprite_rows = 4
+battle_scale = 2.5
+loot_table = [{"item_id": "scrap_metal", "drop_chance": 0.4}, {"item_id": "power_cell", "drop_chance": 0.25}, {"item_id": "targeting_chip", "drop_chance": 0.1}]

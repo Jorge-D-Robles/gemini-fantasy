@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://bstimpack"]
+
+[ext_resource type="Script" path="res://resources/ability_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"stimpack"
+display_name = "Stimpack"
+description = "Injects a combat stimulant that heals wounds and briefly sharpens reflexes."
+ee_cost = 10
+resonance_cost = 0.0
+damage_base = 30
+damage_stat = 1
+target_type = 4
+element = 0
+status_effect = "regen"
+status_chance = 1.0

@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://brifle_shot"]
+
+[ext_resource type="Script" path="res://resources/ability_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"rifle_shot"
+display_name = "Rifle Shot"
+description = "A precise shot from a Resonance-enhanced rifle. Reliable damage at range."
+ee_cost = 6
+resonance_cost = 0.0
+damage_base = 28
+damage_stat = 0
+target_type = 0
+element = 0
+status_effect = ""
+status_chance = 0.0

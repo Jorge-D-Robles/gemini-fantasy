@@ -7,7 +7,7 @@ Started: 2026-03-06
 Closed: —
 
 ## Velocity
-- Completed: 0
+- Completed: 1
 - Added mid-sprint: 0
 - Rolled over: 0
 
@@ -46,3 +46,5 @@ Closed: —
 ---
 
 ## Done This Sprint
+
+- T-0321: Create Ironcoast/Initiative enemy set — Initiative Soldier (BASIC), Initiative Agent (AGGRESSIVE), Security Drone (DEFENSIVE), Initiative Scientist (SUPPORT), 12 abilities, 26 tests

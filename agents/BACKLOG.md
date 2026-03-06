@@ -639,8 +639,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0321
 - Title: Create Ironcoast/Initiative enemy set — soldiers and tech enemies
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: medium
 - Milestone: M2
 - Tags: battle, data, enemy

@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=5 format=3 uid="uid://binitiative_soldier"]
+
+[ext_resource type="Script" path="res://resources/enemy_data.gd" id="1_script"]
+[ext_resource type="Resource" uid="uid://brifle_shot" path="res://data/abilities/rifle_shot.tres" id="2_rifle_shot"]
+[ext_resource type="Resource" uid="uid://bfrag_grenade" path="res://data/abilities/frag_grenade.tres" id="3_frag_grenade"]
+[ext_resource type="Resource" uid="uid://bstimpack" path="res://data/abilities/stimpack.tres" id="4_stimpack"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"initiative_soldier"
+display_name = "Initiative Soldier"
+description = "Armored rank-and-file soldier of the Reclamation Initiative. Well-trained and equipped with Resonance-enhanced weapons. Many are conflicted about their mission."
+max_hp = 120
+max_ee = 45
+attack = 22
+magic = 12
+defense = 16
+resistance = 10
+speed = 8
+luck = 5
+exp_reward = 35
+gold_reward = 22
+abilities = [ExtResource("2_rifle_shot"), ExtResource("3_frag_grenade"), ExtResource("4_stimpack")]
+weaknesses = [7]
+resistances = []
+ai_type = 0
+sprite_path = "res://assets/sprites/enemies/initiative_soldier.png"
+sprite_columns = 3
+sprite_rows = 4
+battle_scale = 2.5
+loot_table = [{"item_id": "military_rations", "drop_chance": 0.4}, {"item_id": "ammo_pack", "drop_chance": 0.25}, {"item_id": "dog_tags", "drop_chance": 0.1}]

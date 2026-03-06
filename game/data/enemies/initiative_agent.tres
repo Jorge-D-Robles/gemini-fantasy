@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=5 format=3 uid="uid://binitiative_agent"]
+
+[ext_resource type="Script" path="res://resources/enemy_data.gd" id="1_script"]
+[ext_resource type="Resource" uid="uid://bprecision_strike" path="res://data/abilities/precision_strike.tres" id="2_precision_strike"]
+[ext_resource type="Resource" uid="uid://bsmoke_screen" path="res://data/abilities/smoke_screen.tres" id="3_smoke_screen"]
+[ext_resource type="Resource" uid="uid://bnerve_strike" path="res://data/abilities/nerve_strike.tres" id="4_nerve_strike"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"initiative_agent"
+display_name = "Initiative Agent"
+description = "Elite operative trained in stealth and targeted elimination. Fast and deadly, agents specialize in disabling key targets before they can react."
+max_hp = 95
+max_ee = 50
+attack = 26
+magic = 14
+defense = 12
+resistance = 14
+speed = 12
+luck = 8
+exp_reward = 45
+gold_reward = 30
+abilities = [ExtResource("2_precision_strike"), ExtResource("3_smoke_screen"), ExtResource("4_nerve_strike")]
+weaknesses = [6]
+resistances = [7]
+ai_type = 1
+sprite_path = "res://assets/sprites/enemies/initiative_agent.png"
+sprite_columns = 3
+sprite_rows = 4
+battle_scale = 2.5
+loot_table = [{"item_id": "stealth_cloak", "drop_chance": 0.15}, {"item_id": "smoke_charge", "drop_chance": 0.3}, {"item_id": "intelligence_report", "drop_chance": 0.1}]
