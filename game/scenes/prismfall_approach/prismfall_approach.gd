@@ -20,6 +20,7 @@ const SCENE_BGM_PATH: String = "res://assets/music/Wandering Through Quiet Lands
 @onready var _spawn_from_forest: Marker2D = $Entities/SpawnFromForest
 @onready var _encounter_system: EncounterSystem = $EncounterSystem
 @onready var _exit_to_forest: Area2D = $Triggers/ExitToForest
+@onready var _exit_to_prismfall: Area2D = $Triggers/ExitToPrismfall
 
 
 func _ready() -> void:
@@ -33,6 +34,9 @@ func _ready() -> void:
 	$Entities/SpawnFromPrismfall.add_to_group("spawn_from_prismfall")
 
 	_exit_to_forest.body_entered.connect(_on_exit_to_forest_entered)
+	_exit_to_prismfall.body_entered.connect(
+		_on_exit_to_prismfall_entered,
+	)
 
 	_spawn_zone_markers()
 
@@ -62,6 +66,14 @@ func _spawn_zone_markers() -> void:
 	top_marker.position = _exit_to_forest.position + Vector2(0, 12)
 	add_child(top_marker)
 
+	var south_marker := ZoneMarker.new()
+	south_marker.direction = ZoneMarker.Direction.DOWN
+	south_marker.destination_name = "Prismfall"
+	south_marker.position = (
+		_exit_to_prismfall.position + Vector2(0, -12)
+	)
+	add_child(south_marker)
+
 
 func _on_exit_to_forest_entered(body: Node2D) -> void:
 	if not body.is_in_group("player"):
@@ -76,6 +88,22 @@ func _on_exit_to_forest_entered(body: Node2D) -> void:
 		SP.VERDANT_FOREST,
 		GameManager.FADE_DURATION,
 		"spawn_from_prismfall",
+	)
+
+
+func _on_exit_to_prismfall_entered(body: Node2D) -> void:
+	if not body.is_in_group("player"):
+		return
+	if GameManager.is_transitioning():
+		return
+	if DialogueManager.is_active():
+		return
+	if BattleManager.is_in_battle():
+		return
+	GameManager.change_scene(
+		SP.PRISMFALL,
+		GameManager.FADE_DURATION,
+		"spawn_from_approach",
 	)
 
 
