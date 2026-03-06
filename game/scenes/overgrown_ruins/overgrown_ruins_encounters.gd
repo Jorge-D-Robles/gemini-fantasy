@@ -9,6 +9,7 @@ extends RefCounted
 static func build_pool(
 	memory_bloom: Resource,
 	creeping_vine: Resource,
+	thornback_bear: Resource = null,
 ) -> Array[EncounterPoolEntry]:
 	var pool: Array[EncounterPoolEntry] = []
 
@@ -27,5 +28,11 @@ static func build_pool(
 			pool.append(EncounterPoolEntry.create(
 				[memory_bloom, creeping_vine] as Array[Resource], 1.0,
 			))
+
+	# Rare heavy encounter
+	if thornback_bear:
+		pool.append(EncounterPoolEntry.create(
+			[thornback_bear] as Array[Resource], 0.3,
+		))
 
 	return pool

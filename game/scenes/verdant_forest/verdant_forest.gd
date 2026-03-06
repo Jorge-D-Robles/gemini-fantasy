@@ -23,6 +23,7 @@ const HOLLOW_SPECTER_PATH: String = "res://data/enemies/hollow_specter.tres"
 const ANCIENT_SENTINEL_PATH: String = "res://data/enemies/ancient_sentinel.tres"
 const GALE_HARPY_PATH: String = "res://data/enemies/gale_harpy.tres"
 const EMBER_HOUND_PATH: String = "res://data/enemies/ember_hound.tres"
+const THORNBACK_BEAR_PATH: String = "res://data/enemies/thornback_bear.tres"
 const SCENE_BGM_PATH: String = "res://assets/music/Overgrown Memories.ogg"
 
 # Tilemap data (legends + maps) lives in VerdantForestMap.
@@ -93,6 +94,7 @@ func _ready() -> void:
 		load(ANCIENT_SENTINEL_PATH) as Resource,
 		load(GALE_HARPY_PATH) as Resource,
 		load(EMBER_HOUND_PATH) as Resource,
+		load(THORNBACK_BEAR_PATH) as Resource,
 	)
 	_encounter_system.setup(pool)
 	_encounter_system.encounter_triggered.connect(_on_encounter_triggered)

@@ -6,13 +6,14 @@ extends RefCounted
 ## Testable without a live scene — pass null for absent enemies.
 
 
-static func build_pool(
+static func build_pool(  # gdlint:ignore = function-arguments-number
 	creeping_vine: Resource,
 	ash_stalker: Resource,
 	hollow_specter: Resource,
 	ancient_sentinel: Resource,
 	gale_harpy: Resource,
 	ember_hound: Resource,
+	thornback_bear: Resource = null,
 ) -> Array[EncounterPoolEntry]:
 	var pool: Array[EncounterPoolEntry] = []
 
@@ -62,6 +63,12 @@ static func build_pool(
 	if gale_harpy and ember_hound:
 		pool.append(EncounterPoolEntry.create(
 			[gale_harpy, ember_hound] as Array[Resource], 0.4,
+		))
+
+	# Rare heavy encounter — Thornback Bear
+	if thornback_bear:
+		pool.append(EncounterPoolEntry.create(
+			[thornback_bear] as Array[Resource], 0.5,
 		))
 
 	return pool

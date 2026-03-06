@@ -7,7 +7,7 @@ Started: 2026-03-05
 Closed: —
 
 ## Velocity
-- Completed: 6
+- Completed: 7
 - Added mid-sprint: 0
 - Rolled over: 0
 
@@ -51,18 +51,6 @@ Closed: —
 
 ### Enemies (medium priority)
 
-### T-0288
-- Title: Create Thornback Bear enemy — Verdant Tangle heavy hitter
-- Status: todo
-- Assigned: unassigned
-- Priority: medium
-- Milestone: M1
-- Tags: battle, data, enemy
-- Depends: —
-- Blocked-by: —
-- Refs: docs/game-design/02-enemy-design.md, game/data/enemies/
-- Notes: AGGRESSIVE AI, ~120 HP. Maul, Thorn Volley, Roar. Weak to Fire. Add to Verdant Forest and Overgrown Ruins encounter pools. 3+ tests.
-
 ### T-0289
 - Title: Create Shard Serpent enemy — Crystalline Steppes construct
 - Status: todo
@@ -84,4 +72,5 @@ Closed: —
 - T-0276: Create status effect .tres data files — poison, burn, stun, haste, slow, shield, weakness, regen; 8 new tests validating all fields
 - T-0274: Implement Echo combat system — equip/unequip (max 6 slots) in EchoManager, per-battle use tracking, "echo" command in PlayerTurnState, echo mode in ActionSelectState, echo execution (DAMAGE/HEAL/BUFF/DEBUFF) in ActionExecuteState, BattleAction.ECHO type, auto-target for AoE/SELF echoes, serialize equipped echoes, 10 new tests
 - T-0277: Implement heal-targeting for support abilities — is_ally_target() helper in BAX, execute_ability() heals allies instead of damaging, 6 new tests
+- T-0288: Create Thornback Bear enemy — 120 HP AGGRESSIVE AI, maul/thorn_volley/roar abilities, weak to FIRE resists EARTH, added to Verdant Forest + Overgrown Ruins as rare encounter, 9 new tests
 - T-0275: Add Ground command — BattleAction.GROUND type, "ground" command in PlayerTurnState, Hollow ally targeting in TargetSelectState, _execute_ground in ActionExecuteState (25% resonance cost, cure Hollow, 25% HP heal), GROUND_RESONANCE_COST/GROUND_HEAL_PERCENT constants, 6 new tests

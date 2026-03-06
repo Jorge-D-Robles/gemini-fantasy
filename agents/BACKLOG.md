@@ -209,8 +209,8 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0288
 - Title: Create Thornback Bear enemy — Verdant Tangle heavy hitter
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: medium
 - Milestone: M1
 - Tags: battle, data, enemy

@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=5 format=3 uid="uid://bthornback_bear"]
+
+[ext_resource type="Script" path="res://resources/enemy_data.gd" id="1_script"]
+[ext_resource type="Resource" uid="uid://bmaul" path="res://data/abilities/maul.tres" id="2_maul"]
+[ext_resource type="Resource" uid="uid://bthorn_volley" path="res://data/abilities/thorn_volley.tres" id="3_thorn_volley"]
+[ext_resource type="Resource" uid="uid://broar" path="res://data/abilities/roar.tres" id="4_roar"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"thornback_bear"
+display_name = "Thornback Bear"
+description = "A massive bear with crystalline thorns growing from its spine. Once a gentle forest guardian, driven mad by unchecked crystal growth."
+max_hp = 120
+max_ee = 40
+attack = 22
+magic = 8
+defense = 14
+resistance = 8
+speed = 8
+luck = 4
+exp_reward = 35
+gold_reward = 20
+abilities = [ExtResource("2_maul"), ExtResource("3_thorn_volley"), ExtResource("4_roar")]
+weaknesses = [1]
+resistances = [5]
+ai_type = 1
+sprite_path = "res://assets/sprites/enemies/bear.png"
+sprite_columns = 3
+sprite_rows = 4
+battle_scale = 2.5
+loot_table = [{"item_id": "beast_hide", "drop_chance": 0.4}, {"item_id": "crystal_thorn", "drop_chance": 0.25}, {"item_id": "feral_essence", "drop_chance": 0.1}]

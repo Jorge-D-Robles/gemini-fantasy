@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://bthorn_volley"]
+
+[ext_resource type="Script" path="res://resources/ability_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"thorn_volley"
+display_name = "Thorn Volley"
+description = "Launches a barrage of crystalline thorns at the entire party."
+ee_cost = 12
+resonance_cost = 0.0
+damage_base = 25
+damage_stat = 0
+target_type = 1
+element = 5
+status_effect = ""
+status_chance = 0.0
+animation_name = "thorn_volley"
