@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="EquipmentData" load_steps=2 format=3 uid="uid://balloy_helm"]
+
+[ext_resource type="Script" path="res://resources/equipment_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"alloy_helm"
+display_name = "Alloy Helm"
+description = "Lightweight alloy helmet from Gearhaven's forges. Good protection without bulk."
+slot_type = 1
+weapon_type = 0
+defense_bonus = 7
+buy_price = 280
+sell_price = 140

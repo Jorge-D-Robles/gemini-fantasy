@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ShopData" load_steps=2 format=3 uid="uid://bgearhaven_tech"]
+
+[ext_resource type="Script" path="res://resources/shop_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+shop_id = &"gearhaven_tech"
+shop_name = "Gearhaven Tech Emporium"
+item_paths = Array[String](["res://data/equipment/resonance_blade.tres", "res://data/equipment/chrome_repeater.tres", "res://data/equipment/arc_staff.tres", "res://data/equipment/steel_mace.tres", "res://data/equipment/iron_shield.tres", "res://data/equipment/reinforced_coat.tres", "res://data/equipment/alloy_helm.tres", "res://data/equipment/signal_ring.tres", "res://data/equipment/mystic_ring.tres", "res://data/equipment/speed_ring.tres", "res://data/items/hi_potion.tres", "res://data/items/ether.tres", "res://data/items/antidote.tres", "res://data/items/phoenix_down.tres", "res://data/items/resonance_tonic.tres"])
+buy_price_modifier = 1.0
+sell_price_modifier = 0.5

@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EquipmentData" load_steps=2 format=3 uid="uid://bchrome_repeater"]
+
+[ext_resource type="Script" path="res://resources/equipment_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"chrome_repeater"
+display_name = "Chrome Repeater"
+description = "Initiative-issue semi-automatic rifle. Reliable and precise."
+slot_type = 0
+weapon_type = 4
+attack_bonus = 12
+speed_bonus = 2
+buy_price = 420
+sell_price = 210

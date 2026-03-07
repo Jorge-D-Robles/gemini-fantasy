@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EquipmentData" load_steps=2 format=3 uid="uid://bsignal_ring"]
+
+[ext_resource type="Script" path="res://resources/equipment_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"signal_ring"
+display_name = "Signal Ring"
+description = "A ring that amplifies Resonance signals. Boosts magic and resistance."
+slot_type = 3
+weapon_type = 0
+magic_bonus = 5
+resistance_bonus = 5
+buy_price = 320
+sell_price = 160

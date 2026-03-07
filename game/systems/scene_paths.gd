@@ -28,6 +28,9 @@ const PRISMFALL: String = (
 const EMBERHEARTH: String = (
 	"res://scenes/emberhearth/emberhearth.tscn"
 )
+const GEARHAVEN: String = (
+	"res://scenes/gearhaven/gearhaven.tscn"
+)
 
 # -- Cindral Wastes routes --
 const SCORCHED_ROAD: String = (

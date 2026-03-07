@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EquipmentData" load_steps=2 format=3 uid="uid://breinforced_coat"]
+
+[ext_resource type="Script" path="res://resources/equipment_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"reinforced_coat"
+display_name = "Reinforced Coat"
+description = "A heavy coat reinforced with alloy plating. Standard issue for Gearhaven guards."
+slot_type = 2
+weapon_type = 0
+defense_bonus = 10
+resistance_bonus = 3
+buy_price = 380
+sell_price = 190

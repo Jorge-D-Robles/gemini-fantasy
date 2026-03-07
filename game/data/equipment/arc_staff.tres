@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EquipmentData" load_steps=2 format=3 uid="uid://barc_staff"]
+
+[ext_resource type="Script" path="res://resources/equipment_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"arc_staff"
+display_name = "Arc Staff"
+description = "A staff conducting electrical Resonance. Devastating magical potential."
+slot_type = 0
+weapon_type = 7
+magic_bonus = 14
+attack_bonus = 2
+buy_price = 430
+sell_price = 215
