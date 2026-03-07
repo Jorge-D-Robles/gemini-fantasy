@@ -402,11 +402,12 @@ Completed and superseded tickets are in `agents/COMPLETED.md`.
 
 ### T-0302
 - Title: Build Gearhaven city scene — Ironcoast major hub (largest city)
-- Status: todo
-- Assigned: unassigned
+- Status: done
+- Assigned: claude
 - Priority: high
 - Milestone: M2
 - Tags: scene, tilemap
+- Completed: 2026-03-06
 - Depends: —
 - Blocked-by: —
 - Refs: docs/game-design/03-world-map-and-locations.md (Gearhaven)

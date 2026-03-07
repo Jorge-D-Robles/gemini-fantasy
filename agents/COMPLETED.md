@@ -137,3 +137,4 @@ T-0025 | 2026-02-22 | Build bonding system framework | BondData Resource + BondM
 [2026-03-06] T-0346: Implement Ash's "The Drawing" character quest — 4-stage event, 43 dialogue lines (Ash silent), quest .tres, 34 tests (claude)
 [2026-03-06] T-0301: Build Scorched Road route scene — volcanic highway, 3 biomes, ashlands rock borders, winding path, Cindral Wastes encounters (magma_crawler/lava_elemental/ash_stalker), 20 tests (claude)
 [2026-03-06] T-0300: Build Emberhearth city scene — volcanic caldera hub, procedural ground (3 biomes), steampunk buildings, ashlands border, 5 flag-reactive NPCs, forge shop (15 items), inn healing, save point, 31 tests (claude)
+- T-0302: Build Gearhaven city scene — steampunk Ironcoast hub, 6 NPCs, tech shop, 6 equipment, 43 tests (2026-03-06)

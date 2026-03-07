@@ -7,7 +7,7 @@ Started: 2026-03-06
 Closed: —
 
 ## Velocity
-- Completed: 20
+- Completed: 21
 - Added mid-sprint: 0
 - Rolled over: 0
 
@@ -27,6 +27,7 @@ Closed: —
 
 ## Done This Sprint
 
+- T-0302: Build Gearhaven city scene — steampunk Ironcoast hub, 40x30 map, 6 NPCs with flag-reactive dialogue, tech shop (15 items), 6 new equipment, inn healing, save point, 43 tests
 - T-0301: Build Scorched Road route scene — volcanic highway, 3 biomes, ashlands borders, Cindral Wastes encounters, 20 tests
 - T-0300: Build Emberhearth city scene — Cindral Wastes volcanic hub with procedural ground, steampunk buildings, 5 NPCs, shop, inn, save point, 31 tests
 - T-0346: Implement Ash's "The Drawing" character quest — 4-stage event (43 dialogue lines, Ash never speaks), quest .tres, stage gating, trigger_stage(), 34 tests
