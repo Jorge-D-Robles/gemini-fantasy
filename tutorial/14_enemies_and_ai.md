@@ -1,0 +1,354 @@
+# Module 14: Enemies and AI
+
+## What We Have So Far
+
+Three connected areas (town, forest, dungeon), a battle system with interactive menus, and encounter zones in the Crystal Cavern waiting for enemies.
+
+## What We're Building This Module
+
+Enemy data types, three enemy species with basic AI, a random encounter system that triggers battles while walking, encounter groups, and the Crystal Guardian boss fight.
+
+## EnemyData Resource
+
+Enemies need their own data. Create `res://resources/enemy_data.gd`:
+
+```gdscript
+extends Resource
+class_name EnemyData
+## Data definition for an enemy combatant.
+
+enum AIType { AGGRESSIVE, CAUTIOUS, BALANCED }
+
+@export var id: String = ""
+@export var display_name: String = ""
+@export var sprite: Texture2D
+@export var ai_type: AIType = AIType.BALANCED
+
+@export_group("Stats")
+@export var max_hp: int = 30
+@export var max_mp: int = 0
+@export var attack: int = 8
+@export var defense: int = 3
+@export var speed: int = 5
+
+@export_group("Rewards")
+@export var xp_reward: int = 10
+@export var gold_reward: int = 5
+@export var drop_item: ItemData
+@export_range(0.0, 1.0) var drop_chance: float = 0.25
+```
+
+Create three enemies as `.tres` files in `res://data/enemies/`:
+
+**`cave_bat.tres`** — Fast, weak, aggressive
+- display_name: "Cave Bat", ai_type: AGGRESSIVE
+- HP: 20, attack: 6, defense: 2, speed: 12
+- XP: 8, gold: 3
+
+**`crystal_slime.tres`** — Moderate, balanced
+- display_name: "Crystal Slime", ai_type: BALANCED
+- HP: 35, attack: 8, defense: 5, speed: 4
+- XP: 12, gold: 6, drop: Potion (25%)
+
+**`stone_golem.tres`** — Tanky, cautious
+- display_name: "Stone Golem", ai_type: CAUTIOUS
+- HP: 60, attack: 12, defense: 10, speed: 2
+- XP: 25, gold: 15, drop: Ether (20%)
+
+## Enemy AI
+
+Each enemy needs to decide what to do on its turn. Our three AI types:
+
+```gdscript
+# Add to ActionExecute state or create a separate ai_controller.gd
+
+static func choose_enemy_action(
+    battler: BattlerData,
+    enemy_data: EnemyData,
+    party: Array[BattlerData],
+    allies: Array[BattlerData],
+) -> Dictionary:
+    match enemy_data.ai_type:
+        EnemyData.AIType.AGGRESSIVE:
+            return _ai_aggressive(battler, party)
+        EnemyData.AIType.CAUTIOUS:
+            return _ai_cautious(battler, party)
+        EnemyData.AIType.BALANCED:
+            return _ai_balanced(battler, party)
+        _:
+            return _ai_balanced(battler, party)
+
+
+static func _ai_aggressive(battler: BattlerData, targets: Array[BattlerData]) -> Dictionary:
+    # Always attack the target with the lowest HP
+    var weakest: BattlerData = targets[0]
+    for t in targets:
+        if t.current_hp < weakest.current_hp:
+            weakest = t
+    return {action = "attack", battler = battler, target = weakest}
+
+
+static func _ai_cautious(battler: BattlerData, targets: Array[BattlerData]) -> Dictionary:
+    # Defend when HP is below 30%, otherwise attack randomly
+    var hp_ratio: float = float(battler.current_hp) / float(battler.character_data.max_hp)
+    if hp_ratio < 0.3:
+        return {action = "defend", battler = battler, target = battler}
+    var target: BattlerData = targets[randi() % targets.size()]
+    return {action = "attack", battler = battler, target = target}
+
+
+static func _ai_balanced(battler: BattlerData, targets: Array[BattlerData]) -> Dictionary:
+    # 70% attack, 30% defend
+    var target: BattlerData = targets[randi() % targets.size()]
+    if randf() < 0.3:
+        return {action = "defend", battler = battler, target = battler}
+    return {action = "attack", battler = battler, target = target}
+```
+
+## The Encounter System
+
+### EncounterData Resource
+
+Define which enemies appear together:
+
+```gdscript
+extends Resource
+class_name EncounterData
+## Defines a possible random encounter — which enemies appear as a group.
+
+@export var enemies: Array[EnemyData] = []
+@export_range(0.0, 1.0) var weight: float = 1.0  # Relative probability
+```
+
+Create some encounter groups in `res://data/encounters/`:
+
+**`cave_bats.tres`:** 2-3 Cave Bats (common)
+**`slime_pair.tres`:** 2 Crystal Slimes (uncommon)
+**`golem.tres`:** 1 Stone Golem (rare)
+
+### The Step Counter System
+
+Random encounters trigger based on a step counter. Create `res://systems/encounter_system.gd`:
+
+```gdscript
+extends Node
+## Tracks player movement and triggers random encounters in encounter zones.
+
+signal encounter_triggered(encounter: EncounterData)
+
+var _step_count: int = 0
+var _threshold: int = 0
+var _in_encounter_zone: bool = false
+var _current_encounters: Array[EncounterData] = []
+var _encounter_rate: float = 0.1
+var _last_player_position: Vector2 = Vector2.ZERO
+
+const STEP_DISTANCE: float = 16.0  # One tile = one step
+
+
+func _process(_delta: float) -> void:
+    if not _in_encounter_zone:
+        return
+
+    var player := get_tree().get_first_node_in_group("player")
+    if not player:
+        return
+
+    var distance: float = player.global_position.distance_to(_last_player_position)
+    if distance >= STEP_DISTANCE:
+        _last_player_position = player.global_position
+        _step_count += 1
+        _check_encounter()
+
+
+func _check_encounter() -> void:
+    if _step_count >= _threshold:
+        _step_count = 0
+        _threshold = randi_range(8, 20)  # Next encounter in 8-20 steps
+
+        if randf() < _encounter_rate and not _current_encounters.is_empty():
+            var encounter := _pick_weighted_encounter()
+            encounter_triggered.emit(encounter)
+
+
+func _pick_weighted_encounter() -> EncounterData:
+    var total_weight: float = 0.0
+    for enc in _current_encounters:
+        total_weight += enc.weight
+
+    var roll: float = randf() * total_weight
+    var cumulative: float = 0.0
+    for enc in _current_encounters:
+        cumulative += enc.weight
+        if roll <= cumulative:
+            return enc
+
+    return _current_encounters[0]
+
+
+func enter_zone(encounters: Array[EncounterData], rate: float) -> void:
+    _in_encounter_zone = true
+    _current_encounters = encounters
+    _encounter_rate = rate
+    _threshold = randi_range(10, 25)
+    _step_count = 0
+    var player := get_tree().get_first_node_in_group("player")
+    if player:
+        _last_player_position = player.global_position
+
+
+func exit_zone() -> void:
+    _in_encounter_zone = false
+    _current_encounters.clear()
+```
+
+> **See:** [Random number generation](https://docs.godotengine.org/en/stable/tutorials/math/random_number_generation.html) — `randi_range()`, `randf()`, and weighted random selection.
+
+### Wiring Encounter Zones
+
+Update the encounter zone script from Module 13:
+
+```gdscript
+extends Area2D
+## Marks a region where random encounters can happen.
+
+@export var encounters: Array[EncounterData] = []
+@export var encounter_rate: float = 0.1
+
+@onready var _encounter_system: Node = $"../EncounterSystem"  # or find it differently
+
+
+func _ready() -> void:
+    body_entered.connect(_on_body_entered)
+    body_exited.connect(_on_body_exited)
+
+
+func _on_body_entered(body: Node2D) -> void:
+    if body.is_in_group("player") and _encounter_system:
+        _encounter_system.enter_zone(encounters, encounter_rate)
+
+
+func _on_body_exited(body: Node2D) -> void:
+    if body.is_in_group("player") and _encounter_system:
+        _encounter_system.exit_zone()
+```
+
+## The Boss: Crystal Guardian
+
+The Crystal Guardian is a stronger enemy with a pre-battle dialogue:
+
+**`crystal_guardian.tres`** (EnemyData)
+- display_name: "Crystal Guardian"
+- ai_type: AGGRESSIVE
+- HP: 200, attack: 15, defense: 8, speed: 6
+- XP: 100, gold: 50
+
+The boss room trigger starts dialogue, then transitions to battle:
+
+```gdscript
+extends Area2D
+## Triggers the boss fight with a pre-battle cutscene.
+
+@export var boss_data: EnemyData
+var _triggered: bool = false
+
+
+func _ready() -> void:
+    body_entered.connect(_on_body_entered)
+
+
+func _on_body_entered(body: Node2D) -> void:
+    if body.is_in_group("player") and not _triggered:
+        _triggered = true
+        _start_boss_sequence()
+
+
+func _start_boss_sequence() -> void:
+    var player := get_tree().get_first_node_in_group("player")
+    if player and player.has_method("set_disabled"):
+        player.set_disabled(true)
+
+    # Pre-boss dialogue
+    var line := DialogueLine.new()
+    line.speaker_name = "Crystal Guardian"
+    line.text = "You dare disturb the crystals? Prepare yourself!"
+
+    var dialogue_box = get_tree().get_first_node_in_group("dialogue_boxes")
+    if dialogue_box:
+        dialogue_box.start_dialogue([line])
+        await dialogue_box.dialogue_finished
+
+    # Start the boss battle
+    _start_boss_battle()
+
+
+func _start_boss_battle() -> void:
+    var hero := BattlerData.new()
+    hero.character_data = load("res://data/characters/aiden.tres")
+    hero.is_player_controlled = true
+
+    var boss_char := CharacterData.new()
+    boss_char.display_name = boss_data.display_name
+    boss_char.max_hp = boss_data.max_hp
+    boss_char.attack = boss_data.attack
+    boss_char.defense = boss_data.defense
+    boss_char.speed = boss_data.speed
+
+    var boss := BattlerData.new()
+    boss.character_data = boss_char
+    boss.is_player_controlled = false
+
+    SceneManager.start_battle({
+        party = [hero],
+        enemies = [boss],
+    })
+```
+
+## Flee Mechanic
+
+Add a "Flee" option to the battle menu. Fleeing succeeds based on the party's average speed vs the enemies':
+
+```gdscript
+func attempt_flee(party: Array[BattlerData], enemies: Array[BattlerData]) -> bool:
+    var party_speed: float = 0.0
+    for b in party:
+        party_speed += b.current_speed
+    party_speed /= party.size()
+
+    var enemy_speed: float = 0.0
+    for b in enemies:
+        enemy_speed += b.current_speed
+    enemy_speed /= enemies.size()
+
+    # Base 50% chance, modified by speed ratio
+    var chance: float = 0.5 + (party_speed - enemy_speed) * 0.05
+    chance = clampf(chance, 0.1, 0.9)  # Always 10-90% chance
+
+    return randf() < chance
+```
+
+If flee succeeds, return to the overworld. If it fails, the turn is wasted.
+
+> **JRPG Pattern:** Most JRPGs don't let you flee from boss battles. Add a `can_flee: bool` to your encounter data.
+
+## What We've Learned
+
+- **EnemyData** Resource defines enemy stats, AI type, rewards, and loot drops.
+- **Three AI types** (aggressive, cautious, balanced) create varied combat encounters with simple weighted logic.
+- **The step counter** triggers encounters after a semi-random number of movement steps.
+- **Encounter groups** (EncounterData) define which enemies appear together, with weighted random selection.
+- **Boss fights** use pre-battle dialogue sequences and stronger enemy data.
+- **Flee mechanic** uses speed-based probability with bounded randomness.
+
+## What You Should See
+
+When exploring the Crystal Cavern:
+- Random battles trigger after walking a number of steps
+- Different enemies appear (bats, slimes, golems)
+- Each enemy behaves differently based on AI type
+- Entering the boss room triggers dialogue, then a boss battle
+- The Flee option sometimes works, sometimes doesn't
+
+## Next Module
+
+We can fight, but nothing happens after winning. In **Module 15: Victory, Rewards, and Leveling**, we'll add XP distribution, a leveling system, gold and item drops, the victory fanfare, and the game-over flow.

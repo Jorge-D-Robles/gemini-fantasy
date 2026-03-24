@@ -1,0 +1,42 @@
+<!-- Landing page content — injected into template.html by build.js -->
+<div class="text-center py-12 sm:py-20">
+  <h1 class="hero-title">Build a JRPG<br><span class="text-sky-400">in Godot 4</span></h1>
+  <p class="hero-subtitle mx-auto">
+    A complete, from-scratch tutorial series that takes you from an empty Godot project
+    to a fully playable turn-based RPG. 21 modules. One continuous project. Every system explained.
+  </p>
+  <a href="01-the-journey-begins.html" class="cta-button">
+    Start the Tutorial
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+    </svg>
+  </a>
+</div>
+
+<div class="max-w-2xl mx-auto mb-12">
+  <div class="bg-slate-800/50 rounded-lg border border-slate-700/50 p-6 text-left">
+    <h2 class="text-lg font-semibold text-white mt-0 mb-3 border-0">What You'll Build</h2>
+    <p class="text-slate-400 text-sm mb-4">
+      <strong class="text-slate-200">Crystal Saga</strong> — a small but architecturally complete JRPG
+      with a town, a forest, a dungeon, and a boss fight. Along the way, you'll implement every major
+      system a JRPG needs:
+    </p>
+    <div class="grid sm:grid-cols-2 gap-2 text-sm text-slate-300">
+      <div class="flex items-start gap-2"><span class="text-sky-400 mt-0.5">▸</span> Tile-based overworld with multiple areas</div>
+      <div class="flex items-start gap-2"><span class="text-sky-400 mt-0.5">▸</span> Scene transitions with fade effects</div>
+      <div class="flex items-start gap-2"><span class="text-sky-400 mt-0.5">▸</span> NPCs with branching dialogue</div>
+      <div class="flex items-start gap-2"><span class="text-sky-400 mt-0.5">▸</span> Turn-based battle system</div>
+      <div class="flex items-start gap-2"><span class="text-sky-400 mt-0.5">▸</span> Inventory, equipment, and shops</div>
+      <div class="flex items-start gap-2"><span class="text-sky-400 mt-0.5">▸</span> Quest system with game flags</div>
+      <div class="flex items-start gap-2"><span class="text-sky-400 mt-0.5">▸</span> Party management and recruitment</div>
+      <div class="flex items-start gap-2"><span class="text-sky-400 mt-0.5">▸</span> Save/load with JSON serialization</div>
+      <div class="flex items-start gap-2"><span class="text-sky-400 mt-0.5">▸</span> Music, SFX, and audio buses</div>
+      <div class="flex items-start gap-2"><span class="text-sky-400 mt-0.5">▸</span> Title screen, pause menu, credits</div>
+    </div>
+  </div>
+</div>
+
+<div class="max-w-2xl mx-auto">
+  <h2 class="text-xl font-semibold text-white mb-6 border-0">All Modules</h2>
+  {{MODULE_LIST}}
+</div>

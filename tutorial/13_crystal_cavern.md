@@ -1,0 +1,289 @@
+# Module 13: The Crystal Cavern — Dungeon Design
+
+## What We Have So Far
+
+A town, a forest, a battle system with actions and animations, and an inventory. We need a destination — somewhere that tests the player's skills and rewards their preparation.
+
+## What We're Building This Module
+
+The **Crystal Cavern** — a dungeon area with a distinct tileset, multiple rooms connected by passages, treasure chests, encounter zones for random battles, a save crystal, and a boss room at the end. This is level design, not system design — we're applying everything we've learned about TileMaps, scene transitions, and interactables.
+
+## Dungeon vs Overworld Design
+
+Dungeons differ from overworld areas in several ways:
+
+| Aspect | Overworld (Willowbrook, Whisperwood) | Dungeon (Crystal Cavern) |
+|--------|--------------------------------------|--------------------------|
+| Tile palette | Grass, trees, paths, buildings | Cave walls, stone floor, crystals |
+| Layout | Open, organic, free-roaming | Corridors, rooms, controlled flow |
+| Collision | Boundary trees and water | Walls everywhere — tight spaces |
+| Encounters | Occasional (forest only) | Frequent — every few steps |
+| Items | Shops (buy) | Treasure chests (find) |
+| Save points | Towns (convenient) | Rare (crystals — strategic) |
+| Goal | Exploration and socializing | Challenge and progression |
+
+## Building the Cave Tilemap
+
+Create `res://scenes/crystal_cavern/crystal_cavern.tscn` with the familiar layer structure, but using cave-themed tiles:
+
+```
+CrystalCavern (Node2D)
+├── Ground (TileMapLayer)      — stone floors, cave ground
+├── Detail (TileMapLayer)      — cracks, rubble, small crystals
+├── YSortGroup (Node2D, y_sort_enabled)
+│   ├── Objects (TileMapLayer) — large crystal formations, stalagmites
+│   ├── Player (instance)
+│   └── ... (treasure chests, save crystal)
+├── AbovePlayer (TileMapLayer) — cave ceiling overhangs, arches
+├── Exits (Node2D)
+│   ├── ExitToWhisperwood (Area2D + exit_zone.gd)
+│   └── ... (spawn points)
+├── EncounterZones (Node2D)
+│   ├── MainCorridor (Area2D)
+│   └── DeepCavern (Area2D)
+├── DialogueBox (instance)
+└── InventoryScreen (instance)
+```
+
+### Room-Based Layout
+
+Design the dungeon as connected rooms:
+
+```
+[Entrance] → [Main Corridor] → [Fork]
+                                  ├→ [Dead End — Treasure]
+                                  └→ [Deep Cavern] → [Boss Room]
+                                       ↑
+                                  [Save Crystal]
+```
+
+Each "room" is a region of the tilemap. Passages connect them. The fork creates a simple decision: explore the dead end for treasure, or push ahead toward the boss.
+
+### Design Tips
+
+- **Walls on all sides.** Unlike overworld areas with natural boundaries (trees, water), dungeon rooms need explicit walls. Fill everything with wall tiles, then carve out rooms and corridors.
+- **Varied room shapes.** Rectangles are fine, but an L-shaped room or a round cavern adds visual interest.
+- **Visual landmarks.** Place unique crystal formations or broken pillars at decision points so the player can orient themselves.
+- **Width variety.** Tight corridors create tension. Open rooms offer relief. Alternate between them.
+
+> **Spiral:** All the TileMapLayer skills from Module 4 apply here — multiple layers, physics on wall tiles, pixel-perfect settings. The only difference is the tile palette.
+
+## Treasure Chests
+
+A chest is an interactable that gives the player an item. It's a reusable scene.
+
+Create `res://entities/interactable/treasure_chest.tscn`:
+
+```
+TreasureChest (StaticBody2D)
+├── Sprite (Sprite2D)          — closed/open chest image
+├── CollisionShape2D           — blocks walking through
+├── InteractionZone (Area2D)
+│   └── CollisionShape2D
+└── InteractionPrompt (Sprite2D, hidden)
+```
+
+Script `res://entities/interactable/treasure_chest.gd`:
+
+```gdscript
+extends StaticBody2D
+## A treasure chest that gives the player an item when opened.
+
+signal opened
+
+@export var item: ItemData
+@export var item_count: int = 1
+@export var chest_id: String = ""  # Unique ID for save/load tracking
+
+var is_opened: bool = false
+
+@onready var _sprite: Sprite2D = $Sprite
+@onready var _prompt: Sprite2D = $InteractionPrompt
+@onready var _zone: Area2D = $InteractionZone
+
+var _player_in_range: bool = false
+
+
+func _ready() -> void:
+    _zone.body_entered.connect(_on_body_entered)
+    _zone.body_exited.connect(_on_body_exited)
+    _prompt.visible = false
+    add_to_group("interactables")
+
+
+func _unhandled_input(event: InputEvent) -> void:
+    if not _player_in_range or is_opened:
+        return
+    if event.is_action_pressed("interact"):
+        _open()
+        get_viewport().set_input_as_handled()
+
+
+func _open() -> void:
+    is_opened = true
+    _prompt.visible = false
+    # Change sprite to open chest (if you have one)
+    # _sprite.frame = 1  # or swap texture
+
+    if item:
+        InventoryManager.add_item(item, item_count)
+        print("Found: " + item.display_name + " x" + str(item_count))
+
+    opened.emit()
+
+
+func _on_body_entered(body: Node2D) -> void:
+    if body.is_in_group("player") and not is_opened:
+        _player_in_range = true
+        _prompt.visible = true
+
+
+func _on_body_exited(body: Node2D) -> void:
+    if body.is_in_group("player"):
+        _player_in_range = false
+        _prompt.visible = false
+```
+
+Place chests in the dungeon using the editor:
+- **Dead End room:** A Potion and an Ether
+- **Before boss room:** An Iron Sword (if the player hasn't bought one)
+
+Set the `@export var item` in the Inspector by dragging the `.tres` file into the slot.
+
+## The Save Crystal
+
+A classic JRPG save point — a glowing crystal the player interacts with. For now, it just prints "Game saved!" — we'll wire it to the actual save system in Module 18.
+
+Create `res://entities/interactable/save_crystal.tscn` — same structure as the treasure chest, but with different behavior:
+
+```gdscript
+extends StaticBody2D
+## A save crystal — lets the player save their game.
+
+var _player_in_range: bool = false
+
+@onready var _prompt: Sprite2D = $InteractionPrompt
+@onready var _zone: Area2D = $InteractionZone
+
+
+func _ready() -> void:
+    _zone.body_entered.connect(_on_body_entered)
+    _zone.body_exited.connect(_on_body_exited)
+    _prompt.visible = false
+    add_to_group("save_points")
+
+
+func _unhandled_input(event: InputEvent) -> void:
+    if not _player_in_range:
+        return
+    if event.is_action_pressed("interact"):
+        _activate()
+        get_viewport().set_input_as_handled()
+
+
+func _activate() -> void:
+    # Module 18 will add actual saving here
+    print("Your progress has been saved!")
+    # Optional: heal the party at save points (common JRPG pattern)
+
+
+func _on_body_entered(body: Node2D) -> void:
+    if body.is_in_group("player"):
+        _player_in_range = true
+        _prompt.visible = true
+
+
+func _on_body_exited(body: Node2D) -> void:
+    if body.is_in_group("player"):
+        _player_in_range = false
+        _prompt.visible = false
+```
+
+Place the save crystal in the room before the boss — the classic "save point before the big fight" pattern.
+
+## Encounter Zones
+
+Encounter zones define where random battles can happen and which enemies appear. We'll set up the zones now and wire them to the encounter system in Module 14.
+
+Add `Area2D` nodes to mark regions:
+
+```gdscript
+extends Area2D
+## Marks a region where random encounters can happen.
+
+@export var encounter_group_id: String = ""  # Links to encounter data
+@export var encounter_rate: float = 0.1      # Probability per step
+```
+
+Place two zones:
+- **MainCorridor** — covers the entrance corridor (easy enemies)
+- **DeepCavern** — covers the deeper rooms (harder enemies)
+
+## The Boss Room Door
+
+A locked passage that requires a key item or a quest flag. Simple implementation:
+
+```gdscript
+extends StaticBody2D
+## A locked door that opens when the player has the right item or flag.
+
+@export var required_item_id: String = ""
+@export var unlock_message: String = "The door is locked."
+@export var open_message: String = "The door opens!"
+
+var is_unlocked: bool = false
+var _player_in_range: bool = false
+
+
+func _unhandled_input(event: InputEvent) -> void:
+    if not _player_in_range or is_unlocked:
+        return
+    if event.is_action_pressed("interact"):
+        _try_open()
+        get_viewport().set_input_as_handled()
+
+
+func _try_open() -> void:
+    if required_item_id.is_empty() or InventoryManager.has_item(required_item_id):
+        is_unlocked = true
+        print(open_message)
+        # Remove the door's collision and visual
+        queue_free()
+    else:
+        print(unlock_message)
+```
+
+For Crystal Saga, the boss room door could require a "Crystal Key" found in the treasure room, creating a simple puzzle: explore the dead end before you can face the boss.
+
+## Connecting the Scenes
+
+Add scene transitions:
+- **Whisperwood south exit** → Crystal Cavern entrance
+- **Crystal Cavern entrance** → back to Whisperwood
+
+Add spawn points (Marker2D in `spawn_points` group):
+- `from_whisperwood` — at the cave entrance
+- `default` — same as `from_whisperwood`
+
+## What We've Learned
+
+- **Dungeon design** uses tight corridors, connected rooms, and controlled flow — different from open overworld areas.
+- **Treasure chests** are interactable StaticBody2D nodes with `@export var item: ItemData`.
+- **Save crystals** mark locations where the player can save (wired in Module 18).
+- **Encounter zones** (Area2D) define regions where random battles trigger.
+- **Locked doors** check for key items before opening — simple puzzle design.
+- **Room-based layout** with forks, dead ends, and a boss room creates exploration incentive.
+
+## What You Should See
+
+When you enter Crystal Cavern from Whisperwood:
+- A distinct cave tilemap with stone floors and crystal walls
+- Multiple connected rooms with corridors between them
+- Treasure chests that give items when opened
+- A save crystal that responds to interaction
+- A boss room door at the far end
+- Encounter zones marked (we'll add random battles next module)
+
+## Next Module
+
+The dungeon exists but is quiet — no monsters. In **Module 14: Enemies and AI**, we'll create enemy types, build an encounter system that triggers random battles as you walk, design basic enemy AI, and create the Crystal Guardian boss.

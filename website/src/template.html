@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{PAGE_TITLE}}</title>
+  <meta name="description" content="{{PAGE_DESCRIPTION}}">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body class="bg-slate-900 text-slate-200 font-sans min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="fixed top-0 left-0 right-0 z-40 bg-slate-900/95 backdrop-blur border-b border-slate-700/50">
+    <div class="flex items-center justify-between h-14 px-4 lg:px-6">
+      <div class="flex items-center gap-3">
+        <button id="menu-toggle" class="lg:hidden p-2 -ml-2 text-slate-400 hover:text-white" aria-label="Toggle navigation">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+        <a href="index.html" class="flex items-center gap-2 text-white hover:text-crystal-400 transition-colors">
+          <svg class="w-5 h-5 text-crystal-400" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10 2L3 7l7 5 7-5-7-5zM3 13l7 5 7-5M3 17l7 5 7-5"/>
+          </svg>
+          <span class="font-semibold text-sm tracking-wide">JRPG in Godot 4</span>
+        </a>
+      </div>
+      <a href="https://github.com/robles/gemini-fantasy" target="_blank" rel="noopener" class="text-slate-400 hover:text-white transition-colors" aria-label="GitHub repository">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+        </svg>
+      </a>
+    </div>
+  </header>
+
+  <!-- Mobile overlay -->
+  <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden"></div>
+
+  <div class="flex pt-14 min-h-screen">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="fixed top-14 bottom-0 left-0 w-72 bg-slate-900 border-r border-slate-700/50 overflow-y-auto z-30 transform -translate-x-full lg:translate-x-0 transition-transform duration-200">
+      <nav class="py-4 px-3" aria-label="Tutorial navigation">
+        {{SIDEBAR}}
+      </nav>
+    </aside>
+
+    <!-- Main content -->
+    <main class="flex-1 lg:ml-72 min-w-0">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+        <article class="prose">
+          {{CONTENT}}
+        </article>
+
+        <!-- Prev/Next navigation -->
+        {{PREV_NEXT}}
+      </div>
+    </main>
+  </div>
+
+  <script src="scripts.js"></script>
+</body>
+</html>
