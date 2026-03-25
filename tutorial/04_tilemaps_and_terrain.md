@@ -45,20 +45,27 @@ Throughout this tutorial, we always use `TileMapLayer`.
 
 ## Getting a Tile Sheet
 
-To build a tilemap, you need a **tile sheet** — an image file containing all your tiles arranged in a grid. For this tutorial, you have a few options:
+To build a tilemap, you need a **tile sheet** — an image file containing all your tiles arranged in a grid.
 
-1. **Use a free asset pack.** [Kenney](https://kenney.nl/) has excellent free tilesets. The [1-Bit Pack](https://kenney.nl/assets/1-bit-pack) works well for prototyping.
-2. **Draw your own.** Even simple colored squares work to start — green for grass, brown for paths, blue for water, gray for walls.
-3. **Use a placeholder.** We'll describe the setup in terms of generic tiles. Replace them with real art whenever you're ready.
+For this tutorial, we recommend **Kenney's Tiny Town pack** — a free, public-domain tileset that includes everything we need:
 
-For Crystal Saga, we'll assume you have a simple tile sheet with at least these tile types:
+1. Go to [kenney.nl/assets/tiny-town](https://kenney.nl/assets/tiny-town) and click **Download**.
+2. Extract the ZIP file.
+3. In the extracted folder, find `Tilemap/tilemap_packed.png`.
+4. Create a `tilesets` folder in your project: right-click in the **FileSystem** dock → **New Folder** → name it `tilesets`.
+5. Copy `tilemap_packed.png` into `res://tilesets/` (drag it into the FileSystem dock, or copy it into the folder on disk).
+6. Rename it to `town_tiles.png` if you like, or keep the original name.
+
+This sheet contains grass, paths, water, walls, trees, buildings, and more — all in a 16x16 grid. It's everything we need for Willowbrook.
+
+> **Alternatives:** If you can't download assets, you can create a minimal placeholder. Open any image editor, create a 80x16 PNG with five 16x16 colored squares: green (#4a7c3f) for grass, brown (#8b6914) for path, blue (#3b6bb5) for water, gray (#808080) for walls, and tan (#c4a882) for floor. Save as `res://tilesets/town_tiles.png`. You can replace it with real art later.
+
+For Crystal Saga, we need at least these tile types:
 - Grass (walkable ground)
 - Path/dirt (walkable)
 - Water (not walkable)
 - Wall/building exterior (not walkable)
 - Building interior floor (walkable)
-
-Save your tile sheet image to `res://tilesets/town_tiles.png` (or whatever you name it).
 
 > **JRPG Pattern:** Most classic JRPGs use 16x16 pixel tiles. Some use 32x32 for more detail. The choice affects the overall aesthetic. We'll use **16x16** tiles for an authentic retro feel — you can use 32x32 if you prefer a more detailed look.
 
@@ -70,7 +77,7 @@ A **TileSet** is a resource that tells Godot how to interpret your tile sheet �
 
 1. Create a new scene (Scene → New Scene).
 2. Add a **Node2D** as the root. Rename it to `Willowbrook`.
-3. Save as `res://scenes/willowbrook/willowbrook.tscn`.
+3. Create the folder structure first: right-click in the **FileSystem** dock → **New Folder** → name it `scenes`. Then right-click `scenes` → **New Folder** → name it `willowbrook`. Save as `res://scenes/willowbrook/willowbrook.tscn`.
 
 ### Step 2: Add the First TileMapLayer
 
@@ -82,7 +89,7 @@ A **TileSet** is a resource that tells Godot how to interpret your tile sheet �
 1. Select the `Ground` node.
 2. In the Inspector, find the **Tile Set** property.
 3. Click it and choose **New TileSet**.
-4. Click the TileSet to expand it. Set **Tile Size** to `16x16` (or your tile size) — **you must set this before creating an atlas**.
+4. Click the TileSet resource to expand it in the **Inspector** (right panel). Find the **Tile Size** property and set it to `16x16` (or your tile size) — **you must set this before creating an atlas**.
 
 ### Step 4: Create an Atlas Source
 
@@ -94,6 +101,8 @@ The TileSet panel appears at the bottom of the editor.
 4. Godot will ask if you want to **create tiles automatically**. Click **Yes**.
 
 You should see your tile sheet with a grid overlay. Each grid cell is one tile, and Godot has created a tile entry for each one.
+
+> **Note:** If Godot doesn't prompt you automatically, click the three-dot menu (⋮) in the TileSet panel and choose **Create Tiles in Non-Transparent Texture Regions**. If that option isn't available, make sure your Tile Size matches your tile sheet's grid.
 
 > **Warning:** If the grid doesn't align with your tiles, double-check that the **Tile Size** in the TileSet matches your tile sheet's grid size. Misaligned grids are the #1 tileset setup problem.
 
@@ -183,14 +192,20 @@ T = Tree     . = Empty
   GGGWWWWWWWWWWWWWWWWWGGGG
 ```
 
-Think about:
+Your map will look different depending on which tiles you chose — that's perfectly fine. The goal is to have paths connecting buildings with grass around them. Think about:
 - **Paths** connecting buildings and leading to the town entrance/exit
 - **Buildings** as solid rectangles (we'll use the Object layer for visual detail)
 - **Water** on one edge (a pond or stream)
 - **Trees** around the perimeter for a natural boundary
 - An **exit** leading south (to the forest in Module 6)
 
-Paint the `Ground` layer first (fill everything with grass, then paint paths and water over it). Then add trees and building details on the `Objects` layer. Add flowers and grass variations on the `Detail` layer.
+Here's a practical approach:
+
+1. **Ground layer first:** Select the `Ground` layer. Choose a grass tile from the palette, select the **Bucket Fill** tool, and click in the viewport to fill a large area (at least 30x20 tiles). Then switch to the **Paint** tool and paint paths over the grass. Add water tiles along one edge.
+2. **Objects layer:** Select the `Objects` layer. Paint tree, building, and fence tiles. These go on top of the ground.
+3. **Detail layer:** Select the `Detail` layer. Add sparse flowers, path-edge tiles, or grass variations. Keep it sparse — a few per area, not on every tile.
+
+> **Tip:** Right-click while painting to pick a tile from the viewport (eyedropper). Use the scroll wheel to zoom in/out, and middle-click-drag to pan the viewport.
 
 ## Adding Collision to Tiles
 
@@ -205,20 +220,24 @@ Right now, the player walks through everything. We need to mark certain tiles as
 
 ### Step 2: Mark Tiles as Solid
 
-1. In the TileSet panel (bottom of editor), switch to the **Select** mode.
-2. Click on a tile you want to be solid (e.g., a wall tile, a water tile, a tree trunk).
-3. In the tile's properties panel, find **Physics → Physics Layer 0**.
-4. Click the collision shape area. You can draw a polygon, or for simple tiles, right-click and choose **Reset to default tile shape** to fill the entire tile.
+1. In the TileSet panel (bottom of editor), click the **Paint** tab (not "Setup" or "Select").
+2. In the paint property dropdown (left side of the panel), select **Physics Layer 0**.
+3. Now click on each tile that should be solid — wall tiles, water tiles, tree trunks, building exteriors. Each click fills the tile with a blue collision rectangle.
+4. If you need to remove collision from a tile, right-click it to clear it.
 
-Repeat this for every tile type that should block the player: walls, water, tree trunks, building exteriors.
+> **Alternative method:** If you prefer more control, switch to the **Select** tab instead. Click on a tile, then in the properties panel on the right, expand **Physics → Physics Layer 0**. Click **Add Collision Polygon**, or right-click the collision area and choose **Reset to default tile shape** to fill the entire tile. The Paint method above is faster for marking many tiles at once.
+
+Repeat until every tile type that should block the player has collision: walls, water, tree trunks, building exteriors.
 
 > **Note:** You only need to set collision on the tile *definition* in the TileSet — not on each placed tile individually. Once a tile type has collision, every instance of that tile on the map is solid.
 
 ### Step 3: Test It
 
-Make sure your player's CollisionShape2D is appropriately sized (it should be smaller than a tile — roughly half-tile height works well for a JRPG character, so the player's feet collide but their head can overlap with objects above).
+First, resize the player's collision shape to fit the tile-based world. Open `player/player.tscn`, select the `CollisionShape2D` node, and in the Inspector set the shape's **Size** to `Vector2(14, 10)` and **Position** to `Vector2(0, 4)`. The 64x64 collision from Module 3 was sized for the Godot icon — it's far too large for 16x16 tile corridors. The smaller shape represents the player's feet, so they can walk through tile-width paths.
 
-Instance the Player scene into `Willowbrook`. Run with F6 and try walking into walls and water. The player should collide and slide along surfaces.
+Instance the Player scene into `Willowbrook` (drag `player/player.tscn` from the FileSystem dock into the viewport). Run with **F6** (which runs the current scene directly — not F5, which runs the main scene). Try walking into walls and water. The player should collide and slide along surfaces.
+
+> **Note:** Your main scene is still `main.tscn` from Module 1. That's fine — we use F6 to test Willowbrook directly. In Module 6, we'll build a proper SceneManager and set up scene transitions.
 
 ## Camera2D: Following the Player
 
@@ -249,9 +268,9 @@ In the Camera2D Inspector:
 - **Limit → Right:** your map's width in pixels (e.g., `640`)
 - **Limit → Bottom:** your map's height in pixels (e.g., `480`)
 
-> **See:** [Camera2D](https://docs.godotengine.org/en/stable/classes/class_camera2d.html) — all Camera2D properties including limits, zoom, smoothing, and drag margins.
+To calculate your map's pixel dimensions: count the tiles you painted horizontally and vertically, then multiply by the tile size. For example, a 40×30 map with 16px tiles is 640×480 pixels. If you're unsure of your exact count, use a generous estimate like `800` × `600` — you can fine-tune later.
 
-You can calculate your map's pixel dimensions: `tile_count_x * tile_size` × `tile_count_y * tile_size`. For a 40×30 map with 16px tiles: 640×480.
+> **See:** [Camera2D](https://docs.godotengine.org/en/stable/classes/class_camera2d.html) — all Camera2D properties including limits, zoom, smoothing, and drag margins.
 
 ## Pixel-Perfect Rendering Checklist
 

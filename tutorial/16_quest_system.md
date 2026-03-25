@@ -151,11 +151,15 @@ func get_completed_quests() -> Array[QuestData]:
 
 func _on_flag_changed(flag_name: String, _value: bool) -> void:
     # Check if any active quest's objectives are now all met
+    # Collect completed quests first — don't modify the array during iteration
+    var newly_completed: Array[QuestData] = []
     for quest in _active_quests:
         if _all_objectives_met(quest):
-            _active_quests.erase(quest)
-            _completed_quests.append(quest)
-            quest_completed.emit(quest)
+            newly_completed.append(quest)
+    for quest in newly_completed:
+        _active_quests.erase(quest)
+        _completed_quests.append(quest)
+        quest_completed.emit(quest)
 
 
 func _all_objectives_met(quest: QuestData) -> bool:
@@ -247,6 +251,20 @@ func _make_lines(speaker: String, texts: Array[String]) -> Array[DialogueLine]:
 ## Quest Log UI
 
 A simple quest log accessible from the pause menu. Create `res://ui/quest_log/quest_log.tscn`:
+
+### Scene Tree
+
+```
+QuestLog (PanelContainer)
+└── MarginContainer
+    └── VBoxContainer
+        ├── QuestList (VBoxContainer)
+        └── DetailLabel (RichTextLabel, bbcode_enabled)
+```
+
+### Script
+
+Save as `res://ui/quest_log/quest_log.gd`:
 
 ```gdscript
 extends PanelContainer

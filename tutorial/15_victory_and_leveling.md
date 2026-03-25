@@ -19,19 +19,23 @@ static func xp_for_level(level: int) -> int:
     return level * level * 10
 ```
 
-| Level | XP Required | Total XP |
-|-------|------------|----------|
-| 1 → 2 | 40 | 40 |
-| 2 → 3 | 90 | 130 |
-| 3 → 4 | 160 | 290 |
-| 5 → 6 | 360 | 1,050 |
-| 10 → 11 | 1,100 | 5,500 |
+| Level | XP to Next Level | Total XP |
+|-------|-----------------|----------|
+| 1 → 2 | 10 | 10 |
+| 2 → 3 | 40 | 50 |
+| 3 → 4 | 90 | 140 |
+| 5 → 6 | 250 | 640 |
+| 10 → 11 | 1,000 | 3,850 |
+
+The formula `level * level * 10` means at level 1 you need 10 XP, at level 5 you need 250 XP, etc.
 
 This curve starts gentle and ramps up — early levels come fast (motivating), later levels take more effort (extending gameplay).
 
 ### Stat Growth
 
-When a character levels up, their stats increase based on **growth rates** defined in CharacterData:
+When a character levels up, their stats increase based on **growth rates** defined in CharacterData. Add this method to `res://resources/character_data.gd` (after the `@export` properties):
+
+> **Note:** `level_up()` modifies the Resource's properties at runtime. These changes persist in memory (because Resources are shared by reference) but do NOT modify the `.tres` file on disk. This is the correct behavior — runtime progression should not overwrite base data.
 
 ```gdscript
 func level_up() -> Dictionary:
@@ -71,13 +75,11 @@ func enter(_context: Dictionary = {}) -> void:
 
     # Calculate rewards from all enemies
     for enemy in battle_manager.enemies:
-        # Access the EnemyData to get rewards
-        var enemy_data: EnemyData = enemy.get_meta("enemy_data") if enemy.has_meta("enemy_data") else null
-        if enemy_data:
-            total_xp += enemy_data.xp_reward
-            total_gold += enemy_data.gold_reward
-            if enemy_data.drop_item and randf() < enemy_data.drop_chance:
-                dropped_items.append(enemy_data.drop_item)
+        if enemy.enemy_data:
+            total_xp += enemy.enemy_data.xp_reward
+            total_gold += enemy.enemy_data.gold_reward
+            if enemy.enemy_data.drop_item and randf() < enemy.enemy_data.drop_chance:
+                dropped_items.append(enemy.enemy_data.drop_item)
 
     # Distribute XP to party members
     var xp_per_member: int = total_xp / max(1, battle_manager.get_alive_party().size())
@@ -106,8 +108,6 @@ func _apply_xp(battler: BattlerData, xp: int) -> void:
         return
 
     var char_data: CharacterData = battler.character_data
-    # We need to track current XP — add it to CharacterData
-    char_data.current_xp = char_data.get("current_xp") if char_data.get("current_xp") else 0
     char_data.current_xp += xp
     print(char_data.display_name + " gained " + str(xp) + " XP!")
 
@@ -122,11 +122,26 @@ func _apply_xp(battler: BattlerData, xp: int) -> void:
         required = char_data.level * char_data.level * 10
 ```
 
-Add `current_xp` to the CharacterData resource:
+Add these runtime properties to `res://resources/character_data.gd` (not `@export` — these are runtime state, not base data):
 
 ```gdscript
-# Add to character_data.gd
-var current_xp: int = 0  # Runtime state, not @export
+# Add to character_data.gd — runtime state
+var current_xp: int = 0
+var current_hp: int = 0  # Set from max_hp at battle start
+var current_mp: int = 0  # Set from max_mp at battle start
+```
+
+Also, add an `enemy_data` property to `res://systems/battle/battler_data.gd` so the victory flow can access enemy rewards:
+
+```gdscript
+# Add to battler_data.gd
+var enemy_data: EnemyData = null  # Set when creating enemy battlers
+```
+
+When creating enemy BattlerData (in Module 14's encounter or boss fight code), set this property:
+
+```gdscript
+battler.enemy_data = enemy_data_resource
 ```
 
 ## The Defeat Flow

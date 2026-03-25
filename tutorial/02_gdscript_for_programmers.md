@@ -80,6 +80,8 @@ func _ready() -> void:
     print("I'm alive! My position is: ", position)
 ```
 
+Try it now: replace the `pass` in `_ready()` with that print line, save the script, and press F5. You should see the message appear in the **Output** panel at the bottom of the editor. Stop the game (F8) and continue.
+
 ### `_process(delta)`
 
 Called **every frame** — typically 60 times per second (or more, depending on the display). The `delta` parameter is the time in seconds since the last frame. This is where you handle movement, input, animation updates, and anything that needs to happen continuously.
@@ -241,14 +243,16 @@ The default project includes several built-in actions:
 
 | Action | Default Keys |
 |--------|-------------|
-| `ui_up` | Arrow Up, W |
-| `ui_down` | Arrow Down, S |
-| `ui_left` | Arrow Left, A |
-| `ui_right` | Arrow Right, D |
+| `ui_up` | Arrow Up |
+| `ui_down` | Arrow Down |
+| `ui_left` | Arrow Left |
+| `ui_right` | Arrow Right |
 | `ui_accept` | Enter, Space |
 | `ui_cancel` | Escape |
 
 You can view and edit these in **Project → Project Settings → Input Map**.
+
+> **Note:** The `ui_*` actions only map to arrow keys by default — WASD is **not** included. To add WASD support: open **Project → Project Settings → Input Map**, find `ui_up`, click the **+** button next to it, press **W**, and click **OK**. Repeat for `ui_down` (S), `ui_left` (A), and `ui_right` (D). Now both arrow keys and WASD will work.
 
 > **Note:** `Input` is a globally available singleton — what Godot calls an "autoload." You access it by name from anywhere: `Input.is_action_pressed("ui_up")`. We'll create our own autoloads in Module 6. For now, just know that some objects (like `Input`, `Engine`, `Time`) are always available because Godot provides them globally.
 
@@ -308,7 +312,7 @@ Let's unpack this:
 3. **`direction.normalized()`** — Without this, moving diagonally would be ~41% faster than moving horizontally or vertically (because the diagonal of a unit square is √2 ≈ 1.414). Normalizing makes the vector length exactly 1 in all directions.
 4. **`position += direction * speed * delta`** — Move the sprite by `speed` pixels per second in the input direction, scaled by `delta` for frame-rate independence.
 
-Save the script and press F5. Use the arrow keys (or WASD) to move the sprite around. The Godot icon slides smoothly across the screen.
+Save the script and press F5. Use the arrow keys to move the sprite around (or WASD if you added those bindings above). The Godot icon slides smoothly across the screen.
 
 > **JRPG Pattern:** This is "free movement" — the character moves smoothly in any direction. Some JRPGs use "grid-based movement" instead, where the character snaps from tile to tile. We'll discuss this tradeoff in Module 5 and implement free movement for Crystal Saga.
 
@@ -357,7 +361,7 @@ If you're coming from another language, watch for these:
 
 ### From Python
 - GDScript is **not Python**. Many things look similar but work differently under the hood.
-- There's no `self` keyword — use the variable name directly. (`health`, not `self.health`.)
+- GDScript has a `self` keyword, but you rarely need it — member variables are accessed directly without it (`health`, not `self.health`). `self` exists for disambiguation when a local variable shadows a member variable.
 - Dictionaries use `{"key": value}` syntax (with colons), not `{key: value}` without quotes (though GDScript also supports the `{key = value}` form).
 
 ### From JavaScript/TypeScript
@@ -380,7 +384,7 @@ If you're coming from another language, watch for these:
 
 ## Putting It Together: A Complete First Script
 
-Here's our complete `sprite_2d.gd` with everything we've learned:
+Let's replace our movement code with a cleaner version. Copy this complete script into `sprite_2d.gd`, **replacing everything** that was there:
 
 ```gdscript
 extends Sprite2D
@@ -432,7 +436,7 @@ Notice two improvements:
 ## What You Should See
 
 When you press F5:
-- The sprite responds to arrow keys / WASD
+- The sprite responds to arrow keys (and WASD if you added those bindings)
 - Movement is smooth and consistent
 - Diagonal movement is the same speed as cardinal movement (thanks to `normalized()`)
 - The Output panel shows the startup print message

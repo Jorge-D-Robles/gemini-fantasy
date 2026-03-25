@@ -215,7 +215,7 @@ extends Area2D
 @export var encounters: Array[EncounterData] = []
 @export var encounter_rate: float = 0.1
 
-@onready var _encounter_system: Node = $"../EncounterSystem"  # or find it differently
+@onready var _encounter_system: Node = $"../EncounterSystem"
 
 
 func _ready() -> void:
@@ -232,6 +232,44 @@ func _on_body_exited(body: Node2D) -> void:
     if body.is_in_group("player") and _encounter_system:
         _encounter_system.exit_zone()
 ```
+
+### Connecting Encounters to Battles
+
+The EncounterSystem emits `encounter_triggered`, but nothing starts a battle yet. Add this wiring to your Crystal Cavern scene script (`crystal_cavern.gd`):
+
+```gdscript
+@onready var _encounter_system: Node = $EncounterSystem
+
+
+func _ready() -> void:
+    _encounter_system.encounter_triggered.connect(_on_encounter_triggered)
+
+
+func _on_encounter_triggered(encounter: EncounterData) -> void:
+    # Convert EnemyData to BattlerData for the battle system
+    var enemy_battlers: Array[BattlerData] = []
+    for enemy_data in encounter.enemies:
+        var battler := BattlerData.new()
+        var char_data := CharacterData.new()
+        char_data.display_name = enemy_data.display_name
+        char_data.max_hp = enemy_data.max_hp
+        char_data.attack = enemy_data.attack
+        char_data.defense = enemy_data.defense
+        char_data.speed = enemy_data.speed
+        battler.character_data = char_data
+        battler.is_player_controlled = false
+        battler.enemy_data = enemy_data  # Store for victory rewards (Module 15)
+        enemy_battlers.append(battler)
+
+    # Build party (temporary — Module 17 adds a proper PartyManager)
+    var hero := BattlerData.new()
+    hero.character_data = load("res://data/characters/aiden.tres")
+    hero.is_player_controlled = true
+
+    SceneManager.start_battle([hero], enemy_battlers)
+```
+
+> **Note:** The `enemy_data` property on BattlerData is added in Module 15. You can add it now: open `battler_data.gd` and add `var enemy_data: EnemyData = null`.
 
 ## The Boss: Crystal Guardian
 

@@ -20,12 +20,14 @@ An enum-based `match` block for 7+ states becomes a single massive function that
 
 ### The Node-Based Pattern
 
-Each state is a **Node** with three methods:
+Each state is a **Node** with three methods (`enter`, `process`, `exit`), plus a reference to the battle manager. Save this as `res://systems/battle/battle_state.gd`:
 
 ```gdscript
 extends Node
 class_name BattleState
 ## Base class for all battle states.
+
+var battle_manager: Node  # Set by BattleManager during _ready()
 
 ## Called when this state becomes active.
 func enter(_context: Dictionary = {}) -> void:
@@ -202,13 +204,16 @@ var battler_data: BattlerData
 
 func setup(data: BattlerData) -> void:
     battler_data = data
+    add_to_group("battler_sprites")
     if data.character_data and data.character_data.portrait:
         _sprite.texture = data.character_data.portrait
 ```
 
 ## The BattleManager
 
-The battle manager orchestrates the entire fight. Create `res://systems/battle/battle_manager.gd`:
+The battle manager orchestrates the entire fight. Create `res://systems/battle/battle_manager.gd` and **attach it to the `Battle` root node** in `battle.tscn`:
+
+> **Note:** BattleManager is NOT an autoload — it is the root script of `battle.tscn`, which means it only exists while a battle is happening. The SceneManager loads the battle scene and calls its `initialize_battle()` method.
 
 ```gdscript
 extends Node
@@ -314,28 +319,9 @@ func get_alive_party() -> Array[BattlerData]:
 
 Each state is a small script. Let's implement them one by one.
 
-### Update the Base State
-
-Give `BattleState` a reference to the battle manager:
-
-```gdscript
-extends Node
-class_name BattleState
-## Base class for all battle states.
-
-var battle_manager: Node  # Set by BattleManager during _ready()
-
-func enter(_context: Dictionary = {}) -> void:
-    pass
-
-func process(_delta: float) -> void:
-    pass
-
-func exit() -> void:
-    pass
-```
-
 ### Intro State
+
+Save each state script in `res://systems/battle/states/`. For example, save this as `res://systems/battle/states/intro_state.gd`:
 
 ```gdscript
 extends BattleState
@@ -350,6 +336,8 @@ func enter(_context: Dictionary = {}) -> void:
 ```
 
 ### TurnStart State
+
+Save as `res://systems/battle/states/turn_start_state.gd`:
 
 ```gdscript
 extends BattleState
@@ -387,6 +375,8 @@ func _process_next_turn() -> void:
 
 ### PlayerChoice State
 
+Save as `res://systems/battle/states/player_choice_state.gd`:
+
 ```gdscript
 extends BattleState
 ## Waits for the player to choose an action.
@@ -413,6 +403,8 @@ func enter(context: Dictionary = {}) -> void:
 ```
 
 ### ActionExecute State
+
+Save as `res://systems/battle/states/action_execute_state.gd`:
 
 ```gdscript
 extends BattleState
@@ -461,6 +453,8 @@ func _execute_enemy_turn(battler: BattlerData) -> void:
 
 ### CheckResult State
 
+Save as `res://systems/battle/states/check_result_state.gd`:
+
 ```gdscript
 extends BattleState
 ## Checks if the battle is over after an action.
@@ -500,8 +494,10 @@ func _process_next_in_queue() -> void:
 
 ### Victory and Defeat States
 
+Save as `res://systems/battle/states/victory_state.gd`:
+
 ```gdscript
-# victory.gd
+# victory_state.gd
 extends BattleState
 ## Battle won! Show results and return to overworld.
 
@@ -514,8 +510,10 @@ func enter(_context: Dictionary = {}) -> void:
     # Return to overworld (Module 15 will handle this properly)
 ```
 
+Save as `res://systems/battle/states/defeat_state.gd`:
+
 ```gdscript
-# defeat.gd
+# defeat_state.gd
 extends BattleState
 ## Party wiped. Game over flow.
 

@@ -101,13 +101,13 @@ Create `res://ui/pause_menu/pause_menu.tscn`:
 ```
 PauseMenu (CanvasLayer, layer = 50, process_mode = ALWAYS)
 └── Background (ColorRect, semi-transparent black)
-    └── PanelContainer (centered)
-        └── VBoxContainer
-            ├── ResumeButton
-            ├── InventoryButton
-            ├── QuestLogButton
-            ├── SettingsButton
-            └── QuitButton
+    └── Panel (PanelContainer, centered)
+        └── VBox (VBoxContainer)
+            ├── ResumeButton (Button)
+            ├── InventoryButton (Button)
+            ├── QuestLogButton (Button)
+            ├── SettingsButton (Button)
+            └── QuitButton (Button)
 ```
 
 ```gdscript
@@ -177,6 +177,11 @@ SceneManager.change_scene("res://ui/ending/ending.tscn")
 
 Create a simple ending scene `res://ui/ending/ending.tscn`:
 
+```
+Ending (Control, Layout: Full Rect)
+└── StoryText (RichTextLabel, Layout: Full Rect, BBCode Enabled)
+```
+
 ```gdscript
 extends Control
 ## The victory ending scene.
@@ -199,7 +204,12 @@ func _ready() -> void:
 
 ## Credits
 
-A scrolling credits screen:
+Create `res://ui/credits/credits.tscn`:
+
+```
+Credits (Control, Layout: Full Rect)
+└── CreditsLabel (Label, Horizontal Alignment: Center)
+```
 
 ```gdscript
 extends Control

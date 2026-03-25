@@ -109,7 +109,19 @@ func _recruit_lira() -> void:
         print("Lira joined the party!")
 ```
 
-Update the battle system to use the party roster from PartyManager when building BattlerData for battles.
+Update the battle initialization to use PartyManager instead of a hardcoded hero. In your scene scripts and encounter wiring (from Module 14), replace the hero creation code with:
+
+```gdscript
+# Build party BattlerData from PartyManager
+var party_battlers: Array[BattlerData] = []
+for char_data in PartyManager.get_members():
+    var battler := BattlerData.new()
+    battler.character_data = char_data
+    battler.is_player_controlled = true
+    party_battlers.append(battler)
+```
+
+Use `party_battlers` instead of `[hero]` when calling `SceneManager.start_battle()`.
 
 ## Equipment System
 
@@ -122,7 +134,7 @@ Add equipment slots to `character_data.gd`:
 var equipped_weapon: ItemData = null
 var equipped_armor: ItemData = null
 var equipped_accessory: ItemData = null
-var current_xp: int = 0
+# current_xp was already added in Module 15
 
 
 func get_effective_attack() -> int:
@@ -193,7 +205,19 @@ Now equipping a better sword directly increases damage in battle.
 
 ### Equipment UI
 
-Add an equipment screen to the party menu. Each party member shows their current equipment and stats:
+Create `res://ui/equipment/equipment_panel.tscn`:
+
+```
+EquipmentPanel (PanelContainer)
+└── VBox (VBoxContainer)
+    ├── NameLabel (Label)
+    ├── StatsLabel (RichTextLabel)
+    └── Slots (VBoxContainer)
+        ├── WeaponButton (Button: "Weapon: ---")
+        └── ArmorButton (Button: "Armor: ---")
+```
+
+Save the script as `res://ui/equipment/equipment_panel.gd`:
 
 ```gdscript
 extends PanelContainer
@@ -246,11 +270,22 @@ Create `res://data/shops/willowbrook_shop.tres`:
 
 ### Shop UI
 
-A buy/sell screen that shows available items with prices:
+Create `res://ui/shop/shop_ui.tscn`:
+
+```
+ShopUI (CanvasLayer, layer = 15)
+└── Panel (PanelContainer, centered)
+    └── Margin (MarginContainer)
+        └── VBox (VBoxContainer)
+            ├── ItemList (VBoxContainer)
+            └── GoldLabel (Label: "Gold: 0")
+```
+
+Save the script as `res://ui/shop/shop_ui.gd`:
 
 ```gdscript
 extends CanvasLayer
-## Shop interface for buying and selling items.
+## Shop interface for buying items.
 
 signal shop_closed
 

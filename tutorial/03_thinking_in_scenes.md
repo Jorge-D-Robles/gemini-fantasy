@@ -89,13 +89,13 @@ Select the `CollisionShape2D` node. In the Inspector:
 2. Select **New RectangleShape2D**.
 3. In the viewport, you'll see a blue rectangle. Drag its handles to roughly match the size of the sprite.
 
-Alternatively, set the shape's **Size** in the Inspector to match your sprite dimensions. For the Godot icon, `Vector2(64, 64)` works.
+Alternatively, set the shape's **Size** in the Inspector to match your sprite dimensions. For the Godot icon, `Vector2(64, 64)` works. (We'll resize this to something much smaller in Module 4 when we switch to 16x16 tile-based environments.)
 
 > **Warning:** A CollisionShape2D with no shape assigned will show a yellow warning triangle in the scene tree. Always assign a shape — otherwise, your CharacterBody2D can't detect collisions.
 
 ### Step 5: Save the Scene
 
-Save as `res://player/player.tscn`. Create the `player` folder first — keeping scenes organized in folders is a habit worth building now.
+Save as `res://player/player.tscn`. Create the `player` folder first — right-click in the **FileSystem** dock and choose **New Folder**, name it `player`. Keeping scenes organized in folders is a habit worth building now.
 
 > **Note:** The convention is to name folders and files in `snake_case`. The scene file and its primary script should share a name: `player.tscn` and `player.gd`.
 
@@ -156,7 +156,7 @@ For physics-based movement (anything using `move_and_slide()`), always use `_phy
 Now we need a scene to put our Player in. Let's go back to our `main.tscn`:
 
 1. Open `main.tscn`.
-2. Delete the old `Sprite2D` node (and its script — we don't need them anymore).
+2. Delete the old `Sprite2D` node (select it, press **Delete** or right-click → **Delete Node**). Also delete the `sprite_2d.gd` file from the **FileSystem** dock (right-click → **Delete**) — we won't need it anymore.
 3. You should have just the `Main` (Node2D) root.
 4. Drag `player/player.tscn` from the FileSystem dock into the viewport, or right-click `Main` and choose **Instance Child Scene** and select `player.tscn`.
 
@@ -217,10 +217,12 @@ Let's see a simple example. Add an **Area2D** node to our `main.tscn`:
 4. Set the shape to a `RectangleShape2D` and make it reasonably large (e.g., 100x100 pixels).
 5. Position it somewhere the player will walk into.
 
+Before connecting the signal, the `Main` node needs a script. Right-click `Main` in the Scene dock and choose **Attach Script**. Accept the defaults (path: `res://main.gd`) and click **Create**.
+
 Now connect the Area2D's signal:
 
 1. Select the `TestZone` (Area2D) node.
-2. Go to the **Node** tab in the Inspector panel (next to the Inspector tab, look for a signal/node icon).
+2. Click the **Node** tab (right side of the editor, next to the Inspector tab — it has a signal icon).
 3. Find `body_entered(body: Node2D)` in the signal list.
 4. Double-click it. A connection dialog appears.
 5. Select the `Main` node as the receiver and click **Connect**.
@@ -233,6 +235,10 @@ func _on_test_zone_body_entered(body: Node2D) -> void:
 ```
 
 Run the game and walk into the zone. The output panel prints the player's name. The Area2D detected the collision and told the Main node about it — without either node knowing the other's internal details.
+
+> **Note:** This works because both the Player (CharacterBody2D) and the TestZone (Area2D) are on collision layer 1 by default. If `body_entered` doesn't fire, check that both nodes are on the same layer in the Inspector under **Collision → Layer** and **Collision → Mask**. We'll cover collision layers in more detail in Module 4.
+
+Once you've tested the signal, you can delete the `TestZone` node from `main.tscn` — it was just for learning. We won't need it going forward.
 
 This is the signal pattern we'll use throughout Crystal Saga:
 - Exit zones signal "the player wants to leave" → the SceneManager handles the transition (Module 6)
@@ -303,7 +309,7 @@ The pattern: **each "thing" gets a folder with its scene and script(s).** As the
 ## What You Should See
 
 When you press F5:
-- The player (Godot icon) moves with arrow keys / WASD
+- The player (Godot icon) moves with arrow keys (and WASD if you added those bindings in Module 2)
 - Walking into the TestZone prints a message in the Output panel
 - The player moves smoothly with physics-based collision
 

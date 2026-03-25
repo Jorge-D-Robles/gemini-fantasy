@@ -109,6 +109,16 @@ Register it as an autoload: **Project → Project Settings → Autoload** → ad
 | SceneManager | 6 | Scene transitions with fade effects |
 | **InventoryManager** | **10** | **Item storage, add/remove, signals** |
 
+## Adding a Menu Input Action
+
+Before building the UI, define a `menu` action for opening the inventory:
+
+1. **Project → Project Settings → Input Map**
+2. Add a new action: `menu`
+3. Bind it to **Tab** (or **I**) and the **Start/Menu** gamepad button
+
+> **Note:** Avoid binding `menu` to Escape — Escape is already mapped to `ui_cancel`, which we'll use to *close* the inventory. Using the same key for both open and close works thanks to our `elif` structure in the script, but using different keys (Tab to open, Escape to close) is clearer and avoids confusion.
+
 ## The Inventory UI
 
 Create `res://ui/inventory/inventory_screen.tscn`:
@@ -140,7 +150,11 @@ ItemSlot (PanelContainer)
 │       └── CountLabel (Label)
 ```
 
-And `res://ui/inventory/item_slot.gd`:
+Select the `Icon` (TextureRect) node and set **Custom Minimum Size** to `Vector2(32, 32)` so each slot has a reasonable size even without an icon texture.
+
+> **Note:** Since we haven't set item icons in our `.tres` files yet, the inventory slots will show blank icon areas — that's expected. You'll see the count label (e.g., "3" for potions). To add placeholder icons, drag `res://icon.svg` into the `icon` field of each item `.tres` file.
+
+Create `res://ui/inventory/item_slot.gd`:
 
 ```gdscript
 extends PanelContainer
@@ -173,7 +187,7 @@ func _gui_input(event: InputEvent) -> void:
 
 
 func _notification(what: int) -> void:
-    if what == NOTIFICATION_FOCUS_ENTERED:
+    if what == NOTIFICATION_FOCUS_ENTER:
         slot_selected.emit(item_data)
 ```
 
@@ -229,12 +243,9 @@ func close() -> void:
 
 
 func _refresh() -> void:
-    # Clear existing slots
+    # Clear existing slots (use free(), not queue_free(), to remove immediately)
     for child in _item_grid.get_children():
-        child.queue_free()
-
-    # Wait a frame for queue_free to process
-    await get_tree().process_frame
+        child.free()
 
     # Create slots for each item
     var items := InventoryManager.get_all_items()
@@ -245,10 +256,9 @@ func _refresh() -> void:
         slot.slot_selected.connect(_on_slot_selected)
         slot.slot_activated.connect(_on_slot_activated)
 
-    # Focus the first slot
+    # Focus the first slot (deferred so the slot is ready)
     if _item_grid.get_child_count() > 0:
-        await get_tree().process_frame
-        _item_grid.get_child(0).grab_focus()
+        _item_grid.get_child(0).call_deferred("grab_focus")
 
 
 func _on_slot_selected(item: ItemData) -> void:
@@ -299,19 +309,11 @@ Every node has a `process_mode` property that controls whether it runs while pau
 | `PROCESS_MODE_ALWAYS` | Always runs, regardless of pause state |
 | `PROCESS_MODE_DISABLED` | Never runs |
 
-Set the inventory screen's CanvasLayer `process_mode` to **`PROCESS_MODE_ALWAYS`** in the Inspector. This lets it receive input and update even when the game is paused.
+> **IMPORTANT:** Select the `InventoryScreen` (CanvasLayer) root node in the editor and set **Process → Mode** to **`Always`** in the Inspector. Without this, the inventory will open but immediately freeze because the paused game prevents it from processing input. The only way to recover would be to force-quit.
 
-The SceneManager should also be `PROCESS_MODE_ALWAYS` — it needs to work during transitions regardless of pause state.
+The SceneManager should also be `PROCESS_MODE_ALWAYS` — go back to `scene_manager.tscn` and set its root node's **Process → Mode** to **`Always`** too. It needs to work during transitions regardless of pause state.
 
 > **See:** [Pausing games](https://docs.godotengine.org/en/stable/tutorials/scripting/pausing_games.html) — the official guide to pausing and `process_mode`.
-
-## Adding a Menu Input Action
-
-Define a `menu` action for opening the inventory:
-
-1. **Project → Project Settings → Input Map**
-2. Add a new action: `menu`
-3. Bind it to **Escape** (or **I** for inventory) and the **Start/Menu** gamepad button
 
 ## Giving the Player Starting Items
 
@@ -329,9 +331,12 @@ Or better — add items through game events. For now, the starting items are fin
 
 ## Integration: Adding the Inventory to Scenes
 
-Instance `inventory_screen.tscn` in each scene that needs it, or add it as a child of the SceneManager autoload so it's always available.
+Add the inventory screen to each scene:
 
-For a quick setup, add it to each scene:
+1. Open `willowbrook.tscn`. Right-click the root `Willowbrook` node → **Instance Child Scene** → select `res://ui/inventory/inventory_screen.tscn`.
+2. Repeat for `whisperwood.tscn`.
+
+Your scene tree should look like:
 
 ```
 Willowbrook (Node2D)
@@ -358,15 +363,25 @@ Willowbrook (Node2D)
 - **`_gui_input()`** handles input events on Control nodes. **`accept_event()`** prevents propagation (like `set_input_as_handled()` for UI).
 - Items are consumed with `remove_item()` — the grid refreshes automatically via the `inventory_changed` signal.
 
+### Troubleshooting
+
+| Problem | Likely Cause |
+|---------|-------------|
+| Inventory doesn't open when pressing Tab | `menu` input action not defined, or key not bound |
+| Game freezes when inventory opens | `process_mode` not set to `Always` on the InventoryScreen CanvasLayer |
+| Items stacking incorrectly or showing wrong item | Missing or duplicate `id` fields in `.tres` files (see Module 7) |
+| Slots appear too small or empty | No icon set on items (expected — use Godot icon as placeholder), or TextureRect missing minimum size |
+| Escape doesn't close inventory | `ui_cancel` not mapped to Escape (it is by default) |
+
 ## What You Should See
 
 When you press F6 (running Willowbrook):
-- Press Escape (or your menu key) — the inventory screen opens
+- Press Tab (or your menu key) — the inventory screen opens
 - The game world freezes behind the menu
-- Items appear as icons in a grid (3 Potions from starting inventory)
+- Items appear in a grid (3 Potions from starting inventory) — icons may be blank if you haven't set them
 - Navigating slots with arrow keys highlights them and shows descriptions
 - Pressing accept on a Potion uses it and decrements the count
-- Pressing Escape again closes the inventory and resumes the game
+- Pressing Escape closes the inventory and resumes the game
 
 ## Next Module
 

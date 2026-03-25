@@ -108,7 +108,27 @@ func resume_previous_track() -> void:
         play_music(_previous_track_path)
 ```
 
-Create it as a scene `music_manager.tscn` with two AudioStreamPlayer children (`PlayerA`, `PlayerB`). Register as autoload.
+Create the scene `res://autoloads/music_manager.tscn`:
+
+1. Create a new scene with **Node** as root. Rename it to `MusicManager`.
+2. Add two **AudioStreamPlayer** children. Name them `PlayerA` and `PlayerB`.
+3. Attach `music_manager.gd` to the root node.
+4. Save as `res://autoloads/music_manager.tscn`.
+5. Register as autoload: **Project → Project Settings → Autoload** → add the `.tscn` file (not the `.gd` file — autoloads that need child nodes use the scene).
+
+```
+MusicManager (Node)
+├── PlayerA (AudioStreamPlayer)
+└── PlayerB (AudioStreamPlayer)
+```
+
+### Audio Assets
+
+You'll need audio files to test with. If you don't have music/SFX yet:
+- **Free music:** [Kenney](https://kenney.nl/assets?q=audio) has free audio packs, or search [opengameart.org](https://opengameart.org) for "JRPG music."
+- **Placeholder:** Any `.ogg` or `.wav` file works. You can create a silent `.ogg` file with Audacity (Generate → Silence → Export as OGG) to test the system without audio.
+- Create folders `res://audio/music/` and `res://audio/sfx/` and place your files there.
+- **Looping:** Select a music `.ogg` file in the FileSystem dock, go to the **Import** tab, and check **Loop** to make it repeat. Click **Reimport**.
 
 ### Using MusicManager in Scenes
 

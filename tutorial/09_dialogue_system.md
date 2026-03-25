@@ -64,7 +64,16 @@ class_name NPCData
 @export var dialogue: Array[DialogueLine] = []
 ```
 
-The `dialogue` array replaces the old `dialogue_lines`. Each entry is a `DialogueLine` with speaker name, text, and an optional portrait. Update the NPC `.tres` files to use the new format.
+The `dialogue` array replaces the old `dialogue_lines`. Update each NPC `.tres` file to use the new format:
+
+1. Open the `.tres` file (e.g., `shopkeeper.tres`) in the Inspector.
+2. The old `dialogue_lines` field will be gone (replaced by `dialogue`). Click the `dialogue` array.
+3. Click **Add Element**. An empty slot appears.
+4. Click the empty slot and choose **New DialogueLine**.
+5. Expand the new DialogueLine and fill in `speaker_name` (e.g., "Merchant Hilda") and `text` (the dialogue line). Leave `portrait` empty for now.
+6. Repeat for each line of dialogue.
+
+> **Tip:** Creating sub-resources inside arrays can feel clunky at first. Each array element needs to be clicked, then "New DialogueLine" selected, then expanded to fill in fields. It's tedious but straightforward.
 
 > **Spiral:** This is the Resource pattern from Module 7 in action. We define a data type (`DialogueLine`), use it in another Resource (`NPCData`), and the editor gives us a clean UI for editing dialogue without touching code.
 
@@ -273,7 +282,7 @@ Since dialogue can happen anywhere, it's a good candidate for global access. But
 
 For simplicity, let's use **Option A** for now — instance the dialogue box in Willowbrook. We can refactor to a global approach later.
 
-Update `willowbrook.gd`:
+Replace the contents of `willowbrook.gd` (the Module 8 version with `print()` dialogue is now obsolete):
 
 ```gdscript
 extends Node2D
@@ -318,7 +327,7 @@ The flow:
 
 Some dialogue needs player choices — "Yes/No" questions, multiple response options. Let's extend our system to support this.
 
-First, extend `DialogueLine` to support choices:
+First, **replace the entire contents of `res://resources/dialogue_line.gd`** with this updated version that adds a `choices` field:
 
 ```gdscript
 extends Resource
@@ -333,7 +342,14 @@ class_name DialogueLine
 
 When `choices` is non-empty, instead of advancing on press, we show choice buttons.
 
-Add choice UI nodes to the dialogue box:
+Add a ChoiceContainer node to the dialogue box scene:
+
+1. Open `dialogue_box.tscn`.
+2. Select the **VBoxContainer** (the one containing SpeakerLabel and TextLabel).
+3. Add a **VBoxContainer** child to it. Rename it to `ChoiceContainer`.
+4. This is where choice buttons will appear dynamically.
+
+Your updated scene tree:
 
 ```
 DialogueBox (CanvasLayer)
@@ -346,7 +362,7 @@ DialogueBox (CanvasLayer)
                 # Buttons are added dynamically
 ```
 
-Add choice handling to `dialogue_box.gd`:
+Add the following to `dialogue_box.gd`: a new signal, a new `@onready` variable, and **replace** the existing `_show_current_line()` and `_advance()` methods with these updated versions. Also add the new `_show_choices()` and `_on_choice_pressed()` methods:
 
 ```gdscript
 signal choice_made(choice_index: int)
@@ -417,6 +433,154 @@ func _on_choice_pressed(index: int) -> void:
         _show_current_line()
 ```
 
+### The Complete `dialogue_box.gd`
+
+After merging the base script with the choice additions, your complete file should look like this:
+
+```gdscript
+extends CanvasLayer
+## Displays dialogue with a typewriter effect and optional choices.
+
+signal dialogue_started
+signal dialogue_finished
+signal line_advanced
+signal choice_made(choice_index: int)
+
+@export var characters_per_second: float = 30.0
+
+var _lines: Array[DialogueLine] = []
+var _current_line_index: int = 0
+var _is_typing: bool = false
+var _current_tween: Tween = null
+
+@onready var _panel: PanelContainer = $PanelContainer
+@onready var _speaker_label: Label = $PanelContainer/MarginContainer/VBoxContainer/SpeakerLabel
+@onready var _text_label: RichTextLabel = $PanelContainer/MarginContainer/VBoxContainer/TextLabel
+@onready var _choice_container: VBoxContainer = $PanelContainer/MarginContainer/VBoxContainer/ChoiceContainer
+
+
+func _ready() -> void:
+    _panel.visible = false
+
+
+func _unhandled_input(event: InputEvent) -> void:
+    if not _panel.visible:
+        return
+
+    if event.is_action_pressed("interact") or event.is_action_pressed("ui_accept"):
+        get_viewport().set_input_as_handled()
+
+        if _is_typing:
+            _skip_typing()
+        else:
+            _advance()
+
+
+func start_dialogue(lines: Array[DialogueLine]) -> void:
+    if lines.is_empty():
+        return
+
+    _lines = lines
+    _current_line_index = 0
+    _panel.visible = true
+    dialogue_started.emit()
+    _show_current_line()
+
+
+func _show_current_line() -> void:
+    var line: DialogueLine = _lines[_current_line_index]
+
+    _speaker_label.text = line.speaker_name
+    _speaker_label.visible = line.speaker_name != ""
+    _text_label.text = line.text
+    _text_label.visible_ratio = 0.0
+
+    # Clear old choices
+    for child in _choice_container.get_children():
+        child.queue_free()
+    _choice_container.visible = false
+
+    _start_typing()
+
+
+func _start_typing() -> void:
+    _is_typing = true
+
+    var char_count: int = _text_label.get_total_character_count()
+    var duration: float = char_count / characters_per_second
+
+    if _current_tween and _current_tween.is_valid():
+        _current_tween.kill()
+
+    _current_tween = create_tween()
+    _current_tween.tween_property(_text_label, "visible_ratio", 1.0, duration)
+    _current_tween.finished.connect(_on_typing_finished)
+
+
+func _skip_typing() -> void:
+    if _current_tween and _current_tween.is_valid():
+        _current_tween.kill()
+    _text_label.visible_ratio = 1.0
+    _is_typing = false
+
+
+func _on_typing_finished() -> void:
+    _is_typing = false
+
+
+func _advance() -> void:
+    var current_line: DialogueLine = _lines[_current_line_index]
+
+    if not current_line.choices.is_empty() and _choice_container.get_child_count() == 0:
+        _show_choices(current_line.choices)
+        return
+
+    _current_line_index += 1
+    line_advanced.emit()
+
+    if _current_line_index >= _lines.size():
+        _close()
+    else:
+        _show_current_line()
+
+
+func _show_choices(choices: Array[String]) -> void:
+    _choice_container.visible = true
+
+    for i in choices.size():
+        var button := Button.new()
+        button.text = choices[i]
+        button.pressed.connect(_on_choice_pressed.bind(i))
+        _choice_container.add_child(button)
+
+    await get_tree().process_frame
+    if _choice_container.get_child_count() > 0:
+        _choice_container.get_child(0).grab_focus()
+
+
+func _on_choice_pressed(index: int) -> void:
+    choice_made.emit(index)
+    _choice_container.visible = false
+
+    for child in _choice_container.get_children():
+        child.queue_free()
+
+    _current_line_index += 1
+    if _current_line_index >= _lines.size():
+        _close()
+    else:
+        _show_current_line()
+
+
+func _close() -> void:
+    _panel.visible = false
+    _lines.clear()
+    _current_line_index = 0
+    dialogue_finished.emit()
+```
+
+> **Note:** In this basic implementation, choices don't affect what happens next — the dialogue continues linearly. In Module 16 (Quests), we'll connect choices to game flags that change story outcomes.
+
 > **Note:** `grab_focus()` on the first button enables keyboard/gamepad navigation. Players can use up/down arrows to select and Enter/interact to confirm — no mouse needed. This is critical for JRPGs.
 
 > **See:** [GUI navigation](https://docs.godotengine.org/en/stable/tutorials/ui/gui_navigation.html) — how focus works for keyboard/gamepad UI navigation.
@@ -464,6 +628,8 @@ When you press F6 (running Willowbrook):
 - Press interact again to advance to the next line
 - After the last line, the dialogue box disappears
 - The player can move again
+
+To test the choice system, edit one of your NPC `.tres` files (e.g., the innkeeper) and add `["Yes", "No"]` to the `choices` array on the last `DialogueLine`. When that line appears, two buttons should show up instead of auto-advancing. Selecting a choice dismisses the buttons and continues.
 
 ## Next Module
 

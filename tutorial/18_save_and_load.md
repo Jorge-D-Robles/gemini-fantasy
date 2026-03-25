@@ -137,17 +137,20 @@ func from_save_data(data: Dictionary) -> void:
 
 ## The SaveManager
 
-Create `res://autoloads/save_manager.gd` (does NOT need to be an autoload — it's a static utility):
+Create `res://autoloads/save_manager.gd` and register it as an autoload (**Project → Project Settings → Autoload** → add `save_manager.gd` as `SaveManager`). Unlike the other autoloads, SaveManager has no visible nodes — it's pure logic. We make it an autoload so it can use `await` for scene loading:
+
+> **Note:** Static functions in GDScript cannot use `await` (they have no node context). Since `load_game()` needs to await a scene change, SaveManager must be an autoload instance, not a static utility.
 
 ```gdscript
-class_name SaveManager
+extends Node
 ## Handles saving and loading game state to JSON files.
+## Registered as autoload — accessible as SaveManager.
 
 const SAVE_DIR := "user://saves/"
 const MAX_SLOTS := 3
 
 
-static func save_game(slot: int) -> bool:
+func save_game(slot: int) -> bool:
     DirAccess.make_dir_recursive_absolute(SAVE_DIR)
 
     var save_data: Dictionary = {
@@ -192,7 +195,7 @@ static func save_game(slot: int) -> bool:
     return true
 
 
-static func load_game(slot: int) -> bool:
+func load_game(slot: int) -> bool:
     var path := SAVE_DIR + "save_" + str(slot) + ".json"
 
     if not FileAccess.file_exists(path):
@@ -241,7 +244,7 @@ static func load_game(slot: int) -> bool:
     return true
 
 
-static func get_slot_info(slot: int) -> Dictionary:
+func get_slot_info(slot: int) -> Dictionary:
     var path := SAVE_DIR + "save_" + str(slot) + ".json"
     if not FileAccess.file_exists(path):
         return {}
@@ -262,7 +265,7 @@ static func get_slot_info(slot: int) -> Dictionary:
     }
 
 
-static func slot_exists(slot: int) -> bool:
+func slot_exists(slot: int) -> bool:
     return FileAccess.file_exists(SAVE_DIR + "save_" + str(slot) + ".json")
 ```
 

@@ -122,15 +122,22 @@ The SceneManager needs visible nodes (a ColorRect for the black overlay, an Anim
 
 ### Step 3: Create the Fade Animations
 
-Select the AnimationPlayer and create two animations:
+Select the AnimationPlayer and create two animations. Here's the step-by-step for the first one:
 
 **`fade_out`** (0.3 seconds):
-- At time 0: ColorRect `modulate` alpha = `0.0` (transparent)
-- At time 0.3: ColorRect `modulate` alpha = `1.0` (fully black)
+1. In the Animation panel at the bottom, click **Animation → New**. Name it `fade_out`.
+2. Set the animation length to `0.3` (the number field next to the timeline).
+3. Click **Add Track → Property Track**. Select the `ColorRect` node.
+4. Choose the **`modulate`** property from the list.
+5. Right-click the timeline at time `0.0` and choose **Insert Key**. Set the value's alpha to `0.0` (transparent).
+6. Right-click at time `0.3` and insert another key. Set alpha to `1.0` (fully opaque/black).
+
+> **See:** [Introduction to animations](https://docs.godotengine.org/en/stable/tutorials/animation/introduction.html) — how to create animations with property tracks in AnimationPlayer.
 
 **`fade_in`** (0.3 seconds):
-- At time 0: ColorRect `modulate` alpha = `1.0` (fully black)
-- At time 0.3: ColorRect `modulate` alpha = `0.0` (transparent)
+Same process, but reversed:
+- At time 0: `modulate` alpha = `1.0` (fully black)
+- At time 0.3: `modulate` alpha = `0.0` (transparent)
 
 Attach the `scene_manager.gd` script to the root `SceneManager` node. Save the scene as `res://autoloads/scene_manager.tscn`.
 
@@ -198,6 +205,8 @@ func _on_body_entered(body: Node2D) -> void:
         SceneManager.change_scene(target_scene, target_spawn_point)
 ```
 
+> **Note:** The Area2D's default collision mask monitors layer 1, which is the same layer the player's CharacterBody2D is on by default. If you changed collision layers in Module 4, make sure the exit zone's **Collision → Mask** includes the player's layer.
+
 Attach this script to `ExitToWhisperwood`. In the Inspector, set:
 - **Target Scene:** `res://scenes/whisperwood/whisperwood.tscn`
 - **Target Spawn Point:** `from_town`
@@ -213,7 +222,7 @@ The exit zone checks `body.is_in_group("player")`. We need to add the player to 
 3. Go to the **Node** tab → **Groups** section.
 4. Type `player` and click **Add**.
 
-While we're here, also add the player to the `spawn_points` group... actually no — spawn points are separate marker nodes. But the player needs to be in the `player` group so systems can find it with `get_tree().get_first_node_in_group("player")`.
+The player needs to be in the `player` group so systems like the SceneManager can find it with `get_tree().get_first_node_in_group("player")`.
 
 ### Spawn Points
 
@@ -236,24 +245,22 @@ Create a second area to connect to:
 2. Create a new scene: `Node2D` root, rename to `Whisperwood`.
 3. Save as `res://scenes/whisperwood/whisperwood.tscn`.
 
-Add TileMapLayers using the same workflow as Module 4:
-- You can create a new TileSet for forest tiles (trees, grass, dirt paths)
-- Or reuse the town TileSet if it has enough variety
+Reuse the same TileSet from Module 4 (`town_tileset.tres`). Add TileMapLayers using the same workflow — Ground, Detail, Objects, AbovePlayer — and assign the TileSet to each. In Module 13, we'll create a dedicated dungeon tileset with a different aesthetic.
 
-Design a simple forest area:
-- Dense trees on the sides (solid collision)
-- A winding path through the middle
+Design a simple forest area (at least 20x15 tiles). Use grass tiles for ground, tree tiles for borders, and path tiles through the center:
+- Paint rows 0-2 and 13-15 as dense trees on the Ground layer (collision-enabled)
+- Leave a 3-tile-wide path winding through the middle
 - An entrance on the north side (connecting to Willowbrook)
 - An exit on the south side (leading to the Crystal Cavern — we'll build that in Module 13)
 
-Add spawn points:
+Add spawn points (add both to the `spawn_points` group):
 - `from_town` — near the north entrance
 - `default` — same position as `from_town`
 
 Add an exit zone:
 - `ExitToWillowbrook` — Area2D at the north edge, pointing back to `res://scenes/willowbrook/willowbrook.tscn` with spawn point `from_forest`
 
-Instance the Player scene into Whisperwood (temporary — later the SceneManager will handle spawning).
+Set up Y-sorting as in Module 5 (create a YSortGroup with Objects and Player as children). Instance the Player scene into Whisperwood (temporary — later the SceneManager will handle spawning). If you test and see an empty forest with no player, check that you instanced `player.tscn` into the scene.
 
 > **Note:** For now, we're placing the Player instance directly in each scene. This means there are technically multiple Player instances across scenes. That's fine because only one scene is loaded at a time. In a more complex setup, you might have the SceneManager spawn the player dynamically.
 

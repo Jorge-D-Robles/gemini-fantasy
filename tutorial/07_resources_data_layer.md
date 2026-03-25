@@ -37,6 +37,8 @@ Godot lets you define your own Resource types. This is extraordinarily useful fo
 
 ### Defining a Resource Class
 
+First, create two new folders for our data architecture: `res://resources/` (for Resource class definitions) and `res://data/` with subdirectories `items/` and `characters/` (for data instances). Right-click in the FileSystem dock → **New Folder** to create each.
+
 Create a new file at `res://resources/item_data.gd`:
 
 ```gdscript
@@ -47,10 +49,10 @@ class_name ItemData
 enum ItemType { CONSUMABLE, EQUIPMENT, KEY_ITEM }
 enum EquipSlot { NONE, WEAPON, ARMOR, ACCESSORY }
 
-@export var id: String = ""
+@export var id: String = ""  ## Unique identifier — match the .tres filename (e.g., "potion")
 @export var display_name: String = ""
 @export_multiline var description: String = ""
-@export var icon: Texture2D
+@export var icon: Texture2D  ## Leave empty for now — we'll add item icons later
 @export var item_type: ItemType = ItemType.CONSUMABLE
 @export var equip_slot: EquipSlot = EquipSlot.NONE
 
@@ -122,6 +124,7 @@ potion.sell_price = 10
 Create these `.tres` files in `res://data/items/`:
 
 **`potion.tres`** (ItemData)
+- id: "potion"
 - display_name: "Potion"
 - description: "Restores 50 HP to one ally."
 - item_type: CONSUMABLE
@@ -129,6 +132,7 @@ Create these `.tres` files in `res://data/items/`:
 - buy_price: 25, sell_price: 10
 
 **`ether.tres`** (ItemData)
+- id: "ether"
 - display_name: "Ether"
 - description: "Restores 20 MP to one ally."
 - item_type: CONSUMABLE
@@ -136,6 +140,7 @@ Create these `.tres` files in `res://data/items/`:
 - buy_price: 50, sell_price: 20
 
 **`iron_sword.tres`** (ItemData)
+- id: "iron_sword"
 - display_name: "Iron Sword"
 - description: "A sturdy blade forged in Willowbrook."
 - item_type: EQUIPMENT
@@ -144,6 +149,7 @@ Create these `.tres` files in `res://data/items/`:
 - buy_price: 100, sell_price: 40
 
 **`leather_armor.tres`** (ItemData)
+- id: "leather_armor"
 - display_name: "Leather Armor"
 - description: "Light protection for the road ahead."
 - item_type: EQUIPMENT
@@ -224,7 +230,10 @@ class_name CharacterData
 
 Save this as `res://resources/character_data.gd`.
 
+> **Important:** Always set the `id` field on every `.tres` file. The inventory system (Module 10) uses `id` to match and stack items. If two items have the same `id` (or both are left empty), they'll be treated as identical.
+
 Create the hero's data at `res://data/characters/aiden.tres`:
+- id: "aiden"
 - display_name: "Aiden"
 - max_hp: 120, max_mp: 15
 - attack: 12, defense: 8, speed: 10
@@ -252,7 +261,7 @@ class_name NPCData
 
 Save as `res://resources/npc_data.gd`.
 
-This is a simple version — we'll replace `dialogue_lines: Array[String]` with a proper `DialogueLine` Resource in Module 9. But even this simple version is better than hardcoding NPC names and text in each scene.
+This is a simple version — we'll replace `dialogue_lines: Array[String]` with a proper `DialogueLine` Resource in Module 9. When we do, you'll need to re-edit the NPC `.tres` files to use the new dialogue format — keep your text values handy. But even this simple version is better than hardcoding NPC names and text in each scene.
 
 ## The Three-File Pattern
 

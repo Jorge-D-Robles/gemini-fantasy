@@ -205,15 +205,9 @@ Place the save crystal in the room before the boss — the classic "save point b
 
 Encounter zones define where random battles can happen and which enemies appear. We'll set up the zones now and wire them to the encounter system in Module 14.
 
-Add `Area2D` nodes to mark regions:
+Add `Area2D` nodes to mark the encounter regions. For now, just create the Area2D nodes with CollisionShape2D children — **don't attach scripts yet**. We'll create the encounter system and encounter zone scripts in Module 14.
 
-```gdscript
-extends Area2D
-## Marks a region where random encounters can happen.
-
-@export var encounter_group_id: String = ""  # Links to encounter data
-@export var encounter_rate: float = 0.1      # Probability per step
-```
+Also add an **EncounterSystem** node (plain `Node`) as a child of the CrystalCavern root. We'll attach a script to this in Module 14.
 
 Place two zones:
 - **MainCorridor** — covers the entrance corridor (easy enemies)
@@ -221,7 +215,18 @@ Place two zones:
 
 ## The Boss Room Door
 
-A locked passage that requires a key item or a quest flag. Simple implementation:
+A locked passage that requires a key item or a quest flag. Create `res://entities/interactable/boss_door.tscn`:
+
+```
+BossDoor (StaticBody2D)
+├── Sprite (Sprite2D)
+├── CollisionShape2D
+├── InteractionZone (Area2D)
+│   └── InteractionShape (CollisionShape2D, larger radius)
+└── InteractionPrompt (Label, text "!", visible = false)
+```
+
+Save the script as `res://entities/interactable/boss_door.gd`:
 
 ```gdscript
 extends StaticBody2D
@@ -233,6 +238,15 @@ extends StaticBody2D
 
 var is_unlocked: bool = false
 var _player_in_range: bool = false
+
+@onready var _interaction_zone: Area2D = $InteractionZone
+@onready var _interaction_prompt: Label = $InteractionPrompt
+
+
+func _ready() -> void:
+    _interaction_zone.body_entered.connect(_on_body_entered)
+    _interaction_zone.body_exited.connect(_on_body_exited)
+    _interaction_prompt.visible = false
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -247,10 +261,21 @@ func _try_open() -> void:
     if required_item_id.is_empty() or InventoryManager.has_item(required_item_id):
         is_unlocked = true
         print(open_message)
-        # Remove the door's collision and visual
         queue_free()
     else:
         print(unlock_message)
+
+
+func _on_body_entered(body: Node2D) -> void:
+    if body.is_in_group("player"):
+        _player_in_range = true
+        _interaction_prompt.visible = true
+
+
+func _on_body_exited(body: Node2D) -> void:
+    if body.is_in_group("player"):
+        _player_in_range = false
+        _interaction_prompt.visible = false
 ```
 
 For Crystal Saga, the boss room door could require a "Crystal Key" found in the treasure room, creating a simple puzzle: explore the dead end before you can face the boss.

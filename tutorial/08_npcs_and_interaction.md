@@ -43,7 +43,7 @@ Create a reusable NPC scene that can represent any character — a shopkeeper, a
 
 ### Scene Structure
 
-Create `res://npcs/npc.tscn`:
+Create a `res://npcs/` folder (this holds reusable entity scenes, separate from the area scenes in `scenes/`). Create `res://npcs/npc.tscn`:
 
 ```
 NPC (CharacterBody2D)
@@ -51,12 +51,14 @@ NPC (CharacterBody2D)
 ├── CollisionShape2D
 ├── InteractionZone (Area2D)
 │   └── InteractionShape (CollisionShape2D)
-└── InteractionPrompt (Sprite2D)
+└── InteractionPrompt (Label)
 ```
 
 **Why CharacterBody2D?** Even though NPCs don't move, using CharacterBody2D makes them solid — the player collides with them and can't walk through them. StaticBody2D would also work, but CharacterBody2D is more flexible if we later want NPCs to wander.
 
 ### Node Configuration
+
+**Sprite (AnimatedSprite2D)** — The NPC's visual. For now, if you don't have NPC sprite sheets, set up single-frame animations using the Godot icon, just like we did for the player fallback in Module 5. Create `idle_down`, `idle_up`, `idle_left`, `idle_right` animations with the icon as the single frame. You can replace these with real NPC sprites later.
 
 **CollisionShape2D** — The NPC's physical body. Same "feet-only" approach as the player.
 - Shape: `RectangleShape2D`, small (e.g., 12x8)
@@ -66,9 +68,12 @@ NPC (CharacterBody2D)
 - Its CollisionShape should be **larger** than the body — a circle with radius ~24px works well.
 - This is the "can interact" range.
 
-**InteractionPrompt (Sprite2D)** — A small icon (like "!" or a button icon) that appears above the NPC when the player is in range.
-- Position it above the sprite (e.g., `Vector2(0, -20)`)
+**InteractionPrompt (Label)** — A text label showing "!" that appears above the NPC when the player is in range. Using a Label instead of a Sprite2D means we don't need any art assets.
+- Set **Text** to `!`
+- Set **Horizontal Alignment** to `Center`
+- Position it above the sprite (e.g., `Vector2(-4, -20)`)
 - Set **Visible** to `false` initially
+- Optionally increase the font size in Theme Overrides
 
 ### The NPC Script
 
@@ -85,7 +90,7 @@ signal interacted(npc: CharacterBody2D)
 var _player_in_range: bool = false
 
 @onready var _sprite: AnimatedSprite2D = $Sprite
-@onready var _interaction_prompt: Sprite2D = $InteractionPrompt
+@onready var _interaction_prompt: Label = $InteractionPrompt
 @onready var _interaction_zone: Area2D = $InteractionZone
 
 
@@ -185,19 +190,24 @@ Open `willowbrook.tscn` and instance the NPC scene three times:
 2. Rename each instance: `Shopkeeper`, `Innkeeper`, `Traveler`.
 3. Position them in appropriate spots: shopkeeper near a market stall, innkeeper by a house, traveler on the path.
 
-For each NPC, create an NPCData `.tres` file and assign it:
+**Important:** Add each NPC instance to the `npcs` group (select the NPC → **Node** tab → **Groups** → type `npcs` → click **Add**). The scene script below uses this group to find all NPCs.
+
+For each NPC, create an NPCData `.tres` file in `res://data/npcs/` (create the folder first). Follow the same Inspector workflow from Module 7: right-click the folder → **New Resource** → search for `NPCData` → **Create**. Assign each to the corresponding NPC's `npc_data` export in the Inspector.
 
 **`res://data/npcs/shopkeeper.tres`:**
+- id: "shopkeeper"
 - display_name: "Merchant Hilda"
 - facing_direction: Vector2.DOWN
 - dialogue_lines: ["Welcome to my shop!", "I have potions and gear for sale.", "Be careful in those woods."]
 
 **`res://data/npcs/innkeeper.tres`:**
+- id: "innkeeper"
 - display_name: "Old Brennan"
 - facing_direction: Vector2.DOWN
 - dialogue_lines: ["Need a rest? 10 gold for a night.", "You look like you've seen some trouble."]
 
 **`res://data/npcs/traveler.tres`:**
+- id: "traveler"
 - display_name: "Wandering Fynn"
 - facing_direction: Vector2.LEFT
 - dialogue_lines: ["I lost something precious in the Whisperwood...", "A pendant, silver with a blue stone.", "If you find it, I'd be forever grateful."]
@@ -208,7 +218,7 @@ For each NPC, create an NPCData `.tres` file and assign it:
 
 When the player interacts with an NPC, we should transition the player to the INTERACT state (Module 5). For now, let's connect this simply in the Willowbrook scene script.
 
-Create `res://scenes/willowbrook/willowbrook.gd` and attach it to the root node:
+Create `res://scenes/willowbrook/willowbrook.gd` and attach it to the root `Willowbrook` node (if you already have a script attached from a previous module, replace its contents):
 
 ```gdscript
 extends Node2D
@@ -236,8 +246,6 @@ func _on_npc_interacted(npc: CharacterBody2D) -> void:
     if player and player.has_method("end_interaction"):
         player.end_interaction()
 ```
-
-Add each NPC to the `npcs` group (select the NPC instance → Node tab → Groups → add `npcs`).
 
 This is a temporary placeholder — in Module 9, we'll replace the `print()` calls with a proper dialogue box. But it demonstrates the flow: NPC detects interaction → emits signal → scene script handles it → player enters INTERACT state → interaction completes → player returns to IDLE.
 

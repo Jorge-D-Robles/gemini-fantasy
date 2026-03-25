@@ -21,10 +21,16 @@ Row 3: Walk Up    — frame 0, 1, 2, 3
 
 Each row is a direction, each column is a frame of the walk animation. Most JRPG characters use 3-4 frames per direction.
 
-If you don't have character art yet, you can:
-1. **Use a free sprite** from OpenGameArt or itch.io (search "JRPG character sprite sheet")
-2. **Draw a simple placeholder** — even a colored square with an arrow showing facing direction works for testing
-3. **Use Godot's icon** for now and add art later
+For this tutorial, we recommend downloading a free character sprite sheet:
+
+1. Go to [kenney.nl/assets/tiny-town](https://kenney.nl/assets/tiny-town) (the same pack from Module 4).
+2. In the extracted ZIP, look in the `Tilemap/` folder for character sprites, or use the `tilemap_packed.png` sheet which contains small character tiles.
+
+Alternatively, search [opengameart.org](https://opengameart.org) for "JRPG character sprite sheet 16x16" — you'll find many free options. Look for a sheet with **4 rows** (one per direction: down, left, right, up) and **3-4 columns** (frames per walk cycle).
+
+> **Note:** If your sprite sheet has a different layout (e.g., 3 frames instead of 4, or rows in a different order like down/up/left/right), that's fine — just adjust the frame selection when setting up animations below. The script we write works with any 4-direction animation names.
+
+If you can't find a sheet, you can still follow along — but you'll need to set up AnimatedSprite2D with single-frame animations. Follow the setup steps below, using the Godot `icon.svg` as your image. Create each of the 8 animations (`idle_down`, `idle_up`, etc.) with the icon as the single frame. The walk animations won't visually animate, but the state machine code will work correctly, and you can swap in real art later.
 
 Save your sprite sheet to `res://player/player_spritesheet.png`.
 
@@ -44,6 +50,8 @@ Player (CharacterBody2D)
 └── Camera2D
 ```
 
+In Module 4, we resized the collision shape from the original 64x64 to fit tile corridors. Now that we're using an actual character sprite instead of the Godot icon, fine-tune it: set the shape's **Size** to roughly `Vector2(12, 8)` and the **CollisionShape2D** node's **Position** (under Transform) to `Vector2(0, 4)` so it covers just the character's feet. We'll discuss why this "feet-only" collision matters later in this module.
+
 ### Creating a SpriteFrames Resource
 
 AnimatedSprite2D uses a **SpriteFrames** resource to define animations.
@@ -57,7 +65,7 @@ AnimatedSprite2D uses a **SpriteFrames** resource to define animations.
 In the SpriteFrames panel:
 
 1. You'll see a `default` animation. Rename it to `idle_down`.
-2. Click the grid icon (📋) — **Add frames from Sprite Sheet**.
+2. Click the **Add frames from Sprite Sheet** button (it has a grid pattern icon — hover over the buttons near the top of the SpriteFrames panel to find it).
 3. Select your sprite sheet image.
 4. Set the grid size to match your sheet (e.g., 4 columns × 4 rows for a 4-direction, 4-frame sheet).
 5. Click the frames for the "facing down idle" pose (usually just the first frame of the down row).
@@ -73,7 +81,22 @@ Repeat for each animation:
 - `walk_left` — all frames of the left walk cycle
 - `walk_right` — all frames of the right walk cycle
 
-For each walk animation, set the **FPS** to 8-10 in the SpriteFrames panel. Idle animations can stay at the default speed since they're typically a single frame (or 2-3 frames for a breathing animation).
+Here's a reference table for a 4-column × 4-row sprite sheet (down/left/right/up):
+
+| Animation | Row | Frames to Select |
+|-----------|-----|-----------------|
+| `idle_down` | 0 | Frame 0 only |
+| `idle_left` | 1 | Frame 0 only |
+| `idle_right` | 2 | Frame 0 only |
+| `idle_up` | 3 | Frame 0 only |
+| `walk_down` | 0 | Frames 0, 1, 2, 3 |
+| `walk_left` | 1 | Frames 0, 1, 2, 3 |
+| `walk_right` | 2 | Frames 0, 1, 2, 3 |
+| `walk_up` | 3 | Frames 0, 1, 2, 3 |
+
+For each walk animation, set the **FPS** to 8-10 (the number field at the top of the SpriteFrames panel, next to the loop toggle — the circular arrow icon). Also enable looping for walk animations by clicking that loop toggle. Idle animations can stay at the default speed since they're typically a single frame (or 2-3 frames for a breathing animation).
+
+> **Warning:** Animation names must match **exactly** what the script expects — the code constructs names like `"walk_down"` and `"idle_left"` dynamically. If you name an animation `Walk_Down` or `walkdown`, it won't be found. Use all lowercase with an underscore: `idle_down`, `walk_up`, etc.
 
 > **See:** [2D sprite animation](https://docs.godotengine.org/en/stable/tutorials/2d/2d_sprite_animation.html) — covers both AnimatedSprite2D and AnimationPlayer approaches to 2D animation.
 
@@ -124,7 +147,7 @@ The key insight: **each state is a self-contained behavior.** The IDLE state che
 
 ### Implementation
 
-Here's the full player script with the state machine:
+Replace the entire contents of `res://player/player.gd` with this state machine version:
 
 ```gdscript
 extends CharacterBody2D
@@ -135,7 +158,7 @@ enum State { IDLE, WALK, INTERACT, DISABLED }
 @export var speed: float = 200.0
 
 var current_state: State = State.IDLE
-var facing_direction: Vector2 = Vector2.DOWN
+var facing_direction: Vector2 = Vector2.DOWN  # Vector2(0, 1) — positive Y is downward in Godot
 
 @onready var sprite: AnimatedSprite2D = $Sprite
 
@@ -267,11 +290,16 @@ Godot handles this with **Y-sort**. When enabled on a parent node, its children 
 
 In the Willowbrook scene:
 
-1. Select the root `Willowbrook` node (or create a new `Node2D` to contain sorted elements).
-2. In the Inspector, find **CanvasItem → Ordering → Y Sort Enabled** and turn it on.
-3. Make sure the Player and the Objects TileMapLayer are children of this Y-sorted node.
+> **Tip:** To reparent a node, drag it in the Scene dock and drop it onto the new parent node. The node moves in the tree hierarchy. You'll use this technique in the steps below.
 
-For the Objects TileMapLayer, you may need to adjust the **Y Sort Origin** property so that objects sort correctly based on their base (bottom edge) rather than their top-left corner.
+1. Add a new **Node2D** as a child of `Willowbrook`. Rename it to `YSortGroup`.
+2. In the Inspector, find **CanvasItem → Ordering → Y Sort Enabled** and turn it **on**.
+3. Drag the `Objects` TileMapLayer onto `YSortGroup` to reparent it (it becomes a child of YSortGroup instead of Willowbrook).
+4. Drag the `Player` instance onto `YSortGroup` the same way.
+5. Select the `Objects` TileMapLayer. In the Inspector, find **CanvasItem → Ordering → Y Sort Enabled** and turn it **on** for this node too. This is essential — without it, the individual tiles within the layer won't sort against the player. The entire layer would render as a single block, causing the player to appear always in front of or behind all objects.
+
+Now set the Y Sort Origin for the Objects layer so tiles sort by their bottom edge:
+1. With `Objects` still selected, find **Y Sort Origin** in the Inspector and set it to `16` (the tile height in pixels). This makes tiles sort based on their bottom edge rather than their top-left corner, which looks correct for trees, rocks, and buildings.
 
 The AbovePlayer layer should **not** be Y-sorted with the player — it should always draw on top. Keep it outside the Y-sorted group, or set its Z-index higher.
 
@@ -293,16 +321,14 @@ The `YSortGroup` node sorts the Objects layer tiles and the Player by their Y po
 
 ## Adjusting the Collision Shape
 
-With animated sprites, you'll want to adjust the player's CollisionShape2D:
+We already set the collision shape values earlier in this module when we added the AnimatedSprite2D. This section explains the *reasoning* behind feet-only collision, so you understand why we chose those specific values.
 
-- Make it **shorter** than the sprite — roughly the bottom third or half. This represents the player's "feet" area.
-- **Offset it downward** so it aligns with the feet, not the center of the sprite.
+With animated sprites, you want the collision shape to be:
 
-In the CollisionShape2D Inspector:
-- **Shape Size:** Something like `Vector2(12, 8)` for a 16x16 character
-- **Position:** Offset downward, e.g., `Vector2(0, 4)`
+- **Shorter** than the sprite — roughly the bottom third or half. This represents the player's "feet" area.
+- **Offset downward** so it aligns with the feet, not the center of the sprite.
 
-This gives the player a small collision "footprint" that feels natural. The player's head and torso can overlap with objects above, but their feet are blocked by solid tiles.
+Our values (`Vector2(12, 8)` size, `Vector2(0, 4)` offset) give the player a small collision "footprint" that feels natural. The player's head and torso can overlap with objects above, but their feet are blocked by solid tiles.
 
 > **JRPG Pattern:** Almost every JRPG uses "feet-only" collision. It's why you can walk close to a table and it looks like you're standing at the table, not being blocked a full character-width away.
 

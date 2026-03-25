@@ -164,9 +164,9 @@ You should see the Godot icon appear in the viewport. If it's hard to see, use t
 ### Step 4: Position It
 
 With the Sprite2D selected, look at the **Transform** section in the Inspector. Set:
-- **Position** → x: `576`, y: `324`
+- **Position** → x: `320`, y: `180`
 
-This places the sprite roughly in the center of the default viewport (1152x648). You can also just drag the sprite in the viewport to position it.
+This places the sprite in the center of the viewport. (We'll set the viewport to 640x360 shortly, so this position is already centered for our final resolution.) You can also just drag the sprite in the viewport to position it.
 
 ### Step 5: Save the Scene
 
@@ -224,7 +224,7 @@ Under **Display → Window**:
 - **Window Height Override:** `720`
 - **Stretch → Mode:** `canvas_items`
 
-This gives us a small internal resolution (640x360) that scales up cleanly to 720p. Every pixel in our game will be rendered at exactly 2x size, keeping art crisp.
+The **viewport** (640x360) is the internal resolution your game renders at. The **window overrides** (1280x720) control how big the window appears on screen. Godot scales the viewport up to fill the window — at exactly 2x in our case. Every pixel in our game will be rendered at exactly 2x size, keeping art crisp.
 
 ### Texture Filtering
 Under **Rendering → Textures**:
@@ -255,7 +255,7 @@ When you press F5, you should see:
 - The Godot icon (or your placeholder sprite) appears, with crisp pixel rendering
 - The background is a default gray/blue color
 
-If the sprite looks blurry, double-check that **Default Texture Filter** is set to `Nearest` in Project Settings.
+If the sprite looks blurry, double-check that **Default Texture Filter** is set to `Nearest` in Project Settings. If you see a blank window with no sprite, make sure the **Main Scene** is set correctly (Project → Project Settings → Application → Run → Main Scene should be `res://main.tscn`).
 
 ## Next Module
 
