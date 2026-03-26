@@ -60,6 +60,8 @@ func _ready() -> void:
     for child in get_children():
         if child is BattleState:
             states[child.name] = child
+    if states.is_empty():
+        push_error("BattleStateMachine: no states registered. Attach BattleState scripts to child nodes.")
 
 
 func start(initial_state: String, context: Dictionary = {}) -> void:

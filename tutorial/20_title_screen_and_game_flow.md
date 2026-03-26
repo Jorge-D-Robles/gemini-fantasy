@@ -166,6 +166,8 @@ func close() -> void:
 
 func _open_inventory() -> void:
     # Show the inventory screen from Module 10
+    # Requires the InventoryScreen node to be in the "inventory_screens" group
+    # (add it in the editor: select node → Node dock → Groups → add "inventory_screens")
     var inv := get_tree().get_first_node_in_group("inventory_screens")
     if inv:
         inv.visible = true
@@ -173,6 +175,7 @@ func _open_inventory() -> void:
 
 func _open_quest_log() -> void:
     # Show the quest log from Module 16
+    # Requires the QuestLog node to be in the "quest_logs" group
     var log_panel := get_tree().get_first_node_in_group("quest_logs")
     if log_panel:
         log_panel.visible = true

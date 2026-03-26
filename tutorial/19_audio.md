@@ -242,6 +242,7 @@ Save the script as `res://ui/settings/settings_panel.gd`:
 
 ```gdscript
 extends PanelContainer
+## Volume settings panel. Press Escape to close.
 
 @onready var _music_slider: HSlider = $VBox/MusicSlider
 @onready var _sfx_slider: HSlider = $VBox/SFXSlider
@@ -269,6 +270,12 @@ func _on_music_volume_changed(value: float) -> void:
 func _on_sfx_volume_changed(value: float) -> void:
     var db: float = linear_to_db(value)
     AudioServer.set_bus_volume_db(AudioServer.get_bus_index("SFX"), db)
+
+
+func _unhandled_input(event: InputEvent) -> void:
+    if event.is_action_pressed("ui_cancel"):
+        queue_free()
+        get_viewport().set_input_as_handled()
 ```
 
 `linear_to_db()` converts a 0-1 slider value to decibels. At 0, it returns -INF (silent). At 1, it returns 0 (full volume).

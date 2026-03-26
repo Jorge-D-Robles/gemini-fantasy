@@ -284,16 +284,6 @@ func _on_encounter_triggered(encounter: EncounterData) -> void:
     SceneManager.start_battle({party = [hero], enemies = enemy_battlers})
 ```
 
-## The Boss: Crystal Guardian
-
-The Crystal Guardian is a stronger enemy with a pre-battle dialogue:
-
-**`crystal_guardian.tres`** (EnemyData)
-- display_name: "Crystal Guardian"
-- ai_type: AGGRESSIVE
-- HP: 200, attack: 15, defense: 8, speed: 6
-- XP: 100, gold: 50
-
 ### Using AI in Battle
 
 Now update the `_execute_enemy_turn` method in `res://systems/battle/states/action_execute_state.gd` to use the AI controller instead of random targeting:
@@ -384,6 +374,7 @@ func _start_boss_battle() -> void:
     var boss := BattlerData.new()
     boss.character_data = boss_char
     boss.is_player_controlled = false
+    boss.enemy_data = boss_data  # Required for Module 15's victory rewards
 
     SceneManager.start_battle({
         party = [hero],
