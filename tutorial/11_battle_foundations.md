@@ -699,4 +699,4 @@ When you press B (our temporary test trigger) in Willowbrook:
 
 ## Next Module
 
-The battle runs automatically — the player can't choose actions yet. In **Module 12: Player Actions**, we'll build the battle menu UI (Attack/Magic/Defend/Item), implement the command pattern for actions, add target selection, and create battle animations with Tweens. The battle system will transform from a debug log into a visual, interactive experience.
+The battle runs automatically — the player can't choose actions yet. In **Module 12: Player Actions**, we'll build the battle menu UI (Attack/Magic/Defend/Item), implement the command pattern for actions, add target selection, and create battle animations with Tweens. The battle system will go from print output to visual, interactive combat.

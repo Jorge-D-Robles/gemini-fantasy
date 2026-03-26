@@ -74,7 +74,7 @@ This is where `print()` output appears, along with errors and warnings. It's you
 
 ## Nodes: The Building Blocks
 
-Here's the single most important concept in Godot:
+Here's the most important concept in Godot:
 
 **Everything is a node.**
 
