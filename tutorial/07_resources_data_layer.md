@@ -33,7 +33,7 @@ Resources are **data objects** — they hold information but don't have behavior
 
 ## Custom Resource Classes
 
-Godot lets you define your own Resource types. This is extraordinarily useful for game data — instead of using raw dictionaries, you define structured data types with named, typed fields that the editor understands.
+Godot lets you define your own Resource types. This is very useful for game data — instead of using raw dictionaries, you define structured data types with named, typed fields that the editor understands.
 
 ### Defining a Resource Class
 

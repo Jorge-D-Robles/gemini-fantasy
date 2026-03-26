@@ -2,7 +2,7 @@
 
 ## What We Have So Far
 
-A connected world with NPCs, dialogue, inventory, and Resources. Everything before this module was setting the stage — the overworld, the living world, the data layer. Now we build the heart of the JRPG: the battle system.
+A connected world with NPCs, dialogue, inventory, and Resources. Everything before this was building the world and its data. Now we tackle the battle system.
 
 ## What We're Building This Module
 

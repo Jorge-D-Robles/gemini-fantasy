@@ -385,4 +385,4 @@ When you press F6 (running Willowbrook):
 
 ## Next Module
 
-We have items and NPCs and dialogue. Now it's time for the biggest system in any JRPG: **combat**. In **Module 11: Battle Foundations**, we'll build the battle scene, implement a node-based state machine for battle flow, and create the turn order system. The journey from idle exploration to heart-pounding boss fights starts here.
+We have items and NPCs and dialogue. Now it's time for the biggest system in any JRPG: **combat**. In **Module 11: Battle Foundations**, we'll build the battle scene, implement a node-based state machine for battle flow, and create the turn order system. Combat is next.

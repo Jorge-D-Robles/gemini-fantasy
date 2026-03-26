@@ -2,7 +2,7 @@
 
 ## What We Have So Far
 
-Combat with rewards and leveling, a dungeon, NPCs with dialogue. The game has systems — but it doesn't have a *story*. Nothing connects the player's actions into a progression.
+Combat with rewards and leveling, a dungeon, NPCs with dialogue. The game has systems — but nothing connecting the player's actions into a progression.
 
 ## What We're Building This Module
 

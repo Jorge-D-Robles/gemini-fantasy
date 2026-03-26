@@ -6,7 +6,7 @@ An animated player character with a state machine, walking around the town of Wi
 
 ## What We're Building This Module
 
-A second area (Whisperwood Forest), exit zones that detect when the player walks to the edge of a map, and a **SceneManager** autoload that handles smooth fade-to-black transitions between locations. This is the module where Crystal Saga starts feeling like a real game with a connected world.
+A second area (Whisperwood Forest), exit zones that detect when the player walks to the edge of a map, and a **SceneManager** autoload that handles smooth fade-to-black transitions between locations. By the end, Crystal Saga will have two areas you can walk between.
 
 ## Why Scenes Map to Locations
 

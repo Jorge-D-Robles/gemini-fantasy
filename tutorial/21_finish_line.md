@@ -243,7 +243,7 @@ More importantly, you've learned the **patterns** that scale. The state machine 
 
 ## Closing Thoughts
 
-JRPGs are a labor of love. They require patience — for building systems, crafting worlds, writing dialogue, balancing combat, and testing everything together. But they're also one of the most rewarding genres to build, because every system connects to every other system, and when they all work together, the result is greater than the sum of its parts.
+JRPGs are a labor of love. They require patience — for building systems, crafting worlds, writing dialogue, balancing combat, and testing everything together. But they're also one of the most rewarding genres to build, because every system connects to every other system, and when they all work together, the result is a game that feels whole.
 
 Crystal Saga is small by commercial standards, but it's architecturally complete. You can expand it in any direction: more story, more areas, more characters, more mechanics. The foundation supports it.
 

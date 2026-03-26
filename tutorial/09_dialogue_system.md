@@ -6,7 +6,7 @@ NPCs in Willowbrook that detect the player and emit interaction signals. But dia
 
 ## What We're Building This Module
 
-A full dialogue box UI: text appears with a typewriter effect, the speaker's name is displayed, conversations span multiple pages, and the player can make choices during branching dialogue. This is one of the most visible systems in any JRPG.
+A full dialogue box UI: text appears with a typewriter effect, the speaker's name is displayed, conversations span multiple pages, and the player can make choices during branching dialogue. Players spend more time reading dialogue than doing almost anything else in a JRPG, so getting the textbox right matters.
 
 ## UI Fundamentals: Control Nodes
 

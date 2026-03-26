@@ -4,7 +4,7 @@
 
 By the end of this module, you'll have Godot installed, a brand new project created, and a sprite displayed on screen. It's not much to look at yet — but it's the foundation for everything that follows.
 
-More importantly, you'll understand **how Godot thinks about games**: as trees of small, reusable building blocks called nodes, grouped into scenes. This mental model is the single most important thing to internalize early, because every system we build in this tutorial — movement, combat, dialogue, inventory — is just a different arrangement of nodes in a scene tree.
+More importantly, you'll understand **how Godot thinks about games**: as trees of small, reusable building blocks called nodes, grouped into scenes. This mental model is what matters most to learn early, because every system we build in this tutorial — movement, combat, dialogue, inventory — is just a different arrangement of nodes in a scene tree.
 
 ## What is Godot?
 
@@ -14,7 +14,7 @@ For our purposes — building a 2D JRPG — Godot is an excellent choice for thr
 
 1. **First-class 2D support.** Unlike engines that bolt 2D onto a 3D core, Godot's 2D system is purpose-built. Pixel-perfect rendering, tile maps, sprite animation, and 2D physics all work out of the box without fighting 3D abstractions.
 
-2. **GDScript.** Godot's built-in scripting language is designed specifically for game development. If you've written Python, you'll feel at home immediately. It's tightly integrated with the editor — autocompletion, documentation, and debugging all work seamlessly.
+2. **GDScript.** Godot's built-in scripting language is designed specifically for game development. If you've written Python, you'll feel at home immediately. It's tightly integrated with the editor — autocompletion, documentation, and debugging all work without extra setup.
 
 3. **Scene system.** Godot's scene-based architecture maps naturally to JRPG design. A town is a scene. A battle screen is a scene. An NPC is a scene. A dialogue box is a scene. You compose them like building blocks, and each one is self-contained and reusable.
 
@@ -28,7 +28,7 @@ A few notes on the download:
 
 - **Choose the standard version**, not the .NET version (that's for C# development — we're using GDScript).
 - Godot is a single executable — no installer needed. Download it, extract it, and run it. On macOS, drag it to your Applications folder. On Windows, put it wherever you like.
-- The download is small (around 60-80 MB). Godot is remarkably lightweight compared to other engines.
+- The download is small (around 60-80 MB). Godot is lightweight compared to other engines.
 
 Launch Godot. You'll see the **Project Manager**.
 
@@ -135,7 +135,7 @@ Let's put something on screen. We'll create a simple scene with a single `Sprite
 
 ### Step 1: Create the Root Node
 
-In the **Scene** dock (top-left), you'll see buttons to create a root node. Click **2D Scene**. This creates a `Node2D` as the root — a generic 2D node that serves as a container.
+In the **Scene** dock (top-left), you'll see buttons to create a root node. Click **2D Scene**. This creates a `Node2D` as the root — a generic 2D node that works as a container.
 
 You'll see `Node2D` appear in the scene tree. Rename it by double-clicking the name and typing `Main`.
 

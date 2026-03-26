@@ -6,7 +6,7 @@ A tiled town (Willowbrook) with collision, a camera that follows the player, and
 
 ## What We're Building This Module
 
-A fully animated player character with four-directional walk cycles, a proper state machine to manage behavior, and Y-sorting for correct depth rendering. The player will feel like a real JRPG character moving through a living world.
+A fully animated player character with four-directional walk cycles, a proper state machine to manage behavior, and Y-sorting for correct depth rendering. By the end, the player character will have proper walk cycles and depth sorting — it'll look like an actual JRPG.
 
 ## Sprite Sheets and Walk Cycles
 

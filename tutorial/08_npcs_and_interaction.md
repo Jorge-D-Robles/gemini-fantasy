@@ -155,7 +155,7 @@ func _on_player_exited(body: Node2D) -> void:
         _interaction_prompt.visible = false
 ```
 
-Let's unpack the key design decisions:
+Here's why we made these choices:
 
 ### `_unhandled_input()` vs `_input()` vs `_process()`
 

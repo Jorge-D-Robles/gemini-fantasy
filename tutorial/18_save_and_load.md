@@ -347,4 +347,4 @@ if not save_data.has("version"):
 
 ## Next Module
 
-The game is fully playable and saveable. In **Module 19: Audio**, we'll add background music, sound effects, and a volume settings system — making Crystal Saga feel alive.
+The game is fully playable and saveable. In **Module 19: Audio**, we'll add background music, sound effects, and a volume settings system — bringing sound to Crystal Saga.

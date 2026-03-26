@@ -10,7 +10,7 @@ A script attached to our sprite that responds to keyboard input and moves around
 
 ## GDScript at a Glance
 
-GDScript is Godot's built-in scripting language. It looks like Python but is a completely separate language, designed from the ground up for game development. If you've written Python, JavaScript, or any dynamically typed language, you'll feel right at home. If you're coming from C#, Java, or C++, the indentation-based syntax might take a few minutes to adjust to, but the concepts are all familiar.
+GDScript is Godot's built-in scripting language. It looks like Python but is a completely separate language, built for game development. If you've written Python, JavaScript, or any dynamically typed language, you'll feel right at home. If you're coming from C#, Java, or C++, the indentation-based syntax might take a few minutes to adjust to, but the concepts are all familiar.
 
 Here's a quick taste:
 
@@ -203,7 +203,7 @@ match direction:
 
 ## The `@export` and `@onready` Annotations
 
-These two annotations are GDScript-specific and incredibly useful.
+These two annotations are GDScript-specific and very handy.
 
 ### `@export` — Edit in the Inspector
 
@@ -353,7 +353,7 @@ A few tips for working in Godot's built-in script editor:
 - **Ctrl+/** toggles comment on the selected lines.
 - **Ctrl+Space** triggers autocompletion.
 
-The built-in docs (F1) are remarkably complete. When you look up `Sprite2D`, you'll see every property, method, and signal the class has. We'll refer to these frequently.
+The built-in docs (F1) are very thorough. When you look up `Sprite2D`, you'll see every property, method, and signal the class has. We'll refer to these frequently.
 
 ## Common Gotchas
 

@@ -18,7 +18,7 @@ A scene is a saved tree of nodes. It's a `.tscn` file on disk. When you instance
 - You can test each scene in isolation. Press F6 to run just the Player scene and verify it works before putting it in a level.
 - Changes to the Player scene propagate everywhere it's instanced. Fix a bug once, and it's fixed in every level.
 
-This is **composition over inheritance** — the core design philosophy of Godot, and the principle that makes complex games possible without drowning in code.
+This is **composition over inheritance** — Godot's core design principle. It's what keeps complex games manageable.
 
 > **See:** [Nodes and scene instances](https://docs.godotengine.org/en/stable/tutorials/scripting/nodes_and_scene_instances.html) — the official guide to instancing scenes and thinking compositionally.
 
