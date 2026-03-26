@@ -114,7 +114,7 @@ Scenes are Godot's version of what other engines call "prefabs" or "blueprints."
 - When you instance a scene, it appears as a single node in the parent's tree, with all its internals hidden. This keeps things clean.
 - Scenes can contain other scenes. Your Town scene might contain several NPC scenes, each of which contains a Sprite and a collision shape.
 
-The beauty of this system for JRPGs is that it maps perfectly to how we think about game structure:
+This maps well to how we think about JRPG structure:
 
 ```
 Town Scene

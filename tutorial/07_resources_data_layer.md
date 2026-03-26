@@ -70,7 +70,7 @@ enum EquipSlot { NONE, WEAPON, ARMOR, ACCESSORY }
 @export var sell_price: int = 0
 ```
 
-Let's break down what's happening:
+Here's what's going on:
 
 ### `class_name ItemData`
 
@@ -294,7 +294,7 @@ This separation keeps your code clean:
 
 ## Why Resources Over Dictionaries
 
-You might be thinking: "I could just use a Dictionary for all this." You're right — and many tutorials do. But Resources have significant advantages:
+You might be thinking: "I could just use a Dictionary for all this." You're right — and many tutorials do. But Resources have clear advantages:
 
 | Feature | Dictionary | Resource |
 |---------|-----------|----------|

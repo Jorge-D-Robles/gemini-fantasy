@@ -305,7 +305,7 @@ func _process(delta: float) -> void:
     position += direction * speed * delta
 ```
 
-Let's unpack this:
+Here's what each part does:
 
 1. **`var direction := Vector2.ZERO`** — We start with no movement. `Vector2.ZERO` is `Vector2(0, 0)`.
 2. **Input checks** — We check each direction independently. Using `if` (not `elif`) allows diagonal movement.

@@ -252,7 +252,7 @@ func end_interaction() -> void:
     _change_state(State.IDLE)
 ```
 
-Let's break down the key design decisions:
+Here's why we made these choices:
 
 ### The `match` Statement
 
@@ -278,7 +278,7 @@ The `_direction_to_string()` function converts a Vector2 direction into "up", "d
 
 This keeps the state machine's logic internal while providing a clean API for the rest of the game.
 
-> **Spiral:** We'll revisit state machines in Module 11 when we build the battle system. The battle state machine is more complex (7+ states with intricate transitions), so we'll upgrade from this enum-based approach to a **node-based** state machine. The enum approach works great for the player's 4 simple states.
+> **Spiral:** We'll revisit state machines in Module 11 when we build the battle system. The battle state machine is more complex (7+ states with complex transitions), so we'll upgrade from this enum-based approach to a **node-based** state machine. The enum approach works great for the player's 4 simple states.
 
 ## Y-Sorting: Correct Depth Ordering
 
