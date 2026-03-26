@@ -129,7 +129,7 @@ Create some encounter groups as `.tres` files in `res://data/encounters/`:
 
 ### The Step Counter System
 
-Random encounters trigger based on a step counter. Create `res://systems/encounter_system.gd`:
+Random encounters trigger based on a step counter. Create `res://systems/encounter_system.gd` and attach it to the `EncounterSystem` node in `crystal_cavern.tscn`:
 
 ```gdscript
 extends Node
@@ -350,7 +350,7 @@ func _start_boss_sequence() -> void:
     line.speaker_name = "Crystal Guardian"
     line.text = "You dare disturb the crystals? Prepare yourself!"
 
-    var dialogue_box = get_tree().get_first_node_in_group("dialogue_boxes")
+    var dialogue_box = get_tree().current_scene.get_node_or_null("DialogueBox")
     if dialogue_box:
         dialogue_box.start_dialogue([line])
         await dialogue_box.dialogue_finished
