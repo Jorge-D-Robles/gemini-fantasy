@@ -52,14 +52,14 @@ Play through Crystal Saga from start to finish and verify each checkpoint:
 - [ ] Battles work: actions, damage, animations, victory
 - [ ] XP and gold are awarded after battles
 - [ ] Level-ups show stat increases
-- [ ] The pendant can be found (if you placed it)
+- [ ] The pendant can be found (requires a pickup object in Whisperwood — see Module 13's treasure chest pattern)
 
 ### 4. Crystal Cavern
 - [ ] Dungeon music plays
 - [ ] Treasure chests give items
 - [ ] Save crystal saves the game
 - [ ] Encounter zones have harder enemies
-- [ ] Boss room door requires the Crystal Key
+- [ ] Boss room door requires the Crystal Key (if you created this item — otherwise leave `required_item_id` empty)
 - [ ] Crystal Guardian dialogue plays before the fight
 
 ### 5. Boss Battle
@@ -70,14 +70,14 @@ Play through Crystal Saga from start to finish and verify each checkpoint:
 ### 6. Ending and Credits
 - [ ] Ending text displays after boss
 - [ ] Credits scroll and return to title
-- [ ] "Continue" now loads the post-boss save
+- [ ] "Continue" loads the save (if the player saved before the boss)
 
 ### 7. Systems Integration
 - [ ] Save/load preserves all state correctly
 - [ ] Quest log shows correct objective states
 - [ ] Equipment changes are reflected in battle
 - [ ] Pause menu works at any time
-- [ ] Audio volume controls persist
+- [ ] Audio volume controls work during the session (persistence requires the optional settings save extension from Module 19)
 
 ## Common Bugs and Fixes
 
@@ -232,8 +232,8 @@ Generate cave layouts from room templates:
 
 You started with an empty Godot project and a blinking cursor. Twenty-one modules later, you have:
 
-- **~4,800 lines of GDScript** across dozens of scripts
-- **7 autoloads** managing global game state
+- **Thousands of lines of GDScript** across dozens of scripts
+- **7 autoloads** managing global game state (SceneManager, InventoryManager, GameManager, QuestManager, PartyManager, SaveManager, MusicManager)
 - **3 game areas** with hand-crafted tilemaps
 - **A complete battle system** with state machines, AI, and animations
 - **5 interlocking systems** (inventory, quests, party, save/load, audio)

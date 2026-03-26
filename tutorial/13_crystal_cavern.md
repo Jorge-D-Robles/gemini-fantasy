@@ -22,6 +22,18 @@ Dungeons differ from overworld areas in several ways:
 | Save points | Towns (convenient) | Rare (crystals — strategic) |
 | Goal | Exploration and socializing | Challenge and progression |
 
+## Cave Tileset Assets
+
+You'll need cave or dungeon tiles for the Crystal Cavern. Here are your options:
+
+**Option 1 — Free tileset pack:** Download the [Kenney 1-Bit Pack](https://kenney.nl/assets/1-bit-pack) which includes cave and dungeon tiles. Extract it and copy the relevant tile sheets to `res://assets/tilesets/`.
+
+**Option 2 — Reuse and recolor:** Duplicate the TileSet from Module 4. Open the new TileSet resource, and in the Physics/Terrain tabs, you can reuse the same workflow. Many JRPG tileset packs include both outdoor and dungeon tiles in the same set.
+
+**Option 3 — Placeholder tiles:** Create a simple cave palette with colored rectangles: dark grey for walls (e.g., `Color(0.25, 0.25, 0.3)`), lighter grey for walkable floor (`Color(0.45, 0.45, 0.5)`), and blue-purple for crystal decorations (`Color(0.4, 0.3, 0.7)`). In the TileSet editor, you can draw directly onto a new atlas.
+
+Whichever approach you use, create a new TileSet resource for the cave: **right-click `res://scenes/crystal_cavern/`** → New Resource → TileSet. Add your tile sheet as an Atlas source, set up collision on wall tiles (same process as Module 4), and assign it to each TileMapLayer.
+
 ## Building the Cave Tilemap
 
 Create `res://scenes/crystal_cavern/crystal_cavern.tscn` with the familiar layer structure, but using cave-themed tiles:
@@ -39,8 +51,9 @@ CrystalCavern (Node2D)
 │   ├── ExitToWhisperwood (Area2D + exit_zone.gd)
 │   └── ... (spawn points)
 ├── EncounterZones (Node2D)
-│   ├── MainCorridor (Area2D)
-│   └── DeepCavern (Area2D)
+│   ├── MainCorridor (Area2D + CollisionShape2D)
+│   └── DeepCavern (Area2D + CollisionShape2D)
+├── EncounterSystem (Node)
 ├── DialogueBox (instance)
 └── InventoryScreen (instance)
 ```
@@ -154,7 +167,18 @@ Set the `@export var item` in the Inspector by dragging the `.tres` file into th
 
 A classic JRPG save point — a glowing crystal the player interacts with. For now, it just prints "Game saved!" — we'll wire it to the actual save system in Module 18.
 
-Create `res://entities/interactable/save_crystal.tscn` — same structure as the treasure chest, but with different behavior:
+Create `res://entities/interactable/save_crystal.tscn`:
+
+```
+SaveCrystal (StaticBody2D)
+├── Sprite (Sprite2D)          — crystal image (use any placeholder sprite)
+├── CollisionShape2D           — blocks walking through (RectangleShape2D, 16x16)
+├── InteractionZone (Area2D)
+│   └── CollisionShape2D       — interaction radius (CircleShape2D, radius ~24)
+└── InteractionPrompt (Sprite2D, visible = false)
+```
+
+Script `res://entities/interactable/save_crystal.gd`:
 
 ```gdscript
 extends StaticBody2D
@@ -207,7 +231,12 @@ Encounter zones define where random battles can happen and which enemies appear.
 
 Add `Area2D` nodes to mark the encounter regions. For now, just create the Area2D nodes with CollisionShape2D children — **don't attach scripts yet**. We'll create the encounter system and encounter zone scripts in Module 14.
 
-Also add an **EncounterSystem** node (plain `Node`) as a child of the CrystalCavern root. We'll attach a script to this in Module 14.
+For each encounter zone:
+1. Create an **Area2D** node (e.g., `MainCorridor`) as a child of `EncounterZones`.
+2. Add a **CollisionShape2D** child with a **RectangleShape2D**.
+3. Size the rectangle to cover the room or corridor where encounters should happen (e.g., 200x100 pixels for a corridor).
+
+Also add an **EncounterSystem** node (plain `Node`) as a direct child of the `CrystalCavern` root — **not** inside `EncounterZones`. We'll attach a script to this in Module 14.
 
 Place two zones:
 - **MainCorridor** — covers the entrance corridor (easy enemies)
@@ -286,9 +315,15 @@ Add scene transitions:
 - **Whisperwood south exit** → Crystal Cavern entrance
 - **Crystal Cavern entrance** → back to Whisperwood
 
-Add spawn points (Marker2D in `spawn_points` group):
+Add spawn points (Marker2D nodes as children of Exits, added to the `spawn_points` group):
 - `from_whisperwood` — at the cave entrance
-- `default` — same as `from_whisperwood`
+- `default` — same position as `from_whisperwood`
+
+> **See:** [TileMapLayer](https://docs.godotengine.org/en/stable/classes/class_tilemaplayer.html) — the node used for each tile layer. Same class as Module 4, now with a cave tileset.
+
+> **See:** [StaticBody2D](https://docs.godotengine.org/en/stable/classes/class_staticbody2d.html) — used for treasure chests, save crystals, and boss doors (solid, non-moving objects).
+
+> **See:** [Area2D](https://docs.godotengine.org/en/stable/classes/class_area2d.html) — used for interaction zones and encounter regions. The `body_entered`/`body_exited` signals detect when the player enters.
 
 ## What We've Learned
 

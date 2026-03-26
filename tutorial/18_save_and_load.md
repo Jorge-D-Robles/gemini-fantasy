@@ -86,6 +86,8 @@ func to_save_data() -> Dictionary:
             attack = member.attack,
             defense = member.defense,
             speed = member.speed,
+            current_hp = member.current_hp,
+            current_mp = member.current_mp,
             weapon_path = member.equipped_weapon.resource_path if member.equipped_weapon else "",
             armor_path = member.equipped_armor.resource_path if member.equipped_armor else "",
             accessory_path = member.equipped_accessory.resource_path if member.equipped_accessory else "",
@@ -104,9 +106,17 @@ func from_save_data(data: Dictionary) -> void:
             character.attack = entry.get("attack", character.attack)
             character.defense = entry.get("defense", character.defense)
             character.speed = entry.get("speed", character.speed)
+            character.current_hp = entry.get("current_hp", character.max_hp)
+            character.current_mp = entry.get("current_mp", character.max_mp)
             var weapon_path: String = entry.get("weapon_path", "")
             if weapon_path:
                 character.equipped_weapon = load(weapon_path) as ItemData
+            var armor_path: String = entry.get("armor_path", "")
+            if armor_path:
+                character.equipped_armor = load(armor_path) as ItemData
+            var accessory_path: String = entry.get("accessory_path", "")
+            if accessory_path:
+                character.equipped_accessory = load(accessory_path) as ItemData
             members.append(character)
 ```
 
@@ -306,6 +316,19 @@ if not save_data.has("version"):
     push_error("Save data missing version field")
     return false
 ```
+
+**Autoload reference card** (updated):
+
+| Autoload | Module | Purpose |
+|----------|--------|---------|
+| SceneManager | 6 | Scene transitions with fade effects |
+| InventoryManager | 10 | Item storage, add/remove, signals |
+| GameManager | 16 | Game flags, world state tracking |
+| QuestManager | 16 | Quest tracking, objective checking |
+| PartyManager | 17 | Party roster, recruitment, stats |
+| **SaveManager** | **18** | **Save/load game state to JSON** |
+
+> **Note:** `load_game()` uses `tree.change_scene_to_file()` directly instead of `SceneManager.change_scene()`. This is intentional — the save system needs to bypass SceneManager's spawn point logic and instead restore the exact player position from the save file. If you want the fade effect, you could call `SceneManager._anim_player.play("fade_out")` before loading and `fade_in` after.
 
 ## What We've Learned
 

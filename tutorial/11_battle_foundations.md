@@ -175,12 +175,20 @@ Battle (Node2D)
     └── Defeat (BattleState)
 ```
 
-Position the Marker2D nodes to create the classic JRPG battle layout:
-- **Party** on the right side of the screen
-- **Enemies** on the left side
-- Leave space in the center for action animations
+Position the Marker2D nodes to create the classic JRPG battle layout. In the Inspector, set the `position` property for each:
 
-For the background, use a simple ColorRect or a textured background for now.
+| Node | Position | Role |
+|------|----------|------|
+| PartySlot0 | (240, 60) | Top party member |
+| PartySlot1 | (240, 120) | Middle party member |
+| PartySlot2 | (240, 180) | Bottom party member |
+| EnemySlot0 | (80, 60) | Top enemy |
+| EnemySlot1 | (80, 120) | Middle enemy |
+| EnemySlot2 | (80, 180) | Bottom enemy |
+
+Party on the right, enemies on the left, with space in the center for action animations.
+
+For the background, add the `ColorRect` node first. Set its color to a dark blue-grey (e.g., `Color(0.15, 0.15, 0.25)`) and set its Layout to **Full Rect** (select the node, then in the toolbar use Layout → Full Rect).
 
 ### Battler Sprites
 
@@ -216,8 +224,8 @@ The battle manager orchestrates the entire fight. Create `res://systems/battle/b
 > **Note:** BattleManager is NOT an autoload — it is the root script of `battle.tscn`, which means it only exists while a battle is happening. The SceneManager loads the battle scene and calls its `initialize_battle()` method.
 
 ```gdscript
-extends Node
-## Orchestrates battle flow. Attached to the Battle scene root.
+extends Node2D
+## Orchestrates battle flow. Attached to the Battle scene root (Node2D).
 
 signal battle_started(party: Array[BattlerData], enemies: Array[BattlerData])
 signal turn_started(battler: BattlerData)
@@ -241,9 +249,8 @@ func _ready() -> void:
     # Pass a reference to this manager into every state
     for state in _state_machine.states.values():
         state.battle_manager = self
-
-    # Start the battle intro
-    _state_machine.start("Intro")
+    # Don't start the state machine here — wait for initialize_battle()
+    # to populate party and enemies first.
 
 
 func initialize_battle(party_data: Array[BattlerData], enemy_data: Array[BattlerData]) -> void:
@@ -261,6 +268,9 @@ func initialize_battle(party_data: Array[BattlerData], enemy_data: Array[Battler
     _spawn_battler_sprites(enemies, _enemy_positions)
 
     battle_started.emit(party, enemies)
+
+    # NOW start the state machine — data is ready
+    _state_machine.start("Intro")
 
 
 func _spawn_battler_sprites(battlers: Array[BattlerData], positions: Node2D) -> void:
@@ -319,9 +329,17 @@ func get_alive_party() -> Array[BattlerData]:
 
 Each state is a small script. Let's implement them one by one.
 
+Save each state script in `res://systems/battle/states/`. After creating all the scripts, you need to **attach each script to its corresponding node** in the scene tree:
+
+1. In the editor, select the **Intro** node under StateMachine.
+2. In the Inspector, click the Script dropdown and choose **Load**, then select `intro_state.gd`.
+3. Repeat for each state node: TurnStart → `turn_start_state.gd`, PlayerChoice → `player_choice_state.gd`, etc.
+
+Alternatively, you can right-click each state node → **Attach Script** → change the path to the existing file.
+
 ### Intro State
 
-Save each state script in `res://systems/battle/states/`. For example, save this as `res://systems/battle/states/intro_state.gd`:
+Save as `res://systems/battle/states/intro_state.gd`:
 
 ```gdscript
 extends BattleState
@@ -639,6 +657,21 @@ Here's the complete state flow visualized:
 ```
 
 Each state is isolated. Adding new actions (magic, items, defend) means adding branches in `PlayerChoice` and `ActionExecute` — not restructuring the entire flow.
+
+> **See:** [Node](https://docs.godotengine.org/en/stable/classes/class_node.html) — the base class for all scene tree nodes. The node-based state machine pattern uses `get_children()` and polymorphism.
+
+> **See:** [SceneTree.create_timer()](https://docs.godotengine.org/en/stable/classes/class_scenetree.html#class-scenetree-method-create-timer) — creates a one-shot timer. Used with `await` in states for pacing.
+
+> **See:** [Array.sort_custom()](https://docs.godotengine.org/en/stable/classes/class_array.html#class-array-method-sort-custom) — custom sorting with a callable. Used for speed-based turn ordering.
+
+**Autoload reference card** (unchanged from Module 10 — no new autoloads this module):
+
+| Autoload | Module | Purpose |
+|----------|--------|---------|
+| SceneManager | 6 | Scene transitions with fade effects |
+| InventoryManager | 10 | Item storage, add/remove, signals |
+
+> **Note:** BattleManager is NOT an autoload. It is the root script of `battle.tscn` and only exists during battles. The SceneManager loads the battle scene and calls `initialize_battle()` on it.
 
 ## What We've Learned
 

@@ -57,10 +57,11 @@ Create three enemies as `.tres` files in `res://data/enemies/`:
 
 ## Enemy AI
 
-Each enemy needs to decide what to do on its turn. Our three AI types:
+Each enemy needs to decide what to do on its turn. Create `res://systems/battle/ai_controller.gd` for the AI logic:
 
 ```gdscript
-# Add to ActionExecute state or create a separate ai_controller.gd
+class_name AIController
+## Enemy AI decision-making. Static methods — no instance needed.
 
 static func choose_enemy_action(
     battler: BattlerData,
@@ -109,7 +110,7 @@ static func _ai_balanced(battler: BattlerData, targets: Array[BattlerData]) -> D
 
 ### EncounterData Resource
 
-Define which enemies appear together:
+Define which enemies appear together. Save as `res://resources/encounter_data.gd`:
 
 ```gdscript
 extends Resource
@@ -120,11 +121,11 @@ class_name EncounterData
 @export_range(0.0, 1.0) var weight: float = 1.0  # Relative probability
 ```
 
-Create some encounter groups in `res://data/encounters/`:
+Create some encounter groups as `.tres` files in `res://data/encounters/`:
 
-**`cave_bats.tres`:** 2-3 Cave Bats (common)
-**`slime_pair.tres`:** 2 Crystal Slimes (uncommon)
-**`golem.tres`:** 1 Stone Golem (rare)
+**`cave_bats.tres`:** 3 Cave Bats (weight: 1.0 — common)
+**`slime_pair.tres`:** 2 Crystal Slimes (weight: 0.6 — uncommon)
+**`golem.tres`:** 1 Stone Golem (weight: 0.3 — rare)
 
 ### The Step Counter System
 
@@ -206,7 +207,7 @@ func exit_zone() -> void:
 
 ### Wiring Encounter Zones
 
-Update the encounter zone script from Module 13:
+Create a new script for the encounter zones we placed in Module 13. Save as `res://systems/encounter_zone.gd`, then attach it to each encounter zone Area2D node (MainCorridor, DeepCavern):
 
 ```gdscript
 extends Area2D
@@ -215,7 +216,8 @@ extends Area2D
 @export var encounters: Array[EncounterData] = []
 @export var encounter_rate: float = 0.1
 
-@onready var _encounter_system: Node = $"../EncounterSystem"
+# Path from EncounterZones/MainCorridor up to CrystalCavern, then down to EncounterSystem
+@onready var _encounter_system: Node = $"../../EncounterSystem"
 
 
 func _ready() -> void:
@@ -233,11 +235,23 @@ func _on_body_exited(body: Node2D) -> void:
         _encounter_system.exit_zone()
 ```
 
-### Connecting Encounters to Battles
+### Adding enemy_data to BattlerData
 
-The EncounterSystem emits `encounter_triggered`, but nothing starts a battle yet. Add this wiring to your Crystal Cavern scene script (`crystal_cavern.gd`):
+Before wiring encounters to battles, we need a way for the victory flow (Module 15) to access enemy rewards. Open `res://resources/battler_data.gd` and add this property:
 
 ```gdscript
+# Add to battler_data.gd — stores the EnemyData for reward calculation
+var enemy_data: EnemyData = null
+```
+
+### Connecting Encounters to Battles
+
+The EncounterSystem emits `encounter_triggered`, but nothing starts a battle yet. Create the Crystal Cavern scene script — save as `res://scenes/crystal_cavern/crystal_cavern.gd` and attach to the CrystalCavern root node:
+
+```gdscript
+extends Node2D
+## Crystal Cavern dungeon scene.
+
 @onready var _encounter_system: Node = $EncounterSystem
 
 
@@ -248,17 +262,17 @@ func _ready() -> void:
 func _on_encounter_triggered(encounter: EncounterData) -> void:
     # Convert EnemyData to BattlerData for the battle system
     var enemy_battlers: Array[BattlerData] = []
-    for enemy_data in encounter.enemies:
+    for ed in encounter.enemies:
         var battler := BattlerData.new()
         var char_data := CharacterData.new()
-        char_data.display_name = enemy_data.display_name
-        char_data.max_hp = enemy_data.max_hp
-        char_data.attack = enemy_data.attack
-        char_data.defense = enemy_data.defense
-        char_data.speed = enemy_data.speed
+        char_data.display_name = ed.display_name
+        char_data.max_hp = ed.max_hp
+        char_data.attack = ed.attack
+        char_data.defense = ed.defense
+        char_data.speed = ed.speed
         battler.character_data = char_data
         battler.is_player_controlled = false
-        battler.enemy_data = enemy_data  # Store for victory rewards (Module 15)
+        battler.enemy_data = ed  # Store for victory rewards (Module 15)
         enemy_battlers.append(battler)
 
     # Build party (temporary — Module 17 adds a proper PartyManager)
@@ -266,10 +280,9 @@ func _on_encounter_triggered(encounter: EncounterData) -> void:
     hero.character_data = load("res://data/characters/aiden.tres")
     hero.is_player_controlled = true
 
-    SceneManager.start_battle([hero], enemy_battlers)
+    # Must use Dictionary format — matches SceneManager.start_battle() from Module 11
+    SceneManager.start_battle({party = [hero], enemies = enemy_battlers})
 ```
-
-> **Note:** The `enemy_data` property on BattlerData is added in Module 15. You can add it now: open `battler_data.gd` and add `var enemy_data: EnemyData = null`.
 
 ## The Boss: Crystal Guardian
 
@@ -281,7 +294,43 @@ The Crystal Guardian is a stronger enemy with a pre-battle dialogue:
 - HP: 200, attack: 15, defense: 8, speed: 6
 - XP: 100, gold: 50
 
-The boss room trigger starts dialogue, then transitions to battle:
+### Using AI in Battle
+
+Now update the `_execute_enemy_turn` method in `res://systems/battle/states/action_execute_state.gd` to use the AI controller instead of random targeting:
+
+```gdscript
+func _execute_enemy_turn(battler: BattlerData) -> void:
+    var targets := battle_manager.get_alive_party()
+    if targets.is_empty():
+        return
+
+    # Use AI controller if enemy has EnemyData, otherwise random
+    if battler.enemy_data:
+        var command: Dictionary = AIController.choose_enemy_action(
+            battler, battler.enemy_data, targets, battle_manager.get_alive_enemies(),
+        )
+        var target: BattlerData = command.get("target", targets[0])
+        match command.get("action", "attack"):
+            "attack":
+                await _execute_attack(battler, target)
+            "defend":
+                _execute_defend(battler)
+    else:
+        var target: BattlerData = targets[randi() % targets.size()]
+        await _execute_attack(battler, target)
+```
+
+## The Boss: Crystal Guardian
+
+The Crystal Guardian is a stronger enemy with a pre-battle dialogue.
+
+**`crystal_guardian.tres`** (EnemyData) in `res://data/enemies/`:
+- display_name: "Crystal Guardian"
+- ai_type: AGGRESSIVE
+- HP: 200, attack: 15, defense: 8, speed: 6
+- XP: 100, gold: 50
+
+The boss room trigger starts dialogue, then transitions to battle. Save as `res://entities/interactable/boss_trigger.gd` and attach to an Area2D node in the boss room:
 
 ```gdscript
 extends Area2D
@@ -344,10 +393,10 @@ func _start_boss_battle() -> void:
 
 ## Flee Mechanic
 
-Add a "Flee" option to the battle menu. Fleeing succeeds based on the party's average speed vs the enemies':
+Add a "Flee" option. First, add the flee logic to `res://systems/battle/ai_controller.gd`:
 
 ```gdscript
-func attempt_flee(party: Array[BattlerData], enemies: Array[BattlerData]) -> bool:
+static func attempt_flee(party: Array[BattlerData], enemies: Array[BattlerData]) -> bool:
     var party_speed: float = 0.0
     for b in party:
         party_speed += b.current_speed
@@ -365,9 +414,37 @@ func attempt_flee(party: Array[BattlerData], enemies: Array[BattlerData]) -> boo
     return randf() < chance
 ```
 
-If flee succeeds, return to the overworld. If it fails, the turn is wasted.
+Then add a Flee button to `res://ui/battle/battle_menu.tscn` (add a 5th Button node named `FleeButton` in the ActionList) and wire it in `battle_menu.gd`:
 
-> **JRPG Pattern:** Most JRPGs don't let you flee from boss battles. Add a `can_flee: bool` to your encounter data.
+```gdscript
+@onready var _flee_btn: Button = $MarginContainer/ActionList/FleeButton
+
+# Add in _ready():
+_flee_btn.pressed.connect(func() -> void: action_chosen.emit("flee"))
+```
+
+Handle flee in the PlayerChoice state (`player_choice_state.gd`), inside the `_on_action_chosen` match block:
+
+```gdscript
+        "flee":
+            var success := AIController.attempt_flee(
+                battle_manager.get_alive_party(),
+                battle_manager.get_alive_enemies(),
+            )
+            if success:
+                print("Escaped!")
+                SceneManager.return_from_battle()
+            else:
+                print("Couldn't escape!")
+                # Wasted turn — go to next battler
+                battle_manager._state_machine.transition_to("CheckResult")
+```
+
+> **JRPG Pattern:** Most JRPGs don't let you flee from boss battles. Add a `can_flee: bool` to your EncounterData and disable the Flee button when it's false.
+
+> **See:** [Resource](https://docs.godotengine.org/en/stable/classes/class_resource.html) — EnemyData and EncounterData both extend Resource. The `@export_group` and `@export_range` annotations organize the Inspector.
+
+> **See:** [Random number generation](https://docs.godotengine.org/en/stable/tutorials/math/random_number_generation.html) — `randi_range()`, `randf()`, and weighted random selection used throughout the encounter and AI systems.
 
 ## What We've Learned
 

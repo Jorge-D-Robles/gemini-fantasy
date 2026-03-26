@@ -59,8 +59,13 @@ func _on_continue() -> void:
 
 
 func _on_settings() -> void:
-    # Show settings panel (volume sliders from Module 19)
-    pass
+    # Show the volume settings panel from Module 19
+    var settings_scene := preload("res://ui/settings/settings_panel.tscn")
+    var panel: PanelContainer = settings_scene.instantiate()
+    add_child(panel)
+    # Center it on screen
+    panel.anchors_preset = Control.PRESET_CENTER
+    panel.grab_focus()
 
 
 func _initialize_fresh_state() -> void:
@@ -77,6 +82,11 @@ func _initialize_fresh_state() -> void:
     PartyManager.from_save_data({members = []})
     var aiden: CharacterData = load("res://data/characters/aiden.tres")
     if aiden:
+        # Initialize HP/MP to full for a fresh game
+        aiden.current_hp = aiden.max_hp
+        aiden.current_mp = aiden.max_mp
+        aiden.current_xp = 0
+        aiden.level = 1
         PartyManager.add_member(aiden)
 
     # Reset quests
@@ -90,7 +100,7 @@ func _any_saves_exist() -> bool:
     return false
 ```
 
-Set `res://ui/title_screen/title_screen.tscn` as the project's **Main Scene** in Project Settings.
+Set `res://ui/title_screen/title_screen.tscn` as the project's **Main Scene**: go to **Project → Project Settings → General → Application → Run → Main Scene** and select the title screen `.tscn` file.
 
 ## The Pause Menu
 
@@ -127,7 +137,9 @@ func _ready() -> void:
 
     _resume_btn.pressed.connect(close)
     _quit_btn.pressed.connect(_quit_to_title)
-    # Connect other buttons to open inventory, quest log, settings...
+    $Background/Panel/VBox/InventoryButton.pressed.connect(_open_inventory)
+    $Background/Panel/VBox/QuestLogButton.pressed.connect(_open_quest_log)
+    $Background/Panel/VBox/SettingsButton.pressed.connect(_open_settings)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -150,6 +162,28 @@ func close() -> void:
     _is_open = false
     _background.visible = false
     get_tree().paused = false
+
+
+func _open_inventory() -> void:
+    # Show the inventory screen from Module 10
+    var inv := get_tree().get_first_node_in_group("inventory_screens")
+    if inv:
+        inv.visible = true
+
+
+func _open_quest_log() -> void:
+    # Show the quest log from Module 16
+    var log_panel := get_tree().get_first_node_in_group("quest_logs")
+    if log_panel:
+        log_panel.visible = true
+        log_panel.refresh()
+
+
+func _open_settings() -> void:
+    # Show the settings panel from Module 19
+    var settings_scene := preload("res://ui/settings/settings_panel.tscn")
+    var panel: PanelContainer = settings_scene.instantiate()
+    add_child(panel)
 
 
 func _quit_to_title() -> void:
@@ -186,6 +220,8 @@ Ending (Control, Layout: Full Rect)
 extends Control
 ## The victory ending scene.
 
+var _can_skip: bool = false
+
 
 func _ready() -> void:
     MusicManager.play_music("res://audio/music/ending_theme.ogg")
@@ -198,7 +234,19 @@ func _ready() -> void:
     label.text += "The world is safe... for now.\n\n"
     label.text += "[b]Thank you for playing Crystal Saga.[/b][/center]"
 
-    await get_tree().create_timer(8.0).timeout
+    # Allow skipping after a brief delay
+    await get_tree().create_timer(2.0).timeout
+    _can_skip = true
+    await get_tree().create_timer(6.0).timeout
+    _go_to_credits()
+
+
+func _unhandled_input(event: InputEvent) -> void:
+    if _can_skip and (event.is_action_pressed("ui_accept") or event.is_action_pressed("ui_cancel")):
+        _go_to_credits()
+
+
+func _go_to_credits() -> void:
     SceneManager.change_scene("res://ui/credits/credits.tscn")
 ```
 
@@ -228,6 +276,9 @@ func _ready() -> void:
     _credits_label.text += "Thank you for playing!"
 
     _credits_label.position.y = get_viewport_rect().size.y
+
+    # Wait one frame so the label's size is calculated after setting text
+    await get_tree().process_frame
 
     var tween := create_tween()
     tween.tween_property(

@@ -321,6 +321,8 @@ func _execute_enemy_turn(battler: BattlerData) -> void:
 
 Animations make combat feel impactful. The classic JRPG attack animation: the attacker slides forward, pauses, then slides back.
 
+Add both `_play_attack_animation` and `_find_battler_sprite` to `res://systems/battle/states/action_execute_state.gd` (the same script as the action execution code above):
+
 ```gdscript
 func _play_attack_animation(attacker: BattlerData) -> void:
     # Find the attacker's sprite node in the scene
@@ -352,7 +354,7 @@ func _find_battler_sprite(battler: BattlerData) -> Node2D:
 
 ## Floating Damage Numbers
 
-A small label that rises and fades when damage is dealt:
+A small label that rises and fades when damage is dealt. Add this method to `action_execute_state.gd` alongside the animation methods:
 
 ```gdscript
 func _spawn_damage_number(target: BattlerData, amount: int, is_heal: bool = false) -> void:

@@ -8,11 +8,26 @@ Interactive combat with enemies, AI, random encounters, and a boss fight. But wi
 
 Post-battle rewards (XP, gold, item drops), a leveling system with stat growth curves, the victory fanfare screen, and the game-over/defeat flow.
 
-## Experience and Level-Up
+## Preparing the Data Layer
+
+Before building the victory and leveling flows, we need to add a few runtime properties to existing Resources. Make these changes first.
+
+### CharacterData Additions
+
+Open `res://resources/character_data.gd` and add these runtime properties (not `@export` — these track state during play, not base data):
+
+```gdscript
+# Add to character_data.gd — runtime state (below the @export vars)
+var current_xp: int = 0
+var current_hp: int = 0  # Tracks HP between battles
+var current_mp: int = 0  # Tracks MP between battles
+```
+
+> **Why both CharacterData and BattlerData have HP/MP:** BattlerData holds HP/MP *during* a battle (it's temporary, created fresh each fight). CharacterData holds HP/MP *between* battles (persistent across scenes). At battle start, `BattlerData.initialize_from_character()` copies from CharacterData. At battle end, we sync back.
 
 ### The XP Curve
 
-We need a formula for "how much XP to reach the next level." A simple quadratic curve works well:
+We need a formula for "how much XP to reach the next level." A simple quadratic curve works well. Add this static function to `res://resources/character_data.gd`:
 
 ```gdscript
 static func xp_for_level(level: int) -> int:
@@ -24,7 +39,8 @@ static func xp_for_level(level: int) -> int:
 | 1 → 2 | 10 | 10 |
 | 2 → 3 | 40 | 50 |
 | 3 → 4 | 90 | 140 |
-| 5 → 6 | 250 | 640 |
+| 4 → 5 | 160 | 300 |
+| 5 → 6 | 250 | 550 |
 | 10 → 11 | 1,000 | 3,850 |
 
 The formula `level * level * 10` means at level 1 you need 10 XP, at level 5 you need 250 XP, etc.
@@ -33,7 +49,7 @@ This curve starts gentle and ramps up — early levels come fast (motivating), l
 
 ### Stat Growth
 
-When a character levels up, their stats increase based on **growth rates** defined in CharacterData. Add this method to `res://resources/character_data.gd` (after the `@export` properties):
+When a character levels up, their stats increase based on **growth rates** defined in CharacterData. Add this method to `res://resources/character_data.gd`:
 
 > **Note:** `level_up()` modifies the Resource's properties at runtime. These changes persist in memory (because Resources are shared by reference) but do NOT modify the `.tres` file on disk. This is the correct behavior — runtime progression should not overwrite base data.
 
@@ -59,7 +75,7 @@ The small random variance (randi_range(0, 1) or (0, 2)) makes each level-up feel
 
 ## The Victory Flow
 
-Update the Victory battle state to show rewards:
+Now that the data layer is ready, update the Victory battle state (`res://systems/battle/states/victory_state.gd`) to show rewards:
 
 ```gdscript
 extends BattleState
@@ -86,6 +102,12 @@ func enter(_context: Dictionary = {}) -> void:
     for battler in battle_manager.get_alive_party():
         _apply_xp(battler, xp_per_member)
 
+    # Sync battle HP/MP back to CharacterData for persistence
+    for battler in battle_manager.party:
+        if battler.character_data:
+            battler.character_data.current_hp = battler.current_hp
+            battler.character_data.current_mp = battler.current_mp
+
     # Grant gold
     InventoryManager.add_gold(total_gold)
     print("Gained " + str(total_gold) + " gold!")
@@ -111,37 +133,15 @@ func _apply_xp(battler: BattlerData, xp: int) -> void:
     char_data.current_xp += xp
     print(char_data.display_name + " gained " + str(xp) + " XP!")
 
-    # Check for level up
-    var required: int = char_data.level * char_data.level * 10
+    # Check for level up (may level up multiple times)
+    var required: int = CharacterData.xp_for_level(char_data.level)
     while char_data.current_xp >= required:
         char_data.current_xp -= required
         var gains: Dictionary = char_data.level_up()
         print(char_data.display_name + " reached level " + str(char_data.level) + "!")
         print("  HP +" + str(gains.hp) + ", ATK +" + str(gains.attack) +
               ", DEF +" + str(gains.defense))
-        required = char_data.level * char_data.level * 10
-```
-
-Add these runtime properties to `res://resources/character_data.gd` (not `@export` — these are runtime state, not base data):
-
-```gdscript
-# Add to character_data.gd — runtime state
-var current_xp: int = 0
-var current_hp: int = 0  # Set from max_hp at battle start
-var current_mp: int = 0  # Set from max_mp at battle start
-```
-
-Also, add an `enemy_data` property to `res://systems/battle/battler_data.gd` so the victory flow can access enemy rewards:
-
-```gdscript
-# Add to battler_data.gd
-var enemy_data: EnemyData = null  # Set when creating enemy battlers
-```
-
-When creating enemy BattlerData (in Module 14's encounter or boss fight code), set this property:
-
-```gdscript
-battler.enemy_data = enemy_data_resource
+        required = CharacterData.xp_for_level(char_data.level)
 ```
 
 ## The Defeat Flow
@@ -162,18 +162,25 @@ func enter(_context: Dictionary = {}) -> void:
 
     # Return to title screen (or last save point)
     # For now, just reload the main scene
-    SceneManager.change_scene("res://scenes/willowbrook/willowbrook.tscn")
+    SceneManager.change_scene("res://scenes/willowbrook/willowbrook.tscn", "default")
 ```
 
 In Module 20, we'll replace this with a proper Game Over screen with options (retry, load save, return to title).
 
 ## Post-Battle State Restoration
 
-After a victorious battle, the party needs to return to the overworld with their current HP/MP intact. The SceneManager's `return_from_battle()` handles the scene change, but we need to persist the party's battle state.
+After a victorious battle, the party returns to the overworld with their current HP/MP intact. Two things make this work:
 
-For now, since we don't have a formal PartyManager yet (Module 17), the CharacterData resources retain their modified stats because Resources are shared by reference. When the battle modifies `character_data.max_hp` via `level_up()`, that change persists across scenes.
+1. **HP/MP sync** — the Victory state writes `battler.current_hp` and `battler.current_mp` back to `battler.character_data` (see the sync code above). Without this, the party would return to full HP after every fight.
+2. **Resource sharing** — CharacterData resources are shared by reference. When the battle modifies stats via `level_up()`, that change persists across scenes automatically.
+
+For now, since we don't have a formal PartyManager yet (Module 17), the CharacterData resource at `res://data/characters/aiden.tres` is loaded via `load()`, which caches it — all code that loads the same path gets the same object.
 
 > **JRPG Pattern:** After normal battles, HP/MP carry over (no free heals). Save points and inns restore them. This creates a resource management game — do you use that Potion now or save it for the boss?
+
+> **See:** [Resource](https://docs.godotengine.org/en/stable/classes/class_resource.html) — Resources loaded with `load()` are cached and shared by reference. Runtime changes to exported properties persist in memory but don't write back to the `.tres` file.
+
+> **See:** [Tween](https://docs.godotengine.org/en/stable/classes/class_tween.html) — for future enhancements, Tweens can animate the victory screen (stat bars filling, XP counters incrementing).
 
 ## What We've Learned
 
@@ -188,14 +195,17 @@ For now, since we don't have a formal PartyManager yet (Module 17), the Characte
 ## What You Should See
 
 After winning a battle:
-- "VICTORY" message appears
-- XP, gold, and item drops are shown
-- Characters may level up with stat increase notifications
-- The game returns to the overworld at the player's previous position
+- "--- VICTORY ---" appears in the output panel
+- XP, gold, and item drops are listed (e.g., "Aiden gained 12 XP!", "Gained 6 gold!")
+- Characters may level up: "Aiden reached level 2!" with stat increases
+- After 2 seconds, the game returns to the overworld at the player's previous position
+- HP/MP carry over from the battle (if you took damage, your HP stays reduced)
 
 After losing a battle:
-- "DEFEAT" message appears
-- The game reloads (placeholder for proper Game Over screen)
+- "--- DEFEAT ---" appears in the output panel
+- The game reloads Willowbrook (placeholder for proper Game Over screen in Module 20)
+
+**Concrete example:** If Aiden (level 1, 0 XP) defeats 2 Crystal Slimes (12 XP each), he gains 24 XP total. Since level 1→2 requires only 10 XP, he levels up to level 2 with 14 XP remaining.
 
 ## Next Module
 

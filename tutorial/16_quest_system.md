@@ -67,6 +67,8 @@ Flags are used everywhere:
 
 ## QuestData Resource
 
+Save as `res://resources/quest_data.gd`:
+
 ```gdscript
 extends Resource
 class_name QuestData
@@ -179,28 +181,44 @@ func _is_quest_done(quest_id: String) -> bool:
 
 ## Crystal Saga Quests
 
-### Main Quest: "The Crystal Resonance"
+### Creating Quest `.tres` Files
 
-```
-Objectives:
-1. Talk to Elder Maren in Willowbrook → flag: "talked_to_elder"
-2. Explore Whisperwood → flag: "reached_whisperwood"
-3. Find the Crystal Cavern → flag: "entered_crystal_cavern"
-4. Defeat the Crystal Guardian → flag: "boss_defeated"
+Create the `res://data/quests/` folder (right-click `res://data/` → New Folder → `quests`).
 
-Reward: 200 XP, 100 gold
-```
+**Main Quest: "The Crystal Resonance"**
 
-### Side Quest: "The Lost Pendant"
+1. Right-click `res://data/quests/` → New Resource → select **QuestData**
+2. Save as `crystal_resonance.tres`
+3. In the Inspector, set these fields:
+   - `id`: "crystal_resonance"
+   - `title`: "The Crystal Resonance"
+   - `description`: "Investigate the crystal disturbances in the cave."
+   - **Objectives:** Click the array, add 4 entries:
+     - "Talk to Elder Maren in Willowbrook"
+     - "Explore Whisperwood"
+     - "Find the Crystal Cavern"
+     - "Defeat the Crystal Guardian"
+   - **Objective Flags:** Click the array, add 4 matching entries:
+     - "talked_to_elder"
+     - "reached_whisperwood"
+     - "entered_crystal_cavern"
+     - "boss_defeated"
+   - `xp_reward`: 200
+   - `gold_reward`: 100
 
-```
-Objectives:
-1. Talk to Wandering Fynn → flag: "talked_to_fynn" (starts quest)
-2. Find the pendant in Whisperwood → flag: "pendant_found"
-3. Return pendant to Fynn → flag: "pendant_returned"
+**Side Quest: "The Lost Pendant"**
 
-Reward: 50 XP, 30 gold, Ether x2
-```
+1. Right-click `res://data/quests/` → New Resource → **QuestData**
+2. Save as `lost_pendant.tres`
+3. Set fields:
+   - `id`: "lost_pendant"
+   - `title`: "The Lost Pendant"
+   - `description`: "Find Fynn's pendant in the Whisperwood."
+   - **Objectives:** "Talk to Wandering Fynn", "Find the pendant in Whisperwood", "Return pendant to Fynn"
+   - **Objective Flags:** "talked_to_fynn", "pendant_found", "pendant_returned"
+   - `xp_reward`: 50
+   - `gold_reward`: 30
+   - **Reward Items:** Drag `ether.tres` into the array, set count to 2
 
 ## Reactive Dialogue
 
@@ -310,9 +328,12 @@ func _show_detail(quest: QuestData) -> void:
 |----------|--------|---------|
 | SceneManager | 6 | Scene transitions with fade effects |
 | InventoryManager | 10 | Item storage, add/remove, signals |
-| BattleManager | 11 | Battle state machine, turn queue |
 | **GameManager** | **16** | **Game flags, world state tracking** |
 | **QuestManager** | **16** | **Quest tracking, objective checking** |
+
+> **See:** [Singletons (Autoload)](https://docs.godotengine.org/en/stable/tutorials/scripting/singletons_autoload.html) — GameManager and QuestManager are both autoloads. This tutorial covers when and why to use the autoload pattern.
+
+> **See:** [Resources](https://docs.godotengine.org/en/stable/tutorials/scripting/resources.html) — QuestData extends Resource. This guide covers custom Resources, `@export` properties, and `.tres` file creation.
 
 ## What We've Learned
 

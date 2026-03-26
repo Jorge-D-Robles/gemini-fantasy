@@ -227,7 +227,18 @@ AudioServer.set_bus_mute(AudioServer.get_bus_index("Music"), true)
 
 ### Volume Settings UI
 
-A simple settings panel with sliders:
+Create `res://ui/settings/settings_panel.tscn`:
+
+```
+SettingsPanel (PanelContainer)
+└── VBox (VBoxContainer)
+    ├── MusicLabel (Label: "Music Volume")
+    ├── MusicSlider (HSlider)
+    ├── SFXLabel (Label: "SFX Volume")
+    └── SFXSlider (HSlider)
+```
+
+Save the script as `res://ui/settings/settings_panel.gd`:
 
 ```gdscript
 extends PanelContainer
@@ -262,16 +273,18 @@ func _on_sfx_volume_changed(value: float) -> void:
 
 `linear_to_db()` converts a 0-1 slider value to decibels. At 0, it returns -INF (silent). At 1, it returns 0 (full volume).
 
+> **Note:** Volume settings are lost when the game restarts. To persist them, save the slider values to `user://settings.json` and load them in `_ready()`. This is left as an exercise — the pattern is the same as Module 18's save system.
+
 ## Autoload Reference Card (Final)
 
 | Autoload | Module | Purpose |
 |----------|--------|---------|
 | SceneManager | 6 | Scene transitions with fade effects |
 | InventoryManager | 10 | Item storage, add/remove, signals |
-| BattleManager | 11 | Battle state machine, turn queue |
 | GameManager | 16 | Game flags, world state tracking |
 | QuestManager | 16 | Quest tracking, objective checking |
 | PartyManager | 17 | Party roster, recruitment, stats |
+| SaveManager | 18 | Save/load game state to JSON |
 | **MusicManager** | **19** | **BGM crossfading, battle music** |
 
 ## What We've Learned

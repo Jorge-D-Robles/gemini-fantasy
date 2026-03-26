@@ -90,7 +90,14 @@ func _get_lira_dialogue() -> Array[DialogueLine]:
     ])
 ```
 
-After the second conversation, trigger recruitment:
+After the second conversation, trigger recruitment. This code goes in `willowbrook.gd`, which should have `@onready` references for the UI nodes (from Modules 9 and this module):
+
+```gdscript
+@onready var _dialogue_box: Control = $DialogueBox  # From Module 9
+@onready var _shop_ui: CanvasLayer = $ShopUI         # Instance of shop_ui.tscn (add to scene)
+```
+
+Add the recruitment wiring to the existing interaction handler:
 
 ```gdscript
 func _on_npc_interacted(npc: CharacterBody2D) -> void:
@@ -109,7 +116,7 @@ func _recruit_lira() -> void:
         print("Lira joined the party!")
 ```
 
-Update the battle initialization to use PartyManager instead of a hardcoded hero. In your scene scripts and encounter wiring (from Module 14), replace the hero creation code with:
+Update the battle initialization to use PartyManager instead of a hardcoded hero. In each area scene script that triggers battles (e.g., `crystal_cavern.gd` from Module 14), find the code that creates `var hero := BattlerData.new()` and replace the hero creation + `start_battle` call with:
 
 ```gdscript
 # Build party BattlerData from PartyManager
@@ -119,9 +126,12 @@ for char_data in PartyManager.get_members():
     battler.character_data = char_data
     battler.is_player_controlled = true
     party_battlers.append(battler)
+
+# Use the full party instead of just [hero]
+SceneManager.start_battle({party = party_battlers, enemies = enemy_battlers})
 ```
 
-Use `party_battlers` instead of `[hero]` when calling `SceneManager.start_battle()`.
+Apply this same change to the boss trigger (`boss_trigger.gd`) and any other script that calls `SceneManager.start_battle()`.
 
 ## Equipment System
 
@@ -194,12 +204,16 @@ Update BattlerData to use effective stats:
 func initialize_from_character() -> void:
     if not character_data:
         return
-    current_hp = character_data.max_hp
-    current_mp = character_data.max_mp
+    # Use current_hp/current_mp if set (carries over between battles)
+    # Fall back to max values for the first battle or after a full heal
+    current_hp = character_data.current_hp if character_data.current_hp > 0 else character_data.max_hp
+    current_mp = character_data.current_mp if character_data.current_mp > 0 else character_data.max_mp
     current_attack = character_data.get_effective_attack()
     current_defense = character_data.get_effective_defense()
     current_speed = character_data.get_effective_speed()
 ```
+
+> **Important:** This ensures HP/MP carries over between battles. Module 15's Victory state syncs `battler.current_hp` back to `character_data.current_hp` after each fight. Without this check, the party would heal to full after every battle.
 
 Now equipping a better sword directly increases damage in battle.
 
@@ -295,6 +309,18 @@ var _shop_data: ShopData
 @onready var _gold_label: Label = $Panel/Margin/VBox/GoldLabel
 
 
+func _ready() -> void:
+    # Must process while paused so the shop can receive input
+    process_mode = Node.PROCESS_MODE_ALWAYS
+    visible = false
+
+
+func _unhandled_input(event: InputEvent) -> void:
+    if visible and event.is_action_pressed("ui_cancel"):
+        close_shop()
+        get_viewport().set_input_as_handled()
+
+
 func open_shop(shop_data: ShopData) -> void:
     _shop_data = shop_data
     visible = true
@@ -374,13 +400,20 @@ func _handle_inn(npc: CharacterBody2D) -> void:
             _dialogue_box.start_dialogue(_make_lines("Old Brennan", ["Seems you're a bit short."]))
 ```
 
+> **See:** [Singletons (Autoload)](https://docs.godotengine.org/en/stable/tutorials/scripting/singletons_autoload.html) — PartyManager is a new autoload. This guide covers the autoload pattern.
+
+> **See:** [GUI containers](https://docs.godotengine.org/en/stable/tutorials/ui/gui_containers.html) — VBoxContainer and PanelContainer used for the equipment and shop UIs.
+
+> **See:** [Resources](https://docs.godotengine.org/en/stable/tutorials/scripting/resources.html) — ShopData and CharacterData equipment slots both use the Resource pattern.
+
+> **Note:** Selling items is left as an exercise. The pattern mirrors buying: show the player's inventory, select an item, add gold equal to half `buy_price`, remove the item from inventory.
+
 ## Autoload Reference Card (Updated)
 
 | Autoload | Module | Purpose |
 |----------|--------|---------|
 | SceneManager | 6 | Scene transitions with fade effects |
 | InventoryManager | 10 | Item storage, add/remove, signals |
-| BattleManager | 11 | Battle state machine, turn queue |
 | GameManager | 16 | Game flags, world state tracking |
 | QuestManager | 16 | Quest tracking, objective checking |
 | **PartyManager** | **17** | **Party roster, recruitment, stats** |
