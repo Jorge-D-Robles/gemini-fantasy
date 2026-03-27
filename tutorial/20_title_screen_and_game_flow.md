@@ -194,7 +194,7 @@ func _quit_to_title() -> void:
     SceneManager.change_scene("res://ui/title_screen/title_screen.tscn")
 ```
 
-> **See:** [Pausing games](https://docs.godotengine.org/en/stable/tutorials/scripting/pausing_games.html) — `process_mode` and `get_tree().paused`.
+> **See:** [Pausing games](https://docs.godotengine.org/en/stable/tutorials/scripting/pausing_games.html). Covers `process_mode` and `get_tree().paused`.
 
 > **Note:** The pause menu's `process_mode = ALWAYS` ensures it receives input even when the tree is paused. The SceneManager also needs `ALWAYS` to handle transitions during pause.
 

@@ -1,4 +1,4 @@
-# Module 7: Resources — The Data Layer
+# Module 7: Resources, the Data Layer
 
 ## What We Have So Far
 
@@ -6,9 +6,9 @@ A connected two-area game world (Willowbrook and Whisperwood) with scene transit
 
 ## What We're Building This Module
 
-The data architecture that powers everything from here forward. We'll learn Godot's **Resource** system and create custom data types for items, characters, and NPC information — all editable in the Inspector, all saved as `.tres` files, all type-safe.
+The data architecture that powers everything from here forward. We'll learn Godot's **Resource** system and create custom data types for items, characters, and NPC information, all editable in the Inspector, all saved as `.tres` files, all type-safe.
 
-This might seem like a detour from "making the game," but it's not. Every system we build after this — dialogue, inventory, combat, quests — will use Resources as their data backbone. Getting this right now saves us from painful refactors later.
+This might seem like a detour from "making the game," but it's not. Every system we build after this (dialogue, inventory, combat, quests) will use Resources as their data backbone. Getting this right now saves us from painful refactors later.
 
 ## What is a Resource?
 
@@ -19,7 +19,7 @@ A **Resource** is Godot's universal data container. You've already used several:
 - The `RectangleShape2D` on your CollisionShape2D is a Resource
 - Even GDScript files (`.gd`) are Resources
 
-Resources are **data objects** — they hold information but don't have behavior tied to the scene tree. Unlike Nodes, they:
+Resources are **data objects**: they hold information but don't have behavior tied to the scene tree. Unlike Nodes, they:
 
 - Are not part of the scene tree
 - Can be shared across multiple nodes (the same TileSet used by four TileMapLayers)
@@ -27,13 +27,13 @@ Resources are **data objects** — they hold information but don't have behavior
 - Can be loaded and unloaded at any time
 - Can be created and edited in the Inspector
 
-> **See:** [Resources](https://docs.godotengine.org/en/stable/tutorials/scripting/resources.html) — the official guide to Godot's Resource system.
+> **See:** [Resources](https://docs.godotengine.org/en/stable/tutorials/scripting/resources.html), the official guide to Godot's Resource system.
 
-> **See:** [Resource class](https://docs.godotengine.org/en/stable/classes/class_resource.html) — the full API reference.
+> **See:** [Resource class](https://docs.godotengine.org/en/stable/classes/class_resource.html), the full API reference.
 
 ## Custom Resource Classes
 
-Godot lets you define your own Resource types. This is very useful for game data — instead of using raw dictionaries, you define structured data types with named, typed fields that the editor understands.
+Godot lets you define your own Resource types. This is very useful for game data. Instead of using raw dictionaries, you define structured data types with named, typed fields that the editor understands.
 
 ### Defining a Resource Class
 
@@ -49,10 +49,10 @@ class_name ItemData
 enum ItemType { CONSUMABLE, EQUIPMENT, KEY_ITEM }
 enum EquipSlot { NONE, WEAPON, ARMOR, ACCESSORY }
 
-@export var id: String = ""  ## Unique identifier — match the .tres filename (e.g., "potion")
+@export var id: String = ""  ## Unique identifier; match the .tres filename (e.g., "potion")
 @export var display_name: String = ""
 @export_multiline var description: String = ""
-@export var icon: Texture2D  ## Leave empty for now — we'll add item icons later
+@export var icon: Texture2D  ## Leave empty for now; we'll add item icons later
 @export var item_type: ItemType = ItemType.CONSUMABLE
 @export var equip_slot: EquipSlot = EquipSlot.NONE
 
@@ -74,7 +74,7 @@ Here's what's going on:
 
 ### `class_name ItemData`
 
-This registers the class globally. After saving this file, `ItemData` becomes a recognized type everywhere in the project — in other scripts, in the Inspector, in the "Create New Resource" dialog.
+This registers the class globally. After saving this file, `ItemData` becomes a recognized type everywhere in the project: in other scripts, in the Inspector, in the "Create New Resource" dialog.
 
 ### `@export` Properties
 
@@ -82,7 +82,7 @@ Every `@export` property appears as an editable field in the Inspector when you 
 
 ### `@export_group("...")`
 
-Groups `@export` properties under collapsible headers in the Inspector. Purely organizational — no runtime effect.
+Groups `@export` properties under collapsible headers in the Inspector. Purely organizational, no runtime effect.
 
 ### `@export_multiline`
 
@@ -103,7 +103,7 @@ Now that we have the `ItemData` class, let's create actual items.
 3. Search for `ItemData` in the type list.
 4. Click **Create**.
 5. A new `.tres` file appears. Name it `potion.tres`.
-6. Select it — the Inspector shows all the `@export` fields.
+6. Select it. The Inspector shows all the `@export` fields.
 7. Fill in the values.
 
 ### Method 2: In Code (for testing)
@@ -157,7 +157,7 @@ Create these `.tres` files in `res://data/items/`:
 - defense_bonus: 3
 - buy_price: 80, sell_price: 30
 
-## `preload()` vs `load()` — and When to Use Each
+## `preload()` vs `load()`, and When to Use Each
 
 There are two ways to load resources in code:
 
@@ -167,7 +167,7 @@ There are two ways to load resources in code:
 const POTION := preload("res://data/items/potion.tres")
 ```
 
-- Loads at **compile time** — the resource is embedded in the script.
+- Loads at **compile time**: the resource is embedded in the script.
 - The path must be a **string literal** (no variables).
 - **Fast** at runtime because it's already loaded.
 - Use for resources you always need: UI textures, commonly used items, sound effects.
@@ -178,7 +178,7 @@ const POTION := preload("res://data/items/potion.tres")
 var item: ItemData = load("res://data/items/" + item_id + ".tres") as ItemData
 ```
 
-- Loads at **runtime** — the resource is read from disk when the line executes.
+- Loads at **runtime**: the resource is read from disk when the line executes.
 - The path can be a **variable** (dynamic paths).
 - Slightly slower the first time (Godot caches after the first load).
 - Use for resources loaded dynamically: items based on player inventory, enemies based on encounter data.
@@ -194,7 +194,7 @@ if item == null:
     return
 ```
 
-This pattern prevents crashes from typos in file paths. Get in the habit of checking `load()` results — you'll thank yourself when a missing file doesn't crash the game but instead prints a clear error message.
+This pattern prevents crashes from typos in file paths. Get in the habit of checking `load()` results. You'll thank yourself when a missing file doesn't crash the game but instead prints a clear error message.
 
 > **Note:** `preload()` will cause a compile-time error if the path is wrong, so it doesn't need a null check. `load()` fails silently (returns `null`), so always check.
 
@@ -243,7 +243,7 @@ We'll create Lira's data (the mage companion) in Module 17 when we implement par
 
 ## NPCData Resource
 
-NPCs need data too — their name, sprite, and what they say:
+NPCs need data too: their name, sprite, and what they say.
 
 ```gdscript
 extends Resource
@@ -261,7 +261,7 @@ class_name NPCData
 
 Save as `res://resources/npc_data.gd`.
 
-This is a simple version — we'll replace `dialogue_lines: Array[String]` with a proper `DialogueLine` Resource in Module 9. When we do, you'll need to re-edit the NPC `.tres` files to use the new dialogue format — keep your text values handy. But even this simple version is better than hardcoding NPC names and text in each scene.
+This is a simple version. We'll replace `dialogue_lines: Array[String]` with a proper `DialogueLine` Resource in Module 9. When we do, you'll need to re-edit the NPC `.tres` files to use the new dialogue format, so keep your text values handy. But even this simple version is better than hardcoding NPC names and text in each scene.
 
 ## The Three-File Pattern
 
@@ -294,12 +294,12 @@ This separation keeps your code clean:
 
 ## Why Resources Over Dictionaries
 
-You might be thinking: "I could just use a Dictionary for all this." You're right — and many tutorials do. But Resources have clear advantages:
+You might be thinking: "I could just use a Dictionary for all this." You're right, and many tutorials do. But Resources have clear advantages:
 
 | Feature | Dictionary | Resource |
 |---------|-----------|----------|
-| Editor integration | None — must edit in code | Full Inspector UI |
-| Type safety | None — any key, any value | Typed `@export` properties |
+| Editor integration | None (must edit in code) | Full Inspector UI |
+| Type safety | None (any key, any value) | Typed `@export` properties |
 | Autocompletion | None | Full IDE support |
 | Sharing | Copy by reference (dangerous) | Explicit sharing via `.tres` files |
 | Saving to disk | Manual JSON serialization | Built-in `.tres`/`.res` format |
@@ -345,7 +345,7 @@ Notice the pattern: `resources/` holds class definitions, `data/` holds instance
 
 ## What We've Learned
 
-- **Resources** are Godot's data containers — type-safe, editor-friendly, saveable to disk.
+- **Resources** are Godot's data containers: type-safe, editor-friendly, saveable to disk.
 - **Custom Resource classes** use `class_name` and `@export` to define structured data types.
 - **`.tres` files** are Resource instances you create and edit in the Inspector.
 - **`preload()`** loads at compile time (fast, constant paths only). **`load()`** loads at runtime (dynamic paths, must null-check).
@@ -360,8 +360,8 @@ After this module:
 - `ItemData`, `CharacterData`, and `NPCData` appear in the "Create New Resource" dialog
 - Selecting a `.tres` file shows its typed properties in the Inspector
 - Properties have appropriate editors: dropdowns for enums, texture pickers for `Texture2D`, multiline for descriptions
-- No visual changes to the game yet — this module builds the foundation for everything that follows
+- No visual changes to the game yet. This module builds the foundation for everything that follows
 
 ## Next Module
 
-We have data types. In **Module 8: NPCs and Interaction**, we'll use `NPCData` to populate Willowbrook with characters the player can approach and talk to. We'll build the interaction system — detecting nearby NPCs, showing a prompt, and handling the interaction input.
+We have data types. In **Module 8: NPCs and Interaction**, we'll use `NPCData` to populate Willowbrook with characters the player can approach and talk to. We'll build the interaction system: detecting nearby NPCs, showing a prompt, and handling the interaction input.

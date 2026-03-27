@@ -1,4 +1,4 @@
-# Module 21: Finish Line — Polish, Export, and Next Steps
+# Module 21: Finish Line (Polish, Export, and Next Steps)
 
 ## What We Have
 
@@ -26,7 +26,7 @@ A complete JRPG. Let that sink in. Over 20 modules, you've built:
 - A title screen, pause menu, ending, and credits
 - A complete game loop
 
-That's a real game. Not a demo, not a prototype — a playable JRPG with every major system in place. Everything else is content and polish.
+That's a real game. Not a demo, not a prototype, but a playable JRPG with every major system in place. Everything else is content and polish.
 
 ## Playtesting Walkthrough
 
@@ -52,14 +52,14 @@ Play through Crystal Saga from start to finish and verify each checkpoint:
 - [ ] Battles work: actions, damage, animations, victory
 - [ ] XP and gold are awarded after battles
 - [ ] Level-ups show stat increases
-- [ ] The pendant can be found (requires a pickup object in Whisperwood — see Module 13's treasure chest pattern)
+- [ ] The pendant can be found (requires a pickup object in Whisperwood; see Module 13's treasure chest pattern)
 
 ### 4. Crystal Cavern
 - [ ] Dungeon music plays
 - [ ] Treasure chests give items
 - [ ] Save crystal saves the game
 - [ ] Encounter zones have harder enemies
-- [ ] Boss room door requires the Crystal Key (if you created this item — otherwise leave `required_item_id` empty)
+- [ ] Boss room door requires the Crystal Key (if you created this item; otherwise leave `required_item_id` empty)
 - [ ] Crystal Guardian dialogue plays before the fight
 
 ### 5. Boss Battle
@@ -130,9 +130,9 @@ func _process(delta):
 If you're creating many floating damage numbers per battle, consider reusing label nodes instead of creating and freeing them each time.
 
 ### TileMap optimization
-Large tilemaps with thousands of tiles are fine — Godot optimizes them into rendering quadrants. But avoid calling `set_cell()` in `_process()`.
+Large tilemaps with thousands of tiles are fine. Godot optimizes them into rendering quadrants. But avoid calling `set_cell()` in `_process()`.
 
-> **See:** [Performance best practices](https://docs.godotengine.org/en/stable/tutorials/performance/general_optimization.html) — the official performance guide.
+> **See:** [Performance best practices](https://docs.godotengine.org/en/stable/tutorials/performance/general_optimization.html), the official performance guide.
 
 ## Exporting the Game
 
@@ -152,7 +152,7 @@ Click **Export Project** and choose where to save the build. Godot creates a sta
 
 Your game is now a real, distributable application.
 
-> **See:** [Exporting projects](https://docs.godotengine.org/en/stable/tutorials/export/exporting_projects.html) — the full export guide for all platforms.
+> **See:** [Exporting projects](https://docs.godotengine.org/en/stable/tutorials/export/exporting_projects.html), the full export guide for all platforms.
 
 ## Where to Go from Here
 
@@ -190,7 +190,7 @@ Special abilities that charge as a character takes damage:
 - Cutscene system with camera movement and character positioning
 
 ### More Party Members (Medium)
-Each new character needs: CharacterData, abilities, recruitment event, and unique battle behavior. The systems already support it — just add content.
+Each new character needs: CharacterData, abilities, recruitment event, and unique battle behavior. The systems already support it; just add content.
 
 ### Procedural Dungeons (Hard)
 Generate cave layouts from room templates:
@@ -212,21 +212,21 @@ Generate cave layouts from room templates:
 ## Recommended Resources
 
 ### Learning
-- **[GDQuest](https://www.gdquest.com/)** — High-quality Godot tutorials and courses
-- **[KidsCanCode](https://kidscancode.org/godot_recipes/)** — Godot recipes and patterns
-- **[Official Godot docs](https://docs.godotengine.org/)** — The reference we've cited throughout
-- **[Godot community forums](https://forum.godotengine.org/)** — Help and discussion
+- **[GDQuest](https://www.gdquest.com/):** High-quality Godot tutorials and courses
+- **[KidsCanCode](https://kidscancode.org/godot_recipes/):** Godot recipes and patterns
+- **[Official Godot docs](https://docs.godotengine.org/):** The reference we've cited throughout
+- **[Godot community forums](https://forum.godotengine.org/):** Help and discussion
 
 ### Assets
-- **[Kenney](https://kenney.nl/)** — Free, high-quality 2D/3D game assets
-- **[OpenGameArt](https://opengameart.org/)** — Community-contributed free art
-- **[itch.io asset packs](https://itch.io/game-assets)** — Free and paid 2D art, including JRPG-specific packs
-- **[Time Fantasy](https://finalbossblues.com/timefantasy/)** — Professional JRPG tile and sprite packs
+- **[Kenney](https://kenney.nl/):** Free, high-quality 2D/3D game assets
+- **[OpenGameArt](https://opengameart.org/):** Community-contributed free art
+- **[itch.io asset packs](https://itch.io/game-assets):** Free and paid 2D art, including JRPG-specific packs
+- **[Time Fantasy](https://finalbossblues.com/timefantasy/):** Professional JRPG tile and sprite packs
 
 ### Tools
-- **[Aseprite](https://www.aseprite.org/)** — Pixel art editor (paid, open source)
-- **[Tiled](https://www.mapeditor.org/)** — External tilemap editor (free)
-- **[Audacity](https://www.audacityteam.org/)** — Audio editing (free)
+- **[Aseprite](https://www.aseprite.org/):** Pixel art editor (paid, open source)
+- **[Tiled](https://www.mapeditor.org/):** External tilemap editor (free)
+- **[Audacity](https://www.audacityteam.org/):** Audio editing (free)
 
 ## What You've Accomplished
 
@@ -243,7 +243,7 @@ More importantly, you've learned the **patterns** that scale. The state machine 
 
 ## Closing Thoughts
 
-JRPGs are a labor of love. They require patience — for building systems, crafting worlds, writing dialogue, balancing combat, and testing everything together. But they're also one of the most rewarding genres to build, because every system connects to every other system, and when they all work together, the result is a game that feels whole.
+JRPGs are a labor of love. They require patience: building systems, crafting worlds, writing dialogue, balancing combat, and testing everything together. But they're also one of the most rewarding genres to build, because every system connects to every other system, and when they all work together, the result is a game that feels whole.
 
 Crystal Saga is small by commercial standards, but it's architecturally complete. You can expand it in any direction: more story, more areas, more characters, more mechanics. The foundation supports it.
 

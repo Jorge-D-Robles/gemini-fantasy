@@ -1,12 +1,12 @@
-# Module 13: The Crystal Cavern — Dungeon Design
+# Module 13: The Crystal Cavern, Dungeon Design
 
 ## What We Have So Far
 
-A town, a forest, a battle system with actions and animations, and an inventory. We need a destination — somewhere that tests the player's skills and rewards their preparation.
+A town, a forest, a battle system with actions and animations, and an inventory. We need a destination, somewhere that tests the player's skills and rewards their preparation.
 
 ## What We're Building This Module
 
-The **Crystal Cavern** — a dungeon area with a distinct tileset, multiple rooms connected by passages, treasure chests, encounter zones for random battles, a save crystal, and a boss room at the end. This is level design, not system design — we're applying everything we've learned about TileMaps, scene transitions, and interactables.
+The **Crystal Cavern**: a dungeon area with a distinct tileset, multiple rooms connected by passages, treasure chests, encounter zones for random battles, a save crystal, and a boss room at the end. This is level design, not system design. We're applying everything we've learned about TileMaps, scene transitions, and interactables.
 
 ## Dungeon vs Overworld Design
 
@@ -16,21 +16,21 @@ Dungeons differ from overworld areas in several ways:
 |--------|--------------------------------------|--------------------------|
 | Tile palette | Grass, trees, paths, buildings | Cave walls, stone floor, crystals |
 | Layout | Open, organic, free-roaming | Corridors, rooms, controlled flow |
-| Collision | Boundary trees and water | Walls everywhere — tight spaces |
-| Encounters | Occasional (forest only) | Frequent — every few steps |
+| Collision | Boundary trees and water | Walls everywhere, tight spaces |
+| Encounters | Occasional (forest only) | Frequent, every few steps |
 | Items | Shops (buy) | Treasure chests (find) |
-| Save points | Towns (convenient) | Rare (crystals — strategic) |
+| Save points | Towns (convenient) | Rare (crystals, strategic) |
 | Goal | Exploration and socializing | Challenge and progression |
 
 ## Cave Tileset Assets
 
 You'll need cave or dungeon tiles for the Crystal Cavern. Here are your options:
 
-**Option 1 — Free tileset pack:** Download the [Kenney 1-Bit Pack](https://kenney.nl/assets/1-bit-pack) which includes cave and dungeon tiles. Extract it and copy the relevant tile sheets to `res://assets/tilesets/`.
+**Option 1, free tileset pack:** Download the [Kenney 1-Bit Pack](https://kenney.nl/assets/1-bit-pack) which includes cave and dungeon tiles. Extract it and copy the relevant tile sheets to `res://assets/tilesets/`.
 
-**Option 2 — Reuse and recolor:** Duplicate the TileSet from Module 4. Open the new TileSet resource, and in the Physics/Terrain tabs, you can reuse the same workflow. Many JRPG tileset packs include both outdoor and dungeon tiles in the same set.
+**Option 2, reuse and recolor:** Duplicate the TileSet from Module 4. Open the new TileSet resource, and in the Physics/Terrain tabs, you can reuse the same workflow. Many JRPG tileset packs include both outdoor and dungeon tiles in the same set.
 
-**Option 3 — Placeholder tiles:** Create a simple cave palette with colored rectangles: dark grey for walls (e.g., `Color(0.25, 0.25, 0.3)`), lighter grey for walkable floor (`Color(0.45, 0.45, 0.5)`), and blue-purple for crystal decorations (`Color(0.4, 0.3, 0.7)`). In the TileSet editor, you can draw directly onto a new atlas.
+**Option 3, placeholder tiles:** Create a simple cave palette with colored rectangles: dark grey for walls (e.g., `Color(0.25, 0.25, 0.3)`), lighter grey for walkable floor (`Color(0.45, 0.45, 0.5)`), and blue-purple for crystal decorations (`Color(0.4, 0.3, 0.7)`). In the TileSet editor, you can draw directly onto a new atlas.
 
 Whichever approach you use, create a new TileSet resource for the cave: **right-click `res://scenes/crystal_cavern/`** → New Resource → TileSet. Add your tile sheet as an Atlas source, set up collision on wall tiles (same process as Module 4), and assign it to each TileMapLayer.
 
@@ -40,13 +40,13 @@ Create `res://scenes/crystal_cavern/crystal_cavern.tscn` with the familiar layer
 
 ```
 CrystalCavern (Node2D)
-├── Ground (TileMapLayer)      — stone floors, cave ground
-├── Detail (TileMapLayer)      — cracks, rubble, small crystals
+├── Ground (TileMapLayer)      : stone floors, cave ground
+├── Detail (TileMapLayer)      : cracks, rubble, small crystals
 ├── YSortGroup (Node2D, y_sort_enabled)
-│   ├── Objects (TileMapLayer) — large crystal formations, stalagmites
+│   ├── Objects (TileMapLayer) : large crystal formations, stalagmites
 │   ├── Player (instance)
 │   └── ... (treasure chests, save crystal)
-├── AbovePlayer (TileMapLayer) — cave ceiling overhangs, arches
+├── AbovePlayer (TileMapLayer) : cave ceiling overhangs, arches
 ├── Exits (Node2D)
 │   ├── ExitToWhisperwood (Area2D + exit_zone.gd)
 │   └── ... (spawn points)
@@ -64,7 +64,7 @@ Design the dungeon as connected rooms:
 
 ```
 [Entrance] → [Main Corridor] → [Fork]
-                                  ├→ [Dead End — Treasure]
+                                  ├→ [Dead End, Treasure]
                                   └→ [Deep Cavern] → [Boss Room]
                                        ↑
                                   [Save Crystal]
@@ -79,7 +79,7 @@ Each "room" is a region of the tilemap. Passages connect them. The fork creates 
 - **Visual landmarks.** Place unique crystal formations or broken pillars at decision points so the player can orient themselves.
 - **Width variety.** Tight corridors create tension. Open rooms offer relief. Alternate between them.
 
-> **Spiral:** All the TileMapLayer skills from Module 4 apply here — multiple layers, physics on wall tiles, pixel-perfect settings. The only difference is the tile palette.
+> **Spiral:** All the TileMapLayer skills from Module 4 apply here: multiple layers, physics on wall tiles, pixel-perfect settings. The only difference is the tile palette.
 
 ## Treasure Chests
 
@@ -89,8 +89,8 @@ Create `res://entities/interactable/treasure_chest.tscn`:
 
 ```
 TreasureChest (StaticBody2D)
-├── Sprite (Sprite2D)          — closed/open chest image
-├── CollisionShape2D           — blocks walking through
+├── Sprite (Sprite2D)          : closed/open chest image
+├── CollisionShape2D           : blocks walking through
 ├── InteractionZone (Area2D)
 │   └── CollisionShape2D
 └── InteractionPrompt (Sprite2D, hidden)
@@ -165,16 +165,16 @@ Set the `@export var item` in the Inspector by dragging the `.tres` file into th
 
 ## The Save Crystal
 
-A classic JRPG save point — a glowing crystal the player interacts with. For now, it just prints "Game saved!" — we'll wire it to the actual save system in Module 18.
+A classic JRPG save point, a glowing crystal the player interacts with. For now, it just prints "Game saved!". We'll wire it to the actual save system in Module 18.
 
 Create `res://entities/interactable/save_crystal.tscn`:
 
 ```
 SaveCrystal (StaticBody2D)
-├── Sprite (Sprite2D)          — crystal image (use any placeholder sprite)
-├── CollisionShape2D           — blocks walking through (RectangleShape2D, 16x16)
+├── Sprite (Sprite2D)          : crystal image (use any placeholder sprite)
+├── CollisionShape2D           : blocks walking through (RectangleShape2D, 16x16)
 ├── InteractionZone (Area2D)
-│   └── CollisionShape2D       — interaction radius (CircleShape2D, radius ~24)
+│   └── CollisionShape2D       : interaction radius (CircleShape2D, radius ~24)
 └── InteractionPrompt (Sprite2D, visible = false)
 ```
 
@@ -182,7 +182,7 @@ Script `res://entities/interactable/save_crystal.gd`:
 
 ```gdscript
 extends StaticBody2D
-## A save crystal — lets the player save their game.
+## A save crystal. Lets the player save their game.
 
 var _player_in_range: bool = false
 
@@ -223,24 +223,24 @@ func _on_body_exited(body: Node2D) -> void:
         _prompt.visible = false
 ```
 
-Place the save crystal in the room before the boss — the classic "save point before the big fight" pattern.
+Place the save crystal in the room before the boss, the classic "save point before the big fight" pattern.
 
 ## Encounter Zones
 
 Encounter zones define where random battles can happen and which enemies appear. We'll set up the zones now and wire them to the encounter system in Module 14.
 
-Add `Area2D` nodes to mark the encounter regions. For now, just create the Area2D nodes with CollisionShape2D children — **don't attach scripts yet**. We'll create the encounter system and encounter zone scripts in Module 14.
+Add `Area2D` nodes to mark the encounter regions. For now, just create the Area2D nodes with CollisionShape2D children, but **don't attach scripts yet**. We'll create the encounter system and encounter zone scripts in Module 14.
 
 For each encounter zone:
 1. Create an **Area2D** node (e.g., `MainCorridor`) as a child of `EncounterZones`.
 2. Add a **CollisionShape2D** child with a **RectangleShape2D**.
 3. Size the rectangle to cover the room or corridor where encounters should happen (e.g., 200x100 pixels for a corridor).
 
-Also add an **EncounterSystem** node (plain `Node`) as a direct child of the `CrystalCavern` root — **not** inside `EncounterZones`. We'll attach a script to this in Module 14.
+Also add an **EncounterSystem** node (plain `Node`) as a direct child of the `CrystalCavern` root, **not** inside `EncounterZones`. We'll attach a script to this in Module 14.
 
 Place two zones:
-- **MainCorridor** — covers the entrance corridor (easy enemies)
-- **DeepCavern** — covers the deeper rooms (harder enemies)
+- **MainCorridor** covers the entrance corridor (easy enemies)
+- **DeepCavern** covers the deeper rooms (harder enemies)
 
 ## The Boss Room Door
 
@@ -316,22 +316,22 @@ Add scene transitions:
 - **Crystal Cavern entrance** → back to Whisperwood
 
 Add spawn points (Marker2D nodes as children of Exits, added to the `spawn_points` group):
-- `from_whisperwood` — at the cave entrance
-- `default` — same position as `from_whisperwood`
+- `from_whisperwood` at the cave entrance
+- `default` same position as `from_whisperwood`
 
-> **See:** [TileMapLayer](https://docs.godotengine.org/en/stable/classes/class_tilemaplayer.html) — the node used for each tile layer. Same class as Module 4, now with a cave tileset.
+> **See:** [TileMapLayer](https://docs.godotengine.org/en/stable/classes/class_tilemaplayer.html), the node used for each tile layer. Same class as Module 4, now with a cave tileset.
 
-> **See:** [StaticBody2D](https://docs.godotengine.org/en/stable/classes/class_staticbody2d.html) — used for treasure chests, save crystals, and boss doors (solid, non-moving objects).
+> **See:** [StaticBody2D](https://docs.godotengine.org/en/stable/classes/class_staticbody2d.html), used for treasure chests, save crystals, and boss doors (solid, non-moving objects).
 
-> **See:** [Area2D](https://docs.godotengine.org/en/stable/classes/class_area2d.html) — used for interaction zones and encounter regions. The `body_entered`/`body_exited` signals detect when the player enters.
+> **See:** [Area2D](https://docs.godotengine.org/en/stable/classes/class_area2d.html), used for interaction zones and encounter regions. The `body_entered`/`body_exited` signals detect when the player enters.
 
 ## What We've Learned
 
-- **Dungeon design** uses tight corridors, connected rooms, and controlled flow — different from open overworld areas.
+- **Dungeon design** uses tight corridors, connected rooms, and controlled flow, different from open overworld areas.
 - **Treasure chests** are interactable StaticBody2D nodes with `@export var item: ItemData`.
 - **Save crystals** mark locations where the player can save (wired in Module 18).
 - **Encounter zones** (Area2D) define regions where random battles trigger.
-- **Locked doors** check for key items before opening — simple puzzle design.
+- **Locked doors** check for key items before opening, a simple puzzle design.
 - **Room-based layout** with forks, dead ends, and a boss room creates exploration incentive.
 
 ## What You Should See
@@ -346,4 +346,4 @@ When you enter Crystal Cavern from Whisperwood:
 
 ## Next Module
 
-The dungeon exists but is quiet — no monsters. In **Module 14: Enemies and AI**, we'll create enemy types, build an encounter system that triggers random battles as you walk, design basic enemy AI, and create the Crystal Guardian boss.
+The dungeon exists but is quiet, with no monsters. In **Module 14: Enemies and AI**, we'll create enemy types, build an encounter system that triggers random battles as you walk, design basic enemy AI, and create the Crystal Guardian boss.

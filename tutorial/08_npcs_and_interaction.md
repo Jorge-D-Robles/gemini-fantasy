@@ -30,16 +30,16 @@ First, let's define a custom input action for interaction.
 1. Go to **Project → Project Settings → Input Map**.
 2. At the top, type `interact` in the "Add New Action" field and click **Add**.
 3. Click the **+** button next to the new `interact` action.
-4. Press the key you want to use — **Z** is traditional for JRPGs, or use **Enter/Space**.
+4. Press the key you want to use. **Z** is traditional for JRPGs, or use **Enter/Space**.
 5. Add a second binding for gamepad: click **+** again, choose **Joypad Button**, and select the **A/Cross** button.
 
 Now `Input.is_action_just_pressed("interact")` works for both keyboard and gamepad.
 
-> **See:** [Input examples](https://docs.godotengine.org/en/stable/tutorials/inputs/input_examples.html) — setting up and using custom input actions.
+> **See:** [Input examples](https://docs.godotengine.org/en/stable/tutorials/inputs/input_examples.html), setting up and using custom input actions.
 
 ## The NPC Scene
 
-Create a reusable NPC scene that can represent any character — a shopkeeper, an innkeeper, a traveler — by swapping out data.
+Create a reusable NPC scene that can represent any character (a shopkeeper, an innkeeper, a traveler) by swapping out data.
 
 ### Scene Structure
 
@@ -54,21 +54,21 @@ NPC (CharacterBody2D)
 └── InteractionPrompt (Label)
 ```
 
-**Why CharacterBody2D?** Even though NPCs don't move, using CharacterBody2D makes them solid — the player collides with them and can't walk through them. StaticBody2D would also work, but CharacterBody2D is more flexible if we later want NPCs to wander.
+**Why CharacterBody2D?** Even though NPCs don't move, using CharacterBody2D makes them solid. The player collides with them and can't walk through them. StaticBody2D would also work, but CharacterBody2D is more flexible if we later want NPCs to wander.
 
 ### Node Configuration
 
-**Sprite (AnimatedSprite2D)** — The NPC's visual. For now, if you don't have NPC sprite sheets, set up single-frame animations using the Godot icon, just like we did for the player fallback in Module 5. Create `idle_down`, `idle_up`, `idle_left`, `idle_right` animations with the icon as the single frame. You can replace these with real NPC sprites later.
+**Sprite (AnimatedSprite2D):** The NPC's visual. For now, if you don't have NPC sprite sheets, set up single-frame animations using the Godot icon, just like we did for the player fallback in Module 5. Create `idle_down`, `idle_up`, `idle_left`, `idle_right` animations with the icon as the single frame. You can replace these with real NPC sprites later.
 
-**CollisionShape2D** — The NPC's physical body. Same "feet-only" approach as the player.
+**CollisionShape2D:** The NPC's physical body. Same "feet-only" approach as the player.
 - Shape: `RectangleShape2D`, small (e.g., 12x8)
 - Offset downward to align with the sprite's feet
 
-**InteractionZone (Area2D)** — A larger area around the NPC that detects when the player is nearby.
-- Its CollisionShape should be **larger** than the body — a circle with radius ~24px works well.
+**InteractionZone (Area2D):** A larger area around the NPC that detects when the player is nearby.
+- Its CollisionShape should be **larger** than the body. A circle with radius ~24px works well.
 - This is the "can interact" range.
 
-**InteractionPrompt (Label)** — A text label showing "!" that appears above the NPC when the player is in range. Using a Label instead of a Sprite2D means we don't need any art assets.
+**InteractionPrompt (Label):** A text label showing "!" that appears above the NPC when the player is in range. Using a Label instead of a Sprite2D means we don't need any art assets.
 - Set **Text** to `!`
 - Set **Horizontal Alignment** to `Center`
 - Position it above the sprite (e.g., `Vector2(-4, -20)`)
@@ -174,7 +174,7 @@ We use **`_unhandled_input()`** instead of checking input in `_process()`. There
 
 ### The `interacted` Signal
 
-The NPC emits `interacted(self)` when the player presses interact. It doesn't know or care what happens next — dialogue, a shop, a quest update. That's the responsibility of whatever system connects to this signal.
+The NPC emits `interacted(self)` when the player presses interact. It doesn't know or care what happens next: dialogue, a shop, a quest update. That's the responsibility of whatever system connects to this signal.
 
 This is the **separation of concerns** principle. The NPC knows about proximity detection and facing. The dialogue system knows about displaying text. They communicate through signals.
 
@@ -212,7 +212,7 @@ For each NPC, create an NPCData `.tres` file in `res://data/npcs/` (create the f
 - facing_direction: Vector2.LEFT
 - dialogue_lines: ["I lost something precious in the Whisperwood...", "A pendant, silver with a blue stone.", "If you find it, I'd be forever grateful."]
 
-> **JRPG Pattern:** Notice how the traveler's dialogue sets up a side quest. We're not implementing the quest system yet (that's Module 16), but the dialogue seeds the idea in the player's mind. Classic JRPGs do this constantly — NPCs hint at things that become important later.
+> **JRPG Pattern:** Notice how the traveler's dialogue sets up a side quest. We're not implementing the quest system yet (that's Module 16), but the dialogue seeds the idea in the player's mind. Classic JRPGs do this constantly. NPCs hint at things that become important later.
 
 ### Using the Player's INTERACT State
 
@@ -222,7 +222,7 @@ Create `res://scenes/willowbrook/willowbrook.gd` and attach it to the root `Will
 
 ```gdscript
 extends Node2D
-## The town of Willowbrook — Crystal Saga's starting village.
+## The town of Willowbrook, Crystal Saga's starting village.
 
 
 func _ready() -> void:
@@ -247,7 +247,7 @@ func _on_npc_interacted(npc: CharacterBody2D) -> void:
         player.end_interaction()
 ```
 
-This is a temporary placeholder — in Module 9, we'll replace the `print()` calls with a proper dialogue box. But it demonstrates the flow: NPC detects interaction → emits signal → scene script handles it → player enters INTERACT state → interaction completes → player returns to IDLE.
+This is a temporary placeholder. In Module 9, we'll replace the `print()` calls with a proper dialogue box. But it demonstrates the flow: NPC detects interaction → emits signal → scene script handles it → player enters INTERACT state → interaction completes → player returns to IDLE.
 
 ## Interaction Detection: RayCast2D Alternative
 
@@ -266,18 +266,18 @@ The RayCast approach:
 - Checks if it hits an interactable
 - The interact button only works if the ray is hitting something
 
-**Pros:** More precise — you can only interact with what you're facing. No "interacting with the NPC behind you" situations.
+**Pros:** More precise, since you can only interact with what you're facing. No "interacting with the NPC behind you" situations.
 **Cons:** More setup, requires updating the ray direction when the player turns.
 
 Both approaches are valid. We're using the Area2D approach because it's simpler to set up and understand. If you want to switch later, the NPC's `interacted` signal works the same either way.
 
-> **See:** [RayCast2D](https://docs.godotengine.org/en/stable/classes/class_raycast2d.html) — for the ray-based detection approach.
+> **See:** [RayCast2D](https://docs.godotengine.org/en/stable/classes/class_raycast2d.html), for the ray-based detection approach.
 
 ## What We've Learned
 
 - **Custom input actions** (`interact`) work with both keyboard and gamepad. Define them in Project Settings → Input Map.
 - The **interaction pattern**: Area2D detection zone → prompt appears → player presses interact → NPC responds via signal.
-- **`_unhandled_input()`** is the right callback for game-world interactions — it respects UI focus and can mark events as handled.
+- **`_unhandled_input()`** is the right callback for game-world interactions. It respects UI focus and can mark events as handled.
 - **`get_viewport().set_input_as_handled()`** prevents multiple nodes from responding to the same input.
 - **`@export var npc_data: NPCData`** lets each NPC instance use different data without a separate script.
 - The `interacted` signal keeps NPCs decoupled from dialogue, shops, and quests.

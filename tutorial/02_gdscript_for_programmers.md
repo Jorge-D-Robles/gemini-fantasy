@@ -31,10 +31,10 @@ func _process(delta: float) -> void:
 Key things to notice:
 - **Indentation** defines code blocks (like Python), not braces.
 - **`extends`** declares what class this script inherits from.
-- **Static typing** is optional but recommended — we use it everywhere in this tutorial. `var speed: float = 200.0` is statically typed. `var speed = 200.0` is dynamically typed and also valid.
-- **Functions starting with `_`** are special — they're callbacks that Godot calls for you.
+- **Static typing** is optional but recommended. We use it everywhere in this tutorial. `var speed: float = 200.0` is statically typed. `var speed = 200.0` is dynamically typed and also valid.
+- **Functions starting with `_`** are special: they're callbacks that Godot calls for you.
 
-> **See:** [GDScript reference](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html) — the complete language reference covering syntax, types, and features.
+> **See:** [GDScript reference](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html), the complete language reference covering syntax, types, and features.
 
 ## Creating and Attaching a Script
 
@@ -73,7 +73,7 @@ Godot doesn't ask you to write a game loop or manage update timing. Instead, it 
 
 ### `_ready()`
 
-Called **once**, when the node and all its children have entered the scene tree. This is where you initialize things — set starting values, cache references to other nodes, connect signals.
+Called **once**, when the node and all its children have entered the scene tree. This is where you initialize things: set starting values, cache references to other nodes, connect signals.
 
 ```gdscript
 func _ready() -> void:
@@ -84,7 +84,7 @@ Try it now: replace the `pass` in `_ready()` with that print line, save the scri
 
 ### `_process(delta)`
 
-Called **every frame** — typically 60 times per second (or more, depending on the display). The `delta` parameter is the time in seconds since the last frame. This is where you handle movement, input, animation updates, and anything that needs to happen continuously.
+Called **every frame**, typically 60 times per second (or more, depending on the display). The `delta` parameter is the time in seconds since the last frame. This is where you handle movement, input, animation updates, and anything that needs to happen continuously.
 
 Why `delta`? Because frame rates vary. If your game runs at 60 FPS on one machine and 30 FPS on another, moving 5 pixels per frame would make the player move twice as fast on the faster machine. By multiplying movement by `delta`, you make motion **frame-rate independent**:
 
@@ -97,11 +97,11 @@ func _process(delta: float) -> void:
     position.x += 200.0 * delta
 ```
 
-> **See:** [Idle and physics processing](https://docs.godotengine.org/en/stable/tutorials/scripting/idle_and_physics_processing.html) — explains `_process()`, `_physics_process()`, and when to use each.
+> **See:** [Idle and physics processing](https://docs.godotengine.org/en/stable/tutorials/scripting/idle_and_physics_processing.html), which explains `_process()`, `_physics_process()`, and when to use each.
 
 There's also **`_physics_process(delta)`**, which is called at a fixed rate (60 times per second by default, regardless of frame rate). We'll use this in Module 3 when we add physics-based movement. For now, `_process()` is all we need.
 
-> **See:** [Overridable functions](https://docs.godotengine.org/en/stable/tutorials/scripting/overridable_functions.html) — the full list of virtual functions Godot provides, including `_enter_tree()`, `_exit_tree()`, and `_input()`.
+> **See:** [Overridable functions](https://docs.godotengine.org/en/stable/tutorials/scripting/overridable_functions.html), the full list of virtual functions Godot provides, including `_enter_tree()`, `_exit_tree()`, and `_input()`.
 
 ## Variables and Types
 
@@ -120,7 +120,7 @@ var is_alive: bool = true
 var speed := 200.0          # float
 var player_name := "Aiden"  # String
 
-# No type (dynamic typing — works but we avoid it)
+# No type (dynamic typing, works but we avoid it)
 var speed = 200.0  # could be anything
 ```
 
@@ -132,7 +132,7 @@ var speed = 200.0  # could be anything
 | `float` | `3.14` | Decimal numbers |
 | `bool` | `true`, `false` | |
 | `String` | `"hello"` | Use double quotes |
-| `Vector2` | `Vector2(10, 20)` | 2D position/direction — you'll use this *constantly* |
+| `Vector2` | `Vector2(10, 20)` | 2D position/direction (you'll use this *constantly*) |
 | `Array` | `[1, 2, 3]` | Ordered list |
 | `Dictionary` | `{"hp": 100}` | Key-value pairs |
 
@@ -205,7 +205,7 @@ match direction:
 
 These two annotations are GDScript-specific and very handy.
 
-### `@export` — Edit in the Inspector
+### `@export`: Edit in the Inspector
 
 `@export` exposes a variable in the Inspector panel, so you can tweak it per-instance without editing code:
 
@@ -214,9 +214,9 @@ These two annotations are GDScript-specific and very handy.
 @export var player_name: String = "Aiden"
 ```
 
-After adding these, select the node in the editor and look at the Inspector — you'll see `Speed` and `Player Name` as editable fields. This is how we'll customize NPCs, items, and other game objects without writing separate scripts for each one.
+After adding these, select the node in the editor and look at the Inspector. You'll see `Speed` and `Player Name` as editable fields. This is how we'll customize NPCs, items, and other game objects without writing separate scripts for each one.
 
-### `@onready` — Cache Node References
+### `@onready`: Cache Node References
 
 `@onready` initializes a variable when `_ready()` is called, which is when the node tree is guaranteed to be built:
 
@@ -227,7 +227,7 @@ After adding these, select the node in the editor and look at the Inspector — 
 
 The `$` operator is shorthand for `get_node()`. `$Sprite2D` means "find the child node named Sprite2D." `$UI/HealthBar` means "find the child named UI, then find its child named HealthBar."
 
-> **Warning:** If you try to access `$Sprite2D` in a plain `var` declaration (outside `@onready`), it will fail — the node tree hasn't been built yet when `var` initializers run. Always use `@onready` for node references.
+> **Warning:** If you try to access `$Sprite2D` in a plain `var` declaration (outside `@onready`), it will fail because the node tree hasn't been built yet when `var` initializers run. Always use `@onready` for node references.
 
 There's also `%UniqueName`, which finds a node by its **unique name** regardless of where it is in the tree. We'll use this later for UI elements that need to be found from anywhere.
 
@@ -237,7 +237,7 @@ Now for the fun part. Let's make our sprite respond to keyboard input.
 
 ### The Input Map
 
-Godot doesn't check for raw key codes directly (though it can). Instead, it uses **actions** — named inputs that can be mapped to multiple keys, buttons, or axes. This means your game automatically works with both keyboard and gamepad without extra code.
+Godot doesn't check for raw key codes directly (though it can). Instead, it uses **actions**, named inputs that can be mapped to multiple keys, buttons, or axes. This means your game automatically works with both keyboard and gamepad without extra code.
 
 The default project includes several built-in actions:
 
@@ -252,9 +252,9 @@ The default project includes several built-in actions:
 
 You can view and edit these in **Project → Project Settings → Input Map**.
 
-> **Note:** The `ui_*` actions only map to arrow keys by default — WASD is **not** included. To add WASD support: open **Project → Project Settings → Input Map**, find `ui_up`, click the **+** button next to it, press **W**, and click **OK**. Repeat for `ui_down` (S), `ui_left` (A), and `ui_right` (D). Now both arrow keys and WASD will work.
+> **Note:** The `ui_*` actions only map to arrow keys by default; WASD is **not** included. To add WASD support: open **Project → Project Settings → Input Map**, find `ui_up`, click the **+** button next to it, press **W**, and click **OK**. Repeat for `ui_down` (S), `ui_left` (A), and `ui_right` (D). Now both arrow keys and WASD will work.
 
-> **Note:** `Input` is a globally available singleton — what Godot calls an "autoload." You access it by name from anywhere: `Input.is_action_pressed("ui_up")`. We'll create our own autoloads in Module 6. For now, just know that some objects (like `Input`, `Engine`, `Time`) are always available because Godot provides them globally.
+> **Note:** `Input` is a globally available singleton, what Godot calls an "autoload." You access it by name from anywhere: `Input.is_action_pressed("ui_up")`. We'll create our own autoloads in Module 6. For now, just know that some objects (like `Input`, `Engine`, `Time`) are always available because Godot provides them globally.
 
 ### Checking Input
 
@@ -274,7 +274,7 @@ Input.is_action_just_released("ui_accept")
 Input.get_axis("ui_left", "ui_right")
 ```
 
-> **See:** [Input examples](https://docs.godotengine.org/en/stable/tutorials/inputs/input_examples.html) — the official tutorial covering input handling patterns.
+> **See:** [Input examples](https://docs.godotengine.org/en/stable/tutorials/inputs/input_examples.html), the official tutorial covering input handling patterns.
 
 ### Moving the Sprite
 
@@ -307,14 +307,14 @@ func _process(delta: float) -> void:
 
 Here's what each part does:
 
-1. **`var direction := Vector2.ZERO`** — We start with no movement. `Vector2.ZERO` is `Vector2(0, 0)`.
-2. **Input checks** — We check each direction independently. Using `if` (not `elif`) allows diagonal movement.
-3. **`direction.normalized()`** — Without this, moving diagonally would be ~41% faster than moving horizontally or vertically (because the diagonal of a unit square is √2 ≈ 1.414). Normalizing makes the vector length exactly 1 in all directions.
-4. **`position += direction * speed * delta`** — Move the sprite by `speed` pixels per second in the input direction, scaled by `delta` for frame-rate independence.
+1. **`var direction := Vector2.ZERO`**: We start with no movement. `Vector2.ZERO` is `Vector2(0, 0)`.
+2. **Input checks**: We check each direction independently. Using `if` (not `elif`) allows diagonal movement.
+3. **`direction.normalized()`**: Without this, moving diagonally would be ~41% faster than moving horizontally or vertically (because the diagonal of a unit square is √2 ≈ 1.414). Normalizing makes the vector length exactly 1 in all directions.
+4. **`position += direction * speed * delta`**: Move the sprite by `speed` pixels per second in the input direction, scaled by `delta` for frame-rate independence.
 
 Save the script and press F5. Use the arrow keys to move the sprite around (or WASD if you added those bindings above). The Godot icon slides smoothly across the screen.
 
-> **JRPG Pattern:** This is "free movement" — the character moves smoothly in any direction. Some JRPGs use "grid-based movement" instead, where the character snaps from tile to tile. We'll discuss this tradeoff in Module 5 and implement free movement for Crystal Saga.
+> **JRPG Pattern:** This is "free movement," where the character moves smoothly in any direction. Some JRPGs use "grid-based movement" instead, where the character snaps from tile to tile. We'll discuss this tradeoff in Module 5 and implement free movement for Crystal Saga.
 
 ## `print()` Debugging
 
@@ -327,7 +327,7 @@ func _ready() -> void:
     print("Position: ", position)
 
 func _process(delta: float) -> void:
-    # This will flood the output — use sparingly!
+    # This will flood the output, so use sparingly!
     # print("Frame! Delta: ", delta)
     pass
 ```
@@ -341,14 +341,14 @@ push_error("Something broke!")        # Red error (doesn't crash)
 printerr("Also an error")            # Error output
 ```
 
-> **Warning:** Don't leave `print()` calls inside `_process()` in production code — printing 60+ messages per second will slow your game down. Use them for debugging, then remove them.
+> **Warning:** Don't leave `print()` calls inside `_process()` in production code. Printing 60+ messages per second will slow your game down. Use them for debugging, then remove them.
 
 ## The Script Editor
 
 A few tips for working in Godot's built-in script editor:
 
 - **Ctrl+Click** on a function or variable name to jump to its definition.
-- **F1** opens the built-in documentation search — type any class name to see its full API.
+- **F1** opens the built-in documentation search. Type any class name to see its full API.
 - **Ctrl+Shift+D** duplicates the current line.
 - **Ctrl+/** toggles comment on the selected lines.
 - **Ctrl+Space** triggers autocompletion.
@@ -361,7 +361,7 @@ If you're coming from another language, watch for these:
 
 ### From Python
 - GDScript is **not Python**. Many things look similar but work differently under the hood.
-- GDScript has a `self` keyword, but you rarely need it — member variables are accessed directly without it (`health`, not `self.health`). `self` exists for disambiguation when a local variable shadows a member variable.
+- GDScript has a `self` keyword, but you rarely need it. Member variables are accessed directly without it (`health`, not `self.health`). `self` exists for disambiguation when a local variable shadows a member variable.
 - Dictionaries use `{"key": value}` syntax (with colons), not `{key: value}` without quotes (though GDScript also supports the `{key = value}` form).
 
 ### From JavaScript/TypeScript
@@ -370,17 +370,17 @@ If you're coming from another language, watch for these:
 - `null` is called `null` (same as JS), but types often use specific "empty" values like `Vector2.ZERO` or `""`.
 
 ### From C#/Java
-- No class declarations — each `.gd` file is implicitly a class.
+- No class declarations; each `.gd` file is implicitly a class.
 - `extends` instead of `: BaseClass` or `extends BaseClass`.
 - No access modifiers (`public`, `private`). By convention, prefix private members with `_` (e.g., `_internal_var`).
-- Arrays and dictionaries are dynamic — no generics syntax (though typed arrays exist: `Array[int]`).
+- Arrays and dictionaries are dynamic, with no generics syntax (though typed arrays exist: `Array[int]`).
 
 ### Universal
 - **Tabs for indentation**, not spaces. Godot enforces this by default.
 - **Double quotes** for strings (single quotes work but double is convention).
 - **Two blank lines** between functions. One blank line between logical sections within a function.
 
-> **See:** [GDScript style guide](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_styleguide.html) — the official style conventions for GDScript code.
+> **See:** [GDScript style guide](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_styleguide.html), the official style conventions for GDScript code.
 
 ## Putting It Together: A Complete First Script
 
@@ -388,7 +388,7 @@ Let's replace our movement code with a cleaner version. Copy this complete scrip
 
 ```gdscript
 extends Sprite2D
-## A simple movable sprite — our first step toward a player character.
+## A simple movable sprite, our first step toward a player character.
 
 @export var speed: float = 200.0
 
@@ -415,15 +415,15 @@ func _get_input_direction() -> Vector2:
 
 Notice two improvements:
 
-1. **`Input.get_axis()`** — This is a cleaner way to get directional input. It returns a float between -1 and 1, handling both keyboard and analog sticks automatically. We replaced four `if` blocks with a single `Vector2`.
+1. **`Input.get_axis()`**: This is a cleaner way to get directional input. It returns a float between -1 and 1, handling both keyboard and analog sticks automatically. We replaced four `if` blocks with a single `Vector2`.
 
-2. **Extracted `_get_input_direction()`** — The input logic is now in its own function. The `_` prefix signals that it's a private helper. This is a habit worth building early — small functions with clear names make your code much easier to read and modify.
+2. **Extracted `_get_input_direction()`**: The input logic is now in its own function. The `_` prefix signals that it's a private helper. This is a habit worth building early; small functions with clear names make your code much easier to read and modify.
 
-> **See:** [InputEvent](https://docs.godotengine.org/en/stable/tutorials/inputs/inputevent.html) — deep dive into Godot's input event system, including how events propagate through the scene tree.
+> **See:** [InputEvent](https://docs.godotengine.org/en/stable/tutorials/inputs/inputevent.html), a deep dive into Godot's input event system, including how events propagate through the scene tree.
 
 ## What We've Learned
 
-- **GDScript** is Godot's scripting language — Python-like syntax, designed for game development.
+- **GDScript** is Godot's scripting language, with Python-like syntax designed for game development.
 - **Static typing** (`var x: int = 5`) catches bugs early and enables better autocompletion.
 - **`_ready()`** runs once when the node enters the scene. **`_process(delta)`** runs every frame.
 - **`delta`** makes movement frame-rate independent. Always multiply speed by `delta`.
@@ -443,4 +443,4 @@ When you press F5:
 
 ## Next Module
 
-We have a moving sprite, but it's just a floating icon. In **Module 3: Thinking in Scenes**, we'll build a proper Player scene with collision physics, learn when to use `CharacterBody2D` vs other body types, and understand scene composition — the architectural principle that makes complex games manageable.
+We have a moving sprite, but it's just a floating icon. In **Module 3: Thinking in Scenes**, we'll build a proper Player scene with collision physics, learn when to use `CharacterBody2D` vs other body types, and understand scene composition, the architectural principle that makes complex games manageable.

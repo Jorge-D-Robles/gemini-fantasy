@@ -4,7 +4,7 @@
 
 This tutorial series takes a programmer with zero Godot experience and walks them through building a complete, playable JRPG demo called **Crystal Saga** from scratch. By the end, the reader will have built: a tile-based overworld with multiple areas, screen transitions, NPCs with dialogue, a turn-based battle system, inventory and equipment, a quest tracker, save/load, audio, and a title screen tying it all together.
 
-The tutorial is organized into **six parts** containing **twenty-one modules**. Each module builds directly on the previous ones — there are no standalone lessons. The reader maintains a single Godot project throughout, and every module ends with something new they can run and see.
+The tutorial is organized into **six parts** containing **twenty-one modules**. Each module builds directly on the previous ones; there are no standalone lessons. The reader maintains a single Godot project throughout, and every module ends with something new they can run and see.
 
 ### Design Principles
 
@@ -25,7 +25,7 @@ A small JRPG with enough scope to exercise every major system:
 - **Party:** The hero (swordsman) and one recruitable companion (a mage met in town).
 - **Systems:** Overworld exploration, NPC dialogue, a shop, an inn, random encounters, turn-based battles, inventory/equipment, one side quest, save/load, and a simple main quest line.
 
-This scope is deliberately small — big enough to need real architecture, small enough to finish.
+This scope is deliberately small: big enough to need real architecture, small enough to finish.
 
 ---
 
@@ -72,11 +72,11 @@ This scope is deliberately small — big enough to need real architecture, small
 - GDScript-specific: `@export`, `@onready`, `$NodePath`, `%UniqueNode`
 - The `_ready()` and `_process(delta)` virtual functions
 - Input basics: `Input.is_action_pressed()`, the Input Map
-- A note on `Input`: this is your first autoload — a globally accessible singleton provided by Godot. We'll create our own in Module 6.
+- A note on `Input`: this is your first autoload, a globally accessible singleton provided by Godot. We'll create our own in Module 6.
 - Moving a sprite with code
 - `print()` debugging and the Output panel
 - Common gotchas for Python/JS/C# developers
-- Keyboard vs gamepad: Godot's Input Map handles both — define an action once, bind it to keyboard AND gamepad buttons
+- Keyboard vs gamepad: Godot's Input Map handles both. Define an action once, bind it to keyboard AND gamepad buttons
 
 **Godot Docs References:**
 - `tutorials/scripting/gdscript/gdscript_basics.rst`
@@ -97,10 +97,10 @@ This scope is deliberately small — big enough to need real architecture, small
 
 **Topics:**
 - Scene composition: why scenes are the building block, not scripts
-- CharacterBody2D vs RigidBody2D vs Area2D — when to use each
+- CharacterBody2D vs RigidBody2D vs Area2D: when to use each
 - Building the Player scene: CharacterBody2D → Sprite2D + CollisionShape2D
 - `move_and_slide()` for physics-based movement
-- `_physics_process()` vs `_process()` — when each matters
+- `_physics_process()` vs `_process()`: when each matters
 - Instancing scenes into other scenes
 - The scene tree at runtime: parent/child relationships
 - Signals: a first look (connecting `body_entered` in the editor)
@@ -122,19 +122,19 @@ This scope is deliberately small — big enough to need real architecture, small
 
 *Creating the game world with tilemaps, camera, and connected areas. By the end of Part II, you'll have a town and a forest the player can walk between, with an animated hero.*
 
-### Module 4: The Overworld — TileMaps and Terrain
+### Module 4: The Overworld: TileMaps and Terrain
 **File:** `tutorial/04_tilemaps_and_terrain.md`
 
 **What the reader builds:** The town of Willowbrook as a tiled map with ground, paths, water, and collision.
 
 **Topics:**
 - What is a TileMapLayer? The grid-based approach to 2D worlds
-- Conceptual model: think of layers as transparent sheets stacked on top of each other — ground on the bottom, then details, then objects, then things that appear above the player
+- Conceptual model: think of layers as transparent sheets stacked on top of each other, with ground on the bottom, then details, then objects, then things that appear above the player
 - TileSet: creating a tileset from a sprite sheet
 - Atlas sources: importing tile sheets, configuring tile size (16x16 or 32x32)
 - Painting terrain: the TileMapLayer editor tools
-- Multiple TileMapLayers: Ground, Detail, Objects, AbovePlayer — one node per layer
-- Why `TileMapLayer` and not `TileMap`? The old `TileMap` node is deprecated as of Godot 4.3. `TileMapLayer` is the replacement — one node per layer, simpler API.
+- Multiple TileMapLayers: Ground, Detail, Objects, AbovePlayer (one node per layer)
+- Why `TileMapLayer` and not `TileMap`? The old `TileMap` node is deprecated as of Godot 4.3. `TileMapLayer` is the replacement: one node per layer, simpler API.
 - Physics layers on tiles: marking solid tiles for collision
 - The Camera2D node: following the player, setting limits
 - Pixel-perfect rendering: viewport settings, texture filtering (`Filter: Nearest`)
@@ -185,7 +185,7 @@ This scope is deliberately small — big enough to need real architecture, small
 
 ---
 
-### Module 6: Connecting Worlds — Scene Transitions
+### Module 6: Connecting Worlds: Scene Transitions
 **File:** `tutorial/06_scene_transitions.md`
 
 **What the reader builds:** A forest area (Whisperwood) connected to Willowbrook via door/exit zones, with a fade-to-black transition.
@@ -196,7 +196,7 @@ This scope is deliberately small — big enough to need real architecture, small
 - Detecting the player entering a zone (`body_entered` signal)
 - Changing scenes: `get_tree().change_scene_to_file()` and its limitations
 - **Autoloads: creating your own singleton (SceneManager)**
-  - You've already used autoloads — `Input`, `Engine`, and `Time` are all Godot built-ins that work this way. Now we create our own.
+  - You've already used autoloads. `Input`, `Engine`, and `Time` are all Godot built-ins that work this way. Now we create our own.
   - Registering autoloads in Project Settings
   - Why autoloads? Global state that persists across scene changes
 - Building a SceneManager: fade-out, change scene, fade-in
@@ -205,7 +205,7 @@ This scope is deliberately small — big enough to need real architecture, small
 - Signal lifecycle reminder: when scenes are freed, their signals disconnect automatically. Autoload signals persist because autoloads are never freed.
 - Building the Whisperwood forest scene
 - Connecting town ↔ forest with bidirectional exits
-- **Autoload reference card** — a running table of all autoloads we create (updated in future modules):
+- **Autoload reference card**, a running table of all autoloads we create (updated in future modules):
   | Autoload | Module | Purpose |
   |----------|--------|---------|
   | SceneManager | 6 | Scene transitions with fade effects |
@@ -226,10 +226,10 @@ This scope is deliberately small — big enough to need real architecture, small
 
 *Populating the world with characters and systems for the player to interact with. By the end of Part III, you'll have NPCs who talk, an inventory, and a data-driven architecture.*
 
-### Module 7: Resources — The Data Layer
+### Module 7: Resources: The Data Layer
 **File:** `tutorial/07_resources_data_layer.md`
 
-**What the reader builds:** Custom Resource classes for items, character stats, and NPC data — establishing the data-driven architecture before we need it.
+**What the reader builds:** Custom Resource classes for items, character stats, and NPC data, establishing the data-driven architecture before we need it.
 
 **Topics:**
 - What is a Resource? Godot's data container
@@ -294,7 +294,7 @@ This scope is deliberately small — big enough to need real architecture, small
 - RichTextLabel for styled text (`bbcode_enabled`)
 - **The typewriter effect: tween `visible_ratio` from 0.0 to 1.0**
   - Why `visible_ratio` (a float) and not `visible_characters` (an int): tweening an int produces choppy per-character jumps. `visible_ratio` gives smooth character-by-character reveal.
-  - Tween lifecycle: `create_tween()` tweens are automatically killed when the creating node is freed. Store Tween references carefully — a Tween held in a variable can outlive its target node if the node is freed first.
+  - Tween lifecycle: `create_tween()` tweens are automatically killed when the creating node is freed. Store Tween references carefully, because a Tween held in a variable can outlive its target node if the node is freed first.
 - DialogueLine resource: speaker name, text, portrait (using the Resource pattern from Module 7)
 - DialogueSequence: an array of DialogueLine resources
 - Signals for dialogue flow: `dialogue_started`, `dialogue_finished`, `line_advanced`
@@ -353,7 +353,7 @@ This scope is deliberately small — big enough to need real architecture, small
 
 *The heart of any JRPG. By the end of Part IV, you'll have a complete turn-based battle system with abilities, enemies, and rewards.*
 
-### Module 11: Battle Foundations — State Machines and Turn Order
+### Module 11: Battle Foundations: State Machines and Turn Order
 **File:** `tutorial/11_battle_foundations.md`
 
 **What the reader builds:** A battle scene skeleton with party and enemies displayed, a turn order system, and transitions between battle phases.
@@ -390,7 +390,7 @@ This scope is deliberately small — big enough to need real architecture, small
 
 ---
 
-### Module 12: Player Actions — Attack, Defend, Magic, Items
+### Module 12: Player Actions: Attack, Defend, Magic, Items
 **File:** `tutorial/12_player_actions.md`
 
 **What the reader builds:** A battle menu (Attack/Magic/Defend/Item) with functional actions that deal damage, heal, and modify defense.
@@ -421,7 +421,7 @@ This scope is deliberately small — big enough to need real architecture, small
 
 ---
 
-### Module 13: The Crystal Cavern — Dungeon Design
+### Module 13: The Crystal Cavern: Dungeon Design
 **File:** `tutorial/13_crystal_cavern.md`
 
 **What the reader builds:** A dungeon area (Crystal Cavern) with a distinct tilemap, multiple rooms connected by passages, a boss room, and encounter zones.
@@ -430,7 +430,7 @@ This scope is deliberately small — big enough to need real architecture, small
 - Dungeon vs overworld: different tileset, different layer needs, different collision
 - Building the Crystal Cavern TileMapLayer setup: cave floor, walls, crystal formations, darkness overlay
 - Room-based design: entry chamber, branching paths, dead ends with treasure, boss room
-- Encounter zones: Area2D regions that define which enemies can appear (data only — enemies come in Module 14)
+- Encounter zones: Area2D regions that define which enemies can appear (data only; enemies come in Module 14)
 - Treasure chests: an interactable that gives items (reusing the interaction pattern from Module 8)
 - The save crystal: an interactable object in the dungeon (*we'll wire it up for saving in Module 18*)
 - Connecting Whisperwood → Crystal Cavern via scene transitions
@@ -463,7 +463,7 @@ This scope is deliberately small — big enough to need real architecture, small
   - Threshold with randomness: encounter triggers when counter exceeds a random threshold
   - Resetting after each encounter
 - Encounter zones wired up: connecting Module 13's zones to encounter group data
-- Boss design: the Crystal Guardian — higher stats, unique ability pattern, dialogue before fight
+- Boss design: the Crystal Guardian, with higher stats, unique ability pattern, dialogue before fight
 - The pre-boss cutscene: triggering dialogue before transitioning to battle
 - Flee mechanic: probability-based escape (higher speed = better chance)
 
@@ -629,7 +629,7 @@ This scope is deliberately small — big enough to need real architecture, small
 
 *Making it feel like a real game. By the end of Part VI, you'll have a complete, playable JRPG demo with audio, menus, and a polished game loop.*
 
-### Module 19: Audio — Music and Sound Effects
+### Module 19: Audio (Music and Sound Effects)
 **File:** `tutorial/19_audio.md`
 
 **What the reader builds:** Background music for each area, battle music with transitions, SFX for actions, and volume controls.
@@ -704,7 +704,7 @@ This scope is deliberately small — big enough to need real architecture, small
 
 ---
 
-### Module 21: Finish Line — Polish, Export, and Next Steps
+### Module 21: Finish Line (Polish, Export, and Next Steps)
 **File:** `tutorial/21_finish_line.md`
 
 **What the reader builds:** A polished, exported build of Crystal Saga, plus a roadmap for what to add next.
@@ -781,13 +781,13 @@ Module 1 (Setup)
 | 4. TileMaps and Terrain | 3,500 | 80 | Medium |
 | 5. Player Character + State Machine | 4,000 | 250 | Medium |
 | 6. Scene Transitions | 4,000 | 250 | Medium |
-| 7. Resources — Data Layer | 3,500 | 200 | Medium |
+| 7. Resources: Data Layer | 3,500 | 200 | Medium |
 | 8. NPCs and Interaction | 3,000 | 200 | Medium |
 | 9. Dialogue System | 4,500 | 350 | Medium-High |
 | 10. Inventory System | 3,500 | 300 | Medium |
 | 11. Battle Foundations | 5,000 | 400 | High |
 | 12. Player Actions | 4,500 | 350 | High |
-| 13. Crystal Cavern — Dungeon | 3,000 | 150 | Medium |
+| 13. Crystal Cavern: Dungeon | 3,000 | 150 | Medium |
 | 14. Enemies and AI | 3,500 | 300 | High |
 | 15. Victory and Leveling | 3,500 | 250 | Medium-High |
 | 16. Quests and Game Flags | 4,500 | 350 | Medium-High |

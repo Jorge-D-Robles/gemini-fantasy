@@ -2,7 +2,7 @@
 
 ## What We Have So Far
 
-Interactive combat with enemies, AI, random encounters, and a boss fight. But winning a battle does nothing — no rewards, no progression.
+Interactive combat with enemies, AI, random encounters, and a boss fight. But winning a battle does nothing: no rewards, no progression.
 
 ## What We're Building This Module
 
@@ -14,10 +14,10 @@ Before building the victory and leveling flows, we need to add a few runtime pro
 
 ### CharacterData Additions
 
-Open `res://resources/character_data.gd` and add these runtime properties (not `@export` — these track state during play, not base data):
+Open `res://resources/character_data.gd` and add these runtime properties (not `@export`, since these track state during play, not base data):
 
 ```gdscript
-# Add to character_data.gd — runtime state (below the @export vars)
+# Add to character_data.gd, runtime state (below the @export vars)
 var current_xp: int = 0
 var current_hp: int = 0  # Tracks HP between battles
 var current_mp: int = 0  # Tracks MP between battles
@@ -45,13 +45,13 @@ static func xp_for_level(level: int) -> int:
 
 The formula `level * level * 10` means at level 1 you need 10 XP, at level 5 you need 250 XP, etc.
 
-This curve starts gentle and ramps up — early levels come fast (motivating), later levels take more effort (extending gameplay).
+This curve starts gentle and ramps up. Early levels come fast (motivating), later levels take more effort (extending gameplay).
 
 ### Stat Growth
 
 When a character levels up, their stats increase based on **growth rates** defined in CharacterData. Add this method to `res://resources/character_data.gd`:
 
-> **Note:** `level_up()` modifies the Resource's properties at runtime. These changes persist in memory (because Resources are shared by reference) but do NOT modify the `.tres` file on disk. This is the correct behavior — runtime progression should not overwrite base data.
+> **Note:** `level_up()` modifies the Resource's properties at runtime. These changes persist in memory (because Resources are shared by reference) but do NOT modify the `.tres` file on disk. This is the correct behavior; runtime progression should not overwrite base data.
 
 ```gdscript
 func level_up() -> Dictionary:
@@ -171,16 +171,16 @@ In Module 20, we'll replace this with a proper Game Over screen with options (re
 
 After a victorious battle, the party returns to the overworld with their current HP/MP intact. Two things make this work:
 
-1. **HP/MP sync** — the Victory state writes `battler.current_hp` and `battler.current_mp` back to `battler.character_data` (see the sync code above). Without this, the party would return to full HP after every fight.
-2. **Resource sharing** — CharacterData resources are shared by reference. When the battle modifies stats via `level_up()`, that change persists across scenes automatically.
+1. **HP/MP sync**: the Victory state writes `battler.current_hp` and `battler.current_mp` back to `battler.character_data` (see the sync code above). Without this, the party would return to full HP after every fight.
+2. **Resource sharing**: CharacterData resources are shared by reference. When the battle modifies stats via `level_up()`, that change persists across scenes automatically.
 
-For now, since we don't have a formal PartyManager yet (Module 17), the CharacterData resource at `res://data/characters/aiden.tres` is loaded via `load()`, which caches it — all code that loads the same path gets the same object.
+For now, since we don't have a formal PartyManager yet (Module 17), the CharacterData resource at `res://data/characters/aiden.tres` is loaded via `load()`, which caches it. All code that loads the same path gets the same object.
 
-> **JRPG Pattern:** After normal battles, HP/MP carry over (no free heals). Save points and inns restore them. This creates a resource management game — do you use that Potion now or save it for the boss?
+> **JRPG Pattern:** After normal battles, HP/MP carry over (no free heals). Save points and inns restore them. This creates a resource management game: do you use that Potion now or save it for the boss?
 
-> **See:** [Resource](https://docs.godotengine.org/en/stable/classes/class_resource.html) — Resources loaded with `load()` are cached and shared by reference. Runtime changes to exported properties persist in memory but don't write back to the `.tres` file.
+> **See:** [Resource](https://docs.godotengine.org/en/stable/classes/class_resource.html). Resources loaded with `load()` are cached and shared by reference. Runtime changes to exported properties persist in memory but don't write back to the `.tres` file.
 
-> **See:** [Tween](https://docs.godotengine.org/en/stable/classes/class_tween.html) — for future enhancements, Tweens can animate the victory screen (stat bars filling, XP counters incrementing).
+> **See:** [Tween](https://docs.godotengine.org/en/stable/classes/class_tween.html). For future enhancements, Tweens can animate the victory screen (stat bars filling, XP counters incrementing).
 
 ## What We've Learned
 

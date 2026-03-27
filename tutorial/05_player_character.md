@@ -6,17 +6,17 @@ A tiled town (Willowbrook) with collision, a camera that follows the player, and
 
 ## What We're Building This Module
 
-A fully animated player character with four-directional walk cycles, a proper state machine to manage behavior, and Y-sorting for correct depth rendering. By the end, the player character will have proper walk cycles and depth sorting — it'll look like an actual JRPG.
+A fully animated player character with four-directional walk cycles, a proper state machine to manage behavior, and Y-sorting for correct depth rendering. By the end, the player character will have proper walk cycles and depth sorting. It'll look like an actual JRPG.
 
 ## Sprite Sheets and Walk Cycles
 
-JRPG characters are typically drawn as **sprite sheets** — a single image containing all animation frames arranged in a grid. A standard 4-direction character has frames like this:
+JRPG characters are typically drawn as **sprite sheets**, single images containing all animation frames arranged in a grid. A standard 4-direction character has frames like this:
 
 ```
-Row 0: Walk Down  — frame 0, 1, 2, 3
-Row 1: Walk Left  — frame 0, 1, 2, 3
-Row 2: Walk Right — frame 0, 1, 2, 3
-Row 3: Walk Up    — frame 0, 1, 2, 3
+Row 0: Walk Down:  frame 0, 1, 2, 3
+Row 1: Walk Left:  frame 0, 1, 2, 3
+Row 2: Walk Right: frame 0, 1, 2, 3
+Row 3: Walk Up:    frame 0, 1, 2, 3
 ```
 
 Each row is a direction, each column is a frame of the walk animation. Most JRPG characters use 3-4 frames per direction.
@@ -26,11 +26,11 @@ For this tutorial, we recommend downloading a free character sprite sheet:
 1. Go to [kenney.nl/assets/tiny-town](https://kenney.nl/assets/tiny-town) (the same pack from Module 4).
 2. In the extracted ZIP, look in the `Tilemap/` folder for character sprites, or use the `tilemap_packed.png` sheet which contains small character tiles.
 
-Alternatively, search [opengameart.org](https://opengameart.org) for "JRPG character sprite sheet 16x16" — you'll find many free options. Look for a sheet with **4 rows** (one per direction: down, left, right, up) and **3-4 columns** (frames per walk cycle).
+Alternatively, search [opengameart.org](https://opengameart.org) for "JRPG character sprite sheet 16x16", and you'll find many free options. Look for a sheet with **4 rows** (one per direction: down, left, right, up) and **3-4 columns** (frames per walk cycle).
 
-> **Note:** If your sprite sheet has a different layout (e.g., 3 frames instead of 4, or rows in a different order like down/up/left/right), that's fine — just adjust the frame selection when setting up animations below. The script we write works with any 4-direction animation names.
+> **Note:** If your sprite sheet has a different layout (e.g., 3 frames instead of 4, or rows in a different order like down/up/left/right), that's fine. Just adjust the frame selection when setting up animations below. The script we write works with any 4-direction animation names.
 
-If you can't find a sheet, you can still follow along — but you'll need to set up AnimatedSprite2D with single-frame animations. Follow the setup steps below, using the Godot `icon.svg` as your image. Create each of the 8 animations (`idle_down`, `idle_up`, etc.) with the icon as the single frame. The walk animations won't visually animate, but the state machine code will work correctly, and you can swap in real art later.
+If you can't find a sheet, you can still follow along, but you'll need to set up AnimatedSprite2D with single-frame animations. Follow the setup steps below, using the Godot `icon.svg` as your image. Create each of the 8 animations (`idle_down`, `idle_up`, etc.) with the icon as the single frame. The walk animations won't visually animate, but the state machine code will work correctly, and you can swap in real art later.
 
 Save your sprite sheet to `res://player/player_spritesheet.png`.
 
@@ -65,21 +65,21 @@ AnimatedSprite2D uses a **SpriteFrames** resource to define animations.
 In the SpriteFrames panel:
 
 1. You'll see a `default` animation. Rename it to `idle_down`.
-2. Click the **Add frames from Sprite Sheet** button (it has a grid pattern icon — hover over the buttons near the top of the SpriteFrames panel to find it).
+2. Click the **Add frames from Sprite Sheet** button (it has a grid pattern icon; hover over the buttons near the top of the SpriteFrames panel to find it).
 3. Select your sprite sheet image.
 4. Set the grid size to match your sheet (e.g., 4 columns × 4 rows for a 4-direction, 4-frame sheet).
 5. Click the frames for the "facing down idle" pose (usually just the first frame of the down row).
 6. Click **Add Frames**.
 
 Repeat for each animation:
-- `idle_down` — the standing frame facing down
-- `idle_up` — standing facing up
-- `idle_left` — standing facing left
-- `idle_right` — standing facing right
-- `walk_down` — all frames of the down walk cycle
-- `walk_up` — all frames of the up walk cycle
-- `walk_left` — all frames of the left walk cycle
-- `walk_right` — all frames of the right walk cycle
+- `idle_down`: the standing frame facing down
+- `idle_up`: standing facing up
+- `idle_left`: standing facing left
+- `idle_right`: standing facing right
+- `walk_down`: all frames of the down walk cycle
+- `walk_up`: all frames of the up walk cycle
+- `walk_left`: all frames of the left walk cycle
+- `walk_right`: all frames of the right walk cycle
 
 Here's a reference table for a 4-column × 4-row sprite sheet (down/left/right/up):
 
@@ -94,25 +94,25 @@ Here's a reference table for a 4-column × 4-row sprite sheet (down/left/right/u
 | `walk_right` | 2 | Frames 0, 1, 2, 3 |
 | `walk_up` | 3 | Frames 0, 1, 2, 3 |
 
-For each walk animation, set the **FPS** to 8-10 (the number field at the top of the SpriteFrames panel, next to the loop toggle — the circular arrow icon). Also enable looping for walk animations by clicking that loop toggle. Idle animations can stay at the default speed since they're typically a single frame (or 2-3 frames for a breathing animation).
+For each walk animation, set the **FPS** to 8-10 (the number field at the top of the SpriteFrames panel, next to the loop toggle, the circular arrow icon). Also enable looping for walk animations by clicking that loop toggle. Idle animations can stay at the default speed since they're typically a single frame (or 2-3 frames for a breathing animation).
 
-> **Warning:** Animation names must match **exactly** what the script expects — the code constructs names like `"walk_down"` and `"idle_left"` dynamically. If you name an animation `Walk_Down` or `walkdown`, it won't be found. Use all lowercase with an underscore: `idle_down`, `walk_up`, etc.
+> **Warning:** Animation names must match **exactly** what the script expects. The code constructs names like `"walk_down"` and `"idle_left"` dynamically. If you name an animation `Walk_Down` or `walkdown`, it won't be found. Use all lowercase with an underscore: `idle_down`, `walk_up`, etc.
 
-> **See:** [2D sprite animation](https://docs.godotengine.org/en/stable/tutorials/2d/2d_sprite_animation.html) — covers both AnimatedSprite2D and AnimationPlayer approaches to 2D animation.
+> **See:** [2D sprite animation](https://docs.godotengine.org/en/stable/tutorials/2d/2d_sprite_animation.html), covering both AnimatedSprite2D and AnimationPlayer approaches to 2D animation.
 
-> **See:** [AnimatedSprite2D](https://docs.godotengine.org/en/stable/classes/class_animatedsprite2d.html) — full API reference.
+> **See:** [AnimatedSprite2D](https://docs.godotengine.org/en/stable/classes/class_animatedsprite2d.html), the full API reference.
 
 ### The Alternative: Sprite2D + AnimationPlayer
 
-There's another way to animate sprites in Godot — using a regular `Sprite2D` with an `AnimationPlayer` that keyframes the `frame` property or `region_rect`. This approach is more powerful (you can animate any property), but more complex to set up.
+There's another way to animate sprites in Godot: using a regular `Sprite2D` with an `AnimationPlayer` that keyframes the `frame` property or `region_rect`. This approach is more powerful (you can animate any property), but more complex to set up.
 
 For character walk cycles, `AnimatedSprite2D` is simpler and perfectly adequate. We'll use `AnimationPlayer` later for UI animations and battle effects where we need to animate multiple properties simultaneously.
 
-> **See:** [AnimationPlayer](https://docs.godotengine.org/en/stable/classes/class_animationplayer.html) — for when you need to animate arbitrary properties.
+> **See:** [AnimationPlayer](https://docs.godotengine.org/en/stable/classes/class_animationplayer.html), for when you need to animate arbitrary properties.
 
 ## The State Machine Pattern
 
-Right now, our player script is simple — check input, set velocity, move. But as we add features, the logic gets tangled:
+Right now, our player script is simple: check input, set velocity, move. But as we add features, the logic gets tangled:
 
 - Can the player move during dialogue? (No.)
 - Can the player open the inventory while walking? (Yes, but movement should stop.)
@@ -126,10 +126,10 @@ The solution is a **state machine**: the player is always in exactly one state, 
 ### Our Four States
 
 ```
-IDLE       — standing still, can accept input
-WALK       — moving, playing walk animation
-INTERACT   — talking to NPC or object, movement disabled
-DISABLED   — cutscene, battle transition, or menu, movement disabled
+IDLE:       standing still, can accept input
+WALK:       moving, playing walk animation
+INTERACT:   talking to NPC or object, movement disabled
+DISABLED:   cutscene, battle transition, or menu, movement disabled
 ```
 
 ### The Rules
@@ -143,7 +143,7 @@ DISABLED   — cutscene, battle transition, or menu, movement disabled
 | Any | DISABLED | Cutscene starts / battle starts / menu opens |
 | DISABLED | IDLE | Cutscene ends / battle ends / menu closes |
 
-The key insight: **each state is a self-contained behavior.** The IDLE state checks for movement and interact input. The WALK state plays the walk animation and moves. The INTERACT state does nothing — it waits for a signal that dialogue is finished. The DISABLED state is completely inert.
+The key insight: **each state is a self-contained behavior.** The IDLE state checks for movement and interact input. The WALK state plays the walk animation and moves. The INTERACT state does nothing; it waits for a signal that dialogue is finished. The DISABLED state is completely inert.
 
 ### Implementation
 
@@ -158,7 +158,7 @@ enum State { IDLE, WALK, INTERACT, DISABLED }
 @export var speed: float = 200.0
 
 var current_state: State = State.IDLE
-var facing_direction: Vector2 = Vector2.DOWN  # Vector2(0, 1) — positive Y is downward in Godot
+var facing_direction: Vector2 = Vector2.DOWN  # Vector2(0, 1), positive Y is downward in Godot
 
 @onready var sprite: AnimatedSprite2D = $Sprite
 
@@ -200,12 +200,12 @@ func _state_walk() -> void:
 
 func _state_interact() -> void:
     velocity = Vector2.ZERO
-    # Waiting for interaction to complete — controlled externally.
+    # Waiting for interaction to complete. Controlled externally.
 
 
 func _state_disabled() -> void:
     velocity = Vector2.ZERO
-    # Completely inert — cutscene, menu, or battle transition.
+    # Completely inert: cutscene, menu, or battle transition.
 
 
 func _change_state(new_state: State) -> void:
@@ -270,7 +270,7 @@ The `match` statement routes to the correct state handler each frame. Each state
 
 `facing_direction` is a `Vector2` that remembers which way the player last moved. We use it to choose the correct animation even when standing still (idle_down, idle_left, etc.).
 
-The `_direction_to_string()` function converts a Vector2 direction into "up", "down", "left", or "right" by checking which axis has the larger magnitude. This handles diagonal input gracefully — if you press right and slightly down, you face right.
+The `_direction_to_string()` function converts a Vector2 direction into "up", "down", "left", or "right" by checking which axis has the larger magnitude. This handles diagonal input gracefully: if you press right and slightly down, you face right.
 
 ### Public Methods for External Control
 
@@ -282,9 +282,9 @@ This keeps the state machine's logic internal while providing a clean API for th
 
 ## Y-Sorting: Correct Depth Ordering
 
-In a top-down 2D game, objects lower on the screen should appear in front of objects higher on the screen. This creates the illusion of depth — the player walks "behind" a tree when they're above it, and "in front of" a tree when they're below it.
+In a top-down 2D game, objects lower on the screen should appear in front of objects higher on the screen. This creates the illusion of depth. The player walks "behind" a tree when they're above it, and "in front of" a tree when they're below it.
 
-Godot handles this with **Y-sort**. When enabled on a parent node, its children are drawn sorted by their Y position — lower Y values are drawn first (behind), higher Y values are drawn last (in front).
+Godot handles this with **Y-sort**. When enabled on a parent node, its children are drawn sorted by their Y position: lower Y values are drawn first (behind), higher Y values are drawn last (in front).
 
 ### Setting Up Y-Sort
 
@@ -296,14 +296,14 @@ In the Willowbrook scene:
 2. In the Inspector, find **CanvasItem → Ordering → Y Sort Enabled** and turn it **on**.
 3. Drag the `Objects` TileMapLayer onto `YSortGroup` to reparent it (it becomes a child of YSortGroup instead of Willowbrook).
 4. Drag the `Player` instance onto `YSortGroup` the same way.
-5. Select the `Objects` TileMapLayer. In the Inspector, find **CanvasItem → Ordering → Y Sort Enabled** and turn it **on** for this node too. This is essential — without it, the individual tiles within the layer won't sort against the player. The entire layer would render as a single block, causing the player to appear always in front of or behind all objects.
+5. Select the `Objects` TileMapLayer. In the Inspector, find **CanvasItem → Ordering → Y Sort Enabled** and turn it **on** for this node too. This is essential; without it, the individual tiles within the layer won't sort against the player. The entire layer would render as a single block, causing the player to appear always in front of or behind all objects.
 
 Now set the Y Sort Origin for the Objects layer so tiles sort by their bottom edge:
 1. With `Objects` still selected, find **Y Sort Origin** in the Inspector and set it to `16` (the tile height in pixels). This makes tiles sort based on their bottom edge rather than their top-left corner, which looks correct for trees, rocks, and buildings.
 
-The AbovePlayer layer should **not** be Y-sorted with the player — it should always draw on top. Keep it outside the Y-sorted group, or set its Z-index higher.
+The AbovePlayer layer should **not** be Y-sorted with the player; it should always draw on top. Keep it outside the Y-sorted group, or set its Z-index higher.
 
-> **See:** [CanvasItem](https://docs.godotengine.org/en/stable/classes/class_canvasitem.html) — the `y_sort_enabled` property and how it affects rendering order.
+> **See:** [CanvasItem](https://docs.godotengine.org/en/stable/classes/class_canvasitem.html), covering the `y_sort_enabled` property and how it affects rendering order.
 
 ### A Practical Scene Structure
 
@@ -325,7 +325,7 @@ We already set the collision shape values earlier in this module when we added t
 
 With animated sprites, you want the collision shape to be:
 
-- **Shorter** than the sprite — roughly the bottom third or half. This represents the player's "feet" area.
+- **Shorter** than the sprite, roughly the bottom third or half. This represents the player's "feet" area.
 - **Offset downward** so it aligns with the feet, not the center of the sprite.
 
 Our values (`Vector2(12, 8)` size, `Vector2(0, 4)` offset) give the player a small collision "footprint" that feels natural. The player's head and torso can overlap with objects above, but their feet are blocked by solid tiles.
@@ -334,7 +334,7 @@ Our values (`Vector2(12, 8)` size, `Vector2(0, 4)` offset) give the player a sma
 
 ## Grid-Based vs Free Movement
 
-We've implemented **free movement** — the player moves smoothly in any direction at any time. This is what most modern JRPGs use (and what Crystal Saga will use).
+We've implemented **free movement**: the player moves smoothly in any direction at any time. This is what most modern JRPGs use (and what Crystal Saga will use).
 
 The alternative is **grid-based movement**, where the player snaps from one tile to the next in discrete steps. This is what classic JRPGs (Final Fantasy I-VI, Dragon Quest I-V, Pokemon) use.
 
@@ -354,7 +354,7 @@ Grid-based movement is elegant for tile-heavy games but requires a different arc
 - A **state machine** organizes player behavior into discrete states (IDLE, WALK, INTERACT, DISABLED), preventing conflicting behavior.
 - The **enum + match** pattern is a clean way to implement a simple state machine.
 - **Public methods** (`set_disabled`, `start_interaction`) give other systems controlled access to the state machine.
-- **Y-sorting** creates correct depth ordering — lower objects appear in front.
+- **Y-sorting** creates correct depth ordering, where lower objects appear in front.
 - **Feet-only collision** (small, low CollisionShape2D) feels natural in top-down JRPGs.
 - **Free movement** is smoother and simpler than grid-based; Crystal Saga uses free movement.
 - **Facing direction** persists so idle animations face the last movement direction.
@@ -370,4 +370,4 @@ When you press F6 (running the Willowbrook scene):
 
 ## Next Module
 
-We have a living player in a real town — but there's nowhere to go. In **Module 6: Connecting Worlds**, we'll build a second area (Whisperwood Forest), create exit zones that trigger scene transitions, and build our first autoload — the SceneManager — that handles fade-to-black transitions between locations.
+We have a living player in a real town, but there's nowhere to go. In **Module 6: Connecting Worlds**, we'll build a second area (Whisperwood Forest), create exit zones that trigger scene transitions, and build our first autoload (the SceneManager) that handles fade-to-black transitions between locations.

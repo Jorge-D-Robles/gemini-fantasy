@@ -2,11 +2,11 @@
 
 ## What We Have So Far
 
-NPCs with a dialogue system, custom Resources for items and characters, scene transitions, and a connected two-area world. We've defined items like Potion and Iron Sword as `.tres` files — but the player can't actually carry or use them yet.
+NPCs with a dialogue system, custom Resources for items and characters, scene transitions, and a connected two-area world. We've defined items like Potion and Iron Sword as `.tres` files, but the player can't actually carry or use them yet.
 
 ## What We're Building This Module
 
-An inventory system with a global autoload for tracking items, a UI screen the player can open with a key, and the ability to use consumable items. We'll keep this focused — equipment and shops come in Module 17.
+An inventory system with a global autoload for tracking items, a UI screen the player can open with a key, and the ability to use consumable items. We'll keep this focused; equipment and shops come in Module 17.
 
 ## InventoryManager Autoload
 
@@ -16,7 +16,7 @@ Create `res://autoloads/inventory_manager.gd`:
 
 ```gdscript
 extends Node
-## Manages the player's inventory. Autoload — accessible as InventoryManager.
+## Manages the player's inventory. Autoload, accessible as InventoryManager.
 
 signal item_added(item: ItemData, new_count: int)
 signal item_removed(item: ItemData, new_count: int)
@@ -96,9 +96,9 @@ Register it as an autoload: **Project → Project Settings → Autoload** → ad
 
 ### Design Notes
 
-**Signal-driven updates:** Every change emits a signal (`item_added`, `item_removed`, `inventory_changed`, `gold_changed`). The UI listens to these signals and updates itself — the InventoryManager never touches UI directly.
+**Signal-driven updates:** Every change emits a signal (`item_added`, `item_removed`, `inventory_changed`, `gold_changed`). The UI listens to these signals and updates itself. The InventoryManager never touches UI directly.
 
-**ID-based matching:** Items are matched by their `id` string (`item.id == item_id`), not by object reference. This means two different `ItemData` instances with the same `id` are treated as the same item — important when loading from saves.
+**ID-based matching:** Items are matched by their `id` string (`item.id == item_id`), not by object reference. This means two different `ItemData` instances with the same `id` are treated as the same item, which is important when loading from saves.
 
 **`remove_item` returns bool:** Callers can check if the removal succeeded. Trying to remove an item the player doesn't have returns `false`.
 
@@ -117,7 +117,7 @@ Before building the UI, define a `menu` action for opening the inventory:
 2. Add a new action: `menu`
 3. Bind it to **Tab** (or **I**) and the **Start/Menu** gamepad button
 
-> **Note:** Avoid binding `menu` to Escape — Escape is already mapped to `ui_cancel`, which we'll use to *close* the inventory. Using the same key for both open and close works thanks to our `elif` structure in the script, but using different keys (Tab to open, Escape to close) is clearer and avoids confusion.
+> **Note:** Avoid binding `menu` to Escape. Escape is already mapped to `ui_cancel`, which we'll use to *close* the inventory. Using the same key for both open and close works thanks to our `elif` structure in the script, but using different keys (Tab to open, Escape to close) is clearer and avoids confusion.
 
 ## The Inventory UI
 
@@ -152,7 +152,7 @@ ItemSlot (PanelContainer)
 
 Select the `Icon` (TextureRect) node and set **Custom Minimum Size** to `Vector2(32, 32)` so each slot has a reasonable size even without an icon texture.
 
-> **Note:** Since we haven't set item icons in our `.tres` files yet, the inventory slots will show blank icon areas — that's expected. You'll see the count label (e.g., "3" for potions). To add placeholder icons, drag `res://icon.svg` into the `icon` field of each item `.tres` file.
+> **Note:** Since we haven't set item icons in our `.tres` files yet, the inventory slots will show blank icon areas. That's expected. You'll see the count label (e.g., "3" for potions). To add placeholder icons, drag `res://icon.svg` into the `icon` field of each item `.tres` file.
 
 Create `res://ui/inventory/item_slot.gd`:
 
@@ -191,9 +191,9 @@ func _notification(what: int) -> void:
         slot_selected.emit(item_data)
 ```
 
-> **See:** [TextureRect](https://docs.godotengine.org/en/stable/classes/class_texturerect.html) — displaying images in UI.
+> **See:** [TextureRect](https://docs.godotengine.org/en/stable/classes/class_texturerect.html): displaying images in UI.
 
-> **See:** [GridContainer](https://docs.godotengine.org/en/stable/classes/class_gridcontainer.html) — automatic grid layout for child nodes.
+> **See:** [GridContainer](https://docs.godotengine.org/en/stable/classes/class_gridcontainer.html): automatic grid layout for child nodes.
 
 ### The Inventory Screen Script
 
@@ -297,7 +297,7 @@ get_tree().paused = true   # Pause everything
 get_tree().paused = false  # Resume everything
 ```
 
-But wait — if everything is paused, how does the inventory UI itself continue to work? Through **`process_mode`**.
+But wait: if everything is paused, how does the inventory UI itself continue to work? Through **`process_mode`**.
 
 Every node has a `process_mode` property that controls whether it runs while paused:
 
@@ -311,9 +311,9 @@ Every node has a `process_mode` property that controls whether it runs while pau
 
 > **IMPORTANT:** Select the `InventoryScreen` (CanvasLayer) root node in the editor and set **Process → Mode** to **`Always`** in the Inspector. Without this, the inventory will open but immediately freeze because the paused game prevents it from processing input. The only way to recover would be to force-quit.
 
-The SceneManager should also be `PROCESS_MODE_ALWAYS` — go back to `scene_manager.tscn` and set its root node's **Process → Mode** to **`Always`** too. It needs to work during transitions regardless of pause state.
+The SceneManager should also be `PROCESS_MODE_ALWAYS`. Go back to `scene_manager.tscn` and set its root node's **Process → Mode** to **`Always`** too. It needs to work during transitions regardless of pause state.
 
-> **See:** [Pausing games](https://docs.godotengine.org/en/stable/tutorials/scripting/pausing_games.html) — the official guide to pausing and `process_mode`.
+> **See:** [Pausing games](https://docs.godotengine.org/en/stable/tutorials/scripting/pausing_games.html): the official guide to pausing and `process_mode`.
 
 ## Giving the Player Starting Items
 
@@ -327,7 +327,7 @@ func _ready() -> void:
         add_item(potion, 3)
 ```
 
-Or better — add items through game events. For now, the starting items are fine for testing.
+Or better, add items through game events. For now, the starting items are fine for testing.
 
 ## Integration: Adding the Inventory to Scenes
 
@@ -361,7 +361,7 @@ Willowbrook (Node2D)
 - **Focus-based navigation** (`focus_mode`, `grab_focus()`) makes UI work with keyboard and gamepad.
 - **Signal pattern:** InventoryManager emits `inventory_changed` → UI refreshes. Manager never touches UI directly.
 - **`_gui_input()`** handles input events on Control nodes. **`accept_event()`** prevents propagation (like `set_input_as_handled()` for UI).
-- Items are consumed with `remove_item()` — the grid refreshes automatically via the `inventory_changed` signal.
+- Items are consumed with `remove_item()`, and the grid refreshes automatically via the `inventory_changed` signal.
 
 ### Troubleshooting
 
@@ -370,15 +370,15 @@ Willowbrook (Node2D)
 | Inventory doesn't open when pressing Tab | `menu` input action not defined, or key not bound |
 | Game freezes when inventory opens | `process_mode` not set to `Always` on the InventoryScreen CanvasLayer |
 | Items stacking incorrectly or showing wrong item | Missing or duplicate `id` fields in `.tres` files (see Module 7) |
-| Slots appear too small or empty | No icon set on items (expected — use Godot icon as placeholder), or TextureRect missing minimum size |
+| Slots appear too small or empty | No icon set on items (expected; use Godot icon as placeholder), or TextureRect missing minimum size |
 | Escape doesn't close inventory | `ui_cancel` not mapped to Escape (it is by default) |
 
 ## What You Should See
 
 When you press F6 (running Willowbrook):
-- Press Tab (or your menu key) — the inventory screen opens
+- Press Tab (or your menu key). The inventory screen opens
 - The game world freezes behind the menu
-- Items appear in a grid (3 Potions from starting inventory) — icons may be blank if you haven't set them
+- Items appear in a grid (3 Potions from starting inventory). Icons may be blank if you haven't set them
 - Navigating slots with arrow keys highlights them and shows descriptions
 - Pressing accept on a Potion uses it and decrements the count
 - Pressing Escape closes the inventory and resumes the game

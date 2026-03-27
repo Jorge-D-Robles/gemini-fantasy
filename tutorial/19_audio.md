@@ -1,8 +1,8 @@
-# Module 19: Audio — Music and Sound Effects
+# Module 19: Audio (Music and Sound Effects)
 
 ## What We Have So Far
 
-A complete, saveable JRPG with exploration, combat, quests, and party management. But it's silent. JRPGs are defined by their music as much as their gameplay — time to fix that.
+A complete, saveable JRPG with exploration, combat, quests, and party management. But it's silent. JRPGs are defined by their music as much as their gameplay. Time to fix that.
 
 ## What We're Building This Module
 
@@ -17,9 +17,9 @@ Godot provides two audio player nodes:
 | **AudioStreamPlayer** | Non-positional audio: BGM, UI sounds, fanfares |
 | **AudioStreamPlayer2D** | Positional 2D audio: footsteps, environmental sounds |
 
-For a JRPG, most audio is non-positional — music plays at full volume regardless of camera position, menu sounds don't have a source in the world.
+For a JRPG, most audio is non-positional. Music plays at full volume regardless of camera position, and menu sounds don't have a source in the world.
 
-> **See:** [AudioStreamPlayer](https://docs.godotengine.org/en/stable/classes/class_audiostreamplayer.html) — the non-positional audio player.
+> **See:** [AudioStreamPlayer](https://docs.godotengine.org/en/stable/classes/class_audiostreamplayer.html), the non-positional audio player.
 
 ## Audio Formats
 
@@ -114,7 +114,7 @@ Create the scene `res://autoloads/music_manager.tscn`:
 2. Add two **AudioStreamPlayer** children. Name them `PlayerA` and `PlayerB`.
 3. Attach `music_manager.gd` to the root node.
 4. Save as `res://autoloads/music_manager.tscn`.
-5. Register as autoload: **Project → Project Settings → Autoload** → add the `.tscn` file (not the `.gd` file — autoloads that need child nodes use the scene).
+5. Register as autoload: **Project → Project Settings → Autoload** → add the `.tscn` file (not the `.gd` file, since autoloads that need child nodes use the scene).
 
 ```
 MusicManager (Node)
@@ -164,7 +164,7 @@ MusicManager.resume_previous_track()
 
 ## Sound Effects
 
-SFX are simpler — play once, no crossfading. You can either add AudioStreamPlayer nodes to scenes or create a simple SFX utility:
+SFX are simpler: play once, no crossfading. You can either add AudioStreamPlayer nodes to scenes or create a simple SFX utility:
 
 ```gdscript
 # Simple approach: preload and play in the script that needs it
@@ -181,13 +181,13 @@ func _play_sfx(stream: AudioStream) -> void:
 ```
 
 Common SFX to add:
-- **Menu cursor** — when navigating buttons
-- **Menu select** — when pressing a button
-- **Attack hit** — when damage is dealt
-- **Heal** — when HP is restored
-- **Level up** — jingle on level up
-- **Victory fanfare** — short victory theme
-- **Door/chest open** — when interacting with objects
+- **Menu cursor:** when navigating buttons
+- **Menu select:** when pressing a button
+- **Attack hit:** when damage is dealt
+- **Heal:** when HP is restored
+- **Level up:** jingle on level up
+- **Victory fanfare:** short victory theme
+- **Door/chest open:** when interacting with objects
 
 ## Audio Buses
 
@@ -219,11 +219,11 @@ AudioServer.set_bus_volume_db(AudioServer.get_bus_index("SFX"), -5.0)
 AudioServer.set_bus_mute(AudioServer.get_bus_index("Music"), true)
 ```
 
-> **See:** [Audio buses](https://docs.godotengine.org/en/stable/tutorials/audio/audio_buses.html) — setting up bus layout, routing, and effects.
+> **See:** [Audio buses](https://docs.godotengine.org/en/stable/tutorials/audio/audio_buses.html), for setting up bus layout, routing, and effects.
 
-> **See:** [AudioServer](https://docs.godotengine.org/en/stable/classes/class_audioserver.html) — runtime bus control.
+> **See:** [AudioServer](https://docs.godotengine.org/en/stable/classes/class_audioserver.html), for runtime bus control.
 
-> **See:** [AudioBusLayout](https://docs.godotengine.org/en/stable/classes/class_audiobuslayout.html) — the resource that stores bus configuration.
+> **See:** [AudioBusLayout](https://docs.godotengine.org/en/stable/classes/class_audiobuslayout.html), the resource that stores bus configuration.
 
 ### Volume Settings UI
 
@@ -280,7 +280,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 `linear_to_db()` converts a 0-1 slider value to decibels. At 0, it returns -INF (silent). At 1, it returns 0 (full volume).
 
-> **Note:** Volume settings are lost when the game restarts. To persist them, save the slider values to `user://settings.json` and load them in `_ready()`. This is left as an exercise — the pattern is the same as Module 18's save system.
+> **Note:** Volume settings are lost when the game restarts. To persist them, save the slider values to `user://settings.json` and load them in `_ready()`. This is left as an exercise; the pattern is the same as Module 18's save system.
 
 ## Autoload Reference Card (Final)
 
@@ -314,4 +314,4 @@ func _unhandled_input(event: InputEvent) -> void:
 
 ## Next Module
 
-The game sounds alive. In **Module 20: Title Screen and Game Flow**, we'll build the complete game loop — title screen, new game, continue, pause menu, victory ending, and credits.
+The game sounds alive. In **Module 20: Title Screen and Game Flow**, we'll build the complete game loop: title screen, new game, continue, pause menu, victory ending, and credits.

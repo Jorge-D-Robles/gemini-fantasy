@@ -2,7 +2,7 @@
 
 ## What We Have So Far
 
-Every game system is functional — exploration, dialogue, combat, inventory, quests, party, equipment, shops. But if the player closes the game, everything is lost.
+Every game system is functional: exploration, dialogue, combat, inventory, quests, party, equipment, shops. But if the player closes the game, everything is lost.
 
 ## What We're Building This Module
 
@@ -23,14 +23,14 @@ Every autoload holds state that must persist:
 ## Why JSON?
 
 We use JSON for saves because:
-- **Human-readable** — you can open a save file in a text editor and debug it
-- **No class coupling** — JSON doesn't care about your Resource class definitions
-- **Universally understood** — every language and tool can read JSON
-- **Simple API** — Godot's `JSON.stringify()` and `JSON.parse_string()` handle everything
+- **Human-readable:** you can open a save file in a text editor and debug it
+- **No class coupling:** JSON doesn't care about your Resource class definitions
+- **Universally understood:** every language and tool can read JSON
+- **Simple API:** Godot's `JSON.stringify()` and `JSON.parse_string()` handle everything
 
-The alternative — Godot's `ResourceSaver` with `.tres` files — provides type safety but couples your saves to your class hierarchy. If you rename a Resource class, old saves break. JSON is more resilient for a tutorial scope.
+The alternative (Godot's `ResourceSaver` with `.tres` files) provides type safety but couples your saves to your class hierarchy. If you rename a Resource class, old saves break. JSON is more resilient for a tutorial scope.
 
-> **See:** [Saving games](https://docs.godotengine.org/en/stable/tutorials/io/saving_games.html) — the official guide covering multiple save approaches.
+> **See:** [Saving games](https://docs.godotengine.org/en/stable/tutorials/io/saving_games.html), the official guide covering multiple save approaches.
 
 ## The `to_save_data()` / `from_save_data()` Pattern
 
@@ -147,14 +147,14 @@ func from_save_data(data: Dictionary) -> void:
 
 ## The SaveManager
 
-Create `res://autoloads/save_manager.gd` and register it as an autoload (**Project → Project Settings → Autoload** → add `save_manager.gd` as `SaveManager`). Unlike the other autoloads, SaveManager has no visible nodes — it's pure logic. We make it an autoload so it can use `await` for scene loading:
+Create `res://autoloads/save_manager.gd` and register it as an autoload (**Project → Project Settings → Autoload** → add `save_manager.gd` as `SaveManager`). Unlike the other autoloads, SaveManager has no visible nodes; it's pure logic. We make it an autoload so it can use `await` for scene loading:
 
 > **Note:** Static functions in GDScript cannot use `await` (they have no node context). Since `load_game()` needs to await a scene change, SaveManager must be an autoload instance, not a static utility.
 
 ```gdscript
 extends Node
 ## Handles saving and loading game state to JSON files.
-## Registered as autoload — accessible as SaveManager.
+## Registered as autoload, accessible as SaveManager.
 
 const SAVE_DIR := "user://saves/"
 const MAX_SLOTS := 3
@@ -279,11 +279,11 @@ func slot_exists(slot: int) -> bool:
     return FileAccess.file_exists(SAVE_DIR + "save_" + str(slot) + ".json")
 ```
 
-> **See:** [FileAccess](https://docs.godotengine.org/en/stable/classes/class_fileaccess.html) — reading and writing files.
+> **See:** [FileAccess](https://docs.godotengine.org/en/stable/classes/class_fileaccess.html), for reading and writing files.
 
-> **See:** [Data paths](https://docs.godotengine.org/en/stable/tutorials/io/data_paths.html) — `user://` is the platform-specific writable directory for save data.
+> **See:** [Data paths](https://docs.godotengine.org/en/stable/tutorials/io/data_paths.html). `user://` is the platform-specific writable directory for save data.
 
-> **See:** [JSON](https://docs.godotengine.org/en/stable/classes/class_json.html) — parsing and generating JSON.
+> **See:** [JSON](https://docs.godotengine.org/en/stable/classes/class_json.html), for parsing and generating JSON.
 
 ## Wiring the Save Crystal
 
@@ -297,7 +297,7 @@ func _activate() -> void:
     print("Your progress has been saved!")
 ```
 
-A proper implementation would show a save slot selection UI — three buttons, each showing the timestamp and location of existing saves.
+A proper implementation would show a save slot selection UI: three buttons, each showing the timestamp and location of existing saves.
 
 ## Error Handling
 
@@ -328,7 +328,7 @@ if not save_data.has("version"):
 | PartyManager | 17 | Party roster, recruitment, stats |
 | **SaveManager** | **18** | **Save/load game state to JSON** |
 
-> **Note:** `load_game()` uses `tree.change_scene_to_file()` directly instead of `SceneManager.change_scene()`. This is intentional — the save system needs to bypass SceneManager's spawn point logic and instead restore the exact player position from the save file. If you want the fade effect, you could call `SceneManager._anim_player.play("fade_out")` before loading and `fade_in` after.
+> **Note:** `load_game()` uses `tree.change_scene_to_file()` directly instead of `SceneManager.change_scene()`. This is intentional. The save system needs to bypass SceneManager's spawn point logic and instead restore the exact player position from the save file. If you want the fade effect, you could call `SceneManager._anim_player.play("fade_out")` before loading and `fade_in` after.
 
 ## What We've Learned
 
@@ -336,8 +336,8 @@ if not save_data.has("version"):
 - **`to_save_data()` / `from_save_data()`** on each autoload exports/imports state as Dictionaries.
 - **`user://`** is the writable save directory; `FileAccess` handles file I/O.
 - **Save crystals** trigger the save flow; **load** happens from the title screen or pause menu.
-- Resources are referenced by **path** in saves (`resource_path`), not by value — the `.tres` file is the source of truth, the save just points to it.
-- Always validate JSON before using it — corrupt saves shouldn't crash the game.
+- Resources are referenced by **path** in saves (`resource_path`), not by value. The `.tres` file is the source of truth; the save just points to it.
+- Always validate JSON before using it. Corrupt saves shouldn't crash the game.
 
 ## What You Should See
 
@@ -347,4 +347,4 @@ if not save_data.has("version"):
 
 ## Next Module
 
-The game is fully playable and saveable. In **Module 19: Audio**, we'll add background music, sound effects, and a volume settings system — bringing sound to Crystal Saga.
+The game is fully playable and saveable. In **Module 19: Audio**, we'll add background music, sound effects, and a volume settings system, bringing sound to Crystal Saga.

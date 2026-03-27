@@ -62,7 +62,7 @@ Create Lira's character data at `res://data/characters/lira.tres`:
 - attack: 6, defense: 5, speed: 9
 - hp_growth: 8, mp_growth: 8, attack_growth: 1, defense_growth: 1
 
-Lira is a mage — lower HP and attack, higher MP and speed.
+Lira is a mage: lower HP and attack, higher MP and speed.
 
 ### The Recruitment Scene
 
@@ -344,7 +344,7 @@ func _refresh() -> void:
 
     for item in _shop_data.items_for_sale:
         var button := Button.new()
-        button.text = item.display_name + " — " + str(item.buy_price) + "g"
+        button.text = item.display_name + " - " + str(item.buy_price) + "g"
         if InventoryManager.gold < item.buy_price:
             button.disabled = true
         button.pressed.connect(_buy_item.bind(item))
@@ -378,7 +378,7 @@ func _on_npc_interacted(npc: CharacterBody2D) -> void:
 
 ### The Innkeeper
 
-The innkeeper is simpler — a dialogue choice that costs gold and heals the party:
+The innkeeper is simpler, just a dialogue choice that costs gold and heals the party:
 
 ```gdscript
 func _handle_inn(npc: CharacterBody2D) -> void:
@@ -400,11 +400,11 @@ func _handle_inn(npc: CharacterBody2D) -> void:
             _dialogue_box.start_dialogue(_make_lines("Old Brennan", ["Seems you're a bit short."]))
 ```
 
-> **See:** [Singletons (Autoload)](https://docs.godotengine.org/en/stable/tutorials/scripting/singletons_autoload.html) — PartyManager is a new autoload. This guide covers the autoload pattern.
+> **See:** [Singletons (Autoload)](https://docs.godotengine.org/en/stable/tutorials/scripting/singletons_autoload.html). PartyManager is a new autoload. This guide covers the autoload pattern.
 
-> **See:** [GUI containers](https://docs.godotengine.org/en/stable/tutorials/ui/gui_containers.html) — VBoxContainer and PanelContainer used for the equipment and shop UIs.
+> **See:** [GUI containers](https://docs.godotengine.org/en/stable/tutorials/ui/gui_containers.html). VBoxContainer and PanelContainer are used for the equipment and shop UIs.
 
-> **See:** [Resources](https://docs.godotengine.org/en/stable/tutorials/scripting/resources.html) — ShopData and CharacterData equipment slots both use the Resource pattern.
+> **See:** [Resources](https://docs.godotengine.org/en/stable/tutorials/scripting/resources.html). ShopData and CharacterData equipment slots both use the Resource pattern.
 
 > **Note:** Selling items is left as an exercise. The pattern mirrors buying: show the player's inventory, select an item, add gold equal to half `buy_price`, remove the item from inventory.
 
@@ -421,7 +421,7 @@ func _handle_inn(npc: CharacterBody2D) -> void:
 ## What We've Learned
 
 - **PartyManager** autoload tracks the roster of party members.
-- **Recruitment** is triggered by dialogue + game flags — the NPC becomes a party member.
+- **Recruitment** is triggered by dialogue + game flags, and the NPC becomes a party member.
 - **Equipment** modifies effective stats. `get_effective_attack()` = base + weapon bonus.
 - **Equip/unequip** swaps items between the character and inventory.
 - **Shops** use a ShopData resource listing items with prices.
@@ -439,4 +439,4 @@ func _handle_inn(npc: CharacterBody2D) -> void:
 
 ## Next Module
 
-All game systems are in place. In **Module 18: Save and Load**, we'll persist everything — position, inventory, quests, party, equipment, flags — to JSON files, with save crystals in the world and multiple save slots.
+All game systems are in place. In **Module 18: Save and Load**, we'll persist everything (position, inventory, quests, party, equipment, flags) to JSON files, with save crystals in the world and multiple save slots.

@@ -40,17 +40,17 @@ enum AIType { AGGRESSIVE, CAUTIOUS, BALANCED }
 
 Create three enemies as `.tres` files in `res://data/enemies/`:
 
-**`cave_bat.tres`** — Fast, weak, aggressive
+**`cave_bat.tres`**, fast, weak, aggressive
 - display_name: "Cave Bat", ai_type: AGGRESSIVE
 - HP: 20, attack: 6, defense: 2, speed: 12
 - XP: 8, gold: 3
 
-**`crystal_slime.tres`** — Moderate, balanced
+**`crystal_slime.tres`**, moderate, balanced
 - display_name: "Crystal Slime", ai_type: BALANCED
 - HP: 35, attack: 8, defense: 5, speed: 4
 - XP: 12, gold: 6, drop: Potion (25%)
 
-**`stone_golem.tres`** — Tanky, cautious
+**`stone_golem.tres`**, tanky, cautious
 - display_name: "Stone Golem", ai_type: CAUTIOUS
 - HP: 60, attack: 12, defense: 10, speed: 2
 - XP: 25, gold: 15, drop: Ether (20%)
@@ -61,7 +61,7 @@ Each enemy needs to decide what to do on its turn. Create `res://systems/battle/
 
 ```gdscript
 class_name AIController
-## Enemy AI decision-making. Static methods — no instance needed.
+## Enemy AI decision-making. Static methods, no instance needed.
 
 static func choose_enemy_action(
     battler: BattlerData,
@@ -115,7 +115,7 @@ Define which enemies appear together. Save as `res://resources/encounter_data.gd
 ```gdscript
 extends Resource
 class_name EncounterData
-## Defines a possible random encounter — which enemies appear as a group.
+## Defines a possible random encounter: which enemies appear as a group.
 
 @export var enemies: Array[EnemyData] = []
 @export_range(0.0, 1.0) var weight: float = 1.0  # Relative probability
@@ -123,9 +123,9 @@ class_name EncounterData
 
 Create some encounter groups as `.tres` files in `res://data/encounters/`:
 
-**`cave_bats.tres`:** 3 Cave Bats (weight: 1.0 — common)
-**`slime_pair.tres`:** 2 Crystal Slimes (weight: 0.6 — uncommon)
-**`golem.tres`:** 1 Stone Golem (weight: 0.3 — rare)
+**`cave_bats.tres`:** 3 Cave Bats (weight: 1.0, common)
+**`slime_pair.tres`:** 2 Crystal Slimes (weight: 0.6, uncommon)
+**`golem.tres`:** 1 Stone Golem (weight: 0.3, rare)
 
 ### The Step Counter System
 
@@ -203,7 +203,7 @@ func exit_zone() -> void:
     _current_encounters.clear()
 ```
 
-> **See:** [Random number generation](https://docs.godotengine.org/en/stable/tutorials/math/random_number_generation.html) — `randi_range()`, `randf()`, and weighted random selection.
+> **See:** [Random number generation](https://docs.godotengine.org/en/stable/tutorials/math/random_number_generation.html), covering `randi_range()`, `randf()`, and weighted random selection.
 
 ### Wiring Encounter Zones
 
@@ -240,13 +240,13 @@ func _on_body_exited(body: Node2D) -> void:
 Before wiring encounters to battles, we need a way for the victory flow (Module 15) to access enemy rewards. Open `res://resources/battler_data.gd` and add this property:
 
 ```gdscript
-# Add to battler_data.gd — stores the EnemyData for reward calculation
+# Add to battler_data.gd, stores the EnemyData for reward calculation
 var enemy_data: EnemyData = null
 ```
 
 ### Connecting Encounters to Battles
 
-The EncounterSystem emits `encounter_triggered`, but nothing starts a battle yet. Create the Crystal Cavern scene script — save as `res://scenes/crystal_cavern/crystal_cavern.gd` and attach to the CrystalCavern root node:
+The EncounterSystem emits `encounter_triggered`, but nothing starts a battle yet. Create the Crystal Cavern scene script. Save as `res://scenes/crystal_cavern/crystal_cavern.gd` and attach to the CrystalCavern root node:
 
 ```gdscript
 extends Node2D
@@ -275,12 +275,12 @@ func _on_encounter_triggered(encounter: EncounterData) -> void:
         battler.enemy_data = ed  # Store for victory rewards (Module 15)
         enemy_battlers.append(battler)
 
-    # Build party (temporary — Module 17 adds a proper PartyManager)
+    # Build party (temporary, Module 17 adds a proper PartyManager)
     var hero := BattlerData.new()
     hero.character_data = load("res://data/characters/aiden.tres")
     hero.is_player_controlled = true
 
-    # Must use Dictionary format — matches SceneManager.start_battle() from Module 11
+    # Must use Dictionary format, matches SceneManager.start_battle() from Module 11
     SceneManager.start_battle({party = [hero], enemies = enemy_battlers})
 ```
 
@@ -427,15 +427,15 @@ Handle flee in the PlayerChoice state (`player_choice_state.gd`), inside the `_o
                 SceneManager.return_from_battle()
             else:
                 print("Couldn't escape!")
-                # Wasted turn — go to next battler
+                # Wasted turn, go to next battler
                 battle_manager._state_machine.transition_to("CheckResult")
 ```
 
 > **JRPG Pattern:** Most JRPGs don't let you flee from boss battles. Add a `can_flee: bool` to your EncounterData and disable the Flee button when it's false.
 
-> **See:** [Resource](https://docs.godotengine.org/en/stable/classes/class_resource.html) — EnemyData and EncounterData both extend Resource. The `@export_group` and `@export_range` annotations organize the Inspector.
+> **See:** [Resource](https://docs.godotengine.org/en/stable/classes/class_resource.html). EnemyData and EncounterData both extend Resource. The `@export_group` and `@export_range` annotations organize the Inspector.
 
-> **See:** [Random number generation](https://docs.godotengine.org/en/stable/tutorials/math/random_number_generation.html) — `randi_range()`, `randf()`, and weighted random selection used throughout the encounter and AI systems.
+> **See:** [Random number generation](https://docs.godotengine.org/en/stable/tutorials/math/random_number_generation.html), covering `randi_range()`, `randf()`, and weighted random selection used throughout the encounter and AI systems.
 
 ## What We've Learned
 

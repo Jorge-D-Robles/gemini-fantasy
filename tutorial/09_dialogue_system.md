@@ -10,7 +10,7 @@ A full dialogue box UI: text appears with a typewriter effect, the speaker's nam
 
 ## UI Fundamentals: Control Nodes
 
-Godot's UI system is built on **Control** nodes — a family of nodes designed specifically for user interfaces. Unlike Node2D (which uses pixel coordinates), Control nodes use **anchors**, **margins**, and **containers** to create responsive layouts.
+Godot's UI system is built on **Control** nodes, a family of nodes designed specifically for user interfaces. Unlike Node2D (which uses pixel coordinates), Control nodes use **anchors**, **margins**, and **containers** to create responsive layouts.
 
 Key Control nodes we'll use:
 
@@ -26,11 +26,11 @@ Key Control nodes we'll use:
 
 Control nodes automatically size and position themselves based on their parent container. This means our dialogue box will work correctly regardless of screen resolution.
 
-> **See:** [Size and anchors](https://docs.godotengine.org/en/stable/tutorials/ui/size_and_anchors.html) — how Control nodes position themselves.
+> **See:** [Size and anchors](https://docs.godotengine.org/en/stable/tutorials/ui/size_and_anchors.html), how Control nodes position themselves.
 
-> **See:** [GUI containers](https://docs.godotengine.org/en/stable/tutorials/ui/gui_containers.html) — automatic layout with VBox, HBox, Grid, and Margin containers.
+> **See:** [GUI containers](https://docs.godotengine.org/en/stable/tutorials/ui/gui_containers.html), automatic layout with VBox, HBox, Grid, and Margin containers.
 
-> **See:** [Control node gallery](https://docs.godotengine.org/en/stable/tutorials/ui/control_node_gallery.html) — visual catalog of all Control nodes.
+> **See:** [Control node gallery](https://docs.godotengine.org/en/stable/tutorials/ui/control_node_gallery.html), visual catalog of all Control nodes.
 
 ## The DialogueLine Resource
 
@@ -106,7 +106,7 @@ DialogueBox (CanvasLayer, layer = 10)
 - Under Theme Overrides → Constants, set margins: left=16, right=16, top=12, bottom=12
 
 **SpeakerLabel (Label)**
-- Text: "" (empty — filled at runtime)
+- Text: "" (empty, filled at runtime)
 - Horizontal Alignment: Left
 - Add a bold font or increase font size to distinguish the speaker name
 
@@ -114,9 +114,9 @@ DialogueBox (CanvasLayer, layer = 10)
 - BBCode Enabled: `true`
 - Fit Content: `true`
 - Scroll Active: `false`
-- Text: "" (empty — filled at runtime)
+- Text: "" (empty, filled at runtime)
 
-The result is a dark panel at the bottom of the screen with a speaker name on top and dialogue text below — the classic JRPG textbox.
+The result is a dark panel at the bottom of the screen with a speaker name on top and dialogue text below, the classic JRPG textbox.
 
 ## The Typewriter Effect
 
@@ -132,12 +132,12 @@ tween.tween_property(text_label, "visible_ratio", 1.0, duration)
 
 Why `visible_ratio` and not `visible_characters`?
 
-- **`visible_characters`** is an `int` — the number of characters shown. Tweening it produces discrete jumps (0 chars, 1 char, 2 chars). For short lines, this looks choppy.
+- **`visible_characters`** is an `int`, the number of characters shown. Tweening it produces discrete jumps (0 chars, 1 char, 2 chars). For short lines, this looks choppy.
 - **`visible_ratio`** is a `float` from 0.0 to 1.0. Tweening it produces smooth character-by-character reveal at a consistent rate regardless of line length.
 
-> **See:** [RichTextLabel](https://docs.godotengine.org/en/stable/classes/class_richtextlabel.html) — the `visible_ratio` and `visible_characters` properties.
+> **See:** [RichTextLabel](https://docs.godotengine.org/en/stable/classes/class_richtextlabel.html), the `visible_ratio` and `visible_characters` properties.
 
-> **See:** [BBCode in RichTextLabel](https://docs.godotengine.org/en/stable/tutorials/ui/bbcode_in_richtextlabel.html) — formatting text with colors, bold, italics, and more.
+> **See:** [BBCode in RichTextLabel](https://docs.godotengine.org/en/stable/tutorials/ui/bbcode_in_richtextlabel.html), formatting text with colors, bold, italics, and more.
 
 ## The Dialogue Box Script
 
@@ -175,7 +175,7 @@ func _unhandled_input(event: InputEvent) -> void:
         get_viewport().set_input_as_handled()
 
         if _is_typing:
-            # Skip the typewriter effect — show all text immediately
+            # Skip the typewriter effect: show all text immediately
             _skip_typing()
         else:
             # Advance to the next line
@@ -254,7 +254,7 @@ func _close() -> void:
 - First press while text is typing: **skip** to show all text immediately.
 - Press when text is fully shown: **advance** to the next line or close.
 
-This is the standard JRPG dialogue control — players who read fast can skip ahead, while slow readers have time.
+This is the standard JRPG dialogue control. Players who read fast can skip ahead, while slow readers have time.
 
 **Tween lifecycle management:**
 ```gdscript
@@ -266,7 +266,7 @@ Before creating a new tween, we kill any existing one. This prevents overlapping
 
 > **Warning:** A Tween stored in a variable can outlive its creating node if the variable is held elsewhere. In our case, `_current_tween` is a member of the dialogue box itself, so it's cleaned up when the box is freed. But be careful with Tweens passed between objects.
 
-> **See:** [Tween](https://docs.godotengine.org/en/stable/classes/class_tween.html) — the Tween API, including `kill()`, `is_valid()`, and chaining methods.
+> **See:** [Tween](https://docs.godotengine.org/en/stable/classes/class_tween.html), the Tween API, including `kill()`, `is_valid()`, and chaining methods.
 
 ## Connecting Dialogue to NPCs
 
@@ -280,13 +280,13 @@ Add an instance of `dialogue_box.tscn` to each scene that needs dialogue (Willow
 
 Since dialogue can happen anywhere, it's a good candidate for global access. But instead of a full autoload, we can instance it in the SceneManager (which is already an autoload and has a CanvasLayer).
 
-For simplicity, let's use **Option A** for now — instance the dialogue box in Willowbrook. We can refactor to a global approach later.
+For simplicity, let's use **Option A** for now: instance the dialogue box in Willowbrook. We can refactor to a global approach later.
 
 Replace the contents of `willowbrook.gd` (the Module 8 version with `print()` dialogue is now obsolete):
 
 ```gdscript
 extends Node2D
-## The town of Willowbrook — Crystal Saga's starting village.
+## The town of Willowbrook, Crystal Saga's starting village.
 
 @onready var _dialogue_box: CanvasLayer = $DialogueBox
 
@@ -325,7 +325,7 @@ The flow:
 
 ## Choice Dialogue (Branching)
 
-Some dialogue needs player choices — "Yes/No" questions, multiple response options. Let's extend our system to support this.
+Some dialogue needs player choices: "Yes/No" questions, multiple response options. Let's extend our system to support this.
 
 First, **replace the entire contents of `res://resources/dialogue_line.gd`** with this updated version that adds a `choices` field:
 
@@ -579,11 +579,11 @@ func _close() -> void:
     dialogue_finished.emit()
 ```
 
-> **Note:** In this basic implementation, choices don't affect what happens next — the dialogue continues linearly. In Module 16 (Quests), we'll connect choices to game flags that change story outcomes.
+> **Note:** In this basic implementation, choices don't affect what happens next; the dialogue continues linearly. In Module 16 (Quests), we'll connect choices to game flags that change story outcomes.
 
-> **Note:** `grab_focus()` on the first button enables keyboard/gamepad navigation. Players can use up/down arrows to select and Enter/interact to confirm — no mouse needed. This is critical for JRPGs.
+> **Note:** `grab_focus()` on the first button enables keyboard/gamepad navigation. Players can use up/down arrows to select and Enter/interact to confirm, no mouse needed. This is critical for JRPGs.
 
-> **See:** [GUI navigation](https://docs.godotengine.org/en/stable/tutorials/ui/gui_navigation.html) — how focus works for keyboard/gamepad UI navigation.
+> **See:** [GUI navigation](https://docs.godotengine.org/en/stable/tutorials/ui/gui_navigation.html), how focus works for keyboard/gamepad UI navigation.
 
 ## Styling the Dialogue Box
 
@@ -613,9 +613,9 @@ The dialogue box's `_unhandled_input` handles the interact/accept buttons for ad
 - The **typewriter effect** uses `visible_ratio` (a float, tweened from 0.0 to 1.0) for smooth character reveal.
 - **Two-press interaction:** first press skips typing, second press advances to the next line.
 - **Choice dialogue** uses dynamically created Buttons with `grab_focus()` for keyboard navigation.
-- **`DialogueLine`** is a Resource with speaker name, text, and optional choices — clean data separation.
+- **`DialogueLine`** is a Resource with speaker name, text, and optional choices, giving you clean data separation.
 - **Tween lifecycle:** kill existing tweens before creating new ones. `create_tween()` tweens are auto-cleaned when the node is freed.
-- `_unhandled_input()` respects UI focus — the dialogue box gets input events after UI buttons have had their chance.
+- `_unhandled_input()` respects UI focus: the dialogue box gets input events after UI buttons have had their chance.
 
 ## What You Should See
 

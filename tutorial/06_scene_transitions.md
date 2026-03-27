@@ -1,8 +1,8 @@
-# Module 6: Connecting Worlds — Scene Transitions
+# Module 6: Connecting Worlds: Scene Transitions
 
 ## What We Have So Far
 
-An animated player character with a state machine, walking around the town of Willowbrook with proper collision and Y-sorting. But the town is an island — there's no way to leave.
+An animated player character with a state machine, walking around the town of Willowbrook with proper collision and Y-sorting. But the town is an island, and there's no way to leave.
 
 ## What We're Building This Module
 
@@ -17,7 +17,7 @@ In a JRPG, each location is typically one scene:
 - Crystal Cavern (dungeon) → `crystal_cavern.tscn`
 - Battle Screen → `battle.tscn`
 
-When the player walks to the edge of town, the game transitions to the forest. When they walk to the forest entrance, it transitions back to town. This is a **scene change** — the current scene is freed (removed from memory), and the new scene is loaded and instanced.
+When the player walks to the edge of town, the game transitions to the forest. When they walk to the forest entrance, it transitions back to town. This is a **scene change**: the current scene is freed (removed from memory), and the new scene is loaded and instanced.
 
 The challenge: how do we manage these transitions cleanly? Who handles the fade effect? How does the new scene know where to spawn the player?
 
@@ -25,7 +25,7 @@ The answer is our first **autoload**.
 
 ## Autoloads: Your First Singleton
 
-You've been using autoloads since Module 2 — you just didn't know it. `Input`, `Engine`, `Time`, `Performance`, and `AudioServer` are all globally available singletons that Godot provides. When you write `Input.is_action_pressed("ui_right")`, you're calling a method on an autoloaded singleton.
+You've been using autoloads since Module 2; you just didn't know it. `Input`, `Engine`, `Time`, `Performance`, and `AudioServer` are all globally available singletons that Godot provides. When you write `Input.is_action_pressed("ui_right")`, you're calling a method on an autoloaded singleton.
 
 Now we're going to create our own.
 
@@ -36,7 +36,7 @@ An **autoload** (also called a singleton) is a scene or script that:
 
 This makes autoloads perfect for game-wide systems: scene management, inventory, audio, quest tracking, game state. We'll build several throughout this tutorial.
 
-> **See:** [Singletons (Autoload)](https://docs.godotengine.org/en/stable/tutorials/scripting/singletons_autoload.html) — the official guide to autoloads, including when and why to use them.
+> **See:** [Singletons (Autoload)](https://docs.godotengine.org/en/stable/tutorials/scripting/singletons_autoload.html), the official guide to autoloads, including when and why to use them.
 
 > **Warning:** Autoloads are powerful but easy to overuse. Not everything needs to be global. If a system only matters within a single scene (like the layout of a specific room), keep it local. We'll use autoloads for systems that genuinely need to persist across the entire game.
 
@@ -51,7 +51,7 @@ Create a new folder `res://autoloads/` and a new script `res://autoloads/scene_m
 ```gdscript
 extends Node
 ## Manages scene transitions with fade effects.
-## Registered as an autoload — accessible as SceneManager from anywhere.
+## Registered as an autoload. Accessible as SceneManager from anywhere.
 
 signal transition_started
 signal transition_finished
@@ -132,7 +132,7 @@ Select the AnimationPlayer and create two animations. Here's the step-by-step fo
 5. Right-click the timeline at time `0.0` and choose **Insert Key**. Set the value's alpha to `0.0` (transparent).
 6. Right-click at time `0.3` and insert another key. Set alpha to `1.0` (fully opaque/black).
 
-> **See:** [Introduction to animations](https://docs.godotengine.org/en/stable/tutorials/animation/introduction.html) — how to create animations with property tracks in AnimationPlayer.
+> **See:** [Introduction to animations](https://docs.godotengine.org/en/stable/tutorials/animation/introduction.html), explaining how to create animations with property tracks in AnimationPlayer.
 
 **`fade_in`** (0.3 seconds):
 Same process, but reversed:
@@ -141,9 +141,9 @@ Same process, but reversed:
 
 Attach the `scene_manager.gd` script to the root `SceneManager` node. Save the scene as `res://autoloads/scene_manager.tscn`.
 
-> **Note:** We use a CanvasLayer with a high layer number (100) so the fade overlay draws on top of everything — UI, game world, particles, everything. CanvasLayer nodes exist outside the normal rendering order.
+> **Note:** We use a CanvasLayer with a high layer number (100) so the fade overlay draws on top of everything: UI, game world, particles, all of it. CanvasLayer nodes exist outside the normal rendering order.
 
-> **See:** [CanvasLayer](https://docs.godotengine.org/en/stable/classes/class_canvaslayer.html) — how CanvasLayer works and why it's essential for UI and overlays.
+> **See:** [CanvasLayer](https://docs.godotengine.org/en/stable/classes/class_canvaslayer.html), explaining how CanvasLayer works and why it's essential for UI and overlays.
 
 ### Step 4: Register the Autoload
 
@@ -154,11 +154,11 @@ Attach the `scene_manager.gd` script to the root `SceneManager` node. Save the s
 
 Now `SceneManager` is globally accessible. Any script in the game can call `SceneManager.change_scene(...)`.
 
-> **See:** [Change scenes manually](https://docs.godotengine.org/en/stable/tutorials/scripting/change_scenes_manually.html) — the built-in `change_scene_to_file()` and why a wrapper autoload is often needed.
+> **See:** [Change scenes manually](https://docs.godotengine.org/en/stable/tutorials/scripting/change_scenes_manually.html), covering the built-in `change_scene_to_file()` and why a wrapper autoload is often needed.
 
 ## Understanding `await`
 
-The SceneManager uses `await` — a GDScript keyword that pauses the function until a signal is emitted, then resumes.
+The SceneManager uses `await`, a GDScript keyword that pauses the function until a signal is emitted, then resumes.
 
 ```gdscript
 _anim_player.play("fade_out")
@@ -245,32 +245,32 @@ Create a second area to connect to:
 2. Create a new scene: `Node2D` root, rename to `Whisperwood`.
 3. Save as `res://scenes/whisperwood/whisperwood.tscn`.
 
-Reuse the same TileSet from Module 4 (`town_tileset.tres`). Add TileMapLayers using the same workflow — Ground, Detail, Objects, AbovePlayer — and assign the TileSet to each. In Module 13, we'll create a dedicated dungeon tileset with a different aesthetic.
+Reuse the same TileSet from Module 4 (`town_tileset.tres`). Add TileMapLayers using the same workflow (Ground, Detail, Objects, AbovePlayer) and assign the TileSet to each. In Module 13, we'll create a dedicated dungeon tileset with a different aesthetic.
 
 Design a simple forest area (at least 20x15 tiles). Use grass tiles for ground, tree tiles for borders, and path tiles through the center:
 - Paint rows 0-2 and 13-15 as dense trees on the Ground layer (collision-enabled)
 - Leave a 3-tile-wide path winding through the middle
 - An entrance on the north side (connecting to Willowbrook)
-- An exit on the south side (leading to the Crystal Cavern — we'll build that in Module 13)
+- An exit on the south side (leading to the Crystal Cavern, which we'll build in Module 13)
 
 Add spawn points (add both to the `spawn_points` group):
-- `from_town` — near the north entrance
-- `default` — same position as `from_town`
+- `from_town`: near the north entrance
+- `default`: same position as `from_town`
 
 Add an exit zone:
-- `ExitToWillowbrook` — Area2D at the north edge, pointing back to `res://scenes/willowbrook/willowbrook.tscn` with spawn point `from_forest`
+- `ExitToWillowbrook`: Area2D at the north edge, pointing back to `res://scenes/willowbrook/willowbrook.tscn` with spawn point `from_forest`
 
-Set up Y-sorting as in Module 5 (create a YSortGroup with Objects and Player as children). Instance the Player scene into Whisperwood (temporary — later the SceneManager will handle spawning). If you test and see an empty forest with no player, check that you instanced `player.tscn` into the scene.
+Set up Y-sorting as in Module 5 (create a YSortGroup with Objects and Player as children). Instance the Player scene into Whisperwood (temporary; later the SceneManager will handle spawning). If you test and see an empty forest with no player, check that you instanced `player.tscn` into the scene.
 
 > **Note:** For now, we're placing the Player instance directly in each scene. This means there are technically multiple Player instances across scenes. That's fine because only one scene is loaded at a time. In a more complex setup, you might have the SceneManager spawn the player dynamically.
 
 ## Signal Lifecycle Across Scene Changes
 
-An important detail to understand: when you call `get_tree().change_scene_to_file()`, the current scene is **freed** — all its nodes are removed from the tree and deleted. This means:
+An important detail to understand: when you call `get_tree().change_scene_to_file()`, the current scene is **freed**, and all its nodes are removed from the tree and deleted. This means:
 
 1. All signal connections within that scene are cleaned up automatically (as we discussed in Module 3).
-2. The SceneManager's signals (`transition_started`, `transition_finished`) still work because the SceneManager is an autoload — it's never freed.
-3. Any signals connected TO an autoload FROM a scene node are also cleaned up when the scene node is freed — no dangling references.
+2. The SceneManager's signals (`transition_started`, `transition_finished`) still work because the SceneManager is an autoload, so it's never freed.
+3. Any signals connected TO an autoload FROM a scene node are also cleaned up when the scene node is freed, so there are no dangling references.
 
 This is why autoloads are the right home for cross-scene systems. They're the stable foundation that persists while the world changes around them.
 
@@ -282,7 +282,7 @@ This is why autoloads are the right home for cross-scene systems. They're the st
 4. The screen should fade to black, then the forest appears, with the player at the `from_town` spawn point.
 5. Walk north in the forest to return to Willowbrook, arriving at the `from_forest` spawn point.
 
-If it works, congratulations — you have a connected game world.
+If it works, congratulations. You have a connected game world.
 
 ### Troubleshooting
 
@@ -291,8 +291,8 @@ If it works, congratulations — you have a connected game world.
 | Player doesn't trigger the exit zone | Player not in `player` group, or exit zone collision shape is missing |
 | Scene changes but player is at wrong position | Spawn point name doesn't match, or spawn point isn't in `spawn_points` group |
 | Fade effect not visible | CanvasLayer layer not high enough, or ColorRect not covering the screen |
-| Crash on scene change | Target scene path is wrong — check for typos in the Inspector |
-| Player stuck after transition | `_is_transitioning` flag not reset — check `await` chain |
+| Crash on scene change | Target scene path is wrong. Check for typos in the Inspector |
+| Player stuck after transition | `_is_transitioning` flag not reset. Check `await` chain |
 
 ## The Autoload Reference Card
 
@@ -307,7 +307,7 @@ We'll maintain this running table throughout the tutorial, adding each new autol
 ## What We've Learned
 
 - **Autoloads** are globally accessible singletons that persist across scene changes. `SceneManager` is our first custom one.
-- `Input`, `Engine`, `Time`, etc. are Godot's built-in autoloads — you've been using them since Module 2.
+- `Input`, `Engine`, `Time`, etc. are Godot's built-in autoloads; you've been using them since Module 2.
 - **`get_tree().change_scene_to_file()`** is Godot's built-in scene change, but it's abrupt. A SceneManager adds fade transitions and spawn point management.
 - **`await`** pauses a function until a signal fires, making async sequences readable as linear code.
 - **Area2D exit zones** detect the player and trigger scene changes.
@@ -327,4 +327,4 @@ When you press F5:
 
 ## Next Module
 
-We can explore two areas now — but the world feels empty. Before we add NPCs and dialogue, we need to establish our **data architecture**. In **Module 7: Resources — The Data Layer**, we'll learn how to define game data (items, characters, NPC info) as reusable, editor-friendly Resource classes. This is the foundation every system from inventory to combat will build on.
+We can explore two areas now, but the world feels empty. Before we add NPCs and dialogue, we need to establish our **data architecture**. In **Module 7: Resources, The Data Layer**, we'll learn how to define game data (items, characters, NPC info) as reusable, editor-friendly Resource classes. This is the foundation every system from inventory to combat will build on.

@@ -1,8 +1,8 @@
-# Module 12: Player Actions — Attack, Defend, Magic, Items
+# Module 12: Player Actions: Attack, Defend, Magic, Items
 
 ## What We Have So Far
 
-A battle system with a node-based state machine, turn order, and automatic combat. But the player can't make choices — everything happens automatically.
+A battle system with a node-based state machine, turn order, and automatic combat. But the player can't make choices. Everything happens automatically.
 
 ## What We're Building This Module
 
@@ -52,7 +52,7 @@ func hide_menu() -> void:
     visible = false
 ```
 
-> **See:** [GUI navigation](https://docs.godotengine.org/en/stable/tutorials/ui/gui_navigation.html) — focus navigation between buttons with keyboard/gamepad.
+> **See:** [GUI navigation](https://docs.godotengine.org/en/stable/tutorials/ui/gui_navigation.html): focus navigation between buttons with keyboard/gamepad.
 
 ## The Command Pattern
 
@@ -68,7 +68,7 @@ var command: Dictionary = {
 }
 ```
 
-This pattern keeps the action execution generic. The `ActionExecute` state doesn't need to know the details of every possible action — it just reads the command dictionary.
+This pattern keeps the action execution generic. The `ActionExecute` state doesn't need to know the details of every possible action; it just reads the command dictionary.
 
 ## Target Selection
 
@@ -185,11 +185,11 @@ func _on_action_chosen(action: String) -> void:
                 action = "defend",
             })
         "magic":
-            # Magic system not yet implemented — placeholder
+            # Magic system not yet implemented, placeholder
             print("Magic not yet available!")
             _battle_menu.show_menu()
         "item":
-            # Item use in battle — simplified for now
+            # Item use in battle (simplified for now)
             var consumables := InventoryManager.get_consumables()
             if consumables.is_empty():
                 print("No items!")
@@ -221,7 +221,7 @@ func _on_target_cancelled() -> void:
 
 This wires the complete flow: menu appears → player picks action → target selection if needed → command passed to ActionExecute.
 
-> **Note:** Magic and item selection are simplified placeholders. Magic is disabled until we define AbilityData (a stretch goal). Item use picks the first consumable automatically — in a full game, you'd show an item selection sub-menu.
+> **Note:** Magic and item selection are simplified placeholders. Magic is disabled until we define AbilityData (a stretch goal). Item use picks the first consumable automatically. In a full game, you'd show an item selection sub-menu.
 
 ## The Damage Formula
 
@@ -350,7 +350,7 @@ func _find_battler_sprite(battler: BattlerData) -> Node2D:
     return null
 ```
 
-> **See:** [Tween](https://docs.godotengine.org/en/stable/classes/class_tween.html) — `tween_property()`, `tween_interval()`, chaining, and `await finished`.
+> **See:** [Tween](https://docs.godotengine.org/en/stable/classes/class_tween.html): `tween_property()`, `tween_interval()`, chaining, and `await finished`.
 
 ## Floating Damage Numbers
 
@@ -402,10 +402,10 @@ This is the simplest form of a temporary status effect. In Module 21 (Next Steps
 - The **battle menu** uses VBoxContainer with Buttons and `grab_focus()` for keyboard navigation.
 - **Target selection** presents enemy names as buttons; cancelling returns to the menu.
 - The **command pattern** represents actions as dictionaries: `{action, battler, target, ability, item}`.
-- **Damage formula:** `max(1, attack - defense + random_variance)` — simple, transparent, extensible.
+- **Damage formula:** `max(1, attack - defense + random_variance)`, simple, transparent, extensible.
 - **Battle animations** use Tweens: slide forward → pause → slide back.
 - **Floating damage numbers** rise and fade using parallel tweens.
-- **Defend** is a temporary defense buff — the simplest status effect pattern.
+- **Defend** is a temporary defense buff, the simplest status effect pattern.
 - `set_parallel(true)` and `chain()` control Tween sequencing.
 
 ## What You Should See
@@ -421,4 +421,4 @@ When a battle starts:
 
 ## Next Module
 
-We have interactive battles, but we're fighting placeholder Slimes with a debug key. In **Module 13: The Crystal Cavern**, we'll build a dungeon with its own tilemap, encounter zones, treasure chests, and a boss room — giving the battle system a proper home.
+We have interactive battles, but we're fighting placeholder Slimes with a debug key. In **Module 13: The Crystal Cavern**, we'll build a dungeon with its own tilemap, encounter zones, treasure chests, and a boss room, giving the battle system a proper home.

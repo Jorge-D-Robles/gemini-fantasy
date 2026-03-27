@@ -2,11 +2,11 @@
 
 ## What We Have So Far
 
-A project with a Sprite2D that moves with keyboard input. But it's just a floating image — no collision, no physics, and if we wanted two players, we'd have to duplicate everything manually.
+A project with a Sprite2D that moves with keyboard input. But it's just a floating image: no collision, no physics, and if we wanted two players, we'd have to duplicate everything manually.
 
 ## What We're Building This Module
 
-A proper Player **scene** — a reusable, self-contained character with physics-based movement and collision. We'll also learn the most important architectural principle in Godot: **scene composition**.
+A proper Player **scene**, a reusable, self-contained character with physics-based movement and collision. We'll also learn the most important architectural principle in Godot: **scene composition**.
 
 ## Why Scenes, Not Scripts
 
@@ -18,9 +18,9 @@ A scene is a saved tree of nodes. It's a `.tscn` file on disk. When you instance
 - You can test each scene in isolation. Press F6 to run just the Player scene and verify it works before putting it in a level.
 - Changes to the Player scene propagate everywhere it's instanced. Fix a bug once, and it's fixed in every level.
 
-This is **composition over inheritance** — Godot's core design principle. It's what keeps complex games manageable.
+This is **composition over inheritance**, Godot's core design principle. It's what keeps complex games manageable.
 
-> **See:** [Nodes and scene instances](https://docs.godotengine.org/en/stable/tutorials/scripting/nodes_and_scene_instances.html) — the official guide to instancing scenes and thinking compositionally.
+> **See:** [Nodes and scene instances](https://docs.godotengine.org/en/stable/tutorials/scripting/nodes_and_scene_instances.html), the official guide to instancing scenes and thinking compositionally.
 
 ## Physics Bodies: Choosing the Right One
 
@@ -30,13 +30,13 @@ Before we build the Player scene, we need to understand the three types of physi
 
 A body you control directly with code. It moves where you tell it, and it handles collision detection and response through `move_and_slide()`. **This is what we use for the player character and NPCs.**
 
-Use when: You want full control over movement. The character doesn't bounce or get pushed — you decide exactly how it responds to collisions.
+Use when: You want full control over movement. The character doesn't bounce or get pushed; you decide exactly how it responds to collisions.
 
 ### RigidBody2D
 
 A body governed by Godot's physics engine. It has mass, friction, and responds to forces. It bounces off walls, gets pushed by other bodies, and is affected by gravity.
 
-Use when: You want realistic physics — a rolling boulder, a falling crate, a bouncing ball.
+Use when: You want realistic physics: a rolling boulder, a falling crate, a bouncing ball.
 
 ### StaticBody2D
 
@@ -46,11 +46,11 @@ Use when: You need invisible walls, floors, or barriers. (In practice, we'll use
 
 ### Area2D
 
-Not technically a physics body — it's a **detection zone**. It doesn't block movement; it detects when other bodies enter or exit it. We'll use these extensively for exit zones, interaction triggers, and encounter regions.
+Not technically a physics body. It's a **detection zone**. It doesn't block movement; it detects when other bodies enter or exit it. We'll use these extensively for exit zones, interaction triggers, and encounter regions.
 
-> **See:** [Physics introduction](https://docs.godotengine.org/en/stable/tutorials/physics/physics_introduction.html) — covers all body types, collision layers, and physics concepts.
+> **See:** [Physics introduction](https://docs.godotengine.org/en/stable/tutorials/physics/physics_introduction.html), which covers all body types, collision layers, and physics concepts.
 
-For our player character, **CharacterBody2D** is the right choice. It gives us pixel-perfect collision without the unpredictability of a physics simulation. JRPGs need precise, deterministic movement — not bouncy physics.
+For our player character, **CharacterBody2D** is the right choice. It gives us pixel-perfect collision without the unpredictability of a physics simulation. JRPGs need precise, deterministic movement, not bouncy physics.
 
 ## Building the Player Scene
 
@@ -67,8 +67,8 @@ Let's create a proper Player scene that we can reuse throughout the game.
 
 With `Player` selected, add these children (click `+` or press `Ctrl+A`):
 
-1. **Sprite2D** — for displaying the character's image
-2. **CollisionShape2D** — for defining the collision hitbox
+1. **Sprite2D**, for displaying the character's image
+2. **CollisionShape2D**, for defining the collision hitbox
 
 Your scene tree should look like:
 
@@ -80,7 +80,7 @@ Player (CharacterBody2D)
 
 ### Step 3: Configure the Sprite
 
-Select the `Sprite2D` node. In the Inspector, set the **Texture** to `icon.svg` (the Godot logo — we'll replace this with real character art in Module 5).
+Select the `Sprite2D` node. In the Inspector, set the **Texture** to `icon.svg` (the Godot logo; we'll replace this with real character art in Module 5).
 
 ### Step 4: Configure the Collision Shape
 
@@ -91,17 +91,17 @@ Select the `CollisionShape2D` node. In the Inspector:
 
 Alternatively, set the shape's **Size** in the Inspector to match your sprite dimensions. For the Godot icon, `Vector2(64, 64)` works. (We'll resize this to something much smaller in Module 4 when we switch to 16x16 tile-based environments.)
 
-> **Warning:** A CollisionShape2D with no shape assigned will show a yellow warning triangle in the scene tree. Always assign a shape — otherwise, your CharacterBody2D can't detect collisions.
+> **Warning:** A CollisionShape2D with no shape assigned will show a yellow warning triangle in the scene tree. Always assign a shape; otherwise, your CharacterBody2D can't detect collisions.
 
 ### Step 5: Save the Scene
 
-Save as `res://player/player.tscn`. Create the `player` folder first — right-click in the **FileSystem** dock and choose **New Folder**, name it `player`. Keeping scenes organized in folders is a habit worth building now.
+Save as `res://player/player.tscn`. Create the `player` folder first: right-click in the **FileSystem** dock and choose **New Folder**, name it `player`. Keeping scenes organized in folders is a habit worth building now.
 
 > **Note:** The convention is to name folders and files in `snake_case`. The scene file and its primary script should share a name: `player.tscn` and `player.gd`.
 
-## `move_and_slide()` — Physics-Based Movement
+## `move_and_slide()`: Physics-Based Movement
 
-In Module 2, we moved the sprite by directly modifying `position`. That works for a floating image, but it ignores collisions entirely — the sprite would pass through walls. `CharacterBody2D` gives us `move_and_slide()`, which moves the body and automatically handles collisions.
+In Module 2, we moved the sprite by directly modifying `position`. That works for a floating image, but it ignores collisions entirely; the sprite would pass through walls. `CharacterBody2D` gives us `move_and_slide()`, which moves the body and automatically handles collisions.
 
 Attach a new script to the Player node. Save it as `res://player/player.gd`:
 
@@ -132,11 +132,11 @@ This looks similar to our Module 2 script, but with key differences:
 We switched from `_process()` to `_physics_process()`. Here's why:
 
 - **`_process(delta)`** runs every *rendering* frame. The rate varies based on GPU load and display refresh rate.
-- **`_physics_process(delta)`** runs at a *fixed* rate — 60 times per second by default, regardless of frame rate.
+- **`_physics_process(delta)`** runs at a *fixed* rate, 60 times per second by default, regardless of frame rate.
 
 For physics-based movement (anything using `move_and_slide()`), always use `_physics_process()`. It ensures consistent collision detection. If physics runs at variable rates, objects can clip through walls during frame rate drops.
 
-> **See:** [Idle and physics processing](https://docs.godotengine.org/en/stable/tutorials/scripting/idle_and_physics_processing.html) — explains the difference in depth and when to use each.
+> **See:** [Idle and physics processing](https://docs.godotengine.org/en/stable/tutorials/scripting/idle_and_physics_processing.html), which explains the difference in depth and when to use each.
 
 ### `velocity` and `move_and_slide()`
 
@@ -147,16 +147,16 @@ For physics-based movement (anything using `move_and_slide()`), always use `_phy
 3. Slides along surfaces instead of stopping dead
 4. Automatically handles `delta` internally (which is why we don't multiply by `delta` ourselves)
 
-> **Note:** `move_and_slide()` handles delta time internally — you set `velocity` in pixels per second, and the method figures out how far to move this physics tick. Don't multiply by `delta` when setting `velocity` for `move_and_slide()`.
+> **Note:** `move_and_slide()` handles delta time internally. You set `velocity` in pixels per second, and the method figures out how far to move this physics tick. Don't multiply by `delta` when setting `velocity` for `move_and_slide()`.
 
-> **See:** [CharacterBody2D](https://docs.godotengine.org/en/stable/classes/class_characterbody2d.html) — full API reference for the class, including all properties and methods.
+> **See:** [CharacterBody2D](https://docs.godotengine.org/en/stable/classes/class_characterbody2d.html), the full API reference for the class, including all properties and methods.
 
 ## Instancing the Player into a Scene
 
 Now we need a scene to put our Player in. Let's go back to our `main.tscn`:
 
 1. Open `main.tscn`.
-2. Delete the old `Sprite2D` node (select it, press **Delete** or right-click → **Delete Node**). Also delete the `sprite_2d.gd` file from the **FileSystem** dock (right-click → **Delete**) — we won't need it anymore.
+2. Delete the old `Sprite2D` node (select it, press **Delete** or right-click → **Delete Node**). Also delete the `sprite_2d.gd` file from the **FileSystem** dock (right-click → **Delete**). We won't need it anymore.
 3. You should have just the `Main` (Node2D) root.
 4. Drag `player/player.tscn` from the FileSystem dock into the viewport, or right-click `Main` and choose **Instance Child Scene** and select `player.tscn`.
 
@@ -167,9 +167,9 @@ Main (Node2D)
 └── Player (player.tscn instance)
 ```
 
-Notice that the Player node has a little "link" icon — this indicates it's an **instance** of another scene. If you click the arrow next to it, you can expand it to see its children (Sprite2D, CollisionShape2D), but they're grayed out because they belong to the instanced scene.
+Notice that the Player node has a little "link" icon, which indicates it's an **instance** of another scene. If you click the arrow next to it, you can expand it to see its children (Sprite2D, CollisionShape2D), but they're grayed out because they belong to the instanced scene.
 
-Press F5. You should be able to move around — but there's nothing to collide with yet. We'll add walls in Module 4 when we build the tilemap.
+Press F5. You should be able to move around, but there's nothing to collide with yet. We'll add walls in Module 4 when we build the tilemap.
 
 ## The Scene Tree at Runtime
 
@@ -203,11 +203,11 @@ $Sprite2D          # same as get_node("Sprite2D")
 $"Long Node Name"  # use quotes for names with spaces
 ```
 
-> **See:** [Scene tree](https://docs.godotengine.org/en/stable/tutorials/scripting/scene_tree.html) — how the scene tree works at runtime, including node ordering and groups.
+> **See:** [Scene tree](https://docs.godotengine.org/en/stable/tutorials/scripting/scene_tree.html), covering how the scene tree works at runtime, including node ordering and groups.
 
 ## Signals: A First Look
 
-Signals are Godot's event system — a way for nodes to communicate without knowing about each other. A node emits a signal ("something happened"), and other nodes can connect to it ("when that happens, run this function").
+Signals are Godot's event system, a way for nodes to communicate without knowing about each other. A node emits a signal ("something happened"), and other nodes can connect to it ("when that happens, run this function").
 
 Let's see a simple example. Add an **Area2D** node to our `main.tscn`:
 
@@ -222,7 +222,7 @@ Before connecting the signal, the `Main` node needs a script. Right-click `Main`
 Now connect the Area2D's signal:
 
 1. Select the `TestZone` (Area2D) node.
-2. Click the **Node** tab (right side of the editor, next to the Inspector tab — it has a signal icon).
+2. Click the **Node** tab (right side of the editor, next to the Inspector tab; it has a signal icon).
 3. Find `body_entered(body: Node2D)` in the signal list.
 4. Double-click it. A connection dialog appears.
 5. Select the `Main` node as the receiver and click **Connect**.
@@ -234,11 +234,11 @@ func _on_test_zone_body_entered(body: Node2D) -> void:
     print("Something entered the zone: ", body.name)
 ```
 
-Run the game and walk into the zone. The output panel prints the player's name. The Area2D detected the collision and told the Main node about it — without either node knowing the other's internal details.
+Run the game and walk into the zone. The output panel prints the player's name. The Area2D detected the collision and told the Main node about it, without either node knowing the other's internal details.
 
 > **Note:** This works because both the Player (CharacterBody2D) and the TestZone (Area2D) are on collision layer 1 by default. If `body_entered` doesn't fire, check that both nodes are on the same layer in the Inspector under **Collision → Layer** and **Collision → Mask**. We'll cover collision layers in more detail in Module 4.
 
-Once you've tested the signal, you can delete the `TestZone` node from `main.tscn` — it was just for learning. We won't need it going forward.
+Once you've tested the signal, you can delete the `TestZone` node from `main.tscn`. It was just for learning. We won't need it going forward.
 
 This is the signal pattern we'll use throughout Crystal Saga:
 - Exit zones signal "the player wants to leave" → the SceneManager handles the transition (Module 6)
@@ -251,7 +251,7 @@ An important detail: when a node is **freed** (removed from the tree and deleted
 
 This matters when we start changing scenes in Module 6. When we leave a town and enter a forest, all the town's nodes are freed, and all their signal connections disappear cleanly. No dangling references, no crashes.
 
-> **See:** [Instancing with signals](https://docs.godotengine.org/en/stable/tutorials/scripting/instancing_with_signals.html) — connects scene instancing with signal-based communication.
+> **See:** [Instancing with signals](https://docs.godotengine.org/en/stable/tutorials/scripting/instancing_with_signals.html), which connects scene instancing with signal-based communication.
 
 ## Scene Files: `.tscn` Under the Hood
 
@@ -298,7 +298,7 @@ The pattern: **each "thing" gets a folder with its scene and script(s).** As the
 ## What We've Learned
 
 - **Scenes** are reusable node trees saved as `.tscn` files. They're Godot's primary organizational unit.
-- **Scene composition**: complex behavior comes from combining simple, focused nodes — not from one monolithic script.
+- **Scene composition**: complex behavior comes from combining simple, focused nodes, not from one monolithic script.
 - **CharacterBody2D** is for player-controlled characters. **RigidBody2D** is for physics-driven objects. **Area2D** is for detection zones.
 - **`move_and_slide()`** handles movement and collision response. Use it in `_physics_process()`.
 - **`_physics_process()`** runs at a fixed rate for consistent physics. **`_process()`** runs every rendering frame.
@@ -315,4 +315,4 @@ When you press F5:
 
 ## Next Module
 
-We have a moving, collision-aware player — but the world is empty. In **Module 4: TileMaps and Terrain**, we'll build the town of Willowbrook using Godot's TileMapLayer system. We'll create a tileset from a sprite sheet, paint a multi-layered map, and give our player actual walls to bump into.
+We have a moving, collision-aware player, but the world is empty. In **Module 4: TileMaps and Terrain**, we'll build the town of Willowbrook using Godot's TileMapLayer system. We'll create a tileset from a sprite sheet, paint a multi-layered map, and give our player actual walls to bump into.

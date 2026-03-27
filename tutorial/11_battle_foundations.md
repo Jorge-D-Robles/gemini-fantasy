@@ -1,4 +1,4 @@
-# Module 11: Battle Foundations — State Machines and Turn Order
+# Module 11: Battle Foundations: State Machines and Turn Order
 
 ## What We Have So Far
 
@@ -6,11 +6,11 @@ A connected world with NPCs, dialogue, inventory, and Resources. Everything befo
 
 ## What We're Building This Module
 
-The battle scene skeleton — party and enemies displayed on screen, a state machine controlling the flow of combat, a turn order system, and transitions between the overworld and battle. By the end, battles will start and cycle through turns, even if we can't take actions yet (that's Module 12).
+The battle scene skeleton: party and enemies displayed on screen, a state machine controlling the flow of combat, a turn order system, and transitions between the overworld and battle. By the end, battles will start and cycle through turns, even if we can't take actions yet (that's Module 12).
 
 ## Scaling Up: From Enum to Node-Based State Machine
 
-In Module 5, we built an enum-based state machine for the player with four states. That approach works great for simple cases — but the battle system has significantly more states with complex transitions:
+In Module 5, we built an enum-based state machine for the player with four states. That approach works great for simple cases, but the battle system has significantly more states with complex transitions:
 
 ```
 INTRO → TURN_START → PLAYER_CHOICE → ACTION_EXECUTE → CHECK_RESULT → VICTORY → DEFEAT
@@ -93,11 +93,11 @@ func _process(delta: float) -> void:
 
 Save these as `res://systems/battle/battle_state.gd` and `res://systems/battle/battle_state_machine.gd`.
 
-> **Spiral:** Compare this to Module 5's enum state machine. The enum approach uses `match` in `_physics_process` to route to different functions. The node approach uses polymorphism — each state is a separate Node, and the machine just calls `enter()`/`process()`/`exit()` on whichever one is current. Same pattern, different scale.
+> **Spiral:** Compare this to Module 5's enum state machine. The enum approach uses `match` in `_physics_process` to route to different functions. The node approach uses polymorphism: each state is a separate Node, and the machine just calls `enter()`/`process()`/`exit()` on whichever one is current. Same pattern, different scale.
 
 ## BattlerData: Who's Fighting
 
-We need a Resource to represent someone in battle — combining their base stats with runtime battle state.
+We need a Resource to represent someone in battle, combining their base stats with runtime battle state.
 
 Create `res://resources/battler_data.gd`:
 
@@ -109,7 +109,7 @@ class_name BattlerData
 @export var character_data: CharacterData
 @export var is_player_controlled: bool = true
 
-# Runtime state (not saved to .tres — set during battle)
+# Runtime state (not saved to .tres, set during battle)
 var current_hp: int = 0
 var current_mp: int = 0
 var current_attack: int = 0
@@ -223,7 +223,7 @@ func setup(data: BattlerData) -> void:
 
 The battle manager orchestrates the entire fight. Create `res://systems/battle/battle_manager.gd` and **attach it to the `Battle` root node** in `battle.tscn`:
 
-> **Note:** BattleManager is NOT an autoload — it is the root script of `battle.tscn`, which means it only exists while a battle is happening. The SceneManager loads the battle scene and calls its `initialize_battle()` method.
+> **Note:** BattleManager is NOT an autoload. It is the root script of `battle.tscn`, which means it only exists while a battle is happening. The SceneManager loads the battle scene and calls its `initialize_battle()` method.
 
 ```gdscript
 extends Node2D
@@ -251,7 +251,7 @@ func _ready() -> void:
     # Pass a reference to this manager into every state
     for state in _state_machine.states.values():
         state.battle_manager = self
-    # Don't start the state machine here — wait for initialize_battle()
+    # Don't start the state machine here. Wait for initialize_battle()
     # to populate party and enemies first.
 
 
@@ -271,7 +271,7 @@ func initialize_battle(party_data: Array[BattlerData], enemy_data: Array[Battler
 
     battle_started.emit(party, enemies)
 
-    # NOW start the state machine — data is ready
+    # NOW start the state machine, data is ready
     _state_machine.start("Intro")
 
 
@@ -373,7 +373,7 @@ func _process_next_turn() -> void:
     var battler := battle_manager.get_next_battler()
 
     if battler == null:
-        # All turns exhausted — start a new round
+        # All turns exhausted, start a new round
         battle_manager._state_machine.transition_to("TurnStart")
         return
 
@@ -486,7 +486,7 @@ func enter(_context: Dictionary = {}) -> void:
     elif not battle_manager.is_party_alive():
         battle_manager._state_machine.transition_to("Defeat")
     else:
-        # More turns to process — go back to TurnStart
+        # More turns to process, go back to TurnStart
         # The TurnStart state will get the next battler from the queue
         _process_next_in_queue()
 
@@ -495,7 +495,7 @@ func _process_next_in_queue() -> void:
     var battler := battle_manager.get_next_battler()
 
     if battler == null:
-        # Round over — start a new round
+        # Round over, start a new round
         battle_manager._state_machine.transition_to("TurnStart")
         return
 
@@ -658,15 +658,15 @@ Here's the complete state flow visualized:
          └── Queue empty → back to [TURN_START] for new round
 ```
 
-Each state is isolated. Adding new actions (magic, items, defend) means adding branches in `PlayerChoice` and `ActionExecute` — not restructuring the entire flow.
+Each state is isolated. Adding new actions (magic, items, defend) means adding branches in `PlayerChoice` and `ActionExecute`, not restructuring the entire flow.
 
-> **See:** [Node](https://docs.godotengine.org/en/stable/classes/class_node.html) — the base class for all scene tree nodes. The node-based state machine pattern uses `get_children()` and polymorphism.
+> **See:** [Node](https://docs.godotengine.org/en/stable/classes/class_node.html): the base class for all scene tree nodes. The node-based state machine pattern uses `get_children()` and polymorphism.
 
-> **See:** [SceneTree.create_timer()](https://docs.godotengine.org/en/stable/classes/class_scenetree.html#class-scenetree-method-create-timer) — creates a one-shot timer. Used with `await` in states for pacing.
+> **See:** [SceneTree.create_timer()](https://docs.godotengine.org/en/stable/classes/class_scenetree.html#class-scenetree-method-create-timer): creates a one-shot timer. Used with `await` in states for pacing.
 
-> **See:** [Array.sort_custom()](https://docs.godotengine.org/en/stable/classes/class_array.html#class-array-method-sort-custom) — custom sorting with a callable. Used for speed-based turn ordering.
+> **See:** [Array.sort_custom()](https://docs.godotengine.org/en/stable/classes/class_array.html#class-array-method-sort-custom): custom sorting with a callable. Used for speed-based turn ordering.
 
-**Autoload reference card** (unchanged from Module 10 — no new autoloads this module):
+**Autoload reference card** (unchanged from Module 10; no new autoloads this module):
 
 | Autoload | Module | Purpose |
 |----------|--------|---------|
@@ -683,7 +683,7 @@ Each state is isolated. Adding new actions (magic, items, defend) means adding b
 - The **battle scene** has party on one side, enemies on the other, with Marker2D nodes for positioning.
 - **State transitions** pass **context dictionaries** so states can share data (the active battler, the chosen target, the action type).
 - The **SceneManager** remembers the previous scene and player position for returning from battle.
-- Each battle state is a separate script file — easy to modify one state without touching others.
+- Each battle state is a separate script file, easy to modify one state without touching others.
 
 ## What You Should See
 
@@ -699,4 +699,4 @@ When you press B (our temporary test trigger) in Willowbrook:
 
 ## Next Module
 
-The battle runs automatically — the player can't choose actions yet. In **Module 12: Player Actions**, we'll build the battle menu UI (Attack/Magic/Defend/Item), implement the command pattern for actions, add target selection, and create battle animations with Tweens. The battle system will go from print output to visual, interactive combat.
+The battle runs automatically, and the player can't choose actions yet. In **Module 12: Player Actions**, we'll build the battle menu UI (Attack/Magic/Defend/Item), implement the command pattern for actions, add target selection, and create battle animations with Tweens. The battle system will go from print output to visual, interactive combat.

@@ -2,11 +2,11 @@
 
 ## What We Have So Far
 
-Combat with rewards and leveling, a dungeon, NPCs with dialogue. The game has systems — but nothing connecting the player's actions into a progression.
+Combat with rewards and leveling, a dungeon, NPCs with dialogue. The game has systems, but nothing connecting the player's actions into a progression.
 
 ## What We're Building This Module
 
-Two things: a **game flags** system for tracking boolean world state, and a **quest system** built on top of it. Together, they make the world react to what the player does — NPCs say different things, doors open, new areas unlock.
+Two things: a **game flags** system for tracking boolean world state, and a **quest system** built on top of it. Together, they make the world react to what the player does: NPCs say different things, doors open, new areas unlock.
 
 ## Game Flags: The Boolean Backbone
 
@@ -153,7 +153,7 @@ func get_completed_quests() -> Array[QuestData]:
 
 func _on_flag_changed(flag_name: String, _value: bool) -> void:
     # Check if any active quest's objectives are now all met
-    # Collect completed quests first — don't modify the array during iteration
+    # Collect completed quests first; don't modify the array during iteration
     var newly_completed: Array[QuestData] = []
     for quest in _active_quests:
         if _all_objectives_met(quest):
@@ -331,16 +331,16 @@ func _show_detail(quest: QuestData) -> void:
 | **GameManager** | **16** | **Game flags, world state tracking** |
 | **QuestManager** | **16** | **Quest tracking, objective checking** |
 
-> **See:** [Singletons (Autoload)](https://docs.godotengine.org/en/stable/tutorials/scripting/singletons_autoload.html) — GameManager and QuestManager are both autoloads. This tutorial covers when and why to use the autoload pattern.
+> **See:** [Singletons (Autoload)](https://docs.godotengine.org/en/stable/tutorials/scripting/singletons_autoload.html). GameManager and QuestManager are both autoloads. This tutorial covers when and why to use the autoload pattern.
 
-> **See:** [Resources](https://docs.godotengine.org/en/stable/tutorials/scripting/resources.html) — QuestData extends Resource. This guide covers custom Resources, `@export` properties, and `.tres` file creation.
+> **See:** [Resources](https://docs.godotengine.org/en/stable/tutorials/scripting/resources.html). QuestData extends Resource. This guide covers custom Resources, `@export` properties, and `.tres` file creation.
 
 ## What We've Learned
 
 - **Game flags** are boolean key-value pairs tracking world state (`flag_name → bool`).
 - **`GameManager.flag_changed` signal** lets any system react when the world state changes.
-- **QuestData** defines objectives as flag names — a quest completes when all its flags are set.
-- **Reactive dialogue** checks flags to choose what an NPC says — creating the illusion of a living world.
+- **QuestData** defines objectives as flag names; a quest completes when all its flags are set.
+- **Reactive dialogue** checks flags to choose what an NPC says, creating the illusion of a living world.
 - **Quest rewards** are granted on turn-in: gold, items, and a completion flag.
 - The quest log shows objectives with checkmarks based on current flag state.
 
@@ -354,4 +354,4 @@ func _show_detail(quest: QuestData) -> void:
 
 ## Next Module
 
-In **Module 17: Party Management, Equipment, and Shops**, we'll recruit Lira the mage, add equipment that modifies stats, and build the shop system — the final progression systems before save/load.
+In **Module 17: Party Management, Equipment, and Shops**, we'll recruit Lira the mage, add equipment that modifies stats, and build the shop system, the final progression systems before save/load.
