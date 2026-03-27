@@ -377,7 +377,7 @@ This scope is deliberately small: big enough to need real architecture, small en
   |----------|--------|---------|
   | SceneManager | 6 | Scene transitions with fade effects |
   | InventoryManager | 10 | Item storage, add/remove, signals |
-  | BattleManager | 11 | Battle state machine, turn queue |
+  | *(BattleManager)* | *11* | *Scene script on battle.tscn, NOT an autoload* |
 
 **Godot Docs References:**
 - `tutorials/best_practices/` (state machine patterns)
@@ -532,7 +532,7 @@ This scope is deliberately small: big enough to need real architecture, small en
   |----------|--------|---------|
   | SceneManager | 6 | Scene transitions with fade effects |
   | InventoryManager | 10 | Item storage, add/remove, signals |
-  | BattleManager | 11 | Battle state machine, turn queue |
+  | *(BattleManager)* | *11* | *Scene script on battle.tscn, NOT an autoload* |
   | GameManager | 16 | Game flags, world state tracking |
   | QuestManager | 16 | Quest tracking, objective checking |
 
@@ -577,7 +577,7 @@ This scope is deliberately small: big enough to need real architecture, small en
   |----------|--------|---------|
   | SceneManager | 6 | Scene transitions with fade effects |
   | InventoryManager | 10 | Item storage, add/remove, signals |
-  | BattleManager | 11 | Battle state machine, turn queue |
+  | *(BattleManager)* | *11* | *Scene script on battle.tscn, NOT an autoload* |
   | GameManager | 16 | Game flags, world state tracking |
   | QuestManager | 16 | Quest tracking, objective checking |
   | PartyManager | 17 | Party roster, recruitment, stats |
@@ -655,7 +655,7 @@ This scope is deliberately small: big enough to need real architecture, small en
   |----------|--------|---------|
   | SceneManager | 6 | Scene transitions with fade effects |
   | InventoryManager | 10 | Item storage, add/remove, signals |
-  | BattleManager | 11 | Battle state machine, turn queue |
+  | *(BattleManager)* | *11* | *Scene script on battle.tscn, NOT an autoload* |
   | GameManager | 16 | Game flags, world state tracking |
   | QuestManager | 16 | Quest tracking, objective checking |
   | PartyManager | 17 | Party roster, recruitment, stats |

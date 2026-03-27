@@ -93,6 +93,8 @@ enum QuestState { NOT_STARTED, ACTIVE, COMPLETE, TURNED_IN }
 
 ## QuestManager Autoload
 
+Save as `res://autoloads/quest_manager.gd` and register as autoload `QuestManager` (Project -> Project Settings -> Autoload tab -> add the script path, name it `QuestManager`).
+
 ```gdscript
 extends Node
 ## Tracks active quests and checks objectives. Autoload as QuestManager.
@@ -133,6 +135,11 @@ func turn_in_quest(quest: QuestData) -> void:
     _turned_in_quests.append(quest)
 
     # Grant rewards
+    if quest.xp_reward > 0:
+        # Distribute XP to all party members (once PartyManager exists in Module 17)
+        if Engine.has_singleton("PartyManager") or get_node_or_null("/root/PartyManager"):
+            for member in PartyManager.get_members():
+                member.current_xp += quest.xp_reward
     if quest.gold_reward > 0:
         InventoryManager.add_gold(quest.gold_reward)
     for item in quest.reward_items:
@@ -220,12 +227,73 @@ Create the `res://data/quests/` folder (right-click `res://data/` → New Folder
    - `gold_reward`: 30
    - **Reward Items:** Drag `ether.tres` into the array, set count to 2
 
-## Reactive Dialogue
+## Setting Quest Flags from Gameplay
 
-NPCs should say different things based on quest state and flags. Update NPC dialogue to check flags:
+The quest objectives rely on flags being set when things happen. Here's where to add flag-setting calls:
+
+**In `res://scenes/willowbrook/willowbrook.gd`** (the elder NPC interaction):
+```gdscript
+# When the player talks to Elder Maren, set the flag:
+func _on_elder_interacted() -> void:
+    GameManager.set_flag("talked_to_elder")
+    # ... existing dialogue code ...
+```
+
+**In `res://scenes/whisperwood/whisperwood.gd`** (scene entry):
+```gdscript
+func _ready() -> void:
+    GameManager.set_flag("reached_whisperwood")
+    # ... existing setup code ...
+```
+
+**In `res://scenes/crystal_cavern/crystal_cavern.gd`** (scene entry):
+```gdscript
+func _ready() -> void:
+    GameManager.set_flag("entered_crystal_cavern")
+    # ... existing setup code ...
+```
+
+The `boss_defeated` flag is set in Module 20's ending trigger. The `talked_to_fynn` flag is set in the reactive dialogue below.
+
+**Starting the main quest:** Add this to the elder's dialogue handler in `willowbrook.gd`:
+```gdscript
+if not QuestManager.is_quest_active("crystal_resonance"):
+    var quest: QuestData = load("res://data/quests/crystal_resonance.tres")
+    if quest:
+        QuestManager.start_quest(quest)
+```
+
+### The Pendant Pickup
+
+The side quest needs a pendant object in Whisperwood. Use the treasure chest pattern from Module 13 to create a pickup:
+
+1. Create `res://data/items/pendant.tres` (ItemData, type: KEY_ITEM, display_name: "Silver Pendant")
+2. Place a treasure chest instance in the Whisperwood scene near a memorable landmark
+3. Set the chest's `item` export to `pendant.tres` in the Inspector
+4. In `whisperwood.gd`, connect to the chest's `opened` signal to set the flag:
 
 ```gdscript
-# In the scene script that handles NPC interaction:
+func _on_pendant_chest_opened() -> void:
+    GameManager.set_flag("pendant_found")
+```
+
+For Fynn's turn-in, add this to the `pendant_found` dialogue path in `willowbrook.gd`:
+```gdscript
+# After the "You found it!" dialogue finishes:
+GameManager.set_flag("pendant_returned")
+var quest: QuestData = load("res://data/quests/lost_pendant.tres")
+if quest:
+    QuestManager.turn_in_quest(quest)
+```
+
+## Reactive Dialogue
+
+NPCs should say different things based on quest state and flags. Update NPC dialogue to check flags.
+
+Add the following to `res://scenes/willowbrook/willowbrook.gd`:
+
+```gdscript
+# Add to willowbrook.gd:
 func _get_dialogue_for_npc(npc: CharacterBody2D) -> Array[DialogueLine]:
     match npc.npc_data.id:
         "traveler_fynn":

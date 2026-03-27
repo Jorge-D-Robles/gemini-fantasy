@@ -49,7 +49,11 @@ This curve starts gentle and ramps up. Early levels come fast (motivating), late
 
 ### Stat Growth
 
-When a character levels up, their stats increase based on **growth rates** defined in CharacterData. Add this method to `res://resources/character_data.gd`:
+When a character levels up, their stats increase based on **growth rates** defined in CharacterData.
+
+> **Spiral:** These growth rate fields (`hp_growth`, `mp_growth`, `attack_growth`, `defense_growth`, `speed_growth`) were defined in Module 7's CharacterData class. Verify your `aiden.tres` has non-zero values for all growth fields (e.g., hp_growth: 12, attack_growth: 3). If they default to 0, Aiden won't gain stats on level-up.
+
+Add this method to `res://resources/character_data.gd`:
 
 > **Note:** `level_up()` modifies the Resource's properties at runtime. These changes persist in memory (because Resources are shared by reference) but do NOT modify the `.tres` file on disk. This is the correct behavior; runtime progression should not overwrite base data.
 

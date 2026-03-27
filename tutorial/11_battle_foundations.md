@@ -217,7 +217,12 @@ func setup(data: BattlerData) -> void:
     add_to_group("battler_sprites")
     if data.character_data and data.character_data.portrait:
         _sprite.texture = data.character_data.portrait
+    else:
+        # Fallback so sprites are always visible during testing
+        _sprite.texture = preload("res://icon.svg")
 ```
+
+> **Important:** Battler sprites will be invisible until you set the `portrait` property on your CharacterData resources. For testing, open `res://data/characters/aiden.tres` in the Inspector and drag `res://icon.svg` into the `portrait` field. For enemies created in code, set `char_data.portrait = preload("res://icon.svg")` in the test battle setup. The fallback code above handles this automatically.
 
 ## The BattleManager
 
@@ -253,6 +258,11 @@ func _ready() -> void:
         state.battle_manager = self
     # Don't start the state machine here. Wait for initialize_battle()
     # to populate party and enemies first.
+    #
+    # NOTE: Child nodes' _ready() runs BEFORE the parent's _ready().
+    # That means each state's _ready() has already fired by this point,
+    # so battle_manager was null during their _ready(). Never access
+    # battle_manager in a state's _ready(). Use enter() instead.
 
 
 func initialize_battle(party_data: Array[BattlerData], enemy_data: Array[BattlerData]) -> void:
@@ -329,7 +339,7 @@ func get_alive_party() -> Array[BattlerData]:
 
 ## Implementing the Battle States
 
-Each state is a small script. Let's implement them one by one.
+Each state is a small script. Here they are, one by one.
 
 Save each state script in `res://systems/battle/states/`. After creating all the scripts, you need to **attach each script to its corresponding node** in the scene tree:
 
@@ -551,6 +561,8 @@ The overworld needs to trigger battle transitions. Update the SceneManager to su
 
 ```gdscript
 # Add to scene_manager.gd
+# Place these two variables after the existing _is_transitioning variable.
+# Place both methods after the existing _place_player_at_spawn() method.
 
 var _previous_scene_path: String = ""
 var _previous_player_position: Vector2 = Vector2.ZERO
@@ -573,7 +585,7 @@ func start_battle(encounter_data: Dictionary) -> void:
     await _anim_player.animation_finished
 
     get_tree().change_scene_to_file("res://scenes/battle/battle.tscn")
-    await get_tree().process_frame
+    await get_tree().tree_changed
 
     # Initialize the battle with encounter data
     var battle_scene := get_tree().current_scene

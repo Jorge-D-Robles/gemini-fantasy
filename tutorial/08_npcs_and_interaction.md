@@ -25,7 +25,7 @@ We need three things to make this work:
 
 ## Setting Up the Interact Input Action
 
-First, let's define a custom input action for interaction.
+First, define a custom input action for interaction.
 
 1. Go to **Project → Project Settings → Input Map**.
 2. At the top, type `interact` in the "Add New Action" field and click **Add**.
@@ -216,7 +216,7 @@ For each NPC, create an NPCData `.tres` file in `res://data/npcs/` (create the f
 
 ### Using the Player's INTERACT State
 
-When the player interacts with an NPC, we should transition the player to the INTERACT state (Module 5). For now, let's connect this simply in the Willowbrook scene script.
+When the player interacts with an NPC, we should transition the player to the INTERACT state (Module 5). For now, we'll connect this in the Willowbrook scene script.
 
 Create `res://scenes/willowbrook/willowbrook.gd` and attach it to the root `Willowbrook` node (if you already have a script attached from a previous module, replace its contents):
 

@@ -78,8 +78,9 @@ func change_scene(scene_path: String, spawn_point: String = "default") -> void:
 
     get_tree().change_scene_to_file(_target_scene_path)
 
-    # Wait one frame for the new scene to initialize
-    await get_tree().process_frame
+    # Wait for the new scene to be added to the tree.
+    # change_scene_to_file() is deferred, so we need to wait for the swap.
+    await get_tree().tree_changed
 
     _place_player_at_spawn()
 
@@ -176,7 +177,7 @@ await some_node.some_signal                  # Wait for a custom signal
 
 ## Exit Zones
 
-An **exit zone** is an Area2D that detects when the player enters it and triggers a scene change. Let's set up bidirectional exits between Willowbrook and Whisperwood.
+An **exit zone** is an Area2D that detects when the player enters it and triggers a scene change. We'll set up bidirectional exits between Willowbrook and Whisperwood.
 
 ### Creating an Exit Zone
 

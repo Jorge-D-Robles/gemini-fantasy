@@ -56,11 +56,14 @@ Register as autoload `PartyManager`.
 
 ## Recruiting Lira
 
-Create Lira's character data at `res://data/characters/lira.tres`:
-- display_name: "Lira"
-- max_hp: 80, max_mp: 40
-- attack: 6, defense: 5, speed: 9
-- hp_growth: 8, mp_growth: 8, attack_growth: 1, defense_growth: 1
+Create Lira's character data at `res://data/characters/lira.tres`. Set ALL of these fields in the Inspector:
+- `id`: "lira"
+- `display_name`: "Lira"
+- `max_hp`: 80, `max_mp`: 40
+- `attack`: 6, `defense`: 5, `speed`: 9
+- `hp_growth`: 8, `mp_growth`: 8, `attack_growth`: 1, `defense_growth`: 1, `speed_growth`: 2
+
+> **Important:** The `id` field must be `"lira"` exactly. `PartyManager.get_member_by_id("lira")` uses this to find her. All growth rate fields must be non-zero or she won't gain stats on level-up (see Module 15).
 
 Lira is a mage: lower HP and attack, higher MP and speed.
 
@@ -195,6 +198,33 @@ func unequip(slot: ItemData.EquipSlot) -> ItemData:
             equipped_accessory = null
     return item
 ```
+
+### Creating Equipment Items
+
+Create two equipment `.tres` files so the player has something to equip:
+
+**Iron Sword** (`res://data/items/iron_sword.tres`):
+1. Right-click `res://data/items/` -> New Resource -> ItemData
+2. Set: `id`: "iron_sword", `display_name`: "Iron Sword", `item_type`: EQUIPMENT, `equip_slot`: WEAPON, `attack_bonus`: 5, `buy_price`: 50, `sell_price`: 25
+
+**Leather Armor** (`res://data/items/leather_armor.tres`):
+1. Right-click `res://data/items/` -> New Resource -> ItemData
+2. Set: `id`: "leather_armor", `display_name`: "Leather Armor", `item_type`: EQUIPMENT, `equip_slot`: ARMOR, `defense_bonus`: 4, `buy_price`: 40, `sell_price`: 20
+
+### The Complete Equip Flow
+
+When equipping an item, the old item must return to inventory:
+
+```gdscript
+# Example: equipping from inventory (add to your equipment UI handler)
+func _equip_item_on_character(character: CharacterData, item: ItemData) -> void:
+    var previous: ItemData = character.equip(item)
+    InventoryManager.remove_item(item)
+    if previous:
+        InventoryManager.add_item(previous)
+```
+
+This three-step pattern (equip new, remove from inventory, add old back) prevents item duplication. The `equip()` method returns the old item so you always have a reference to it.
 
 ### Battle Integration
 

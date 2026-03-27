@@ -44,7 +44,7 @@ The Project Manager is where you create, import, and organize your Godot project
 
 > **See:** [Creating and importing projects](https://docs.godotengine.org/en/stable/getting_started/step_by_step/creating_and_importing_projects.html), with more details on project creation options.
 
-The editor opens. Take a breath; there's a lot on screen. Let's break it down.
+The editor opens. Take a breath; there's a lot on screen. Here's a quick breakdown.
 
 ## The Editor Interface
 
@@ -131,7 +131,7 @@ Every scene is self-contained. The NPC scene doesn't know or care whether it's i
 
 ## Your First Scene: A Sprite on Screen
 
-Let's put something on screen. We'll create a simple scene with a single `Sprite2D` node, the beginning of our player character.
+Time to put something on screen. We'll create a simple scene with a single `Sprite2D` node, the beginning of our player character.
 
 ### Step 1: Create the Root Node
 
@@ -152,7 +152,7 @@ Main (Node2D)
 
 ### Step 3: Give It a Texture
 
-The Sprite2D node needs an image to display. We don't have character art yet, so let's use Godot's built-in icon.
+The Sprite2D node needs an image to display. We don't have character art yet, so we'll use Godot's built-in icon.
 
 1. Select the `Sprite2D` node in the scene tree.
 2. In the **Inspector** (right panel), find the **Texture** property.
@@ -212,7 +212,7 @@ The top-right of the editor has several play buttons:
 
 ## Project Settings for Pixel Art
 
-Before we move on, let's configure the project for pixel art, the visual style of most 2D JRPGs.
+Before we move on, we need to configure the project for pixel art, the visual style of most 2D JRPGs.
 
 Go to **Project → Project Settings** and make these changes:
 
@@ -238,7 +238,7 @@ After changing these settings, run the game again (F5). The window will be large
 
 ## What We've Learned
 
-Let's recap the key concepts from this module:
+Here are the key concepts from this module:
 
 - **Godot** is a free game engine with excellent 2D support and a purpose-built scripting language (GDScript).
 - **Nodes** are the atomic building blocks. Each type does one thing: display an image, handle physics, play audio, etc.

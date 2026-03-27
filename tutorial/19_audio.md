@@ -114,7 +114,9 @@ Create the scene `res://autoloads/music_manager.tscn`:
 2. Add two **AudioStreamPlayer** children. Name them `PlayerA` and `PlayerB`.
 3. Attach `music_manager.gd` to the root node.
 4. Save as `res://autoloads/music_manager.tscn`.
-5. Register as autoload: **Project → Project Settings → Autoload** → add the `.tscn` file (not the `.gd` file, since autoloads that need child nodes use the scene).
+5. Register as autoload: **Project → Project Settings → Autoload** → add the `.tscn` file, name it `MusicManager`.
+
+> **Warning:** All previous autoloads used `.gd` files. MusicManager is different because it needs AudioStreamPlayer child nodes. When registering, browse to `music_manager.tscn`, NOT `music_manager.gd`. If you register the `.gd` file, the AudioStreamPlayer nodes won't exist and you'll get null reference errors.
 
 ```
 MusicManager (Node)

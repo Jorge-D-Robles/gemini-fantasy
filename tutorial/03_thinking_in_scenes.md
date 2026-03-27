@@ -54,7 +54,7 @@ For our player character, **CharacterBody2D** is the right choice. It gives us p
 
 ## Building the Player Scene
 
-Let's create a proper Player scene that we can reuse throughout the game.
+We'll create a proper Player scene that we can reuse throughout the game.
 
 ### Step 1: Create a New Scene
 
@@ -62,6 +62,7 @@ Let's create a proper Player scene that we can reuse throughout the game.
 2. Click **Other Node** in the Scene dock.
 3. Search for `CharacterBody2D` and create it.
 4. Rename it to `Player`.
+5. In the Inspector, find **Motion Mode** and set it to **Floating**. (The default, Grounded, is for side-scrollers. Floating is correct for top-down games because it disables floor/wall/ceiling logic.)
 
 ### Step 2: Add Child Nodes
 
@@ -153,7 +154,7 @@ For physics-based movement (anything using `move_and_slide()`), always use `_phy
 
 ## Instancing the Player into a Scene
 
-Now we need a scene to put our Player in. Let's go back to our `main.tscn`:
+Now we need a scene to put our Player in. Go back to `main.tscn`:
 
 1. Open `main.tscn`.
 2. Delete the old `Sprite2D` node (select it, press **Delete** or right-click → **Delete Node**). Also delete the `sprite_2d.gd` file from the **FileSystem** dock (right-click → **Delete**). We won't need it anymore.
@@ -209,7 +210,7 @@ $"Long Node Name"  # use quotes for names with spaces
 
 Signals are Godot's event system, a way for nodes to communicate without knowing about each other. A node emits a signal ("something happened"), and other nodes can connect to it ("when that happens, run this function").
 
-Let's see a simple example. Add an **Area2D** node to our `main.tscn`:
+Here's a simple example. Add an **Area2D** node to `main.tscn`:
 
 1. Select the `Main` node.
 2. Add a child **Area2D** node. Rename it to `TestZone`.

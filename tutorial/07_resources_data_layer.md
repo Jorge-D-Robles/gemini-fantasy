@@ -94,7 +94,7 @@ When you `@export` an enum variable, the Inspector shows a dropdown menu with th
 
 ## Creating `.tres` Files
 
-Now that we have the `ItemData` class, let's create actual items.
+Now that we have the `ItemData` class, we'll create actual items.
 
 ### Method 1: In the Inspector
 
@@ -200,7 +200,7 @@ This pattern prevents crashes from typos in file paths. Get in the habit of chec
 
 ## CharacterData Resource
 
-Let's create a Resource for character stats:
+Next, a Resource for character stats:
 
 ```gdscript
 extends Resource

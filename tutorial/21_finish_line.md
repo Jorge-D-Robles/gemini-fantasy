@@ -239,7 +239,7 @@ You started with an empty Godot project and a blinking cursor. Twenty-one module
 - **5 interlocking systems** (inventory, quests, party, save/load, audio)
 - **A playable game** with a beginning, middle, and end
 
-More importantly, you've learned the **patterns** that scale. The state machine pattern works for player movement, battle flow, quest tracking, and dialog flow. The Resource pattern works for items, characters, enemies, quests, and encounters. The autoload pattern works for scene management, inventory, battle, quests, party, and audio. These patterns repeat everywhere in game development, not just in JRPGs.
+More importantly, you've learned the **patterns** that scale. The state machine pattern works for player movement, battle flow, quest tracking, and dialogue flow. The Resource pattern works for items, characters, enemies, quests, and encounters. The autoload pattern works for scene management, inventory, battle, quests, party, and audio. These patterns repeat everywhere in game development, not just in JRPGs.
 
 ## Closing Thoughts
 

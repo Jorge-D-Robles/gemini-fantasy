@@ -34,7 +34,7 @@ Control nodes automatically size and position themselves based on their parent c
 
 ## The DialogueLine Resource
 
-Before building the UI, let's define the data format for dialogue. We created a basic `NPCData` with `dialogue_lines: Array[String]` in Module 7. Now we'll make a proper dialogue line resource.
+Before building the UI, we need to define the data format for dialogue. We created a basic `NPCData` with `dialogue_lines: Array[String]` in Module 7. Now we'll make a proper dialogue line resource.
 
 Create `res://resources/dialogue_line.gd`:
 
@@ -270,7 +270,7 @@ Before creating a new tween, we kill any existing one. This prevents overlapping
 
 ## Connecting Dialogue to NPCs
 
-Now let's wire the dialogue system into the game. Add the dialogue box to the scene.
+Now we'll wire the dialogue system into the game. Add the dialogue box to the scene.
 
 ### Option A: Instance in Each Scene
 
@@ -280,7 +280,7 @@ Add an instance of `dialogue_box.tscn` to each scene that needs dialogue (Willow
 
 Since dialogue can happen anywhere, it's a good candidate for global access. But instead of a full autoload, we can instance it in the SceneManager (which is already an autoload and has a CanvasLayer).
 
-For simplicity, let's use **Option A** for now: instance the dialogue box in Willowbrook. We can refactor to a global approach later.
+For simplicity, we'll use **Option A** for now: instance the dialogue box in Willowbrook. We can refactor to a global approach later.
 
 Replace the contents of `willowbrook.gd` (the Module 8 version with `print()` dialogue is now obsolete):
 
@@ -325,7 +325,7 @@ The flow:
 
 ## Choice Dialogue (Branching)
 
-Some dialogue needs player choices: "Yes/No" questions, multiple response options. Let's extend our system to support this.
+Some dialogue needs player choices: "Yes/No" questions, multiple response options. We'll extend the system to support this.
 
 First, **replace the entire contents of `res://resources/dialogue_line.gd`** with this updated version that adds a `choices` field:
 

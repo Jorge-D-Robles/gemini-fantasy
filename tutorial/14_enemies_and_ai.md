@@ -141,7 +141,7 @@ var _step_count: int = 0
 var _threshold: int = 0
 var _in_encounter_zone: bool = false
 var _current_encounters: Array[EncounterData] = []
-var _encounter_rate: float = 0.1
+var _encounter_rate: float = 0.6  # 60% chance per threshold hit; tune this for your dungeon
 var _last_player_position: Vector2 = Vector2.ZERO
 
 const STEP_DISTANCE: float = 16.0  # One tile = one step
@@ -165,7 +165,7 @@ func _process(_delta: float) -> void:
 func _check_encounter() -> void:
     if _step_count >= _threshold:
         _step_count = 0
-        _threshold = randi_range(8, 20)  # Next encounter in 8-20 steps
+        _threshold = randi_range(8, 20)  # Next threshold in 8-20 steps
 
         if randf() < _encounter_rate and not _current_encounters.is_empty():
             var encounter := _pick_weighted_encounter()

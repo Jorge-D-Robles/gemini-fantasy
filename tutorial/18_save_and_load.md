@@ -239,7 +239,8 @@ func load_game(slot: int) -> bool:
     if scene_path:
         var tree := Engine.get_main_loop() as SceneTree
         tree.change_scene_to_file(scene_path)
-        await tree.process_frame
+        # change_scene_to_file() is deferred. Wait for the tree to update.
+        await tree.tree_changed
 
         # Restore player position
         var pos_data: Dictionary = save_data.get("player_position", {})

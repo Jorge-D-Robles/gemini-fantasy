@@ -38,7 +38,7 @@ Key things to notice:
 
 ## Creating and Attaching a Script
 
-Let's add behavior to our Sprite2D from Module 1.
+We'll add behavior to our Sprite2D from Module 1.
 
 1. Open your `main.tscn` scene.
 2. Select the `Sprite2D` node in the scene tree.
@@ -65,7 +65,7 @@ func _process(delta: float) -> void:
     pass
 ```
 
-This template gives us the two most important virtual functions. Let's understand them.
+This template gives us the two most important virtual functions. Here's what they do.
 
 ## Virtual Functions: `_ready()` and `_process()`
 
@@ -233,7 +233,7 @@ There's also `%UniqueName`, which finds a node by its **unique name** regardless
 
 ## Input: Making Things Move
 
-Now for the fun part. Let's make our sprite respond to keyboard input.
+Now for the fun part: making our sprite respond to keyboard input.
 
 ### The Input Map
 
@@ -384,7 +384,7 @@ If you're coming from another language, watch for these:
 
 ## Putting It Together: A Complete First Script
 
-Let's replace our movement code with a cleaner version. Copy this complete script into `sprite_2d.gd`, **replacing everything** that was there:
+Replace our movement code with a cleaner version. Copy this complete script into `sprite_2d.gd`, **replacing everything** that was there:
 
 ```gdscript
 extends Sprite2D

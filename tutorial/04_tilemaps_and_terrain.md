@@ -12,7 +12,7 @@ By the end, you'll have a real place to explore.
 
 ## How TileMaps Work: A Conceptual Model
 
-Before we touch any code, let's understand the idea.
+Before we touch any code, here's the core idea.
 
 A tilemap is a grid of small images (tiles) assembled into a larger scene, like placing mosaic tiles to create a picture. Instead of drawing an entire town as one massive image, you draw it from reusable 16x16 or 32x32 pixel pieces: a grass tile, a path tile, a wall tile, a roof tile.
 
@@ -51,7 +51,7 @@ For this tutorial, we recommend **Kenney's Tiny Town pack**, a free, public-doma
 
 1. Go to [kenney.nl/assets/tiny-town](https://kenney.nl/assets/tiny-town) and click **Download**.
 2. Extract the ZIP file.
-3. In the extracted folder, find `Tilemap/tilemap_packed.png`.
+3. In the extracted folder, find `tilemap_packed.png` (at the root of the ZIP, not in a subfolder).
 4. Create a `tilesets` folder in your project: right-click in the **FileSystem** dock → **New Folder** → name it `tilesets`.
 5. Copy `tilemap_packed.png` into `res://tilesets/` (drag it into the FileSystem dock, or copy it into the folder on disk).
 6. Rename it to `town_tiles.png` if you like, or keep the original name.

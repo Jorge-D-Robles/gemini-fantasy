@@ -64,7 +64,7 @@ func _on_settings() -> void:
     var panel: PanelContainer = settings_scene.instantiate()
     add_child(panel)
     # Center it on screen
-    panel.anchors_preset = Control.PRESET_CENTER
+    panel.set_anchors_preset(Control.PRESET_CENTER)
     panel.grab_focus()
 
 
@@ -82,7 +82,10 @@ func _initialize_fresh_state() -> void:
     PartyManager.from_save_data({members = []})
     var aiden: CharacterData = load("res://data/characters/aiden.tres")
     if aiden:
-        # Initialize HP/MP to full for a fresh game
+        # IMPORTANT: duplicate() creates a fresh copy. Without it, load() returns
+        # the cached Resource, which may still have leveled-up stats from a
+        # previous play session. This is a common Resource pitfall.
+        aiden = aiden.duplicate()
         aiden.current_hp = aiden.max_hp
         aiden.current_mp = aiden.max_mp
         aiden.current_xp = 0
@@ -106,7 +109,9 @@ Set `res://ui/title_screen/title_screen.tscn` as the project's **Main Scene**: g
 
 The pause menu is accessible from anywhere during gameplay.
 
-Create `res://ui/pause_menu/pause_menu.tscn`:
+Create `res://ui/pause_menu/pause_menu.tscn` and **register it as an autoload** named `PauseMenu` (Project -> Project Settings -> Autoload tab -> browse to `pause_menu.tscn`, name it `PauseMenu`). Since the pause menu needs child nodes (ColorRect, buttons), we register the `.tscn` file, not the `.gd` file, just like the MusicManager in Module 19.
+
+Scene tree:
 
 ```
 PauseMenu (CanvasLayer, layer = 50, process_mode = ALWAYS)
@@ -165,17 +170,20 @@ func close() -> void:
 
 
 func _open_inventory() -> void:
-    # Show the inventory screen from Module 10
-    # Requires the InventoryScreen node to be in the "inventory_screens" group
-    # (add it in the editor: select node → Node dock → Groups → add "inventory_screens")
+    # Show the inventory screen from Module 10.
+    # The InventoryScreen node must be in the "inventory_screens" group.
+    # To set this up: in each scene that has an InventoryScreen instance,
+    # select the InventoryScreen node → Node dock (next to Inspector) →
+    # Groups tab → type "inventory_screens" → click Add.
     var inv := get_tree().get_first_node_in_group("inventory_screens")
     if inv:
         inv.visible = true
 
 
 func _open_quest_log() -> void:
-    # Show the quest log from Module 16
-    # Requires the QuestLog node to be in the "quest_logs" group
+    # Show the quest log from Module 16.
+    # Same group setup as inventory: select QuestLog node → Node dock →
+    # Groups → add "quest_logs".
     var log_panel := get_tree().get_first_node_in_group("quest_logs")
     if log_panel:
         log_panel.visible = true
@@ -200,16 +208,22 @@ func _quit_to_title() -> void:
 
 ## The Ending
 
-When the Crystal Guardian is defeated, trigger the ending. Update the boss battle's victory handling:
+When the Crystal Guardian is defeated, trigger the ending. Open `res://systems/battle/states/victory_state.gd` and add this check at the beginning of the `enter()` method, before the reward calculation:
 
 ```gdscript
-# After winning the Crystal Guardian fight
-if GameManager.has_flag("boss_defeated"):
-    return  # Already beaten
+# Add at the top of victory_state.gd enter() method:
+# Check if this was the final boss fight
+var is_boss_fight: bool = false
+for enemy in battle_manager.enemies:
+    if enemy.enemy_data and enemy.enemy_data.id == "crystal_guardian":
+        is_boss_fight = true
+        break
 
-GameManager.set_flag("boss_defeated")
-# Transition to ending scene instead of returning to overworld
-SceneManager.change_scene("res://ui/ending/ending.tscn")
+if is_boss_fight:
+    GameManager.set_flag("boss_defeated")
+    await get_tree().create_timer(2.0).timeout
+    SceneManager.change_scene("res://ui/ending/ending.tscn")
+    return  # Skip normal victory flow
 ```
 
 Create a simple ending scene `res://ui/ending/ending.tscn`:

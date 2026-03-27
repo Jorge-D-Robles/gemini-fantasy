@@ -93,8 +93,10 @@ TreasureChest (StaticBody2D)
 ├── CollisionShape2D           : blocks walking through
 ├── InteractionZone (Area2D)
 │   └── CollisionShape2D
-└── InteractionPrompt (Sprite2D, hidden)
+└── InteractionPrompt (Label, hidden)  : text "!", font_size 12
 ```
+
+> **Note:** We use a `Label` for the interaction prompt (just like the NPC prompt in Module 8) because it works without any art assets. If you prefer, you can swap it for a `Sprite2D` with a custom icon later.
 
 Script `res://entities/interactable/treasure_chest.gd`:
 
@@ -111,7 +113,7 @@ signal opened
 var is_opened: bool = false
 
 @onready var _sprite: Sprite2D = $Sprite
-@onready var _prompt: Sprite2D = $InteractionPrompt
+@onready var _prompt: Label = $InteractionPrompt
 @onready var _zone: Area2D = $InteractionZone
 
 var _player_in_range: bool = false
@@ -175,7 +177,7 @@ SaveCrystal (StaticBody2D)
 ├── CollisionShape2D           : blocks walking through (RectangleShape2D, 16x16)
 ├── InteractionZone (Area2D)
 │   └── CollisionShape2D       : interaction radius (CircleShape2D, radius ~24)
-└── InteractionPrompt (Sprite2D, visible = false)
+└── InteractionPrompt (Label, visible = false)  : text "!", font_size 12
 ```
 
 Script `res://entities/interactable/save_crystal.gd`:
@@ -186,7 +188,7 @@ extends StaticBody2D
 
 var _player_in_range: bool = false
 
-@onready var _prompt: Sprite2D = $InteractionPrompt
+@onready var _prompt: Label = $InteractionPrompt
 @onready var _zone: Area2D = $InteractionZone
 
 
