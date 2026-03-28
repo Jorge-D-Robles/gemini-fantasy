@@ -551,7 +551,7 @@ function build() {
     .replace("{{PAGE_TITLE}}", "JRPG in Godot 4 — Complete Tutorial Series")
     .replace(
       "{{PAGE_DESCRIPTION}}",
-      "A complete, from-scratch tutorial on building a turn-based JRPG in Godot 4. 21 modules covering every major system."
+      "A complete, from-scratch tutorial on building a turn-based JRPG in Godot 4. 27 modules covering every major system."
     )
     .replace("{{SIDEBAR}}", indexSidebar)
     .replace("{{CONTENT}}", indexContent)
