@@ -40,15 +40,9 @@ module.exports = function (hljs) {
 
   var ANNOTATIONS = {
     className: "meta",
-    begin: "@",
-    end: "\\b",
-    contains: [
-      {
-        className: "keyword",
-        begin:
-          "export|onready|icon|tool|export_file|export_range|export_enum|export_multiline",
-      },
-    ],
+    begin:
+      "@(?:export_file|export_range|export_enum|export_multiline|export|onready|icon|tool)\\b",
+    relevance: 5,
   };
 
   var STRING = {
