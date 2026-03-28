@@ -155,57 +155,52 @@ Now for the fun part. Select a TileMapLayer node and start painting:
 
 ### Painting Tools
 
-The TileMap editor toolbar offers several tools:
+The TileMap editor toolbar offers several painting tools. All of them work in the **2D viewport**, not in the TileSet panel itself. Select a tile from the palette, then paint in the viewport.
 
-| Tool | What It Does |
-|------|-------------|
-| Paint | Place one tile at a time (click or drag) |
-| Line | Draw a straight line of tiles |
-| Rectangle | Fill a rectangular area |
-| Bucket Fill | Fill a contiguous area with the same tile |
-| Eraser | Remove tiles |
+| Tool | What It Does | Shortcut |
+|------|-------------|----------|
+| Paint | Place one tile at a time (click or drag) | Default mode |
+| Line | Draw a straight line of tiles between two points | Hold **Shift** while in Paint mode |
+| Rectangle | Fill a rectangular area with one drag | Hold **Ctrl+Shift** while in Paint mode |
+| Bucket Fill | Fill a contiguous region with the selected tile | Separate tool button |
+| Eraser | Remove tiles | **Right-click** in any mode |
+| Picker | Grab a tile from the viewport to use as your brush | Hold **Ctrl** and click in Paint mode |
 
-> **Note:** Right-click while a tool is selected to pick a tile from the viewport (like an eyedropper tool). This is faster than scrolling through the palette.
+The Line and Rectangle modes are temporary holds, not separate tool buttons. You stay in Paint mode and hold the modifier keys when you need them. This is faster than switching tools constantly.
+
+**Selecting multiple tiles:** In the TileSet palette at the bottom, click and drag to select a rectangular group of tiles. When you paint with a multi-tile selection, the entire group is placed as one unit. This is how you place multi-tile objects like buildings, large trees, or decorative structures that span several cells.
+
+**Randomization:** If you select multiple individual tiles (Shift+click in the palette), the Paint tool randomly picks one of them for each cell you paint. This is useful for ground variation — select three or four grass variants, then paint freely and the ground gets natural-looking variety without you placing each variant by hand.
+
+**Scattering:** Set the Scattering value above 0 in the TileMap toolbar to randomly skip cells while painting. At 0.5, roughly half the cells are left empty. This is useful for sparse decorations on the Detail layer — paint across an area and only some cells get a flower or crack.
+
+> **See:** [Using TileMaps](https://docs.godotengine.org/en/stable/tutorials/2d/using_tilemaps.html), the official guide covering all painting tools, randomization, scattering, and patterns.
 
 ### Building Willowbrook
 
-Here's a suggested layout for Willowbrook. You don't need to follow this exactly; make it your own.
+This is the creative part. You're designing a town by painting tiles directly in the Godot editor — there's no "right answer" and no grid template to follow. Think about what a small starting village looks like in the JRPGs you've played: a few buildings connected by paths, some trees and natural features, and a clear exit leading to the next area.
 
-```
-Key:
-G = Grass    P = Path    W = Water    B = Building
-T = Tree     . = Empty
+**Design goals for Willowbrook:**
 
-         GGGGGGGGGGGGGGGGG
-        GGGTTTGGGGGTTTGGGG
-       GGGTTTTGGGGTTTTGGGG
-      GGGG  BBBPPBBB  GGGG
-     GGGGG  BBBPPBBB  GGGGG
-    GGGGGG    PPPP    GGGGGG
-   GGGGGGG   PPPP   GGGGGGG
-  GGGGGGGGPPPPPPPPPGGGGGGGG
-  GGGGGGGGPPPPPPPPPGGGGGGGG
-  GGGGTTTGPPPP PPPPGTTTTGGG
-  GGGGTTTGPPPP PPPPGTTTTGGG
-  GGGGGGGGPPPPPPPPPGGGGGGGG
-  GGGGGWWWWWWWWWWWWWWGGGGG
-  GGGWWWWWWWWWWWWWWWWWGGGG
-```
+- **Paths** that connect buildings and lead to an exit on the south edge (the player will walk to the forest in Module 7)
+- **Two or three buildings** (a shop, an inn, and an elder's house are enough for now)
+- **Some water** on one side — a pond or a stream running along an edge
+- **Trees** around the perimeter to create natural boundaries and make the town feel nestled in a landscape
+- **Open space** — don't fill every cell. Leave room for the player to walk around, and leave some grass visible. Real towns have empty space.
 
-Your map will look different depending on which tiles you chose, and that's fine. The goal is to have paths connecting buildings with grass around them. Think about:
-- **Paths** connecting buildings and leading to the town entrance/exit
-- **Buildings** as solid rectangles (we'll use the Object layer for visual detail)
-- **Water** on one edge (a pond or stream)
-- **Trees** around the perimeter for a natural boundary
-- An **exit** leading south (to the forest in Module 7)
+**Paint it layer by layer:**
 
-Here's a practical approach:
+1. **Ground layer first.** Select the `Ground` layer in the scene tree. Pick a grass tile from the palette. Use **Bucket Fill** to cover a generous area (around 30x20 tiles or larger — you can always shrink it later). Now switch to the **Paint** tool, select a path or dirt tile, and paint the paths by hand. Drag them in natural shapes: a main road through town, a few branches to the buildings. Add water tiles along one edge. Press **F6** to run the scene and walk around. Adjust until it feels like a good size — not so small that it's cramped, not so large that it's empty.
 
-1. **Ground layer first:** Select the `Ground` layer. Choose a grass tile from the palette, select the **Bucket Fill** tool, and click in the viewport to fill a large area (at least 30x20 tiles). Then switch to the **Paint** tool and paint paths over the grass. Add water tiles along one edge.
-2. **Objects layer:** Select the `Objects` layer. Paint tree, building, and fence tiles. These go on top of the ground.
-3. **Detail layer:** Select the `Detail` layer. Add sparse flowers, path-edge tiles, or grass variations. Keep it sparse: a few per area, not on every tile.
+2. **Objects layer.** Select the `Objects` layer. Paint buildings as rectangular clusters of wall and roof tiles. Place trees around the edges and between buildings. Add fences, signs, or rocks where they make sense. Use **Ctrl+click** (Picker) to grab tiles from the viewport when you want to reuse something you already placed. If your tile sheet has multi-tile objects (like a 2x2 tree), select all the tiles as a group in the palette and place them together.
 
-> **Tip:** Right-click while painting to pick a tile from the viewport (eyedropper). Use the scroll wheel to zoom in/out, and middle-click-drag to pan the viewport.
+3. **Detail layer.** Select the `Detail` layer. This is for the finishing touches: flowers along paths, cracks in stone, grass variations over the base ground, path border tiles that soften the edge between dirt and grass. **Keep it sparse.** A few details per area, not one on every cell. If you have the Scattering feature, set it to 0.3–0.5 and paint loosely across an area.
+
+4. **AbovePlayer layer.** If you have treetop canopy tiles or roof overhangs, place them on this layer. Anything here draws on top of the player sprite, which creates the illusion of walking under trees or into doorways.
+
+After each layer, press **F6** to run and walk around. Does it look right? Is there enough room to move? Are the buildings visible? Adjust as you go.
+
+> **Tip:** Middle-click and drag to pan the viewport. Scroll wheel to zoom. Right-click erases. Get comfortable with these three controls and painting goes fast.
 
 ## Adding Collision to Tiles
 
