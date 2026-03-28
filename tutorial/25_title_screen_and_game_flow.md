@@ -1,4 +1,4 @@
-# Module 20: Title Screen and Game Flow
+# Module 25: Title Screen and Game Flow
 
 ## What We Have So Far
 
@@ -59,7 +59,7 @@ func _on_continue() -> void:
 
 
 func _on_settings() -> void:
-    # Show the volume settings panel from Module 19
+    # Show the volume settings panel from Module 24
     var settings_scene := preload("res://ui/settings/settings_panel.tscn")
     var panel: PanelContainer = settings_scene.instantiate()
     add_child(panel)
@@ -109,7 +109,7 @@ Set `res://ui/title_screen/title_screen.tscn` as the project's **Main Scene**: g
 
 The pause menu is accessible from anywhere during gameplay.
 
-Create `res://ui/pause_menu/pause_menu.tscn` and **register it as an autoload** named `PauseMenu` (Project -> Project Settings -> Autoload tab -> browse to `pause_menu.tscn`, name it `PauseMenu`). Since the pause menu needs child nodes (ColorRect, buttons), we register the `.tscn` file, not the `.gd` file, just like the MusicManager in Module 19.
+Create `res://ui/pause_menu/pause_menu.tscn` and **register it as an autoload** named `PauseMenu` (Project -> Project Settings -> Autoload tab -> browse to `pause_menu.tscn`, name it `PauseMenu`). Since the pause menu needs child nodes (ColorRect, buttons), we register the `.tscn` file, not the `.gd` file, just like the MusicManager in Module 24.
 
 Scene tree:
 
@@ -170,7 +170,7 @@ func close() -> void:
 
 
 func _open_inventory() -> void:
-    # Show the inventory screen from Module 10.
+    # Show the inventory screen from Module 12.
     # The InventoryScreen node must be in the "inventory_screens" group.
     # To set this up: in each scene that has an InventoryScreen instance,
     # select the InventoryScreen node → Node dock (next to Inspector) →
@@ -181,7 +181,7 @@ func _open_inventory() -> void:
 
 
 func _open_quest_log() -> void:
-    # Show the quest log from Module 16.
+    # Show the quest log from Module 20.
     # Same group setup as inventory: select QuestLog node → Node dock →
     # Groups → add "quest_logs".
     var log_panel := get_tree().get_first_node_in_group("quest_logs")
@@ -191,7 +191,7 @@ func _open_quest_log() -> void:
 
 
 func _open_settings() -> void:
-    # Show the settings panel from Module 19
+    # Show the settings panel from Module 24
     var settings_scene := preload("res://ui/settings/settings_panel.tscn")
     var panel: PanelContainer = settings_scene.instantiate()
     add_child(panel)
@@ -208,7 +208,7 @@ func _quit_to_title() -> void:
 
 ## The Game Over Screen
 
-Module 15's defeat state sends the player back to Willowbrook as a placeholder. Now we'll build a proper Game Over screen with options.
+Module 18's defeat state sends the player back to Willowbrook as a placeholder. Now we'll build a proper Game Over screen with options.
 
 Create `res://ui/game_over/game_over.tscn`:
 
@@ -255,7 +255,7 @@ func _on_title() -> void:
     SceneManager.change_scene("res://ui/title_screen/title_screen.tscn")
 ```
 
-Now update the defeat state in `res://systems/battle/states/defeat_state.gd` to use this screen (replacing the Module 15 placeholder):
+Now update the defeat state in `res://systems/battle/states/defeat_state.gd` to use this screen (replacing the Module 18 placeholder):
 
 ```gdscript
 extends BattleState
@@ -438,4 +438,4 @@ Every path loops back to the title screen. The game is a complete, closed loop.
 
 ## Next Module
 
-The game is complete. In **Module 21: Finish Line**, we'll walk through a full playtest, cover common bugs and fixes, discuss performance, export the game as a standalone build, and explore where to take Crystal Saga from here.
+The game is complete. In **Module 26: Finish Line**, we'll walk through a full playtest, cover common bugs and fixes, discuss performance, export the game as a standalone build, and explore where to take Crystal Saga from here.

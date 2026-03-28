@@ -1,4 +1,4 @@
-# Module 17: Party Management, Equipment, and Shops
+# Module 21: Party Management, Equipment, and Shops
 
 ## What We Have So Far
 
@@ -63,7 +63,7 @@ Create Lira's character data at `res://data/characters/lira.tres`. Set ALL of th
 - `attack`: 6, `defense`: 5, `speed`: 9
 - `hp_growth`: 8, `mp_growth`: 8, `attack_growth`: 1, `defense_growth`: 1, `speed_growth`: 2
 
-> **Important:** The `id` field must be `"lira"` exactly. `PartyManager.get_member_by_id("lira")` uses this to find her. All growth rate fields must be non-zero or she won't gain stats on level-up (see Module 15).
+> **Important:** The `id` field must be `"lira"` exactly. `PartyManager.get_member_by_id("lira")` uses this to find her. All growth rate fields must be non-zero or she won't gain stats on level-up (see Module 18).
 
 Lira is a mage: lower HP and attack, higher MP and speed.
 
@@ -96,7 +96,7 @@ func _get_lira_dialogue() -> Array[DialogueLine]:
 After the second conversation, trigger recruitment. This code goes in `willowbrook.gd`, which should have `@onready` references for the UI nodes (from Modules 9 and this module):
 
 ```gdscript
-@onready var _dialogue_box: Control = $DialogueBox  # From Module 9
+@onready var _dialogue_box: Control = $DialogueBox  # From Module 11
 @onready var _shop_ui: CanvasLayer = $ShopUI         # Instance of shop_ui.tscn (add to scene)
 ```
 
@@ -119,7 +119,7 @@ func _recruit_lira() -> void:
         print("Lira joined the party!")
 ```
 
-Update the battle initialization to use PartyManager instead of a hardcoded hero. In each area scene script that triggers battles (e.g., `crystal_cavern.gd` from Module 14), find the code that creates `var hero := BattlerData.new()` and replace the hero creation + `start_battle` call with:
+Update the battle initialization to use PartyManager instead of a hardcoded hero. In each area scene script that triggers battles (e.g., `crystal_cavern.gd` from Module 17), find the code that creates `var hero := BattlerData.new()` and replace the hero creation + `start_battle` call with:
 
 ```gdscript
 # Build party BattlerData from PartyManager
@@ -147,7 +147,7 @@ Add equipment slots to `character_data.gd`:
 var equipped_weapon: ItemData = null
 var equipped_armor: ItemData = null
 var equipped_accessory: ItemData = null
-# current_xp was already added in Module 15
+# current_xp was already added in Module 18
 
 
 func get_effective_attack() -> int:
@@ -243,7 +243,7 @@ func initialize_from_character() -> void:
     current_speed = character_data.get_effective_speed()
 ```
 
-> **Important:** This ensures HP/MP carries over between battles. Module 15's Victory state syncs `battler.current_hp` back to `character_data.current_hp` after each fight. Without this check, the party would heal to full after every battle.
+> **Important:** This ensures HP/MP carries over between battles. Module 18's Victory state syncs `battler.current_hp` back to `character_data.current_hp` after each fight. Without this check, the party would heal to full after every battle.
 
 Now equipping a better sword directly increases damage in battle.
 
@@ -328,7 +328,7 @@ func _on_slot_pressed(slot: ItemData.EquipSlot) -> void:
     equipment_changed.emit()
 ```
 
-> **Exercise:** For a more polished experience, replace the "equip first item" logic with a popup list showing all matching items, their stats, and the stat difference compared to the current equipment. The inventory grid pattern from Module 10 works well for this.
+> **Exercise:** For a more polished experience, replace the "equip first item" logic with a popup list showing all matching items, their stats, and the stat difference compared to the current equipment. The inventory grid pattern from Module 12 works well for this.
 
 ## The Shop System
 
@@ -503,4 +503,4 @@ func _handle_inn(npc: CharacterBody2D) -> void:
 
 ## Next Module
 
-All game systems are in place. In **Module 18: Save and Load**, we'll persist everything (position, inventory, quests, party, equipment, flags) to JSON files, with save crystals in the world and multiple save slots.
+All game systems are in place. In **Module 22: Save and Load**, we'll persist everything (position, inventory, quests, party, equipment, flags) to JSON files, with save crystals in the world and multiple save slots.

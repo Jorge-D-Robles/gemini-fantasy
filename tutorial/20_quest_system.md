@@ -1,4 +1,4 @@
-# Module 16: The Quest System and Game Flags
+# Module 20: The Quest System and Game Flags
 
 ## What We Have So Far
 
@@ -136,7 +136,7 @@ func turn_in_quest(quest: QuestData) -> void:
 
     # Grant rewards
     if quest.xp_reward > 0:
-        # Distribute XP to all party members (once PartyManager exists in Module 17)
+        # Distribute XP to all party members (once PartyManager exists in Module 21)
         if Engine.has_singleton("PartyManager") or get_node_or_null("/root/PartyManager"):
             for member in PartyManager.get_members():
                 member.current_xp += quest.xp_reward
@@ -253,7 +253,7 @@ func _ready() -> void:
     # ... existing setup code ...
 ```
 
-The `boss_defeated` flag is set in Module 20's ending trigger. The `talked_to_fynn` flag is set in the reactive dialogue below.
+The `boss_defeated` flag is set in Module 25's ending trigger. The `talked_to_fynn` flag is set in the reactive dialogue below.
 
 **Starting the main quest:** Add this to the elder's dialogue handler in `willowbrook.gd`:
 ```gdscript
@@ -265,7 +265,7 @@ if not QuestManager.is_quest_active("crystal_resonance"):
 
 ### The Pendant Pickup
 
-The side quest needs a pendant object in Whisperwood. Use the treasure chest pattern from Module 13 to create a pickup:
+The side quest needs a pendant object in Whisperwood. Use the treasure chest pattern from Module 16 to create a pickup:
 
 1. Create `res://data/items/pendant.tres` (ItemData, type: KEY_ITEM, display_name: "Silver Pendant")
 2. Place a treasure chest instance in the Whisperwood scene near a memorable landmark
@@ -422,4 +422,4 @@ func _show_detail(quest: QuestData) -> void:
 
 ## Next Module
 
-In **Module 17: Party Management, Equipment, and Shops**, we'll recruit Lira the mage, add equipment that modifies stats, and build the shop system, the final progression systems before save/load.
+In **Module 21: Party Management, Equipment, and Shops**, we'll recruit Lira the mage, add equipment that modifies stats, and build the shop system, the final progression systems before save/load.

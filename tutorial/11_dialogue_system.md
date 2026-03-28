@@ -1,4 +1,4 @@
-# Module 9: The Dialogue System
+# Module 11: The Dialogue System
 
 ## What We Have So Far
 
@@ -34,7 +34,7 @@ Control nodes automatically size and position themselves based on their parent c
 
 ## The DialogueLine Resource
 
-Before building the UI, we need to define the data format for dialogue. We created a basic `NPCData` with `dialogue_lines: Array[String]` in Module 7. Now we'll make a proper dialogue line resource.
+Before building the UI, we need to define the data format for dialogue. We created a basic `NPCData` with `dialogue_lines: Array[String]` in Module 9. Now we'll make a proper dialogue line resource.
 
 Create `res://resources/dialogue_line.gd`:
 
@@ -75,7 +75,7 @@ The `dialogue` array replaces the old `dialogue_lines`. Update each NPC `.tres` 
 
 > **Tip:** Creating sub-resources inside arrays can feel clunky at first. Each array element needs to be clicked, then "New DialogueLine" selected, then expanded to fill in fields. It's tedious but straightforward.
 
-> **Spiral:** This is the Resource pattern from Module 7 in action. We define a data type (`DialogueLine`), use it in another Resource (`NPCData`), and the editor gives us a clean UI for editing dialogue without touching code.
+> **Spiral:** This is the Resource pattern from Module 9 in action. We define a data type (`DialogueLine`), use it in another Resource (`NPCData`), and the editor gives us a clean UI for editing dialogue without touching code.
 
 ## Building the Dialogue Box Scene
 
@@ -282,7 +282,7 @@ Since dialogue can happen anywhere, it's a good candidate for global access. But
 
 For simplicity, we'll use **Option A** for now: instance the dialogue box in Willowbrook. We can refactor to a global approach later.
 
-Replace the contents of `willowbrook.gd` (the Module 8 version with `print()` dialogue is now obsolete):
+Replace the contents of `willowbrook.gd` (the Module 10 version with `print()` dialogue is now obsolete):
 
 ```gdscript
 extends Node2D
@@ -579,7 +579,7 @@ func _close() -> void:
     dialogue_finished.emit()
 ```
 
-> **Note:** In this basic implementation, choices don't affect what happens next; the dialogue continues linearly. In Module 16 (Quests), we'll connect choices to game flags that change story outcomes.
+> **Note:** In this basic implementation, choices don't affect what happens next; the dialogue continues linearly. In Module 20 (Quests), we'll connect choices to game flags that change story outcomes.
 
 > **Note:** `grab_focus()` on the first button enables keyboard/gamepad navigation. Players can use up/down arrows to select and Enter/interact to confirm, no mouse needed. This is critical for JRPGs.
 
@@ -602,7 +602,7 @@ This gives you the classic JRPG text box look. You can refine it later with cust
 
 ## Freezing the Player During Dialogue
 
-This is already handled by our state machine (Module 5). When `start_interaction()` is called, the player enters INTERACT state and stops processing input. When `end_interaction()` is called, the player returns to IDLE.
+This is already handled by our state machine (Module 6). When `start_interaction()` is called, the player enters INTERACT state and stops processing input. When `end_interaction()` is called, the player returns to IDLE.
 
 The dialogue box's `_unhandled_input` handles the interact/accept buttons for advancing text. Since the player's INTERACT state doesn't consume input events, the dialogue box can receive them normally.
 
@@ -633,4 +633,4 @@ To test the choice system, edit one of your NPC `.tres` files (e.g., the innkeep
 
 ## Next Module
 
-We have NPCs who talk. In **Module 10: The Inventory System**, we'll build an inventory the player can open with a menu key, display items in a grid, and use consumable items like potions. This is the first game system that requires both data (Resources from Module 7) and UI (patterns from this module) working together.
+We have NPCs who talk. In **Module 12: The Inventory System**, we'll build an inventory the player can open with a menu key, display items in a grid, and use consumable items like potions. This is the first game system that requires both data (Resources from Module 9) and UI (patterns from this module) working together.

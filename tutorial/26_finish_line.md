@@ -1,4 +1,4 @@
-# Module 21: Finish Line (Polish, Export, and Next Steps)
+# Module 26: Finish Line (Polish, Export, and Next Steps)
 
 ## What We Have
 
@@ -52,7 +52,7 @@ Play through Crystal Saga from start to finish and verify each checkpoint:
 - [ ] Battles work: actions, damage, animations, victory
 - [ ] XP and gold are awarded after battles
 - [ ] Level-ups show stat increases
-- [ ] The pendant can be found (requires a pickup object in Whisperwood; see Module 13's treasure chest pattern)
+- [ ] The pendant can be found (requires a pickup object in Whisperwood; see Module 16's treasure chest pattern)
 
 ### 4. Crystal Cavern
 - [ ] Dungeon music plays
@@ -77,7 +77,7 @@ Play through Crystal Saga from start to finish and verify each checkpoint:
 - [ ] Quest log shows correct objective states
 - [ ] Equipment changes are reflected in battle
 - [ ] Pause menu works at any time
-- [ ] Audio volume controls work during the session (persistence requires the optional settings save extension from Module 19)
+- [ ] Audio volume controls work during the session (persistence requires the optional settings save extension from Module 24)
 
 ## Common Bugs and Fixes
 
@@ -165,7 +165,7 @@ Crystal Saga is a foundation. Here's what you could add next, in rough order of 
 - Extended dialogue for existing NPCs
 
 ### Status Effects System (Medium)
-Generalize the Defend buff from Module 12 into a full system:
+Generalize the Defend buff from Module 15 into a full system:
 - **Poison:** Lose HP each turn (3 turns)
 - **Sleep:** Skip turn, wakes on damage
 - **Stun:** Skip one turn

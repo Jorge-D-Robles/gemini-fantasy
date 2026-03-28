@@ -1,4 +1,4 @@
-# Module 15: Victory, Rewards, and Leveling
+# Module 18: Victory, Rewards, and Leveling
 
 ## What We Have So Far
 
@@ -51,7 +51,7 @@ This curve starts gentle and ramps up. Early levels come fast (motivating), late
 
 When a character levels up, their stats increase based on **growth rates** defined in CharacterData.
 
-> **Spiral:** These growth rate fields (`hp_growth`, `mp_growth`, `attack_growth`, `defense_growth`, `speed_growth`) were defined in Module 7's CharacterData class. Verify your `aiden.tres` has non-zero values for all growth fields (e.g., hp_growth: 12, attack_growth: 3). If they default to 0, Aiden won't gain stats on level-up.
+> **Spiral:** These growth rate fields (`hp_growth`, `mp_growth`, `attack_growth`, `defense_growth`, `speed_growth`) were defined in Module 9's CharacterData class. Verify your `aiden.tres` has non-zero values for all growth fields (e.g., hp_growth: 12, attack_growth: 3). If they default to 0, Aiden won't gain stats on level-up.
 
 Add this method to `res://resources/character_data.gd`:
 
@@ -169,7 +169,7 @@ func enter(_context: Dictionary = {}) -> void:
     SceneManager.change_scene("res://scenes/willowbrook/willowbrook.tscn", "default")
 ```
 
-Module 20 replaces this with a proper Game Over screen with options (load save, return to title).
+Module 25 replaces this with a proper Game Over screen with options (load save, return to title).
 
 ## Post-Battle State Restoration
 
@@ -178,7 +178,7 @@ After a victorious battle, the party returns to the overworld with their current
 1. **HP/MP sync**: the Victory state writes `battler.current_hp` and `battler.current_mp` back to `battler.character_data` (see the sync code above). Without this, the party would return to full HP after every fight.
 2. **Resource sharing**: CharacterData resources are shared by reference. When the battle modifies stats via `level_up()`, that change persists across scenes automatically.
 
-For now, since we don't have a formal PartyManager yet (Module 17), the CharacterData resource at `res://data/characters/aiden.tres` is loaded via `load()`, which caches it. All code that loads the same path gets the same object.
+For now, since we don't have a formal PartyManager yet (Module 21), the CharacterData resource at `res://data/characters/aiden.tres` is loaded via `load()`, which caches it. All code that loads the same path gets the same object.
 
 > **JRPG Pattern:** After normal battles, HP/MP carry over (no free heals). Save points and inns restore them. This creates a resource management game: do you use that Potion now or save it for the boss?
 
@@ -207,10 +207,10 @@ After winning a battle:
 
 After losing a battle:
 - "--- DEFEAT ---" appears in the output panel
-- The game reloads Willowbrook (placeholder for proper Game Over screen in Module 20)
+- The game reloads Willowbrook (placeholder for proper Game Over screen in Module 25)
 
 **Concrete example:** If Aiden (level 1, 0 XP) defeats 2 Crystal Slimes (12 XP each), he gains 24 XP total. Since level 1→2 requires only 10 XP, he levels up to level 2 with 14 XP remaining.
 
 ## Next Module
 
-We have combat with rewards. In **Module 16: The Quest System and Game Flags**, we'll add a game-wide flag system for tracking world state, quest data with objectives, a quest log UI, and make NPCs react differently based on what the player has accomplished.
+We have combat with rewards. In **Module 20: The Quest System and Game Flags**, we'll add a game-wide flag system for tracking world state, quest data with objectives, a quest log UI, and make NPCs react differently based on what the player has accomplished.

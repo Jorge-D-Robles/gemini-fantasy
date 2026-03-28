@@ -1,4 +1,4 @@
-# Module 7: Resources, the Data Layer
+# Module 9: Resources, the Data Layer
 
 ## What We Have So Far
 
@@ -14,8 +14,8 @@ This might seem like a detour from "making the game," but it's not. Every system
 
 A **Resource** is Godot's universal data container. You've already used several:
 
-- The `SpriteFrames` you created in Module 5 is a Resource
-- The `TileSet` from Module 4 is a Resource
+- The `SpriteFrames` you created in Module 6 is a Resource
+- The `TileSet` from Module 5 is a Resource
 - The `RectangleShape2D` on your CollisionShape2D is a Resource
 - Even GDScript files (`.gd`) are Resources
 
@@ -103,7 +103,7 @@ var my_copy: ItemData = shared_item.duplicate()
 my_copy.hp_restore = 99  # Only affects my_copy, not the original
 ```
 
-At runtime, never modify a Resource you loaded from a `.tres` unless you want the change to be visible everywhere. We'll revisit this pattern in Module 20 when we need a fresh copy of CharacterData for new games.
+At runtime, never modify a Resource you loaded from a `.tres` unless you want the change to be visible everywhere. We'll revisit this pattern in Module 25 when we need a fresh copy of CharacterData for new games.
 
 ## Creating `.tres` Files
 
@@ -243,7 +243,7 @@ class_name CharacterData
 
 Save this as `res://resources/character_data.gd`.
 
-> **Important:** Always set the `id` field on every `.tres` file. The inventory system (Module 10) uses `id` to match and stack items. If two items have the same `id` (or both are left empty), they'll be treated as identical.
+> **Important:** Always set the `id` field on every `.tres` file. The inventory system (Module 12) uses `id` to match and stack items. If two items have the same `id` (or both are left empty), they'll be treated as identical.
 
 Create the hero's data at `res://data/characters/aiden.tres`:
 - id: "aiden"
@@ -252,7 +252,7 @@ Create the hero's data at `res://data/characters/aiden.tres`:
 - attack: 12, defense: 8, speed: 10
 - hp_growth: 15, attack_growth: 3
 
-We'll create Lira's data (the mage companion) in Module 17 when we implement party recruitment.
+We'll create Lira's data (the mage companion) in Module 21 when we implement party recruitment.
 
 ## NPCData Resource
 
@@ -274,7 +274,7 @@ class_name NPCData
 
 Save as `res://resources/npc_data.gd`.
 
-This is a simple version. We'll replace `dialogue_lines: Array[String]` with a proper `DialogueLine` Resource in Module 9. When we do, you'll need to re-edit the NPC `.tres` files to use the new dialogue format, so keep your text values handy. But even this simple version is better than hardcoding NPC names and text in each scene.
+This is a simple version. We'll replace `dialogue_lines: Array[String]` with a proper `DialogueLine` Resource in Module 11. When we do, you'll need to re-edit the NPC `.tres` files to use the new dialogue format, so keep your text values handy. But even this simple version is better than hardcoding NPC names and text in each scene.
 
 ## The Three-File Pattern
 
@@ -377,4 +377,4 @@ After this module:
 
 ## Next Module
 
-We have data types. In **Module 8: NPCs and Interaction**, we'll use `NPCData` to populate Willowbrook with characters the player can approach and talk to. We'll build the interaction system: detecting nearby NPCs, showing a prompt, and handling the interaction input.
+We have data types. In **Module 10: NPCs and Interaction**, we'll use `NPCData` to populate Willowbrook with characters the player can approach and talk to. We'll build the interaction system: detecting nearby NPCs, showing a prompt, and handling the interaction input.

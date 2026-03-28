@@ -1,4 +1,4 @@
-# Module 18: Save and Load
+# Module 22: Save and Load
 
 ## What We Have So Far
 
@@ -288,7 +288,7 @@ func slot_exists(slot: int) -> bool:
 
 ## Wiring the Save Crystal
 
-Update the save crystal from Module 13:
+Update the save crystal from Module 16:
 
 ```gdscript
 func _activate() -> void:
@@ -417,4 +417,4 @@ if not save_data.has("version"):
 
 ## Next Module
 
-The game is fully playable and saveable. In **Module 19: Audio**, we'll add background music, sound effects, and a volume settings system, bringing sound to Crystal Saga.
+The game is fully playable and saveable. In **Module 24: Audio**, we'll add background music, sound effects, and a volume settings system, bringing sound to Crystal Saga.

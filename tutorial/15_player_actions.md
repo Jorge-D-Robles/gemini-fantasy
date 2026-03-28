@@ -1,4 +1,4 @@
-# Module 12: Player Actions: Attack, Defend, Magic, Items
+# Module 15: Player Actions: Attack, Defend, Magic, Items
 
 ## What We Have So Far
 
@@ -135,7 +135,7 @@ Set both to **visible = false** initially in the Inspector.
 
 ## Updating the PlayerChoice State
 
-This is the critical wiring that connects the menu to the state machine. **Replace** the contents of `res://systems/battle/states/player_choice_state.gd` (the Module 11 placeholder that auto-attacked):
+This is the critical wiring that connects the menu to the state machine. **Replace** the contents of `res://systems/battle/states/player_choice_state.gd` (the Module 14 placeholder that auto-attacked):
 
 ```gdscript
 extends BattleState
@@ -397,7 +397,7 @@ The boost is reset at the start of the battler's next turn (in the turn processi
 battler.defense_boost = 0  # Reset before the battler acts
 ```
 
-This is the simplest form of a temporary status effect. In Module 21 (Next Steps), we'll discuss generalizing this into a full status effects system with poison, sleep, buffs, and debuffs.
+This is the simplest form of a temporary status effect. In Module 26 (Next Steps), we'll discuss generalizing this into a full status effects system with poison, sleep, buffs, and debuffs.
 
 ## Complete action_execute_state.gd
 
@@ -537,4 +537,4 @@ When a battle starts:
 
 ## Next Module
 
-We have interactive battles, but we're fighting placeholder Slimes with a debug key. In **Module 13: The Crystal Cavern**, we'll build a dungeon with its own tilemap, encounter zones, treasure chests, and a boss room, giving the battle system a proper home.
+We have interactive battles, but we're fighting placeholder Slimes with a debug key. In **Module 16: The Crystal Cavern**, we'll build a dungeon with its own tilemap, encounter zones, treasure chests, and a boss room, giving the battle system a proper home.

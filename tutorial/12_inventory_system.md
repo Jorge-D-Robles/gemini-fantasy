@@ -1,4 +1,4 @@
-# Module 10: The Inventory System
+# Module 12: The Inventory System
 
 ## What We Have So Far
 
@@ -6,7 +6,7 @@ NPCs with a dialogue system, custom Resources for items and characters, scene tr
 
 ## What We're Building This Module
 
-An inventory system with a global autoload for tracking items, a UI screen the player can open with a key, and the ability to use consumable items. We'll keep this focused; equipment and shops come in Module 17.
+An inventory system with a global autoload for tracking items, a UI screen the player can open with a key, and the ability to use consumable items. We'll keep this focused; equipment and shops come in Module 21.
 
 ## InventoryManager Autoload
 
@@ -272,7 +272,7 @@ func _on_slot_activated(item: ItemData) -> void:
 
 func _use_consumable(item: ItemData) -> void:
     # For now, apply directly to a placeholder HP value
-    # In Module 17, this will apply to the selected party member
+    # In Module 21, this will apply to the selected party member
     if item.hp_restore > 0:
         print("Restored ", item.hp_restore, " HP!")
     if item.mp_restore > 0:
@@ -369,7 +369,7 @@ Willowbrook (Node2D)
 |---------|-------------|
 | Inventory doesn't open when pressing Tab | `menu` input action not defined, or key not bound |
 | Game freezes when inventory opens | `process_mode` not set to `Always` on the InventoryScreen CanvasLayer |
-| Items stacking incorrectly or showing wrong item | Missing or duplicate `id` fields in `.tres` files (see Module 7) |
+| Items stacking incorrectly or showing wrong item | Missing or duplicate `id` fields in `.tres` files (see Module 9) |
 | Slots appear too small or empty | No icon set on items (expected; use Godot icon as placeholder), or TextureRect missing minimum size |
 | Escape doesn't close inventory | `ui_cancel` not mapped to Escape (it is by default) |
 
@@ -385,4 +385,4 @@ When you press F6 (running Willowbrook):
 
 ## Next Module
 
-We have items and NPCs and dialogue. Now it's time for the biggest system in any JRPG: **combat**. In **Module 11: Battle Foundations**, we'll build the battle scene, implement a node-based state machine for battle flow, and create the turn order system. Combat is next.
+We have items and NPCs and dialogue. Now it's time for the biggest system in any JRPG: **combat**. In **Module 14: Battle Foundations**, we'll build the battle scene, implement a node-based state machine for battle flow, and create the turn order system. Combat is next.

@@ -14,12 +14,12 @@ const DIST_DIR = path.join(__dirname, "dist");
 const PUBLIC_DIR = path.join(__dirname, "public");
 
 const PART_GROUPINGS = [
-  { name: "Part I: Welcome to Godot", range: [1, 3] },
-  { name: "Part II: Building the World", range: [4, 6] },
-  { name: "Part III: Data and Dialogue", range: [7, 10] },
-  { name: "Part IV: Combat", range: [11, 15] },
-  { name: "Part V: Systems", range: [16, 18] },
-  { name: "Part VI: Polish", range: [19, 21] },
+  { name: "Part I: Welcome to Godot", range: [1, 4] },
+  { name: "Part II: Building the World", range: [5, 8] },
+  { name: "Part III: Data and Dialogue", range: [9, 13] },
+  { name: "Part IV: Combat", range: [14, 19] },
+  { name: "Part V: Systems", range: [20, 23] },
+  { name: "Part VI: Polish", range: [24, 27] },
 ];
 
 // ─── Register GDScript grammar ─────────────────────────
@@ -188,6 +188,80 @@ function slugify(text) {
 
 function stripHtml(html) {
   return html.replace(/<[^>]*>/g, "");
+}
+
+function stripMarkdownInline(text) {
+  return text
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
+    .replace(/[*_]{1,3}/g, "")
+    .replace(/`([^`]+)`/g, "$1")
+    .trim();
+}
+
+function stripMarkdownBlock(text) {
+  return text
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
+    .replace(/[*_]{1,3}([^*_]+)[*_]{1,3}/g, "$1")
+    .replace(/`([^`]+)`/g, "$1")
+    .replace(/^#{1,6}\s+/gm, "")
+    .replace(/^>\s*/gm, "")
+    .replace(/^[-*_]{3,}\s*$/gm, "")
+    .replace(/<[^>]*>/g, "")
+    .replace(/^[\s]*[-*+]\s+/gm, " ")
+    .replace(/^[\s]*\d+\.\s+/gm, " ")
+    .replace(/\|/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function extractSections(markdown, slug, moduleNum, shortTitleText) {
+  var lines = markdown.split("\n");
+  var sections = [];
+  var inCodeBlock = false;
+  var currentHeading = shortTitleText;
+  var currentAnchor = "";
+  var currentText = [];
+
+  for (var line of lines) {
+    if (line.match(/^```/)) {
+      inCodeBlock = !inCodeBlock;
+      continue;
+    }
+    if (inCodeBlock) continue;
+
+    var h1Match = line.match(/^# (.+)$/);
+    if (h1Match) continue;
+
+    var h2Match = line.match(/^## (.+)$/);
+    var h3Match = line.match(/^### (.+)$/);
+
+    if (h2Match || h3Match) {
+      if (currentText.length > 0) {
+        var text = stripMarkdownBlock(currentText.join("\n"));
+        if (text.length > 30) {
+          sections.push({ h: currentHeading, a: currentAnchor, x: text });
+        }
+      }
+      var raw = (h2Match || h3Match)[1];
+      currentHeading = stripMarkdownInline(raw);
+      currentAnchor = slugify(currentHeading);
+      currentText = [];
+    } else {
+      currentText.push(line);
+    }
+  }
+
+  if (currentText.length > 0) {
+    var text = stripMarkdownBlock(currentText.join("\n"));
+    if (text.length > 30) {
+      sections.push({ h: currentHeading, a: currentAnchor, x: text });
+    }
+  }
+
+  return sections.map(function (s) {
+    return { m: moduleNum, t: shortTitleText, s: slug, h: s.h, a: s.a, x: s.x };
+  });
 }
 
 function extractRawText(tokens) {
@@ -397,13 +471,15 @@ function build() {
   var modules = getTutorialFiles();
   console.log("Found " + modules.length + " tutorial modules.\n");
 
-  // Build search index
-  var searchData = modules.map(function (m) {
-    return { num: m.moduleNum, title: m.shortTitle, full: m.fullTitle, slug: m.slug };
-  });
-  var searchJs = "window.__SEARCH_DATA__=" + JSON.stringify(searchData) + ";";
+  // Build full-text search index with section-level entries
+  var searchEntries = [];
+  for (var mod of modules) {
+    var sections = extractSections(mod.markdown, mod.slug, mod.moduleNum, mod.shortTitle);
+    searchEntries = searchEntries.concat(sections);
+  }
+  var searchJs = "window.__SEARCH_DATA__=" + JSON.stringify(searchEntries) + ";";
   fs.writeFileSync(path.join(DIST_DIR, "search-data.js"), searchJs);
-  console.log("  ✓ search-data.js generated");
+  console.log("  ✓ search-data.js generated (" + searchEntries.length + " sections)");
 
   // Build each module page
   for (var i = 0; i < modules.length; i++) {

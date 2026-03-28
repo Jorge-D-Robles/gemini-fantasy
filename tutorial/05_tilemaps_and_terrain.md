@@ -1,4 +1,4 @@
-# Module 4: The Overworld: TileMaps and Terrain
+# Module 5: The Overworld: TileMaps and Terrain
 
 ## What We Have So Far
 
@@ -131,7 +131,7 @@ Willowbrook (Node2D)
 For each new layer:
 1. Set the **Tile Set** property to your saved `town_tileset.tres` (drag it from the FileSystem dock or click Load).
 
-The layers are drawn in tree order: `Ground` first (bottom), `AbovePlayer` last (top). The player sprite should render between `Objects` and `AbovePlayer`. We'll handle this with Y-sorting in Module 5.
+The layers are drawn in tree order: `Ground` first (bottom), `AbovePlayer` last (top). The player sprite should render between `Objects` and `AbovePlayer`. We'll handle this with Y-sorting in Module 6.
 
 ### Why Four Layers?
 
@@ -197,7 +197,7 @@ Your map will look different depending on which tiles you chose, and that's fine
 - **Buildings** as solid rectangles (we'll use the Object layer for visual detail)
 - **Water** on one edge (a pond or stream)
 - **Trees** around the perimeter for a natural boundary
-- An **exit** leading south (to the forest in Module 6)
+- An **exit** leading south (to the forest in Module 7)
 
 Here's a practical approach:
 
@@ -237,7 +237,7 @@ First, resize the player's collision shape to fit the tile-based world. Open `pl
 
 Instance the Player scene into `Willowbrook` (drag `player/player.tscn` from the FileSystem dock into the viewport). Run with **F6** (which runs the current scene directly, not F5, which runs the main scene). Try walking into walls and water. The player should collide and slide along surfaces.
 
-> **Note:** Your main scene is still `main.tscn` from Module 1. That's fine; we use F6 to test Willowbrook directly. In Module 6, we'll build a proper SceneManager and set up scene transitions.
+> **Note:** Your main scene is still `main.tscn` from Module 1. That's fine; we use F6 to test Willowbrook directly. In Module 7, we'll build a proper SceneManager and set up scene transitions.
 
 ## Camera2D: Following the Player
 
@@ -298,7 +298,7 @@ Willowbrook (Node2D)
 └── Player (player.tscn instance)
 ```
 
-Later (in Module 6), the Player will be spawned by the SceneManager rather than placed directly in the scene. But for now, having it here lets us test immediately.
+Later (in Module 7), the Player will be spawned by the SceneManager rather than placed directly in the scene. But for now, having it here lets us test immediately.
 
 ## A Note on Tile Art
 
@@ -332,4 +332,4 @@ When you press F6 (to run the Willowbrook scene directly):
 
 ## Next Module
 
-We have a town, but our player is still the Godot icon sliding around lifelessly. In **Module 5: Bringing the Player to Life**, we'll add sprite animations (walk cycles in four directions), implement a proper enum-based state machine, and add Y-sorting so the player walks behind trees and in front of paths.
+We have a town, but our player is still the Godot icon sliding around lifelessly. In **Module 6: Bringing the Player to Life**, we'll add sprite animations (walk cycles in four directions), implement a proper enum-based state machine, and add Y-sorting so the player walks behind trees and in front of paths.

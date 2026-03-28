@@ -1,4 +1,4 @@
-# Module 19: Audio (Music and Sound Effects)
+# Module 24: Audio (Music and Sound Effects)
 
 ## What We Have So Far
 
@@ -282,7 +282,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 `linear_to_db()` converts a 0-1 slider value to decibels. At 0, it returns -INF (silent). At 1, it returns 0 (full volume).
 
-> **Note:** Volume settings are lost when the game restarts. To persist them, save the slider values to `user://settings.json` and load them in `_ready()`. This is left as an exercise; the pattern is the same as Module 18's save system.
+> **Note:** Volume settings are lost when the game restarts. To persist them, save the slider values to `user://settings.json` and load them in `_ready()`. This is left as an exercise; the pattern is the same as Module 22's save system.
 
 ## Autoload Reference Card (Final)
 
@@ -316,4 +316,4 @@ func _unhandled_input(event: InputEvent) -> void:
 
 ## Next Module
 
-The game sounds alive. In **Module 20: Title Screen and Game Flow**, we'll build the complete game loop: title screen, new game, continue, pause menu, victory ending, and credits.
+The game sounds alive. In **Module 25: Title Screen and Game Flow**, we'll build the complete game loop: title screen, new game, continue, pause menu, victory ending, and credits.

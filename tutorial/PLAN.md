@@ -11,7 +11,7 @@ The tutorial is organized into **six parts** containing **twenty-one modules**. 
 1. **One project, start to finish.** Every module adds to "Crystal Saga." No throwaway examples.
 2. **Show, then explain.** Code comes first, then we unpack what it does and why. *Exception: spatial/visual systems (TileMaps, dungeon design) get a brief conceptual model up front before code, because debugging visual problems without understanding the model is painful.*
 3. **Cite everything.** Every Godot concept links to the official documentation so readers can go deeper.
-4. **Spiral learning.** Concepts appear simply at first, then return with more depth. (e.g., signals appear in Module 3 for input, then again in Module 8 for dialogue events, then again in Module 11 for battle state changes. State machines are built in Module 5 for player movement, then applied at scale in Module 11 for battle flow.)
+4. **Spiral learning.** Concepts appear simply at first, then return with more depth. (e.g., signals appear in Module 3 for input, then again in Module 10 for dialogue events, then again in Module 14 for battle state changes. State machines are built in Module 6 for player movement, then applied at scale in Module 14 for battle flow.)
 5. **JRPG-specific.** This isn't a generic game dev course. Every example, every pattern, every design decision is framed through the lens of "how does a JRPG do this?"
 6. **Approachable but not patronizing.** We assume the reader can code. We don't assume they know Godot, game dev patterns, or GDScript.
 7. **Runnable checkpoints.** Each module ends with a "What You Should See" section describing the expected state of the game. Readers can verify they're on track.
@@ -72,7 +72,7 @@ This scope is deliberately small: big enough to need real architecture, small en
 - GDScript-specific: `@export`, `@onready`, `$NodePath`, `%UniqueNode`
 - The `_ready()` and `_process(delta)` virtual functions
 - Input basics: `Input.is_action_pressed()`, the Input Map
-- A note on `Input`: this is your first autoload, a globally accessible singleton provided by Godot. We'll create our own in Module 6.
+- A note on `Input`: this is your first autoload, a globally accessible singleton provided by Godot. We'll create our own in Module 7.
 - Moving a sprite with code
 - `print()` debugging and the Output panel
 - Common gotchas for Python/JS/C# developers
@@ -122,7 +122,7 @@ This scope is deliberately small: big enough to need real architecture, small en
 
 *Creating the game world with tilemaps, camera, and connected areas. By the end of Part II, you'll have a town and a forest the player can walk between, with an animated hero.*
 
-### Module 4: The Overworld: TileMaps and Terrain
+### Module 5: The Overworld: TileMaps and Terrain
 **File:** `tutorial/04_tilemaps_and_terrain.md`
 
 **What the reader builds:** The town of Willowbrook as a tiled map with ground, paths, water, and collision.
@@ -152,7 +152,7 @@ This scope is deliberately small: big enough to need real architecture, small en
 
 ---
 
-### Module 5: Bringing the Player to Life
+### Module 6: Bringing the Player to Life
 **File:** `tutorial/05_player_character.md`
 
 **What the reader builds:** A player character with 4-directional sprite animation, a proper state machine (IDLE, WALK, INTERACT, DISABLED), and collision with the tilemap.
@@ -170,7 +170,7 @@ This scope is deliberately small: big enough to need real architecture, small en
   - Four states: `IDLE`, `WALK`, `INTERACT`, `DISABLED`
   - The `match` statement as a state router
   - State transitions: when and how states change
-  - *We'll revisit state machines in Module 11 when we build the battle system, which uses a more complex node-based approach.*
+  - *We'll revisit state machines in Module 14 when we build the battle system, which uses a more complex node-based approach.*
 - Refining the Player scene from Module 3
 
 **Godot Docs References:**
@@ -185,7 +185,7 @@ This scope is deliberately small: big enough to need real architecture, small en
 
 ---
 
-### Module 6: Connecting Worlds: Scene Transitions
+### Module 7: Connecting Worlds: Scene Transitions
 **File:** `tutorial/06_scene_transitions.md`
 
 **What the reader builds:** A forest area (Whisperwood) connected to Willowbrook via door/exit zones, with a fade-to-black transition.
@@ -226,7 +226,7 @@ This scope is deliberately small: big enough to need real architecture, small en
 
 *Populating the world with characters and systems for the player to interact with. By the end of Part III, you'll have NPCs who talk, an inventory, and a data-driven architecture.*
 
-### Module 7: Resources: The Data Layer
+### Module 9: Resources: The Data Layer
 **File:** `tutorial/07_resources_data_layer.md`
 
 **What the reader builds:** Custom Resource classes for items, character stats, and NPC data, establishing the data-driven architecture before we need it.
@@ -254,7 +254,7 @@ This scope is deliberately small: big enough to need real architecture, small en
 
 ---
 
-### Module 8: NPCs and Interaction
+### Module 10: NPCs and Interaction
 **File:** `tutorial/08_npcs_and_interaction.md`
 
 **What the reader builds:** Stationary NPCs in Willowbrook that the player can walk up to and interact with via a button press, each configured with an NPCData resource.
@@ -266,8 +266,8 @@ This scope is deliberately small: big enough to need real architecture, small en
 - Raycasting vs Area2D overlap for interaction detection
 - The Interactable interface: a convention for `interact()` methods
 - Facing the NPC toward the player during interaction
-- Using the player's INTERACT state from Module 5
-- NPC variants: the same scene, different data (using NPCData resources from Module 7)
+- Using the player's INTERACT state from Module 6
+- NPC variants: the same scene, different data (using NPCData resources from Module 9)
 - `@export var npc_data: NPCData` for per-instance customization in the editor
 - Placing NPCs in Willowbrook: a shopkeeper, an innkeeper, and a traveler
 
@@ -279,11 +279,11 @@ This scope is deliberately small: big enough to need real architecture, small en
 
 **Key Concepts Introduced:** Interaction pattern, RayCast2D, `@export` with Resource types, interface convention, Input Map custom actions, player state integration
 
-**Callback to Previous Modules:** State machine INTERACT state (Module 5), Resources/NPCData (Module 7)
+**Callback to Previous Modules:** State machine INTERACT state (Module 6), Resources/NPCData (Module 9)
 
 ---
 
-### Module 9: The Dialogue System
+### Module 11: The Dialogue System
 **File:** `tutorial/09_dialogue_system.md`
 
 **What the reader builds:** A dialogue box UI that displays NPC text with a typewriter effect, supports multi-page dialogue, and shows speaker names.
@@ -295,7 +295,7 @@ This scope is deliberately small: big enough to need real architecture, small en
 - **The typewriter effect: tween `visible_ratio` from 0.0 to 1.0**
   - Why `visible_ratio` (a float) and not `visible_characters` (an int): tweening an int produces choppy per-character jumps. `visible_ratio` gives smooth character-by-character reveal.
   - Tween lifecycle: `create_tween()` tweens are automatically killed when the creating node is freed. Store Tween references carefully, because a Tween held in a variable can outlive its target node if the node is freed first.
-- DialogueLine resource: speaker name, text, portrait (using the Resource pattern from Module 7)
+- DialogueLine resource: speaker name, text, portrait (using the Resource pattern from Module 9)
 - DialogueSequence: an array of DialogueLine resources
 - Signals for dialogue flow: `dialogue_started`, `dialogue_finished`, `line_advanced`
 - Freezing player movement during dialogue (setting player to DISABLED state)
@@ -314,11 +314,11 @@ This scope is deliberately small: big enough to need real architecture, small en
 
 **Key Concepts Introduced:** Control nodes, anchors, containers, RichTextLabel, `visible_ratio`, Tween lifecycle, DialogueLine resource, UI layering with CanvasLayer
 
-**Callback to Previous Modules:** Resources (Module 7), player DISABLED state (Module 5), NPC interaction (Module 8)
+**Callback to Previous Modules:** Resources (Module 9), player DISABLED state (Module 6), NPC interaction (Module 10)
 
 ---
 
-### Module 10: The Inventory System
+### Module 12: The Inventory System
 **File:** `tutorial/10_inventory_system.md`
 
 **What the reader builds:** An inventory system the player can open with a key, displaying items in a grid, with the ability to use consumable items.
@@ -331,7 +331,7 @@ This scope is deliberately small: big enough to need real architecture, small en
 - Item slot scene: TextureRect (icon) + Label (count)
 - Opening/closing the inventory: input action, `get_tree().paused`, and `process_mode`
 - Using items: consumables that heal HP
-- Key items: items that can't be used but are checked by quest logic (*we'll use these in Module 16*)
+- Key items: items that can't be used but are checked by quest logic (*we'll use these in Module 20*)
 - **Autoload reference card update:**
   | Autoload | Module | Purpose |
   |----------|--------|---------|
@@ -353,20 +353,20 @@ This scope is deliberately small: big enough to need real architecture, small en
 
 *The heart of any JRPG. By the end of Part IV, you'll have a complete turn-based battle system with abilities, enemies, and rewards.*
 
-### Module 11: Battle Foundations: State Machines and Turn Order
+### Module 14: Battle Foundations: State Machines and Turn Order
 **File:** `tutorial/11_battle_foundations.md`
 
 **What the reader builds:** A battle scene skeleton with party and enemies displayed, a turn order system, and transitions between battle phases.
 
 **Topics:**
 - **Scaling up the state machine: from enum to node-based**
-  - In Module 5, we built a 4-state enum-based state machine for the player. That works great for simple cases.
+  - In Module 6, we built a 4-state enum-based state machine for the player. That works great for simple cases.
   - The battle system has 7+ states with complex transitions. At this scale, an enum-based `match` block becomes unwieldy. We need a more flexible approach.
   - Node-based state machines: each state is a child Node with `enter()`, `exit()`, and `process()` methods
   - The BattleStateMachine node: managing current state, handling transitions
 - Battle states: INTRO → TURN_START → PLAYER_CHOICE → ACTION_EXECUTE → CHECK_RESULT → VICTORY / DEFEAT
 - The battle scene layout: party on the right, enemies on the left
-- BattlerData: a Resource (Module 7 pattern) combining character stats with battle-specific data
+- BattlerData: a Resource (Module 9 pattern) combining character stats with battle-specific data
 - Turn order: speed-based sorting
 - The turn queue: who goes next?
 - Transitioning from overworld to battle: passing encounter data through the SceneManager
@@ -386,11 +386,11 @@ This scope is deliberately small: big enough to need real architecture, small en
 
 **Key Concepts Introduced:** Node-based state machine, battle states, turn queue, BattlerData, BattleManager, encounter data, enum vs node state machine tradeoffs
 
-**Callback to Previous Modules:** Enum state machine (Module 5), SceneManager (Module 6), Resources (Module 7), signals (Modules 3, 9)
+**Callback to Previous Modules:** Enum state machine (Module 6), SceneManager (Module 7), Resources (Module 9), signals (Modules 3, 9)
 
 ---
 
-### Module 12: Player Actions: Attack, Defend, Magic, Items
+### Module 15: Player Actions: Attack, Defend, Magic, Items
 **File:** `tutorial/12_player_actions.md`
 
 **What the reader builds:** A battle menu (Attack/Magic/Defend/Item) with functional actions that deal damage, heal, and modify defense.
@@ -401,7 +401,7 @@ This scope is deliberately small: big enough to need real architecture, small en
 - Action architecture: the Command pattern
 - Attack action: selecting a target, calculating damage (attack vs defense)
 - **Defend action as a temporary buff:** boosting defense for one turn using a simple modifier system
-  - This is the simplest form of a status effect. *In Module 21 (next steps), we'll discuss how to generalize this into a full status effects system.*
+  - This is the simplest form of a status effect. *In Module 26 (next steps), we'll discuss how to generalize this into a full status effects system.*
 - Magic/Ability system: AbilityData resource, MP costs, elemental types
 - The target selection sub-state: choosing which enemy to hit
 - Item usage in battle: opening a filtered inventory view
@@ -421,7 +421,7 @@ This scope is deliberately small: big enough to need real architecture, small en
 
 ---
 
-### Module 13: The Crystal Cavern: Dungeon Design
+### Module 16: The Crystal Cavern: Dungeon Design
 **File:** `tutorial/13_crystal_cavern.md`
 
 **What the reader builds:** A dungeon area (Crystal Cavern) with a distinct tilemap, multiple rooms connected by passages, a boss room, and encounter zones.
@@ -430,9 +430,9 @@ This scope is deliberately small: big enough to need real architecture, small en
 - Dungeon vs overworld: different tileset, different layer needs, different collision
 - Building the Crystal Cavern TileMapLayer setup: cave floor, walls, crystal formations, darkness overlay
 - Room-based design: entry chamber, branching paths, dead ends with treasure, boss room
-- Encounter zones: Area2D regions that define which enemies can appear (data only; enemies come in Module 14)
-- Treasure chests: an interactable that gives items (reusing the interaction pattern from Module 8)
-- The save crystal: an interactable object in the dungeon (*we'll wire it up for saving in Module 18*)
+- Encounter zones: Area2D regions that define which enemies can appear (data only; enemies come in Module 17)
+- Treasure chests: an interactable that gives items (reusing the interaction pattern from Module 10)
+- The save crystal: an interactable object in the dungeon (*we'll wire it up for saving in Module 22*)
 - Connecting Whisperwood → Crystal Cavern via scene transitions
 - The boss room door: a locked passage that requires a key item
 - Environmental storytelling: crystal formations, ancient ruins, visual narrative
@@ -444,11 +444,11 @@ This scope is deliberately small: big enough to need real architecture, small en
 
 **Key Concepts Introduced:** Dungeon tilemap design, room-based level design, encounter zones, treasure chests, locked doors, environmental design
 
-**Callback to Previous Modules:** TileMapLayer (Module 4), scene transitions (Module 6), interaction pattern (Module 8), Resources for chest loot (Module 7)
+**Callback to Previous Modules:** TileMapLayer (Module 5), scene transitions (Module 7), interaction pattern (Module 10), Resources for chest loot (Module 9)
 
 ---
 
-### Module 14: Enemies and AI
+### Module 17: Enemies and AI
 **File:** `tutorial/14_enemies_and_ai.md`
 
 **What the reader builds:** Three enemy types with basic AI, random encounters triggered while walking in Whisperwood and Crystal Cavern, and a boss fight.
@@ -462,7 +462,7 @@ This scope is deliberately small: big enough to need real architecture, small en
   - Step counter: each movement tick increments a counter
   - Threshold with randomness: encounter triggers when counter exceeds a random threshold
   - Resetting after each encounter
-- Encounter zones wired up: connecting Module 13's zones to encounter group data
+- Encounter zones wired up: connecting Module 16's zones to encounter group data
 - Boss design: the Crystal Guardian, with higher stats, unique ability pattern, dialogue before fight
 - The pre-boss cutscene: triggering dialogue before transitioning to battle
 - Flee mechanic: probability-based escape (higher speed = better chance)
@@ -473,11 +473,11 @@ This scope is deliberately small: big enough to need real architecture, small en
 
 **Key Concepts Introduced:** Enemy AI patterns, encounter system, step-counter encounters, boss design, encounter groups
 
-**Callback to Previous Modules:** Resources (Module 7), battle system (Modules 11-12), encounter zones (Module 13), dialogue (Module 9)
+**Callback to Previous Modules:** Resources (Module 9), battle system (Modules 11-12), encounter zones (Module 16), dialogue (Module 11)
 
 ---
 
-### Module 15: Victory, Rewards, and Leveling
+### Module 18: Victory, Rewards, and Leveling
 **File:** `tutorial/15_victory_and_leveling.md`
 
 **What the reader builds:** Post-battle victory screen with XP/gold rewards, a leveling system with stat growth, and the defeat/game-over flow.
@@ -507,7 +507,7 @@ This scope is deliberately small: big enough to need real architecture, small en
 
 *Systems that give the game depth and let the player save their progress. By the end of Part V, you'll have quests, a party member, equipment, and save/load.*
 
-### Module 16: The Quest System and Game Flags
+### Module 20: The Quest System and Game Flags
 **File:** `tutorial/16_quest_system.md`
 
 **What the reader builds:** A game flags system for tracking world state, a quest tracker with a main quest ("Explore the Crystal Cavern") and a side quest ("Find the traveler's lost pendant"), with NPC dialogue that reacts to quest state.
@@ -542,11 +542,11 @@ This scope is deliberately small: big enough to need real architecture, small en
 
 **Key Concepts Introduced:** Game flags, GameManager, quest state machine, quest objectives, reactive dialogue, quest log UI
 
-**Callback to Previous Modules:** Resources (Module 7), dialogue (Module 9), NPCs (Module 8), autoloads (Module 6)
+**Callback to Previous Modules:** Resources (Module 9), dialogue (Module 11), NPCs (Module 10), autoloads (Module 7)
 
 ---
 
-### Module 17: Party Management, Equipment, and Shops
+### Module 21: Party Management, Equipment, and Shops
 **File:** `tutorial/17_party_and_equipment.md`
 
 **What the reader builds:** A party system where a mage NPC joins after a dialogue event, equipment slots that modify stats, and a shop in Willowbrook.
@@ -589,11 +589,11 @@ This scope is deliberately small: big enough to need real architecture, small en
 
 **Key Concepts Introduced:** Party roster, recruitment events, equipment system, stat bonuses, shop system, ShopData resource
 
-**Callback to Previous Modules:** Resources (Module 7), dialogue (Module 9), inventory UI patterns (Module 10), battle system (Modules 11-12), game flags (Module 16)
+**Callback to Previous Modules:** Resources (Module 9), dialogue (Module 11), inventory UI patterns (Module 12), battle system (Modules 11-12), game flags (Module 20)
 
 ---
 
-### Module 18: Save and Load
+### Module 22: Save and Load
 **File:** `tutorial/18_save_and_load.md`
 
 **What the reader builds:** A save system with three slots using JSON, saving all game state (position, inventory, quests, party, flags), with save crystals in the world and a load option.
@@ -608,7 +608,7 @@ This scope is deliberately small: big enough to need real architecture, small en
 - Building `to_save_data()` and `from_save_data()` methods on each autoload
 - The save flow: player interacts with a save crystal → write file
 - The load flow: "Continue" option → read file → restore state
-- Wiring up the save crystal from Module 13
+- Wiring up the save crystal from Module 16
 - Restoring scene state: spawning in the right scene and position
 - Restoring inventory, quests, party, equipment, and flags
 - Multiple save slots: `user://saves/save_1.json`, `save_2.json`, `save_3.json`
@@ -629,7 +629,7 @@ This scope is deliberately small: big enough to need real architecture, small en
 
 *Making it feel like a real game. By the end of Part VI, you'll have a complete, playable JRPG demo with audio, menus, and a polished game loop.*
 
-### Module 19: Audio (Music and Sound Effects)
+### Module 24: Audio (Music and Sound Effects)
 **File:** `tutorial/19_audio.md`
 
 **What the reader builds:** Background music for each area, battle music with transitions, SFX for actions, and volume controls.
@@ -671,7 +671,7 @@ This scope is deliberately small: big enough to need real architecture, small en
 
 ---
 
-### Module 20: Title Screen and Game Flow
+### Module 25: Title Screen and Game Flow
 **File:** `tutorial/20_title_screen_and_game_flow.md`
 
 **What the reader builds:** A title screen with New Game / Continue / Settings, a pause menu, and the complete game flow from launch to credits.
@@ -680,7 +680,7 @@ This scope is deliberately small: big enough to need real architecture, small en
 - The title screen scene: logo, menu options, background
 - New Game: initializing fresh game state across all autoloads, loading the first scene
 - Continue: loading the save slot selection screen, then restoring state
-- Settings: volume sliders wired to audio buses from Module 19
+- Settings: volume sliders wired to audio buses from Module 24
 - **The pause menu**
   - `get_tree().paused = true` and `process_mode = PROCESS_MODE_ALWAYS`
   - Menu options: Resume, Inventory, Quest Log, Save (only at save points), Settings, Quit to Title
@@ -704,7 +704,7 @@ This scope is deliberately small: big enough to need real architecture, small en
 
 ---
 
-### Module 21: Finish Line (Polish, Export, and Next Steps)
+### Module 26: Finish Line (Polish, Export, and Next Steps)
 **File:** `tutorial/21_finish_line.md`
 
 **What the reader builds:** A polished, exported build of Crystal Saga, plus a roadmap for what to add next.
@@ -721,7 +721,7 @@ This scope is deliberately small: big enough to need real architecture, small en
   - Configuring an export preset (Windows, macOS, Linux)
   - Building the executable
 - **Where to go from here:**
-  - **Status effects system:** Generalize the defend buff from Module 12 into poison, sleep, stun, regen, etc. with durations and turn-based ticking
+  - **Status effects system:** Generalize the defend buff from Module 15 into poison, sleep, stun, regen, etc. with durations and turn-based ticking
   - **Elemental weakness/resistance:** Rock-paper-scissors damage modifiers
   - **Limit breaks:** Special abilities that charge as you take damage
   - **More party members:** Adding 3-4 more characters with unique ability trees
@@ -747,29 +747,29 @@ This scope is deliberately small: big enough to need real architecture, small en
 Module 1 (Setup)
   └→ Module 2 (GDScript)
        └→ Module 3 (Scenes)
-            ├→ Module 4 (TileMapLayer)
-            │    └→ Module 5 (Player + State Machine)
-            │         └→ Module 6 (Scene Transitions + Autoloads)
-            │              ├→ Module 7 (Resources)
-            │              │    ├→ Module 8 (NPCs)
-            │              │    │    └→ Module 9 (Dialogue)
-            │              │    │         └→ Module 10 (Inventory)
-            │              │    │              └→ Module 11 (Battle Foundations)
-            │              │    │                   └→ Module 12 (Player Actions)
-            │              │    │                        └→ Module 13 (Crystal Cavern)
-            │              │    │                             └→ Module 14 (Enemies + AI)
-            │              │    │                                  └→ Module 15 (Victory + Leveling)
-            │              │    │                                       └→ Module 16 (Quests + Flags)
-            │              │    │                                            └→ Module 17 (Party + Equipment + Shops)
-            │              │    │                                                 └→ Module 18 (Save/Load)
+            ├→ Module 5 (TileMapLayer)
+            │    └→ Module 6 (Player + State Machine)
+            │         └→ Module 7 (Scene Transitions + Autoloads)
+            │              ├→ Module 9 (Resources)
+            │              │    ├→ Module 10 (NPCs)
+            │              │    │    └→ Module 11 (Dialogue)
+            │              │    │         └→ Module 12 (Inventory)
+            │              │    │              └→ Module 14 (Battle Foundations)
+            │              │    │                   └→ Module 15 (Player Actions)
+            │              │    │                        └→ Module 16 (Crystal Cavern)
+            │              │    │                             └→ Module 17 (Enemies + AI)
+            │              │    │                                  └→ Module 18 (Victory + Leveling)
+            │              │    │                                       └→ Module 20 (Quests + Flags)
+            │              │    │                                            └→ Module 21 (Party + Equipment + Shops)
+            │              │    │                                                 └→ Module 22 (Save/Load)
             │              │    └→ [Resources used by all subsequent modules]
-            │              └→ Module 19 (Audio) ← can be done alongside Part V
-            │                   └→ Module 20 (Title Screen + Game Flow)
-            │                        └→ Module 21 (Finish Line)
-            └→ [TileMapLayer knowledge reused in Module 13]
+            │              └→ Module 24 (Audio) ← can be done alongside Part V
+            │                   └→ Module 25 (Title Screen + Game Flow)
+            │                        └→ Module 26 (Finish Line)
+            └→ [TileMapLayer knowledge reused in Module 16]
 ```
 
-**Reading the graph:** Follow the main chain (1 → 2 → ... → 18 → 20 → 21). Module 19 (Audio) branches off from Module 6 and can be written/read somewhat independently, though it integrates with everything. Module 7 (Resources) feeds into everything after it.
+**Reading the graph:** Follow the main chain (1 → 2 → ... → 18 → 20 → 21). Module 24 (Audio) branches off from Module 7 and can be written/read somewhat independently, though it integrates with everything. Module 9 (Resources) feeds into everything after it.
 
 ## Estimated Module Lengths
 
@@ -837,20 +837,20 @@ Changes made based on dual plan review:
 | Feedback | Change Made |
 |----------|-------------|
 | Module count said "eighteen" but had 20 modules | Fixed: now says "twenty-one" and has 21 modules |
-| Resources came after Dialogue, causing immediate refactor | Moved Resources to Module 7, before NPCs and Dialogue |
+| Resources came after Dialogue, causing immediate refactor | Moved Resources to Module 9, before NPCs and Dialogue |
 | TileMap is deprecated; plan cited deprecated class | Changed to TileMapLayer throughout with deprecation note |
-| Module 10 tried to cover inventory + equipment + shop | Split: inventory in M10, equipment/shop in M17 |
-| Module 5 state machine was "preview" not real | Made it a real 4-state enum implementation |
-| Module 13 built dungeon + enemies + AI + boss simultaneously | Split: dungeon in M13, enemies/AI in M14 |
+| Module 12 tried to cover inventory + equipment + shop | Split: inventory in M10, equipment/shop in M17 |
+| Module 6 state machine was "preview" not real | Made it a real 4-state enum implementation |
+| Module 16 built dungeon + enemies + AI + boss simultaneously | Split: dungeon in M13, enemies/AI in M14 |
 | `class_audiobus.rst` doesn't exist | Changed to `tutorials/audio/audio_buses.rst` and `classes/class_audiobuslayout.rst` |
 | `visible_characters` vs `visible_ratio` not distinguished | Made explicit: use `visible_ratio`, explained why |
 | Save format uncommitted ("JSON or Resource") | Committed to JSON with explanation of tradeoffs |
 | Dependency graph had ambiguous M11→M16 branch | Simplified to linear chain with clear branching |
-| Game flags never formally introduced | Added to Module 16 as first topic |
-| Input as autoload not acknowledged | Added note in Module 2 and callback in Module 6 |
+| Game flags never formally introduced | Added to Module 20 as first topic |
+| Input as autoload not acknowledged | Added note in Module 2 and callback in Module 7 |
 | Tween lifecycle not addressed | Added warnings in Modules 9 and 12 |
-| Null-check pattern for `load()` missing | Added to Module 7 |
-| Signal disconnection not covered | Added to Module 3 and Module 6 |
+| Null-check pattern for `load()` missing | Added to Module 9 |
+| Signal disconnection not covered | Added to Module 3 and Module 7 |
 
 ## File Structure
 

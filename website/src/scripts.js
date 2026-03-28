@@ -113,7 +113,7 @@
   });
 })();
 
-// Search modal — Cmd+K / Ctrl+K to open, filter modules by title
+// Search modal — full-text search across all tutorial sections
 (function () {
   var modal = document.getElementById("search-modal");
   var input = document.getElementById("search-input");
@@ -123,14 +123,29 @@
 
   if (!modal || !input || !results) return;
 
+  // Build unique module list for empty-query display
+  var modules = [];
+  var seen = {};
+  data.forEach(function (entry) {
+    if (!seen[entry.m]) {
+      seen[entry.m] = true;
+      modules.push({ num: entry.m, title: entry.t, slug: entry.s });
+    }
+  });
+
   var activeIndex = -1;
+  var resultEls = [];
+  var resultData = [];
+
+  function esc(str) {
+    return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
 
   function open() {
     modal.classList.remove("hidden");
     input.value = "";
     activeIndex = -1;
-    render(data);
-    // Delay focus slightly so the modal is visible
+    renderModules();
     setTimeout(function () { input.focus(); }, 50);
     document.body.style.overflow = "hidden";
   }
@@ -140,94 +155,173 @@
     document.body.style.overflow = "";
   }
 
-  function navigate(slug) {
-    window.location.href = slug + ".html";
+  function navigate(url) {
+    window.location.href = url;
   }
 
-  function render(items) {
+  // Render module list when query is empty
+  function renderModules() {
+    resultEls = [];
+    resultData = [];
     results.innerHTML = "";
-    items.forEach(function (item, i) {
+    modules.forEach(function (m, i) {
+      var url = m.slug + ".html";
       var a = document.createElement("a");
-      a.href = item.slug + ".html";
+      a.href = url;
       a.className = "search-result" + (i === activeIndex ? " active" : "");
       a.innerHTML =
-        '<span class="search-result-num">' + String(item.num).padStart(2, "0") + "</span>" +
-        '<span class="search-result-title">' + item.title + "</span>";
-      a.addEventListener("mouseenter", function () {
-        activeIndex = i;
-        updateActive(items);
-      });
-      a.addEventListener("click", function (e) {
-        e.preventDefault();
-        navigate(item.slug);
-      });
+        '<span class="search-result-num">' + String(m.num).padStart(2, "0") + "</span>" +
+        '<span class="search-result-title">' + esc(m.title) + "</span>";
+      a.addEventListener("mouseenter", function () { activeIndex = i; updateActive(); });
+      a.addEventListener("click", function (e) { e.preventDefault(); navigate(url); });
+      resultEls.push(a);
+      resultData.push({ url: url });
       results.appendChild(a);
     });
   }
 
-  function updateActive(items) {
-    var links = results.querySelectorAll(".search-result");
-    links.forEach(function (link, i) {
+  // Extract a context snippet around the match
+  function snippet(text, query, matchIndex) {
+    var pad = 40;
+    var start = Math.max(0, matchIndex - pad);
+    var end = Math.min(text.length, matchIndex + query.length + pad);
+    var s = "";
+    if (start > 0) s += "\u2026";
+    s += text.slice(start, end);
+    if (end < text.length) s += "\u2026";
+    return highlight(s, query);
+  }
+
+  // Highlight first occurrence of query in text
+  function highlight(text, query) {
+    var lower = text.toLowerCase();
+    var idx = lower.indexOf(query);
+    if (idx < 0) return esc(text);
+    return esc(text.slice(0, idx)) +
+      "<mark>" + esc(text.slice(idx, idx + query.length)) + "</mark>" +
+      esc(text.slice(idx + query.length));
+  }
+
+  // Full-text search
+  function search(query) {
+    if (!query) { renderModules(); return; }
+    var q = query.toLowerCase();
+    var matches = [];
+
+    data.forEach(function (entry) {
+      var hIdx = entry.h.toLowerCase().indexOf(q);
+      var xIdx = entry.x.toLowerCase().indexOf(q);
+      if (hIdx < 0 && xIdx < 0) return;
+
+      var score = 0;
+      var snip = "";
+      if (hIdx >= 0) {
+        score = 10;
+        snip = highlight(entry.h, q);
+      }
+      if (xIdx >= 0) {
+        if (hIdx < 0) score = 1;
+        snip = snippet(entry.x, q, xIdx);
+      }
+
+      matches.push({
+        m: entry.m, t: entry.t, s: entry.s,
+        h: entry.h, a: entry.a,
+        url: entry.s + ".html" + (entry.a ? "#" + entry.a : ""),
+        snip: snip, score: score,
+      });
+    });
+
+    matches.sort(function (a, b) {
+      if (b.score !== a.score) return b.score - a.score;
+      return a.m - b.m;
+    });
+    matches = matches.slice(0, 50);
+    renderSections(matches, q);
+  }
+
+  function renderSections(matches, query) {
+    resultEls = [];
+    resultData = [];
+    results.innerHTML = "";
+
+    if (matches.length === 0) {
+      var empty = document.createElement("div");
+      empty.className = "search-empty";
+      empty.textContent = "No results for \u201c" + query + "\u201d";
+      results.appendChild(empty);
+      return;
+    }
+
+    var lastMod = -1;
+    matches.forEach(function (match, i) {
+      if (match.m !== lastMod) {
+        var header = document.createElement("div");
+        header.className = "search-module-header";
+        header.textContent = "Module " + String(match.m).padStart(2, "0") + ": " + match.t;
+        results.appendChild(header);
+        lastMod = match.m;
+      }
+
+      var a = document.createElement("a");
+      a.href = match.url;
+      a.className = "search-section-result" + (i === activeIndex ? " active" : "");
+      a.innerHTML =
+        '<span class="search-section-heading">' + esc(match.h) + "</span>" +
+        '<span class="search-section-snippet">' + match.snip + "</span>";
+      a.addEventListener("mouseenter", function () { activeIndex = i; updateActive(); });
+      a.addEventListener("click", function (e) { e.preventDefault(); navigate(match.url); });
+      resultEls.push(a);
+      resultData.push({ url: match.url });
+      results.appendChild(a);
+    });
+
+    activeIndex = 0;
+    updateActive();
+  }
+
+  function updateActive() {
+    resultEls.forEach(function (el, i) {
       if (i === activeIndex) {
-        link.classList.add("active");
-        link.scrollIntoView({ block: "nearest" });
+        el.classList.add("active");
+        el.scrollIntoView({ block: "nearest" });
       } else {
-        link.classList.remove("active");
+        el.classList.remove("active");
       }
     });
   }
 
-  function filter(query) {
-    if (!query) return data;
-    var q = query.toLowerCase();
-    return data.filter(function (item) {
-      return item.title.toLowerCase().includes(q) ||
-        item.full.toLowerCase().includes(q) ||
-        String(item.num) === q;
-    });
-  }
-
   input.addEventListener("input", function () {
-    var filtered = filter(input.value);
-    activeIndex = filtered.length > 0 ? 0 : -1;
-    render(filtered);
+    search(input.value.trim());
   });
 
   input.addEventListener("keydown", function (e) {
-    var filtered = filter(input.value);
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      activeIndex = Math.min(activeIndex + 1, filtered.length - 1);
-      updateActive(filtered);
+      activeIndex = Math.min(activeIndex + 1, resultEls.length - 1);
+      updateActive();
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
       activeIndex = Math.max(activeIndex - 1, 0);
-      updateActive(filtered);
-    } else if (e.key === "Enter" && activeIndex >= 0 && filtered[activeIndex]) {
+      updateActive();
+    } else if (e.key === "Enter" && activeIndex >= 0 && resultData[activeIndex]) {
       e.preventDefault();
-      navigate(filtered[activeIndex].slug);
+      navigate(resultData[activeIndex].url);
     } else if (e.key === "Escape") {
       close();
     }
   });
 
-  // Backdrop click closes
   modal.querySelector(".search-backdrop").addEventListener("click", close);
 
-  // Trigger button
   if (trigger) {
     trigger.addEventListener("click", open);
   }
 
-  // Cmd+K / Ctrl+K
   document.addEventListener("keydown", function (e) {
     if ((e.metaKey || e.ctrlKey) && e.key === "k") {
       e.preventDefault();
-      if (modal.classList.contains("hidden")) {
-        open();
-      } else {
-        close();
-      }
+      if (modal.classList.contains("hidden")) { open(); } else { close(); }
     }
   });
 })();

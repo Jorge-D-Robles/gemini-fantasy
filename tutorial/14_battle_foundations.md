@@ -1,4 +1,4 @@
-# Module 11: Battle Foundations: State Machines and Turn Order
+# Module 14: Battle Foundations: State Machines and Turn Order
 
 ## What We Have So Far
 
@@ -6,11 +6,11 @@ A connected world with NPCs, dialogue, inventory, and Resources. Everything befo
 
 ## What We're Building This Module
 
-The battle scene skeleton: party and enemies displayed on screen, a state machine controlling the flow of combat, a turn order system, and transitions between the overworld and battle. By the end, battles will start and cycle through turns, even if we can't take actions yet (that's Module 12).
+The battle scene skeleton: party and enemies displayed on screen, a state machine controlling the flow of combat, a turn order system, and transitions between the overworld and battle. By the end, battles will start and cycle through turns, even if we can't take actions yet (that's Module 15).
 
 ## Scaling Up: From Enum to Node-Based State Machine
 
-In Module 5, we built an enum-based state machine for the player with four states. That approach works great for simple cases, but the battle system has significantly more states with complex transitions:
+In Module 6, we built an enum-based state machine for the player with four states. That approach works great for simple cases, but the battle system has significantly more states with complex transitions:
 
 ```
 INTRO → TURN_START → PLAYER_CHOICE → ACTION_EXECUTE → CHECK_RESULT → VICTORY → DEFEAT
@@ -93,7 +93,7 @@ func _process(delta: float) -> void:
 
 Save these as `res://systems/battle/battle_state.gd` and `res://systems/battle/battle_state_machine.gd`.
 
-> **Spiral:** Compare this to Module 5's enum state machine. The enum approach uses `match` in `_physics_process` to route to different functions. The node approach uses polymorphism: each state is a separate Node, and the machine just calls `enter()`/`process()`/`exit()` on whichever one is current. Same pattern, different scale.
+> **Spiral:** Compare this to Module 6's enum state machine. The enum approach uses `match` in `_physics_process` to route to different functions. The node approach uses polymorphism: each state is a separate Node, and the machine just calls `enter()`/`process()`/`exit()` on whichever one is current. Same pattern, different scale.
 
 ## BattlerData: Who's Fighting
 
@@ -166,7 +166,7 @@ Battle (Node2D)
 │   ├── EnemySlot1 (Marker2D)
 │   └── EnemySlot2 (Marker2D)
 ├── BattleUI (CanvasLayer)
-│   └── ... (we'll build this in Module 12)
+│   └── ... (we'll build this in Module 15)
 └── StateMachine (BattleStateMachine)
     ├── Intro (BattleState)
     ├── TurnStart (BattleState)
@@ -416,7 +416,7 @@ var _active_battler: BattlerData
 
 func enter(context: Dictionary = {}) -> void:
     _active_battler = context.get("battler")
-    # Module 12 will add the battle menu UI here.
+    # Module 15 will add the battle menu UI here.
     # For now, auto-attack the first enemy as a placeholder.
     print(_active_battler.character_data.display_name + "'s turn! (auto-attacking)")
     await get_tree().create_timer(0.3).timeout
@@ -535,9 +535,9 @@ extends BattleState
 func enter(_context: Dictionary = {}) -> void:
     print("Victory! All enemies defeated!")
     battle_manager.battle_won.emit()
-    # Module 15 will add XP, gold, and item drops here
+    # Module 18 will add XP, gold, and item drops here
     await get_tree().create_timer(2.0).timeout
-    # Return to overworld (Module 15 will handle this properly)
+    # Return to overworld (Module 18 will handle this properly)
 ```
 
 Save as `res://systems/battle/states/defeat_state.gd`:
@@ -551,7 +551,7 @@ extends BattleState
 func enter(_context: Dictionary = {}) -> void:
     print("Defeat... the party has fallen.")
     battle_manager.battle_lost.emit()
-    # Module 15 will add the game over screen
+    # Module 18 will add the game over screen
     await get_tree().create_timer(2.0).timeout
 ```
 
@@ -678,7 +678,7 @@ Each state is isolated. Adding new actions (magic, items, defend) means adding b
 
 > **See:** [Array.sort_custom()](https://docs.godotengine.org/en/stable/classes/class_array.html#class-array-method-sort-custom): custom sorting with a callable. Used for speed-based turn ordering.
 
-**Autoload reference card** (unchanged from Module 10; no new autoloads this module):
+**Autoload reference card** (unchanged from Module 12; no new autoloads this module):
 
 | Autoload | Module | Purpose |
 |----------|--------|---------|
@@ -711,4 +711,4 @@ When you press B (our temporary test trigger) in Willowbrook:
 
 ## Next Module
 
-The battle runs automatically, and the player can't choose actions yet. In **Module 12: Player Actions**, we'll build the battle menu UI (Attack/Magic/Defend/Item), implement the command pattern for actions, add target selection, and create battle animations with Tweens. The battle system will go from print output to visual, interactive combat.
+The battle runs automatically, and the player can't choose actions yet. In **Module 15: Player Actions**, we'll build the battle menu UI (Attack/Magic/Defend/Item), implement the command pattern for actions, add target selection, and create battle animations with Tweens. The battle system will go from print output to visual, interactive combat.

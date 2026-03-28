@@ -1,4 +1,4 @@
-# Module 14: Enemies and AI
+# Module 17: Enemies and AI
 
 ## What We Have So Far
 
@@ -207,7 +207,7 @@ func exit_zone() -> void:
 
 ### Wiring Encounter Zones
 
-Create a new script for the encounter zones we placed in Module 13. Save as `res://systems/encounter_zone.gd`, then attach it to each encounter zone Area2D node (MainCorridor, DeepCavern):
+Create a new script for the encounter zones we placed in Module 16. Save as `res://systems/encounter_zone.gd`, then attach it to each encounter zone Area2D node (MainCorridor, DeepCavern):
 
 ```gdscript
 extends Area2D
@@ -237,7 +237,7 @@ func _on_body_exited(body: Node2D) -> void:
 
 ### Adding enemy_data to BattlerData
 
-Before wiring encounters to battles, we need a way for the victory flow (Module 15) to access enemy rewards. Open `res://resources/battler_data.gd` and add this property:
+Before wiring encounters to battles, we need a way for the victory flow (Module 18) to access enemy rewards. Open `res://resources/battler_data.gd` and add this property:
 
 ```gdscript
 # Add to battler_data.gd, stores the EnemyData for reward calculation
@@ -272,15 +272,15 @@ func _on_encounter_triggered(encounter: EncounterData) -> void:
         char_data.speed = ed.speed
         battler.character_data = char_data
         battler.is_player_controlled = false
-        battler.enemy_data = ed  # Store for victory rewards (Module 15)
+        battler.enemy_data = ed  # Store for victory rewards (Module 18)
         enemy_battlers.append(battler)
 
-    # Build party (temporary, Module 17 adds a proper PartyManager)
+    # Build party (temporary, Module 21 adds a proper PartyManager)
     var hero := BattlerData.new()
     hero.character_data = load("res://data/characters/aiden.tres")
     hero.is_player_controlled = true
 
-    # Must use Dictionary format, matches SceneManager.start_battle() from Module 11
+    # Must use Dictionary format, matches SceneManager.start_battle() from Module 14
     SceneManager.start_battle({party = [hero], enemies = enemy_battlers})
 ```
 
@@ -374,7 +374,7 @@ func _start_boss_battle() -> void:
     var boss := BattlerData.new()
     boss.character_data = boss_char
     boss.is_player_controlled = false
-    boss.enemy_data = boss_data  # Required for Module 15's victory rewards
+    boss.enemy_data = boss_data  # Required for Module 18's victory rewards
 
     SceneManager.start_battle({
         party = [hero],
@@ -457,4 +457,4 @@ When exploring the Crystal Cavern:
 
 ## Next Module
 
-We can fight, but nothing happens after winning. In **Module 15: Victory, Rewards, and Leveling**, we'll add XP distribution, a leveling system, gold and item drops, the victory fanfare, and the game-over flow.
+We can fight, but nothing happens after winning. In **Module 18: Victory, Rewards, and Leveling**, we'll add XP distribution, a leveling system, gold and item drops, the victory fanfare, and the game-over flow.

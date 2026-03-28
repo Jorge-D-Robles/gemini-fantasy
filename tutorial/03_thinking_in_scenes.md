@@ -81,7 +81,7 @@ Player (CharacterBody2D)
 
 ### Step 3: Configure the Sprite
 
-Select the `Sprite2D` node. In the Inspector, set the **Texture** to `icon.svg` (the Godot logo; we'll replace this with real character art in Module 5).
+Select the `Sprite2D` node. In the Inspector, set the **Texture** to `icon.svg` (the Godot logo; we'll replace this with real character art in Module 6).
 
 ### Step 4: Configure the Collision Shape
 
@@ -90,7 +90,7 @@ Select the `CollisionShape2D` node. In the Inspector:
 2. Select **New RectangleShape2D**.
 3. In the viewport, you'll see a blue rectangle. Drag its handles to roughly match the size of the sprite.
 
-Alternatively, set the shape's **Size** in the Inspector to match your sprite dimensions. For the Godot icon, `Vector2(64, 64)` works. (We'll resize this to something much smaller in Module 4 when we switch to 16x16 tile-based environments.)
+Alternatively, set the shape's **Size** in the Inspector to match your sprite dimensions. For the Godot icon, `Vector2(64, 64)` works. (We'll resize this to something much smaller in Module 5 when we switch to 16x16 tile-based environments.)
 
 > **Warning:** A CollisionShape2D with no shape assigned will show a yellow warning triangle in the scene tree. Always assign a shape; otherwise, your CharacterBody2D can't detect collisions.
 
@@ -170,7 +170,7 @@ Main (Node2D)
 
 Notice that the Player node has a little "link" icon, which indicates it's an **instance** of another scene. If you click the arrow next to it, you can expand it to see its children (Sprite2D, CollisionShape2D), but they're grayed out because they belong to the instanced scene.
 
-Press F5. You should be able to move around, but there's nothing to collide with yet. We'll add walls in Module 4 when we build the tilemap.
+Press F5. You should be able to move around, but there's nothing to collide with yet. We'll add walls in Module 5 when we build the tilemap.
 
 ## The Scene Tree at Runtime
 
@@ -237,20 +237,20 @@ func _on_test_zone_body_entered(body: Node2D) -> void:
 
 Run the game and walk into the zone. The output panel prints the player's name. The Area2D detected the collision and told the Main node about it, without either node knowing the other's internal details.
 
-> **Note:** This works because both the Player (CharacterBody2D) and the TestZone (Area2D) are on collision layer 1 by default. If `body_entered` doesn't fire, check that both nodes are on the same layer in the Inspector under **Collision → Layer** and **Collision → Mask**. We'll cover collision layers in more detail in Module 4.
+> **Note:** This works because both the Player (CharacterBody2D) and the TestZone (Area2D) are on collision layer 1 by default. If `body_entered` doesn't fire, check that both nodes are on the same layer in the Inspector under **Collision → Layer** and **Collision → Mask**. We'll cover collision layers in more detail in Module 5.
 
 Once you've tested the signal, you can delete the `TestZone` node from `main.tscn`. It was just for learning. We won't need it going forward.
 
 This is the signal pattern we'll use throughout Crystal Saga:
-- Exit zones signal "the player wants to leave" → the SceneManager handles the transition (Module 6)
-- NPCs signal "interaction started" → the dialogue system displays text (Module 9)
-- The battle system signals "turn started" → the UI updates (Module 11)
+- Exit zones signal "the player wants to leave" → the SceneManager handles the transition (Module 7)
+- NPCs signal "interaction started" → the dialogue system displays text (Module 11)
+- The battle system signals "turn started" → the UI updates (Module 14)
 
 ### Signal Auto-Disconnection
 
 An important detail: when a node is **freed** (removed from the tree and deleted), all signal connections involving that node are automatically cleaned up. You don't need to manually disconnect signals in most cases.
 
-This matters when we start changing scenes in Module 6. When we leave a town and enter a forest, all the town's nodes are freed, and all their signal connections disappear cleanly. No dangling references, no crashes.
+This matters when we start changing scenes in Module 7. When we leave a town and enter a forest, all the town's nodes are freed, and all their signal connections disappear cleanly. No dangling references, no crashes.
 
 > **See:** [Instancing with signals](https://docs.godotengine.org/en/stable/tutorials/scripting/instancing_with_signals.html), which connects scene instancing with signal-based communication.
 
@@ -316,4 +316,4 @@ When you press F5:
 
 ## Next Module
 
-We have a moving, collision-aware player, but the world is empty. In **Module 4: TileMaps and Terrain**, we'll build the town of Willowbrook using Godot's TileMapLayer system. We'll create a tileset from a sprite sheet, paint a multi-layered map, and give our player actual walls to bump into.
+We have a moving, collision-aware player, but the world is empty. In **Module 5: TileMaps and Terrain**, we'll build the town of Willowbrook using Godot's TileMapLayer system. We'll create a tileset from a sprite sheet, paint a multi-layered map, and give our player actual walls to bump into.

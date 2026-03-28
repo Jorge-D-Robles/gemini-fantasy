@@ -1,4 +1,4 @@
-# Module 6: Connecting Worlds: Scene Transitions
+# Module 7: Connecting Worlds: Scene Transitions
 
 ## What We Have So Far
 
@@ -206,7 +206,7 @@ func _on_body_entered(body: Node2D) -> void:
         SceneManager.change_scene(target_scene, target_spawn_point)
 ```
 
-> **Note:** The Area2D's default collision mask monitors layer 1, which is the same layer the player's CharacterBody2D is on by default. If you changed collision layers in Module 4, make sure the exit zone's **Collision → Mask** includes the player's layer.
+> **Note:** The Area2D's default collision mask monitors layer 1, which is the same layer the player's CharacterBody2D is on by default. If you changed collision layers in Module 5, make sure the exit zone's **Collision → Mask** includes the player's layer.
 
 Attach this script to `ExitToWhisperwood`. In the Inspector, set:
 - **Target Scene:** `res://scenes/whisperwood/whisperwood.tscn`
@@ -246,13 +246,13 @@ Create a second area to connect to:
 2. Create a new scene: `Node2D` root, rename to `Whisperwood`.
 3. Save as `res://scenes/whisperwood/whisperwood.tscn`.
 
-Reuse the same TileSet from Module 4 (`town_tileset.tres`). Add TileMapLayers using the same workflow (Ground, Detail, Objects, AbovePlayer) and assign the TileSet to each. In Module 13, we'll create a dedicated dungeon tileset with a different aesthetic.
+Reuse the same TileSet from Module 5 (`town_tileset.tres`). Add TileMapLayers using the same workflow (Ground, Detail, Objects, AbovePlayer) and assign the TileSet to each. In Module 16, we'll create a dedicated dungeon tileset with a different aesthetic.
 
 Design a simple forest area (at least 20x15 tiles). Use grass tiles for ground, tree tiles for borders, and path tiles through the center:
 - Paint rows 0-2 and 13-15 as dense trees on the Ground layer (collision-enabled)
 - Leave a 3-tile-wide path winding through the middle
 - An entrance on the north side (connecting to Willowbrook)
-- An exit on the south side (leading to the Crystal Cavern, which we'll build in Module 13)
+- An exit on the south side (leading to the Crystal Cavern, which we'll build in Module 16)
 
 **Whisperwood scene structure checklist** (make sure you have all of these):
 
@@ -336,4 +336,4 @@ When you press F5:
 
 ## Next Module
 
-We can explore two areas now, but the world feels empty. Before we add NPCs and dialogue, we need to establish our **data architecture**. In **Module 7: Resources, The Data Layer**, we'll learn how to define game data (items, characters, NPC info) as reusable, editor-friendly Resource classes. This is the foundation every system from inventory to combat will build on.
+We can explore two areas now, but the world feels empty. Before we add NPCs and dialogue, we need to establish our **data architecture**. In **Module 9: Resources, The Data Layer**, we'll learn how to define game data (items, characters, NPC info) as reusable, editor-friendly Resource classes. This is the foundation every system from inventory to combat will build on.

@@ -254,7 +254,7 @@ You can view and edit these in **Project → Project Settings → Input Map**.
 
 > **Note:** The `ui_*` actions only map to arrow keys by default; WASD is **not** included. To add WASD support: open **Project → Project Settings → Input Map**, find `ui_up`, click the **+** button next to it, press **W**, and click **OK**. Repeat for `ui_down` (S), `ui_left` (A), and `ui_right` (D). Now both arrow keys and WASD will work.
 
-> **Note:** `Input` is a globally available singleton, what Godot calls an "autoload." You access it by name from anywhere: `Input.is_action_pressed("ui_up")`. We'll create our own autoloads in Module 6. For now, just know that some objects (like `Input`, `Engine`, `Time`) are always available because Godot provides them globally.
+> **Note:** `Input` is a globally available singleton, what Godot calls an "autoload." You access it by name from anywhere: `Input.is_action_pressed("ui_up")`. We'll create our own autoloads in Module 7. For now, just know that some objects (like `Input`, `Engine`, `Time`) are always available because Godot provides them globally.
 
 ### Checking Input
 
@@ -314,7 +314,7 @@ Here's what each part does:
 
 Save the script and press F5. Use the arrow keys to move the sprite around (or WASD if you added those bindings above). The Godot icon slides smoothly across the screen.
 
-> **JRPG Pattern:** This is "free movement," where the character moves smoothly in any direction. Some JRPGs use "grid-based movement" instead, where the character snaps from tile to tile. We'll discuss this tradeoff in Module 5 and implement free movement for Crystal Saga.
+> **JRPG Pattern:** This is "free movement," where the character moves smoothly in any direction. Some JRPGs use "grid-based movement" instead, where the character snaps from tile to tile. We'll discuss this tradeoff in Module 6 and implement free movement for Crystal Saga.
 
 ## `print()` Debugging
 

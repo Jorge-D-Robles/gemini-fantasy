@@ -1,4 +1,4 @@
-# Module 5: Bringing the Player to Life
+# Module 6: Bringing the Player to Life
 
 ## What We Have So Far
 
@@ -38,7 +38,7 @@ Skip the "Adding Animations from a Sprite Sheet" section below and use "Adding S
 
 Download a free character sprite sheet from one of these sources:
 
-1. Go to [kenney.nl/assets/tiny-town](https://kenney.nl/assets/tiny-town) (the same pack from Module 4). In the extracted ZIP, `tilemap_packed.png` contains small 16x16 character tiles in the lower portion of the sheet.
+1. Go to [kenney.nl/assets/tiny-town](https://kenney.nl/assets/tiny-town) (the same pack from Module 5). In the extracted ZIP, `tilemap_packed.png` contains small 16x16 character tiles in the lower portion of the sheet.
 
 2. Alternatively, search [opengameart.org](https://opengameart.org) for "JRPG character sprite sheet 16x16". Look for a sheet with **4 rows** (one per direction: down, left, right, up) and **3-4 columns** (frames per walk cycle).
 
@@ -62,7 +62,7 @@ Player (CharacterBody2D)
 └── Camera2D
 ```
 
-In Module 4, we resized the collision shape from the original 64x64 to fit tile corridors. Now that we're using an actual character sprite instead of the Godot icon, fine-tune it: set the shape's **Size** to roughly `Vector2(12, 8)` and the **CollisionShape2D** node's **Position** (under Transform) to `Vector2(0, 4)` so it covers just the character's feet. We'll discuss why this "feet-only" collision matters later in this module.
+In Module 5, we resized the collision shape from the original 64x64 to fit tile corridors. Now that we're using an actual character sprite instead of the Godot icon, fine-tune it: set the shape's **Size** to roughly `Vector2(12, 8)` and the **CollisionShape2D** node's **Position** (under Transform) to `Vector2(0, 4)` so it covers just the character's feet. We'll discuss why this "feet-only" collision matters later in this module.
 
 ### Creating a SpriteFrames Resource
 
@@ -290,7 +290,7 @@ The `_direction_to_string()` function converts a Vector2 direction into "up", "d
 
 This keeps the state machine's logic internal while providing a clean API for the rest of the game.
 
-> **Spiral:** We'll revisit state machines in Module 11 when we build the battle system. The battle state machine is more complex (7+ states with complex transitions), so we'll upgrade from this enum-based approach to a **node-based** state machine. The enum approach works great for the player's 4 simple states.
+> **Spiral:** We'll revisit state machines in Module 14 when we build the battle system. The battle state machine is more complex (7+ states with complex transitions), so we'll upgrade from this enum-based approach to a **node-based** state machine. The enum approach works great for the player's 4 simple states.
 
 ## Y-Sorting: Correct Depth Ordering
 
@@ -382,4 +382,4 @@ When you press F6 (running the Willowbrook scene):
 
 ## Next Module
 
-We have a living player in a real town, but there's nowhere to go. In **Module 6: Connecting Worlds**, we'll build a second area (Whisperwood Forest), create exit zones that trigger scene transitions, and build our first autoload (the SceneManager) that handles fade-to-black transitions between locations.
+We have a living player in a real town, but there's nowhere to go. In **Module 7: Connecting Worlds**, we'll build a second area (Whisperwood Forest), create exit zones that trigger scene transitions, and build our first autoload (the SceneManager) that handles fade-to-black transitions between locations.

@@ -1,4 +1,4 @@
-# Module 8: NPCs and Interaction
+# Module 10: NPCs and Interaction
 
 ## What We Have So Far
 
@@ -58,7 +58,7 @@ NPC (CharacterBody2D)
 
 ### Node Configuration
 
-**Sprite (AnimatedSprite2D):** The NPC's visual. For now, if you don't have NPC sprite sheets, set up single-frame animations using the Godot icon, just like we did for the player fallback in Module 5. Create `idle_down`, `idle_up`, `idle_left`, `idle_right` animations with the icon as the single frame. You can replace these with real NPC sprites later.
+**Sprite (AnimatedSprite2D):** The NPC's visual. For now, if you don't have NPC sprite sheets, set up single-frame animations using the Godot icon, just like we did for the player fallback in Module 6. Create `idle_down`, `idle_up`, `idle_left`, `idle_right` animations with the icon as the single frame. You can replace these with real NPC sprites later.
 
 **CollisionShape2D:** The NPC's physical body. Same "feet-only" approach as the player.
 - Shape: `RectangleShape2D`, small (e.g., 12x8)
@@ -192,7 +192,7 @@ Open `willowbrook.tscn` and instance the NPC scene three times:
 
 **Important:** Add each NPC instance to the `npcs` group (select the NPC → **Node** tab → **Groups** → type `npcs` → click **Add**). The scene script below uses this group to find all NPCs.
 
-For each NPC, create an NPCData `.tres` file in `res://data/npcs/` (create the folder first). Follow the same Inspector workflow from Module 7: right-click the folder → **New Resource** → search for `NPCData` → **Create**. Assign each to the corresponding NPC's `npc_data` export in the Inspector.
+For each NPC, create an NPCData `.tres` file in `res://data/npcs/` (create the folder first). Follow the same Inspector workflow from Module 9: right-click the folder → **New Resource** → search for `NPCData` → **Create**. Assign each to the corresponding NPC's `npc_data` export in the Inspector.
 
 **`res://data/npcs/shopkeeper.tres`:**
 - id: "shopkeeper"
@@ -212,11 +212,11 @@ For each NPC, create an NPCData `.tres` file in `res://data/npcs/` (create the f
 - facing_direction: Vector2.LEFT
 - dialogue_lines: ["I lost something precious in the Whisperwood...", "A pendant, silver with a blue stone.", "If you find it, I'd be forever grateful."]
 
-> **JRPG Pattern:** Notice how the traveler's dialogue sets up a side quest. We're not implementing the quest system yet (that's Module 16), but the dialogue seeds the idea in the player's mind. Classic JRPGs do this constantly. NPCs hint at things that become important later.
+> **JRPG Pattern:** Notice how the traveler's dialogue sets up a side quest. We're not implementing the quest system yet (that's Module 20), but the dialogue seeds the idea in the player's mind. Classic JRPGs do this constantly. NPCs hint at things that become important later.
 
 ### Using the Player's INTERACT State
 
-When the player interacts with an NPC, we should transition the player to the INTERACT state (Module 5). For now, we'll connect this in the Willowbrook scene script.
+When the player interacts with an NPC, we should transition the player to the INTERACT state (Module 6). For now, we'll connect this in the Willowbrook scene script.
 
 Create `res://scenes/willowbrook/willowbrook.gd` and attach it to the root `Willowbrook` node (if you already have a script attached from a previous module, replace its contents):
 
@@ -236,7 +236,7 @@ func _on_npc_interacted(npc: CharacterBody2D) -> void:
     if player and player.has_method("start_interaction"):
         player.start_interaction()
 
-    # For now, just print the dialogue. Module 9 will add the real dialogue UI.
+    # For now, just print the dialogue. Module 11 will add the real dialogue UI.
     if npc.npc_data:
         for line in npc.npc_data.dialogue_lines:
             print(npc.npc_data.display_name + ": " + line)
@@ -247,7 +247,7 @@ func _on_npc_interacted(npc: CharacterBody2D) -> void:
         player.end_interaction()
 ```
 
-This is a temporary placeholder. In Module 9, we'll replace the `print()` calls with a proper dialogue box. But it demonstrates the flow: NPC detects interaction → emits signal → scene script handles it → player enters INTERACT state → interaction completes → player returns to IDLE.
+This is a temporary placeholder. In Module 11, we'll replace the `print()` calls with a proper dialogue box. But it demonstrates the flow: NPC detects interaction → emits signal → scene script handles it → player enters INTERACT state → interaction completes → player returns to IDLE.
 
 ## Interaction Detection: RayCast2D Alternative
 
@@ -282,7 +282,7 @@ Both approaches are valid. We're using the Area2D approach because it's simpler 
 - **`@export var npc_data: NPCData`** lets each NPC instance use different data without a separate script.
 - The `interacted` signal keeps NPCs decoupled from dialogue, shops, and quests.
 - **Scene scripts** (like `willowbrook.gd`) wire NPCs to game systems. The NPC doesn't know about dialogue; the scene connects them.
-- The player's **INTERACT state** (Module 5) freezes movement during interactions.
+- The player's **INTERACT state** (Module 6) freezes movement during interactions.
 
 ## What You Should See
 
@@ -298,4 +298,4 @@ When you press F6 (running Willowbrook):
 
 ## Next Module
 
-We can interact with NPCs, but the dialogue is just `print()` output. In **Module 9: The Dialogue System**, we'll build a proper dialogue box UI with a typewriter text effect, speaker names, multi-page conversations, and choice/branching dialogue. The NPCs will finally talk like real JRPG characters.
+We can interact with NPCs, but the dialogue is just `print()` output. In **Module 11: The Dialogue System**, we'll build a proper dialogue box UI with a typewriter text effect, speaker names, multi-page conversations, and choice/branching dialogue. The NPCs will finally talk like real JRPG characters.
