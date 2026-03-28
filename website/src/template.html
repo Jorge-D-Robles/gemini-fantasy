@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{PAGE_TITLE}}</title>
   <meta name="description" content="{{PAGE_DESCRIPTION}}">
+  <meta property="og:title" content="{{PAGE_TITLE}}">
+  <meta property="og:description" content="{{PAGE_DESCRIPTION}}">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="JRPG in Godot 4">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="{{PAGE_TITLE}}">
+  <meta name="twitter:description" content="{{PAGE_DESCRIPTION}}">
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="stylesheet" href="styles.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -58,8 +65,27 @@
         <!-- Prev/Next navigation -->
         {{PREV_NEXT}}
       </div>
+
+      <!-- Footer -->
+      <footer class="border-t border-slate-700/50 mt-12 py-8 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-slate-500">
+          <span>Built with <a href="https://godotengine.org" target="_blank" rel="noopener" class="text-slate-400 hover:text-white transition-colors">Godot 4</a> and too much coffee</span>
+          <div class="flex items-center gap-4">
+            <a href="https://github.com/Jorge-D-Robles/gemini-fantasy" target="_blank" rel="noopener" class="text-slate-400 hover:text-white transition-colors">Source Code</a>
+            <span class="text-slate-700">|</span>
+            <span>GPLv3</span>
+          </div>
+        </div>
+      </footer>
     </main>
   </div>
+
+  <!-- Scroll to top button -->
+  <button id="scroll-top" class="scroll-top-btn" aria-label="Scroll to top">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/>
+    </svg>
+  </button>
 
   <script src="scripts.js"></script>
 </body>

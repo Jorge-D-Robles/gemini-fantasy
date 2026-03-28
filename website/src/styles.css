@@ -368,6 +368,28 @@
   @apply bg-slate-600;
 }
 
+/* ─── Scroll to top ───────────────────────────────── */
+
+.scroll-top-btn {
+  @apply fixed bottom-6 right-6 p-3 bg-slate-800 border border-slate-700 rounded-full text-slate-400 hover:text-white hover:bg-slate-700 transition-all cursor-pointer shadow-lg z-50;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(12px);
+  transition: opacity 0.2s, transform 0.2s, background-color 0.15s, color 0.15s;
+}
+
+.scroll-top-btn.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* ─── Footer ──────────────────────────────────────── */
+
+footer a {
+  @apply no-underline;
+}
+
 /* ─── Responsive ───────────────────────────────────── */
 
 @media (max-width: 640px) {

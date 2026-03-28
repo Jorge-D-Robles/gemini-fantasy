@@ -30,6 +30,24 @@
   overlay.addEventListener("click", closeMenu);
 })();
 
+// Scroll to top button
+(function () {
+  var btn = document.getElementById("scroll-top");
+  if (!btn) return;
+
+  window.addEventListener("scroll", function () {
+    if (window.scrollY > 400) {
+      btn.classList.add("visible");
+    } else {
+      btn.classList.remove("visible");
+    }
+  });
+
+  btn.addEventListener("click", function () {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+})();
+
 // Code block copy buttons
 (function () {
   var blocks = document.querySelectorAll("pre");

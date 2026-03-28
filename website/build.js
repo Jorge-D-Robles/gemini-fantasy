@@ -210,12 +210,20 @@ function getTutorialFiles() {
 function generateSidebar(modules, activeSlug) {
   var html = "";
 
+  // Find which part the active module belongs to
+  var activeModule = modules.find(function (m) { return m.slug === activeSlug; });
+  var activePart = activeModule ? getPartForModule(activeModule.moduleNum) : null;
+
   for (var part of PART_GROUPINGS) {
     var partModules = modules.filter(function (m) {
       return m.moduleNum >= part.range[0] && m.moduleNum <= part.range[1];
     });
 
-    html += '<details class="sidebar-part" open>\n';
+    var isActivePart = activePart && part.name === activePart.name;
+    // On landing page (no activeSlug), open all parts
+    var openAttr = (!activeSlug || isActivePart) ? " open" : "";
+
+    html += '<details class="sidebar-part"' + openAttr + '>\n';
     html += "  <summary>" + escapeHtml(part.name) + "</summary>\n";
     html += '  <div class="pl-1 pb-2">\n';
 
@@ -407,8 +415,29 @@ function build() {
     }
   }
 
+  // Build 404 page
+  var notFoundContent =
+    '<div class="text-center py-16">\n' +
+    '  <h1 class="text-6xl font-bold text-slate-600 mb-4">404</h1>\n' +
+    '  <p class="text-xl text-slate-400 mb-6">This page doesn\'t exist.</p>\n' +
+    '  <a href="index.html" class="inline-flex items-center gap-2 px-5 py-2.5 bg-sky-500 hover:bg-sky-400 text-white font-semibold rounded-lg transition-colors no-underline">\n' +
+    '    Back to Tutorial\n' +
+    '  </a>\n' +
+    '</div>\n';
+
+  var notFoundSidebar = generateSidebar(modules, "");
+  var notFoundPage = template
+    .replace("{{PAGE_TITLE}}", "Page Not Found | JRPG in Godot 4")
+    .replace("{{PAGE_DESCRIPTION}}", "The page you're looking for doesn't exist.")
+    .replace("{{SIDEBAR}}", notFoundSidebar)
+    .replace("{{CONTENT}}", notFoundContent)
+    .replace("{{PREV_NEXT}}", "");
+
+  fs.writeFileSync(path.join(DIST_DIR, "404.html"), notFoundPage);
+  console.log("  ✓ 404.html — Not found page\n");
+
   console.log(
-    "\nBuild complete! " + (modules.length + 1) + " pages generated in dist/\n"
+    "\nBuild complete! " + (modules.length + 2) + " pages generated in dist/\n"
   );
 }
 
