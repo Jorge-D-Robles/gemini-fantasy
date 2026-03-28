@@ -584,58 +584,58 @@ Three patterns recur throughout the entire architecture. If you internalize thes
 
 ### Audio
 
-- [AudioStreamPlayer](https://docs.godotengine.org/en/stable/classes/class_audiostreamplayer.html) -- non-positional audio playback
-- [AudioStreamPlayer2D](https://docs.godotengine.org/en/stable/classes/class_audiostreamplayer2d.html) -- positional 2D audio playback
-- [AudioStream](https://docs.godotengine.org/en/stable/classes/class_audiostream.html) -- base class for audio data
-- [AudioStreamOggVorbis](https://docs.godotengine.org/en/stable/classes/class_audiostreamoggvorbis.html) -- OGG Vorbis audio stream
-- [AudioStreamWAV](https://docs.godotengine.org/en/stable/classes/class_audiostreamwav.html) -- WAV audio stream
-- [AudioServer](https://docs.godotengine.org/en/stable/classes/class_audioserver.html) -- runtime bus control
-- [AudioBusLayout](https://docs.godotengine.org/en/stable/classes/class_audiobuslayout.html) -- bus configuration resource
-- [Audio buses (tutorial)](https://docs.godotengine.org/en/stable/tutorials/audio/audio_buses.html) -- setting up bus layout and routing
+- [AudioStreamPlayer](https://docs.godotengine.org/en/stable/classes/class_audiostreamplayer.html): non-positional audio playback
+- [AudioStreamPlayer2D](https://docs.godotengine.org/en/stable/classes/class_audiostreamplayer2d.html): positional 2D audio playback
+- [AudioStream](https://docs.godotengine.org/en/stable/classes/class_audiostream.html): base class for audio data
+- [AudioStreamOggVorbis](https://docs.godotengine.org/en/stable/classes/class_audiostreamoggvorbis.html): OGG Vorbis audio stream
+- [AudioStreamWAV](https://docs.godotengine.org/en/stable/classes/class_audiostreamwav.html): WAV audio stream
+- [AudioServer](https://docs.godotengine.org/en/stable/classes/class_audioserver.html): runtime bus control
+- [AudioBusLayout](https://docs.godotengine.org/en/stable/classes/class_audiobuslayout.html): bus configuration resource
+- [Audio buses (tutorial)](https://docs.godotengine.org/en/stable/tutorials/audio/audio_buses.html): setting up bus layout and routing
 
 ### UI and Controls
 
-- [Control](https://docs.godotengine.org/en/stable/classes/class_control.html) -- base class for UI nodes
-- [Button](https://docs.godotengine.org/en/stable/classes/class_button.html) -- clickable/focusable button
-- [HSlider](https://docs.godotengine.org/en/stable/classes/class_hslider.html) -- horizontal slider widget
-- [Label](https://docs.godotengine.org/en/stable/classes/class_label.html) -- text display
-- [RichTextLabel](https://docs.godotengine.org/en/stable/classes/class_richtextlabel.html) -- BBCode-enabled text display
-- [VBoxContainer](https://docs.godotengine.org/en/stable/classes/class_vboxcontainer.html) -- vertical layout container
-- [PanelContainer](https://docs.godotengine.org/en/stable/classes/class_panelcontainer.html) -- panel background for UI
-- [ColorRect](https://docs.godotengine.org/en/stable/classes/class_colorrect.html) -- solid color rectangle
-- [TextureRect](https://docs.godotengine.org/en/stable/classes/class_texturerect.html) -- texture display
-- [CanvasLayer](https://docs.godotengine.org/en/stable/classes/class_canvaslayer.html) -- rendering layer for UI overlays
+- [Control](https://docs.godotengine.org/en/stable/classes/class_control.html): base class for UI nodes
+- [Button](https://docs.godotengine.org/en/stable/classes/class_button.html): clickable/focusable button
+- [HSlider](https://docs.godotengine.org/en/stable/classes/class_hslider.html): horizontal slider widget
+- [Label](https://docs.godotengine.org/en/stable/classes/class_label.html): text display
+- [RichTextLabel](https://docs.godotengine.org/en/stable/classes/class_richtextlabel.html): BBCode-enabled text display
+- [VBoxContainer](https://docs.godotengine.org/en/stable/classes/class_vboxcontainer.html): vertical layout container
+- [PanelContainer](https://docs.godotengine.org/en/stable/classes/class_panelcontainer.html): panel background for UI
+- [ColorRect](https://docs.godotengine.org/en/stable/classes/class_colorrect.html): solid color rectangle
+- [TextureRect](https://docs.godotengine.org/en/stable/classes/class_texturerect.html): texture display
+- [CanvasLayer](https://docs.godotengine.org/en/stable/classes/class_canvaslayer.html): rendering layer for UI overlays
 
 ### Scene Management and Flow
 
-- [SceneTree](https://docs.godotengine.org/en/stable/classes/class_scenetree.html) -- the scene tree, pausing, scene changes
-- [SceneTree.change_scene_to_file()](https://docs.godotengine.org/en/stable/classes/class_scenetree.html#class-scenetree-method-change-scene-to-file) -- switching scenes
-- [Node.process_mode](https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-property-process-mode) -- per-node pause behavior
-- [Pausing games (tutorial)](https://docs.godotengine.org/en/stable/tutorials/scripting/pausing_games.html) -- how pausing works
+- [SceneTree](https://docs.godotengine.org/en/stable/classes/class_scenetree.html): the scene tree, pausing, scene changes
+- [SceneTree.change_scene_to_file()](https://docs.godotengine.org/en/stable/classes/class_scenetree.html#class-scenetree-method-change-scene-to-file): switching scenes
+- [Node.process_mode](https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-property-process-mode): per-node pause behavior
+- [Pausing games (tutorial)](https://docs.godotengine.org/en/stable/tutorials/scripting/pausing_games.html): how pausing works
 
 ### Animation and Tweening
 
-- [Tween](https://docs.godotengine.org/en/stable/classes/class_tween.html) -- procedural animation
-- [AnimationPlayer](https://docs.godotengine.org/en/stable/classes/class_animationplayer.html) -- keyframe animation playback
+- [Tween](https://docs.godotengine.org/en/stable/classes/class_tween.html): procedural animation
+- [AnimationPlayer](https://docs.godotengine.org/en/stable/classes/class_animationplayer.html): keyframe animation playback
 
 ### Utility
 
-- [@GlobalScope.linear_to_db()](https://docs.godotengine.org/en/stable/classes/class_@globalscope.html#class-globalscope-method-linear-to-db) -- linear to decibel conversion
-- [Resource](https://docs.godotengine.org/en/stable/classes/class_resource.html) -- base class for data objects
-- [Resource.duplicate()](https://docs.godotengine.org/en/stable/classes/class_resource.html#class-resource-method-duplicate) -- create a copy of a resource
-- [FileAccess](https://docs.godotengine.org/en/stable/classes/class_fileaccess.html) -- file I/O for save/load
+- [@GlobalScope.linear_to_db()](https://docs.godotengine.org/en/stable/classes/class_@globalscope.html#class-globalscope-method-linear-to-db): linear to decibel conversion
+- [Resource](https://docs.godotengine.org/en/stable/classes/class_resource.html): base class for data objects
+- [Resource.duplicate()](https://docs.godotengine.org/en/stable/classes/class_resource.html#class-resource-method-duplicate): create a copy of a resource
+- [FileAccess](https://docs.godotengine.org/en/stable/classes/class_fileaccess.html): file I/O for save/load
 
 ### Export and Performance
 
-- [Exporting projects (tutorial)](https://docs.godotengine.org/en/stable/tutorials/export/exporting_projects.html) -- building standalone executables
-- [Performance (tutorial)](https://docs.godotengine.org/en/stable/tutorials/performance/general_optimization.html) -- optimization best practices
+- [Exporting projects (tutorial)](https://docs.godotengine.org/en/stable/tutorials/export/exporting_projects.html): building standalone executables
+- [Performance (tutorial)](https://docs.godotengine.org/en/stable/tutorials/performance/general_optimization.html): optimization best practices
 
 ## Where to Go from Here
 
 You have built a complete JRPG: a working game with a title screen, three areas, NPCs, a battle system, quests, saves, audio, and credits. The architecture is modular: autoloads for global state, Resources for data, state machines for complex flow, signals for decoupled communication. These patterns apply outside Crystal Saga and outside Godot. State machines show up in networking code. The Resource pattern is data-driven design. Signals are the Observer pattern. What you learned here is game architecture, not just one engine's API.
 
-The best next step is to keep working on this project. Pick one of the extension ideas from Module 26 -- status effects, elemental damage, limit breaks, more party members, procedural dungeons -- and build it. You already have the save/load serialization pattern, the Resource data layer, and the state machine framework. A status effect system is a new Resource class, a new array on CharacterData, and a new step in the battle turn loop. Elemental damage is a new enum on AbilityData and EnemyData plus a multiplier in the damage formula. Each one teaches you something new while reinforcing what you already know.
+The best next step is to keep working on this project. Pick one of the extension ideas from Module 26 (status effects, elemental damage, limit breaks, more party members, procedural dungeons) and build it. You already have the save/load serialization pattern, the Resource data layer, and the state machine framework. A status effect system is a new Resource class, a new array on CharacterData, and a new step in the battle turn loop. Elemental damage is a new enum on AbilityData and EnemyData plus a multiplier in the damage formula. Each one teaches you something new while reinforcing what you already know.
 
-When you're ready for a new project, try a different genre. A platformer teaches physics and level design, a roguelike teaches procedural generation, a visual novel teaches branching narrative. The fundamentals -- scenes, signals, state machines, data-driven design -- carry over from everything you built here. When you get stuck: the [official Godot documentation](https://docs.godotengine.org/en/stable/), the [Godot community forums](https://forum.godotengine.org/), [GDQuest](https://www.gdquest.com/) for structured courses, and the [Godot Discord](https://discord.gg/godotengine) for real-time help. The community is active and helpful. Use it.
+When you're ready for a new project, try a different genre. A platformer teaches physics and level design, a roguelike teaches procedural generation, a visual novel teaches branching narrative. The fundamentals (scenes, signals, state machines, data-driven design) carry over from everything you built here. When you get stuck: the [official Godot documentation](https://docs.godotengine.org/en/stable/), the [Godot community forums](https://forum.godotengine.org/), [GDQuest](https://www.gdquest.com/) for structured courses, and the [Godot Discord](https://discord.gg/godotengine) for real-time help. The community is active and helpful. Use it.
 
 Good luck with whatever you build next.

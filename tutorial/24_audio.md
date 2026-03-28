@@ -166,7 +166,7 @@ MusicManager.resume_previous_track()
 
 ## Sound Effects
 
-Play any battle in Chrono Trigger with the volume off, then play it again with sound. The difference is dramatic. The sword slash, the critical hit crunch, the heal chime -- these audio cues give every action weight and feedback. Sound effects are the fastest way to make a game feel polished, because the player's brain processes audio feedback faster than visual feedback. A silent menu cursor feels broken; add a tiny click and it feels responsive.
+Play any battle in Chrono Trigger with the volume off, then play it again with sound. The difference is dramatic. The sword slash, the critical hit crunch, the heal chime: these audio cues give every action weight and feedback. Sound effects are the fastest way to make a game feel polished, because the player's brain processes audio feedback faster than visual feedback. A silent menu cursor feels broken; add a tiny click and it feels responsive.
 
 SFX are simpler: play once, no crossfading. You can either add AudioStreamPlayer nodes to scenes or create a simple SFX utility:
 

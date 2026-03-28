@@ -1,20 +1,20 @@
 # Module 8: Part II Review and Cheat Sheet
 
-This module is a review and quick reference for everything covered in Part II (Modules 5-7). No new code, no new features -- just a consolidated look at what you built and a cheat sheet you can flip back to when you need a reminder.
+This module is a review and quick reference for everything covered in Part II (Modules 5-7). No new code, no new features. Just a consolidated look at what you built and a cheat sheet you can flip back to when you need a reminder.
 
 ## Part II in Review
 
 At the start of Part II, you had a Player scene (CharacterBody2D with a sprite and collision) that could move around and handle physics. But the "world" was a blank screen. There was nothing to see, nothing to collide with, and nowhere to go.
 
-Over three modules, you turned that blank canvas into a real game world. You built the town of Willowbrook tile-by-tile using TileMapLayers, layering ground, paths, objects, and treetops into a scene with actual depth. You replaced the sliding Godot icon with a sprite-animated player character driven by a proper state machine -- one that knows whether it's idle, walking, interacting, or disabled. You added Y-sorting so the player walks behind trees and in front of paths. And you connected Willowbrook to a second area, Whisperwood Forest, via exit zones and a SceneManager autoload that handles fade-to-black transitions and spawn point placement.
+Over three modules, you turned that blank canvas into a real game world. You built the town of Willowbrook tile-by-tile using TileMapLayers, layering ground, paths, objects, and treetops into a scene with actual depth. You replaced the sliding Godot icon with a sprite-animated player character driven by a proper state machine, one that knows whether it's idle, walking, interacting, or disabled. You added Y-sorting so the player walks behind trees and in front of paths. And you connected Willowbrook to a second area, Whisperwood Forest, via exit zones and a SceneManager autoload that handles fade-to-black transitions and spawn point placement.
 
-The result is the skeleton of a real JRPG: two connected areas you can walk between, with an animated hero, tile-based collision, camera smoothing, and clean scene transitions. Everything from here forward -- NPCs, dialogue, inventory, combat -- builds on this.
+The result is the skeleton of a real JRPG: two connected areas you can walk between, with an animated hero, tile-based collision, camera smoothing, and clean scene transitions. Everything from here forward (NPCs, dialogue, inventory, combat) builds on this.
 
-### Module 5: The Overworld -- TileMaps and Terrain
+### Module 5: The Overworld — TileMaps and Terrain
 
 - Built Willowbrook using **TileMapLayer** nodes (the replacement for the deprecated `TileMap` node), one per layer: Ground, Detail, Objects, and AbovePlayer.
 - Created a **TileSet** resource from a tile sheet image, configured atlas sources, and shared the TileSet across all layers.
-- Added **physics layers** to the TileSet so wall, water, and building tiles block the player -- set once on the tile definition, applied to every instance automatically.
+- Added **physics layers** to the TileSet so wall, water, and building tiles block the player, set once on the tile definition and applied to every instance automatically.
 - Attached a **Camera2D** to the player with position smoothing and edge limits so the camera follows smoothly without showing empty space beyond the map.
 - Configured **pixel-perfect rendering**: `Nearest` texture filter, `canvas_items` stretch mode, and consistent tile sizes to prevent blurriness and sub-pixel jitter.
 
@@ -26,7 +26,7 @@ The result is the skeleton of a real JRPG: two connected areas you can walk betw
 - Set up **Y-sorting** with a `YSortGroup` Node2D so the player renders in front of or behind objects based on vertical position, and used a **feet-only collision shape** for natural-feeling tile interaction.
 - Tracked **facing direction** as a persistent Vector2 so idle animations face the last movement direction.
 
-### Module 7: Connecting Worlds -- Scene Transitions
+### Module 7: Connecting Worlds — Scene Transitions
 
 - Built a **SceneManager autoload** that wraps `get_tree().change_scene_to_file()` with fade-out/fade-in transitions using a CanvasLayer, ColorRect, and AnimationPlayer.
 - Learned what **autoloads** (singletons) are: nodes that load at startup, persist across scene changes, and are accessible by name from any script. Godot's built-in `Input`, `Engine`, and `Time` are autoloads; SceneManager is our first custom one.
@@ -110,7 +110,7 @@ Willowbrook (Node2D)
 **Painting tips:**
 - Right-click while painting to eyedropper-pick a tile from the viewport.
 - Use Bucket Fill for the ground layer first, then paint paths over it.
-- Keep Detail sparse -- a few flowers per area, not one on every tile.
+- Keep Detail sparse: a few flowers per area, not one on every tile.
 - Scroll wheel zooms, middle-click-drag pans.
 
 ### Sprite Animations (AnimatedSprite2D)
@@ -174,7 +174,7 @@ func _change_state(new_state: State) -> void:
     current_state = new_state
 ```
 
-**State handlers** are self-contained. IDLE checks for input and transitions to WALK. WALK moves the player and transitions back to IDLE when input stops. INTERACT and DISABLED do nothing -- they wait for external systems to release them.
+**State handlers** are self-contained. IDLE checks for input and transitions to WALK. WALK moves the player and transitions back to IDLE when input stops. INTERACT and DISABLED do nothing; they wait for external systems to release them.
 
 **Transition rules:**
 
@@ -187,7 +187,7 @@ func _change_state(new_state: State) -> void:
 | Any | DISABLED | Cutscene, battle, or menu starts |
 | DISABLED | IDLE | Cutscene, battle, or menu ends |
 
-**External control** -- other systems change the player's state through public methods, never by setting the enum directly:
+**External control:** other systems change the player's state through public methods, never by setting the enum directly:
 
 ```gdscript
 func set_disabled(disabled: bool) -> void:
@@ -269,7 +269,7 @@ func change_scene(scene_path: String, spawn_point: String = "default") -> void:
     transition_finished.emit()
 ```
 
-**Spawn point placement** -- the SceneManager finds Marker2D nodes in the `spawn_points` group and teleports the player to the one whose name matches:
+**Spawn point placement:** the SceneManager finds Marker2D nodes in the `spawn_points` group and teleports the player to the one whose name matches:
 
 ```gdscript
 func _place_player_at_spawn() -> void:
@@ -311,7 +311,7 @@ func _on_body_entered(body: Node2D) -> void:
 2. Click the folder icon and select your `.tscn` or `.gd` file.
 3. The name auto-fills (e.g., `SceneManager`). Click Add.
 
-**When to use them:** Systems that need to survive scene changes and be accessible from anywhere -- scene management, inventory, audio, game state. If a system only matters within one scene, keep it local.
+**When to use them:** Systems that need to survive scene changes and be accessible from anywhere: scene management, inventory, audio, game state. If a system only matters within one scene, keep it local.
 
 **Signal lifecycle:** When a scene is freed (during a scene change), all signal connections from its nodes are cleaned up automatically. Autoload signals persist because autoloads are never freed. This is why cross-scene systems belong in autoloads.
 
@@ -370,54 +370,54 @@ Everything referenced in Part II, organized by category. Bookmark the ones you f
 
 ### Tilemap System
 
-- [TileMapLayer](https://docs.godotengine.org/en/stable/classes/class_tilemaplayer.html) -- the node that renders a grid of tiles (replaces the deprecated TileMap)
-- [TileSet](https://docs.godotengine.org/en/stable/classes/class_tileset.html) -- the resource that defines tile properties, atlas sources, and physics layers
-- [Using TileSets](https://docs.godotengine.org/en/stable/tutorials/2d/using_tilesets.html) -- tutorial on creating and configuring TileSets
-- [Using TileMaps](https://docs.godotengine.org/en/stable/tutorials/2d/using_tilemaps.html) -- tutorial on painting tiles and setting up layers
+- [TileMapLayer](https://docs.godotengine.org/en/stable/classes/class_tilemaplayer.html): the node that renders a grid of tiles (replaces the deprecated TileMap)
+- [TileSet](https://docs.godotengine.org/en/stable/classes/class_tileset.html): the resource that defines tile properties, atlas sources, and physics layers
+- [Using TileSets](https://docs.godotengine.org/en/stable/tutorials/2d/using_tilesets.html): tutorial on creating and configuring TileSets
+- [Using TileMaps](https://docs.godotengine.org/en/stable/tutorials/2d/using_tilemaps.html): tutorial on painting tiles and setting up layers
 
 ### Player and Animation
 
-- [CharacterBody2D](https://docs.godotengine.org/en/stable/classes/class_characterbody2d.html) -- physics body for player movement with `move_and_slide()`
-- [AnimatedSprite2D](https://docs.godotengine.org/en/stable/classes/class_animatedsprite2d.html) -- node that plays frame-based animations from a SpriteFrames resource
-- [SpriteFrames](https://docs.godotengine.org/en/stable/classes/class_spriteframes.html) -- resource holding named animation sequences with frames, FPS, and loop settings
-- [AnimationPlayer](https://docs.godotengine.org/en/stable/classes/class_animationplayer.html) -- alternative animation approach for keyframing arbitrary properties
-- [2D Sprite Animation](https://docs.godotengine.org/en/stable/tutorials/2d/2d_sprite_animation.html) -- tutorial covering both AnimatedSprite2D and AnimationPlayer approaches
-- [CollisionShape2D](https://docs.godotengine.org/en/stable/classes/class_collisionshape2d.html) -- defines the shape used for physics collision
-- [RectangleShape2D](https://docs.godotengine.org/en/stable/classes/class_rectangleshape2d.html) -- rectangular collision shape used for player feet and exit zones
+- [CharacterBody2D](https://docs.godotengine.org/en/stable/classes/class_characterbody2d.html): physics body for player movement with `move_and_slide()`
+- [AnimatedSprite2D](https://docs.godotengine.org/en/stable/classes/class_animatedsprite2d.html): node that plays frame-based animations from a SpriteFrames resource
+- [SpriteFrames](https://docs.godotengine.org/en/stable/classes/class_spriteframes.html): resource holding named animation sequences with frames, FPS, and loop settings
+- [AnimationPlayer](https://docs.godotengine.org/en/stable/classes/class_animationplayer.html): alternative animation approach for keyframing arbitrary properties
+- [2D Sprite Animation](https://docs.godotengine.org/en/stable/tutorials/2d/2d_sprite_animation.html): tutorial covering both AnimatedSprite2D and AnimationPlayer approaches
+- [CollisionShape2D](https://docs.godotengine.org/en/stable/classes/class_collisionshape2d.html): defines the shape used for physics collision
+- [RectangleShape2D](https://docs.godotengine.org/en/stable/classes/class_rectangleshape2d.html): rectangular collision shape used for player feet and exit zones
 
 ### Camera and Rendering
 
-- [Camera2D](https://docs.godotengine.org/en/stable/classes/class_camera2d.html) -- viewport camera with smoothing, limits, zoom, and drag margins
-- [Viewport and Canvas Transforms](https://docs.godotengine.org/en/stable/tutorials/2d/2d_transforms.html) -- how coordinates, viewports, and rendering relate in 2D
+- [Camera2D](https://docs.godotengine.org/en/stable/classes/class_camera2d.html): viewport camera with smoothing, limits, zoom, and drag margins
+- [Viewport and Canvas Transforms](https://docs.godotengine.org/en/stable/tutorials/2d/2d_transforms.html): how coordinates, viewports, and rendering relate in 2D
 
 ### Y-Sorting and Rendering Order
 
-- [CanvasItem](https://docs.godotengine.org/en/stable/classes/class_canvasitem.html) -- base class for all 2D nodes; covers `y_sort_enabled`, visibility, modulate, and draw order
-- [Node2D](https://docs.godotengine.org/en/stable/classes/class_node2d.html) -- 2D node used as the YSortGroup container
+- [CanvasItem](https://docs.godotengine.org/en/stable/classes/class_canvasitem.html): base class for all 2D nodes; covers `y_sort_enabled`, visibility, modulate, and draw order
+- [Node2D](https://docs.godotengine.org/en/stable/classes/class_node2d.html): 2D node used as the YSortGroup container
 
 ### Scene Transitions and Autoloads
 
-- [Singletons (Autoload)](https://docs.godotengine.org/en/stable/tutorials/scripting/singletons_autoload.html) -- official guide to creating and registering autoloads
-- [Change Scenes Manually](https://docs.godotengine.org/en/stable/tutorials/scripting/change_scenes_manually.html) -- the built-in `change_scene_to_file()` and why you often wrap it
-- [SceneTree](https://docs.godotengine.org/en/stable/classes/class_scenetree.html) -- the tree that manages all nodes; provides `change_scene_to_file()`, `get_nodes_in_group()`, and `get_first_node_in_group()`
-- [CanvasLayer](https://docs.godotengine.org/en/stable/classes/class_canvaslayer.html) -- renders on a separate layer; used for the fade overlay and UI
-- [ColorRect](https://docs.godotengine.org/en/stable/classes/class_colorrect.html) -- solid-color rectangle used as the black fade overlay
-- [Introduction to Animations](https://docs.godotengine.org/en/stable/tutorials/animation/introduction.html) -- creating property track animations in AnimationPlayer
+- [Singletons (Autoload)](https://docs.godotengine.org/en/stable/tutorials/scripting/singletons_autoload.html): official guide to creating and registering autoloads
+- [Change Scenes Manually](https://docs.godotengine.org/en/stable/tutorials/scripting/change_scenes_manually.html): the built-in `change_scene_to_file()` and why you often wrap it
+- [SceneTree](https://docs.godotengine.org/en/stable/classes/class_scenetree.html): the tree that manages all nodes; provides `change_scene_to_file()`, `get_nodes_in_group()`, and `get_first_node_in_group()`
+- [CanvasLayer](https://docs.godotengine.org/en/stable/classes/class_canvaslayer.html): renders on a separate layer; used for the fade overlay and UI
+- [ColorRect](https://docs.godotengine.org/en/stable/classes/class_colorrect.html): solid-color rectangle used as the black fade overlay
+- [Introduction to Animations](https://docs.godotengine.org/en/stable/tutorials/animation/introduction.html): creating property track animations in AnimationPlayer
 
 ### Interaction and Detection
 
-- [Area2D](https://docs.godotengine.org/en/stable/classes/class_area2d.html) -- trigger zone for detecting overlapping bodies (used for exit zones)
-- [Marker2D](https://docs.godotengine.org/en/stable/classes/class_marker2d.html) -- lightweight position marker used for spawn points
+- [Area2D](https://docs.godotengine.org/en/stable/classes/class_area2d.html): trigger zone for detecting overlapping bodies (used for exit zones)
+- [Marker2D](https://docs.godotengine.org/en/stable/classes/class_marker2d.html): lightweight position marker used for spawn points
 
 ### Input
 
-- [Input](https://docs.godotengine.org/en/stable/classes/class_input.html) -- the global input singleton; `get_axis()`, `is_action_pressed()`
-- [InputEvent](https://docs.godotengine.org/en/stable/classes/class_inputevent.html) -- base class for all input events
+- [Input](https://docs.godotengine.org/en/stable/classes/class_input.html): the global input singleton; `get_axis()`, `is_action_pressed()`
+- [InputEvent](https://docs.godotengine.org/en/stable/classes/class_inputevent.html): base class for all input events
 
 ### GDScript
 
-- [@export_file](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_exports.html) -- export annotation that creates a filtered file picker in the Inspector
-- [Awaiting Signals](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html#awaiting-signals) -- how `await` pauses a function until a signal fires
+- [@export_file](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_exports.html): export annotation that creates a filtered file picker in the Inspector
+- [Awaiting Signals](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html#awaiting-signals): how `await` pauses a function until a signal fires
 
 ## What's Next
 

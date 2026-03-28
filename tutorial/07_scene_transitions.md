@@ -117,7 +117,7 @@ The SceneManager needs visible nodes (a ColorRect for the black overlay, an Anim
 1. Create a new scene with `Node` as root. Rename it to `SceneManager`.
 2. Add a **CanvasLayer** child. Rename it to `TransitionLayer`. Set its **Layer** to `100` in the Inspector (so it draws on top of everything).
 
-In every JRPG, the fade effects and dialogue boxes must render on top of the game world no matter where the camera is or how the scene is structured. In Earthbound, the swirling battle transition overlay covers everything -- the map, the enemies, the party. A regular node would be affected by the camera's position and zoom, and could sort incorrectly with other nodes. CanvasLayer creates an entirely separate rendering surface that is immune to camera transforms and always draws at its designated layer number.
+In every JRPG, the fade effects and dialogue boxes must render on top of the game world no matter where the camera is or how the scene is structured. In Earthbound, the swirling battle transition overlay covers everything: the map, the enemies, the party. A regular node would be affected by the camera's position and zoom, and could sort incorrectly with other nodes. CanvasLayer creates an entirely separate rendering surface that is immune to camera transforms and always draws at its designated layer number.
 
 3. Inside `TransitionLayer`, add a **ColorRect** child. Set its color to black (`Color(0, 0, 0, 1)`).
 4. Set the ColorRect to cover the full screen: **Layout → Anchors Preset → Full Rect** (or set all anchors to cover the viewport).
@@ -180,7 +180,7 @@ await some_node.some_signal                  # Wait for a custom signal
 
 ## Exit Zones
 
-In every JRPG from Dragon Quest to Pokemon, walking to the edge of a town seamlessly transitions you to the next area. The player never clicks a "leave town" button -- they just walk south and the game detects that they have crossed an invisible boundary. The alternative -- checking the player's position every frame with `if position.x > map_width` -- is fragile, hard-coded, and needs rewriting for every map shape. Exit zones are reusable: the same script works on every map edge, every door, and every warp point.
+In every JRPG from Dragon Quest to Pokemon, walking to the edge of a town seamlessly transitions you to the next area. The player never clicks a "leave town" button; they just walk south and the game detects that they have crossed an invisible boundary. The alternative, checking the player's position every frame with `if position.x > map_width` is fragile, hard-coded, and needs rewriting for every map shape. Exit zones are reusable: the same script works on every map edge, every door, and every warp point.
 
 An **exit zone** is an Area2D that detects when the player enters it and triggers a scene change. We'll set up bidirectional exits between Willowbrook and Whisperwood.
 
@@ -229,7 +229,7 @@ Attach this script to `ExitToWhisperwood`. In the Inspector, set:
 
 The exit zone checks `body.is_in_group("player")`. We need to add the player to this group.
 
-**Groups** are tags you can assign to any node. A node can belong to multiple groups, and you can find all nodes in a group with `get_tree().get_nodes_in_group("name")` or get the first match with `get_tree().get_first_node_in_group("name")`. Think of them as labels for querying -- they let systems find nodes without hard-coded paths.
+**Groups** are tags you can assign to any node. A node can belong to multiple groups, and you can find all nodes in a group with `get_tree().get_nodes_in_group("name")` or get the first match with `get_tree().get_first_node_in_group("name")`. Think of them as labels for querying; they let systems find nodes without hard-coded paths.
 
 1. Open `player.tscn`.
 2. Select the `Player` (CharacterBody2D) root node.
@@ -271,13 +271,13 @@ Design a simple forest area (at least 20x15 tiles). Use grass tiles for ground, 
 
 **Whisperwood scene structure checklist** (make sure you have all of these):
 
-1. `Whisperwood` (Node2D) -- root
-2. `Ground` (TileMapLayer) -- grass, paths
-3. `Detail` (TileMapLayer) -- small decorations
+1. `Whisperwood` (Node2D), root
+2. `Ground` (TileMapLayer), grass, paths
+3. `Detail` (TileMapLayer), small decorations
 4. `YSortGroup` (Node2D, `y_sort_enabled = true`)
-   - `Objects` (TileMapLayer, `y_sort_enabled = true`) -- trees, rocks
+   - `Objects` (TileMapLayer, `y_sort_enabled = true`), trees, rocks
    - Player instance (`player.tscn`)
-5. `AbovePlayer` (TileMapLayer) -- treetop canopy
+5. `AbovePlayer` (TileMapLayer), treetop canopy
 6. Spawn points (Marker2D nodes, added to `spawn_points` group):
    - `from_town`: near the north entrance
    - `default`: same position as `from_town`

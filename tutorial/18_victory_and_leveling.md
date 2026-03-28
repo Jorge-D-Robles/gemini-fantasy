@@ -100,8 +100,8 @@ Different characters should grow differently. A warrior gains more HP and Attack
 
 Notice that `level_up()` returns a `gains` dictionary *and* applies the gains in the same call. This is a simplification. In a polished RPG, you'd split this into two steps:
 
-1. **Calculate** the level-up (what stats *would* increase) -- returns a preview
-2. **Apply** the level-up (actually modify the character) -- called after the UI finishes displaying
+1. **Calculate** the level-up (what stats *would* increase), returning a preview
+2. **Apply** the level-up (actually modify the character), called after the UI finishes displaying
 
 This separation lets you show an animated victory screen where stats tick up one by one, HP bars extend, and "Level Up!" flashes before the numbers are committed. For Crystal Saga, combining both steps is fine. But if you build a victory screen with animated stat bars later, refactor `level_up()` into `create_level_up() -> Dictionary` and `apply_level_up(gains: Dictionary)`.
 
@@ -202,7 +202,7 @@ func _apply_xp(battler: BattlerData, xp: int) -> void:
         required = CharacterData.xp_for_level(char_data.level)
 ```
 
-Item drops turn every battle into a small gamble. In Pokemon, rare wild encounters might hold rare items; in Final Fantasy, stealing from bosses yields unique equipment. The probability doesn't need to be high -- even a 10% chance of a rare drop creates a "did I get it?" moment after every fight. Drops should complement shop inventory, not replace it: shops sell reliable basics, drops reward persistence with something special.
+Item drops turn every battle into a small gamble. In Pokemon, rare wild encounters might hold rare items; in Final Fantasy, stealing from bosses yields unique equipment. The probability doesn't need to be high; even a 10% chance of a rare drop creates a "did I get it?" moment after every fight. Drops should complement shop inventory, not replace it: shops sell reliable basics, drops reward persistence with something special.
 
 ## The Defeat Flow
 
@@ -229,7 +229,7 @@ Module 25 replaces this with a proper Game Over screen with options (load save, 
 
 ## Post-Battle State Restoration
 
-HP carry-over is the hidden engine of dungeon tension. In every classic Final Fantasy, the real challenge isn't any single battle -- it's surviving the entire dungeon with limited healing. Each random encounter chips away at your HP and MP, and the question becomes: "Do I use my last Ether now, or save it for the boss?" This resource attrition is what makes save crystals feel like oases and inns feel like home.
+HP carry-over is the hidden engine of dungeon tension. In every classic Final Fantasy, the real challenge isn't any single battle. It's surviving the entire dungeon with limited healing. Each random encounter chips away at your HP and MP, and the question becomes: "Do I use my last Ether now, or save it for the boss?" This resource attrition is what makes save crystals feel like oases and inns feel like home.
 
 After a victorious battle, the party returns to the overworld with their current HP/MP intact. Two things make this work:
 

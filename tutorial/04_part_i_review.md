@@ -4,11 +4,11 @@ This module is a review and quick-reference for everything covered in Part I (Mo
 
 ## Part I in Review
 
-You started Part I with nothing: no engine installed, no project, no code. Module 1 walked you through installing Godot, creating the Crystal Saga project, and understanding the mental model behind the engine -- everything is a node, and nodes compose into scenes. You placed a Sprite2D on screen, configured the project for pixel art, and ran your first build. The Godot icon on a gray background doesn't look like much, but it's what everything else builds from: a project, a scene, a node, and a working feedback loop (edit, save, run, observe).
+You started Part I with nothing: no engine installed, no project, no code. Module 1 walked you through installing Godot, creating the Crystal Saga project, and understanding the mental model behind the engine: everything is a node, and nodes compose into scenes. You placed a Sprite2D on screen, configured the project for pixel art, and ran your first build. The Godot icon on a gray background doesn't look like much, but it's what everything else builds from: a project, a scene, a node, and a working feedback loop (edit, save, run, observe).
 
 Module 2 gave you the language. You attached a script to that sprite and learned GDScript from the perspective of someone who already knows how to program. You wrote variables with static types, defined functions with return annotations, and discovered the virtual function system that drives Godot's game loop: `_ready()` for initialization, `_process(delta)` for per-frame logic. You wired up keyboard input through the Input Map and made the sprite move. By the end, your placeholder icon responded to arrow keys, moved at a consistent speed regardless of frame rate, and printed debug messages to the Output panel.
 
-Module 3 shifted from "scripts that move things" to "scenes that *are* things." You built a Player scene from a CharacterBody2D with a Sprite2D and CollisionShape2D as children, learning why Godot favors composition over inheritance. You replaced direct position manipulation with `move_and_slide()`, switched from `_process()` to `_physics_process()`, and instanced the Player scene into your main scene. You also got your first taste of signals -- Godot's decoupled event system -- by connecting an Area2D's `body_entered` signal to a script function. The result: a reusable player character with physics-based movement that you can drop into any scene.
+Module 3 shifted from "scripts that move things" to "scenes that *are* things." You built a Player scene from a CharacterBody2D with a Sprite2D and CollisionShape2D as children, learning why Godot favors composition over inheritance. You replaced direct position manipulation with `move_and_slide()`, switched from `_process()` to `_physics_process()`, and instanced the Player scene into your main scene. You also got your first taste of signals (Godot's decoupled event system) by connecting an Area2D's `body_entered` signal to a script function. The result: a reusable player character with physics-based movement that you can drop into any scene.
 
 ### Module 1: The Journey Begins
 
@@ -203,8 +203,8 @@ get_node("/root/Main/Player") # absolute path from root
 
 **Scene file conventions:**
 
-- `.tscn` -- text scene file (human-readable, diffs well in git)
-- `.tres` -- text resource file
+- `.tscn`: text scene file (human-readable, diffs well in git)
+- `.tres`: text resource file
 - Name folders and files in `snake_case`
 - Scene and its primary script share a name: `player.tscn` + `player.gd`
 
@@ -272,7 +272,7 @@ func _get_input_direction() -> Vector2:
 
 ### CharacterBody2D Movement
 
-**Module 2 pattern -- direct position manipulation (no collision):**
+**Module 2 pattern: direct position manipulation (no collision):**
 
 ```gdscript
 extends Sprite2D
@@ -287,7 +287,7 @@ func _process(delta: float) -> void:
     position += direction * speed * delta
 ```
 
-**Module 3 pattern -- physics-based movement with collision:**
+**Module 3 pattern: physics-based movement with collision:**
 
 ```gdscript
 extends CharacterBody2D
@@ -348,55 +348,55 @@ These settings were configured in Part I for pixel art rendering:
 
 ## Official Godot Documentation
 
-Every class, method, and concept referenced in Part I, organized by category. Bookmark these -- they're the official source of truth for anything not covered in this tutorial.
+Every class, method, and concept referenced in Part I, organized by category. Bookmark these; they're the official source of truth for anything not covered in this tutorial.
 
 ### Getting Started
 
-- [Introduction to Godot](https://docs.godotengine.org/en/stable/getting_started/introduction/introduction_to_godot.html) -- engine overview and design philosophy
-- [First look at the editor](https://docs.godotengine.org/en/stable/getting_started/introduction/first_look_at_the_editor_interface.html) -- editor panels and layout
-- [Creating and importing projects](https://docs.godotengine.org/en/stable/getting_started/step_by_step/creating_and_importing_projects.html) -- project creation and the Project Manager
-- [Nodes and Scenes](https://docs.godotengine.org/en/stable/getting_started/step_by_step/nodes_and_scenes.html) -- the core building blocks
+- [Introduction to Godot](https://docs.godotengine.org/en/stable/getting_started/introduction/introduction_to_godot.html): engine overview and design philosophy
+- [First look at the editor](https://docs.godotengine.org/en/stable/getting_started/introduction/first_look_at_the_editor_interface.html): editor panels and layout
+- [Creating and importing projects](https://docs.godotengine.org/en/stable/getting_started/step_by_step/creating_and_importing_projects.html): project creation and the Project Manager
+- [Nodes and Scenes](https://docs.godotengine.org/en/stable/getting_started/step_by_step/nodes_and_scenes.html): the core building blocks
 
 ### GDScript
 
-- [GDScript basics](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html) -- complete language reference (syntax, types, features)
-- [GDScript style guide](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_styleguide.html) -- official naming and formatting conventions
-- [Overridable functions](https://docs.godotengine.org/en/stable/tutorials/scripting/overridable_functions.html) -- full list of virtual functions (`_ready`, `_process`, `_enter_tree`, etc.)
+- [GDScript basics](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html): complete language reference (syntax, types, features)
+- [GDScript style guide](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_styleguide.html): official naming and formatting conventions
+- [Overridable functions](https://docs.godotengine.org/en/stable/tutorials/scripting/overridable_functions.html): full list of virtual functions (`_ready`, `_process`, `_enter_tree`, etc.)
 
 ### Scripting and Architecture
 
-- [Nodes and scene instances](https://docs.godotengine.org/en/stable/tutorials/scripting/nodes_and_scene_instances.html) -- instancing scenes, composition, and reuse
-- [Scene tree](https://docs.godotengine.org/en/stable/tutorials/scripting/scene_tree.html) -- runtime hierarchy, node ordering, and groups
-- [Idle and physics processing](https://docs.godotengine.org/en/stable/tutorials/scripting/idle_and_physics_processing.html) -- `_process()` vs `_physics_process()` and when to use each
-- [Instancing with signals](https://docs.godotengine.org/en/stable/tutorials/scripting/instancing_with_signals.html) -- combining scene instancing with signal-based communication
+- [Nodes and scene instances](https://docs.godotengine.org/en/stable/tutorials/scripting/nodes_and_scene_instances.html): instancing scenes, composition, and reuse
+- [Scene tree](https://docs.godotengine.org/en/stable/tutorials/scripting/scene_tree.html): runtime hierarchy, node ordering, and groups
+- [Idle and physics processing](https://docs.godotengine.org/en/stable/tutorials/scripting/idle_and_physics_processing.html): `_process()` vs `_physics_process()` and when to use each
+- [Instancing with signals](https://docs.godotengine.org/en/stable/tutorials/scripting/instancing_with_signals.html): combining scene instancing with signal-based communication
 
 ### Input
 
-- [Input examples](https://docs.godotengine.org/en/stable/tutorials/inputs/input_examples.html) -- input handling patterns and code samples
-- [InputEvent](https://docs.godotengine.org/en/stable/tutorials/inputs/inputevent.html) -- how input events propagate through the scene tree
+- [Input examples](https://docs.godotengine.org/en/stable/tutorials/inputs/input_examples.html): input handling patterns and code samples
+- [InputEvent](https://docs.godotengine.org/en/stable/tutorials/inputs/inputevent.html): how input events propagate through the scene tree
 
 ### Physics
 
-- [Physics introduction](https://docs.godotengine.org/en/stable/tutorials/physics/physics_introduction.html) -- body types, collision layers, and physics concepts
+- [Physics introduction](https://docs.godotengine.org/en/stable/tutorials/physics/physics_introduction.html): body types, collision layers, and physics concepts
 
 ### Class References
 
-- [`Node`](https://docs.godotengine.org/en/stable/classes/class_node.html) -- base class for all nodes
-- [`Node2D`](https://docs.godotengine.org/en/stable/classes/class_node2d.html) -- base class for 2D nodes (has `position`, `rotation`, `scale`)
-- [`Sprite2D`](https://docs.godotengine.org/en/stable/classes/class_sprite2d.html) -- displays a 2D texture
-- [`CharacterBody2D`](https://docs.godotengine.org/en/stable/classes/class_characterbody2d.html) -- player-controlled physics body with `move_and_slide()`
-- [`RigidBody2D`](https://docs.godotengine.org/en/stable/classes/class_rigidbody2d.html) -- physics-driven body with mass, friction, and forces
-- [`StaticBody2D`](https://docs.godotengine.org/en/stable/classes/class_staticbody2d.html) -- immovable collision body
-- [`Area2D`](https://docs.godotengine.org/en/stable/classes/class_area2d.html) -- detection zone with `body_entered` / `body_exited` signals
-- [`CollisionShape2D`](https://docs.godotengine.org/en/stable/classes/class_collisionshape2d.html) -- defines collision boundaries for physics bodies and areas
-- [`Camera2D`](https://docs.godotengine.org/en/stable/classes/class_camera2d.html) -- 2D camera that controls the viewport
-- [`Label`](https://docs.godotengine.org/en/stable/classes/class_label.html) -- displays text on screen
-- [`AudioStreamPlayer`](https://docs.godotengine.org/en/stable/classes/class_audiostreamplayer.html) -- plays audio
-- [`AnimatedSprite2D`](https://docs.godotengine.org/en/stable/classes/class_animatedsprite2d.html) -- plays frame-based sprite animations
-- [`TileMapLayer`](https://docs.godotengine.org/en/stable/classes/class_tilemaplayer.html) -- renders a grid of tiles (mentioned, used in Part II)
-- [`Vector2`](https://docs.godotengine.org/en/stable/classes/class_vector2.html) -- 2D vector used for positions, directions, and velocities
-- [`Input`](https://docs.godotengine.org/en/stable/classes/class_input.html) -- global singleton for checking input state
-- [`RectangleShape2D`](https://docs.godotengine.org/en/stable/classes/class_rectangleshape2d.html) -- rectangular collision shape
+- [`Node`](https://docs.godotengine.org/en/stable/classes/class_node.html): base class for all nodes
+- [`Node2D`](https://docs.godotengine.org/en/stable/classes/class_node2d.html): base class for 2D nodes (has `position`, `rotation`, `scale`)
+- [`Sprite2D`](https://docs.godotengine.org/en/stable/classes/class_sprite2d.html): displays a 2D texture
+- [`CharacterBody2D`](https://docs.godotengine.org/en/stable/classes/class_characterbody2d.html): player-controlled physics body with `move_and_slide()`
+- [`RigidBody2D`](https://docs.godotengine.org/en/stable/classes/class_rigidbody2d.html): physics-driven body with mass, friction, and forces
+- [`StaticBody2D`](https://docs.godotengine.org/en/stable/classes/class_staticbody2d.html): immovable collision body
+- [`Area2D`](https://docs.godotengine.org/en/stable/classes/class_area2d.html): detection zone with `body_entered` / `body_exited` signals
+- [`CollisionShape2D`](https://docs.godotengine.org/en/stable/classes/class_collisionshape2d.html): defines collision boundaries for physics bodies and areas
+- [`Camera2D`](https://docs.godotengine.org/en/stable/classes/class_camera2d.html): 2D camera that controls the viewport
+- [`Label`](https://docs.godotengine.org/en/stable/classes/class_label.html): displays text on screen
+- [`AudioStreamPlayer`](https://docs.godotengine.org/en/stable/classes/class_audiostreamplayer.html): plays audio
+- [`AnimatedSprite2D`](https://docs.godotengine.org/en/stable/classes/class_animatedsprite2d.html): plays frame-based sprite animations
+- [`TileMapLayer`](https://docs.godotengine.org/en/stable/classes/class_tilemaplayer.html): renders a grid of tiles (mentioned, used in Part II)
+- [`Vector2`](https://docs.godotengine.org/en/stable/classes/class_vector2.html): 2D vector used for positions, directions, and velocities
+- [`Input`](https://docs.godotengine.org/en/stable/classes/class_input.html): global singleton for checking input state
+- [`RectangleShape2D`](https://docs.godotengine.org/en/stable/classes/class_rectangleshape2d.html): rectangular collision shape
 
 ## What's Next
 

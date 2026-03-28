@@ -136,7 +136,7 @@ Large tilemaps with thousands of tiles are fine. Godot optimizes them into rende
 
 ## Exporting the Game
 
-Until you export, your game only runs inside the Godot editor. Exporting creates a standalone application that anyone can play without installing Godot -- the same way players download a game from Steam or itch.io. Cave Story was built by one person over five years, and the moment Daisuke Amaya exported it and uploaded it to his website, it went from a personal project to one of the most influential indie games ever made.
+Until you export, your game only runs inside the Godot editor. Exporting creates a standalone application that anyone can play without installing Godot, the same way players download a game from Steam or itch.io. Cave Story was built by one person over five years, and the moment Daisuke Amaya exported it and uploaded it to his website, it went from a personal project to one of the most influential indie games ever made.
 
 ### Step 1: Install Export Templates
 
@@ -172,7 +172,7 @@ Check this loop by doing the math on paper:
 
 1. **How much gold does the player earn per dungeon run?** Average enemies per run * average gold per enemy. For Crystal Saga: ~8 fights * ~8 gold = ~64 gold per run.
 2. **How much does the best available equipment cost?** Iron Sword = 50 gold, Leather Armor = 40 gold. Total to equip one character = ~90 gold.
-3. **How many runs to afford a full equipment set?** 90 / 64 = ~1.5 dungeon runs. That feels about right -- the player can gear up without excessive grinding.
+3. **How many runs to afford a full equipment set?** 90 / 64 = ~1.5 dungeon runs. That feels about right; the player can gear up without excessive grinding.
 
 If the answer to #3 is "10+ runs," your economy is too tight. If it's "they can buy everything after one fight," equipment upgrades don't feel meaningful. Aim for 1-3 dungeon runs to afford the next tier of gear.
 
@@ -221,7 +221,7 @@ Generalize the Defend buff from Module 15 into a full system. The modifier patte
 - **Stun:** Skip one turn. Same interception, but auto-clears after one skip.
 - **Regen:** Heal HP each turn. Tick effect, opposite of Poison.
 - **Buff/Debuff:** Temporary stat modifiers (the `add`/`mult` pattern from Module 21). Bravery adds +25% Attack for 3 turns; Slow reduces Speed by 50% for 2 turns.
-- Each effect needs: type, duration (turns remaining), magnitude, a `tick()` method (for per-turn effects), and a modifier (for stat changes). Use unique IDs to prevent stacking the same buff -- casting Bravery twice refreshes the duration instead of doubling the bonus.
+- Each effect needs: type, duration (turns remaining), magnitude, a `tick()` method (for per-turn effects), and a modifier (for stat changes). Use unique IDs to prevent stacking the same buff; casting Bravery twice refreshes the duration instead of doubling the bonus.
 
 ### Elemental Weakness/Resistance (Medium)
 Add elements to abilities and enemies:

@@ -105,7 +105,7 @@ There's also **`_physics_process(delta)`**, which is called at a fixed rate (60 
 
 ## Variables and Types
 
-Static typing matters more in game code than in most software. Games run in real-time -- a type error in a web app shows you an error page, but a type error in a game crashes mid-boss-fight and the player loses their progress. Imagine you're building Final Fantasy VI's magic system and you accidentally pass a string where an integer is expected for spell damage. Without static typing, the bug hides until a playtester casts Fire 3 on the final boss and the game crashes. With static typing, the editor underlines the mistake the moment you type it.
+Static typing matters more in game code than in most software. Games run in real-time; a type error in a web app shows you an error page, but a type error in a game crashes mid-boss-fight and the player loses their progress. Imagine you're building Final Fantasy VI's magic system and you accidentally pass a string where an integer is expected for spell damage. Without static typing, the bug hides until a playtester casts Fire 3 on the final boss and the game crashes. With static typing, the editor underlines the mistake the moment you type it.
 
 GDScript supports both dynamic and static typing. We always use static typing in this tutorial because it catches bugs at write-time rather than runtime, and gives us better autocompletion in the editor.
 
@@ -201,7 +201,7 @@ match direction:
         velocity = Vector2.ZERO  # default case
 ```
 
-The `match` statement routes behavior when a value can be one of several named options -- and in game development, this comes up constantly. Think about Pokemon's type effectiveness: when a Water-type move hits, the game checks whether the target is Fire, Grass, Rock, or Electric and responds differently for each. A chain of `if/elif` works but gets unwieldy fast. `match` makes the options explicit and readable. It becomes essential when we build state machines in Module 6.
+The `match` statement routes behavior when a value can be one of several named options, and in game development, this comes up constantly. Think about Pokemon's type effectiveness: when a Water-type move hits, the game checks whether the target is Fire, Grass, Rock, or Electric and responds differently for each. A chain of `if/elif` works but gets unwieldy fast. `match` makes the options explicit and readable. It becomes essential when we build state machines in Module 6.
 
 > **Note:** GDScript uses `and`, `or`, and `not` instead of `&&`, `||`, and `!`. Both work, but `and`/`or`/`not` are the idiomatic choice and what we'll use throughout.
 
@@ -211,7 +211,7 @@ These two annotations are GDScript-specific and very handy.
 
 ### `@export`: Edit in the Inspector
 
-Think about Dragon Quest's towns. Every NPC shares the same basic behavior -- stand in place, say a line of dialogue when you talk to them -- but each one says something different. Without `@export`, you would need a separate script for every NPC: `guard_npc.gd`, `baker_npc.gd`, `child_npc.gd`, dozens of nearly identical files that differ only in their dialogue text. With `@export`, you write one `npc.gd` script and set each NPC's dialogue, name, and portrait directly in the editor. One script, dozens of unique characters.
+Think about Dragon Quest's towns. Every NPC shares the same basic behavior (stand in place, say a line of dialogue when you talk to them) but each one says something different. Without `@export`, you would need a separate script for every NPC: `guard_npc.gd`, `baker_npc.gd`, `child_npc.gd`, dozens of nearly identical files that differ only in their dialogue text. With `@export`, you write one `npc.gd` script and set each NPC's dialogue, name, and portrait directly in the editor. One script, dozens of unique characters.
 
 `@export` exposes a variable in the Inspector panel, so you can tweak it per-instance without editing code:
 
@@ -224,7 +224,7 @@ After adding these, select the node in the editor and look at the Inspector. You
 
 ### `@onready`: Cache Node References
 
-In a JRPG battle scene like Chrono Trigger's, you might update the HP bar, the character sprite, and the status icons every single frame -- potentially hundreds of node lookups per second. Each `get_node()` call walks the scene tree by name, which is slow compared to using a cached reference. `@onready` grabs the reference once when the node loads and stores it in a variable, so every subsequent access is instant. It also guarantees the reference is valid -- without it, you might try to grab a child node before it exists and get a null crash at startup.
+In a JRPG battle scene like Chrono Trigger's, you might update the HP bar, the character sprite, and the status icons every single frame, potentially hundreds of node lookups per second. Each `get_node()` call walks the scene tree by name, which is slow compared to using a cached reference. `@onready` grabs the reference once when the node loads and stores it in a variable, so every subsequent access is instant. It also guarantees the reference is valid; without it, you might try to grab a child node before it exists and get a null crash at startup.
 
 `@onready` initializes a variable when `_ready()` is called, which is when the node tree is guaranteed to be built:
 
@@ -245,7 +245,7 @@ Now for the fun part: making our sprite respond to keyboard input.
 
 ### The Input Map
 
-When Undertale launched, players immediately wanted to rebind controls -- some preferred WASD, others used gamepads, and accessibility needs varied. If Toby Fox had hard-coded "check if the Z key is pressed" throughout the codebase, adding gamepad support would have meant hunting down every key check and adding a parallel gamepad check beside it. Input actions solve this by putting a name between your code and the physical keys.
+When Undertale launched, players immediately wanted to rebind controls. Some preferred WASD, others used gamepads, and accessibility needs varied. If Toby Fox had hard-coded "check if the Z key is pressed" throughout the codebase, adding gamepad support would have meant hunting down every key check and adding a parallel gamepad check beside it. Input actions solve this by putting a name between your code and the physical keys.
 
 Godot doesn't check for raw key codes directly (though it can). Instead, it uses **actions**, named inputs that can be mapped to multiple keys, buttons, or axes. This means your game automatically works with both keyboard and gamepad without extra code.
 

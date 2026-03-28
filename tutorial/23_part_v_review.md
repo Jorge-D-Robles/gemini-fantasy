@@ -656,47 +656,47 @@ func _on_continue() -> void:
 
 ### Core Classes
 
-- [Node](https://docs.godotengine.org/en/stable/classes/class_node.html) -- base class for all autoloads (GameManager, QuestManager, PartyManager, SaveManager)
-- [Resource](https://docs.godotengine.org/en/stable/classes/class_resource.html) -- base class for QuestData, ShopData, CharacterData, ItemData
-- [SceneTree](https://docs.godotengine.org/en/stable/classes/class_scenetree.html) -- `change_scene_to_file()`, `paused`, `get_first_node_in_group()`, `tree_changed` signal
-- [Engine](https://docs.godotengine.org/en/stable/classes/class_engine.html) -- `get_main_loop()` used in SaveManager to access the SceneTree
+- [Node](https://docs.godotengine.org/en/stable/classes/class_node.html): base class for all autoloads (GameManager, QuestManager, PartyManager, SaveManager)
+- [Resource](https://docs.godotengine.org/en/stable/classes/class_resource.html): base class for QuestData, ShopData, CharacterData, ItemData
+- [SceneTree](https://docs.godotengine.org/en/stable/classes/class_scenetree.html): `change_scene_to_file()`, `paused`, `get_first_node_in_group()`, `tree_changed` signal
+- [Engine](https://docs.godotengine.org/en/stable/classes/class_engine.html): `get_main_loop()` used in SaveManager to access the SceneTree
 
 ### File I/O and Serialization
 
-- [FileAccess](https://docs.godotengine.org/en/stable/classes/class_fileaccess.html) -- `open()`, `store_string()`, `get_as_text()`, `file_exists()`, `close()`
-- [DirAccess](https://docs.godotengine.org/en/stable/classes/class_diraccess.html) -- `make_dir_recursive_absolute()` for creating save directories
-- [JSON](https://docs.godotengine.org/en/stable/classes/class_json.html) -- `stringify()`, `parse()`, `get_error_message()`
-- [Time](https://docs.godotengine.org/en/stable/classes/class_time.html) -- `get_datetime_string_from_system()` for save timestamps
+- [FileAccess](https://docs.godotengine.org/en/stable/classes/class_fileaccess.html): `open()`, `store_string()`, `get_as_text()`, `file_exists()`, `close()`
+- [DirAccess](https://docs.godotengine.org/en/stable/classes/class_diraccess.html): `make_dir_recursive_absolute()` for creating save directories
+- [JSON](https://docs.godotengine.org/en/stable/classes/class_json.html): `stringify()`, `parse()`, `get_error_message()`
+- [Time](https://docs.godotengine.org/en/stable/classes/class_time.html): `get_datetime_string_from_system()` for save timestamps
 
 ### UI Classes
 
-- [PanelContainer](https://docs.godotengine.org/en/stable/classes/class_panelcontainer.html) -- used for quest log, equipment panel, save slot dialog
-- [VBoxContainer](https://docs.godotengine.org/en/stable/classes/class_vboxcontainer.html) -- vertical layout for item lists, quest lists, slot buttons
-- [MarginContainer](https://docs.godotengine.org/en/stable/classes/class_margincontainer.html) -- interior padding for panels
-- [Button](https://docs.godotengine.org/en/stable/classes/class_button.html) -- quest selection, shop items, equipment slots, save slots
-- [Label](https://docs.godotengine.org/en/stable/classes/class_label.html) -- gold display, character names, slot labels
-- [RichTextLabel](https://docs.godotengine.org/en/stable/classes/class_richtextlabel.html) -- quest detail view with BBCode formatting (`[b]`, `[/b]`)
-- [CanvasLayer](https://docs.godotengine.org/en/stable/classes/class_canvaslayer.html) -- shop UI rendered above the game world
-- [Control](https://docs.godotengine.org/en/stable/classes/class_control.html) -- base class for all UI nodes, `grab_focus()`, `visible`
+- [PanelContainer](https://docs.godotengine.org/en/stable/classes/class_panelcontainer.html): used for quest log, equipment panel, save slot dialog
+- [VBoxContainer](https://docs.godotengine.org/en/stable/classes/class_vboxcontainer.html): vertical layout for item lists, quest lists, slot buttons
+- [MarginContainer](https://docs.godotengine.org/en/stable/classes/class_margincontainer.html): interior padding for panels
+- [Button](https://docs.godotengine.org/en/stable/classes/class_button.html): quest selection, shop items, equipment slots, save slots
+- [Label](https://docs.godotengine.org/en/stable/classes/class_label.html): gold display, character names, slot labels
+- [RichTextLabel](https://docs.godotengine.org/en/stable/classes/class_richtextlabel.html): quest detail view with BBCode formatting (`[b]`, `[/b]`)
+- [CanvasLayer](https://docs.godotengine.org/en/stable/classes/class_canvaslayer.html): shop UI rendered above the game world
+- [Control](https://docs.godotengine.org/en/stable/classes/class_control.html): base class for all UI nodes, `grab_focus()`, `visible`
 
 ### Signals and Input
 
-- [Signal](https://docs.godotengine.org/en/stable/classes/class_signal.html) -- `connect()`, `emit()`, `CONNECT_ONE_SHOT`
-- [InputEvent](https://docs.godotengine.org/en/stable/classes/class_inputevent.html) -- `is_action_pressed()` for shop cancel input handling
+- [Signal](https://docs.godotengine.org/en/stable/classes/class_signal.html): `connect()`, `emit()`, `CONNECT_ONE_SHOT`
+- [InputEvent](https://docs.godotengine.org/en/stable/classes/class_inputevent.html): `is_action_pressed()` for shop cancel input handling
 
 ### Key Tutorials
 
-- [Saving Games](https://docs.godotengine.org/en/stable/tutorials/io/saving_games.html) -- the official guide to save system approaches
-- [Data Paths](https://docs.godotengine.org/en/stable/tutorials/io/data_paths.html) -- explains `user://` and `res://` paths
-- [Singletons (Autoload)](https://docs.godotengine.org/en/stable/tutorials/scripting/singletons_autoload.html) -- the autoload pattern used by all managers
-- [Resources](https://docs.godotengine.org/en/stable/tutorials/scripting/resources.html) -- custom Resource classes, `@export`, `.tres` files
-- [GUI Containers](https://docs.godotengine.org/en/stable/tutorials/ui/gui_containers.html) -- layout for shop, equipment, and quest UIs
+- [Saving Games](https://docs.godotengine.org/en/stable/tutorials/io/saving_games.html): the official guide to save system approaches
+- [Data Paths](https://docs.godotengine.org/en/stable/tutorials/io/data_paths.html): explains `user://` and `res://` paths
+- [Singletons (Autoload)](https://docs.godotengine.org/en/stable/tutorials/scripting/singletons_autoload.html): the autoload pattern used by all managers
+- [Resources](https://docs.godotengine.org/en/stable/tutorials/scripting/resources.html): custom Resource classes, `@export`, `.tres` files
+- [GUI Containers](https://docs.godotengine.org/en/stable/tutorials/ui/gui_containers.html): layout for shop, equipment, and quest UIs
 
 ### GDScript
 
-- [GDScript Basics](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html) -- `match`, `Dictionary`, `Array`, typed arrays, lambdas
-- [GDScript Exports](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_exports.html) -- `@export`, `@export_group`, `@export_multiline`
-- [Awaiting Signals](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html#awaiting-for-signals-or-coroutines) -- `await` used in shop cancel, slot selection, scene loading
+- [GDScript Basics](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html): `match`, `Dictionary`, `Array`, typed arrays, lambdas
+- [GDScript Exports](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_exports.html): `@export`, `@export_group`, `@export_multiline`
+- [Awaiting Signals](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html#awaiting-for-signals-or-coroutines): `await` used in shop cancel, slot selection, scene loading
 
 ## What's Next
 

@@ -34,7 +34,7 @@ The alternative (Godot's `ResourceSaver` with `.tres` files) provides type safet
 
 ## The `to_save_data()` / `from_save_data()` Pattern
 
-Early Pokemon games infamously had save corruption bugs because the save and load code paths were not symmetric -- the game would save data in one order and try to read it back in a different order. The `to_save_data()` / `from_save_data()` pattern prevents this by making each system responsible for its own round-trip. If one method writes three fields, the other reads those same three fields. The symmetry makes it almost impossible to accidentally lose data.
+Early Pokemon games infamously had save corruption bugs because the save and load code paths were not symmetric: the game would save data in one order and try to read it back in a different order. The `to_save_data()` / `from_save_data()` pattern prevents this by making each system responsible for its own round-trip. If one method writes three fields, the other reads those same three fields. The symmetry makes it almost impossible to accidentally lose data.
 
 Each autoload gets two methods: one to export its state as a Dictionary, one to restore it.
 
@@ -307,7 +307,7 @@ func _activate() -> void:
 
 ### Save Slot Selection UI
 
-Final Fantasy games have used three save slots since the original NES cartridge, and the reason hasn't changed: players want to save before a risky boss fight without losing their earlier progress, and families sharing a console need separate saves. Multiple slots also let the player experiment -- save before a branching choice, try one path, reload, try the other.
+Final Fantasy games have used three save slots since the original NES cartridge, and the reason hasn't changed: players want to save before a risky boss fight without losing their earlier progress, and families sharing a console need separate saves. Multiple slots also let the player experiment: save before a branching choice, try one path, reload, try the other.
 
 Rather than hardcoding slot 1, build a simple selection dialog. Create `res://ui/save_slot_dialog/save_slot_dialog.tscn`:
 
@@ -413,7 +413,7 @@ if not save_data.has("version"):
 
 As your game grows, you'll add new things that need saving (new autoloads, new systems, new character fields). Each addition means updating `to_save_data()` and `from_save_data()` for the affected objects. This works, but it's worth knowing the alternative.
 
-Some RPG architectures use a **declarative save schema** -- a single data structure that describes *what* to save, separate from *how* to save it. Instead of each autoload knowing how to serialize itself, a central schema says "from PartyManager, save these fields; from InventoryManager, save these fields." The save system walks the schema, extracts the data, and writes it. Loading walks the same schema in reverse.
+Some RPG architectures use a **declarative save schema**, a single data structure that describes *what* to save, separate from *how* to save it. Instead of each autoload knowing how to serialize itself, a central schema says "from PartyManager, save these fields; from InventoryManager, save these fields." The save system walks the schema, extracts the data, and writes it. Loading walks the same schema in reverse.
 
 The advantage: adding a new saveable field means adding one line to the schema, not editing the autoload. The disadvantage: more upfront complexity.
 
@@ -429,7 +429,7 @@ Another thing to plan for: **save migration**. When you add a new field (say, a 
 - **Save crystals** trigger the save flow; **load** happens from the title screen or pause menu.
 - Resources are referenced by **path** in saves (`resource_path`), not by value. The `.tres` file is the source of truth; the save just points to it.
 - Always validate JSON before using it. Corrupt saves shouldn't crash the game.
-- Use `.get("key", default)` for future-proof save loading -- old saves missing new fields won't crash.
+- Use `.get("key", default)` for future-proof save loading; old saves missing new fields won't crash.
 
 ## What You Should See
 

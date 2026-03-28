@@ -382,7 +382,7 @@ func _execute_enemy_turn(battler: BattlerData) -> void:
 
 ## Battle Animations with Tweens
 
-Without animation, combat is just numbers changing in a log. The original Final Fantasy proved that even simple sprite slides -- a character stepping forward, pausing, then stepping back -- transform a math equation into a fight. Floating damage numbers, first popularized by Diablo and now standard in everything from Final Fantasy XIV to Fortnite, give the player instant visual feedback on what just happened. These two elements -- motion and numbers -- are the minimum viable "game feel" for turn-based combat.
+Without animation, combat is just numbers changing in a log. The original Final Fantasy proved that even simple sprite slides (a character stepping forward, pausing, then stepping back) transform a math equation into a fight. Floating damage numbers, first popularized by Diablo and now standard in everything from Final Fantasy XIV to Fortnite, give the player instant visual feedback on what just happened. These two elements, motion and numbers, are the minimum viable "game feel" for turn-based combat.
 
 Animations make combat feel impactful. The classic JRPG attack animation: the attacker slides forward, pauses, then slides back.
 

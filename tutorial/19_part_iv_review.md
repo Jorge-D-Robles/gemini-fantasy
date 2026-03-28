@@ -4,11 +4,11 @@ Part IV built the combat core of Crystal Saga. This module is your reference for
 
 ## Part IV in Review
 
-Before Part IV, Crystal Saga had a connected world with no conflict. After it, we had a fully playable combat loop. We started in Module 14 by confronting the limits of the enum-based state machine from Module 6 and replacing it with a node-based architecture that could handle the complexity of a battle system with seven distinct states. That architecture -- one Node per state, each with `enter()`, `process()`, and `exit()` -- is what the rest of the battle system sits on.
+Before Part IV, Crystal Saga had a connected world with no conflict. After it, we had a fully playable combat loop. We started in Module 14 by confronting the limits of the enum-based state machine from Module 6 and replacing it with a node-based architecture that could handle the complexity of a battle system with seven distinct states. That architecture (one Node per state, each with `enter()`, `process()`, and `exit()`) is what the rest of the battle system sits on.
 
 With the state machine running, Module 15 filled in the player's side: a battle menu, target selection, the damage formula, and Tween-based animations. The battle went from auto-playing print statements to interactive combat with floating damage numbers. Module 16 then gave us somewhere to fight by building the Crystal Cavern, introducing dungeon design principles, treasure chests, save crystals, and encounter zones. The dungeon was a natural application of TileMapLayer skills from Part II, but with cave tiles and a tighter, more controlled layout.
 
-Module 17 populated the dungeon with enemies. EnemyData resources defined stats and rewards, three AI strategies gave each creature personality, and the encounter system tied walking to random battles using a step counter with weighted encounter pools. The Crystal Guardian boss capped the dungeon with a scripted fight. Finally, Module 18 closed the loop: XP distribution, a quadratic leveling curve, stat growth, gold and item drops, and the flows for both victory and defeat. After Module 18, winning a battle means something -- characters get stronger, and the party returns to the overworld with their battle scars intact.
+Module 17 populated the dungeon with enemies. EnemyData resources defined stats and rewards, three AI strategies gave each creature personality, and the encounter system tied walking to random battles using a step counter with weighted encounter pools. The Crystal Guardian boss capped the dungeon with a scripted fight. Finally, Module 18 closed the loop: XP distribution, a quadratic leveling curve, stat growth, gold and item drops, and the flows for both victory and defeat. After Module 18, winning a battle means something. Characters get stronger, and the party returns to the overworld with their battle scars intact.
 
 ### Module 14: Battle Foundations
 
@@ -23,7 +23,7 @@ Module 17 populated the dungeon with enemies. EnemyData resources defined stats 
 - Built the **battle menu** (Attack/Magic/Defend/Item) as a PanelContainer with VBoxContainer and Buttons, wired through an `action_chosen` signal.
 - Implemented the **command pattern** using dictionaries (`{action, battler, target, ability, item}`) to keep action execution generic.
 - Created **target selection** UI that dynamically spawns buttons for each alive enemy, with cancel support to return to the menu.
-- Defined the **damage formula**: `max(1, attack - effective_defense + randi_range(-2, 2))` -- simple, transparent, always dealing at least 1 damage.
+- Defined the **damage formula**: `max(1, attack - effective_defense + randi_range(-2, 2))`, which is simple, transparent, and always deals at least 1 damage.
 - Added **Tween animations** for attacks (slide forward, pause, slide back) and **floating damage numbers** (parallel tweens for rising position and fading opacity).
 
 ### Module 16: The Crystal Cavern
@@ -45,7 +45,7 @@ Module 17 populated the dungeon with enemies. EnemyData resources defined stats 
 ### Module 18: Victory, Rewards, and Leveling
 
 - Implemented **XP distribution** that divides total enemy XP equally among alive party members.
-- Defined the **XP curve** as `level * level * 10` -- a quadratic formula where early levels come fast and later levels require progressively more XP.
+- Defined the **XP curve** as `level * level * 10`, a quadratic formula where early levels come fast and later levels require progressively more XP.
 - Added **stat growth** on level-up using base growth rates plus small random variance (`randi_range(0, 1)` or `(0, 2)`), making each level-up feel slightly different.
 - Built the **victory flow**: calculate rewards from all enemies, distribute XP (with multi-level-up support), sync battle HP/MP back to CharacterData, grant gold and rolled item drops, then return to the overworld.
 - Built the **defeat flow**: display game over message and return to Willowbrook (placeholder for proper Game Over screen in Module 25).
@@ -65,7 +65,7 @@ Module 17 populated the dungeon with enemies. EnemyData resources defined stats 
 | EnemyData | Resource defining enemy stats, AI type, rewards, and loot drops | Single source of truth for each enemy species, reusable across encounters | Module 17 |
 | Weighted random selection | Cumulative weight algorithm for picking from a pool of options | Common encounters happen often; rare encounters feel special | Module 17 |
 | Step counter | Tracks player movement distance against a randomized threshold | Random encounters triggered by exploration, not timers | Module 17 |
-| XP curve | `level * level * 10` -- quadratic growth formula | Early levels reward quickly; later levels extend gameplay | Module 18 |
+| XP curve | `level * level * 10`: quadratic growth formula | Early levels reward quickly; later levels extend gameplay | Module 18 |
 | Post-battle sync | Writing battle HP/MP back to CharacterData after victory | HP/MP carry over between battles, creating resource management tension | Module 18 |
 
 ## Cheat Sheet
@@ -91,7 +91,7 @@ func exit() -> void:
     pass
 ```
 
-The machine manages transitions -- calling `exit()` on the current state and `enter()` on the new one:
+The machine manages transitions, calling `exit()` on the current state and `enter()` on the new one:
 
 ```gdscript
 # battle_state_machine.gd
@@ -340,7 +340,7 @@ battler.defense_boost = 0
 
 ### Tween Animations
 
-Attack slide: the attacker moves toward the enemy, pauses, then returns. Sequential by default -- each `tween_property()` call queues after the previous one finishes.
+Attack slide: the attacker moves toward the enemy, pauses, then returns. Sequential by default, each `tween_property()` call queues after the previous one finishes.
 
 ```gdscript
 func _play_attack_animation(attacker: BattlerData) -> void:
@@ -380,11 +380,11 @@ func _spawn_damage_number(target: BattlerData, amount: int, is_heal: bool = fals
 ```
 
 Key Tween methods:
-- `tween_property(node, property_path, final_value, duration)` -- animates a property over time
-- `tween_interval(duration)` -- inserts a pause between tweens
-- `set_parallel(true)` -- subsequent tweens run simultaneously
-- `chain()` -- returns to sequential mode after parallel tweens
-- `await tween.finished` -- pauses the calling function until the tween completes
+- `tween_property(node, property_path, final_value, duration)`: animates a property over time
+- `tween_interval(duration)`: inserts a pause between tweens
+- `set_parallel(true)`: subsequent tweens run simultaneously
+- `chain()`: returns to sequential mode after parallel tweens
+- `await tween.finished`: pauses the calling function until the tween completes
 
 ### Dungeon Design
 
@@ -462,7 +462,7 @@ static func choose_enemy_action(
             return _ai_balanced(battler, party)
 ```
 
-**Aggressive** -- always targets the weakest (lowest HP) party member:
+**Aggressive:** always targets the weakest (lowest HP) party member:
 
 ```gdscript
 static func _ai_aggressive(battler: BattlerData, targets: Array[BattlerData]) -> Dictionary:
@@ -473,7 +473,7 @@ static func _ai_aggressive(battler: BattlerData, targets: Array[BattlerData]) ->
     return {action = "attack", battler = battler, target = weakest}
 ```
 
-**Cautious** -- defends when HP drops below 30%, otherwise attacks randomly:
+**Cautious:** defends when HP drops below 30%, otherwise attacks randomly:
 
 ```gdscript
 static func _ai_cautious(battler: BattlerData, targets: Array[BattlerData]) -> Dictionary:
@@ -484,7 +484,7 @@ static func _ai_cautious(battler: BattlerData, targets: Array[BattlerData]) -> D
     return {action = "attack", battler = battler, target = target}
 ```
 
-**Balanced** -- 70% attack, 30% defend:
+**Balanced:** 70% attack, 30% defend:
 
 ```gdscript
 static func _ai_balanced(battler: BattlerData, targets: Array[BattlerData]) -> Dictionary:
@@ -554,7 +554,7 @@ func _on_body_exited(body: Node2D) -> void:
         _encounter_system.exit_zone()
 ```
 
-Weighted selection picks an encounter from the pool -- higher weight means more common:
+Weighted selection picks an encounter from the pool (higher weight means more common):
 
 ```gdscript
 func _pick_weighted_encounter() -> EncounterData:
@@ -699,63 +699,63 @@ Resources loaded with `load()` are cached and shared by reference. When the vict
 
 ### Core Classes
 
-- [Node](https://docs.godotengine.org/en/stable/classes/class_node.html) -- base class for scene tree nodes; the state machine pattern uses `get_children()` and polymorphism
-- [Resource](https://docs.godotengine.org/en/stable/classes/class_resource.html) -- base class for BattlerData, EnemyData, EncounterData, CharacterData
-- [Node2D](https://docs.godotengine.org/en/stable/classes/class_node2d.html) -- base class for BattlerSprite and the Battle scene root
-- [Marker2D](https://docs.godotengine.org/en/stable/classes/class_marker2d.html) -- position markers for party and enemy slots
+- [Node](https://docs.godotengine.org/en/stable/classes/class_node.html): base class for scene tree nodes; the state machine pattern uses `get_children()` and polymorphism
+- [Resource](https://docs.godotengine.org/en/stable/classes/class_resource.html): base class for BattlerData, EnemyData, EncounterData, CharacterData
+- [Node2D](https://docs.godotengine.org/en/stable/classes/class_node2d.html): base class for BattlerSprite and the Battle scene root
+- [Marker2D](https://docs.godotengine.org/en/stable/classes/class_marker2d.html): position markers for party and enemy slots
 
 ### Physics and Collision
 
-- [StaticBody2D](https://docs.godotengine.org/en/stable/classes/class_staticbody2d.html) -- used for treasure chests, save crystals, and boss doors
-- [Area2D](https://docs.godotengine.org/en/stable/classes/class_area2d.html) -- interaction zones, encounter regions, exit zones, boss trigger
-- [CollisionShape2D](https://docs.godotengine.org/en/stable/classes/class_collisionshape2d.html) -- defines collision regions for StaticBody2D and Area2D
-- [RectangleShape2D](https://docs.godotengine.org/en/stable/classes/class_rectangleshape2d.html) -- rectangular collision shapes for zones and chests
-- [CircleShape2D](https://docs.godotengine.org/en/stable/classes/class_circleshape2d.html) -- circular interaction radius for save crystals
+- [StaticBody2D](https://docs.godotengine.org/en/stable/classes/class_staticbody2d.html): used for treasure chests, save crystals, and boss doors
+- [Area2D](https://docs.godotengine.org/en/stable/classes/class_area2d.html): interaction zones, encounter regions, exit zones, boss trigger
+- [CollisionShape2D](https://docs.godotengine.org/en/stable/classes/class_collisionshape2d.html): defines collision regions for StaticBody2D and Area2D
+- [RectangleShape2D](https://docs.godotengine.org/en/stable/classes/class_rectangleshape2d.html): rectangular collision shapes for zones and chests
+- [CircleShape2D](https://docs.godotengine.org/en/stable/classes/class_circleshape2d.html): circular interaction radius for save crystals
 
 ### UI
 
-- [PanelContainer](https://docs.godotengine.org/en/stable/classes/class_panelcontainer.html) -- wraps battle menu and target selection
-- [VBoxContainer](https://docs.godotengine.org/en/stable/classes/class_vboxcontainer.html) -- vertical layout for action buttons and target lists
-- [MarginContainer](https://docs.godotengine.org/en/stable/classes/class_margincontainer.html) -- adds padding inside panels
-- [Button](https://docs.godotengine.org/en/stable/classes/class_button.html) -- menu buttons; `pressed` signal and `grab_focus()` for keyboard navigation
-- [Label](https://docs.godotengine.org/en/stable/classes/class_label.html) -- floating damage numbers and interaction prompts
-- [ColorRect](https://docs.godotengine.org/en/stable/classes/class_colorrect.html) -- battle background placeholder
-- [CanvasLayer](https://docs.godotengine.org/en/stable/classes/class_canvaslayer.html) -- renders BattleUI above the battle scene
+- [PanelContainer](https://docs.godotengine.org/en/stable/classes/class_panelcontainer.html): wraps battle menu and target selection
+- [VBoxContainer](https://docs.godotengine.org/en/stable/classes/class_vboxcontainer.html): vertical layout for action buttons and target lists
+- [MarginContainer](https://docs.godotengine.org/en/stable/classes/class_margincontainer.html): adds padding inside panels
+- [Button](https://docs.godotengine.org/en/stable/classes/class_button.html): menu buttons; `pressed` signal and `grab_focus()` for keyboard navigation
+- [Label](https://docs.godotengine.org/en/stable/classes/class_label.html): floating damage numbers and interaction prompts
+- [ColorRect](https://docs.godotengine.org/en/stable/classes/class_colorrect.html): battle background placeholder
+- [CanvasLayer](https://docs.godotengine.org/en/stable/classes/class_canvaslayer.html): renders BattleUI above the battle scene
 
 ### Animation
 
-- [Tween](https://docs.godotengine.org/en/stable/classes/class_tween.html) -- procedural animations for attack slides and damage numbers; `tween_property()`, `tween_interval()`, `set_parallel()`, `chain()`
-- [Sprite2D](https://docs.godotengine.org/en/stable/classes/class_sprite2d.html) -- visual representation of battlers, chests, crystals
+- [Tween](https://docs.godotengine.org/en/stable/classes/class_tween.html): procedural animations for attack slides and damage numbers; `tween_property()`, `tween_interval()`, `set_parallel()`, `chain()`
+- [Sprite2D](https://docs.godotengine.org/en/stable/classes/class_sprite2d.html): visual representation of battlers, chests, crystals
 
 ### Tilemaps
 
-- [TileMapLayer](https://docs.godotengine.org/en/stable/classes/class_tilemaplayer.html) -- each layer of the dungeon tilemap (Ground, Detail, Objects, AbovePlayer)
-- [TileSet](https://docs.godotengine.org/en/stable/classes/class_tileset.html) -- the cave tileset resource with physics layers for wall collision
+- [TileMapLayer](https://docs.godotengine.org/en/stable/classes/class_tilemaplayer.html): each layer of the dungeon tilemap (Ground, Detail, Objects, AbovePlayer)
+- [TileSet](https://docs.godotengine.org/en/stable/classes/class_tileset.html): the cave tileset resource with physics layers for wall collision
 
 ### Scene Management
 
-- [SceneTree](https://docs.godotengine.org/en/stable/classes/class_scenetree.html) -- `change_scene_to_file()`, `get_first_node_in_group()`, `create_timer()`
-- [SceneTree.create_timer()](https://docs.godotengine.org/en/stable/classes/class_scenetree.html#class-scenetree-method-create-timer) -- one-shot timers used with `await` for pacing in battle states
+- [SceneTree](https://docs.godotengine.org/en/stable/classes/class_scenetree.html): `change_scene_to_file()`, `get_first_node_in_group()`, `create_timer()`
+- [SceneTree.create_timer()](https://docs.godotengine.org/en/stable/classes/class_scenetree.html#class-scenetree-method-create-timer): one-shot timers used with `await` for pacing in battle states
 
 ### Signals and Input
 
-- [Signal](https://docs.godotengine.org/en/stable/classes/class_signal.html) -- `connect()`, `disconnect()`, `is_connected()`, `emit()` used throughout
-- [GUI navigation](https://docs.godotengine.org/en/stable/tutorials/ui/gui_navigation.html) -- focus-based keyboard/gamepad navigation between buttons
+- [Signal](https://docs.godotengine.org/en/stable/classes/class_signal.html): `connect()`, `disconnect()`, `is_connected()`, `emit()` used throughout
+- [GUI navigation](https://docs.godotengine.org/en/stable/tutorials/ui/gui_navigation.html): focus-based keyboard/gamepad navigation between buttons
 
 ### Math and Randomness
 
-- [Random number generation](https://docs.godotengine.org/en/stable/tutorials/math/random_number_generation.html) -- `randi_range()`, `randf()`, weighted random selection
-- [Array.sort_custom()](https://docs.godotengine.org/en/stable/classes/class_array.html#class-array-method-sort-custom) -- custom sorting with a callable for turn ordering
-- [Array.filter()](https://docs.godotengine.org/en/stable/classes/class_array.html#class-array-method-filter) -- filtering alive battlers with `is_alive()`
-- [Array.any()](https://docs.godotengine.org/en/stable/classes/class_array.html#class-array-method-any) -- checking if any battler in a group is alive
-- [@GDScript.max()](https://docs.godotengine.org/en/stable/classes/class_@gdscript.html#class-gdscript-method-max) -- clamping damage to a minimum of 1
-- [@GDScript.clampf()](https://docs.godotengine.org/en/stable/classes/class_@gdscript.html#class-gdscript-method-clampf) -- bounding flee probability to 10-90%
+- [Random number generation](https://docs.godotengine.org/en/stable/tutorials/math/random_number_generation.html): `randi_range()`, `randf()`, weighted random selection
+- [Array.sort_custom()](https://docs.godotengine.org/en/stable/classes/class_array.html#class-array-method-sort-custom): custom sorting with a callable for turn ordering
+- [Array.filter()](https://docs.godotengine.org/en/stable/classes/class_array.html#class-array-method-filter): filtering alive battlers with `is_alive()`
+- [Array.any()](https://docs.godotengine.org/en/stable/classes/class_array.html#class-array-method-any): checking if any battler in a group is alive
+- [@GDScript.max()](https://docs.godotengine.org/en/stable/classes/class_@gdscript.html#class-gdscript-method-max): clamping damage to a minimum of 1
+- [@GDScript.clampf()](https://docs.godotengine.org/en/stable/classes/class_@gdscript.html#class-gdscript-method-clampf): bounding flee probability to 10-90%
 
 ### Export Annotations
 
-- [@export](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_exports.html) -- exposes variables to the Inspector
-- [@export_group](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_exports.html#export-group) -- groups exported variables in the Inspector (used in EnemyData)
-- [@export_range](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_exports.html#export-range) -- constrains numeric values (used for drop_chance 0.0-1.0)
+- [@export](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_exports.html): exposes variables to the Inspector
+- [@export_group](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_exports.html#export-group): groups exported variables in the Inspector (used in EnemyData)
+- [@export_range](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_exports.html#export-range): constrains numeric values (used for drop_chance 0.0-1.0)
 
 ## What's Next
 

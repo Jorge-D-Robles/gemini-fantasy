@@ -10,7 +10,7 @@ Three major systems: **party management** (recruiting Lira the mage), **equipmen
 
 ## PartyManager Autoload
 
-In Pokemon, your party of six travels with you everywhere -- they appear in battle, they need healing at the Pokemon Center, and the PC storage system swaps them in and out. All of that requires one central place that knows who is in your party right now. Without a PartyManager, every system that cares about the roster (battle, save/load, equipment, healing) would need its own copy of the party list, and they would inevitably get out of sync.
+In Pokemon, your party of six travels with you everywhere. They appear in battle, they need healing at the Pokemon Center, and the PC storage system swaps them in and out. All of that requires one central place that knows who is in your party right now. Without a PartyManager, every system that cares about the roster (battle, save/load, equipment, healing) would need its own copy of the party list, and they would inevitably get out of sync.
 
 Create `res://autoloads/party_manager.gd`:
 
@@ -140,7 +140,7 @@ Apply this same change to the boss trigger (`boss_trigger.gd`) and any other scr
 
 ## Equipment System
 
-In Final Fantasy IV, Cecil starts as a Dark Knight with heavy armor and a cursed sword. When he becomes a Paladin, his equipment changes completely and so does how he plays. Equipment is the most tangible form of character progression -- the player can see their attack number go up and feel the difference in battle. It also drives the core economic loop: fight enemies, earn gold, buy better gear, fight harder enemies.
+In Final Fantasy IV, Cecil starts as a Dark Knight with heavy armor and a cursed sword. When he becomes a Paladin, his equipment changes completely and so does how he plays. Equipment is the most tangible form of character progression: the player can see their attack number go up and feel the difference in battle. It also drives the core economic loop: fight enemies, earn gold, buy better gear, fight harder enemies.
 
 ### Extending CharacterData
 
@@ -243,7 +243,7 @@ All flat bonuses are summed first, then all percentage multipliers are applied t
 
 Each modifier gets a **unique ID**. This solves the stacking problem: two different +5 ATK swords stack (different IDs), but casting the same buff spell twice doesn't (same ID overwrites the previous instance).
 
-We won't build this system for Crystal Saga -- the simple `get_effective_*()` approach is sufficient. But if you later add status effects (Module 26 roadmap), buff/debuff spells, or set bonuses, the modifier system is the right abstraction. It lets equipment, spells, status effects, and passive abilities all feed into the same stat calculation through one unified mechanism.
+We won't build this system for Crystal Saga; the simple `get_effective_*()` approach is sufficient. But if you later add status effects (Module 26 roadmap), buff/debuff spells, or set bonuses, the modifier system is the right abstraction. It lets equipment, spells, status effects, and passive abilities all feed into the same stat calculation through one unified mechanism.
 
 ### Battle Integration
 
@@ -405,7 +405,7 @@ The key insight is the **temporarily swap, measure, restore** pattern. It reuses
 
 ## The Shop System
 
-Secret of Mana's weapon shops in each town are progression gates disguised as stores. The player earns gold from battles and spends it on the next tier of weapons, creating a satisfying loop where exploration and combat feed back into power growth. Shops give the player agency over their build -- do you buy a better sword for your fighter or a magic robe for your mage first? -- and they anchor towns as meaningful destinations.
+Secret of Mana's weapon shops in each town are progression gates disguised as stores. The player earns gold from battles and spends it on the next tier of weapons, creating a satisfying loop where exploration and combat feed back into power growth. Shops give the player agency over their build (do you buy a better sword for your fighter or a magic robe for your mage first?) and they anchor towns as meaningful destinations.
 
 ### ShopData Resource
 

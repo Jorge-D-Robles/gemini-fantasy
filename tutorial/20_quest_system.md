@@ -69,7 +69,7 @@ Flags are used everywhere:
 
 ## QuestData Resource
 
-Dragon Quest has hundreds of quests, and each one tracks the same things: a description, a list of objectives, and a reward. If each quest were a unique script with custom logic, the codebase would be unmanageable. Defining quests as data -- a Resource with fields for title, objectives, and rewards -- means adding a new quest is filling out a form, not writing new code.
+Dragon Quest has hundreds of quests, and each one tracks the same things: a description, a list of objectives, and a reward. If each quest were a unique script with custom logic, the codebase would be unmanageable. Defining quests as data (a Resource with fields for title, objectives, and rewards) means adding a new quest is filling out a form, not writing new code.
 
 Save as `res://resources/quest_data.gd`:
 
@@ -292,7 +292,7 @@ if quest:
 
 ## Reactive Dialogue
 
-In Chrono Trigger, every NPC in every town updates their dialogue after each major story event. After you rescue Queen Leene, the castle guards stop asking for help and start thanking you. This is what makes the world feel alive -- characters acknowledge what you have done. Without reactive dialogue, NPCs are just repeating billboards, and the player never feels like their actions matter.
+In Chrono Trigger, every NPC in every town updates their dialogue after each major story event. After you rescue Queen Leene, the castle guards stop asking for help and start thanking you. This is what makes the world feel alive; characters acknowledge what you have done. Without reactive dialogue, NPCs are just repeating billboards, and the player never feels like their actions matter.
 
 NPCs should say different things based on quest state and flags. Update NPC dialogue to check flags.
 

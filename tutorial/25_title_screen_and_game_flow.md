@@ -10,7 +10,7 @@ The title screen (New Game / Continue / Settings), a pause menu, the complete ga
 
 ## The Title Screen
 
-The title screen is the first thing every player sees. Final Fantasy VII's iconic opening -- Cloud standing before the Shinra reactor, the logo fading in, the music swelling -- set the tone for the entire 40-hour experience before the player pressed a single button. A title screen establishes mood, gives the player clear entry points, and signals "this is a finished product, not a tech demo."
+The title screen is the first thing every player sees. Final Fantasy VII's iconic opening (Cloud standing before the Shinra reactor, the logo fading in, the music swelling) set the tone for the entire 40-hour experience before the player pressed a single button. A title screen establishes mood, gives the player clear entry points, and signals "this is a finished product, not a tech demo."
 
 Create `res://ui/title_screen/title_screen.tscn`:
 
@@ -109,7 +109,7 @@ Set `res://ui/title_screen/title_screen.tscn` as the project's **Main Scene**: g
 
 ## The Pause Menu
 
-In every Zelda game since the original, pressing Start opens an equipment and item screen. The pause menu is not just a way to stop the action -- it is the player's home base, the place they go to check inventory, review quests, change equipment, or adjust settings. Without it, the player has no way to manage their party between battles.
+In every Zelda game since the original, pressing Start opens an equipment and item screen. The pause menu is not just a way to stop the action. It is the player's home base, the place they go to check inventory, review quests, change equipment, or adjust settings. Without it, the player has no way to manage their party between battles.
 
 The pause menu is accessible from anywhere during gameplay.
 
@@ -212,7 +212,7 @@ func _quit_to_title() -> void:
 
 ## The Game Over Screen
 
-Dragon Quest popularized the gentle game over: instead of erasing your progress, the king revives you at the last church but takes half your gold. The Game Over screen is a critical piece of player experience design -- it determines whether failure feels punishing or fair. Offering "Load Last Save" versus "Return to Title" gives the player agency after defeat.
+Dragon Quest popularized the gentle game over: instead of erasing your progress, the king revives you at the last church but takes half your gold. The Game Over screen is a critical piece of player experience design; it determines whether failure feels punishing or fair. Offering "Load Last Save" versus "Return to Title" gives the player agency after defeat.
 
 Module 18's defeat state sends the player back to Willowbrook as a placeholder. Now we'll build a proper Game Over screen with options.
 
@@ -344,7 +344,7 @@ func _go_to_credits() -> void:
 
 ## Credits
 
-Credits serve two purposes: they honor the people who made the game, and they give the player a moment to decompress after the climax. The scrolling credits in Final Fantasy VI, set to the character themes medley, are remembered as one of the greatest moments in gaming -- not because of gameplay, but because of the emotional space they create. Even for a solo project, credits signal "this is a complete work."
+Credits serve two purposes: they honor the people who made the game, and they give the player a moment to decompress after the climax. The scrolling credits in Final Fantasy VI, set to the character themes medley, are remembered as one of the greatest moments in gaming, not because of gameplay, but because of the emotional space they create. Even for a solo project, credits signal "this is a complete work."
 
 Create `res://ui/credits/credits.tscn`:
 

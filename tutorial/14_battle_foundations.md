@@ -299,7 +299,7 @@ func _spawn_battler_sprites(battlers: Array[BattlerData], positions: Node2D) -> 
         sprite_node.setup(battlers[i])
 ```
 
-Turn order is what makes the Speed stat matter. In Dragon Quest, faster characters act first, which means a healer with high speed can save a dying ally before the enemy lands the killing blow. A slow but powerful warrior might deal massive damage but always acts last, creating the risk that the enemy attacks first. This single mechanic -- who goes when -- turns a stat number into a tactical consideration.
+Turn order is what makes the Speed stat matter. In Dragon Quest, faster characters act first, which means a healer with high speed can save a dying ally before the enemy lands the killing blow. A slow but powerful warrior might deal massive damage but always acts last, creating the risk that the enemy attacks first. This single mechanic, who goes when, turns a stat number into a tactical consideration.
 
 ```gdscript
 func build_turn_queue() -> void:
@@ -702,7 +702,7 @@ We've now seen two kinds of state management in Crystal Saga. They solve differe
 
 **State Machine** (mutually exclusive states): Only one state is active at a time. Transitioning from PLAYER_CHOICE to ACTION_EXECUTE *replaces* the active state. The battle system uses this because you're always in exactly one phase of combat.
 
-**State Stack** (layered states): Multiple states can be active simultaneously, stacked on top of each other. The SceneManager uses this pattern: when a battle starts, the overworld scene isn't destroyed -- it's paused underneath the battle scene. When battle ends, the overworld scene is revealed and resumed.
+**State Stack** (layered states): Multiple states can be active simultaneously, stacked on top of each other. The SceneManager uses this pattern: when a battle starts, the overworld scene isn't destroyed; it's paused underneath the battle scene. When battle ends, the overworld scene is revealed and resumed.
 
 The same pattern applies to menus: opening the inventory pushes a new layer on top of the game. The game world is still there, just paused. Closing the menu pops the layer and the game resumes.
 

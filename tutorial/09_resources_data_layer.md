@@ -12,7 +12,7 @@ This might seem like a detour from "making the game," but it's not. Every system
 
 ## What is a Resource?
 
-Every RPG you have ever played runs on a hidden spreadsheet. When the original Final Fantasy team designed their game in 1987, they kept binders full of handwritten tables: which weapon gives +5 attack, which spell costs 8 MP, which enemy has 120 HP. The game code didn't contain those numbers directly -- it read them from data tables. This separation of data from code is what let the designers tune balance without rewriting programs. Godot's Resource system is the modern version of those binders: a structured, editor-friendly way to define game data that your code reads at runtime.
+Every RPG you have ever played runs on a hidden spreadsheet. When the original Final Fantasy team designed their game in 1987, they kept binders full of handwritten tables: which weapon gives +5 attack, which spell costs 8 MP, which enemy has 120 HP. The game code didn't contain those numbers directly; it read them from data tables. This separation of data from code is what let the designers tune balance without rewriting programs. Godot's Resource system is the modern version of those binders: a structured, editor-friendly way to define game data that your code reads at runtime.
 
 A **Resource** is Godot's universal data container. You've already used several:
 
@@ -280,7 +280,7 @@ This is a simple version. We'll replace `dialogue_lines: Array[String]` with a p
 
 ## The Three-File Pattern
 
-This pattern exists because RPGs are content-heavy games. Dragon Quest XI has over 300 items, 200 monsters, and dozens of characters -- all sharing the same underlying structure but with different values. If every Potion required its own function and every Slime required its own script, the codebase would be unmanageable. By separating structure, data, and consumer, a designer can add a new healing herb by creating one data file. No code changes needed.
+This pattern exists because RPGs are content-heavy games. Dragon Quest XI has over 300 items, 200 monsters, and dozens of characters, all sharing the same underlying structure but with different values. If every Potion required its own function and every Slime required its own script, the codebase would be unmanageable. By separating structure, data, and consumer, a designer can add a new healing herb by creating one data file. No code changes needed.
 
 Resources follow a consistent pattern across the project:
 
@@ -326,7 +326,7 @@ The editor integration alone is worth it. Game designers (including future you) 
 
 ### The Data-Driven Mindset
 
-Resources aren't just a convenience -- they represent a fundamental design philosophy: **separate your data from your logic.** This is the single most important architectural pattern in RPG development.
+Resources aren't just a convenience. They represent a fundamental design philosophy: **separate your data from your logic.** This is the single most important architectural pattern in RPG development.
 
 Consider two ways to define a Potion:
 
@@ -344,7 +344,7 @@ func use_item(item: ItemData, target: CharacterData) -> void:
 
 The first version requires a new function for every item. The second version works for *any* healing item: Potion (50 HP), Hi-Potion (150 HP), Elixir (full HP). One function, infinite items. The data (effect_value) drives the behavior.
 
-This pattern scales across your entire RPG. Enemies, abilities, quests, dialogue, shops, encounter tables -- all of them should be **data that code acts upon**, not **code that contains data**. When you find yourself writing a `match` statement with dozens of cases for specific item names or enemy types, that's a signal to push the differences into data.
+This pattern scales across your entire RPG. Enemies, abilities, quests, dialogue, shops, encounter tables: all of them should be **data that code acts upon**, not **code that contains data**. When you find yourself writing a `match` statement with dozens of cases for specific item names or enemy types, that's a signal to push the differences into data.
 
 Every system we build from here on will follow this principle. The three-file pattern (class → data → consumer) is how we enforce it.
 

@@ -1,26 +1,26 @@
 # Module 13: Part III Review and Cheat Sheet
 
-This module is a review and quick-reference for everything covered in Part III (Modules 9-12). No new code here -- just a consolidated reference you can come back to when you need to remember how something works.
+This module is a review and quick-reference for everything covered in Part III (Modules 9-12). No new code here. Just a consolidated reference you can come back to when you need to remember how something works.
 
 ## Part III in Review
 
-Part III is where Crystal Saga went from a world you walk through to a world you interact with. The central change was separating **data from logic** using Godot's Resource system. Instead of hardcoding item stats, NPC names, and dialogue text inside scripts, we defined structured data types (Resource classes), created instances of those types (`.tres` files), and wrote systems that consume the data without caring about specific values. This pattern -- define a Resource class, populate `.tres` files, wire them into scripts -- will repeat in every system we build from here forward.
+Part III is where Crystal Saga went from a world you walk through to a world you interact with. The central change was separating **data from logic** using Godot's Resource system. Instead of hardcoding item stats, NPC names, and dialogue text inside scripts, we defined structured data types (Resource classes), created instances of those types (`.tres` files), and wrote systems that consume the data without caring about specific values. This pattern (define a Resource class, populate `.tres` files, wire them into scripts) will repeat in every system we build from here forward.
 
 With the data layer in place, we built three interconnected systems on top of it. NPCs use `NPCData` resources to configure their appearance and dialogue. The dialogue system reads `DialogueLine` resources and renders them in a typewriter-style textbox. The inventory system tracks `ItemData` resources and displays them in a navigable grid. Each system is decoupled from the others through signals: the NPC does not know about the dialogue box, the dialogue box does not know about the inventory, and the inventory does not know about either. They communicate through emit-and-connect wiring in the scene scripts.
 
-The result is a working game architecture. Resources for data, signals for communication, autoloads for persistence, Control nodes for UI -- these same patterns show up in the battle system, quest system, save/load, and everything else we build in the remaining parts. If any of these concepts feel shaky, this is a good place to review before moving into Part IV.
+The result is a working game architecture. Resources for data, signals for communication, autoloads for persistence, Control nodes for UI. These same patterns show up in the battle system, quest system, save/load, and everything else we build in the remaining parts. If any of these concepts feel shaky, this is a good place to review before moving into Part IV.
 
 ### Module 9: Resources, the Data Layer
 
-- Learned that **Resources** are Godot's universal data container -- type-safe, editor-friendly objects that can be saved as `.tres` files and shared across the project.
+- Learned that **Resources** are Godot's universal data container: type-safe, editor-friendly objects that can be saved as `.tres` files and shared across the project.
 - Defined three custom Resource classes (`ItemData`, `CharacterData`, `NPCData`) using `class_name`, `@export`, `@export_group()`, `@export_multiline`, and enum-typed exports.
-- Created `.tres` data files in the Inspector for potions, equipment, and the hero's stats -- filling in typed fields through dropdown menus and text editors instead of writing raw data.
+- Created `.tres` data files in the Inspector for potions, equipment, and the hero's stats, filling in typed fields through dropdown menus and text editors instead of writing raw data.
 - Established the **three-file pattern**: a Resource class (`.gd`) defines the structure, a `.tres` file holds specific values, and a consumer script uses the data at runtime.
 - Learned when to use `preload()` (compile-time, constant paths, no null check needed) versus `load()` (runtime, dynamic paths, always null-check the result).
 
 ### Module 10: NPCs and Interaction
 
-- Built a reusable NPC scene (`CharacterBody2D` + `AnimatedSprite2D` + `Area2D` + `Label`) driven by an `@export var npc_data: NPCData` -- swapping the resource changes the NPC's identity without changing the script.
+- Built a reusable NPC scene (`CharacterBody2D` + `AnimatedSprite2D` + `Area2D` + `Label`) driven by an `@export var npc_data: NPCData`. Swapping the resource changes the NPC's identity without changing the script.
 - Implemented the **Area2D interaction pattern**: the NPC's `InteractionZone` detects the player via `body_entered`/`body_exited` signals, toggles an interaction prompt, and listens for the `interact` input action.
 - Used `_unhandled_input()` instead of `_input()` or `_process()` polling, so the NPC only responds to input that UI elements have not already consumed, and called `set_input_as_handled()` to prevent other nodes from double-processing the same press.
 - Connected NPC signals to scene scripts (`willowbrook.gd`) to demonstrate **separation of concerns**: the NPC detects interaction and emits a signal; the scene script decides what to do with it.
@@ -31,13 +31,13 @@ The result is a working game architecture. Resources for data, signals for commu
 - Created the `DialogueLine` Resource (speaker name, text, optional portrait, optional choices) and upgraded `NPCData` from `Array[String]` to `Array[DialogueLine]` for structured dialogue data.
 - Built a dialogue box UI scene using **Control nodes** (`CanvasLayer` > `PanelContainer` > `MarginContainer` > `VBoxContainer` > `Label` + `RichTextLabel`) with anchors and containers for responsive layout.
 - Implemented the **typewriter effect** by tweening `RichTextLabel.visible_ratio` from `0.0` to `1.0`, with proper tween lifecycle management (kill before creating a new one).
-- Added the **two-press interaction** pattern (first press skips typing, second press advances or closes) -- the standard JRPG dialogue control.
+- Added the **two-press interaction** pattern (first press skips typing, second press advances or closes), the standard JRPG dialogue control.
 - Extended dialogue with **branching choices**: dynamically creating `Button` nodes in a `ChoiceContainer`, using `grab_focus()` for keyboard navigation, and emitting `choice_made` signals.
 
 ### Module 12: The Inventory System
 
 - Created the **InventoryManager autoload** to persist items across scene changes, tracking items as `{item: ItemData, count: int}` dictionaries matched by `item.id`.
-- Built a signal-driven architecture: InventoryManager emits `item_added`, `item_removed`, `inventory_changed`, and `gold_changed` -- the UI listens and refreshes, and the manager never touches UI directly.
+- Built a signal-driven architecture: InventoryManager emits `item_added`, `item_removed`, `inventory_changed`, and `gold_changed`. The UI listens and refreshes, and the manager never touches UI directly.
 - Constructed the inventory UI with dynamically instanced `ItemSlot` scenes in a `GridContainer`, each slot emitting `slot_selected` and `slot_activated` signals for description display and item use.
 - Learned how **pausing** works: `get_tree().paused = true` freezes the game world, while `process_mode = PROCESS_MODE_ALWAYS` on the inventory's CanvasLayer lets the menu continue to function.
 - Used `_gui_input()` and `accept_event()` for Control-node input handling, and `focus_mode = FOCUS_ALL` with `grab_focus()` for keyboard/gamepad-navigable item slots.
@@ -58,7 +58,7 @@ The result is a working game architecture. Resources for data, signals for commu
 | CanvasLayer | A node that renders its children on a separate drawing layer | Draws UI on top of the game world regardless of camera position | Module 11 |
 | `visible_ratio` | A float (0.0 to 1.0) controlling how much of a RichTextLabel's text is shown | Powers the typewriter effect via tweening | Module 11 |
 | Tween lifecycle | Creating, chaining, killing, and checking validity of Tweens | Prevents overlapping animations when the player advances dialogue quickly | Module 11 |
-| `grab_focus()` | Programmatically gives keyboard/gamepad focus to a Control node | Makes UI navigable without a mouse -- critical for JRPGs | Module 11 |
+| `grab_focus()` | Programmatically gives keyboard/gamepad focus to a Control node | Makes UI navigable without a mouse, which is critical for JRPGs | Module 11 |
 | Autoload | A node auto-instanced at startup, accessible globally by name | Persists data (inventory, gold) across scene changes | Module 12 |
 | `process_mode` | Controls whether a node runs during pause | Lets the inventory UI function while the game world is frozen | Module 12 |
 | `_gui_input()` | Input callback specific to Control nodes | Handles button presses, focus changes, and mouse events on UI elements | Module 12 |
@@ -134,7 +134,7 @@ autoloads/inventory_manager.gd -- manages a collection of items at runtime
 
 This separation means:
 - **Game designers** (or future you) can tweak values in the Inspector without touching code.
-- **Consumer scripts** work with any `ItemData` -- they do not care whether it is a potion or a sword.
+- **Consumer scripts** work with any `ItemData`; they do not care whether it is a potion or a sword.
 - **Resource classes** change rarely; data instances change often. Changes to data never break code.
 
 The same pattern applies everywhere: `CharacterData` for stats, `NPCData` for NPC configuration, `DialogueLine` for dialogue content.
@@ -216,7 +216,7 @@ Different `NPCData` `.tres` files produce different NPCs from the same scene. Th
 
 ### The Dialogue System
 
-**Data format** -- a `DialogueLine` Resource per line of conversation:
+**Data format:** a `DialogueLine` Resource per line of conversation:
 
 ```gdscript
 extends Resource
@@ -228,13 +228,13 @@ class_name DialogueLine
 @export var choices: Array[String] = []
 ```
 
-**Starting dialogue** -- pass an array of `DialogueLine` resources:
+**Starting dialogue:** pass an array of `DialogueLine` resources:
 
 ```gdscript
 _dialogue_box.start_dialogue(npc.npc_data.dialogue)
 ```
 
-**Typewriter effect** -- tween `visible_ratio` on a `RichTextLabel`:
+**Typewriter effect:** tween `visible_ratio` on a `RichTextLabel`:
 
 ```gdscript
 func _start_typing() -> void:
@@ -250,7 +250,7 @@ func _start_typing() -> void:
     _current_tween.finished.connect(_on_typing_finished)
 ```
 
-**Two-press input** -- skip typing on first press, advance on second:
+**Two-press input:** skip typing on first press, advance on second:
 
 ```gdscript
 func _unhandled_input(event: InputEvent) -> void:
@@ -264,7 +264,7 @@ func _unhandled_input(event: InputEvent) -> void:
             _advance()
 ```
 
-**Branching choices** -- dynamically create buttons when a `DialogueLine` has choices:
+**Branching choices:** dynamically create buttons when a `DialogueLine` has choices:
 
 ```gdscript
 func _show_choices(choices: Array[String]) -> void:
@@ -310,15 +310,15 @@ These tags work inside `DialogueLine.text` and render correctly with the typewri
 
 Key `RichTextLabel` properties:
 
-- `bbcode_enabled` -- must be `true` for tags to render
-- `visible_ratio` -- float 0.0 to 1.0, controls how much text is visible (used for typewriter)
-- `visible_characters` -- int, same idea but discrete (we use `visible_ratio` for smoother tweening)
-- `fit_content` -- auto-sizes the node to fit the text
-- `scroll_active` -- set to `false` for dialogue boxes (we handle paging manually)
+- `bbcode_enabled`: must be `true` for tags to render
+- `visible_ratio`: float 0.0 to 1.0, controls how much text is visible (used for typewriter)
+- `visible_characters`: int, same idea but discrete (we use `visible_ratio` for smoother tweening)
+- `fit_content`: auto-sizes the node to fit the text
+- `scroll_active`: set to `false` for dialogue boxes (we handle paging manually)
 
 ### Inventory System Architecture
 
-**InventoryManager** (autoload) -- tracks items, emits signals:
+**InventoryManager** (autoload), which tracks items and emits signals:
 
 ```gdscript
 signal item_added(item: ItemData, new_count: int)
@@ -354,7 +354,7 @@ InventoryManager.add_gold(50)
 var could_afford: bool = InventoryManager.spend_gold(100)
 ```
 
-**ID-based matching** -- items are matched by their `id` string, not by object reference. Two different `ItemData` objects with `id = "potion"` are treated as the same item. Always set unique `id` values on `.tres` files.
+**ID-based matching:** items are matched by their `id` string, not by object reference. Two different `ItemData` objects with `id = "potion"` are treated as the same item. Always set unique `id` values on `.tres` files.
 
 ### UI Patterns for Lists
 
@@ -374,7 +374,7 @@ PanelContainer (background)
         └── DescriptionLabel (RichTextLabel)
 ```
 
-**Dynamic slot creation** -- clear old slots, create new ones from data:
+**Dynamic slot creation:** clear old slots, create new ones from data:
 
 ```gdscript
 const ItemSlotScene := preload("res://ui/inventory/item_slot.tscn")
@@ -486,7 +486,7 @@ The consistent pattern: the object that **knows something happened** emits a sig
 | Duplicate or empty `id` fields on `.tres` files | Items stack incorrectly in inventory; wrong item gets removed | Give every `.tres` file a unique `id` that matches the filename (e.g., `"potion"` for `potion.tres`) |
 | Not setting `process_mode` to `Always` on the inventory CanvasLayer | Game freezes permanently when the inventory opens (pause locks the menu too) | Select the InventoryScreen root node in the editor, set **Process > Mode** to **Always** |
 | Using `_input()` instead of `_unhandled_input()` for NPC interaction | Interact button fires even when a UI menu is open | Switch to `_unhandled_input()` and call `get_viewport().set_input_as_handled()` |
-| Not killing the previous tween before creating a new one | Text glitches when the player advances dialogue rapidly -- overlapping animations | Check `if _current_tween and _current_tween.is_valid(): _current_tween.kill()` before `create_tween()` |
+| Not killing the previous tween before creating a new one | Text glitches when the player advances dialogue rapidly, causing overlapping animations | Check `if _current_tween and _current_tween.is_valid(): _current_tween.kill()` before `create_tween()` |
 | Using `queue_free()` when refreshing the item grid | Old and new item slots briefly overlap on screen | Use `free()` instead of `queue_free()` when clearing a container before immediately repopulating it |
 | Forgetting to add the player to the `"player"` group | NPC interaction zone never detects the player; `body_entered` fires but `is_in_group("player")` is false | Select the Player node, go to Node tab > Groups, add `player` |
 
@@ -494,58 +494,58 @@ The consistent pattern: the object that **knows something happened** emits a sig
 
 ### Core Classes
 
-- [Resource](https://docs.godotengine.org/en/stable/classes/class_resource.html) -- base class for all resources; `duplicate()`, `resource_path`
-- [Node](https://docs.godotengine.org/en/stable/classes/class_node.html) -- `_ready()`, `_process()`, `_unhandled_input()`, `process_mode`, `get_tree()`
-- [SceneTree](https://docs.godotengine.org/en/stable/classes/class_scenetree.html) -- `paused`, `get_nodes_in_group()`, `get_first_node_in_group()`, `create_timer()`
-- [Viewport](https://docs.godotengine.org/en/stable/classes/class_viewport.html) -- `set_input_as_handled()`
-- [InputEvent](https://docs.godotengine.org/en/stable/classes/class_inputevent.html) -- `is_action_pressed()`, `is_action_just_pressed()`
+- [Resource](https://docs.godotengine.org/en/stable/classes/class_resource.html): base class for all resources; `duplicate()`, `resource_path`
+- [Node](https://docs.godotengine.org/en/stable/classes/class_node.html): `_ready()`, `_process()`, `_unhandled_input()`, `process_mode`, `get_tree()`
+- [SceneTree](https://docs.godotengine.org/en/stable/classes/class_scenetree.html): `paused`, `get_nodes_in_group()`, `get_first_node_in_group()`, `create_timer()`
+- [Viewport](https://docs.godotengine.org/en/stable/classes/class_viewport.html): `set_input_as_handled()`
+- [InputEvent](https://docs.godotengine.org/en/stable/classes/class_inputevent.html): `is_action_pressed()`, `is_action_just_pressed()`
 
 ### Physics and Detection
 
-- [CharacterBody2D](https://docs.godotengine.org/en/stable/classes/class_characterbody2d.html) -- solid body used for NPCs (and the player)
-- [Area2D](https://docs.godotengine.org/en/stable/classes/class_area2d.html) -- `body_entered`, `body_exited` signals for proximity detection
-- [CollisionShape2D](https://docs.godotengine.org/en/stable/classes/class_collisionshape2d.html) -- defines collision geometry
-- [RectangleShape2D](https://docs.godotengine.org/en/stable/classes/class_rectangleshape2d.html) -- rectangular collision shape
-- [CircleShape2D](https://docs.godotengine.org/en/stable/classes/class_circleshape2d.html) -- circular collision shape (used for interaction zones)
-- [RayCast2D](https://docs.godotengine.org/en/stable/classes/class_raycast2d.html) -- alternative to Area2D for directional interaction detection
+- [CharacterBody2D](https://docs.godotengine.org/en/stable/classes/class_characterbody2d.html): solid body used for NPCs (and the player)
+- [Area2D](https://docs.godotengine.org/en/stable/classes/class_area2d.html): `body_entered`, `body_exited` signals for proximity detection
+- [CollisionShape2D](https://docs.godotengine.org/en/stable/classes/class_collisionshape2d.html): defines collision geometry
+- [RectangleShape2D](https://docs.godotengine.org/en/stable/classes/class_rectangleshape2d.html): rectangular collision shape
+- [CircleShape2D](https://docs.godotengine.org/en/stable/classes/class_circleshape2d.html): circular collision shape (used for interaction zones)
+- [RayCast2D](https://docs.godotengine.org/en/stable/classes/class_raycast2d.html): alternative to Area2D for directional interaction detection
 
 ### Sprites and Animation
 
-- [AnimatedSprite2D](https://docs.godotengine.org/en/stable/classes/class_animatedsprite2d.html) -- sprite with named animations; `play()`, `sprite_frames`
-- [SpriteFrames](https://docs.godotengine.org/en/stable/classes/class_spriteframes.html) -- the resource that holds animation data; `has_animation()`
+- [AnimatedSprite2D](https://docs.godotengine.org/en/stable/classes/class_animatedsprite2d.html): sprite with named animations; `play()`, `sprite_frames`
+- [SpriteFrames](https://docs.godotengine.org/en/stable/classes/class_spriteframes.html): the resource that holds animation data; `has_animation()`
 
 ### UI and Control Nodes
 
-- [Control](https://docs.godotengine.org/en/stable/classes/class_control.html) -- base UI node; `focus_mode`, `grab_focus()`, `_gui_input()`, anchors, margins
-- [CanvasLayer](https://docs.godotengine.org/en/stable/classes/class_canvaslayer.html) -- renders children on a separate layer; `layer` property
-- [PanelContainer](https://docs.godotengine.org/en/stable/classes/class_panelcontainer.html) -- styled background panel
-- [MarginContainer](https://docs.godotengine.org/en/stable/classes/class_margincontainer.html) -- adds padding around its child
-- [VBoxContainer](https://docs.godotengine.org/en/stable/classes/class_vboxcontainer.html) -- stacks children vertically
-- [HBoxContainer](https://docs.godotengine.org/en/stable/classes/class_hboxcontainer.html) -- stacks children horizontally
-- [GridContainer](https://docs.godotengine.org/en/stable/classes/class_gridcontainer.html) -- lays out children in a grid; `columns` property
-- [Label](https://docs.godotengine.org/en/stable/classes/class_label.html) -- plain text display
-- [RichTextLabel](https://docs.godotengine.org/en/stable/classes/class_richtextlabel.html) -- BBCode-formatted text; `visible_ratio`, `visible_characters`, `bbcode_enabled`, `fit_content`, `get_total_character_count()`
-- [TextureRect](https://docs.godotengine.org/en/stable/classes/class_texturerect.html) -- displays an image in UI
-- [Button](https://docs.godotengine.org/en/stable/classes/class_button.html) -- clickable button; `pressed` signal, `text`
-- [StyleBoxFlat](https://docs.godotengine.org/en/stable/classes/class_styleboxflat.html) -- custom panel styles (bg color, border, corner radius)
+- [Control](https://docs.godotengine.org/en/stable/classes/class_control.html): base UI node; `focus_mode`, `grab_focus()`, `_gui_input()`, anchors, margins
+- [CanvasLayer](https://docs.godotengine.org/en/stable/classes/class_canvaslayer.html): renders children on a separate layer; `layer` property
+- [PanelContainer](https://docs.godotengine.org/en/stable/classes/class_panelcontainer.html): styled background panel
+- [MarginContainer](https://docs.godotengine.org/en/stable/classes/class_margincontainer.html): adds padding around its child
+- [VBoxContainer](https://docs.godotengine.org/en/stable/classes/class_vboxcontainer.html): stacks children vertically
+- [HBoxContainer](https://docs.godotengine.org/en/stable/classes/class_hboxcontainer.html): stacks children horizontally
+- [GridContainer](https://docs.godotengine.org/en/stable/classes/class_gridcontainer.html): lays out children in a grid; `columns` property
+- [Label](https://docs.godotengine.org/en/stable/classes/class_label.html): plain text display
+- [RichTextLabel](https://docs.godotengine.org/en/stable/classes/class_richtextlabel.html): BBCode-formatted text; `visible_ratio`, `visible_characters`, `bbcode_enabled`, `fit_content`, `get_total_character_count()`
+- [TextureRect](https://docs.godotengine.org/en/stable/classes/class_texturerect.html): displays an image in UI
+- [Button](https://docs.godotengine.org/en/stable/classes/class_button.html): clickable button; `pressed` signal, `text`
+- [StyleBoxFlat](https://docs.godotengine.org/en/stable/classes/class_styleboxflat.html): custom panel styles (bg color, border, corner radius)
 
 ### Animation and Tweening
 
-- [Tween](https://docs.godotengine.org/en/stable/classes/class_tween.html) -- `tween_property()`, `kill()`, `is_valid()`, `finished` signal
-- [Node.create_tween()](https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-method-create-tween) -- creates a Tween bound to the node's lifetime
+- [Tween](https://docs.godotengine.org/en/stable/classes/class_tween.html): `tween_property()`, `kill()`, `is_valid()`, `finished` signal
+- [Node.create_tween()](https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-method-create-tween): creates a Tween bound to the node's lifetime
 
 ### Tutorials and Guides
 
-- [Resources (tutorial)](https://docs.godotengine.org/en/stable/tutorials/scripting/resources.html) -- creating and using Resources
-- [GDScript exports](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_exports.html) -- `@export`, `@export_group`, `@export_multiline`, enum exports
-- [Input examples](https://docs.godotengine.org/en/stable/tutorials/inputs/input_examples.html) -- setting up custom input actions
-- [Size and anchors](https://docs.godotengine.org/en/stable/tutorials/ui/size_and_anchors.html) -- positioning Control nodes
-- [GUI containers](https://docs.godotengine.org/en/stable/tutorials/ui/gui_containers.html) -- automatic layout with VBox, HBox, Grid, Margin containers
-- [Control node gallery](https://docs.godotengine.org/en/stable/tutorials/ui/control_node_gallery.html) -- visual catalog of all Control nodes
-- [GUI navigation](https://docs.godotengine.org/en/stable/tutorials/ui/gui_navigation.html) -- keyboard/gamepad focus navigation
-- [BBCode in RichTextLabel](https://docs.godotengine.org/en/stable/tutorials/ui/bbcode_in_richtextlabel.html) -- text formatting with BBCode tags
-- [Pausing games](https://docs.godotengine.org/en/stable/tutorials/scripting/pausing_games.html) -- `SceneTree.paused` and `process_mode`
+- [Resources (tutorial)](https://docs.godotengine.org/en/stable/tutorials/scripting/resources.html): creating and using Resources
+- [GDScript exports](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_exports.html): `@export`, `@export_group`, `@export_multiline`, enum exports
+- [Input examples](https://docs.godotengine.org/en/stable/tutorials/inputs/input_examples.html): setting up custom input actions
+- [Size and anchors](https://docs.godotengine.org/en/stable/tutorials/ui/size_and_anchors.html): positioning Control nodes
+- [GUI containers](https://docs.godotengine.org/en/stable/tutorials/ui/gui_containers.html): automatic layout with VBox, HBox, Grid, Margin containers
+- [Control node gallery](https://docs.godotengine.org/en/stable/tutorials/ui/control_node_gallery.html): visual catalog of all Control nodes
+- [GUI navigation](https://docs.godotengine.org/en/stable/tutorials/ui/gui_navigation.html): keyboard/gamepad focus navigation
+- [BBCode in RichTextLabel](https://docs.godotengine.org/en/stable/tutorials/ui/bbcode_in_richtextlabel.html): text formatting with BBCode tags
+- [Pausing games](https://docs.godotengine.org/en/stable/tutorials/scripting/pausing_games.html): `SceneTree.paused` and `process_mode`
 
 ## What's Next
 
-Part IV is combat. In Module 14 we build the battle scene, implement a node-based state machine for battle flow, and create the turn order system. Modules 15-18 add player actions, a dungeon, enemy AI, and a victory/leveling loop. Everything from Part III -- Resources, signals, UI patterns -- carries directly into it.
+Part IV is combat. In Module 14 we build the battle scene, implement a node-based state machine for battle flow, and create the turn order system. Modules 15-18 add player actions, a dungeon, enemy AI, and a victory/leveling loop. Everything from Part III (Resources, signals, UI patterns) carries directly into it.
