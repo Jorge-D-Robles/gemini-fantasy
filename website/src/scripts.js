@@ -1,3 +1,16 @@
+// Restore sidebar scroll position across page navigations
+(function () {
+  var sidebar = document.getElementById("sidebar");
+  if (!sidebar) return;
+
+  var saved = sessionStorage.getItem("sidebar-scroll");
+  if (saved) sidebar.scrollTop = parseInt(saved, 10);
+
+  window.addEventListener("beforeunload", function () {
+    sessionStorage.setItem("sidebar-scroll", sidebar.scrollTop);
+  });
+})();
+
 // Mobile navigation toggle
 (function () {
   var toggle = document.getElementById("menu-toggle");
