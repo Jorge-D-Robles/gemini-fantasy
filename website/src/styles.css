@@ -29,14 +29,58 @@
 
 .prose h2 {
   @apply text-xl sm:text-2xl font-semibold text-white mt-12 mb-4 pb-2 border-b border-slate-700/50;
+  scroll-margin-top: 5rem;
 }
 
 .prose h3 {
   @apply text-lg font-semibold text-slate-100 mt-8 mb-3;
+  scroll-margin-top: 5rem;
 }
 
 .prose h4 {
   @apply text-base font-semibold text-slate-200 mt-6 mb-2;
+}
+
+/* Heading anchor links */
+.heading-anchor {
+  @apply text-slate-600 no-underline mr-2 opacity-0 transition-opacity;
+  font-size: 0.85em;
+}
+
+.prose h2:hover .heading-anchor,
+.prose h3:hover .heading-anchor,
+.heading-anchor:focus {
+  @apply opacity-100 text-sky-500;
+}
+
+/* Reading time */
+.reading-time {
+  @apply text-sm text-slate-500 mt-0 mb-6;
+}
+
+/* On This Page TOC */
+.toc {
+  @apply bg-slate-800/40 border border-slate-700/50 rounded-lg px-5 py-4 mb-8;
+}
+
+.toc .toc-title {
+  @apply text-sm font-semibold uppercase tracking-wider text-slate-500 mt-0 mb-2 pb-0 border-0;
+}
+
+.toc ul {
+  @apply list-none pl-0 mb-0 space-y-0;
+}
+
+.toc li {
+  @apply text-sm;
+}
+
+.toc .toc-link {
+  @apply block py-1 text-slate-400 hover:text-sky-400 no-underline transition-colors truncate;
+}
+
+.toc .toc-link.active {
+  @apply text-sky-400;
 }
 
 .prose p {
@@ -382,6 +426,60 @@
   opacity: 1;
   pointer-events: auto;
   transform: translateY(0);
+}
+
+/* ─── Search modal ────────────────────────────────── */
+
+.search-overlay {
+  @apply fixed inset-0 z-50 flex items-start justify-center;
+  padding-top: 15vh;
+}
+
+.search-backdrop {
+  @apply absolute inset-0 bg-black/60;
+}
+
+.search-dialog {
+  @apply relative w-full max-w-lg bg-slate-800 border border-slate-700 rounded-xl shadow-2xl overflow-hidden;
+}
+
+.search-input-wrapper {
+  @apply flex items-center gap-3 px-4 py-3 border-b border-slate-700;
+}
+
+.search-input-wrapper input {
+  @apply flex-1 bg-transparent text-white text-base outline-none placeholder-slate-500;
+}
+
+.search-results {
+  @apply max-h-72 overflow-y-auto;
+  scrollbar-width: thin;
+  scrollbar-color: #334155 transparent;
+}
+
+.search-result {
+  @apply flex items-center gap-3 px-4 py-2.5 text-sm text-slate-300 no-underline cursor-pointer transition-colors;
+}
+
+.search-result:hover,
+.search-result.active {
+  @apply bg-sky-500/10 text-white;
+}
+
+.search-result-num {
+  @apply text-xs text-slate-500 font-mono w-6;
+}
+
+.search-result-title {
+  @apply truncate;
+}
+
+.search-footer {
+  @apply flex items-center gap-4 px-4 py-2.5 border-t border-slate-700 text-xs text-slate-500;
+}
+
+.search-footer kbd {
+  @apply px-1.5 py-0.5 bg-slate-700 rounded text-slate-400 font-mono;
 }
 
 /* ─── Footer ──────────────────────────────────────── */

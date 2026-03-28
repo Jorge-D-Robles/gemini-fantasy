@@ -133,11 +133,37 @@ renderer.link = function (token) {
   return originalLink(token);
 };
 
+// Headings — add anchor IDs and collect h2s for TOC
+renderer.heading = function ({ tokens, depth }) {
+  var text = this.parser.parseInline(tokens);
+  var rawText = stripHtml(text);
+  var id = slugify(rawText);
+
+  if (depth === 2) {
+    collectedHeadings.push({ id: id, text: rawText });
+  }
+
+  if (depth >= 2) {
+    return (
+      "<h" + depth + ' id="' + escapeHtml(id) + '">' +
+      '<a class="heading-anchor" href="#' + escapeHtml(id) + '" aria-label="Link to ' + escapeHtml(rawText) + '">#</a>' +
+      text +
+      "</h" + depth + ">\n"
+    );
+  }
+
+  return "<h" + depth + ">" + text + "</h" + depth + ">\n";
+};
+
 marked.setOptions({
   renderer: renderer,
   gfm: true,
   breaks: false,
 });
+
+// ─── Heading collection (reset per module) ────────────
+
+var collectedHeadings = [];
 
 // ─── Helpers ───────────────────────────────────────────
 
@@ -147,6 +173,30 @@ function escapeHtml(str) {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
+}
+
+function slugify(text) {
+  return text
+    .toLowerCase()
+    .replace(/<[^>]*>/g, "")
+    .replace(/&[^;]+;/g, "")
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+function stripHtml(html) {
+  return html.replace(/<[^>]*>/g, "");
+}
+
+function wordCount(text) {
+  return text.replace(/```[\s\S]*?```/g, "").replace(/[#*`\[\]()_|>-]/g, " ")
+    .split(/\s+/).filter(Boolean).length;
+}
+
+function readingTime(words) {
+  return Math.max(1, Math.ceil(words / 200));
 }
 
 function slugFromFilename(filename) {
@@ -340,10 +390,48 @@ function build() {
   var modules = getTutorialFiles();
   console.log("Found " + modules.length + " tutorial modules.\n");
 
+  // Build search index
+  var searchData = modules.map(function (m) {
+    return { num: m.moduleNum, title: m.shortTitle, full: m.fullTitle, slug: m.slug };
+  });
+  var searchJs = "window.__SEARCH_DATA__=" + JSON.stringify(searchData) + ";";
+  fs.writeFileSync(path.join(DIST_DIR, "search-data.js"), searchJs);
+  console.log("  ✓ search-data.js generated");
+
   // Build each module page
   for (var i = 0; i < modules.length; i++) {
     var mod = modules[i];
+
+    // Reset heading collection and parse
+    collectedHeadings = [];
     var contentHtml = marked.parse(mod.markdown);
+
+    // Generate reading time
+    var words = wordCount(mod.markdown);
+    var minutes = readingTime(words);
+    var readingTimeHtml =
+      '<p class="reading-time">' + minutes + " min read</p>\n";
+
+    // Generate TOC from collected headings
+    var tocHtml = "";
+    if (collectedHeadings.length > 2) {
+      tocHtml = '<nav class="toc" aria-label="On this page">\n';
+      tocHtml += '  <h2 class="toc-title">On This Page</h2>\n';
+      tocHtml += '  <ul>\n';
+      for (var h of collectedHeadings) {
+        tocHtml += '    <li><a class="toc-link" href="#' + escapeHtml(h.id) + '">' + escapeHtml(h.text) + '</a></li>\n';
+      }
+      tocHtml += '  </ul>\n';
+      tocHtml += '</nav>\n';
+    }
+
+    // Inject reading time and TOC after h1
+    var h1End = contentHtml.indexOf("</h1>");
+    if (h1End !== -1) {
+      var insertPos = h1End + 5;
+      contentHtml = contentHtml.slice(0, insertPos) + "\n" + readingTimeHtml + tocHtml + contentHtml.slice(insertPos);
+    }
+
     var sidebar = generateSidebar(modules, mod.slug);
     var prevNext = generatePrevNext(modules, i);
 
@@ -365,7 +453,8 @@ function build() {
     var outPath = path.join(DIST_DIR, mod.slug + ".html");
     fs.writeFileSync(outPath, page);
     console.log(
-      "  ✓ " + mod.slug + ".html — Module " + mod.moduleNum + ": " + mod.shortTitle
+      "  ✓ " + mod.slug + ".html — Module " + mod.moduleNum + ": " + mod.shortTitle +
+      " (" + minutes + " min, " + collectedHeadings.length + " sections)"
     );
   }
 
