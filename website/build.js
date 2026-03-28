@@ -136,7 +136,7 @@ renderer.link = function (token) {
 // Headings — add anchor IDs and collect h2s for TOC
 renderer.heading = function ({ tokens, depth }) {
   var text = this.parser.parseInline(tokens);
-  var rawText = stripHtml(text);
+  var rawText = extractRawText(tokens);
   var id = slugify(rawText);
 
   if (depth === 2) {
@@ -188,6 +188,13 @@ function slugify(text) {
 
 function stripHtml(html) {
   return html.replace(/<[^>]*>/g, "");
+}
+
+function extractRawText(tokens) {
+  return tokens.map(function (t) {
+    if (t.tokens) return extractRawText(t.tokens);
+    return t.text || t.raw || "";
+  }).join("");
 }
 
 function wordCount(text) {
