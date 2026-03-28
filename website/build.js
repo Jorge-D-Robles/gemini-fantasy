@@ -210,20 +210,12 @@ function getTutorialFiles() {
 function generateSidebar(modules, activeSlug) {
   var html = "";
 
-  // Find which part the active module belongs to
-  var activeModule = modules.find(function (m) { return m.slug === activeSlug; });
-  var activePart = activeModule ? getPartForModule(activeModule.moduleNum) : null;
-
   for (var part of PART_GROUPINGS) {
     var partModules = modules.filter(function (m) {
       return m.moduleNum >= part.range[0] && m.moduleNum <= part.range[1];
     });
 
-    var isActivePart = activePart && part.name === activePart.name;
-    // On landing page (no activeSlug), open all parts
-    var openAttr = (!activeSlug || isActivePart) ? " open" : "";
-
-    html += '<details class="sidebar-part"' + openAttr + '>\n';
+    html += '<details class="sidebar-part" open>\n';
     html += "  <summary>" + escapeHtml(part.name) + "</summary>\n";
     html += '  <div class="pl-1 pb-2">\n';
 
