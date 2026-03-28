@@ -56,6 +56,8 @@ func hide_menu() -> void:
 
 ## The Command Pattern
 
+In Final Fantasy X, the game shows you a preview of the turn order before you commit to an action. Choosing Haste on yourself moves your icon up in the queue; choosing a slow spell pushes it back. This preview is only possible because actions are data objects that can be inspected before execution. If "Attack" were just a function call, there would be nothing to preview. By representing actions as data, we separate the decision from the execution.
+
 Each battle action follows the same interface: an attacker does something to a target. We structure this as a dictionary command:
 
 ```gdscript
@@ -71,6 +73,8 @@ var command: Dictionary = {
 This pattern keeps the action execution generic. The `ActionExecute` state doesn't need to know the details of every possible action; it just reads the command dictionary.
 
 ## Target Selection
+
+Target selection is where strategy enters combat. In Earthbound, choosing to focus fire on the Territorial Oak instead of spreading damage across all enemies is often the difference between a clean fight and a party wipe. Without target selection, combat would be "press Attack and watch numbers happen." With it, every attack is a decision.
 
 When the player chooses Attack, they need to pick which enemy to target. Create a target selection sub-system:
 
@@ -377,6 +381,8 @@ func _execute_enemy_turn(battler: BattlerData) -> void:
 ```
 
 ## Battle Animations with Tweens
+
+Without animation, combat is just numbers changing in a log. The original Final Fantasy proved that even simple sprite slides -- a character stepping forward, pausing, then stepping back -- transform a math equation into a fight. Floating damage numbers, first popularized by Diablo and now standard in everything from Final Fantasy XIV to Fortnite, give the player instant visual feedback on what just happened. These two elements -- motion and numbers -- are the minimum viable "game feel" for turn-based combat.
 
 Animations make combat feel impactful. The classic JRPG attack animation: the attacker slides forward, pauses, then slides back.
 

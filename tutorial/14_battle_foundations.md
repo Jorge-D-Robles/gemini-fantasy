@@ -10,6 +10,8 @@ The battle scene skeleton: party and enemies displayed on screen, a state machin
 
 ## Scaling Up: From Enum to Node-Based State Machine
 
+A JRPG battle is one of the most complex state flows in all of game development. Think about a single turn in Final Fantasy VI: the game waits for your ATB gauge to fill, shows the command menu, you pick Magic, it shows the spell list, you pick Fire, it shows the target list, you pick an enemy, the character runs forward, the spell animation plays, damage numbers pop up, the game checks if anyone died, and then it moves to the next character. Each of those phases has different rules about what input is allowed, what's displayed, and what happens next.
+
 In Module 6, we built an enum-based state machine for the player with four states. That approach works great for simple cases, but the battle system has significantly more states with complex transitions:
 
 ```
@@ -96,6 +98,8 @@ Save these as `res://systems/battle/battle_state.gd` and `res://systems/battle/b
 > **Spiral:** Compare this to Module 6's enum state machine. The enum approach uses `match` in `_physics_process` to route to different functions. The node approach uses polymorphism: each state is a separate Node, and the machine just calls `enter()`/`process()`/`exit()` on whichever one is current. Same pattern, different scale.
 
 ## BattlerData: Who's Fighting
+
+Characters in an RPG exist in two contexts: their permanent identity (name, base stats, level) and their temporary battle state (current HP this fight, a defense buff that wears off next turn). In Final Fantasy, Cloud's base stats live on his character sheet, but when he uses Defend, the temporary defense boost only lasts until his next turn. We need a wrapper that holds both: the permanent data from CharacterData and the temporary state that exists only during one battle.
 
 We need a Resource to represent someone in battle, combining their base stats with runtime battle state.
 
@@ -293,8 +297,11 @@ func _spawn_battler_sprites(battlers: Array[BattlerData], positions: Node2D) -> 
         var sprite_node: Node2D = BattlerSpriteScene.instantiate()
         slots[i].add_child(sprite_node)
         sprite_node.setup(battlers[i])
+```
 
+Turn order is what makes the Speed stat matter. In Dragon Quest, faster characters act first, which means a healer with high speed can save a dying ally before the enemy lands the killing blow. A slow but powerful warrior might deal massive damage but always acts last, creating the risk that the enemy attacks first. This single mechanic -- who goes when -- turns a stat number into a tactical consideration.
 
+```gdscript
 func build_turn_queue() -> void:
     turn_queue.clear()
 

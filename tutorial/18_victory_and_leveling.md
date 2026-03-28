@@ -202,6 +202,8 @@ func _apply_xp(battler: BattlerData, xp: int) -> void:
         required = CharacterData.xp_for_level(char_data.level)
 ```
 
+Item drops turn every battle into a small gamble. In Pokemon, rare wild encounters might hold rare items; in Final Fantasy, stealing from bosses yields unique equipment. The probability doesn't need to be high -- even a 10% chance of a rare drop creates a "did I get it?" moment after every fight. Drops should complement shop inventory, not replace it: shops sell reliable basics, drops reward persistence with something special.
+
 ## The Defeat Flow
 
 When the party is wiped:
@@ -226,6 +228,8 @@ func enter(_context: Dictionary = {}) -> void:
 Module 25 replaces this with a proper Game Over screen with options (load save, return to title).
 
 ## Post-Battle State Restoration
+
+HP carry-over is the hidden engine of dungeon tension. In every classic Final Fantasy, the real challenge isn't any single battle -- it's surviving the entire dungeon with limited healing. Each random encounter chips away at your HP and MP, and the question becomes: "Do I use my last Ether now, or save it for the boss?" This resource attrition is what makes save crystals feel like oases and inns feel like home.
 
 After a victorious battle, the party returns to the overworld with their current HP/MP intact. Two things make this work:
 

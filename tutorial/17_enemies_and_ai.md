@@ -10,6 +10,8 @@ Enemy data types, three enemy species with basic AI, a random encounter system t
 
 ## EnemyData Resource
 
+Enemies need different data than party members. A Slime doesn't have equipment slots or growth rates, but it does have XP rewards, gold drops, and an AI personality. In Pokemon, every species has a catch rate, habitat, and evolution chain -- data that makes no sense on a trainer's character sheet. By giving enemies their own Resource type, we can tailor the Inspector to show exactly what matters for enemy design.
+
 Enemies need their own data. Create `res://resources/enemy_data.gd`:
 
 ```gdscript
@@ -60,6 +62,8 @@ Create three enemies as `.tres` files in `res://data/enemies/`. Follow the same 
 - XP: 25, gold: 15, drop: Ether (20%)
 
 ## Enemy AI
+
+Enemy AI is what makes each monster feel like a distinct creature rather than a bag of hit points. In Final Fantasy VI, the Behemoth counters every physical attack with a claw swipe, teaching players to use magic instead. Cactuars always flee, making them exciting to encounter. These behaviors come from simple AI rules -- not complex neural networks, just "if HP is low, heal; otherwise, attack the weakest target." Three or four personality types are enough to make combat feel varied.
 
 Each enemy needs to decide what to do on its turn. Create `res://systems/battle/ai_controller.gd` for the AI logic:
 
@@ -422,6 +426,8 @@ func _start_boss_battle() -> void:
 ```
 
 ## Flee Mechanic
+
+The Flee command is a pressure valve. In Dragon Quest, when you're deep in a dungeon with 10 HP and no Potions, the ability to run from a random encounter is the difference between a tense retreat to the save point and a frustrating game over. Flee also makes Speed matter outside of turn order -- a fast party escapes easily, while slow characters are trapped.
 
 Add a "Flee" option. First, add the flee logic to `res://systems/battle/ai_controller.gd`:
 

@@ -136,6 +136,8 @@ Large tilemaps with thousands of tiles are fine. Godot optimizes them into rende
 
 ## Exporting the Game
 
+Until you export, your game only runs inside the Godot editor. Exporting creates a standalone application that anyone can play without installing Godot -- the same way players download a game from Steam or itch.io. Cave Story was built by one person over five years, and the moment Daisuke Amaya exported it and uploaded it to his website, it went from a personal project to one of the most influential indie games ever made.
+
 ### Step 1: Install Export Templates
 
 Go to **Editor → Manage Export Templates → Download and Install**. This downloads platform-specific build templates.

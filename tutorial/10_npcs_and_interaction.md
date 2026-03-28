@@ -10,6 +10,8 @@ NPCs that stand in Willowbrook, face the player when approached, and respond to 
 
 ## The Interaction Pattern
 
+NPCs are how an RPG world comes alive. In Chrono Trigger, talking to the people of Guardia Castle tells you about the Millennial Fair, hints at the kingdom's history, and sets up plot points that pay off 20 hours later. Without NPCs, the player is just walking through empty geometry. The interaction system we're building here is the foundation for everything social in the game: shops, inns, quest-givers, lore-keepers, and story-critical characters all start with "walk up and press a button."
+
 Most JRPGs use the same interaction flow:
 
 1. Player walks near an NPC
@@ -160,6 +162,8 @@ Here's why we made these choices:
 ### `_unhandled_input()` vs `_input()` vs `_process()`
 
 We use **`_unhandled_input()`** instead of checking input in `_process()`. There are three input callbacks:
+
+Imagine you're playing Secret of Mana and you open the ring menu. You press a button to select an item, but that same press also swings your sword at the NPC behind you. That's what happens when game-world input doesn't respect UI focus. Choosing the right input callback prevents this class of bug entirely.
 
 | Callback | When It Runs |
 |----------|-------------|

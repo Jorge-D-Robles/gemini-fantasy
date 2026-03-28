@@ -48,6 +48,8 @@ Save your sprite sheet to `res://player/player_spritesheet.png`.
 
 ## Setting Up AnimatedSprite2D
 
+In the original Final Fantasy on NES, characters barely animated -- they shuffled two frames when walking -- and the world still felt more alive than a static sprite sliding across the screen like a chess piece. Walk cycle animation transforms a game object into a character. It conveys weight, personality, and direction. When Crono walks in Chrono Trigger, his cape bounces and his legs pump -- even though it is only 4 frames of animation, it sells the illusion of a living person.
+
 Open `player/player.tscn`. We're going to replace the `Sprite2D` with an `AnimatedSprite2D`, which handles frame-based animation natively.
 
 1. **Delete** the existing `Sprite2D` node.
@@ -65,6 +67,8 @@ Player (CharacterBody2D)
 In Module 5, we resized the collision shape from the original 64x64 to fit tile corridors. Now that we're using an actual character sprite instead of the Godot icon, fine-tune it: set the shape's **Size** to roughly `Vector2(12, 8)` and the **CollisionShape2D** node's **Position** (under Transform) to `Vector2(0, 4)` so it covers just the character's feet. We'll discuss why this "feet-only" collision matters later in this module.
 
 ### Creating a SpriteFrames Resource
+
+A SpriteFrames resource is the animation library for a character. In games like Pokemon, every character has a consistent set of animations (walk_up, walk_down, walk_left, walk_right, idle), and the game engine picks the right one based on the character's current state and direction. By storing these as named animations, you can swap an entire character's appearance just by assigning a different SpriteFrames -- replace the hero's animations with a disguise, or reuse the same walking logic for every NPC by giving each one unique SpriteFrames with their own art.
 
 AnimatedSprite2D uses a **SpriteFrames** resource to define animations.
 
@@ -296,6 +300,8 @@ This keeps the state machine's logic internal while providing a clean API for th
 > **Spiral:** We'll revisit state machines in Module 14 when we build the battle system. The battle state machine is more complex (7+ states with complex transitions), so we'll upgrade from this enum-based approach to a **node-based** state machine. The enum approach works great for the player's 4 simple states.
 
 ## Y-Sorting: Correct Depth Ordering
+
+Without Y-sorting, you get a common visual bug: the player walks south past a tree and the tree renders on top of them, but walking north past the same tree puts the player on top. In Final Fantasy VI, Y-sorting is what makes towns feel three-dimensional despite being flat 2D art. When Terra walks behind a market stall, the stall's roof covers her sprite. When she walks in front of it, she covers the stall. The engine draws objects sorted by their Y position: objects higher on the screen (further away) are drawn first, objects lower (closer) are drawn on top.
 
 In a top-down 2D game, objects lower on the screen should appear in front of objects higher on the screen. This creates the illusion of depth. The player walks "behind" a tree when they're above it, and "in front of" a tree when they're below it.
 

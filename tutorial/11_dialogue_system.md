@@ -8,7 +8,11 @@ NPCs in Willowbrook that detect the player and emit interaction signals. But dia
 
 A full dialogue box UI: text appears with a typewriter effect, the speaker's name is displayed, conversations span multiple pages, and the player can make choices during branching dialogue. Players spend more time reading dialogue than doing almost anything else in a JRPG, so getting the textbox right matters.
 
+The dialogue box is arguably the most important UI element in any JRPG. In Undertale, every character has a distinct voice expressed through text speed, font, and box style -- Sans speaks in lowercase, Papyrus in all-caps, and Flowey's text box literally breaks apart during intense moments. Even without going that far, the difference between a raw `print()` dump and a proper typewriter textbox is the difference between reading a script and experiencing a conversation.
+
 ## UI Fundamentals: Control Nodes
+
+Game UI needs to work at any screen size. When a player resizes the window or plays on a phone, the dialogue box should still be at the bottom, the health bar should still be in the corner, and menus should still be centered. Node2D nodes use fixed pixel coordinates that break when the resolution changes. Godot's Control nodes solve this with anchors and containers -- the same layout system that powers every web browser and phone app, adapted for games.
 
 Godot's UI system is built on **Control** nodes, a family of nodes designed specifically for user interfaces. Unlike Node2D (which uses pixel coordinates), Control nodes use **anchors**, **margins**, and **containers** to create responsive layouts.
 
@@ -324,6 +328,8 @@ The flow:
 8. Player returns to IDLE state
 
 ## Choice Dialogue (Branching)
+
+Player choice is what separates a cutscene from a conversation. In Dragon Quest V, the game asks whether you want to marry Bianca or Nera -- a choice that changes your party composition, your children's hair color, and NPC dialogue for the rest of the game. Even simple yes/no prompts like "Stay at the inn for 10 gold?" give the player agency.
 
 Some dialogue needs player choices: "Yes/No" questions, multiple response options. We'll extend the system to support this.
 

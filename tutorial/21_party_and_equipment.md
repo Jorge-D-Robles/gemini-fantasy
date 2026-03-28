@@ -10,6 +10,8 @@ Three major systems: **party management** (recruiting Lira the mage), **equipmen
 
 ## PartyManager Autoload
 
+In Pokemon, your party of six travels with you everywhere -- they appear in battle, they need healing at the Pokemon Center, and the PC storage system swaps them in and out. All of that requires one central place that knows who is in your party right now. Without a PartyManager, every system that cares about the roster (battle, save/load, equipment, healing) would need its own copy of the party list, and they would inevitably get out of sync.
+
 Create `res://autoloads/party_manager.gd`:
 
 ```gdscript
@@ -137,6 +139,8 @@ SceneManager.start_battle({party = party_battlers, enemies = enemy_battlers})
 Apply this same change to the boss trigger (`boss_trigger.gd`) and any other script that calls `SceneManager.start_battle()`.
 
 ## Equipment System
+
+In Final Fantasy IV, Cecil starts as a Dark Knight with heavy armor and a cursed sword. When he becomes a Paladin, his equipment changes completely and so does how he plays. Equipment is the most tangible form of character progression -- the player can see their attack number go up and feel the difference in battle. It also drives the core economic loop: fight enemies, earn gold, buy better gear, fight harder enemies.
 
 ### Extending CharacterData
 
@@ -400,6 +404,8 @@ var diff := character.predict_equip(iron_sword)
 The key insight is the **temporarily swap, measure, restore** pattern. It reuses your existing `get_effective_*()` methods rather than duplicating the calculation logic. This means if you later add modifier stacking or set bonuses, the prediction stays accurate automatically.
 
 ## The Shop System
+
+Secret of Mana's weapon shops in each town are progression gates disguised as stores. The player earns gold from battles and spends it on the next tier of weapons, creating a satisfying loop where exploration and combat feed back into power growth. Shops give the player agency over their build -- do you buy a better sword for your fighter or a magic robe for your mage first? -- and they anchor towns as meaningful destinations.
 
 ### ShopData Resource
 

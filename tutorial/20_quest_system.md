@@ -10,6 +10,8 @@ Two things: a **game flags** system for tracking boolean world state, and a **qu
 
 ## Game Flags: The Boolean Backbone
 
+Think about what happens in Final Fantasy VI when you first meet Shadow in the bar at South Figaro. The game remembers whether you talked to him, whether you recruited him, and whether he ran away in your last battle. Dozens of tiny yes-or-no questions like these are tracked behind the scenes. Without them, every NPC would repeat the same line forever and the world would feel frozen. Game flags are how a JRPG makes the world remember what you did.
+
 Game flags are the simplest and most universal state tracking in JRPGs. A flag is a boolean: something either has or hasn't happened.
 
 ```
@@ -66,6 +68,8 @@ Flags are used everywhere:
 - The save system saves and loads flags
 
 ## QuestData Resource
+
+Dragon Quest has hundreds of quests, and each one tracks the same things: a description, a list of objectives, and a reward. If each quest were a unique script with custom logic, the codebase would be unmanageable. Defining quests as data -- a Resource with fields for title, objectives, and rewards -- means adding a new quest is filling out a form, not writing new code.
 
 Save as `res://resources/quest_data.gd`:
 
@@ -288,6 +292,8 @@ if quest:
 
 ## Reactive Dialogue
 
+In Chrono Trigger, every NPC in every town updates their dialogue after each major story event. After you rescue Queen Leene, the castle guards stop asking for help and start thanking you. This is what makes the world feel alive -- characters acknowledge what you have done. Without reactive dialogue, NPCs are just repeating billboards, and the player never feels like their actions matter.
+
 NPCs should say different things based on quest state and flags. Update NPC dialogue to check flags.
 
 Add the following to `res://scenes/willowbrook/willowbrook.gd`:
@@ -335,6 +341,8 @@ func _make_lines(speaker: String, texts: Array[String]) -> Array[DialogueLine]:
 ```
 
 ## Quest Log UI
+
+The moment a JRPG has more than one quest, players start forgetting what they were doing. Earthbound lets you call your dad to get a hint, but most RPGs solve this with a quest journal. Even a simple log with checkable objectives prevents the frustration of wandering aimlessly because you forgot which NPC to talk to next.
 
 A simple quest log accessible from the pause menu. Create `res://ui/quest_log/quest_log.tscn`:
 

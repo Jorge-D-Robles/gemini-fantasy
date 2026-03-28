@@ -116,6 +116,9 @@ The SceneManager needs visible nodes (a ColorRect for the black overlay, an Anim
 
 1. Create a new scene with `Node` as root. Rename it to `SceneManager`.
 2. Add a **CanvasLayer** child. Rename it to `TransitionLayer`. Set its **Layer** to `100` in the Inspector (so it draws on top of everything).
+
+In every JRPG, the fade effects and dialogue boxes must render on top of the game world no matter where the camera is or how the scene is structured. In Earthbound, the swirling battle transition overlay covers everything -- the map, the enemies, the party. A regular node would be affected by the camera's position and zoom, and could sort incorrectly with other nodes. CanvasLayer creates an entirely separate rendering surface that is immune to camera transforms and always draws at its designated layer number.
+
 3. Inside `TransitionLayer`, add a **ColorRect** child. Set its color to black (`Color(0, 0, 0, 1)`).
 4. Set the ColorRect to cover the full screen: **Layout → Anchors Preset → Full Rect** (or set all anchors to cover the viewport).
 5. Set the ColorRect's **Modulate** alpha to `0` (fully transparent by default).
@@ -177,6 +180,8 @@ await some_node.some_signal                  # Wait for a custom signal
 
 ## Exit Zones
 
+In every JRPG from Dragon Quest to Pokemon, walking to the edge of a town seamlessly transitions you to the next area. The player never clicks a "leave town" button -- they just walk south and the game detects that they have crossed an invisible boundary. The alternative -- checking the player's position every frame with `if position.x > map_width` -- is fragile, hard-coded, and needs rewriting for every map shape. Exit zones are reusable: the same script works on every map edge, every door, and every warp point.
+
 An **exit zone** is an Area2D that detects when the player enters it and triggers a scene change. We'll set up bidirectional exits between Willowbrook and Whisperwood.
 
 ### Creating an Exit Zone
@@ -198,6 +203,12 @@ extends Area2D
 
 
 func _ready() -> void:
+    # In Module 3, we connected signals through the editor UI. That works when both
+    # sender and receiver are in the same scene and you are placing nodes manually.
+    # But the exit zone script is designed to be reusable: attach it to any Area2D
+    # in any scene and it just works. Connecting the signal in code means the
+    # connection is self-contained. As your game grows, code-based connections
+    # become the standard for reusable components.
     body_entered.connect(_on_body_entered)
 
 
@@ -228,6 +239,8 @@ The exit zone checks `body.is_in_group("player")`. We need to add the player to 
 > **See:** [Groups](https://docs.godotengine.org/en/stable/tutorials/scripting/groups.html): Godot's node tagging system. We'll use groups again in later modules for encounter zones, UI elements, and save points.
 
 ### Spawn Points
+
+In Pokemon, walking from Route 1 into Viridian City places you at the south entrance. Flying to Viridian City places you at the Pokemon Center. Same destination, different spawn position depending on how you arrived. This is why spawn points need names: the SceneManager doesn't just load a scene, it loads a scene and places you at a specific named location.
 
 A spawn point is a simple **Marker2D** node that marks where the player should appear. Add them to your scenes:
 

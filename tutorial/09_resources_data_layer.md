@@ -12,6 +12,8 @@ This might seem like a detour from "making the game," but it's not. Every system
 
 ## What is a Resource?
 
+Every RPG you have ever played runs on a hidden spreadsheet. When the original Final Fantasy team designed their game in 1987, they kept binders full of handwritten tables: which weapon gives +5 attack, which spell costs 8 MP, which enemy has 120 HP. The game code didn't contain those numbers directly -- it read them from data tables. This separation of data from code is what let the designers tune balance without rewriting programs. Godot's Resource system is the modern version of those binders: a structured, editor-friendly way to define game data that your code reads at runtime.
+
 A **Resource** is Godot's universal data container. You've already used several:
 
 - The `SpriteFrames` you created in Module 6 is a Resource
@@ -277,6 +279,8 @@ Save as `res://resources/npc_data.gd`.
 This is a simple version. We'll replace `dialogue_lines: Array[String]` with a proper `DialogueLine` Resource in Module 11. When we do, you'll need to re-edit the NPC `.tres` files to use the new dialogue format, so keep your text values handy. But even this simple version is better than hardcoding NPC names and text in each scene.
 
 ## The Three-File Pattern
+
+This pattern exists because RPGs are content-heavy games. Dragon Quest XI has over 300 items, 200 monsters, and dozens of characters -- all sharing the same underlying structure but with different values. If every Potion required its own function and every Slime required its own script, the codebase would be unmanageable. By separating structure, data, and consumer, a designer can add a new healing herb by creating one data file. No code changes needed.
 
 Resources follow a consistent pattern across the project:
 

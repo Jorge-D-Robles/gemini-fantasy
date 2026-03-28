@@ -8,6 +8,8 @@ A town, a forest, a battle system with actions and animations, and an inventory.
 
 The **Crystal Cavern**: a dungeon area with a distinct tileset, multiple rooms connected by passages, treasure chests, encounter zones for random battles, a save crystal, and a boss room at the end. This is level design, not system design. We're applying everything we've learned about TileMaps, scene transitions, and interactables.
 
+Dungeons are where RPGs test everything the player has prepared. In Zelda, each dungeon introduces a new item and then builds puzzles around mastering it. In Final Fantasy, dungeons are gauntlets that drain your party's resources over time -- each random battle costs HP and MP, and the question is whether you can reach the boss with enough left to win. A well-designed dungeon creates a rising tension curve: easy rooms at the start, harder encounters deeper in, a save point right before the climax, and a boss that demands everything you've learned.
+
 ## Dungeon vs Overworld Design
 
 Dungeons differ from overworld areas in several ways:
@@ -95,6 +97,8 @@ Each "room" is a region of the tilemap. Passages connect them. The fork creates 
 
 ## Treasure Chests
 
+Treasure chests are the oldest reward mechanism in RPGs. In the original Dragon Quest, finding a chest in a dungeon was a moment of genuine excitement -- the player risked death to explore a dead end and the chest validated that risk. Chests serve two design purposes: they reward exploration (players who check every corner find better gear) and they pace the dungeon (a Potion in a mid-dungeon chest might be the difference between reaching the boss and having to retreat).
+
 A chest is an interactable that gives the player an item. It's a reusable scene.
 
 Create `res://entities/interactable/treasure_chest.tscn`:
@@ -178,6 +182,8 @@ Place chests in the dungeon using the editor:
 Set the `@export var item` in the Inspector by dragging the `.tres` file into the slot.
 
 ## The Save Crystal
+
+The save crystal before a boss room is one of the most recognizable design patterns in JRPGs. In every Final Fantasy game, seeing that glowing crystal means two things: "danger is ahead" and "you won't lose your progress." Save points are as much a narrative device as a mechanical one -- they build anticipation. The absence of save points in a long corridor creates anxiety; their appearance after a tough fight creates relief.
 
 A classic JRPG save point, a glowing crystal the player interacts with. For now, it just prints "Game saved!". We'll wire it to the actual save system in Module 22.
 

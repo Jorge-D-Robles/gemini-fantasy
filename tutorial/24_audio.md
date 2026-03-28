@@ -166,6 +166,8 @@ MusicManager.resume_previous_track()
 
 ## Sound Effects
 
+Play any battle in Chrono Trigger with the volume off, then play it again with sound. The difference is dramatic. The sword slash, the critical hit crunch, the heal chime -- these audio cues give every action weight and feedback. Sound effects are the fastest way to make a game feel polished, because the player's brain processes audio feedback faster than visual feedback. A silent menu cursor feels broken; add a tiny click and it feels responsive.
+
 SFX are simpler: play once, no crossfading. You can either add AudioStreamPlayer nodes to scenes or create a simple SFX utility:
 
 ```gdscript
@@ -192,6 +194,8 @@ Common SFX to add:
 - **Door/chest open:** when interacting with objects
 
 ## Audio Buses
+
+In Undertale, the music is so integral to the storytelling that many players want it louder than the sound effects, while others find the battle SFX distracting and want to turn them down. Without separate audio buses, the only option is a single master volume slider that controls everything at once. Separate buses for music and SFX are a baseline accessibility feature that players expect.
 
 Audio buses let you control volume separately for music and SFX.
 
@@ -228,6 +232,8 @@ AudioServer.set_bus_mute(AudioServer.get_bus_index("Music"), true)
 > **See:** [AudioBusLayout](https://docs.godotengine.org/en/stable/classes/class_audiobuslayout.html), the resource that stores bus configuration.
 
 ### Volume Settings UI
+
+No two players listen to games the same way. Some play with headphones at night and need everything quieter; others play through speakers in a noisy room. A game without volume settings forces every player into the developer's preferred mix. It is one of the most common complaints in indie game reviews: "no volume controls."
 
 Create `res://ui/settings/settings_panel.tscn`:
 

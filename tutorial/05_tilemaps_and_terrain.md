@@ -12,6 +12,8 @@ By the end, you'll have a real place to explore.
 
 ## How TileMaps Work: A Conceptual Model
 
+Imagine drawing the entire overworld of Chrono Trigger as a single image -- it would be enormous, impossible to edit without redrawing entire sections, and you could not add collision without manually painting invisible walls on top. Tilemaps solve all of this. Because every grass patch uses the same 16x16 tile, the game only stores that tile image once and stamps it across the map. Editing is fast: to widen a path, you repaint a few cells instead of redrawing a building. And collision is built in -- you mark wall tiles as solid once, and every wall in the game blocks the player automatically. This is why nearly every 2D RPG from Final Fantasy to Stardew Valley uses tilemaps.
+
 Before we touch any code, here's the core idea.
 
 A tilemap is a grid of small images (tiles) assembled into a larger scene, like placing mosaic tiles to create a picture. Instead of drawing an entire town as one massive image, you draw it from reusable 16x16 or 32x32 pixel pieces: a grass tile, a path tile, a wall tile, a roof tile.
@@ -107,6 +109,8 @@ You should see your tile sheet with a grid overlay. Each grid cell is one tile, 
 > **Warning:** If the grid doesn't align with your tiles, double-check that the **Tile Size** in the TileSet matches your tile sheet's grid size. Misaligned grids are the #1 tileset setup problem.
 
 ### Step 5: Save the TileSet as an External Resource
+
+If you leave the TileSet embedded in one layer, each additional layer gets its own separate copy. When you later add collision to a wall tile, you would have to add it in four separate TileSets -- one per layer -- and keeping them synchronized becomes a nightmare. Saving the TileSet as an external `.tres` file means all layers reference the same data. Change a tile's collision once, and it applies everywhere.
 
 Right now, the TileSet is embedded inside the `Ground` node. We want to share it across multiple layers.
 
@@ -235,6 +239,8 @@ Instance the Player scene into `Willowbrook` (drag `player/player.tscn` from the
 > **Note:** Your main scene is still `main.tscn` from Module 1. That's fine; we use F6 to test Willowbrook directly. In Module 7, we'll build a proper SceneManager and set up scene transitions.
 
 ## Camera2D: Following the Player
+
+Play any early Legend of Zelda game and you will feel the camera snap rigidly to Link's position -- every pixel of movement translates directly to camera movement, which feels jittery at high speeds. Modern JRPGs like OMORI use camera smoothing so the viewport glides gently to follow the player, creating a more cinematic feel. Camera limits are equally important: without them, the camera reveals the void beyond the map edge when the player walks near a boundary, breaking the illusion that this is a real place. Pokemon never lets you see past the edge of a route for exactly this reason.
 
 If your map is larger than the screen, you need a camera. Open the Player scene (`player.tscn`) and add a **Camera2D** node as a child:
 
