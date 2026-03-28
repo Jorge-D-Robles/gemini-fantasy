@@ -435,6 +435,10 @@
   padding-top: 15vh;
 }
 
+.search-overlay.hidden {
+  display: none;
+}
+
 .search-backdrop {
   @apply absolute inset-0 bg-black/60;
 }
