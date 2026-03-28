@@ -282,6 +282,7 @@ Both approaches are valid. We're using the Area2D approach because it's simpler 
 - **`@export var npc_data: NPCData`** lets each NPC instance use different data without a separate script.
 - The `interacted` signal keeps NPCs decoupled from dialogue, shops, and quests.
 - **Scene scripts** (like `willowbrook.gd`) wire NPCs to game systems. The NPC doesn't know about dialogue; the scene connects them.
+- **Triggers vs actions**: the NPC's Area2D + input detection is the *trigger* (when and where something happens). The response (dialogue, shop, quest update) is the *action* (what happens). This separation is deliberate -- the same NPC scene works for shopkeepers, quest-givers, and flavor characters because the trigger mechanism is identical. Only the action wired up in the scene script differs.
 - The player's **INTERACT state** (Module 6) freezes movement during interactions.
 
 ## What You Should See

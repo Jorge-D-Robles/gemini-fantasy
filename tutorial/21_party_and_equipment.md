@@ -226,6 +226,23 @@ func _equip_item_on_character(character: CharacterData, item: ItemData) -> void:
 
 This three-step pattern (equip new, remove from inventory, add old back) prevents item duplication. The `equip()` method returns the old item so you always have a reference to it.
 
+### The Modifier Pattern (Looking Ahead)
+
+Our equipment system uses simple addition: `effective_attack = base_attack + weapon.attack_bonus`. This works for Crystal Saga, but real RPGs need something more flexible. Consider: a spell that doubles your Attack for 3 turns, a poison that halves Speed, or a ring that adds +10% to all stats. Flat bonuses can't express percentages, and they don't stack cleanly with temporary buffs.
+
+The standard solution is a **modifier system** where each modifier has two components:
+
+- **add**: a flat bonus (e.g., +5 Attack from a sword)
+- **mult**: a percentage multiplier (e.g., +0.25 for a 25% buff, -0.50 for a 50% debuff)
+
+The formula: `final = (base + sum_of_adds) * (1.0 + sum_of_mults)`
+
+All flat bonuses are summed first, then all percentage multipliers are applied together. This order matters: it makes percentage buffs more powerful (they multiply the total, not just the base), which is a deliberate design choice.
+
+Each modifier gets a **unique ID**. This solves the stacking problem: two different +5 ATK swords stack (different IDs), but casting the same buff spell twice doesn't (same ID overwrites the previous instance).
+
+We won't build this system for Crystal Saga -- the simple `get_effective_*()` approach is sufficient. But if you later add status effects (Module 26 roadmap), buff/debuff spells, or set bonuses, the modifier system is the right abstraction. It lets equipment, spells, status effects, and passive abilities all feed into the same stat calculation through one unified mechanism.
+
 ### Battle Integration
 
 Update BattlerData to use effective stats:
@@ -329,6 +346,60 @@ func _on_slot_pressed(slot: ItemData.EquipSlot) -> void:
 ```
 
 > **Exercise:** For a more polished experience, replace the "equip first item" logic with a popup list showing all matching items, their stats, and the stat difference compared to the current equipment. The inventory grid pattern from Module 12 works well for this.
+
+### Equipment Comparison: The PredictStats Pattern
+
+Every JRPG shop and equipment screen answers the same question: "would this item make me stronger or weaker?" Showing red/green arrows next to stats is standard UX. The pattern for computing this is called **PredictStats**: calculate what the character's stats *would be* if they equipped a candidate item, without actually equipping it.
+
+```gdscript
+func predict_equip(candidate: ItemData) -> Dictionary:
+    ## Returns a stat diff: positive values = improvement, negative = worse.
+    ## Does NOT modify the character.
+    var current_atk := get_effective_attack()
+    var current_def := get_effective_defense()
+    var current_spd := get_effective_speed()
+
+    # Temporarily swap
+    var slot := candidate.equip_slot
+    var old_item: ItemData = null
+    match slot:
+        ItemData.EquipSlot.WEAPON:
+            old_item = equipped_weapon
+            equipped_weapon = candidate
+        ItemData.EquipSlot.ARMOR:
+            old_item = equipped_armor
+            equipped_armor = candidate
+        ItemData.EquipSlot.ACCESSORY:
+            old_item = equipped_accessory
+            equipped_accessory = candidate
+
+    var diff := {
+        attack = get_effective_attack() - current_atk,
+        defense = get_effective_defense() - current_def,
+        speed = get_effective_speed() - current_spd,
+    }
+
+    # Restore original equipment
+    match slot:
+        ItemData.EquipSlot.WEAPON:
+            equipped_weapon = old_item
+        ItemData.EquipSlot.ARMOR:
+            equipped_armor = old_item
+        ItemData.EquipSlot.ACCESSORY:
+            equipped_accessory = old_item
+
+    return diff
+```
+
+Usage in a shop or equipment UI:
+
+```gdscript
+var diff := character.predict_equip(iron_sword)
+# diff = { attack = 5, defense = 0, speed = -1 }
+# Display: ATK +5 (green arrow), DEF -- (no change), SPD -1 (red arrow)
+```
+
+The key insight is the **temporarily swap, measure, restore** pattern. It reuses your existing `get_effective_*()` methods rather than duplicating the calculation logic. This means if you later add modifier stacking or set bonuses, the prediction stays accurate automatically.
 
 ## The Shop System
 
@@ -487,7 +558,9 @@ func _handle_inn(npc: CharacterBody2D) -> void:
 - **PartyManager** autoload tracks the roster of party members.
 - **Recruitment** is triggered by dialogue + game flags, and the NPC becomes a party member.
 - **Equipment** modifies effective stats. `get_effective_attack()` = base + weapon bonus.
-- **Equip/unequip** swaps items between the character and inventory.
+- **PredictStats pattern:** temporarily swap equipment, measure the difference, restore the original. This lets shop and equipment UIs show green/red stat comparison arrows without committing the change.
+- **The modifier pattern** (looking ahead): equipment bonuses, spell buffs, and status effects can all feed into stats through a unified `add`/`mult` modifier system. Not needed for Crystal Saga's scope, but essential for larger RPGs.
+- **Equip/unequip** uses a three-step swap (equip new → remove from inventory → return old) to prevent item duplication.
 - **Shops** use a ShopData resource listing items with prices.
 - **The inn** is a dialogue choice that costs gold and restores HP/MP.
 - All these systems build on previous modules: Resources (7), dialogue (9), inventory (10), flags (16).

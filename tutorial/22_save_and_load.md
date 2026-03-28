@@ -400,6 +400,18 @@ if not save_data.has("version"):
 
 > **Note:** `load_game()` uses `tree.change_scene_to_file()` directly instead of `SceneManager.change_scene()`. This is intentional. The save system needs to bypass SceneManager's spawn point logic and instead restore the exact player position from the save file. If you want the fade effect, you could call `SceneManager._anim_player.play("fade_out")` before loading and `fade_in` after.
 
+### On Save Schema Design
+
+As your game grows, you'll add new things that need saving (new autoloads, new systems, new character fields). Each addition means updating `to_save_data()` and `from_save_data()` for the affected objects. This works, but it's worth knowing the alternative.
+
+Some RPG architectures use a **declarative save schema** -- a single data structure that describes *what* to save, separate from *how* to save it. Instead of each autoload knowing how to serialize itself, a central schema says "from PartyManager, save these fields; from InventoryManager, save these fields." The save system walks the schema, extracts the data, and writes it. Loading walks the same schema in reverse.
+
+The advantage: adding a new saveable field means adding one line to the schema, not editing the autoload. The disadvantage: more upfront complexity.
+
+Our approach (`to_save_data()` per autoload) is the right call for Crystal Saga's scope. Each autoload owns its own serialization, which is easy to understand and debug. But if you build a larger RPG with 15+ autoloads and hundreds of saveable fields, consider consolidating into a schema.
+
+Another thing to plan for: **save migration**. When you add a new field (say, a `reputation` system), old save files won't have it. Your `from_save_data()` methods should always use `.get("key", default_value)` rather than direct dictionary access. This way, loading an old save that lacks the `reputation` key gracefully falls back to the default instead of crashing.
+
 ## What We've Learned
 
 - **JSON** is the save format: human-readable, no class coupling, simple API.
@@ -408,6 +420,7 @@ if not save_data.has("version"):
 - **Save crystals** trigger the save flow; **load** happens from the title screen or pause menu.
 - Resources are referenced by **path** in saves (`resource_path`), not by value. The `.tres` file is the source of truth; the save just points to it.
 - Always validate JSON before using it. Corrupt saves shouldn't crash the game.
+- Use `.get("key", default)` for future-proof save loading -- old saves missing new fields won't crash.
 
 ## What You Should See
 

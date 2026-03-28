@@ -27,7 +27,39 @@ var current_mp: int = 0  # Tracks MP between battles
 
 ### The XP Curve
 
-We need a formula for "how much XP to reach the next level." A simple quadratic curve works well. Add this static function to `res://resources/character_data.gd`:
+We need a formula for "how much XP to reach the next level." This is one of the most important tuning knobs in your RPG. The curve shape determines the pacing of the entire game.
+
+#### Why Levels Matter (Beyond Numbers)
+
+Levels serve four purposes in a JRPG:
+
+1. **Reward feedback.** The number going up *is* the reward. It's Pavlovian: fight → XP → level up → dopamine. Fast early levels hook the player.
+2. **Narrative pacing.** Level roughly tracks where the player is in the story. A level 5 party is in the early game; a level 30 party is near the end. Designers use this to gate content.
+3. **Complexity drip-feed.** New abilities unlock at specific levels, introducing mechanics gradually instead of dumping everything on the player at once.
+4. **Content gating.** An area with level 15 enemies is implicitly locked until the party reaches that range. No locked doors needed.
+
+#### Real RPG XP Formulas
+
+Different curves produce very different game feel. Here are formulas reverse-engineered from real games:
+
+| Game | Formula | Feel |
+|------|---------|------|
+| D&D 3.5 | `500 * level^2 - 500 * level` | Very steep. High levels are rare achievements. |
+| Pokemon (fast group) | `round(0.8 * level^3)` | Moderate curve. Grinding is possible but not required. |
+| Disgaea | `round(0.04 * level^3 + 0.8 * level^2 + 2 * level)` | Shallow. Levels come fast because *everything* levels. |
+
+The general formula is:
+
+```
+xp_for_level = base_xp * level ^ exponent
+```
+
+- `base_xp` controls the overall cost of leveling. Higher = slower progression.
+- `exponent` controls how much harder each successive level gets. At 1.0, every level costs the same XP. At 2.0 (quadratic), costs increase rapidly. At 3.0 (cubic), later levels take dramatically longer.
+
+#### Our Curve
+
+A simple quadratic curve works well for Crystal Saga's scope. Add this static function to `res://resources/character_data.gd`:
 
 ```gdscript
 static func xp_for_level(level: int) -> int:
@@ -43,15 +75,34 @@ static func xp_for_level(level: int) -> int:
 | 5 → 6 | 250 | 550 |
 | 10 → 11 | 1,000 | 3,850 |
 
-The formula `level * level * 10` means at level 1 you need 10 XP, at level 5 you need 250 XP, etc.
+This is `base_xp=10, exponent=2`. Early levels come fast (10 XP for level 2), later levels take real effort (1,000 XP for level 11). If playtesting reveals that leveling feels too slow or too fast, change the `10` multiplier first, then consider adjusting the exponent.
 
-This curve starts gentle and ramps up. Early levels come fast (motivating), later levels take more effort (extending gameplay).
+> **Tuning tip:** Print the XP table for your expected level range (1-15 for Crystal Saga) and compare it against enemy XP rewards. If a single battle gives enough XP to level up, your curve is too shallow. If the player needs 50+ fights to level, it's too steep. Aim for 4-8 fights per level in the mid-game.
 
 ### Stat Growth
 
 When a character levels up, their stats increase based on **growth rates** defined in CharacterData.
 
 > **Spiral:** These growth rate fields (`hp_growth`, `mp_growth`, `attack_growth`, `defense_growth`, `speed_growth`) were defined in Module 9's CharacterData class. Verify your `aiden.tres` has non-zero values for all growth fields (e.g., hp_growth: 12, attack_growth: 3). If they default to 0, Aiden won't gain stats on level-up.
+
+#### The Importance of Variance
+
+If every level-up gives exactly +3 Attack, the progression feels mechanical. Real JRPGs add randomness: sometimes you get +2, sometimes +4. This makes each level-up a micro-event. The player watches the numbers and thinks "nice, +4 Strength this time!"
+
+Some RPGs use dice notation for this. A growth rate of "3d2" means "roll three 2-sided dice" (range 3-6, weighted toward the middle). Faster-growing stats use more dice with higher sides; slower stats use fewer dice. We'll keep it simpler with `randi_range`, but the principle is the same: **growth rate = base value + bounded randomness**.
+
+Different characters should grow differently. A warrior gains more HP and Attack per level; a mage gains more MP and Magic. These growth rate differences, compounded over 15-20 levels, make characters feel distinct even if they start similar.
+
+#### The Calculate-Before-Apply Pattern
+
+Notice that `level_up()` returns a `gains` dictionary *and* applies the gains in the same call. This is a simplification. In a polished RPG, you'd split this into two steps:
+
+1. **Calculate** the level-up (what stats *would* increase) -- returns a preview
+2. **Apply** the level-up (actually modify the character) -- called after the UI finishes displaying
+
+This separation lets you show an animated victory screen where stats tick up one by one, HP bars extend, and "Level Up!" flashes before the numbers are committed. For Crystal Saga, combining both steps is fine. But if you build a victory screen with animated stat bars later, refactor `level_up()` into `create_level_up() -> Dictionary` and `apply_level_up(gains: Dictionary)`.
+
+#### Implementation
 
 Add this method to `res://resources/character_data.gd`:
 
@@ -75,7 +126,7 @@ func level_up() -> Dictionary:
     return gains
 ```
 
-The small random variance (randi_range(0, 1) or (0, 2)) makes each level-up feel slightly different.
+The small random variance (`randi_range(0, 1)` or `(0, 2)`) makes each level-up feel slightly different. HP gets the widest variance because it's the largest number and small fluctuations are less noticeable.
 
 ## The Victory Flow
 
@@ -189,8 +240,10 @@ For now, since we don't have a formal PartyManager yet (Module 21), the Characte
 ## What We've Learned
 
 - **XP distribution** divides total XP among alive party members.
-- **Level-up curve** (`level * level * 10`) starts easy and scales up.
-- **Stat growth** per level uses base growth rates plus small random variance.
+- **Levels serve four purposes:** reward feedback, narrative pacing, complexity drip-feed, and content gating. They're not just a number.
+- **XP curve shape** (`base_xp * level ^ exponent`) determines game pacing. A quadratic curve (exponent 2) starts fast and ramps up. Compare your curve against enemy XP rewards to check pacing.
+- **Stat growth** per level uses base growth rates plus bounded randomness. Variance makes each level-up feel like a micro-event. Different characters should grow differently to feel distinct.
+- **Calculate before apply:** for a polished victory screen, separate `create_level_up()` (returns preview data) from `apply_level_up()` (commits changes). This enables animated stat displays.
 - **Loot drops** use probability (`randf() < drop_chance`) on each defeated enemy.
 - **Victory flow:** calculate rewards → distribute XP → check level ups → grant gold/items → return to overworld.
 - **Defeat flow:** display game over → return to title or last save.

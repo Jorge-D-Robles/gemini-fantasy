@@ -225,6 +225,18 @@ This wires the complete flow: menu appears → player picks action → target se
 
 ## The Damage Formula
 
+### Why Stats Exist
+
+Before writing a formula, think about *why* stats exist at all. There are three good reasons to add a stat to your RPG:
+
+1. **The simulation needs it.** If you want to calculate "who hits harder," you need a Strength stat. If you want "who acts first," you need Speed. Stats are numbers that feed your combat math.
+2. **It defines characters by difference.** A dragon should feel different from a goblin. If you only have HP and Attack, every enemy is just a bag of hit points. Speed, Defense, and Magic create variety.
+3. **It creates player choices.** Stats that the player can influence (through equipment, levels, or buffs) give strategic depth. "Do I boost Attack or Defense?" is only meaningful if both stats feed into the formula.
+
+If a stat doesn't serve at least one of these purposes, it's clutter.
+
+### Our Damage Formula
+
 A damage formula should be simple to understand, produce meaningful numbers, and allow for strategic depth. Here's ours:
 
 ```gdscript
@@ -242,6 +254,53 @@ This means:
 The Defend action increases `defense_boost`, making `get_effective_defense()` return a higher value, reducing incoming damage.
 
 > **JRPG Pattern:** Most JRPGs keep their damage formula visible and understandable. Players should be able to reason about "if I equip this sword (+5 attack), I'll do roughly 5 more damage per hit." Complex formulas with hidden multipliers frustrate players.
+
+### Alternative Formulas Used in Real RPGs
+
+Our formula is subtractive: `attack - defense = damage`. This is the simplest family of damage formulas, and it works well for small number ranges. But it has a quirk: if defense is close to attack, damage drops to nearly zero and the `max(1)` floor kicks in constantly. With large stat growth, damage can also spike hard. Here are three other approaches real RPGs use:
+
+**Multiplicative (Final Fantasy style):**
+```
+base_damage = random(attack, attack * 2)
+damage = base_damage - defense
+```
+The random range between 1x and 2x attack adds drama. A lucky hit does double. Defense still subtracts, but the higher ceiling means defense rarely walls you completely.
+
+**Ratio-based (Pokemon style):**
+```
+damage = (attack / defense) * base_power * modifier
+```
+The ratio means doubling your attack always doubles your damage, regardless of the target's defense. This produces stable, predictable scaling. The `modifier` term handles type effectiveness, critical hits, and random variance.
+
+**Armor-as-percentage:**
+```
+reduction = defense / (defense + constant)
+damage = attack * (1.0 - reduction)
+```
+Defense gives diminishing returns. The first 10 points of defense reduce a lot of damage; the next 10 reduce less. This prevents any character from becoming truly invincible through stacking defense. Many action RPGs use this.
+
+Our subtractive formula is the right choice for Crystal Saga's scope. If you extend the game significantly, revisit the formula when you notice balance problems (damage too low at high levels, or defense becoming meaningless).
+
+### Accuracy, Evasion, and Critical Hits
+
+Our formula always hits. That's fine for a tutorial game, but commercial JRPGs usually layer accuracy on top of damage. Here's the general pattern:
+
+```
+1. Roll hit chance:   base_accuracy + (attacker.speed / max_speed) / 2
+2. Roll dodge chance: base_evasion + (target.speed - attacker.speed) * 0.01
+3. If miss: show "MISS", deal 0 damage
+4. Roll critical:     small flat chance (5-10%)
+5. If critical:       damage * 1.5 or damage + bonus roll
+6. Otherwise:         normal damage
+```
+
+The key design insight: **speed should do double duty**. It determines turn order (Module 14) *and* influences hit/dodge rates. This makes Speed a meaningful stat without adding separate Accuracy and Evasion stats to your character sheet.
+
+We won't implement this in Crystal Saga, but if you find battles feel too deterministic, adding a miss chance (even just 5-10%) adds tension. Players remember the time they dodged a killing blow.
+
+### Isolate Your Formulas
+
+Put all combat math in one file (we use `calculate_damage()` as a static function). When you start tuning your game's balance, you'll change these numbers constantly. Having them scattered across battle states, AI scripts, and item effects makes tuning painful. One file, one place to tweak.
 
 ## Implementing All Actions
 
@@ -518,7 +577,9 @@ func _spawn_damage_number(target: BattlerData, amount: int, is_heal: bool = fals
 - The **battle menu** uses VBoxContainer with Buttons and `grab_focus()` for keyboard navigation.
 - **Target selection** presents enemy names as buttons; cancelling returns to the menu.
 - The **command pattern** represents actions as dictionaries: `{action, battler, target, ability, item}`.
-- **Damage formula:** `max(1, attack - defense + random_variance)`, simple, transparent, extensible.
+- **Stats exist for three reasons:** the simulation needs them, they differentiate characters, and they create player choices. If a stat doesn't serve at least one purpose, remove it.
+- **Damage formula:** `max(1, attack - defense + random_variance)`. Our subtractive formula is simple and transparent. Alternatives include multiplicative (Final Fantasy), ratio-based (Pokemon), and armor-as-percentage formulas, each with different scaling behavior.
+- **Isolate your formulas** in one place. Combat math gets tweaked constantly during balancing; scattering it across files makes tuning painful.
 - **Battle animations** use Tweens: slide forward → pause → slide back.
 - **Floating damage numbers** rise and fade using parallel tweens.
 - **Defend** is a temporary defense buff, the simplest status effect pattern.

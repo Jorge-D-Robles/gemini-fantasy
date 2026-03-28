@@ -127,6 +127,18 @@ Create some encounter groups as `.tres` files in `res://data/encounters/`:
 **`slime_pair.tres`:** 2 Crystal Slimes (weight: 0.6, uncommon)
 **`golem.tres`:** 1 Stone Golem (weight: 0.3, rare)
 
+#### The Oddment Table Pattern
+
+The weighted selection we're using here has a name: the **oddment table** (also called a weighted random table or loot table). It's one of the most reusable patterns in RPG development. The weights don't need to sum to 1.0 or 100 -- they're *relative*. Cave Bats at 1.0 are roughly 3x more likely than a Stone Golem at 0.3. The actual probabilities are:
+
+| Encounter | Weight | Probability |
+|-----------|--------|-------------|
+| Cave Bats | 1.0 | 1.0 / 1.9 = 53% |
+| Crystal Slimes | 0.6 | 0.6 / 1.9 = 32% |
+| Stone Golem | 0.3 | 0.3 / 1.9 = 16% |
+
+The power of this pattern: you can add or remove entries without recalculating the others. If you add a new "Crystal Spider" encounter at weight 0.4, all existing probabilities shift proportionally. No manual rebalancing needed. You'll see this same pattern used for item drops, shop stock, NPC dialogue variety, and AI decision-making in commercial RPGs.
+
 ### The Step Counter System
 
 Random encounters trigger based on a step counter. Create `res://systems/encounter_system.gd` and attach it to the `EncounterSystem` node in `crystal_cavern.tscn`:
@@ -204,6 +216,27 @@ func exit_zone() -> void:
 ```
 
 > **See:** [Random number generation](https://docs.godotengine.org/en/stable/tutorials/math/random_number_generation.html), covering `randi_range()`, `randf()`, and weighted random selection.
+
+### Tuning Encounter Rates
+
+The encounter system has two knobs: the **step threshold** (how far you walk before a check) and the **encounter rate** (chance of a fight when the check fires). Getting these right is critical to how your game feels.
+
+**Too frequent** (fight every 5 steps): the player feels trapped. Exploration becomes a chore. They'll dread every hallway.
+
+**Too rare** (fight every 50 steps): the dungeon feels empty. The player reaches the boss under-leveled because they didn't fight enough.
+
+**The sweet spot** for a JRPG dungeon is roughly one encounter every 15-25 steps. Our system achieves this through the combination of `randi_range(8, 20)` for the threshold and a 60% encounter rate. Here's the math:
+
+- Average threshold: ~14 steps
+- Average checks before a fight: 1 / 0.6 = ~1.7 checks
+- Expected steps between encounters: 14 * 1.7 = ~24 steps
+
+For different zones, vary the rate rather than the threshold:
+- **Safe corridors near save points:** 10% rate (rare encounters, the player can breathe)
+- **Main dungeon rooms:** 40-60% rate (steady pressure)
+- **Deep/dangerous areas:** 80% rate (tense, limited exploration time)
+
+One more trick real JRPGs use: no encounters within a few steps of entering a zone. Our threshold starts at `randi_range(10, 25)` on `enter_zone()`, which naturally gives the player a grace period when entering a new area.
 
 ### Wiring Encounter Zones
 
@@ -441,8 +474,9 @@ Handle flee in the PlayerChoice state (`player_choice_state.gd`), inside the `_o
 
 - **EnemyData** Resource defines enemy stats, AI type, rewards, and loot drops.
 - **Three AI types** (aggressive, cautious, balanced) create varied combat encounters with simple weighted logic.
-- **The step counter** triggers encounters after a semi-random number of movement steps.
-- **Encounter groups** (EncounterData) define which enemies appear together, with weighted random selection.
+- **The step counter** triggers encounters after a semi-random number of movement steps, with tunable frequency per zone.
+- **Oddment tables** (weighted random selection) are a reusable pattern for encounters, loot drops, AI decisions, and more. Weights are relative, so adding entries doesn't require rebalancing existing ones.
+- **Encounter rate tuning** combines step thresholds with probability checks. Different zones should feel different (safe corridors vs. dangerous depths).
 - **Boss fights** use pre-battle dialogue sequences and stronger enemy data.
 - **Flee mechanic** uses speed-based probability with bounded randomness.
 

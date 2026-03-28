@@ -320,6 +320,30 @@ You might be thinking: "I could just use a Dictionary for all this." You're righ
 
 The editor integration alone is worth it. Game designers (including future you) can tweak item stats, enemy HP, and quest rewards without touching code.
 
+### The Data-Driven Mindset
+
+Resources aren't just a convenience -- they represent a fundamental design philosophy: **separate your data from your logic.** This is the single most important architectural pattern in RPG development.
+
+Consider two ways to define a Potion:
+
+```gdscript
+# Logic-driven (data baked into code):
+func use_potion(target: CharacterData) -> void:
+    target.current_hp = min(target.current_hp + 50, target.max_hp)
+    print("Restored 50 HP!")
+
+# Data-driven (code reads data):
+func use_item(item: ItemData, target: CharacterData) -> void:
+    target.current_hp = min(target.current_hp + item.effect_value, target.max_hp)
+    print("Restored " + str(item.effect_value) + " HP!")
+```
+
+The first version requires a new function for every item. The second version works for *any* healing item: Potion (50 HP), Hi-Potion (150 HP), Elixir (full HP). One function, infinite items. The data (effect_value) drives the behavior.
+
+This pattern scales across your entire RPG. Enemies, abilities, quests, dialogue, shops, encounter tables -- all of them should be **data that code acts upon**, not **code that contains data**. When you find yourself writing a `match` statement with dozens of cases for specific item names or enemy types, that's a signal to push the differences into data.
+
+Every system we build from here on will follow this principle. The three-file pattern (class → data → consumer) is how we enforce it.
+
 ## Project Organization
 
 Here's our growing file structure:

@@ -154,6 +154,54 @@ Your game is now a real, distributable application.
 
 > **See:** [Exporting projects](https://docs.godotengine.org/en/stable/tutorials/export/exporting_projects.html), the full export guide for all platforms.
 
+## Balancing Your Game
+
+You've built all the systems. Now comes the part that separates a frustrating game from a satisfying one: balance. No formula or system matters if the numbers don't feel right.
+
+### Economy Balance
+
+Your game has a gold economy: enemies drop gold, shops charge gold, inns cost gold. These form a loop:
+
+```
+Fight enemies → earn gold → buy equipment → fight harder enemies → earn more gold
+```
+
+Check this loop by doing the math on paper:
+
+1. **How much gold does the player earn per dungeon run?** Average enemies per run * average gold per enemy. For Crystal Saga: ~8 fights * ~8 gold = ~64 gold per run.
+2. **How much does the best available equipment cost?** Iron Sword = 50 gold, Leather Armor = 40 gold. Total to equip one character = ~90 gold.
+3. **How many runs to afford a full equipment set?** 90 / 64 = ~1.5 dungeon runs. That feels about right -- the player can gear up without excessive grinding.
+
+If the answer to #3 is "10+ runs," your economy is too tight. If it's "they can buy everything after one fight," equipment upgrades don't feel meaningful. Aim for 1-3 dungeon runs to afford the next tier of gear.
+
+The inn is a pressure valve. If it costs 10 gold and the player earns ~8 gold per fight, healing between runs costs roughly one fight's worth of gold. That's a fair tax.
+
+### Combat Simulation
+
+Here's a trick from professional RPG development: before playtesting manually, write a quick script that simulates hundreds of battles and prints the results. No UI needed, just pure math:
+
+```gdscript
+# Run this in a test script or the Output panel
+func simulate_battle(attacker_atk: int, attacker_hp: int, defender_atk: int, defender_hp: int) -> Dictionary:
+    var turns: int = 0
+    var a_hp := attacker_hp
+    var d_hp := defender_hp
+    while a_hp > 0 and d_hp > 0:
+        d_hp -= max(1, attacker_atk - 3 + randi_range(-2, 2))  # player hits enemy
+        if d_hp <= 0:
+            break
+        a_hp -= max(1, defender_atk - 3 + randi_range(-2, 2))   # enemy hits player
+        turns += 1
+    return {player_won = a_hp > 0, turns = turns, remaining_hp = a_hp}
+```
+
+Run it 1,000 times with your actual stat values and check:
+- **Win rate against regular enemies** should be 85-95%. Below 80% means the player will wipe too often. Above 98% means fights have no tension.
+- **Average turns to win** should be 2-4 for trash mobs. Longer and fights feel like a slog. Shorter and enemies are just XP piñatas with no threat.
+- **Remaining HP** after a fight tells you how many consecutive fights the player can handle before needing to heal. If they exit every fight at 95% HP, encounters have no strategic weight.
+
+This approach lets you tune your damage formula, stat growth, and enemy stats without playing through the game dozens of times.
+
 ## Where to Go from Here
 
 Crystal Saga is a foundation. Here's what you could add next, in rough order of complexity:
@@ -165,12 +213,13 @@ Crystal Saga is a foundation. Here's what you could add next, in rough order of 
 - Extended dialogue for existing NPCs
 
 ### Status Effects System (Medium)
-Generalize the Defend buff from Module 15 into a full system:
-- **Poison:** Lose HP each turn (3 turns)
-- **Sleep:** Skip turn, wakes on damage
-- **Stun:** Skip one turn
-- **Regen:** Heal HP each turn
-- Each effect: type, duration (turns remaining), magnitude, tick behavior
+Generalize the Defend buff from Module 15 into a full system. The modifier pattern from Module 21 is the natural foundation: each status effect is a modifier with a duration.
+- **Poison:** Lose HP each turn (3 turns). Implement as a tick effect that fires in CHECK_RESULT.
+- **Sleep:** Skip turn, wakes on damage. Implement by intercepting the turn in TURN_START.
+- **Stun:** Skip one turn. Same interception, but auto-clears after one skip.
+- **Regen:** Heal HP each turn. Tick effect, opposite of Poison.
+- **Buff/Debuff:** Temporary stat modifiers (the `add`/`mult` pattern from Module 21). Bravery adds +25% Attack for 3 turns; Slow reduces Speed by 50% for 2 turns.
+- Each effect needs: type, duration (turns remaining), magnitude, a `tick()` method (for per-turn effects), and a modifier (for stat changes). Use unique IDs to prevent stacking the same buff -- casting Bravery twice refreshes the duration instead of doubling the bonus.
 
 ### Elemental Weakness/Resistance (Medium)
 Add elements to abilities and enemies:
