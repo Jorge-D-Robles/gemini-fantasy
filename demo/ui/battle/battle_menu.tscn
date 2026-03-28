@@ -1,0 +1,38 @@
+[gd_scene load_steps=2 format=3 uid="uid://demo_battle_menu"]
+
+[ext_resource type="Script" path="res://ui/battle/battle_menu.gd" id="1_script"]
+
+[node name="BattleMenu" type="PanelContainer"]
+visible = false
+custom_minimum_size = Vector2(120, 0)
+anchor_left = 0.0
+anchor_top = 0.5
+anchor_bottom = 1.0
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+
+[node name="ActionList" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="AttackButton" type="Button" parent="MarginContainer/ActionList"]
+layout_mode = 2
+text = "Attack"
+
+[node name="MagicButton" type="Button" parent="MarginContainer/ActionList"]
+layout_mode = 2
+text = "Magic"
+
+[node name="DefendButton" type="Button" parent="MarginContainer/ActionList"]
+layout_mode = 2
+text = "Defend"
+
+[node name="ItemButton" type="Button" parent="MarginContainer/ActionList"]
+layout_mode = 2
+text = "Item"
+
+[node name="FleeButton" type="Button" parent="MarginContainer/ActionList"]
+layout_mode = 2
+text = "Flee"

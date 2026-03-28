@@ -1,0 +1,88 @@
+[gd_scene load_steps=15 format=3 uid="uid://crystal_cavern_scene"]
+
+[ext_resource type="Script" path="res://scenes/crystal_cavern/crystal_cavern.gd" id="1_crystal_cavern"]
+[ext_resource type="Script" path="res://scenes/exit_zone.gd" id="2_exit_zone"]
+[ext_resource type="PackedScene" uid="uid://player" path="res://player/player.tscn" id="3_player"]
+[ext_resource type="PackedScene" uid="uid://treasure_chest" path="res://entities/interactable/treasure_chest.tscn" id="4_treasure_chest"]
+[ext_resource type="PackedScene" uid="uid://save_crystal" path="res://entities/interactable/save_crystal.tscn" id="5_save_crystal"]
+[ext_resource type="PackedScene" uid="uid://boss_door" path="res://entities/interactable/boss_door.tscn" id="6_boss_door"]
+[ext_resource type="Script" path="res://systems/encounter_zone.gd" id="7_encounter_zone"]
+[ext_resource type="Script" path="res://systems/encounter_system.gd" id="8_encounter_system"]
+[ext_resource type="Script" path="res://entities/interactable/boss_trigger.gd" id="9_boss_trigger"]
+[ext_resource type="PackedScene" uid="uid://dialogue_box" path="res://ui/dialogue_box/dialogue_box.tscn" id="10_dialogue_box"]
+[ext_resource type="PackedScene" uid="uid://inventory_screen" path="res://ui/inventory/inventory_screen.tscn" id="11_inventory"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_exit_whisperwood"]
+size = Vector2(64, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_main_corridor"]
+size = Vector2(320, 160)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_boss_trigger"]
+size = Vector2(32, 32)
+
+[node name="CrystalCavern" type="Node2D"]
+script = ExtResource("1_crystal_cavern")
+
+[node name="Ground" type="TileMapLayer" parent="."]
+
+[node name="Detail" type="TileMapLayer" parent="."]
+
+[node name="YSortGroup" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="Objects" type="TileMapLayer" parent="YSortGroup"]
+y_sort_enabled = true
+
+[node name="Player" parent="YSortGroup" instance=ExtResource("3_player")]
+
+[node name="TreasureChest1" parent="YSortGroup" instance=ExtResource("4_treasure_chest")]
+position = Vector2(96, 96)
+
+[node name="SaveCrystal" parent="YSortGroup" instance=ExtResource("5_save_crystal")]
+position = Vector2(160, 200)
+
+[node name="BossDoor" parent="YSortGroup" instance=ExtResource("6_boss_door")]
+position = Vector2(288, 64)
+
+[node name="AbovePlayer" type="TileMapLayer" parent="."]
+
+[node name="Exits" type="Node2D" parent="."]
+
+[node name="ExitToWhisperwood" type="Area2D" parent="Exits"]
+script = ExtResource("2_exit_zone")
+target_scene = "res://scenes/whisperwood/whisperwood.tscn"
+target_spawn_point = "from_cavern"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Exits/ExitToWhisperwood"]
+shape = SubResource("RectangleShape2D_exit_whisperwood")
+
+[node name="EncounterZones" type="Node2D" parent="."]
+
+[node name="MainCorridor" type="Area2D" parent="EncounterZones"]
+script = ExtResource("7_encounter_zone")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EncounterZones/MainCorridor"]
+shape = SubResource("RectangleShape2D_main_corridor")
+
+[node name="EncounterSystem" type="Node" parent="."]
+script = ExtResource("8_encounter_system")
+
+[node name="BossTrigger" type="Area2D" parent="."]
+position = Vector2(288, 96)
+script = ExtResource("9_boss_trigger")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BossTrigger"]
+shape = SubResource("RectangleShape2D_boss_trigger")
+
+[node name="SpawnPoints" type="Node2D" parent="."]
+
+[node name="default" type="Marker2D" parent="SpawnPoints" groups=["spawn_points"]]
+position = Vector2(160, 280)
+
+[node name="from_forest" type="Marker2D" parent="SpawnPoints" groups=["spawn_points"]]
+position = Vector2(160, 280)
+
+[node name="DialogueBox" parent="." instance=ExtResource("10_dialogue_box")]
+
+[node name="InventoryScreen" parent="." instance=ExtResource("11_inventory")]

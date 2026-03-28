@@ -1,0 +1,33 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://entities/interactable/treasure_chest.gd" id="1_tc"]
+[ext_resource type="Texture2D" path="res://icon.svg" id="2_icon"]
+
+[sub_resource type="RectangleShape2D" id="SubResource_body_col"]
+size = Vector2(16, 16)
+
+[sub_resource type="CircleShape2D" id="SubResource_interact_col"]
+radius = 24.0
+
+[node name="TreasureChest" type="StaticBody2D"]
+script = ExtResource("1_tc")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("2_icon")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("SubResource_body_col")
+
+[node name="InteractionZone" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionZone"]
+shape = SubResource("SubResource_interact_col")
+
+[node name="InteractionPrompt" type="Label" parent="."]
+visible = false
+offset_left = -4.0
+offset_top = -24.0
+offset_right = 4.0
+offset_bottom = -8.0
+text = "!"

@@ -1,0 +1,19 @@
+[gd_scene load_steps=2 format=3 uid="uid://demo_target_select"]
+
+[ext_resource type="Script" path="res://ui/battle/target_select.gd" id="1_script"]
+
+[node name="TargetSelect" type="PanelContainer"]
+visible = false
+anchor_left = 0.6
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+
+[node name="TargetList" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2

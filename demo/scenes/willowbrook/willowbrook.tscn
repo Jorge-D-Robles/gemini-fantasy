@@ -1,0 +1,60 @@
+[gd_scene load_steps=8 format=3 uid="uid://willowbrook_scene"]
+
+[ext_resource type="Script" path="res://scenes/willowbrook/willowbrook.gd" id="1_willowbrook"]
+[ext_resource type="Script" path="res://scenes/exit_zone.gd" id="2_exit_zone"]
+[ext_resource type="PackedScene" uid="uid://player" path="res://player/player.tscn" id="3_player"]
+[ext_resource type="PackedScene" uid="uid://npc" path="res://npcs/npc.tscn" id="4_npc"]
+[ext_resource type="PackedScene" uid="uid://dialogue_box" path="res://ui/dialogue_box/dialogue_box.tscn" id="5_dialogue_box"]
+[ext_resource type="PackedScene" uid="uid://inventory_screen" path="res://ui/inventory/inventory_screen.tscn" id="6_inventory"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_exit_whisperwood"]
+size = Vector2(64, 16)
+
+[node name="Willowbrook" type="Node2D"]
+script = ExtResource("1_willowbrook")
+
+[node name="Ground" type="TileMapLayer" parent="."]
+
+[node name="Detail" type="TileMapLayer" parent="."]
+
+[node name="YSortGroup" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="Objects" type="TileMapLayer" parent="YSortGroup"]
+y_sort_enabled = true
+
+[node name="Player" parent="YSortGroup" instance=ExtResource("3_player")]
+
+[node name="ElderMaren" parent="YSortGroup" instance=ExtResource("4_npc")]
+position = Vector2(160, 128)
+
+[node name="TravelerFynn" parent="YSortGroup" instance=ExtResource("4_npc")]
+position = Vector2(256, 192)
+
+[node name="Lira" parent="YSortGroup" instance=ExtResource("4_npc")]
+position = Vector2(320, 160)
+
+[node name="AbovePlayer" type="TileMapLayer" parent="."]
+
+[node name="Exits" type="Node2D" parent="."]
+
+[node name="ExitToWhisperwood" type="Area2D" parent="Exits"]
+script = ExtResource("2_exit_zone")
+target_scene = "res://scenes/whisperwood/whisperwood.tscn"
+target_spawn_point = "from_town"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Exits/ExitToWhisperwood"]
+position = Vector2(160, 0)
+shape = SubResource("RectangleShape2D_exit_whisperwood")
+
+[node name="SpawnPoints" type="Node2D" parent="."]
+
+[node name="default" type="Marker2D" parent="SpawnPoints" groups=["spawn_points"]]
+position = Vector2(160, 160)
+
+[node name="from_forest" type="Marker2D" parent="SpawnPoints" groups=["spawn_points"]]
+position = Vector2(160, 32)
+
+[node name="DialogueBox" parent="." instance=ExtResource("5_dialogue_box")]
+
+[node name="InventoryScreen" parent="." instance=ExtResource("6_inventory")]

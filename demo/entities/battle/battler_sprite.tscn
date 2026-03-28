@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://entities/battle/battler_sprite.gd" id="1_bs"]
+
+[node name="BattlerSprite" type="Node2D"]
+script = ExtResource("1_bs")
+
+[node name="Sprite" type="Sprite2D" parent="."]
