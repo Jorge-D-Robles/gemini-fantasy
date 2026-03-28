@@ -333,8 +333,8 @@
   @apply text-lg sm:text-xl text-slate-400 mt-4 max-w-2xl;
 }
 
-.cta-button {
-  @apply inline-flex items-center gap-2 px-6 py-3 bg-sky-500 hover:bg-sky-400 text-white font-semibold rounded-lg transition-colors mt-6 no-underline;
+.prose .cta-button {
+  @apply inline-flex items-center gap-2 px-6 py-3 bg-sky-500 hover:bg-sky-400 text-white font-semibold rounded-lg transition-colors mt-6 no-underline decoration-transparent;
 }
 
 .module-card {
