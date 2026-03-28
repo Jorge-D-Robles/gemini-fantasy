@@ -4,7 +4,7 @@ Part IV built the combat core of Crystal Saga. This module is your reference for
 
 ## Part IV in Review
 
-Part IV took us from "a connected world with no conflict" to "a fully playable combat loop." We started in Module 14 by confronting the limits of the enum-based state machine from Module 6 and replacing it with a node-based architecture that could handle the complexity of a battle system with seven distinct states. That architectural decision -- one Node per state, each with `enter()`, `process()`, and `exit()` -- became the foundation everything else was built on.
+Before Part IV, Crystal Saga had a connected world with no conflict. After it, we had a fully playable combat loop. We started in Module 14 by confronting the limits of the enum-based state machine from Module 6 and replacing it with a node-based architecture that could handle the complexity of a battle system with seven distinct states. That architecture -- one Node per state, each with `enter()`, `process()`, and `exit()` -- is what the rest of the battle system sits on.
 
 With the state machine running, Module 15 filled in the player's side: a battle menu, target selection, the damage formula, and Tween-based animations. The battle went from auto-playing print statements to interactive combat with floating damage numbers. Module 16 then gave us somewhere to fight by building the Crystal Cavern, introducing dungeon design principles, treasure chests, save crystals, and encounter zones. The dungeon was a natural application of TileMapLayer skills from Part II, but with cave tiles and a tighter, more controlled layout.
 
@@ -759,4 +759,4 @@ Resources loaded with `load()` are cached and shared by reference. When the vict
 
 ## What's Next
 
-Part V shifts from combat to progression and persistence. In **Module 20: The Quest System and Game Flags**, we build a game-wide boolean flag system for tracking world state and a quest system on top of it, making NPCs react to what the player has accomplished and giving Crystal Saga a sense of forward momentum beyond leveling up.
+Part V shifts from combat to progression and persistence. In **Module 20: The Quest System and Game Flags**, we build a game-wide boolean flag system for tracking world state and a quest system on top of it, so the game has forward momentum beyond just leveling up.

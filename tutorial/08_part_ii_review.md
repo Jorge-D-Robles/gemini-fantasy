@@ -8,7 +8,7 @@ At the start of Part II, you had a Player scene (CharacterBody2D with a sprite a
 
 Over three modules, you turned that blank canvas into a real game world. You built the town of Willowbrook tile-by-tile using TileMapLayers, layering ground, paths, objects, and treetops into a scene with actual depth. You replaced the sliding Godot icon with a sprite-animated player character driven by a proper state machine -- one that knows whether it's idle, walking, interacting, or disabled. You added Y-sorting so the player walks behind trees and in front of paths. And you connected Willowbrook to a second area, Whisperwood Forest, via exit zones and a SceneManager autoload that handles fade-to-black transitions and spawn point placement.
 
-The result is the skeleton of a real JRPG: two connected areas you can walk between, with an animated hero, tile-based collision, camera smoothing, and clean scene transitions. Everything from here forward -- NPCs, dialogue, inventory, combat -- builds on top of this foundation.
+The result is the skeleton of a real JRPG: two connected areas you can walk between, with an animated hero, tile-based collision, camera smoothing, and clean scene transitions. Everything from here forward -- NPCs, dialogue, inventory, combat -- builds on this.
 
 ### Module 5: The Overworld -- TileMaps and Terrain
 
@@ -421,4 +421,4 @@ Everything referenced in Part II, organized by category. Bookmark the ones you f
 
 ## What's Next
 
-Part III brings the world to life. In **Module 9: Resources, the Data Layer**, we'll learn Godot's Resource system and build custom data types for items, characters, and NPCs -- the data-driven foundation that powers everything from dialogue to combat.
+In Part III, we add interactivity. **Module 9: Resources, the Data Layer** introduces Godot's Resource system, where we build custom data types for items, characters, and NPCs. This data layer is what the dialogue, inventory, and combat systems all read from.

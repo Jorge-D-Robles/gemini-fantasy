@@ -4,11 +4,11 @@ This module is a review and quick-reference for everything covered in Part III (
 
 ## Part III in Review
 
-Part III transformed Crystal Saga from a world you walk through into a world you interact with. The big architectural move was separating **data from logic** using Godot's Resource system. Instead of hardcoding item stats, NPC names, and dialogue text inside scripts, we defined structured data types (Resource classes), created instances of those types (`.tres` files), and wrote systems that consume the data without caring about specific values. This pattern -- define a Resource class, populate `.tres` files, wire them into scripts -- will repeat in every system we build from here forward.
+Part III is where Crystal Saga went from a world you walk through to a world you interact with. The central change was separating **data from logic** using Godot's Resource system. Instead of hardcoding item stats, NPC names, and dialogue text inside scripts, we defined structured data types (Resource classes), created instances of those types (`.tres` files), and wrote systems that consume the data without caring about specific values. This pattern -- define a Resource class, populate `.tres` files, wire them into scripts -- will repeat in every system we build from here forward.
 
 With the data layer in place, we built three interconnected systems on top of it. NPCs use `NPCData` resources to configure their appearance and dialogue. The dialogue system reads `DialogueLine` resources and renders them in a typewriter-style textbox. The inventory system tracks `ItemData` resources and displays them in a navigable grid. Each system is decoupled from the others through signals: the NPC does not know about the dialogue box, the dialogue box does not know about the inventory, and the inventory does not know about either. They communicate through emit-and-connect wiring in the scene scripts.
 
-The result is a small but real game architecture. The patterns from Part III -- Resources for data, signals for communication, autoloads for persistence, Control nodes for UI -- are the same patterns that power the battle system, quest system, save/load, and every other system we will build in the remaining parts. If any of these concepts feel shaky, this is a good place to review before moving into Part IV.
+The result is a working game architecture. Resources for data, signals for communication, autoloads for persistence, Control nodes for UI -- these same patterns show up in the battle system, quest system, save/load, and everything else we build in the remaining parts. If any of these concepts feel shaky, this is a good place to review before moving into Part IV.
 
 ### Module 9: Resources, the Data Layer
 
@@ -124,7 +124,7 @@ my_copy.hp_restore = 99  # Only affects the copy
 
 ### The Resource Pattern (Data vs Logic)
 
-The core insight: separate **what the data is** from **what the code does with it**.
+The point: separate **what the data is** from **what the code does with it**.
 
 ```
 resources/item_data.gd       -- defines the shape (fields, types, enums)
@@ -548,4 +548,4 @@ The consistent pattern: the object that **knows something happened** emits a sig
 
 ## What's Next
 
-Part IV is the heart of any JRPG: **combat**. In Module 14 we will build the battle scene, implement a node-based state machine for battle flow, and create the turn order system. From there, Modules 15-18 add player actions, a dungeon to explore, enemy AI, and a victory/leveling loop. Everything we built in Part III -- Resources for data, signals for communication, UI patterns for display -- will be the foundation.
+Part IV is combat. In Module 14 we build the battle scene, implement a node-based state machine for battle flow, and create the turn order system. Modules 15-18 add player actions, a dungeon, enemy AI, and a victory/leveling loop. Everything from Part III -- Resources, signals, UI patterns -- carries directly into it.

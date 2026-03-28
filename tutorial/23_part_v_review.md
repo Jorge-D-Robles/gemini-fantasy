@@ -4,9 +4,9 @@ This module is your reference for everything covered in Part V: Progression and 
 
 ## Part V in Review
 
-Part V transformed Crystal Saga from a collection of isolated systems into a game with real progression. Before these three modules, the player could explore, fight, and collect items, but nothing tied those actions together into a story arc, and nothing survived closing the game.
+Part V connected Crystal Saga's isolated systems into a game with actual progression. Before these three modules, the player could explore, fight, and collect items, but nothing tied those actions together into a story arc, and nothing survived closing the game.
 
-Module 20 introduced two foundational concepts: game flags and quests. Game flags gave every system in the project a shared language for tracking what has happened in the world, while the quest system built on top of those flags to create structured objectives with rewards. The key architectural insight was using a reactive signal (`flag_changed`) so that quest completion happens automatically when the world state changes, rather than through manual checking. This also made NPCs feel alive: Fynn remembers whether you have spoken to him, whether you found his pendant, and whether you already returned it.
+Module 20 introduced two foundational concepts: game flags and quests. Game flags gave every system in the project a shared language for tracking what has happened in the world, while the quest system built on top of those flags to create structured objectives with rewards. The trick was a reactive signal (`flag_changed`) that lets quest completion happen automatically when the world state changes, rather than through manual checking. This also made NPCs responsive: Fynn remembers whether you have spoken to him, whether you found his pendant, and whether you already returned it.
 
 Module 21 added the remaining progression systems. PartyManager gave us a roster (and Lira, the first companion), the equipment system made gear meaningful by modifying effective stats, and the shop system let the player spend their hard-earned gold. These systems layered cleanly onto the Resource and autoload patterns established in earlier modules. Finally, Module 22 closed the loop by persisting every piece of game state to JSON files. The `to_save_data()` / `from_save_data()` pattern gave each autoload a clean serialization boundary, and the save slot UI gave players the classic three-slot experience. With save and load in place, Crystal Saga became a game you can actually put down and come back to.
 
@@ -700,4 +700,4 @@ func _on_continue() -> void:
 
 ## What's Next
 
-All of the game's core systems are built and its state persists across sessions. In **Part VI: Polish and Integration**, we add background music and sound effects, build the title screen with new game and continue flows, and tie every system together into a finished, playable Crystal Saga demo.
+All the core systems are built and game state persists across sessions. In **Part VI: Polish and Integration**, we add music and sound effects, build the title screen with new game and continue flows, and tie everything together into a playable demo.
