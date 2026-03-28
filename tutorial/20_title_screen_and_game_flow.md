@@ -206,6 +206,73 @@ func _quit_to_title() -> void:
 
 > **Note:** The pause menu's `process_mode = ALWAYS` ensures it receives input even when the tree is paused. The SceneManager also needs `ALWAYS` to handle transitions during pause.
 
+## The Game Over Screen
+
+Module 15's defeat state sends the player back to Willowbrook as a placeholder. Now we'll build a proper Game Over screen with options.
+
+Create `res://ui/game_over/game_over.tscn`:
+
+```
+GameOver (Control, Layout: Full Rect)
+└── VBox (VBoxContainer, centered)
+    ├── GameOverLabel (Label: "Game Over", font_size: 32)
+    ├── Spacer (Control, custom_minimum_size: y=20)
+    ├── RetryButton (Button: "Load Last Save")
+    ├── TitleButton (Button: "Return to Title")
+```
+
+```gdscript
+extends Control
+## The Game Over screen. Shown when the party is wiped.
+
+@onready var _retry_btn: Button = $VBox/RetryButton
+@onready var _title_btn: Button = $VBox/TitleButton
+
+
+func _ready() -> void:
+    _retry_btn.pressed.connect(_on_retry)
+    _title_btn.pressed.connect(_on_title)
+
+    # Disable retry if no save exists
+    var has_save: bool = false
+    for i in range(1, SaveManager.MAX_SLOTS + 1):
+        if SaveManager.slot_exists(i):
+            has_save = true
+            break
+    _retry_btn.disabled = not has_save
+    if has_save:
+        _retry_btn.grab_focus()
+    else:
+        _title_btn.grab_focus()
+
+
+func _on_retry() -> void:
+    # Load the most recent save (slot 1 by default, or show slot dialog)
+    SaveManager.load_game(1)
+
+
+func _on_title() -> void:
+    SceneManager.change_scene("res://ui/title_screen/title_screen.tscn")
+```
+
+Now update the defeat state in `res://systems/battle/states/defeat_state.gd` to use this screen (replacing the Module 15 placeholder):
+
+```gdscript
+extends BattleState
+## Party wiped. Show Game Over screen.
+
+
+func enter(_context: Dictionary = {}) -> void:
+    print("--- DEFEAT ---")
+    print("The party has fallen...")
+    battle_manager.battle_lost.emit()
+
+    await get_tree().create_timer(2.0).timeout
+
+    # Show the Game Over screen instead of reloading Willowbrook
+    SceneManager.change_scene("res://ui/game_over/game_over.tscn")
+```
+
 ## The Ending
 
 When the Crystal Guardian is defeated, trigger the ending. Open `res://systems/battle/states/victory_state.gd` and add this check at the beginning of the `enter()` method, before the reward calculation:

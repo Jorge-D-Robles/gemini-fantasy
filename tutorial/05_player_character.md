@@ -21,16 +21,28 @@ Row 3: Walk Up:    frame 0, 1, 2, 3
 
 Each row is a direction, each column is a frame of the walk animation. Most JRPG characters use 3-4 frames per direction.
 
-For this tutorial, we recommend downloading a free character sprite sheet:
+You have two options for the character sprite. **Option A** is fastest and works without downloading anything. **Option B** looks better if you have time.
 
-1. Go to [kenney.nl/assets/tiny-town](https://kenney.nl/assets/tiny-town) (the same pack from Module 4).
-2. In the extracted ZIP, look in the `Tilemap/` folder for character sprites, or use the `tilemap_packed.png` sheet which contains small character tiles.
+### Option A: Godot Icon Fallback (recommended for first playthrough)
 
-Alternatively, search [opengameart.org](https://opengameart.org) for "JRPG character sprite sheet 16x16", and you'll find many free options. Look for a sheet with **4 rows** (one per direction: down, left, right, up) and **3-4 columns** (frames per walk cycle).
+Use the Godot `icon.svg` as your character sprite. This is the fastest way to keep moving. Set up AnimatedSprite2D with single-frame animations using the icon for all 8 animations (`idle_down`, `idle_up`, `idle_left`, `idle_right`, `walk_down`, `walk_up`, `walk_left`, `walk_right`). The walk animations won't visually animate, but the state machine code will work correctly, and you can swap in real art later.
+
+Skip the "Adding Animations from a Sprite Sheet" section below and use "Adding Single-Frame Animations" instead:
+
+1. In the SpriteFrames panel, rename the `default` animation to `idle_down`.
+2. Click "Add Animation" seven more times for: `idle_up`, `idle_left`, `idle_right`, `walk_down`, `walk_up`, `walk_left`, `walk_right`.
+3. For each animation, drag `icon.svg` from the FileSystem dock into the frames area.
+4. Set FPS to 8 and enable looping for the walk animations.
+
+### Option B: Download a sprite sheet
+
+Download a free character sprite sheet from one of these sources:
+
+1. Go to [kenney.nl/assets/tiny-town](https://kenney.nl/assets/tiny-town) (the same pack from Module 4). In the extracted ZIP, `tilemap_packed.png` contains small 16x16 character tiles in the lower portion of the sheet.
+
+2. Alternatively, search [opengameart.org](https://opengameart.org) for "JRPG character sprite sheet 16x16". Look for a sheet with **4 rows** (one per direction: down, left, right, up) and **3-4 columns** (frames per walk cycle).
 
 > **Note:** If your sprite sheet has a different layout (e.g., 3 frames instead of 4, or rows in a different order like down/up/left/right), that's fine. Just adjust the frame selection when setting up animations below. The script we write works with any 4-direction animation names.
-
-If you can't find a sheet, you can still follow along, but you'll need to set up AnimatedSprite2D with single-frame animations. Follow the setup steps below, using the Godot `icon.svg` as your image. Create each of the 8 animations (`idle_down`, `idle_up`, etc.) with the icon as the single frame. The walk animations won't visually animate, but the state machine code will work correctly, and you can swap in real art later.
 
 Save your sprite sheet to `res://player/player_spritesheet.png`.
 

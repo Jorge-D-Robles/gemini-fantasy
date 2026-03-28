@@ -92,6 +92,19 @@ Shows a multiline text editor in the Inspector instead of a single-line field. P
 
 When you `@export` an enum variable, the Inspector shows a dropdown menu with the enum values. No typos, no invalid values.
 
+## A Warning About Resources and Shared References
+
+Resources are **shared by reference**. If you load the same `.tres` file in two places, both get the **same object in memory**. If one script modifies a field (e.g., `item.hp_restore = 99`), the other script sees the change too.
+
+This is powerful for data that should be consistent everywhere (like item definitions). But it's dangerous for data that should be independent (like two characters each equipping the same sword). If you need an independent copy, call `resource.duplicate()`:
+
+```gdscript
+var my_copy: ItemData = shared_item.duplicate()
+my_copy.hp_restore = 99  # Only affects my_copy, not the original
+```
+
+At runtime, never modify a Resource you loaded from a `.tres` unless you want the change to be visible everywhere. We'll revisit this pattern in Module 20 when we need a fresh copy of CharacterData for new games.
+
 ## Creating `.tres` Files
 
 Now that we have the `ItemData` class, we'll create actual items.

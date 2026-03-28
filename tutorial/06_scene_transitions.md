@@ -254,14 +254,22 @@ Design a simple forest area (at least 20x15 tiles). Use grass tiles for ground, 
 - An entrance on the north side (connecting to Willowbrook)
 - An exit on the south side (leading to the Crystal Cavern, which we'll build in Module 13)
 
-Add spawn points (add both to the `spawn_points` group):
-- `from_town`: near the north entrance
-- `default`: same position as `from_town`
+**Whisperwood scene structure checklist** (make sure you have all of these):
 
-Add an exit zone:
-- `ExitToWillowbrook`: Area2D at the north edge, pointing back to `res://scenes/willowbrook/willowbrook.tscn` with spawn point `from_forest`
+1. `Whisperwood` (Node2D) -- root
+2. `Ground` (TileMapLayer) -- grass, paths
+3. `Detail` (TileMapLayer) -- small decorations
+4. `YSortGroup` (Node2D, `y_sort_enabled = true`)
+   - `Objects` (TileMapLayer, `y_sort_enabled = true`) -- trees, rocks
+   - Player instance (`player.tscn`)
+5. `AbovePlayer` (TileMapLayer) -- treetop canopy
+6. Spawn points (Marker2D nodes, added to `spawn_points` group):
+   - `from_town`: near the north entrance
+   - `default`: same position as `from_town`
+7. Exit zone:
+   - `ExitToWillowbrook` (Area2D + `exit_zone.gd`) at the north edge, pointing to `res://scenes/willowbrook/willowbrook.tscn` with spawn point `from_forest`
 
-Set up Y-sorting as in Module 5 (create a YSortGroup with Objects and Player as children). Instance the Player scene into Whisperwood (temporary; later the SceneManager will handle spawning). If you test and see an empty forest with no player, check that you instanced `player.tscn` into the scene.
+If you test and see an empty forest with no player, check that you instanced `player.tscn` into the YSortGroup (not the root).
 
 > **Note:** For now, we're placing the Player instance directly in each scene. This means there are technically multiple Player instances across scenes. That's fine because only one scene is loaded at a time. In a more complex setup, you might have the SceneManager spawn the player dynamically.
 

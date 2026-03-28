@@ -298,7 +298,76 @@ func _activate() -> void:
     print("Your progress has been saved!")
 ```
 
-A proper implementation would show a save slot selection UI: three buttons, each showing the timestamp and location of existing saves.
+### Save Slot Selection UI
+
+Rather than hardcoding slot 1, build a simple selection dialog. Create `res://ui/save_slot_dialog/save_slot_dialog.tscn`:
+
+```
+SaveSlotDialog (PanelContainer)
+└── VBox (VBoxContainer)
+    ├── TitleLabel (Label: "Choose a Slot")
+    ├── Slot1Button (Button)
+    ├── Slot2Button (Button)
+    ├── Slot3Button (Button)
+    └── CancelButton (Button: "Cancel")
+```
+
+```gdscript
+extends PanelContainer
+## A 3-slot save/load selection dialog.
+
+signal slot_selected(slot: int)
+signal cancelled
+
+@onready var _buttons: Array[Button] = [
+    $VBox/Slot1Button,
+    $VBox/Slot2Button,
+    $VBox/Slot3Button,
+]
+@onready var _cancel_btn: Button = $VBox/CancelButton
+
+
+func _ready() -> void:
+    for i in range(_buttons.size()):
+        var slot_num: int = i + 1
+        _buttons[i].pressed.connect(func() -> void: slot_selected.emit(slot_num))
+    _cancel_btn.pressed.connect(func() -> void: cancelled.emit())
+    refresh()
+    _buttons[0].grab_focus()
+
+
+func refresh() -> void:
+    for i in range(_buttons.size()):
+        var slot_num: int = i + 1
+        var info: Dictionary = SaveManager.get_slot_info(slot_num)
+        if info.is_empty():
+            _buttons[i].text = "Slot " + str(slot_num) + ": Empty"
+        else:
+            _buttons[i].text = "Slot " + str(slot_num) + ": " + info.get("scene_name", "Unknown")
+```
+
+Wire this into the save crystal:
+
+```gdscript
+func _activate() -> void:
+    var dialog: PanelContainer = preload("res://ui/save_slot_dialog/save_slot_dialog.tscn").instantiate()
+    get_tree().current_scene.add_child(dialog)
+    var slot: int = await dialog.slot_selected
+    dialog.queue_free()
+    SaveManager.save_game(slot)
+    print("Saved to slot " + str(slot) + "!")
+```
+
+And the title screen's Continue button:
+
+```gdscript
+func _on_continue() -> void:
+    var dialog: PanelContainer = preload("res://ui/save_slot_dialog/save_slot_dialog.tscn").instantiate()
+    add_child(dialog)
+    var slot: int = await dialog.slot_selected
+    dialog.queue_free()
+    SaveManager.load_game(slot)
+```
 
 ## Error Handling
 

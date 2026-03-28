@@ -32,7 +32,19 @@ You'll need cave or dungeon tiles for the Crystal Cavern. Here are your options:
 
 **Option 3, placeholder tiles:** Create a simple cave palette with colored rectangles: dark grey for walls (e.g., `Color(0.25, 0.25, 0.3)`), lighter grey for walkable floor (`Color(0.45, 0.45, 0.5)`), and blue-purple for crystal decorations (`Color(0.4, 0.3, 0.7)`). In the TileSet editor, you can draw directly onto a new atlas.
 
-Whichever approach you use, create a new TileSet resource for the cave: **right-click `res://scenes/crystal_cavern/`** → New Resource → TileSet. Add your tile sheet as an Atlas source, set up collision on wall tiles (same process as Module 4), and assign it to each TileMapLayer.
+**Recommended:** Use Option 3 (placeholder tiles) to keep moving without interruption. You can swap in real art later. Options 1-2 look better but require downloading and importing external assets.
+
+Whichever approach you use, the TileSet creation workflow is the same as Module 4:
+
+1. Create a TileSet resource: right-click `res://scenes/crystal_cavern/` → New Resource → TileSet
+2. Set the **Tile Size** to `16x16` (must be done before adding an atlas)
+3. In the TileSet panel, click **+** → Atlas → drag your cave tile sheet into the Texture slot
+4. Click **Yes** when prompted to create tiles automatically
+5. Switch to the Paint tab, select **Physics Layer 0**, and paint collision on wall tiles
+6. Save the TileSet as `res://scenes/crystal_cavern/cave_tileset.tres`
+7. Assign it to each TileMapLayer in the Inspector
+
+If any of these steps feel unclear, revisit Module 4's "Creating the TileSet" section for the full walkthrough.
 
 ## Building the Cave Tilemap
 

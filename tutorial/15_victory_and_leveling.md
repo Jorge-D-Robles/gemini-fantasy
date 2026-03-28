@@ -169,7 +169,7 @@ func enter(_context: Dictionary = {}) -> void:
     SceneManager.change_scene("res://scenes/willowbrook/willowbrook.tscn", "default")
 ```
 
-In Module 20, we'll replace this with a proper Game Over screen with options (retry, load save, return to title).
+Module 20 replaces this with a proper Game Over screen with options (load save, return to title).
 
 ## Post-Battle State Restoration
 

@@ -294,7 +294,41 @@ func _refresh() -> void:
     _armor_button.text = "Armor: " + (_character.equipped_armor.display_name if _character.equipped_armor else "(none)")
 ```
 
-When the player selects a slot, show equipable items from inventory and allow swapping.
+### Slot Selection and Item Swapping
+
+When the player clicks a slot button, show equipable items from inventory and allow swapping. Connect the button signals and add the selection logic:
+
+```gdscript
+func _ready() -> void:
+    _weapon_button.pressed.connect(_on_slot_pressed.bind(ItemData.EquipSlot.WEAPON))
+    _armor_button.pressed.connect(_on_slot_pressed.bind(ItemData.EquipSlot.ARMOR))
+
+
+func _on_slot_pressed(slot: ItemData.EquipSlot) -> void:
+    # Get equipable items for this slot from inventory
+    var equipable: Array = []
+    for entry in InventoryManager.get_all_items():
+        var item: ItemData = entry.item
+        if item.item_type == ItemData.ItemType.EQUIPMENT and item.equip_slot == slot:
+            equipable.append(item)
+
+    if equipable.is_empty():
+        print("No equipment for this slot in inventory.")
+        return
+
+    # Simple approach: equip the first matching item.
+    # A full UI would show a selection list with stat comparisons.
+    var item: ItemData = equipable[0]
+    var previous: ItemData = _character.equip(item)
+    InventoryManager.remove_item(item)
+    if previous:
+        InventoryManager.add_item(previous)
+
+    _refresh()
+    equipment_changed.emit()
+```
+
+> **Exercise:** For a more polished experience, replace the "equip first item" logic with a popup list showing all matching items, their stats, and the stat difference compared to the current equipment. The inventory grid pattern from Module 10 works well for this.
 
 ## The Shop System
 
