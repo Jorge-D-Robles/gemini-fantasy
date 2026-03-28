@@ -288,13 +288,13 @@ func _unhandled_input(event: InputEvent) -> void:
 
 | Autoload | Module | Purpose |
 |----------|--------|---------|
-| SceneManager | 6 | Scene transitions with fade effects |
-| InventoryManager | 10 | Item storage, add/remove, signals |
-| GameManager | 16 | Game flags, world state tracking |
-| QuestManager | 16 | Quest tracking, objective checking |
-| PartyManager | 17 | Party roster, recruitment, stats |
-| SaveManager | 18 | Save/load game state to JSON |
-| **MusicManager** | **19** | **BGM crossfading, battle music** |
+| SceneManager | 7 | Scene transitions with fade effects |
+| InventoryManager | 12 | Item storage, add/remove, signals |
+| GameManager | 20 | Game flags, world state tracking |
+| QuestManager | 20 | Quest tracking, objective checking |
+| PartyManager | 21 | Party roster, recruitment, stats |
+| SaveManager | 22 | Save/load game state to JSON |
+| **MusicManager** | **24** | **BGM crossfading, battle music** |
 
 ## What We've Learned
 

@@ -161,6 +161,8 @@ const MAX_SLOTS := 3
 
 
 func save_game(slot: int) -> bool:
+    # Creates the save directory (and any parent directories) if it doesn't
+    # exist yet. Safe to call even if the directory already exists.
     DirAccess.make_dir_recursive_absolute(SAVE_DIR)
 
     var save_data: Dictionary = {
@@ -220,6 +222,9 @@ func load_game(slot: int) -> bool:
     var json_string := file.get_as_text()
     file.close()
 
+    # Godot's JSON class works in two steps: json.parse() attempts to parse
+    # the string (returns OK on success), then json.data holds the result
+    # as a Dictionary. Always check the error before using .data.
     var json := JSON.new()
     var error := json.parse(json_string)
     if error != OK:
@@ -391,12 +396,12 @@ if not save_data.has("version"):
 
 | Autoload | Module | Purpose |
 |----------|--------|---------|
-| SceneManager | 6 | Scene transitions with fade effects |
-| InventoryManager | 10 | Item storage, add/remove, signals |
-| GameManager | 16 | Game flags, world state tracking |
-| QuestManager | 16 | Quest tracking, objective checking |
-| PartyManager | 17 | Party roster, recruitment, stats |
-| **SaveManager** | **18** | **Save/load game state to JSON** |
+| SceneManager | 7 | Scene transitions with fade effects |
+| InventoryManager | 12 | Item storage, add/remove, signals |
+| GameManager | 20 | Game flags, world state tracking |
+| QuestManager | 20 | Quest tracking, objective checking |
+| PartyManager | 21 | Party roster, recruitment, stats |
+| **SaveManager** | **22** | **Save/load game state to JSON** |
 
 > **Note:** `load_game()` uses `tree.change_scene_to_file()` directly instead of `SceneManager.change_scene()`. This is intentional. The save system needs to bypass SceneManager's spawn point logic and instead restore the exact player position from the save file. If you want the fade effect, you could call `SceneManager._anim_player.play("fade_out")` before loading and `fade_in` after.
 

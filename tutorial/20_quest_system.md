@@ -394,10 +394,10 @@ func _show_detail(quest: QuestData) -> void:
 
 | Autoload | Module | Purpose |
 |----------|--------|---------|
-| SceneManager | 6 | Scene transitions with fade effects |
-| InventoryManager | 10 | Item storage, add/remove, signals |
-| **GameManager** | **16** | **Game flags, world state tracking** |
-| **QuestManager** | **16** | **Quest tracking, objective checking** |
+| SceneManager | 7 | Scene transitions with fade effects |
+| InventoryManager | 12 | Item storage, add/remove, signals |
+| **GameManager** | **20** | **Game flags, world state tracking** |
+| **QuestManager** | **20** | **Quest tracking, objective checking** |
 
 > **See:** [Singletons (Autoload)](https://docs.godotengine.org/en/stable/tutorials/scripting/singletons_autoload.html). GameManager and QuestManager are both autoloads. This tutorial covers when and why to use the autoload pattern.
 

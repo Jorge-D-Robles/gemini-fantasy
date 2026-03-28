@@ -218,12 +218,14 @@ Attach this script to `ExitToWhisperwood`. In the Inspector, set:
 
 The exit zone checks `body.is_in_group("player")`. We need to add the player to this group.
 
+**Groups** are tags you can assign to any node. A node can belong to multiple groups, and you can find all nodes in a group with `get_tree().get_nodes_in_group("name")` or get the first match with `get_tree().get_first_node_in_group("name")`. Think of them as labels for querying -- they let systems find nodes without hard-coded paths.
+
 1. Open `player.tscn`.
 2. Select the `Player` (CharacterBody2D) root node.
-3. Go to the **Node** tab → **Groups** section.
+3. Go to the **Node** tab (next to Inspector) → **Groups** section.
 4. Type `player` and click **Add**.
 
-The player needs to be in the `player` group so systems like the SceneManager can find it with `get_tree().get_first_node_in_group("player")`.
+> **See:** [Groups](https://docs.godotengine.org/en/stable/tutorials/scripting/groups.html): Godot's node tagging system. We'll use groups again in later modules for encounter zones, UI elements, and save points.
 
 ### Spawn Points
 
@@ -309,7 +311,7 @@ We'll maintain this running table throughout the tutorial, adding each new autol
 
 | Autoload | Module | Purpose |
 |----------|--------|---------|
-| **SceneManager** | 6 | Scene transitions with fade effects |
+| **SceneManager** | 7 | Scene transitions with fade effects |
 
 *Updated in future modules as we add more autoloads.*
 

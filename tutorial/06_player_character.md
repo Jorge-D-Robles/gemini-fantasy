@@ -165,6 +165,9 @@ Replace the entire contents of `res://player/player.gd` with this state machine 
 extends CharacterBody2D
 ## The player character with state-machine-driven movement and animation.
 
+# GDScript enums define a set of named integer constants.
+# This creates State.IDLE = 0, State.WALK = 1, State.INTERACT = 2, State.DISABLED = 3.
+# We use them instead of raw integers so the code reads as words, not magic numbers.
 enum State { IDLE, WALK, INTERACT, DISABLED }
 
 @export var speed: float = 200.0

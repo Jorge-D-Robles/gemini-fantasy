@@ -24,7 +24,7 @@ Key Control nodes we'll use:
 | `RichTextLabel` | Displays text with BBCode formatting |
 | `TextureRect` | Displays an image |
 
-Control nodes automatically size and position themselves based on their parent container. This means our dialogue box will work correctly regardless of screen resolution.
+Control nodes automatically size and position themselves based on their parent container. **Anchors** define where a node pins itself relative to its parent (e.g., "Bottom Wide" means "stick to the bottom edge and stretch the full width"). **Containers** like VBoxContainer handle child arrangement automatically -- you add children and the container lays them out. This means our dialogue box will work correctly regardless of screen resolution.
 
 > **See:** [Size and anchors](https://docs.godotengine.org/en/stable/tutorials/ui/size_and_anchors.html), how Control nodes position themselves.
 
@@ -409,6 +409,9 @@ func _show_choices(choices: Array[String]) -> void:
     for i in choices.size():
         var button := Button.new()
         button.text = choices[i]
+        # .bind(i) attaches the value of i to the callback. When this button
+        # is pressed, _on_choice_pressed receives i as its argument. Without
+        # .bind(), we'd have no way to know which button was pressed.
         button.pressed.connect(_on_choice_pressed.bind(i))
         _choice_container.add_child(button)
 

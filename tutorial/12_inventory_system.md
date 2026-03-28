@@ -106,8 +106,8 @@ Register it as an autoload: **Project → Project Settings → Autoload** → ad
 
 | Autoload | Module | Purpose |
 |----------|--------|---------|
-| SceneManager | 6 | Scene transitions with fade effects |
-| **InventoryManager** | **10** | **Item storage, add/remove, signals** |
+| SceneManager | 7 | Scene transitions with fade effects |
+| **InventoryManager** | **12** | **Item storage, add/remove, signals** |
 
 ## Adding a Menu Input Action
 
@@ -243,7 +243,9 @@ func close() -> void:
 
 
 func _refresh() -> void:
-    # Clear existing slots (use free(), not queue_free(), to remove immediately)
+    # free() removes nodes immediately this frame. queue_free() defers removal
+    # to the end of the frame. When repopulating a container, free() prevents
+    # old and new children from briefly coexisting and causing layout flicker.
     for child in _item_grid.get_children():
         child.free()
 

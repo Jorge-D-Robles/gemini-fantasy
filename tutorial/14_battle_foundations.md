@@ -307,7 +307,9 @@ func build_turn_queue() -> void:
         if b.is_alive():
             all_battlers.append(b)
 
-    # Sort by speed (highest first)
+    # Sort by speed (highest first). sort_custom() takes an inline function
+    # (also called a lambda): func(a, b) -> bool returns true if a should
+    # come before b. GDScript supports these for one-off comparisons.
     all_battlers.sort_custom(func(a: BattlerData, b: BattlerData) -> bool:
         return a.current_speed > b.current_speed
     )
@@ -682,8 +684,8 @@ Each state is isolated. Adding new actions (magic, items, defend) means adding b
 
 | Autoload | Module | Purpose |
 |----------|--------|---------|
-| SceneManager | 6 | Scene transitions with fade effects |
-| InventoryManager | 10 | Item storage, add/remove, signals |
+| SceneManager | 7 | Scene transitions with fade effects |
+| InventoryManager | 12 | Item storage, add/remove, signals |
 
 > **Note:** BattleManager is NOT an autoload. It is the root script of `battle.tscn` and only exists during battles. The SceneManager loads the battle scene and calls `initialize_battle()` on it.
 

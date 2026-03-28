@@ -35,10 +35,14 @@ enum AIType { AGGRESSIVE, CAUTIOUS, BALANCED }
 @export var xp_reward: int = 10
 @export var gold_reward: int = 5
 @export var drop_item: ItemData
-@export_range(0.0, 1.0) var drop_chance: float = 0.25
+@export_range(0.0, 1.0) var drop_chance: float = 0.25  # Shows a slider in the Inspector clamped to 0-1
 ```
 
-Create three enemies as `.tres` files in `res://data/enemies/`:
+> `@export_range(min, max)` constrains the Inspector widget to a slider within the given range. Useful for probabilities, percentages, and any value with natural bounds.
+
+> Notice AIController (below) has `class_name` but no `extends` line. When omitted, GDScript scripts extend `RefCounted` by default. Since AIController only has static methods and is never instanced as a node, that's fine.
+
+Create three enemies as `.tres` files in `res://data/enemies/`. Follow the same workflow from Module 9: right-click the folder in the FileSystem dock, choose **New Resource**, search for `EnemyData`, click **Create**, name the file, then fill in the exported fields in the Inspector.
 
 **`cave_bat.tres`**, fast, weak, aggressive
 - display_name: "Cave Bat", ai_type: AGGRESSIVE
@@ -121,7 +125,7 @@ class_name EncounterData
 @export_range(0.0, 1.0) var weight: float = 1.0  # Relative probability
 ```
 
-Create some encounter groups as `.tres` files in `res://data/encounters/`:
+Create encounter groups as `.tres` files in `res://data/encounters/` (same workflow: right-click folder → New Resource → search `EncounterData` → Create):
 
 **`cave_bats.tres`:** 3 Cave Bats (weight: 1.0, common)
 **`slime_pair.tres`:** 2 Crystal Slimes (weight: 0.6, uncommon)
@@ -249,7 +253,9 @@ extends Area2D
 @export var encounters: Array[EncounterData] = []
 @export var encounter_rate: float = 0.1
 
-# Path from EncounterZones/MainCorridor up to CrystalCavern, then down to EncounterSystem
+# ../../EncounterSystem means: go up two levels in the scene tree (from
+# MainCorridor → EncounterZones → CrystalCavern), then down to EncounterSystem.
+# We've used $ for child access before; ../ navigates to the parent.
 @onready var _encounter_system: Node = $"../../EncounterSystem"
 
 

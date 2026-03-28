@@ -56,7 +56,7 @@ Register as autoload `PartyManager`.
 
 ## Recruiting Lira
 
-Create Lira's character data at `res://data/characters/lira.tres`. Set ALL of these fields in the Inspector:
+Create Lira's character data: right-click `res://data/characters/` → **New Resource** → search `CharacterData` → **Create** → name it `lira.tres`. Set ALL of these fields in the Inspector:
 - `id`: "lira"
 - `display_name`: "Lira"
 - `max_hp`: 80, `max_mp`: 40
@@ -201,15 +201,13 @@ func unequip(slot: ItemData.EquipSlot) -> ItemData:
 
 ### Creating Equipment Items
 
-Create two equipment `.tres` files so the player has something to equip:
+We need equipment the player can actually wear. If you created `iron_sword.tres` and `leather_armor.tres` back in Module 9, open them now and verify the equipment-specific fields match the values below. If you don't have them yet, create them now (right-click `res://data/items/` → New Resource → ItemData):
 
 **Iron Sword** (`res://data/items/iron_sword.tres`):
-1. Right-click `res://data/items/` -> New Resource -> ItemData
-2. Set: `id`: "iron_sword", `display_name`: "Iron Sword", `item_type`: EQUIPMENT, `equip_slot`: WEAPON, `attack_bonus`: 5, `buy_price`: 50, `sell_price`: 25
+- `id`: "iron_sword", `display_name`: "Iron Sword", `item_type`: EQUIPMENT, `equip_slot`: WEAPON, `attack_bonus`: 5, `buy_price`: 50, `sell_price`: 25
 
 **Leather Armor** (`res://data/items/leather_armor.tres`):
-1. Right-click `res://data/items/` -> New Resource -> ItemData
-2. Set: `id`: "leather_armor", `display_name`: "Leather Armor", `item_type`: EQUIPMENT, `equip_slot`: ARMOR, `defense_bonus`: 4, `buy_price`: 40, `sell_price`: 20
+- `id`: "leather_armor", `display_name`: "Leather Armor", `item_type`: EQUIPMENT, `equip_slot`: ARMOR, `defense_bonus`: 4, `buy_price`: 40, `sell_price`: 20
 
 ### The Complete Equip Flow
 
@@ -547,11 +545,11 @@ func _handle_inn(npc: CharacterBody2D) -> void:
 
 | Autoload | Module | Purpose |
 |----------|--------|---------|
-| SceneManager | 6 | Scene transitions with fade effects |
-| InventoryManager | 10 | Item storage, add/remove, signals |
-| GameManager | 16 | Game flags, world state tracking |
-| QuestManager | 16 | Quest tracking, objective checking |
-| **PartyManager** | **17** | **Party roster, recruitment, stats** |
+| SceneManager | 7 | Scene transitions with fade effects |
+| InventoryManager | 12 | Item storage, add/remove, signals |
+| GameManager | 20 | Game flags, world state tracking |
+| QuestManager | 20 | Quest tracking, objective checking |
+| **PartyManager** | **21** | **Party roster, recruitment, stats** |
 
 ## What We've Learned
 

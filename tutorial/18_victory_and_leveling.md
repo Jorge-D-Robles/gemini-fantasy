@@ -62,6 +62,9 @@ xp_for_level = base_xp * level ^ exponent
 A simple quadratic curve works well for Crystal Saga's scope. Add this static function to `res://resources/character_data.gd`:
 
 ```gdscript
+# A static func belongs to the class itself, not an instance. Call it as
+# CharacterData.xp_for_level(5) without needing a CharacterData object.
+# Useful for utility calculations that don't depend on instance data.
 static func xp_for_level(level: int) -> int:
     return level * level * 10
 ```
