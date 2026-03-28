@@ -41,10 +41,16 @@
   @apply text-base font-semibold text-slate-200 mt-6 mb-2;
 }
 
-/* Heading anchor links */
+/* Heading anchor links — positioned outside heading text flow */
 .heading-anchor {
-  @apply text-slate-600 no-underline mr-2 opacity-0 transition-opacity;
+  @apply text-slate-600 no-underline opacity-0 transition-opacity absolute;
   font-size: 0.85em;
+  left: -1.25em;
+}
+
+.prose h2,
+.prose h3 {
+  position: relative;
 }
 
 .prose h2:hover .heading-anchor,
