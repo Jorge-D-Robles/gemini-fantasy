@@ -28,10 +28,11 @@ You will receive:
 ### Step 1 — Load Context
 
 1. Read `tutorial/PLAN.md` to understand the full scope, design principles, and module dependencies
-2. Read the target module(s) thoroughly — every line, every code block, every reference
-3. Read adjacent modules (the one before and the one after) to check continuity
-4. Check `docs/best-practices/` for alignment with project conventions
-5. Check `docs/godot-docs/` for API accuracy when claims are made about Godot behavior
+2. Read `tutorial/REGRESSION.md` — this is the **regression checklist** of known-fixed issues from previous review passes. You MUST verify every item in this checklist that applies to the modules you are reviewing. Flag any regressions immediately as CRITICAL.
+3. Read the target module(s) thoroughly — every line, every code block, every reference
+4. Read adjacent modules (the one before and the one after) to check continuity
+5. Check `docs/best-practices/` for alignment with project conventions
+6. Check `docs/godot-docs/` for API accuracy when claims are made about Godot behavior
 
 ### Step 2 — Attack the Tutorial on Every Axis
 

@@ -78,9 +78,9 @@ func change_scene(scene_path: String, spawn_point: String = "default") -> void:
 
     get_tree().change_scene_to_file(_target_scene_path)
 
-    # Wait for the new scene to be added to the tree.
+    # Wait for the new scene to be fully loaded and added to the tree.
     # change_scene_to_file() is deferred, so we need to wait for the swap.
-    await get_tree().tree_changed
+    await get_tree().scene_changed
 
     _place_player_at_spawn()
 
@@ -115,7 +115,8 @@ func _place_player_at_spawn() -> void:
 The SceneManager needs visible nodes (a ColorRect for the black overlay, an AnimationPlayer for the fade). Create a scene for it.
 
 1. Create a new scene with `Node` as root. Rename it to `SceneManager`.
-2. Add a **CanvasLayer** child. Rename it to `TransitionLayer`. Set its **Layer** to `100` in the Inspector (so it draws on top of everything).
+2. Set the root node's **Process → Mode** to **Always** in the Inspector. This ensures the SceneManager continues working even when the game is paused (which we'll use in Module 12).
+3. Add a **CanvasLayer** child. Rename it to `TransitionLayer`. Set its **Layer** to `100` in the Inspector (so it draws on top of everything).
 
 In every JRPG, the fade effects and dialogue boxes must render on top of the game world no matter where the camera is or how the scene is structured. In Earthbound, the swirling battle transition overlay covers everything: the map, the enemies, the party. A regular node would be affected by the camera's position and zoom, and could sort incorrectly with other nodes. CanvasLayer creates an entirely separate rendering surface that is immune to camera transforms and always draws at its designated layer number.
 

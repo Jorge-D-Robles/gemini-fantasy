@@ -247,7 +247,7 @@ func load_game(slot: int) -> bool:
         var tree := Engine.get_main_loop() as SceneTree
         tree.change_scene_to_file(scene_path)
         # change_scene_to_file() is deferred. Wait for the tree to update.
-        await tree.tree_changed
+        await tree.scene_changed
 
         # Restore player position
         var pos_data: Dictionary = save_data.get("player_position", {})
@@ -352,7 +352,8 @@ func refresh() -> void:
         if info.is_empty():
             _buttons[i].text = "Slot " + str(slot_num) + ": Empty"
         else:
-            _buttons[i].text = "Slot " + str(slot_num) + ": " + info.get("scene_name", "Unknown")
+            var scene_label: String = info.get("scene_path", "").get_file().get_basename().capitalize()
+            _buttons[i].text = "Slot " + str(slot_num) + ": " + scene_label
 ```
 
 Wire this into the save crystal:

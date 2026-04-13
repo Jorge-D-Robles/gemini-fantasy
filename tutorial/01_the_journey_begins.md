@@ -8,7 +8,7 @@ More importantly, you'll understand **how Godot thinks about games**: as trees o
 
 ## What is Godot?
 
-Godot is a free, open-source game engine for 2D and 3D games. It runs on Windows, macOS, and Linux, and can export games to all of those platforms plus mobile and web. It's been in development since 2001, was open-sourced in 2014, and has grown rapidly since.
+Godot is a free, open-source game engine for 2D and 3D games. It runs on Windows, macOS, and Linux, and can export games to all of those platforms plus mobile and web. It's been in development since 2007, was open-sourced in 2014, and has grown rapidly since.
 
 For our purposes (building a 2D JRPG), Godot is an excellent choice for three reasons:
 
@@ -185,7 +185,7 @@ You can also set it manually:
 2. Under **General → Application → Run**, find the **Main Scene** property.
 3. Set it to `res://main.tscn`.
 
-> **Note:** `res://` is Godot's shorthand for "the root of the project folder." Every file path in Godot starts with `res://`. We'll see another path prefix later, `user://`, which points to the user's save data folder.
+> **Note:** `res://` is Godot's shorthand for "the root of the project folder." Every file path in Godot starts with `res://`. In Module 22 (Save and Load), we'll use another prefix, `user://`, which points to the user's save data folder.
 
 ## Running the Project
 

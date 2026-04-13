@@ -127,8 +127,8 @@ MusicManager (Node)
 ### Audio Assets
 
 You'll need audio files to test with. If you don't have music/SFX yet:
-- **Free music:** [Kenney](https://kenney.nl/assets?q=audio) has free audio packs, or search [opengameart.org](https://opengameart.org) for "JRPG music."
-- **Placeholder:** Any `.ogg` or `.wav` file works. You can create a silent `.ogg` file with Audacity (Generate → Silence → Export as OGG) to test the system without audio.
+- **Free music:** [Kenney](https://kenney.nl/assets?q=audio) has free audio packs, or search [opengameart.org](https://opengameart.org) for "JRPG music." The [Kenney Music Jingles pack](https://kenney.nl/assets/music-jingles) has short loops that work well for testing.
+- **Placeholder (no downloads needed):** If you have Audacity (free at audacityteam.org), create silence files: File > New, then Generate > Silence (30 seconds), then File > Export Audio > OGG format. Save four copies as `town_theme.ogg`, `forest_theme.ogg`, `dungeon_theme.ogg`, and `battle_theme.ogg`. This lets you test crossfading and battle music transitions without real audio.
 - Create folders `res://audio/music/` and `res://audio/sfx/` and place your files there.
 - **Looping:** Select a music `.ogg` file in the FileSystem dock, go to the **Import** tab, and check **Loop** to make it repeat. Click **Reimport**.
 

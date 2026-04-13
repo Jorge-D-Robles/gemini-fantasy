@@ -390,21 +390,16 @@ Add both `_play_attack_animation` and `_find_battler_sprite` to `res://systems/b
 
 ```gdscript
 func _play_attack_animation(attacker: BattlerData) -> void:
-    # Find the attacker's sprite node in the scene
-    var sprite_node := _find_battler_sprite(attacker)
-    if not sprite_node:
+    var sprite := _find_battler_sprite(attacker)
+    if not sprite:
         return
-
-    var original_pos: Vector2 = sprite_node.global_position
-    var target_pos: Vector2 = original_pos + Vector2(-30, 0)  # Slide left toward enemies
-
-    if not attacker.is_player_controlled:
-        target_pos = original_pos + Vector2(30, 0)  # Enemies slide right
+    var direction := -1.0 if attacker.is_player_controlled else 1.0
+    var original_pos: Vector2 = sprite.position
 
     var tween := create_tween()
-    tween.tween_property(sprite_node, "global_position", target_pos, 0.15)
-    tween.tween_interval(0.1)  # Brief pause at the target
-    tween.tween_property(sprite_node, "global_position", original_pos, 0.15)
+    tween.tween_property(sprite, "position:x", original_pos.x + 30.0 * direction, 0.15)
+    tween.tween_interval(0.1)
+    tween.tween_property(sprite, "position:x", original_pos.x, 0.15)
     await tween.finished
 
 

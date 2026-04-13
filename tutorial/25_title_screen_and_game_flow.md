@@ -55,9 +55,14 @@ func _on_new_game() -> void:
 
 
 func _on_continue() -> void:
-    # Show save slot selection, then load
-    # Simplified: load slot 1 directly
-    SaveManager.load_game(1)
+    # Show save slot dialog from Module 22
+    var dialog_scene := preload("res://ui/save_slot_dialog/save_slot_dialog.tscn")
+    var dialog: Control = dialog_scene.instantiate()
+    add_child(dialog)
+    var slot: int = await dialog.slot_selected
+    dialog.queue_free()
+    if slot > 0:
+        SaveManager.load_game(slot)
 
 
 func _on_settings() -> void:
@@ -112,6 +117,13 @@ Set `res://ui/title_screen/title_screen.tscn` as the project's **Main Scene**: g
 In every Zelda game since the original, pressing Start opens an equipment and item screen. The pause menu is not just a way to stop the action. It is the player's home base, the place they go to check inventory, review quests, change equipment, or adjust settings. Without it, the player has no way to manage their party between battles.
 
 The pause menu is accessible from anywhere during gameplay.
+
+Before building the pause menu, set up the groups it needs to find UI nodes across scenes. In **each area scene** (Willowbrook, Whisperwood, Crystal Cavern):
+
+1. Select the **InventoryScreen** instance node → open the **Node** dock (next to Inspector) → **Groups** tab → type `inventory_screens` → click **Add**
+2. Select the **QuestLog** instance node → same process → add to group `quest_logs`
+
+The pause menu uses `get_first_node_in_group()` to find these nodes regardless of which scene is loaded.
 
 Create `res://ui/pause_menu/pause_menu.tscn` and **register it as an autoload** named `PauseMenu` (Project -> Project Settings -> Autoload tab -> browse to `pause_menu.tscn`, name it `PauseMenu`). Since the pause menu needs child nodes (ColorRect, buttons), we register the `.tscn` file, not the `.gd` file, just like the MusicManager in Module 24.
 
@@ -175,10 +187,6 @@ func close() -> void:
 
 func _open_inventory() -> void:
     # Show the inventory screen from Module 12.
-    # The InventoryScreen node must be in the "inventory_screens" group.
-    # To set this up: in each scene that has an InventoryScreen instance,
-    # select the InventoryScreen node → Node dock (next to Inspector) →
-    # Groups tab → type "inventory_screens" → click Add.
     var inv := get_tree().get_first_node_in_group("inventory_screens")
     if inv:
         inv.visible = true
@@ -186,8 +194,6 @@ func _open_inventory() -> void:
 
 func _open_quest_log() -> void:
     # Show the quest log from Module 20.
-    # Same group setup as inventory: select QuestLog node → Node dock →
-    # Groups → add "quest_logs".
     var log_panel := get_tree().get_first_node_in_group("quest_logs")
     if log_panel:
         log_panel.visible = true
@@ -253,8 +259,14 @@ func _ready() -> void:
 
 
 func _on_retry() -> void:
-    # Load the most recent save (slot 1 by default, or show slot dialog)
-    SaveManager.load_game(1)
+    # Show save slot dialog so the player picks which save to load
+    var dialog_scene := preload("res://ui/save_slot_dialog/save_slot_dialog.tscn")
+    var dialog: Control = dialog_scene.instantiate()
+    add_child(dialog)
+    var slot: int = await dialog.slot_selected
+    dialog.queue_free()
+    if slot > 0:
+        SaveManager.load_game(slot)
 
 
 func _on_title() -> void:
@@ -427,6 +439,19 @@ At any time during gameplay:
 ```
 
 Every path loops back to the title screen. The game is a complete, closed loop.
+
+## Autoload Reference Card (Final)
+
+| Autoload | Module | Purpose |
+|----------|--------|---------|
+| SceneManager | 7 | Scene transitions with fade effects |
+| InventoryManager | 12 | Item storage, add/remove, signals |
+| GameManager | 20 | Game flags, world state tracking |
+| QuestManager | 20 | Quest tracking, objective checking |
+| PartyManager | 21 | Party roster, recruitment, stats |
+| SaveManager | 22 | Save/load game state to JSON |
+| MusicManager | 24 | BGM crossfading, battle music |
+| **PauseMenu** | **25** | **Global pause menu (UI autoload)** |
 
 ## What We've Learned
 

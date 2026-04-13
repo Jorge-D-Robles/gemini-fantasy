@@ -28,10 +28,11 @@ You will receive:
 ### Step 1 — Understand Context
 
 1. Read `tutorial/PLAN.md` — especially the design principles and demo game scope
-2. Read the target module(s) carefully
-3. Read adjacent modules for continuity
-4. Check `docs/best-practices/` for relevant conventions
-5. If the adversarial review is provided, read it carefully before forming your own assessment
+2. Read `tutorial/REGRESSION.md` — this is the **regression checklist** of known-fixed issues from previous review passes. Verify that items relevant to your target modules haven't regressed. Report any regressions as high-priority concerns.
+3. Read the target module(s) carefully
+4. Read adjacent modules for continuity
+5. Check `docs/best-practices/` for relevant conventions
+6. If the adversarial review is provided, read it carefully before forming your own assessment
 
 ### Step 2 — Evaluate the Tutorial
 

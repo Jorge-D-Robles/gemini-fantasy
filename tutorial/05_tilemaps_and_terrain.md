@@ -91,7 +91,9 @@ A **TileSet** is a resource that tells Godot how to interpret your tile sheet: w
 1. Select the `Ground` node.
 2. In the Inspector, find the **Tile Set** property.
 3. Click it and choose **New TileSet**.
-4. Click the TileSet resource to expand it in the **Inspector** (right panel). Find the **Tile Size** property and set it to `16x16` (or your tile size). **You must set this before creating an atlas.**
+4. Click the TileSet resource to expand it in the **Inspector** (right panel). Find the **Tile Size** property and set it to `16x16` (or your tile size).
+
+> **Warning:** You must set the tile size before creating an atlas source. If the tile size doesn't match your tile sheet's grid, Godot will slice the image incorrectly, and every tile coordinate will be wrong. Set it first, then add the atlas.
 
 ### Step 4: Create an Atlas Source
 
@@ -189,8 +191,29 @@ This is the creative part. You're designing a town by painting tiles directly in
 - **Paths** that connect buildings and lead to an exit on the south edge (the player will walk to the forest in Module 7)
 - **Two or three buildings** (a shop, an inn, and an elder's house are enough for now)
 - **Some water** on one side — a pond or a stream running along an edge
-- **Trees** around the perimeter to create natural boundaries and make the town feel nestled in a landscape
+- **Trees** around the perimeter to create natural boundaries and make the town feel nestled in the surrounding wilderness
 - **Open space** — don't fill every cell. Leave room for the player to walk around, and leave some grass visible. Real towns have empty space.
+
+**If you've never designed a tilemap before,** here's a starter layout to work from. You can modify it freely; the goal is to give you a concrete starting point rather than a blank canvas:
+
+```
+Key: . = grass, # = path, W = water, T = tree, B = building, _ = exit
+
+          North
+    T T T T T T T T T T
+    T . . . B B . . . T
+    T . . . # # . . . T
+    T . B B # # . . . T
+    T . . . # # B B . T
+    T . . . # # . . . T
+    T W W . # # . . . T
+    T W W . # # . . . T
+    T . . . # # . . . T
+    T T T T _ _ T T T T
+          South (exit)
+```
+
+Place buildings as 2x2 or 3x2 clusters of wall/roof tiles. The path runs north-south through town, with branches to each building. Water sits in the west. Trees ring the perimeter. The south edge has a gap for the exit to the forest (Module 7).
 
 **Paint it layer by layer:**
 
@@ -229,6 +252,8 @@ Right now, the player walks through everything. We need to mark certain tiles as
 Repeat until every tile type that should block the player has collision: walls, water, tree trunks, building exteriors.
 
 > **Note:** You only need to set collision on the tile *definition* in the TileSet, not on each placed tile individually. Once a tile type has collision, every instance of that tile on the map is solid.
+
+> **Warning:** All four TileMapLayers share the same TileSet, so a tile marked as solid will block the player on *any* layer it appears. If the player seems stuck in open areas, check whether a ground tile (like grass or dirt) was accidentally given collision. Only mark tiles that should actually block movement: walls, water, tree trunks, and building exteriors.
 
 ### Step 3: Test It
 

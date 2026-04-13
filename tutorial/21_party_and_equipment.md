@@ -409,6 +409,8 @@ Secret of Mana's weapon shops in each town are progression gates disguised as st
 
 ### ShopData Resource
 
+Save as `res://resources/shop_data.gd`:
+
 ```gdscript
 extends Resource
 class_name ShopData
@@ -567,7 +569,7 @@ func _handle_inn(npc: CharacterBody2D) -> void:
 - **Equip/unequip** uses a three-step swap (equip new → remove from inventory → return old) to prevent item duplication.
 - **Shops** use a ShopData resource listing items with prices.
 - **The inn** is a dialogue choice that costs gold and restores HP/MP.
-- All these systems build on previous modules: Resources (7), dialogue (9), inventory (10), flags (16).
+- All these systems build on previous modules: Resources (Module 9), dialogue (Module 11), inventory (Module 12), flags (Module 20).
 
 ## What You Should See
 

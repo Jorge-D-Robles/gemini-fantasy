@@ -75,7 +75,7 @@ Module 17 populated the dungeon with enemies. EnemyData resources defined stats 
 The BattleState base class defines the interface every state must implement. Each state is a child Node of the BattleStateMachine, which auto-registers them by name.
 
 ```gdscript
-# battle_state.gd -- base class for all battle states
+# battle_state.gd: base class for all battle states
 extends Node
 class_name BattleState
 
@@ -168,6 +168,7 @@ class_name BattlerData
 @export var is_player_controlled: bool = true
 
 var current_hp: int = 0
+var current_mp: int = 0
 var current_attack: int = 0
 var current_defense: int = 0
 var current_speed: int = 0
@@ -178,7 +179,8 @@ var enemy_data: EnemyData = null  # For reward calculation
 func initialize_from_character() -> void:
     if not character_data:
         return
-    current_hp = character_data.max_hp
+    current_hp = character_data.current_hp if character_data.current_hp > 0 else character_data.max_hp
+    current_mp = character_data.current_mp if character_data.current_mp > 0 else character_data.max_mp
     current_attack = character_data.attack
     current_defense = character_data.defense
     current_speed = character_data.speed
@@ -646,7 +648,7 @@ func start_battle(encounter_data: Dictionary) -> void:
     await _anim_player.animation_finished
 
     get_tree().change_scene_to_file("res://scenes/battle/battle.tscn")
-    await get_tree().tree_changed
+    await get_tree().scene_changed
 
     var battle_scene := get_tree().current_scene
     if battle_scene.has_method("initialize_battle"):

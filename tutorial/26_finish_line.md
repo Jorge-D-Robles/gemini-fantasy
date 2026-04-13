@@ -279,6 +279,20 @@ Generate cave layouts from room templates:
 - **[Tiled](https://www.mapeditor.org/):** External tilemap editor (free)
 - **[Audacity](https://www.audacityteam.org/):** Audio editing (free)
 
+## What You Should See
+
+After working through this module, your game should pass the full playtesting walkthrough above. Specifically:
+
+- The title screen loads with New Game, Continue, and Settings buttons
+- New Game starts in Willowbrook with a fresh party and empty inventory
+- You can walk through all three areas, talk to NPCs, buy items, and save at the crystal
+- Random encounters trigger in Whisperwood and Crystal Cavern, leading to turn-based battles
+- The boss fight in the Crystal Cavern leads to the ending and credits
+- Continue loads a saved game with all progress intact
+- The game exports to a standalone executable that runs without the Godot editor
+
+If any of these fail, check the Common Bugs section above and the troubleshooting tables in the review modules (08, 13, 19, 23, 27).
+
 ## What You've Accomplished
 
 You started with an empty Godot project and a blinking cursor. Twenty-one modules later, you have:

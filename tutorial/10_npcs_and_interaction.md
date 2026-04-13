@@ -190,7 +190,7 @@ Each NPC instance in the editor gets an `NPCData` resource assigned through the 
 
 Open `willowbrook.tscn` and instance the NPC scene three times:
 
-1. Drag `npc.tscn` into the scene tree (or use Instance Child Scene).
+1. Drag `npc.tscn` into the **YSortGroup** node in the scene tree (or use Instance Child Scene with YSortGroup selected). NPCs must be inside YSortGroup alongside the Player and Objects layer so they sort correctly by Y position.
 2. Rename each instance: `Shopkeeper`, `Innkeeper`, `Traveler`.
 3. Position them in appropriate spots: shopkeeper near a market stall, innkeeper by a house, traveler on the path.
 

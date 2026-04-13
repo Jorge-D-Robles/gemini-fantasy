@@ -141,7 +141,8 @@ func turn_in_quest(quest: QuestData) -> void:
     # Grant rewards
     if quest.xp_reward > 0:
         # Distribute XP to all party members (once PartyManager exists in Module 21)
-        if Engine.has_singleton("PartyManager") or get_node_or_null("/root/PartyManager"):
+        # PartyManager is added in Module 21. Guard against it not existing yet.
+        if get_node_or_null("/root/PartyManager"):
             for member in PartyManager.get_members():
                 member.current_xp += quest.xp_reward
     if quest.gold_reward > 0:
@@ -296,10 +297,14 @@ In Chrono Trigger, every NPC in every town updates their dialogue after each maj
 
 NPCs should say different things based on quest state and flags. Update NPC dialogue to check flags.
 
-Add the following to `res://scenes/willowbrook/willowbrook.gd`:
+Add the following to `res://scenes/willowbrook/willowbrook.gd`. Then update your existing `_on_npc_interacted()` handler to call this function instead of reading `npc.npc_data.dialogue` directly:
 
 ```gdscript
-# Add to willowbrook.gd:
+# In _on_npc_interacted(), replace:
+#   _dialogue_box.start_dialogue(npc.npc_data.dialogue)
+# with:
+#   _dialogue_box.start_dialogue(_get_dialogue_for_npc(npc))
+
 func _get_dialogue_for_npc(npc: CharacterBody2D) -> Array[DialogueLine]:
     match npc.npc_data.id:
         "traveler_fynn":

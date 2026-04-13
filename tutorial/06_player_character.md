@@ -27,7 +27,7 @@ You have two options for the character sprite. **Option A** is fastest and works
 
 Use the Godot `icon.svg` as your character sprite. This is the fastest way to keep moving. Set up AnimatedSprite2D with single-frame animations using the icon for all 8 animations (`idle_down`, `idle_up`, `idle_left`, `idle_right`, `walk_down`, `walk_up`, `walk_left`, `walk_right`). The walk animations won't visually animate, but the state machine code will work correctly, and you can swap in real art later.
 
-Skip the "Adding Animations from a Sprite Sheet" section below and use "Adding Single-Frame Animations" instead:
+Skip ahead to the **"Adding Single-Frame Animations"** section below (search for that heading). You'll rejoin the main flow at **"The State Machine Pattern."** Here are the single-frame setup steps:
 
 1. In the SpriteFrames panel, rename the `default` animation to `idle_down`.
 2. Click "Add Animation" seven more times for: `idle_up`, `idle_left`, `idle_right`, `walk_down`, `walk_up`, `walk_left`, `walk_right`.
@@ -64,7 +64,7 @@ Player (CharacterBody2D)
 └── Camera2D
 ```
 
-In Module 5, we resized the collision shape from the original 64x64 to fit tile corridors. Now that we're using an actual character sprite instead of the Godot icon, fine-tune it: set the shape's **Size** to roughly `Vector2(12, 8)` and the **CollisionShape2D** node's **Position** (under Transform) to `Vector2(0, 4)` so it covers just the character's feet. We'll discuss why this "feet-only" collision matters later in this module.
+In Module 5, we resized the collision shape to `Vector2(14, 10)` to fit tile corridors. That size was matched to the Godot icon, which is wider than a typical 16x16 character sprite. Now that we're using an actual character, shrink it to fit: set the shape's **Size** to roughly `Vector2(12, 8)` and the **CollisionShape2D** node's **Position** (under Transform) to `Vector2(0, 4)` so it covers just the character's feet. We'll discuss why this "feet-only" collision matters later in this module.
 
 ### Creating a SpriteFrames Resource
 
@@ -317,7 +317,9 @@ In the Willowbrook scene:
 2. In the Inspector, find **CanvasItem → Ordering → Y Sort Enabled** and turn it **on**.
 3. Drag the `Objects` TileMapLayer onto `YSortGroup` to reparent it (it becomes a child of YSortGroup instead of Willowbrook).
 4. Drag the `Player` instance onto `YSortGroup` the same way.
-5. Select the `Objects` TileMapLayer. In the Inspector, find **CanvasItem → Ordering → Y Sort Enabled** and turn it **on** for this node too. This is essential; without it, the individual tiles within the layer won't sort against the player. The entire layer would render as a single block, causing the player to appear always in front of or behind all objects.
+5. Select the `Objects` TileMapLayer. In the Inspector, find **CanvasItem → Ordering → Y Sort Enabled** and turn it **on** for this node too.
+
+> **Warning:** This step is essential. Without `y_sort_enabled` on the `Objects` TileMapLayer itself, the individual tiles within the layer won't sort against the player. The entire layer renders as a single block, causing the player to appear always in front of or always behind all objects. If your trees and buildings are sorting incorrectly, this is the first thing to check.
 
 Now set the Y Sort Origin for the Objects layer so tiles sort by their bottom edge:
 1. With `Objects` still selected, find **Y Sort Origin** in the Inspector and set it to `16` (the tile height in pixels). This makes tiles sort based on their bottom edge rather than their top-left corner, which looks correct for trees, rocks, and buildings.

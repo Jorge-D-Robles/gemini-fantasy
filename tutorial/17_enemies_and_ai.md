@@ -310,6 +310,7 @@ func _on_encounter_triggered(encounter: EncounterData) -> void:
         var char_data := CharacterData.new()
         char_data.display_name = ed.display_name
         char_data.max_hp = ed.max_hp
+        char_data.max_mp = ed.max_mp
         char_data.attack = ed.attack
         char_data.defense = ed.defense
         char_data.speed = ed.speed

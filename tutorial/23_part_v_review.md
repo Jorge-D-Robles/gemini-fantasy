@@ -498,7 +498,7 @@ func load_game(slot: int) -> bool:
     if scene_path:
         var tree := Engine.get_main_loop() as SceneTree
         tree.change_scene_to_file(scene_path)
-        await tree.tree_changed
+        await tree.scene_changed
         var pos_data: Dictionary = save_data.get("player_position", {})
         var player := tree.get_first_node_in_group("player")
         if player:
@@ -649,7 +649,7 @@ func _on_continue() -> void:
 | Equipping an item without removing it from inventory | Item duplicated: it appears both equipped and in the inventory | Always use the three-step flow: `character.equip(item)`, `InventoryManager.remove_item(item)`, then `InventoryManager.add_item(previous)` if there was a previous item |
 | Saving Resource objects directly to JSON instead of their paths | JSON contains nested object data that cannot be parsed back into typed Resources | Save `resource_path` strings. On load, call `load(path) as ResourceType` to get the actual Resource |
 | Modifying `_active_quests` array while iterating over it | Quest completion skips entries or throws errors | Collect newly completed quests into a separate array first, then process them after the iteration (as QuestManager does with `newly_completed`) |
-| Missing `await tree.tree_changed` after `change_scene_to_file()` | Player position restoration fails because the new scene has not loaded yet | `change_scene_to_file()` is deferred. `await tree.tree_changed` waits for the scene tree to finish changing before restoring position |
+| Missing `await tree.scene_changed` after `change_scene_to_file()` | Player position restoration fails because the new scene has not loaded yet | `change_scene_to_file()` is deferred. `await tree.scene_changed` waits for the new scene to be fully loaded before restoring position |
 | Not emitting signals after `from_save_data()` in InventoryManager | UI displays stale data after loading a save | Call `inventory_changed.emit()` and `gold_changed.emit(gold)` at the end of `from_save_data()` so listeners update |
 
 ## Official Godot Documentation
@@ -658,7 +658,7 @@ func _on_continue() -> void:
 
 - [Node](https://docs.godotengine.org/en/stable/classes/class_node.html): base class for all autoloads (GameManager, QuestManager, PartyManager, SaveManager)
 - [Resource](https://docs.godotengine.org/en/stable/classes/class_resource.html): base class for QuestData, ShopData, CharacterData, ItemData
-- [SceneTree](https://docs.godotengine.org/en/stable/classes/class_scenetree.html): `change_scene_to_file()`, `paused`, `get_first_node_in_group()`, `tree_changed` signal
+- [SceneTree](https://docs.godotengine.org/en/stable/classes/class_scenetree.html): `change_scene_to_file()`, `paused`, `get_first_node_in_group()`, `scene_changed` signal
 - [Engine](https://docs.godotengine.org/en/stable/classes/class_engine.html): `get_main_loop()` used in SaveManager to access the SceneTree
 
 ### File I/O and Serialization

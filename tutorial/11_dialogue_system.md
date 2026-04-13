@@ -102,9 +102,9 @@ DialogueBox (CanvasLayer, layer = 10)
 - Layer: `10` (draws above the game world but below the SceneManager's transition overlay at layer 100)
 
 **PanelContainer**
-- Anchors: Bottom-wide (left=0, right=1, bottom=1, top=~0.75)
-- This makes the panel span the full width at the bottom of the screen, taking up about 25% of the height
-- Layout → **Anchor Preset**: choose "Bottom Wide" from the preset menu
+- Layout → **Anchor Preset**: choose "Bottom Wide" from the preset dropdown (at the top of the 2D viewport when a Control node is selected)
+- "Bottom Wide" sets all anchors to 1.0, which pins the panel to the very bottom edge. We want it to take up the bottom 25% of the screen, so manually change the **Top** anchor from `1.0` to `0.75` in the Inspector under **Layout → Anchor Points**
+- Final anchors: left=0, right=1, bottom=1, top=0.75
 
 **MarginContainer**
 - Under Theme Overrides → Constants, set margins: left=16, right=16, top=12, bottom=12
@@ -285,6 +285,8 @@ Add an instance of `dialogue_box.tscn` to each scene that needs dialogue (Willow
 Since dialogue can happen anywhere, it's a good candidate for global access. But instead of a full autoload, we can instance it in the SceneManager (which is already an autoload and has a CanvasLayer).
 
 For simplicity, we'll use **Option A** for now: instance the dialogue box in Willowbrook. We can refactor to a global approach later.
+
+Instance `dialogue_box.tscn` as a **direct child of the `Willowbrook` root node** (not inside YSortGroup). The scene script below references it as `$DialogueBox`, so the name must match exactly.
 
 Replace the contents of `willowbrook.gd` (the Module 10 version with `print()` dialogue is now obsolete):
 
@@ -475,6 +477,8 @@ func _ready() -> void:
 func _unhandled_input(event: InputEvent) -> void:
     if not _panel.visible:
         return
+    if _choice_container.visible:
+        return  # Let the Button nodes handle input during choices
 
     if event.is_action_pressed("interact") or event.is_action_pressed("ui_accept"):
         get_viewport().set_input_as_handled()

@@ -258,7 +258,7 @@ func change_scene(scene_path: String, spawn_point: String = "default") -> void:
     await _anim_player.animation_finished
 
     get_tree().change_scene_to_file(_target_scene_path)
-    await get_tree().tree_changed
+    await get_tree().scene_changed
 
     _place_player_at_spawn()
 

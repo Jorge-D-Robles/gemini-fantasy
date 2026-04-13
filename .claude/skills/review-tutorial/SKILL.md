@@ -32,11 +32,12 @@ Target modules: <list of module filenames>
 
 Instructions:
 1. Read tutorial/PLAN.md first for full context (design principles, spiral learning plan, demo game scope)
-2. Read each target module thoroughly
-3. Read adjacent modules (one before and one after each target) for continuity
-4. Check docs/best-practices/ for Godot convention alignment
-5. Verify Godot API claims against docs/godot-docs/classes/ when the module makes specific API assertions
-6. Produce your full adversarial review following your output format
+2. Read tutorial/REGRESSION.md — this is the regression checklist. Verify every item that applies to your target modules. Flag any regressions as CRITICAL.
+3. Read each target module thoroughly
+4. Read adjacent modules (one before and one after each target) for continuity
+5. Check docs/best-practices/ for Godot convention alignment
+6. Verify Godot API claims against docs/godot-docs/classes/ when the module makes specific API assertions
+7. Produce your full adversarial review following your output format
 """)
 
 Agent(subagent_type="tutorial-reviewer-neutral", model="opus", prompt="""
@@ -46,10 +47,11 @@ Target modules: <list of module filenames>
 
 Instructions:
 1. Read tutorial/PLAN.md first for full context (design principles, spiral learning plan, demo game scope)
-2. Read each target module thoroughly
-3. Read adjacent modules for continuity and flow assessment
-4. Check docs/best-practices/ for convention alignment
-5. Produce your full neutral review following your output format
+2. Read tutorial/REGRESSION.md — this is the regression checklist. Verify relevant items haven't regressed. Report any regressions as high-priority concerns.
+3. Read each target module thoroughly
+4. Read adjacent modules for continuity and flow assessment
+5. Check docs/best-practices/ for convention alignment
+6. Produce your full neutral review following your output format
 """)
 ```
 
@@ -134,6 +136,17 @@ After applying changes, output a summary:
 Can a reader complete the full tutorial without external resources? [Yes / Mostly / No]
 - <Explanation of any remaining gaps>
 ```
+
+## Step 6 — Update Regression Checklist
+
+After applying changes, update `tutorial/REGRESSION.md` with any NEW issues that were found and fixed in this pass. This ensures future review runs can verify these fixes haven't regressed.
+
+For each new fix applied:
+1. Determine which category it belongs to (API Correctness, Cross-Module Data Consistency, Input Handling, etc.)
+2. Add a checkbox item with: the rule, which modules it affects, and why it matters
+3. If a fix spans multiple modules, list all affected modules
+
+Do NOT remove existing items from the regression checklist. They are cumulative across all review passes.
 
 ## Important Notes
 

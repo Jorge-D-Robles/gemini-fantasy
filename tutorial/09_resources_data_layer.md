@@ -338,11 +338,11 @@ func use_potion(target: CharacterData) -> void:
 
 # Data-driven (code reads data):
 func use_item(item: ItemData, target: CharacterData) -> void:
-    target.current_hp = min(target.current_hp + item.effect_value, target.max_hp)
-    print("Restored " + str(item.effect_value) + " HP!")
+    target.current_hp = min(target.current_hp + item.hp_restore, target.max_hp)
+    print("Restored " + str(item.hp_restore) + " HP!")
 ```
 
-The first version requires a new function for every item. The second version works for *any* healing item: Potion (50 HP), Hi-Potion (150 HP), Elixir (full HP). One function, infinite items. The data (effect_value) drives the behavior.
+The first version requires a new function for every item. The second version works for *any* healing item: Potion (50 HP), Hi-Potion (150 HP), Elixir (full HP). One function, infinite items. The data (`hp_restore`) drives the behavior. Note that `current_hp` is a runtime variable we'll add in Module 18, not part of the `.tres` file.
 
 This pattern scales across your entire RPG. Enemies, abilities, quests, dialogue, shops, encounter tables: all of them should be **data that code acts upon**, not **code that contains data**. When you find yourself writing a `match` statement with dozens of cases for specific item names or enemy types, that's a signal to push the differences into data.
 

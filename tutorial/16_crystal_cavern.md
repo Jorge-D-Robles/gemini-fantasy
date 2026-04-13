@@ -32,7 +32,7 @@ You'll need cave or dungeon tiles for the Crystal Cavern. Here are your options:
 
 **Option 2, reuse and recolor:** Duplicate the TileSet from Module 5. Open the new TileSet resource, and in the Physics/Terrain tabs, you can reuse the same workflow. Many JRPG tileset packs include both outdoor and dungeon tiles in the same set.
 
-**Option 3, placeholder tiles:** Create a simple cave palette with colored rectangles: dark grey for walls (e.g., `Color(0.25, 0.25, 0.3)`), lighter grey for walkable floor (`Color(0.45, 0.45, 0.5)`), and blue-purple for crystal decorations (`Color(0.4, 0.3, 0.7)`). In the TileSet editor, you can draw directly onto a new atlas.
+**Option 3, placeholder tiles:** Open any image editor (GIMP, Paint.NET, Piskel, or even a browser-based pixel editor) and create a 64x16 PNG with four 16x16 colored squares side by side: dark grey for walls (`#404050`), lighter grey for walkable floor (`#737380`), blue-purple for crystal decorations (`#664DB3`), and black for void/pits (`#1A1A1A`). Save it as `res://assets/tilesets/cave_tiles.png`.
 
 **Recommended:** Use Option 3 (placeholder tiles) to keep moving without interruption. You can swap in real art later. Options 1-2 look better but require downloading and importing external assets.
 
@@ -71,6 +71,8 @@ CrystalCavern (Node2D)
 ├── DialogueBox (instance)
 └── InventoryScreen (instance)
 ```
+
+Instance the DialogueBox and InventoryScreen the same way as in Willowbrook: drag `dialogue_box.tscn` and `inventory_screen.tscn` from the FileSystem dock into the CrystalCavern root node. These are needed for treasure chest messages and the pause menu inventory.
 
 ### Room-Based Layout
 
@@ -331,13 +333,14 @@ For Crystal Saga, the boss room door could require a "Crystal Key" found in the 
 
 ## Connecting the Scenes
 
-Add scene transitions:
-- **Whisperwood south exit** → Crystal Cavern entrance
-- **Crystal Cavern entrance** → back to Whisperwood
+Wire the scene transitions using the same exit zone pattern from Module 7:
+
+1. **Crystal Cavern entrance exit:** Add an Area2D child inside the `Exits` node. Attach `exit_zone.gd` (from `res://scenes/exit_zone.gd` or wherever you saved it in Module 7). Set the exports: `target_scene` = `res://scenes/whisperwood/whisperwood.tscn`, `target_spawn` = `from_cavern`. Add a CollisionShape2D covering the cave entrance.
+2. **Whisperwood south exit:** Open `whisperwood.tscn` and add a new exit zone Area2D. Set `target_scene` = `res://scenes/crystal_cavern/crystal_cavern.tscn`, `target_spawn` = `from_whisperwood`.
 
 Add spawn points (Marker2D nodes as children of Exits, added to the `spawn_points` group):
-- `from_whisperwood` at the cave entrance
-- `default` same position as `from_whisperwood`
+- In Crystal Cavern: `from_whisperwood` at the cave entrance, `default` at the same position
+- In Whisperwood: `from_cavern` near the south exit
 
 > **See:** [TileMapLayer](https://docs.godotengine.org/en/stable/classes/class_tilemaplayer.html), the node used for each tile layer. Same class as Module 5, now with a cave tileset.
 

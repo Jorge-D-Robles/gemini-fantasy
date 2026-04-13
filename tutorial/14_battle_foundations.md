@@ -125,8 +125,8 @@ var defense_boost: int = 0  # Temporary boost from Defend action
 func initialize_from_character() -> void:
     if not character_data:
         return
-    current_hp = character_data.max_hp
-    current_mp = character_data.max_mp
+    current_hp = character_data.current_hp if character_data.current_hp > 0 else character_data.max_hp
+    current_mp = character_data.current_mp if character_data.current_mp > 0 else character_data.max_mp
     current_attack = character_data.attack
     current_defense = character_data.defense
     current_speed = character_data.speed
@@ -594,7 +594,7 @@ func start_battle(encounter_data: Dictionary) -> void:
     await _anim_player.animation_finished
 
     get_tree().change_scene_to_file("res://scenes/battle/battle.tscn")
-    await get_tree().tree_changed
+    await get_tree().scene_changed
 
     # Initialize the battle with encounter data
     var battle_scene := get_tree().current_scene
