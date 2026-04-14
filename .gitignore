@@ -23,3 +23,8 @@ game/assets/**/*.mp3
 
 # Test results
 game/tests/results.xml
+
+# Generated markdown from godot-docs (produced by docs/godot-docs-md/convert.py)
+docs/godot-docs-md/*.md
+!docs/godot-docs-md/README.md
+docs/godot-docs-md/manifest.json
