@@ -131,6 +131,130 @@ TABLE_DIRECTIVE_RE = re.compile(
 	r"(?:(?P=indent)[ \t]+[^\n]*\n|[ \t]*\n)*",
 	re.MULTILINE,
 )
+SUBST_IMAGE_DEF_RE = re.compile(
+	r"^\.\. \|([^|]+)\| image::\s*(\S+)[^\n]*\n(?:[ \t]+:[^\n]*\n)*",
+	re.MULTILINE,
+)
+SUBST_REPLACE_DEF_RE = re.compile(
+	r"^\.\. \|([^|]+)\| replace::\s*([^\n]*)\n",
+	re.MULTILINE,
+)
+TABS_DIRECTIVE_RE = re.compile(r"^(?P<indent>[ \t]*)\.\. tabs::\s*$", re.MULTILINE)
+CODE_TAB_RE = re.compile(r"^(?P<indent>[ \t]*)\.\. code-tab::\s+(?P<lang>\S+)(?:\s+.*)?\s*$")
+
+
+_LANG_NORMALIZE = {
+	"c++": "cpp",
+	"c#": "csharp",
+}
+
+
+def _normalize_lang(lang: str) -> str:
+	key = lang.strip().lower()
+	return _LANG_NORMALIZE.get(key, key)
+
+
+def transform_sphinx_tabs(text: str) -> str:
+	"""Convert .. tabs:: / .. code-tab:: blocks into stacked .. code:: blocks."""
+	lines = text.split("\n")
+	out: list[str] = []
+	i = 0
+	while i < len(lines):
+		line = lines[i]
+		m = TABS_DIRECTIVE_RE.match(line)
+		if not m:
+			out.append(line)
+			i += 1
+			continue
+
+		tabs_indent = len(m.group("indent"))
+		i += 1
+
+		# Collect the entire tabs block: lines indented deeper than the directive
+		# (or blank). Stops at the first line that dedents back to/above tabs level.
+		block: list[str] = []
+		while i < len(lines):
+			ln = lines[i]
+			if not ln.strip():
+				block.append(ln)
+				i += 1
+				continue
+			ln_indent = len(ln) - len(ln.lstrip())
+			if ln_indent <= tabs_indent:
+				break
+			block.append(ln)
+			i += 1
+
+		while block and not block[0].strip():
+			block.pop(0)
+		while block and not block[-1].strip():
+			block.pop()
+
+		sections: list[tuple[str, list[str]]] = []
+		j = 0
+		while j < len(block):
+			ct = CODE_TAB_RE.match(block[j])
+			if not ct:
+				j += 1
+				continue
+			ct_indent = len(ct.group("indent"))
+			lang = _normalize_lang(ct.group("lang"))
+			j += 1
+			while j < len(block) and not block[j].strip():
+				j += 1
+			code: list[str] = []
+			while j < len(block):
+				cln = block[j]
+				if not cln.strip():
+					code.append("")
+					j += 1
+					continue
+				cln_indent = len(cln) - len(cln.lstrip())
+				if cln_indent <= ct_indent:
+					break
+				code.append(cln)
+				j += 1
+			non_blank = [c for c in code if c.strip()]
+			if non_blank:
+				min_indent = min(len(c) - len(c.lstrip()) for c in non_blank)
+				code = [c[min_indent:] if c.strip() else c for c in code]
+			while code and not code[-1].strip():
+				code.pop()
+			sections.append((lang, code))
+
+		pad = " " * tabs_indent
+		for lang, code in sections:
+			out.append(f"{pad}.. code:: {lang}")
+			out.append("")
+			for cl in code:
+				out.append(f"{pad}    {cl}" if cl else "")
+			out.append("")
+
+	return "\n".join(out)
+
+
+def extract_and_apply_substitutions(text: str) -> str:
+	"""Inline `.. |name| image::` and `.. |name| replace::` defs then strip the defs."""
+	image_defs: dict[str, str] = {}
+	for m in SUBST_IMAGE_DEF_RE.finditer(text):
+		image_defs[m.group(1).strip()] = m.group(2).strip()
+	text = SUBST_IMAGE_DEF_RE.sub("", text)
+
+	replace_defs: dict[str, str] = {}
+	for m in SUBST_REPLACE_DEF_RE.finditer(text):
+		replace_defs[m.group(1).strip()] = m.group(2).strip()
+	text = SUBST_REPLACE_DEF_RE.sub("", text)
+
+	def sub_ref(m: re.Match) -> str:
+		name = m.group(1).strip()
+		if name in image_defs:
+			return f"[image: {image_defs[name]}]"
+		if name in replace_defs:
+			return replace_defs[name]
+		return m.group(0)
+
+	text = re.sub(r"\|([^|\s][^|]*?)\|", sub_ref, text)
+	return text
 
 
 def preprocess_rst(text: str) -> str:
@@ -138,6 +262,8 @@ def preprocess_rst(text: str) -> str:
 
 	text = GITHUB_URL_RE.sub("", text)
 	text = TABLE_DIRECTIVE_RE.sub("", text)
+	text = extract_and_apply_substitutions(text)
+	text = transform_sphinx_tabs(text)
 	text = REF_WITH_LABEL_RE.sub(lambda m: m.group(1), text)
 	text = REF_BARE_RE.sub(lambda m: _clean_ref_target(m.group(1)), text)
 	text = LABEL_ANCHOR_RE.sub("", text)
