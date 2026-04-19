@@ -232,6 +232,14 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func open() -> void:
+    _show()
+
+
+func open_from_pause() -> void:
+    _show()
+
+
+func _show() -> void:
     _is_open = true
     _panel.visible = true
     get_tree().paused = true
@@ -291,6 +299,8 @@ func _update_gold_display() -> void:
 func _on_gold_changed(_amount: int) -> void:
     _update_gold_display()
 ```
+
+`open()` and `open_from_pause()` intentionally go through the same `_show()` helper. Module 25's PauseMenu will call the public API instead of toggling `visible` directly, so the inventory always refreshes its slots, tracks `_is_open`, and owns the pause state the same way no matter how it was opened.
 
 ## Pausing the Game
 

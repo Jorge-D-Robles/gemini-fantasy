@@ -241,9 +241,16 @@ class_name CharacterData
 @export var attack_growth: int = 2
 @export var defense_growth: int = 1
 @export var speed_growth: int = 1
+
+# Runtime state (set in code, not in the Inspector)
+var current_xp: int = 0
+var current_hp: int = 0
+var current_mp: int = 0
 ```
 
 Save this as `res://resources/character_data.gd`.
+
+These last three variables are intentionally **not** `@export` values. They are runtime state, not authoring data. You still set Aiden's starting stats in the Inspector, but the game tracks "how much HP does Aiden have right now?" and "how much XP has he earned toward the next level?" in these plain variables while the game is running. A value of `0` means "not initialized yet"; later modules will treat that as "start at max HP/MP" for a fresh run.
 
 > **Important:** Always set the `id` field on every `.tres` file. The inventory system (Module 12) uses `id` to match and stack items. If two items have the same `id` (or both are left empty), they'll be treated as identical.
 
@@ -342,7 +349,7 @@ func use_item(item: ItemData, target: CharacterData) -> void:
     print("Restored " + str(item.hp_restore) + " HP!")
 ```
 
-The first version requires a new function for every item. The second version works for *any* healing item: Potion (50 HP), Hi-Potion (150 HP), Elixir (full HP). One function, infinite items. The data (`hp_restore`) drives the behavior. Note that `current_hp` is a runtime variable we'll add in Module 18, not part of the `.tres` file.
+The first version requires a new function for every item. The second version works for *any* healing item: Potion (50 HP), Hi-Potion (150 HP), Elixir (full HP). One function, infinite items. The data (`hp_restore`) drives the behavior. Note that `current_hp` is runtime state on `CharacterData`, not part of the `.tres` file. We will start using it heavily in Module 18 when battles begin carrying HP and MP forward between scenes.
 
 This pattern scales across your entire RPG. Enemies, abilities, quests, dialogue, shops, encounter tables: all of them should be **data that code acts upon**, not **code that contains data**. When you find yourself writing a `match` statement with dozens of cases for specific item names or enemy types, that's a signal to push the differences into data.
 

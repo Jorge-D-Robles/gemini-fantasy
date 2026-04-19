@@ -265,8 +265,9 @@ Create a second area to connect to:
 Reuse the same TileSet from Module 5 (`town_tileset.tres`). Add TileMapLayers using the same workflow (Ground, Detail, Objects, AbovePlayer) and assign the TileSet to each. In Module 16, we'll create a dedicated dungeon tileset with a different aesthetic.
 
 Design a simple forest area (at least 20x15 tiles). Use grass tiles for ground, tree tiles for borders, and path tiles through the center:
-- Paint rows 0-2 and 13-15 as dense trees on the Ground layer (collision-enabled)
-- Leave a 3-tile-wide path winding through the middle
+- Ground layer: paint grass everywhere, then carve a 3-tile-wide path winding through the middle
+- Objects layer: build the north and south borders out of tree trunks, rocks, and shrubs; collision belongs on the trunk/rock tiles, not on the grass path
+- AbovePlayer layer: add canopy tiles above the tree line so the player can walk "under" the leaves
 - An entrance on the north side (connecting to Willowbrook)
 - An exit on the south side (leading to the Crystal Cavern, which we'll build in Module 16)
 

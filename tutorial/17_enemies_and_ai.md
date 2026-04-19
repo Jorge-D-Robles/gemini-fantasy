@@ -50,16 +50,19 @@ Create three enemies as `.tres` files in `res://data/enemies/`. Follow the same 
 - display_name: "Cave Bat", ai_type: AGGRESSIVE
 - HP: 20, attack: 6, defense: 2, speed: 12
 - XP: 8, gold: 3
+- sprite: assign a small bat image or `res://icon.svg` as a placeholder
 
 **`crystal_slime.tres`**, moderate, balanced
 - display_name: "Crystal Slime", ai_type: BALANCED
 - HP: 35, attack: 8, defense: 5, speed: 4
 - XP: 12, gold: 6, drop: Potion (25%)
+- sprite: assign a slime image or `res://icon.svg`
 
 **`stone_golem.tres`**, tanky, cautious
 - display_name: "Stone Golem", ai_type: CAUTIOUS
 - HP: 60, attack: 12, defense: 10, speed: 2
 - XP: 25, gold: 15, drop: Ether (20%)
+- sprite: assign a golem image or `res://icon.svg`
 
 ## Enemy AI
 
@@ -309,6 +312,7 @@ func _on_encounter_triggered(encounter: EncounterData) -> void:
         var battler := BattlerData.new()
         var char_data := CharacterData.new()
         char_data.display_name = ed.display_name
+        char_data.portrait = ed.sprite if ed.sprite else preload("res://icon.svg")
         char_data.max_hp = ed.max_hp
         char_data.max_mp = ed.max_mp
         char_data.attack = ed.attack
@@ -327,6 +331,8 @@ func _on_encounter_triggered(encounter: EncounterData) -> void:
     # Must use Dictionary format, matches SceneManager.start_battle() from Module 14
     SceneManager.start_battle({party = [hero], enemies = enemy_battlers})
 ```
+
+That `char_data.portrait = ed.sprite` line is the bridge between your enemy data and the battle presentation. `BattlerSprite` already knows how to read `character_data.portrait`, so once you fill in the `sprite` field on each `EnemyData` resource, those visuals now appear in battle automatically.
 
 ### Using AI in Battle
 

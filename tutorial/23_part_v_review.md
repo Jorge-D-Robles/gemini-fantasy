@@ -8,18 +8,19 @@ Part V connected Crystal Saga's isolated systems into a game with actual progres
 
 Module 20 introduced two foundational concepts: game flags and quests. Game flags gave every system in the project a shared language for tracking what has happened in the world, while the quest system built on top of those flags to create structured objectives with rewards. The trick was a reactive signal (`flag_changed`) that lets quest completion happen automatically when the world state changes, rather than through manual checking. This also made NPCs responsive: Fynn remembers whether you have spoken to him, whether you found his pendant, and whether you already returned it.
 
-Module 21 added the remaining progression systems. PartyManager gave us a roster (and Lira, the first companion), the equipment system made gear meaningful by modifying effective stats, and the shop system let the player spend their hard-earned gold. These systems layered cleanly onto the Resource and autoload patterns established in earlier modules. Finally, Module 22 closed the loop by persisting every piece of game state to JSON files. The `to_save_data()` / `from_save_data()` pattern gave each autoload a clean serialization boundary, and the save slot UI gave players the classic three-slot experience. With save and load in place, Crystal Saga became a game you can actually put down and come back to.
+Module 21 added the remaining progression systems. PartyManager gave us a roster (and Lira, the first companion), the equipment system made gear meaningful by modifying effective stats, and the shop system let the player spend their hard-earned gold. It also completed the quest XP loop by routing turn-in rewards through the same leveling helper battles already use. Finally, Module 22 closed the loop by persisting every piece of game state to JSON files. The `to_save_data()` / `from_save_data()` pattern gave each autoload a clean serialization boundary, and the save slot UI gave players the classic three-slot experience. With save and load in place, Crystal Saga became a game you can actually put down and come back to.
 
 ### Module 20: The Quest System and Game Flags
 - Built the **GameManager** autoload: a dictionary of boolean flags (`flag_name -> true/false`) with a `flag_changed` signal that lets any system react when the world state changes.
 - Created the **QuestData** Resource class with objectives defined as flag names, so a quest completes automatically when all its objective flags are set.
-- Built the **QuestManager** autoload to track active, completed, and turned-in quests, grant rewards on turn-in, and emit signals for quest state transitions.
+- Built the **QuestManager** autoload to track active, completed, and turned-in quests, grant gold/items on turn-in, and emit signals for quest state transitions.
 - Implemented **reactive NPC dialogue** where characters like Fynn say different things depending on flags and quest progress, creating the illusion of a living world.
 - Added a **quest log UI** that lists active quests and shows per-objective checkmarks based on current flag state.
 
 ### Module 21: Party Management, Equipment, and Shops
 - Built the **PartyManager** autoload to manage the party roster, with signals for join/leave events and a lookup-by-ID method.
-- Implemented **Lira's recruitment** as a flag-gated dialogue sequence: first meeting sets a flag, second conversation triggers `add_member()`, and the `lira_joined` flag prevents re-recruitment.
+- Implemented **Lira's recruitment** as a flag-gated dialogue sequence: first meeting sets `lira_intro_seen`, second conversation sets `lira_ready_to_join`, and dialogue completion triggers `add_member()` exactly once.
+- Added **party-wide quest XP routing** via `PartyManager.award_xp_to_party()`, so quest rewards and battle rewards both flow through `CharacterData.grant_xp()`.
 - Extended **CharacterData** with equipment slots (weapon, armor, accessory) and `get_effective_*()` methods that add equipment bonuses to base stats, wired directly into battle through BattlerData.
 - Created the **ShopData** Resource and **shop UI**: a CanvasLayer that pauses the game, lists items with prices, validates gold, and handles purchases through InventoryManager.
 - Added the **innkeeper pattern**: a dialogue choice that costs gold and restores HP/MP for the entire party via PartyManager.
@@ -80,7 +81,8 @@ func _on_flag_changed(flag_name: String, value: bool) -> void:
 
 # Bulk operations (used by save/load)
 var all_flags: Dictionary = GameManager.get_all_flags()
-GameManager.load_flags(saved_flags_dictionary)
+GameManager.load_flags(saved_flags_dictionary)        # direct reset/helper
+GameManager.from_save_data(saved_flags_dictionary)    # Module 22 save/load path
 ```
 
 Register GameManager as an autoload at **Project -> Project Settings -> Autoload -> add `res://autoloads/game_manager.gd` as `GameManager`**.
@@ -107,7 +109,7 @@ enum QuestState { NOT_STARTED, ACTIVE, COMPLETE, TURNED_IN }
 @export_group("Rewards")
 @export var xp_reward: int = 0
 @export var gold_reward: int = 0
-@export var reward_items: Array[ItemData] = []
+@export var reward_items: Array[ItemData] = []   # Add the same item twice for two copies
 @export var completion_flag: String = ""  # Flag set on turn-in
 ```
 
@@ -128,7 +130,8 @@ QuestManager.turn_in_quest(quest)
 
 # Listing quests
 var active: Array[QuestData] = QuestManager.get_active_quests()
-var done: Array[QuestData] = QuestManager.get_completed_quests()
+var completed: Array[QuestData] = QuestManager.get_completed_quests()
+var turned_in: Array[QuestData] = QuestManager.get_turned_in_quests()
 
 # Quest signals
 QuestManager.quest_started.connect(_on_quest_started)
@@ -151,6 +154,12 @@ QuestLog (PanelContainer)
 ```
 
 ```gdscript
+func open_from_pause() -> void:
+    _is_open = true
+    visible = true
+    get_tree().paused = true
+    refresh()
+
 # Refreshing the quest list
 func refresh() -> void:
     for child in _quest_list.get_children():
@@ -239,7 +248,7 @@ Recruitment is triggered by dialogue and gated by flags:
 func _on_npc_interacted(npc: CharacterBody2D) -> void:
     # ... dialogue logic ...
     # After Lira's second conversation:
-    if npc.npc_data.id == "lira" and GameManager.has_flag("talked_to_lira") \
+    if npc.npc_data.id == "lira" and GameManager.has_flag("lira_ready_to_join") \
             and not GameManager.has_flag("lira_joined"):
         _dialogue_box.dialogue_finished.connect(_recruit_lira, CONNECT_ONE_SHOT)
 
@@ -585,7 +594,7 @@ func to_save_data() -> Dictionary:
     return {members = members_data}
 ```
 
-The pattern principle: Resources are referenced by path, not serialized by value. `load(entry.path) as CharacterData` reloads the `.tres` base data, then saved values (level, stats, equipment) are applied on top. This keeps save files small and means editing a `.tres` file updates the base values for all future loads.
+The pattern principle: Resources are referenced by path, not serialized by value. `ResourceLoader.load(entry.path, "", ResourceLoader.CACHE_MODE_IGNORE) as CharacterData` reloads a fresh `.tres` base definition, then saved values (level, stats, equipment) are applied on top. This keeps save files small, preserves pristine New Game data, and means editing a `.tres` file updates the base values for all future loads.
 
 ### Save Slots
 

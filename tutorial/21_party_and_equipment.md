@@ -52,9 +52,45 @@ func get_member_by_id(id: String) -> CharacterData:
         if member.id == id:
             return member
     return null
+
+
+func award_xp_to_party(xp_per_member: int) -> void:
+    if xp_per_member <= 0:
+        return
+
+    for member in members:
+        print(member.display_name + " gained " + str(xp_per_member) + " XP!")
+        for result in member.grant_xp(xp_per_member):
+            var gains: Dictionary = result.gains
+            print(member.display_name + " reached level " + str(result.level) + "!")
+            print("  HP +" + str(gains.hp) + ", ATK +" + str(gains.attack) +
+                  ", DEF +" + str(gains.defense))
 ```
 
 Register as autoload `PartyManager`.
+
+### Finishing Quest XP Integration
+
+In Module 20, `QuestData` already had an `xp_reward` field, but `QuestManager.turn_in_quest()` intentionally left it unused because PartyManager did not exist yet. Now that the roster is in place, reopen `res://autoloads/quest_manager.gd` and update the reward section:
+
+```gdscript
+func turn_in_quest(quest: QuestData) -> void:
+    _completed_quests.erase(quest)
+    _turned_in_quests.append(quest)
+
+    if quest.xp_reward > 0:
+        PartyManager.award_xp_to_party(quest.xp_reward)
+    if quest.gold_reward > 0:
+        InventoryManager.add_gold(quest.gold_reward)
+    for item in quest.reward_items:
+        InventoryManager.add_item(item)
+    if not quest.completion_flag.is_empty():
+        GameManager.set_flag(quest.completion_flag)
+
+    quest_turned_in.emit(quest)
+```
+
+This keeps quest turn-ins on the same leveling path as battle rewards. `PartyManager` owns "who gets XP," while `CharacterData.grant_xp()` still owns the actual leveling math from Module 18.
 
 ## Recruiting Lira
 
@@ -78,7 +114,16 @@ func _get_lira_dialogue() -> Array[DialogueLine]:
     if GameManager.has_flag("lira_joined"):
         return _make_lines("Lira", ["Ready to go when you are!"])
 
-    if GameManager.has_flag("talked_to_lira"):
+    if GameManager.has_flag("lira_ready_to_join"):
+        return _make_lines("Lira", [
+            "I've been studying the crystal formations nearby.",
+            "They resonate with a strange energy...",
+            "If you're heading to the Crystal Cavern, I'd like to come along.",
+            "My magic could be useful!",
+        ])
+
+    if GameManager.has_flag("lira_intro_seen"):
+        GameManager.set_flag("lira_ready_to_join")
         return _make_lines("Lira", [
             "I've been studying the crystal formations nearby.",
             "They resonate with a strange energy...",
@@ -87,7 +132,7 @@ func _get_lira_dialogue() -> Array[DialogueLine]:
         ])
 
     # First meeting
-    GameManager.set_flag("talked_to_lira")
+    GameManager.set_flag("lira_intro_seen")
     return _make_lines("Lira", [
         "Oh, hello! I'm Lira, a scholar from the capital.",
         "I came to Willowbrook to study the ancient crystals.",
@@ -108,8 +153,8 @@ Add the recruitment wiring to the existing interaction handler:
 func _on_npc_interacted(npc: CharacterBody2D) -> void:
     # ... existing dialogue logic ...
 
-    # Check for Lira recruitment after dialogue
-    if npc.npc_data.id == "lira" and GameManager.has_flag("talked_to_lira") and not GameManager.has_flag("lira_joined"):
+    # Check for Lira recruitment after the second conversation
+    if npc.npc_data.id == "lira" and GameManager.has_flag("lira_ready_to_join") and not GameManager.has_flag("lira_joined"):
         _dialogue_box.dialogue_finished.connect(_recruit_lira, CONNECT_ONE_SHOT)
 
 
@@ -151,7 +196,7 @@ Add equipment slots to `character_data.gd`:
 var equipped_weapon: ItemData = null
 var equipped_armor: ItemData = null
 var equipped_accessory: ItemData = null
-# current_xp was already added in Module 18
+# current_xp/current_hp/current_mp were introduced in Module 9 and used heavily in Module 18
 
 
 func get_effective_attack() -> int:
@@ -562,6 +607,7 @@ func _handle_inn(npc: CharacterBody2D) -> void:
 ## What We've Learned
 
 - **PartyManager** autoload tracks the roster of party members.
+- **PartyManager.award_xp_to_party()** lets quest rewards reuse the same level-up path battles already use.
 - **Recruitment** is triggered by dialogue + game flags, and the NPC becomes a party member.
 - **Equipment** modifies effective stats. `get_effective_attack()` = base + weapon bonus.
 - **PredictStats pattern:** temporarily swap equipment, measure the difference, restore the original. This lets shop and equipment UIs show green/red stat comparison arrows without committing the change.
@@ -573,12 +619,12 @@ func _handle_inn(npc: CharacterBody2D) -> void:
 
 ## What You Should See
 
-- Talking to Lira twice recruits her into the party
+- Talking to Lira once introduces her, and the second conversation recruits her into the party
 - The party menu shows both characters with stats and equipment
 - Equipping a sword increases ATK in the stats display and in battle
 - The shopkeeper opens a buy menu with prices
 - The innkeeper offers rest for 10 gold and heals the party
-- Lira appears in battle with her own abilities
+- Lira appears in battle as a second party member once she joins
 
 ## Next Module
 

@@ -702,7 +702,9 @@ We've now seen two kinds of state management in Crystal Saga. They solve differe
 
 **State Machine** (mutually exclusive states): Only one state is active at a time. Transitioning from PLAYER_CHOICE to ACTION_EXECUTE *replaces* the active state. The battle system uses this because you're always in exactly one phase of combat.
 
-**State Stack** (layered states): Multiple states can be active simultaneously, stacked on top of each other. The SceneManager uses this pattern: when a battle starts, the overworld scene isn't destroyed; it's paused underneath the battle scene. When battle ends, the overworld scene is revealed and resumed.
+**State Stack** (layered states): Multiple states can be active simultaneously, stacked on top of each other. Menus are the classic JRPG example: the game world stays loaded, the tree is paused, and a UI layer sits on top until the player closes it.
+
+That is **not** what Crystal Saga's battle flow is doing right now. `SceneManager.start_battle()` stores the previous scene path and player position, changes to the battle scene, and `return_from_battle()` reconstructs the overworld scene afterward. The previous scene is destroyed and later rebuilt; it is not preserved underneath battle.
 
 The same pattern applies to menus: opening the inventory pushes a new layer on top of the game. The game world is still there, just paused. Closing the menu pops the layer and the game resumes.
 
@@ -711,12 +713,12 @@ The same pattern applies to menus: opening the inventory pushes a new layer on t
 | State Machine | Exactly one | Battle phases, player movement states | Mutually exclusive modes |
 | State Stack | Many (layered) | Overworld + battle, game + pause menu, game + dialogue | Modes that overlay other modes |
 
-The rule of thumb: if the previous state should be *destroyed* when you leave it, use a state machine. If it should be *preserved* underneath, use a state stack.
+The rule of thumb: if the previous state should be *destroyed* when you leave it, use a state machine or a scene swap. If it should be *preserved* underneath, use a state stack or overlay UI.
 
 ## What We've Learned
 
 - **Node-based state machines** use child Nodes with `enter()`/`process()`/`exit()` methods, managed by a machine node. Better than enums for complex state flows.
-- **State machines vs state stacks**: machines for exclusive states (battle phases), stacks for layered states (overworld under battle).
+- **State machines vs state stacks**: machines for exclusive states (battle phases), stacks for layered UI (pause and menus). Crystal Saga's current battle transition is a scene swap plus reconstruction, not an overworld-under-battle stack.
 - **BattlerData** is a Resource combining character stats with runtime battle state (current HP, temporary buffs).
 - **Turn order** is speed-based: sort all alive battlers by speed, process them in order.
 - The **battle scene** has party on one side, enemies on the other, with Marker2D nodes for positioning.

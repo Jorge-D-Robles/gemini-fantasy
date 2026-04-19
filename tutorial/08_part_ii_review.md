@@ -108,7 +108,8 @@ Willowbrook (Node2D)
 - Every instance of that tile gets collision automatically.
 
 **Painting tips:**
-- Right-click while painting to eyedropper-pick a tile from the viewport.
+- Right-click while painting erases.
+- Use **Ctrl+click** to eyedropper-pick a tile from the viewport.
 - Use Bucket Fill for the ground layer first, then paint paths over it.
 - Keep Detail sparse: a few flowers per area, not one on every tile.
 - Scroll wheel zooms, middle-click-drag pans.

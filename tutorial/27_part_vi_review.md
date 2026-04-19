@@ -19,7 +19,7 @@ Module 26 was the finish line: a full playtesting walkthrough, a troubleshooting
 
 ### Module 25: Title Screen and Game Flow
 - Built a **title screen** with New Game (fresh state initialization), Continue (save slot loading), and Settings (volume controls)
-- Created a **pause menu** as an autoload using `process_mode = ALWAYS` and `get_tree().paused` to work while the game tree is frozen
+- Created a **pause menu** as an autoload using `process_mode = ALWAYS` and `get_tree().paused`, while delegating inventory and quest log opening to the public APIs from Modules 12 and 20
 - Implemented **Game Over** and **Victory Ending** screens that replaced placeholder defeat/victory behavior from earlier modules
 - Built **scrolling credits** using a Tween on the label's Y position
 - Completed the **game loop**: every path through the game (victory, defeat, quit) returns to the title screen
@@ -262,25 +262,29 @@ func _on_new_game() -> void:
 
 
 func _on_continue() -> void:
-    SaveManager.load_game(1)
+    var dialog: PanelContainer = preload("res://ui/save_slot_dialog/save_slot_dialog.tscn").instantiate()
+    add_child(dialog)
+    var slot: int = await dialog.slot_selected
+    dialog.queue_free()
+    if slot > 0:
+        SaveManager.load_game(slot)
 
 
 func _initialize_fresh_state() -> void:
-    GameManager.load_flags({})
+    GameManager.from_save_data({})
     InventoryManager.from_save_data({gold = 100, items = []})
     var potion: ItemData = load("res://data/items/potion.tres")
     if potion:
         InventoryManager.add_item(potion, 3)
 
     PartyManager.from_save_data({members = []})
-    var aiden: CharacterData = load("res://data/characters/aiden.tres")
+    var aiden := ResourceLoader.load(
+        "res://data/characters/aiden.tres", "", ResourceLoader.CACHE_MODE_IGNORE,
+    ) as CharacterData
     if aiden:
-        # duplicate() prevents cached Resource from carrying stale stats
-        aiden = aiden.duplicate()
         aiden.current_hp = aiden.max_hp
         aiden.current_mp = aiden.max_mp
         aiden.current_xp = 0
-        aiden.level = 1
         PartyManager.add_member(aiden)
 
     QuestManager.from_save_data({active = [], completed = [], turned_in = []})
@@ -313,9 +317,9 @@ The complete game loop:
                |                   |
           Willowbrook  <---- Restored Scene
                |
-          Whisperwood (explore, random battles)
+          Whisperwood (explore, pendant quest)
                |
-         Crystal Cavern (dungeon, boss)
+         Crystal Cavern (dungeon, random battles, boss)
                |
        +-- BOSS FIGHT --+
        |                 |
@@ -356,18 +360,27 @@ func _ready() -> void:
 
     _resume_btn.pressed.connect(close)
     _quit_btn.pressed.connect(_quit_to_title)
+    $Background/Panel/VBox/InventoryButton.pressed.connect(_open_inventory)
+    $Background/Panel/VBox/QuestLogButton.pressed.connect(_open_quest_log)
+    $Background/Panel/VBox/SettingsButton.pressed.connect(_open_settings)
 
 
 func _unhandled_input(event: InputEvent) -> void:
-    if event.is_action_pressed("ui_cancel"):
-        if _is_open:
-            close()
-        else:
-            open()
-        get_viewport().set_input_as_handled()
+    if not event.is_action_pressed("ui_cancel"):
+        return
+    if not _can_pause_current_scene() and not _is_open:
+        return
+
+    if _is_open:
+        close()
+    else:
+        open()
+    get_viewport().set_input_as_handled()
 
 
 func open() -> void:
+    if not _can_pause_current_scene():
+        return
     _is_open = true
     _background.visible = true
     get_tree().paused = true
@@ -380,12 +393,43 @@ func close() -> void:
     get_tree().paused = false
 
 
+func _can_pause_current_scene() -> bool:
+    var current_scene := get_tree().current_scene
+    if not current_scene:
+        return false
+    return current_scene.scene_file_path.begins_with("res://scenes/")
+
+
+func _hide_for_submenu() -> void:
+    _is_open = false
+    _background.visible = false
+
+
+func _open_inventory() -> void:
+    var inv := get_tree().get_first_node_in_group("inventory_screens")
+    if inv and inv.has_method("open_from_pause"):
+        _hide_for_submenu()
+        inv.call("open_from_pause")
+
+
+func _open_quest_log() -> void:
+    var log_panel := get_tree().get_first_node_in_group("quest_logs")
+    if log_panel and log_panel.has_method("open_from_pause"):
+        _hide_for_submenu()
+        log_panel.call("open_from_pause")
+
+
+func _open_settings() -> void:
+    var panel: PanelContainer = preload("res://ui/settings/settings_panel.tscn").instantiate()
+    add_child(panel)
+
+
 func _quit_to_title() -> void:
     close()
     SceneManager.change_scene("res://ui/title_screen/title_screen.tscn")
 ```
 
-The two critical pieces: `process_mode = Node.PROCESS_MODE_ALWAYS` ensures the pause menu still receives input when the tree is paused. `get_tree().paused = true` freezes every other node in the game.
+The two critical pieces: `process_mode = Node.PROCESS_MODE_ALWAYS` ensures the pause menu still receives input when the tree is paused. `get_tree().paused = true` freezes every other node in the game. The `_can_pause_current_scene()` guard keeps Escape from opening the pause menu on title, ending, game over, or credits screens.
 
 > **See:** [Pausing games](https://docs.godotengine.org/en/stable/tutorials/scripting/pausing_games.html) | [SceneTree.paused](https://docs.godotengine.org/en/stable/classes/class_scenetree.html#class-scenetree-property-paused) | [Node.process_mode](https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-property-process-mode)
 
@@ -440,11 +484,11 @@ A reference list of polish items to consider before shipping. None of these are 
 
 ## The Complete Architecture
 
-After 26 modules, Crystal Saga is made up of seven autoloads, five major systems, three game areas, and dozens of scripts that wire them together. Here is how everything fits.
+After 26 modules, Crystal Saga is made up of eight autoloads, five major systems, three game areas, and dozens of scripts that wire them together. Here is how everything fits.
 
 ### Autoloads (Global Singletons)
 
-These seven nodes live at the root of the scene tree for the entire lifetime of the game. They never get freed, they survive scene changes, and any script can access them by name.
+These eight nodes live at the root of the scene tree for the entire lifetime of the game. They never get freed, they survive scene changes, and any script can access them by name.
 
 | Autoload | Type | Module | Responsibility |
 |----------|------|--------|----------------|
@@ -465,11 +509,11 @@ Every piece of game content is a [Resource](https://docs.godotengine.org/en/stab
 |---------------|--------|-------------------|
 | `ItemData` | 9 | Name, description, type (consumable/equipment), stat effects |
 | `CharacterData` | 9 | HP, MP, ATK, DEF, abilities, level, XP, equipment slots |
-| `NPCData` | 10 | Name, dialogue lines, portrait, interaction behavior |
-| `EnemyData` | 14 | Stats, loot table, XP reward, AI behavior type |
+| `NPCData` | 9 | Name, dialogue lines, portrait, interaction behavior |
+| `EnemyData` | 17 | Stats, battle sprite, loot table, XP reward, AI behavior type |
 | `AbilityData` | 15 | Name, MP cost, damage formula, target type |
 | `QuestData` | 20 | Title, description, objectives, rewards |
-| `EncounterData` | 16 | Enemy group composition, encounter weight |
+| `EncounterData` | 17 | Enemy group composition, encounter weight |
 
 ### The Battle System
 
@@ -497,11 +541,11 @@ Each game area follows the same pattern: a root node, a TileMapLayer for the map
 Willowbrook (Node2D)             Whisperwood (Node2D)           CrystalCavern (Node2D)
 ├── TileMapLayer                 ├── TileMapLayer               ├── TileMapLayer
 ├── Player (CharacterBody2D)     ├── Player                     ├── Player
-├── NPCs/                        ├── EncounterZones/            ├── TreasureChests/
-│   ├── Shopkeeper               │   ├── ForestZone1            ├── SaveCrystal
-│   ├── Innkeeper                │   └── ForestZone2            ├── EncounterZones/
-│   ├── Fynn                     ├── ExitToWillowbrook          ├── BossDoor
-│   └── Lira                     └── ExitToCavern               ├── BossRoom
+├── NPCs/                        ├── PendantChest               ├── TreasureChests/
+│   ├── Shopkeeper               ├── ExitToWillowbrook          ├── SaveCrystal
+│   ├── Innkeeper                └── ExitToCavern               ├── EncounterZones/
+│   ├── Fynn                                                   ├── BossDoor
+│   └── Lira                                                  ├── BossRoom
 ├── ExitToWhisperwood                                           └── ExitToWhisperwood
 └── SpawnPoints/
 ```
@@ -535,8 +579,8 @@ Player interacts with NPC
   -> Dialogue may recruit a party member via PartyManager (Module 21)
   -> Dialogue may open the ShopUI via InventoryManager (Module 21)
 
-Player enters encounter zone
-  -> EncounterSystem rolls for a random battle (Module 16)
+Player enters a Crystal Cavern encounter zone
+  -> EncounterSystem rolls for a random battle (Module 17)
   -> MusicManager.remember_track() saves current BGM (Module 24)
   -> SceneManager transitions to battle scene (Module 7)
   -> BattleManager runs the fight (Modules 14-18)
@@ -574,7 +618,7 @@ Three patterns recur throughout the entire architecture. If you internalize thes
 | Registering MusicManager or PauseMenu as `.gd` instead of `.tscn` | Null reference errors on `$PlayerA`, `$Background` | Register the `.tscn` file in Project Settings -> Autoload, not the `.gd` file |
 | Not setting `process_mode = ALWAYS` on the pause menu | Pause menu does not respond to input when the game is paused | Set `process_mode = Node.PROCESS_MODE_ALWAYS` in `_ready()` |
 | Calling `get_tree().paused = true` without unpausing on resume | Game stays frozen after closing the pause menu | Ensure `close()` sets `get_tree().paused = false` |
-| Using `load()` for a character Resource without `duplicate()` | New Game carries stats from previous play session | Call `resource.duplicate()` on cached Resources before modifying their properties |
+| Using cached `load()` for a mutable character Resource | New Game carries stats from previous play session | Load a fresh runtime copy with `ResourceLoader.load(path, "", ResourceLoader.CACHE_MODE_IGNORE)` before modifying it |
 | Slider value passed directly to `set_bus_volume_db()` | Volume curve feels wrong (too quiet in the middle) | Convert with `linear_to_db(value)` first; it handles the logarithmic curve |
 | Music plays over itself when re-entering the same area | Two copies of the same track stacked | Check `track_path == _current_track_path` and return early if already playing |
 | Forgetting to check `is_instance_valid()` during scene transitions | Crash: "Attempting to call on freed instance" | Guard node access with `if is_instance_valid(node):` in callbacks that may fire during or after a transition |
@@ -622,7 +666,7 @@ Three patterns recur throughout the entire architecture. If you internalize thes
 
 - [@GlobalScope.linear_to_db()](https://docs.godotengine.org/en/stable/classes/class_@globalscope.html#class-globalscope-method-linear-to-db): linear to decibel conversion
 - [Resource](https://docs.godotengine.org/en/stable/classes/class_resource.html): base class for data objects
-- [Resource.duplicate()](https://docs.godotengine.org/en/stable/classes/class_resource.html#class-resource-method-duplicate): create a copy of a resource
+- [ResourceLoader](https://docs.godotengine.org/en/stable/classes/class_resourceloader.html): advanced runtime resource loading, including cache modes
 - [FileAccess](https://docs.godotengine.org/en/stable/classes/class_fileaccess.html): file I/O for save/load
 
 ### Export and Performance

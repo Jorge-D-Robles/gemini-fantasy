@@ -10,11 +10,11 @@ Post-battle rewards (XP, gold, item drops), a leveling system with stat growth c
 
 ## Preparing the Data Layer
 
-Before building the victory and leveling flows, we need to add a few runtime properties to existing Resources. Make these changes first.
+Before building the victory and leveling flows, make sure `CharacterData` still has the runtime properties we introduced in Module 9. We are finally going to put them to work here.
 
-### CharacterData Additions
+### CharacterData Runtime State
 
-Open `res://resources/character_data.gd` and add these runtime properties (not `@export`, since these track state during play, not base data):
+If your `res://resources/character_data.gd` does not already include these plain variables, add them now:
 
 ```gdscript
 # Add to character_data.gd, runtime state (below the @export vars)
@@ -131,6 +131,32 @@ func level_up() -> Dictionary:
 
 The small random variance (`randi_range(0, 1)` or `(0, 2)`) makes each level-up feel slightly different. HP gets the widest variance because it's the largest number and small fluctuations are less noticeable.
 
+### Centralizing XP Awards
+
+Battles are awarding XP now, and quests will start awarding XP once PartyManager exists in Module 21. Rather than duplicate the level-up loop in multiple systems, give `CharacterData` one helper that owns the "gain XP, maybe level up several times" flow.
+
+Add this below `level_up()` in `res://resources/character_data.gd`:
+
+```gdscript
+func grant_xp(xp: int) -> Array[Dictionary]:
+    current_xp += xp
+
+    var level_ups: Array[Dictionary] = []
+    var required: int = CharacterData.xp_for_level(level)
+    while current_xp >= required:
+        current_xp -= required
+        var gains: Dictionary = level_up()
+        level_ups.append({
+            level = level,
+            gains = gains,
+        })
+        required = CharacterData.xp_for_level(level)
+
+    return level_ups
+```
+
+This helper returns a small summary for each level-up so the caller can print messages or build UI around it without owning the math itself.
+
 ## The Victory Flow
 
 Now that the data layer is ready, update the Victory battle state (`res://systems/battle/states/victory_state.gd`) to show rewards:
@@ -188,18 +214,12 @@ func _apply_xp(battler: BattlerData, xp: int) -> void:
         return
 
     var char_data: CharacterData = battler.character_data
-    char_data.current_xp += xp
     print(char_data.display_name + " gained " + str(xp) + " XP!")
-
-    # Check for level up (may level up multiple times)
-    var required: int = CharacterData.xp_for_level(char_data.level)
-    while char_data.current_xp >= required:
-        char_data.current_xp -= required
-        var gains: Dictionary = char_data.level_up()
-        print(char_data.display_name + " reached level " + str(char_data.level) + "!")
+    for result in char_data.grant_xp(xp):
+        var gains: Dictionary = result.gains
+        print(char_data.display_name + " reached level " + str(result.level) + "!")
         print("  HP +" + str(gains.hp) + ", ATK +" + str(gains.attack) +
               ", DEF +" + str(gains.defense))
-        required = CharacterData.xp_for_level(char_data.level)
 ```
 
 Item drops turn every battle into a small gamble. In Pokemon, rare wild encounters might hold rare items; in Final Fantasy, stealing from bosses yields unique equipment. The probability doesn't need to be high; even a 10% chance of a rare drop creates a "did I get it?" moment after every fight. Drops should complement shop inventory, not replace it: shops sell reliable basics, drops reward persistence with something special.
@@ -236,7 +256,7 @@ After a victorious battle, the party returns to the overworld with their current
 1. **HP/MP sync**: the Victory state writes `battler.current_hp` and `battler.current_mp` back to `battler.character_data` (see the sync code above). Without this, the party would return to full HP after every fight.
 2. **Resource sharing**: CharacterData resources are shared by reference. When the battle modifies stats via `level_up()`, that change persists across scenes automatically.
 
-For now, since we don't have a formal PartyManager yet (Module 21), the CharacterData resource at `res://data/characters/aiden.tres` is loaded via `load()`, which caches it. All code that loads the same path gets the same object.
+For now, since we don't have a formal PartyManager yet (Module 21), the CharacterData resource at `res://data/characters/aiden.tres` is loaded via `load()`, which caches it. All code that loads the same path gets the same object during the current run, which is what lets battle results persist across scenes. In Module 22 and Module 25, we'll start loading **fresh runtime copies** for save/load and New Game so a brand-new run always starts from pristine base data on disk.
 
 > **JRPG Pattern:** After normal battles, HP/MP carry over (no free heals). Save points and inns restore them. This creates a resource management game: do you use that Potion now or save it for the boss?
 
@@ -254,7 +274,8 @@ For now, since we don't have a formal PartyManager yet (Module 21), the Characte
 - **Loot drops** use probability (`randf() < drop_chance`) on each defeated enemy.
 - **Victory flow:** calculate rewards → distribute XP → check level ups → grant gold/items → return to overworld.
 - **Defeat flow:** display game over → return to title or last save.
-- Resources modified in battle persist because they're shared by reference.
+- Character progression is centralized through `CharacterData.grant_xp()`, so battles and later quest rewards can use the same level-up path.
+- Runtime CharacterData changes persist during the current play session because systems share the same active character resources.
 
 ## What You Should See
 

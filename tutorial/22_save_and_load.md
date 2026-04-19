@@ -99,7 +99,9 @@ func to_save_data() -> Dictionary:
 func from_save_data(data: Dictionary) -> void:
     members.clear()
     for entry in data.get("members", []):
-        var character: CharacterData = load(entry.path) as CharacterData
+        var character := ResourceLoader.load(
+            entry.path, "", ResourceLoader.CACHE_MODE_IGNORE,
+        ) as CharacterData
         if character:
             character.level = entry.get("level", 1)
             character.current_xp = entry.get("current_xp", 0)
@@ -121,6 +123,8 @@ func from_save_data(data: Dictionary) -> void:
                 character.equipped_accessory = load(accessory_path) as ItemData
             members.append(character)
 ```
+
+This is our first use of `ResourceLoader.load(path, "", ResourceLoader.CACHE_MODE_IGNORE)`. The third argument tells Godot to bypass the usual cached copy and read a fresh `CharacterData` resource from disk. That matters because party members are mutable runtime objects now: they level up, change equipment, and lose HP. Loading a fresh base definition and then applying the saved state on top keeps the save/load boundary clean.
 
 ### QuestManager
 
@@ -428,7 +432,7 @@ Another thing to plan for: **save migration**. When you add a new field (say, a 
 - **`to_save_data()` / `from_save_data()`** on each autoload exports/imports state as Dictionaries.
 - **`user://`** is the writable save directory; `FileAccess` handles file I/O.
 - **Save crystals** trigger the save flow; **load** happens from the title screen or pause menu.
-- Resources are referenced by **path** in saves (`resource_path`), not by value. The `.tres` file is the source of truth; the save just points to it.
+- Resources are referenced by **path** in saves (`resource_path`), not by value. For mutable party members, `ResourceLoader.CACHE_MODE_IGNORE` rebuilds a fresh runtime copy from the `.tres` definition before saved state is applied.
 - Always validate JSON before using it. Corrupt saves shouldn't crash the game.
 - Use `.get("key", default)` for future-proof save loading; old saves missing new fields won't crash.
 

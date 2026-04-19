@@ -48,10 +48,8 @@ Play through Crystal Saga from start to finish and verify each checkpoint:
 
 ### 3. Whisperwood
 - [ ] Music crossfades when entering the forest
-- [ ] Random encounters trigger after walking
-- [ ] Battles work: actions, damage, animations, victory
-- [ ] XP and gold are awarded after battles
-- [ ] Level-ups show stat increases
+- [ ] Scene transitions to and from Willowbrook still work
+- [ ] The forest reads clearly as an exploration connector, not a battle arena
 - [ ] The pendant can be found (requires a pickup object in Whisperwood; see Module 16's treasure chest pattern)
 
 ### 4. Crystal Cavern
@@ -70,13 +68,13 @@ Play through Crystal Saga from start to finish and verify each checkpoint:
 ### 6. Ending and Credits
 - [ ] Ending text displays after boss
 - [ ] Credits scroll and return to title
-- [ ] "Continue" loads the save (if the player saved before the boss)
+- [ ] "Continue" opens the save slot dialog and loads the selected save (if the player saved before the boss)
 
 ### 7. Systems Integration
 - [ ] Save/load preserves all state correctly
 - [ ] Quest log shows correct objective states
 - [ ] Equipment changes are reflected in battle
-- [ ] Pause menu works at any time
+- [ ] Pause menu works during gameplay and stays inactive on title/ending screens
 - [ ] Audio volume controls work during the session (persistence requires the optional settings save extension from Module 24)
 
 ## Common Bugs and Fixes
@@ -284,11 +282,11 @@ Generate cave layouts from room templates:
 After working through this module, your game should pass the full playtesting walkthrough above. Specifically:
 
 - The title screen loads with New Game, Continue, and Settings buttons
-- New Game starts in Willowbrook with a fresh party and empty inventory
+- New Game starts in Willowbrook with Aiden, 3 Potions, and 100 gold
 - You can walk through all three areas, talk to NPCs, buy items, and save at the crystal
-- Random encounters trigger in Whisperwood and Crystal Cavern, leading to turn-based battles
+- Random encounters trigger in Crystal Cavern, leading to turn-based battles
 - The boss fight in the Crystal Cavern leads to the ending and credits
-- Continue loads a saved game with all progress intact
+- Continue opens the save slot dialog and loads a saved game with all progress intact
 - The game exports to a standalone executable that runs without the Godot editor
 
 If any of these fail, check the Common Bugs section above and the troubleshooting tables in the review modules (08, 13, 19, 23, 27).

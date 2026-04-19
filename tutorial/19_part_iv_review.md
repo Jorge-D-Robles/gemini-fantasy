@@ -36,7 +36,7 @@ Module 17 populated the dungeon with enemies. EnemyData resources defined stats 
 
 ### Module 17: Enemies and AI
 
-- Created **EnemyData** Resource with stats, an AI type enum (AGGRESSIVE, CAUTIOUS, BALANCED), reward values (XP, gold), and a loot drop with probability.
+- Created **EnemyData** Resource with stats, an AI type enum (AGGRESSIVE, CAUTIOUS, BALANCED), a battle sprite, reward values (XP, gold), and a loot drop with probability.
 - Built three **AI strategies** in a static AIController class: aggressive (targets lowest HP), cautious (defends below 30% HP), and balanced (70% attack, 30% defend).
 - Implemented the **encounter system** with a step counter that tracks player movement distance, a randomized step threshold, and weighted encounter selection.
 - Wired **encounter zones** to the encounter system using Area2D body_entered/exited signals, passing different encounter pools and rates per zone.
@@ -62,7 +62,7 @@ Module 17 populated the dungeon with enemies. EnemyData resources defined stats 
 | Tween animation | Procedural animation using `tween_property()`, `tween_interval()`, and `set_parallel()` | Makes combat feel impactful without sprite animation frames | Module 15 |
 | Dungeon design | Room-based layout with corridors, forks, dead ends, and a boss room | Controlled pacing: tension in corridors, relief in open rooms | Module 16 |
 | Encounter zones | Area2D regions that activate the encounter system with specific enemy pools | Different areas of a dungeon can have different enemy types and rates | Module 17 |
-| EnemyData | Resource defining enemy stats, AI type, rewards, and loot drops | Single source of truth for each enemy species, reusable across encounters | Module 17 |
+| EnemyData | Resource defining enemy stats, battle sprite, AI type, rewards, and loot drops | Single source of truth for each enemy species, reusable across encounters and battle presentation | Module 17 |
 | Weighted random selection | Cumulative weight algorithm for picking from a pool of options | Common encounters happen often; rare encounters feel special | Module 17 |
 | Step counter | Tracks player movement distance against a randomized threshold | Random encounters triggered by exploration, not timers | Module 17 |
 | XP curve | `level * level * 10`: quadratic growth formula | Early levels reward quickly; later levels extend gameplay | Module 18 |
@@ -596,6 +596,22 @@ func level_up() -> Dictionary:
     defense += gains.defense
     speed += gains.speed
     return gains
+
+func grant_xp(xp: int) -> Array[Dictionary]:
+    current_xp += xp
+
+    var level_ups: Array[Dictionary] = []
+    var required: int = CharacterData.xp_for_level(level)
+    while current_xp >= required:
+        current_xp -= required
+        var gains: Dictionary = level_up()
+        level_ups.append({
+            level = level,
+            gains = gains,
+        })
+        required = CharacterData.xp_for_level(level)
+
+    return level_ups
 ```
 
 XP distribution in the victory state:
@@ -603,14 +619,8 @@ XP distribution in the victory state:
 ```gdscript
 func _apply_xp(battler: BattlerData, xp: int) -> void:
     var char_data: CharacterData = battler.character_data
-    char_data.current_xp += xp
-
-    var required: int = CharacterData.xp_for_level(char_data.level)
-    while char_data.current_xp >= required:
-        char_data.current_xp -= required
-        var gains: Dictionary = char_data.level_up()
-        print(char_data.display_name + " reached level " + str(char_data.level) + "!")
-        required = CharacterData.xp_for_level(char_data.level)
+    for result in char_data.grant_xp(xp):
+        print(char_data.display_name + " reached level " + str(result.level) + "!")
 ```
 
 The XP curve at a glance:

@@ -77,7 +77,7 @@ func _on_settings() -> void:
 
 func _initialize_fresh_state() -> void:
     # Reset all autoloads to starting state
-    GameManager.load_flags({})
+    GameManager.from_save_data({})
 
     # Reset inventory
     InventoryManager.from_save_data({gold = 100, items = []})
@@ -87,16 +87,13 @@ func _initialize_fresh_state() -> void:
 
     # Reset party to just the hero
     PartyManager.from_save_data({members = []})
-    var aiden: CharacterData = load("res://data/characters/aiden.tres")
+    var aiden := ResourceLoader.load(
+        "res://data/characters/aiden.tres", "", ResourceLoader.CACHE_MODE_IGNORE,
+    ) as CharacterData
     if aiden:
-        # IMPORTANT: duplicate() creates a fresh copy. Without it, load() returns
-        # the cached Resource, which may still have leveled-up stats from a
-        # previous play session. This is a common Resource pitfall.
-        aiden = aiden.duplicate()
         aiden.current_hp = aiden.max_hp
         aiden.current_mp = aiden.max_mp
         aiden.current_xp = 0
-        aiden.level = 1
         PartyManager.add_member(aiden)
 
     # Reset quests
@@ -110,6 +107,8 @@ func _any_saves_exist() -> bool:
     return false
 ```
 
+Notice the New Game path uses the same cache-bypass pattern from Module 22. We load a fresh `CharacterData` definition from disk, then initialize its runtime fields. That gives us a truly pristine new run even if the player leveled up, changed gear, returned to the title screen, and started over without restarting the executable.
+
 Set `res://ui/title_screen/title_screen.tscn` as the project's **Main Scene**: go to **Project → Project Settings → General → Application → Run → Main Scene** and select the title screen `.tscn` file.
 
 ## The Pause Menu
@@ -120,8 +119,9 @@ The pause menu is accessible from anywhere during gameplay.
 
 Before building the pause menu, set up the groups it needs to find UI nodes across scenes. In **each area scene** (Willowbrook, Whisperwood, Crystal Cavern):
 
-1. Select the **InventoryScreen** instance node → open the **Node** dock (next to Inspector) → **Groups** tab → type `inventory_screens` → click **Add**
-2. Select the **QuestLog** instance node → same process → add to group `quest_logs`
+1. Make sure the scene already contains an **InventoryScreen** instance from Module 12 and a **QuestLog** instance from Module 20 as direct children of the scene root.
+2. Select the **InventoryScreen** instance node → open the **Node** dock (next to Inspector) → **Groups** tab → type `inventory_screens` → click **Add**
+3. Select the **QuestLog** instance node → same process → add to group `quest_logs`
 
 The pause menu uses `get_first_node_in_group()` to find these nodes regardless of which scene is loaded.
 
@@ -164,15 +164,21 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-    if event.is_action_pressed("ui_cancel"):
-        if _is_open:
-            close()
-        else:
-            open()
-        get_viewport().set_input_as_handled()
+    if not event.is_action_pressed("ui_cancel"):
+        return
+    if not _can_pause_current_scene() and not _is_open:
+        return
+
+    if _is_open:
+        close()
+    else:
+        open()
+    get_viewport().set_input_as_handled()
 
 
 func open() -> void:
+    if not _can_pause_current_scene():
+        return
     _is_open = true
     _background.visible = true
     get_tree().paused = true
@@ -185,19 +191,32 @@ func close() -> void:
     get_tree().paused = false
 
 
+func _can_pause_current_scene() -> bool:
+    var current_scene := get_tree().current_scene
+    if not current_scene:
+        return false
+    return current_scene.scene_file_path.begins_with("res://scenes/")
+
+
+func _hide_for_submenu() -> void:
+    _is_open = false
+    _background.visible = false
+
+
 func _open_inventory() -> void:
-    # Show the inventory screen from Module 12.
+    # Use Module 12's public API instead of toggling visibility directly.
     var inv := get_tree().get_first_node_in_group("inventory_screens")
-    if inv:
-        inv.visible = true
+    if inv and inv.has_method("open_from_pause"):
+        _hide_for_submenu()
+        inv.call("open_from_pause")
 
 
 func _open_quest_log() -> void:
-    # Show the quest log from Module 20.
+    # Use Module 20's public API instead of toggling visibility directly.
     var log_panel := get_tree().get_first_node_in_group("quest_logs")
-    if log_panel:
-        log_panel.visible = true
-        log_panel.refresh()
+    if log_panel and log_panel.has_method("open_from_pause"):
+        _hide_for_submenu()
+        log_panel.call("open_from_pause")
 
 
 func _open_settings() -> void:
@@ -418,9 +437,9 @@ func _return_to_title() -> void:
                ↓                   ↓
           Willowbrook  ←──── Restored Scene
                ↓
-          Whisperwood (explore, random battles)
+          Whisperwood (explore, pendant quest)
                ↓
-         Crystal Cavern (dungeon, boss)
+         Crystal Cavern (dungeon, random battles, boss)
                ↓
        ┌── BOSS FIGHT ──┐
        ↓                 ↓
@@ -455,9 +474,9 @@ Every path loops back to the title screen. The game is a complete, closed loop.
 
 ## What We've Learned
 
-- The **title screen** initializes fresh state for New Game or loads a save for Continue.
-- The **pause menu** uses `process_mode = ALWAYS` and `get_tree().paused` to work during gameplay.
-- **Quit to title** changes scene back to the title screen, resetting game state.
+- The **title screen** initializes fresh state from pristine character definitions for New Game or opens the save slot dialog for Continue.
+- The **pause menu** uses `process_mode = ALWAYS`, gates itself to gameplay scenes, and opens Inventory/Quest Log through the public APIs from Modules 12 and 20.
+- **Quit to title** changes scene back to the title screen; the next New Game or Continue choice decides what state to load.
 - The **ending** triggers after the boss is defeated, leading to credits then title.
 - **Credits** scroll with a simple Tween on the label's Y position.
 - The complete **game loop** ensures every path returns to the title screen.
@@ -466,8 +485,8 @@ Every path loops back to the title screen. The game is a complete, closed loop.
 
 - Game launches to the title screen
 - "New Game" starts fresh in Willowbrook with 3 Potions and 100 gold
-- "Continue" loads the last save
-- Escape opens the pause menu at any time
+- "Continue" opens the save slot dialog and loads the selected save
+- Escape opens the pause menu during gameplay scenes, but not on the title screen or ending screens
 - Defeating the Crystal Guardian shows the ending and credits
 - Everything loops back to the title screen
 

@@ -15,7 +15,7 @@ Think about what happens in Final Fantasy VI when you first meet Shadow in the b
 Game flags are the simplest and most universal state tracking in JRPGs. A flag is a boolean: something either has or hasn't happened.
 
 ```
-"talked_to_lira" = true
+"lira_intro_seen" = true
 "crystal_cavern_unlocked" = false
 "boss_defeated" = false
 "pendant_found" = false
@@ -117,7 +117,7 @@ func _ready() -> void:
 
 
 func start_quest(quest: QuestData) -> void:
-    if _is_quest_active(quest.id) or _is_quest_done(quest.id):
+    if _is_quest_active(quest.id) or is_quest_complete(quest.id) or _is_quest_done(quest.id):
         return
     _active_quests.append(quest)
     quest_started.emit(quest)
@@ -139,12 +139,6 @@ func turn_in_quest(quest: QuestData) -> void:
     _turned_in_quests.append(quest)
 
     # Grant rewards
-    if quest.xp_reward > 0:
-        # Distribute XP to all party members (once PartyManager exists in Module 21)
-        # PartyManager is added in Module 21. Guard against it not existing yet.
-        if get_node_or_null("/root/PartyManager"):
-            for member in PartyManager.get_members():
-                member.current_xp += quest.xp_reward
     if quest.gold_reward > 0:
         InventoryManager.add_gold(quest.gold_reward)
     for item in quest.reward_items:
@@ -160,6 +154,10 @@ func get_active_quests() -> Array[QuestData]:
 
 
 func get_completed_quests() -> Array[QuestData]:
+    return _completed_quests
+
+
+func get_turned_in_quests() -> Array[QuestData]:
     return _turned_in_quests
 
 
@@ -190,6 +188,8 @@ func _is_quest_active(quest_id: String) -> bool:
 func _is_quest_done(quest_id: String) -> bool:
     return _turned_in_quests.any(func(q: QuestData) -> bool: return q.id == quest_id)
 ```
+
+Notice what `turn_in_quest()` does **not** do yet: it does not award quest XP. That is intentional. Module 20 happens before PartyManager exists, so this version stays self-contained and safe to paste into the project at this point in the series. In Module 21, once the party roster exists, we'll revisit `turn_in_quest()` and route quest XP through the same leveling helper battles already use.
 
 ## Crystal Saga Quests
 
@@ -230,7 +230,7 @@ Create the `res://data/quests/` folder (right-click `res://data/` → New Folder
    - **Objective Flags:** "talked_to_fynn", "pendant_found", "pendant_returned"
    - `xp_reward`: 50
    - `gold_reward`: 30
-   - **Reward Items:** Drag `ether.tres` into the array, set count to 2
+   - **Reward Items:** Click **Add Element** twice and drag `ether.tres` into both slots. In this tutorial, `reward_items` is a plain `Array[ItemData]`, so duplicate entries represent multiple copies.
 
 ## Setting Quest Flags from Gameplay
 
@@ -367,10 +367,36 @@ Save as `res://ui/quest_log/quest_log.gd`:
 
 ```gdscript
 extends PanelContainer
-## Displays active and completed quests.
+## Displays quest objectives and current progress.
+
+var _is_open: bool = false
 
 @onready var _quest_list: VBoxContainer = $MarginContainer/VBoxContainer/QuestList
 @onready var _detail_label: RichTextLabel = $MarginContainer/VBoxContainer/DetailLabel
+
+
+func _ready() -> void:
+    visible = false
+    process_mode = Node.PROCESS_MODE_ALWAYS
+
+
+func _unhandled_input(event: InputEvent) -> void:
+    if event.is_action_pressed("ui_cancel") and _is_open:
+        close()
+        get_viewport().set_input_as_handled()
+
+
+func open_from_pause() -> void:
+    _is_open = true
+    visible = true
+    get_tree().paused = true
+    refresh()
+
+
+func close() -> void:
+    _is_open = false
+    visible = false
+    get_tree().paused = false
 
 
 func refresh() -> void:
@@ -403,6 +429,8 @@ func _show_detail(quest: QuestData) -> void:
     _detail_label.text = text
 ```
 
+After creating the scene, instance `quest_log.tscn` into each gameplay scene you currently have (`Willowbrook`, `Whisperwood`, and `CrystalCavern`) as a direct child of the scene root, alongside your other UI nodes. Leave it hidden by default. Module 25's PauseMenu will open these scene-local quest logs through `open_from_pause()`, just like it opens the inventory through Module 12's public API.
+
 **Autoload reference card:**
 
 | Autoload | Module | Purpose |
@@ -422,7 +450,7 @@ func _show_detail(quest: QuestData) -> void:
 - **`GameManager.flag_changed` signal** lets any system react when the world state changes.
 - **QuestData** defines objectives as flag names; a quest completes when all its flags are set.
 - **Reactive dialogue** checks flags to choose what an NPC says, creating the illusion of a living world.
-- **Quest rewards** are granted on turn-in: gold, items, and a completion flag.
+- **Quest rewards** are granted on turn-in: gold, items, and a completion flag. The `xp_reward` field is defined now and gets wired into PartyManager in Module 21.
 - The quest log shows objectives with checkmarks based on current flag state.
 
 ## What You Should See

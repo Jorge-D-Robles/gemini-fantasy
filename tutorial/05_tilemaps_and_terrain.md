@@ -227,7 +227,7 @@ Place buildings as 2x2 or 3x2 clusters of wall/roof tiles. The path runs north-s
 
 After each layer, press **F6** to run and walk around. Does it look right? Is there enough room to move? Are the buildings visible? Adjust as you go.
 
-> **Tip:** Middle-click and drag to pan the viewport. Scroll wheel to zoom. Right-click erases. Get comfortable with these three controls and painting goes fast.
+> **Tip:** Middle-click and drag to pan the viewport. Scroll wheel to zoom. Right-click erases, and **Ctrl+click** picks a tile from the viewport. Get comfortable with these controls and painting goes fast.
 
 ## Adding Collision to Tiles
 
