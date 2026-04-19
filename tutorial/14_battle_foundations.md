@@ -711,7 +711,7 @@ The same pattern applies to menus: opening the inventory pushes a new layer on t
 | Pattern | Active States | Example | When to Use |
 |---------|--------------|---------|-------------|
 | State Machine | Exactly one | Battle phases, player movement states | Mutually exclusive modes |
-| State Stack | Many (layered) | Overworld + battle, game + pause menu, game + dialogue | Modes that overlay other modes |
+| State Stack | Many (layered) | Game + pause menu, game + dialogue, menu + sub-menu | Modes that overlay other modes |
 
 The rule of thumb: if the previous state should be *destroyed* when you leave it, use a state machine or a scene swap. If it should be *preserved* underneath, use a state stack or overlay UI.
 

@@ -431,7 +431,7 @@ Another thing to plan for: **save migration**. When you add a new field (say, a 
 - **JSON** is the save format: human-readable, no class coupling, simple API.
 - **`to_save_data()` / `from_save_data()`** on each autoload exports/imports state as Dictionaries.
 - **`user://`** is the writable save directory; `FileAccess` handles file I/O.
-- **Save crystals** trigger the save flow; **load** happens from the title screen or pause menu.
+- **Save crystals** trigger the save flow; `load_game()` is designed to be reused by UI flows like the title screen's Continue button in Module 25.
 - Resources are referenced by **path** in saves (`resource_path`), not by value. For mutable party members, `ResourceLoader.CACHE_MODE_IGNORE` rebuilds a fresh runtime copy from the `.tres` definition before saved state is applied.
 - Always validate JSON before using it. Corrupt saves shouldn't crash the game.
 - Use `.get("key", default)` for future-proof save loading; old saves missing new fields won't crash.

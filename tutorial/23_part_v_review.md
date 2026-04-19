@@ -29,8 +29,8 @@ Module 21 added the remaining progression systems. PartyManager gave us a roster
 - Identified **what needs saving** by auditing every autoload for mutable state: flags, inventory, party members (including levels, stats, and equipment), quest arrays, scene path, and player position.
 - Implemented the **`to_save_data()` / `from_save_data()` pattern** on each autoload: export state as a plain Dictionary, import it back from one. Resources are referenced by file path, not serialized by value.
 - Built the **SaveManager** autoload with `save_game(slot)` and `load_game(slot)`: writes JSON to `user://saves/`, reads it back, restores all autoload state, and changes to the saved scene with the correct player position.
-- Created a **save slot selection UI** with three slots that display metadata (timestamp, location) and wire into both save crystals and the title screen's Continue button.
-- Added **error handling** for corrupt or missing save files: JSON parse validation, Dictionary type checks, and version field verification.
+- Created a **save slot selection UI** with three slots that display the saved location and wire into both save crystals and the title screen's Continue button.
+- Added **error handling guidance** for corrupt or missing save files: JSON parse validation in the main flow, plus recommended Dictionary type checks and version verification.
 
 ## Key Concepts
 
@@ -140,6 +140,8 @@ QuestManager.quest_turned_in.connect(_on_quest_turned_in)
 ```
 
 Quest completion is automatic: QuestManager listens for `GameManager.flag_changed` and checks whether all `objective_flags` for each active quest are now set. When they are, it moves the quest to the completed list and emits `quest_completed`.
+
+This first quest log stays focused on **active** quests. Completed and turned-in quests are still tracked separately in `QuestManager` for reward handling, save/load, and future UI expansion, but they are not shown in this starter journal.
 
 ### Quest Log UI
 

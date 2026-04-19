@@ -140,7 +140,7 @@ func _get_lira_dialogue() -> Array[DialogueLine]:
     ])
 ```
 
-After the second conversation, trigger recruitment. This code goes in `willowbrook.gd`, which should have `@onready` references for the UI nodes (from Modules 9 and this module):
+After the second conversation, trigger recruitment. This code goes in `willowbrook.gd`, which should have `@onready` references for the UI nodes (from Module 11 and this module):
 
 ```gdscript
 @onready var _dialogue_box: Control = $DialogueBox  # From Module 11
@@ -322,7 +322,8 @@ EquipmentPanel (PanelContainer)
     ├── StatsLabel (RichTextLabel)
     └── Slots (VBoxContainer)
         ├── WeaponButton (Button: "Weapon: ---")
-        └── ArmorButton (Button: "Armor: ---")
+        ├── ArmorButton (Button: "Armor: ---")
+        └── AccessoryButton (Button: "Accessory: ---")
 ```
 
 Save the script as `res://ui/equipment/equipment_panel.gd`:
@@ -339,6 +340,7 @@ var _character: CharacterData
 @onready var _stats_label: RichTextLabel = $VBox/StatsLabel
 @onready var _weapon_button: Button = $VBox/Slots/WeaponButton
 @onready var _armor_button: Button = $VBox/Slots/ArmorButton
+@onready var _accessory_button: Button = $VBox/Slots/AccessoryButton
 
 
 func show_character(character: CharacterData) -> void:
@@ -356,6 +358,7 @@ func _refresh() -> void:
     )
     _weapon_button.text = "Weapon: " + (_character.equipped_weapon.display_name if _character.equipped_weapon else "(none)")
     _armor_button.text = "Armor: " + (_character.equipped_armor.display_name if _character.equipped_armor else "(none)")
+    _accessory_button.text = "Accessory: " + (_character.equipped_accessory.display_name if _character.equipped_accessory else "(none)")
 ```
 
 ### Slot Selection and Item Swapping
@@ -366,6 +369,7 @@ When the player clicks a slot button, show equipable items from inventory and al
 func _ready() -> void:
     _weapon_button.pressed.connect(_on_slot_pressed.bind(ItemData.EquipSlot.WEAPON))
     _armor_button.pressed.connect(_on_slot_pressed.bind(ItemData.EquipSlot.ARMOR))
+    _accessory_button.pressed.connect(_on_slot_pressed.bind(ItemData.EquipSlot.ACCESSORY))
 
 
 func _on_slot_pressed(slot: ItemData.EquipSlot) -> void:
@@ -393,6 +397,8 @@ func _on_slot_pressed(slot: ItemData.EquipSlot) -> void:
 ```
 
 > **Exercise:** For a more polished experience, replace the "equip first item" logic with a popup list showing all matching items, their stats, and the stat difference compared to the current equipment. The inventory grid pattern from Module 12 works well for this.
+
+We are not creating an accessory item in this module, so the new Accessory button will usually show `(none)` for now. That is expected. The point is to keep the teaching UI aligned with the `CharacterData` slot model you just added.
 
 ### Equipment Comparison: The PredictStats Pattern
 
@@ -620,7 +626,7 @@ func _handle_inn(npc: CharacterBody2D) -> void:
 ## What You Should See
 
 - Talking to Lira once introduces her, and the second conversation recruits her into the party
-- The party menu shows both characters with stats and equipment
+- The equipment panel shows the selected character's stats plus weapon, armor, and accessory slots. The accessory slot will stay `(none)` until you add an accessory item later
 - Equipping a sword increases ATK in the stats display and in battle
 - The shopkeeper opens a buy menu with prices
 - The innkeeper offers rest for 10 gold and heals the party

@@ -97,8 +97,11 @@ These are the series-level rules maintainers should preserve:
 - Module 14's battle flow is a scene swap plus reconstruction, not an overworld-under-battle state stack.
 - Module 20 must remain valid before PartyManager exists. Quest XP integration is explicitly upgraded in Module 21.
 - `get_completed_quests()` and `get_turned_in_quests()` represent different quest states and must stay semantically distinct in tutorial text and review docs.
+- The starter quest log lists active quests only. Completed and turned-in states remain tracked in data/save flow unless the UI is explicitly expanded.
+- If `CharacterData` teaches weapon, armor, and accessory slots, the example equipment UI must expose all three or clearly mark any omission as future work.
 - New Game and save reconstruction must use pristine character definitions, not duplicate a mutated cached runtime resource.
 - PauseMenu must open Inventory and Quest Log through the public APIs taught earlier in Modules 12 and 20.
+- Game Over is a decision point (load last save or return to title), not an automatic return-to-title path.
 - "What You Should See" sections may only promise features the reader has already built by that point.
 - Review modules must mirror the current main modules, not a previous draft.
 

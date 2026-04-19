@@ -431,6 +431,8 @@ func _show_detail(quest: QuestData) -> void:
 
 After creating the scene, instance `quest_log.tscn` into each gameplay scene you currently have (`Willowbrook`, `Whisperwood`, and `CrystalCavern`) as a direct child of the scene root, alongside your other UI nodes. Leave it hidden by default. Module 25's PauseMenu will open these scene-local quest logs through `open_from_pause()`, just like it opens the inventory through Module 12's public API.
 
+This first quest log keeps the presentation simple: it only lists **active** quests. `QuestManager` still tracks completed and turned-in quests separately for reward handling, save/load, and future journal tabs, but we are not surfacing those lists in the UI yet.
+
 **Autoload reference card:**
 
 | Autoload | Module | Purpose |
@@ -451,7 +453,7 @@ After creating the scene, instance `quest_log.tscn` into each gameplay scene you
 - **QuestData** defines objectives as flag names; a quest completes when all its flags are set.
 - **Reactive dialogue** checks flags to choose what an NPC says, creating the illusion of a living world.
 - **Quest rewards** are granted on turn-in: gold, items, and a completion flag. The `xp_reward` field is defined now and gets wired into PartyManager in Module 21.
-- The quest log shows objectives with checkmarks based on current flag state.
+- The first quest log shows **active** quests with objectives and checkmarks based on current flag state.
 
 ## What You Should See
 

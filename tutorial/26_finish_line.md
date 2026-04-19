@@ -63,7 +63,7 @@ Play through Crystal Saga from start to finish and verify each checkpoint:
 ### 5. Boss Battle
 - [ ] Boss has higher stats, tougher fight
 - [ ] Defeating the boss triggers the ending
-- [ ] Game over on party wipe returns to title
+- [ ] Game over on party wipe opens the Game Over screen, with load-or-title options
 
 ### 6. Ending and Credits
 - [ ] Ending text displays after boss
@@ -72,7 +72,7 @@ Play through Crystal Saga from start to finish and verify each checkpoint:
 
 ### 7. Systems Integration
 - [ ] Save/load preserves all state correctly
-- [ ] Quest log shows correct objective states
+- [ ] Quest log shows correct objective states for active quests
 - [ ] Equipment changes are reflected in battle
 - [ ] Pause menu works during gameplay and stays inactive on title/ending screens
 - [ ] Audio volume controls work during the session (persistence requires the optional settings save extension from Module 24)
@@ -296,13 +296,13 @@ If any of these fail, check the Common Bugs section above and the troubleshootin
 You started with an empty Godot project and a blinking cursor. Twenty-one modules later, you have:
 
 - **Thousands of lines of GDScript** across dozens of scripts
-- **7 autoloads** managing global game state (SceneManager, InventoryManager, GameManager, QuestManager, PartyManager, SaveManager, MusicManager)
+- **8 autoloads** managing global game state and global UI (SceneManager, InventoryManager, GameManager, QuestManager, PartyManager, SaveManager, MusicManager, PauseMenu)
 - **3 game areas** with hand-crafted tilemaps
 - **A complete battle system** with state machines, AI, and animations
 - **5 interlocking systems** (inventory, quests, party, save/load, audio)
 - **A playable game** with a beginning, middle, and end
 
-More importantly, you've learned the **patterns** that scale. The state machine pattern works for player movement, battle flow, quest tracking, and dialogue flow. The Resource pattern works for items, characters, enemies, quests, and encounters. The autoload pattern works for scene management, inventory, battle, quests, party, and audio. These patterns repeat everywhere in game development, not just in JRPGs.
+More importantly, you've learned the **patterns** that scale. The state machine pattern works for player movement, battle flow, quest tracking, and dialogue flow. The Resource pattern works for items, characters, enemies, quests, and encounters. The autoload pattern works for scene management, inventory, quests, party, save/load, audio, and pause UI. These patterns repeat everywhere in game development, not just in JRPGs.
 
 ## Closing Thoughts
 

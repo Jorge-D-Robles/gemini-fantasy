@@ -447,7 +447,7 @@ func _return_to_title() -> void:
        ↓                 ↓
     Ending           Game Over
        ↓                 ↓
-    Credits        Title Screen
+    Credits      Load Save or Title Screen
        ↓
   Title Screen
 
@@ -457,7 +457,7 @@ At any time during gameplay:
   Save Crystal → Save Game
 ```
 
-Every path loops back to the title screen. The game is a complete, closed loop.
+There are no dead ends now. Victory rolls through ending and credits back to the title screen, while defeat routes through a Game Over screen that lets the player load a save or return to the title.
 
 ## Autoload Reference Card (Final)
 
@@ -479,7 +479,7 @@ Every path loops back to the title screen. The game is a complete, closed loop.
 - **Quit to title** changes scene back to the title screen; the next New Game or Continue choice decides what state to load.
 - The **ending** triggers after the boss is defeated, leading to credits then title.
 - **Credits** scroll with a simple Tween on the label's Y position.
-- The complete **game loop** ensures every path returns to the title screen.
+- The complete **game flow** ensures victory, defeat, and quit all lead to a clear next step instead of a dead end.
 
 ## What You Should See
 
@@ -488,7 +488,8 @@ Every path loops back to the title screen. The game is a complete, closed loop.
 - "Continue" opens the save slot dialog and loads the selected save
 - Escape opens the pause menu during gameplay scenes, but not on the title screen or ending screens
 - Defeating the Crystal Guardian shows the ending and credits
-- Everything loops back to the title screen
+- Losing a battle opens the Game Over screen with Load Last Save and Return to Title
+- Credits and Quit to Title both bring you back to the title screen
 
 ## Next Module
 

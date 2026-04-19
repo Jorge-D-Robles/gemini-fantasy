@@ -6,7 +6,7 @@ This module is a reference companion for Part VI (Modules 24-26) and a capstone 
 
 Part VI was about finishing the game. We weren't adding mechanics or building systems. We were taking twenty-plus modules of existing work and making it feel complete.
 
-Module 24 tackled audio, the change that probably does the most for how the game feels. A silent game feels like a tech demo. Add music and sound effects and it starts feeling like a real game. We built a MusicManager autoload with crossfading, set up audio buses for independent volume control, added SFX that play and self-destruct, and wired volume sliders into a settings panel. Module 25 closed the game loop. We built the title screen, the pause menu, the game over screen, the victory ending, and the credits. Every path through the game now loops back to the title screen. There are no dead ends.
+Module 24 tackled audio, the change that probably does the most for how the game feels. A silent game feels like a tech demo. Add music and sound effects and it starts feeling like a real game. We built a MusicManager autoload with crossfading, set up audio buses for independent volume control, added SFX that play and self-destruct, and wired volume sliders into a settings panel. Module 25 closed the game flow. We built the title screen, the pause menu, the game over screen, the victory ending, and the credits. Every path through the game now leads to a clear next step, either back to the title screen or into the load flow. There are no dead ends.
 
 Module 26 was the finish line: a full playtesting walkthrough, a troubleshooting guide for the bugs you will encounter, performance advice, export instructions, and a roadmap for where to take Crystal Saga next. That's the finish line.
 
@@ -22,7 +22,7 @@ Module 26 was the finish line: a full playtesting walkthrough, a troubleshooting
 - Created a **pause menu** as an autoload using `process_mode = ALWAYS` and `get_tree().paused`, while delegating inventory and quest log opening to the public APIs from Modules 12 and 20
 - Implemented **Game Over** and **Victory Ending** screens that replaced placeholder defeat/victory behavior from earlier modules
 - Built **scrolling credits** using a Tween on the label's Y position
-- Completed the **game loop**: every path through the game (victory, defeat, quit) returns to the title screen
+- Completed the **game flow**: victory returns through credits to the title screen, while defeat routes through Game Over with a load-or-title choice
 
 ### Module 26: Finish Line (Polish, Export, and Next Steps)
 - Walked through a **full playtesting checklist** covering every system from title screen to credits
@@ -327,7 +327,7 @@ The complete game loop:
        |                 |
     Ending           Game Over
        |                 |
-    Credits        Title Screen
+    Credits      Load Save or Title Screen
        |
   Title Screen
 
@@ -337,7 +337,7 @@ At any time during gameplay:
   Save Crystal -> Save Game
 ```
 
-Every path loops back to the title screen. There are no dead ends in the flow.
+There are no dead ends in the flow. Victory returns to the title screen after credits, and defeat gives the player a clear load-or-title decision.
 
 ### Pause Menu
 
@@ -508,7 +508,7 @@ Every piece of game content is a [Resource](https://docs.godotengine.org/en/stab
 | Resource Class | Module | What It Describes |
 |---------------|--------|-------------------|
 | `ItemData` | 9 | Name, description, type (consumable/equipment), stat effects |
-| `CharacterData` | 9 | HP, MP, ATK, DEF, abilities, level, XP, equipment slots |
+| `CharacterData` | 9 | HP, MP, ATK, DEF, growth, level, XP, equipment slots |
 | `NPCData` | 9 | Name, dialogue lines, portrait, interaction behavior |
 | `EnemyData` | 17 | Stats, battle sprite, loot table, XP reward, AI behavior type |
 | `AbilityData` | 15 | Name, MP cost, damage formula, target type |
@@ -552,7 +552,7 @@ Willowbrook (Node2D)             Whisperwood (Node2D)           CrystalCavern (N
 
 ### UI Layer
 
-UI screens are Control nodes that overlay the game world. Some are instantiated on demand (dialogue box, shop, inventory), others are persistent autoloads (pause menu).
+UI screens are Control nodes that overlay the game world. Some are scene-local children that stay available in gameplay scenes (dialogue box, inventory, quest log), others are instantiated on demand (shop, settings, game over, ending), and PauseMenu is a persistent autoload scene.
 
 | Screen | Module | Trigger |
 |--------|--------|---------|
@@ -577,14 +577,14 @@ Player interacts with NPC
   -> Dialogue checks GameManager flags to pick the right lines (Module 20)
   -> Dialogue may start a quest via QuestManager (Module 20)
   -> Dialogue may recruit a party member via PartyManager (Module 21)
-  -> Dialogue may open the ShopUI via InventoryManager (Module 21)
+  -> Dialogue may open the ShopUI directly (Module 21)
 
 Player enters a Crystal Cavern encounter zone
   -> EncounterSystem rolls for a random battle (Module 17)
   -> MusicManager.remember_track() saves current BGM (Module 24)
   -> SceneManager transitions to battle scene (Module 7)
   -> BattleManager runs the fight (Modules 14-18)
-  -> Victory: XP -> PartyManager, gold/loot -> InventoryManager (Module 18)
+  -> Victory: XP -> active party CharacterData, gold/loot -> InventoryManager (Module 18)
   -> MusicManager.resume_previous_track() (Module 24)
   -> SceneManager returns to overworld (Module 7)
 
