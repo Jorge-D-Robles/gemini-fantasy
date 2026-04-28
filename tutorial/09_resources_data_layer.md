@@ -391,6 +391,18 @@ CrystalSaga/
 
 Notice the pattern: `resources/` holds class definitions, `data/` holds instances. This keeps things clean as the project grows to dozens of items and characters.
 
+## Engineering Contract
+
+- **Global state:** None yet; Resources are data definitions loaded by later systems.
+- **Public surface:** `ItemData`, `CharacterData`, and `NPCData` classes plus `.tres` instances under `res://data/`.
+- **Invariant:** IDs and resource paths are stable because later inventory, party, quest, and save systems reference them.
+- **Failure behavior:** A failed `load()` should be treated as missing content and handled before dereferencing.
+- **Copy semantics:** Resource instances loaded normally are cached and shared; mutable runtime copies need explicit duplication or cache-bypass loading later.
+
+## Engine Gotcha
+
+Godot Resources are reference types. If you mutate a cached Resource at runtime, every holder of that same loaded instance can observe the mutation.
+
 ## What We've Learned
 
 - **Resources** are Godot's data containers: type-safe, editor-friendly, saveable to disk.

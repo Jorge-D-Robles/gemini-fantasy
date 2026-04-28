@@ -127,9 +127,9 @@ my_copy.hp_restore = 99  # Only affects the copy
 The point: separate **what the data is** from **what the code does with it**.
 
 ```
-resources/item_data.gd       -- defines the shape (fields, types, enums)
-data/items/potion.tres        -- holds specific values (Potion, 50 HP, 25 gold)
-autoloads/inventory_manager.gd -- manages a collection of items at runtime
+resources/item_data.gd        : defines the shape (fields, types, enums)
+data/items/potion.tres        : holds specific values (Potion, 50 HP, 25 gold)
+autoloads/inventory_manager.gd: manages a collection of items at runtime
 ```
 
 This separation means:
@@ -191,10 +191,10 @@ The NPC scene tree:
 ```
 NPC (CharacterBody2D)
 ├── Sprite (AnimatedSprite2D)
-├── CollisionShape2D           -- small, feet-only (makes the NPC solid)
+├── CollisionShape2D           : small, feet-only (makes the NPC solid)
 ├── InteractionZone (Area2D)
-│   └── InteractionShape       -- large circle (~24px radius, detection range)
-└── InteractionPrompt (Label)  -- "!" text, hidden by default
+│   └── InteractionShape       : large circle (~24px radius, detection range)
+└── InteractionPrompt (Label)  : "!" text, hidden by default
 ```
 
 The NPC is driven by data, not hardcoded values:
@@ -255,6 +255,8 @@ func _start_typing() -> void:
 ```gdscript
 func _unhandled_input(event: InputEvent) -> void:
     if not _panel.visible:
+        return
+    if _choice_container.visible:
         return
     if event.is_action_pressed("interact") or event.is_action_pressed("ui_accept"):
         get_viewport().set_input_as_handled()

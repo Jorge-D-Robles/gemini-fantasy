@@ -30,6 +30,9 @@ var _items: Array[Dictionary] = []  # [{item: ItemData, count: int}]
 
 
 func add_item(item: ItemData, amount: int = 1) -> void:
+    if amount <= 0:
+        return
+
     for entry in _items:
         if entry.item.id == item.id:
             entry.count += amount
@@ -43,13 +46,22 @@ func add_item(item: ItemData, amount: int = 1) -> void:
 
 
 func remove_item(item: ItemData, amount: int = 1) -> bool:
+    if amount <= 0:
+        return false
+
     for i in _items.size():
         if _items[i].item.id == item.id:
-            _items[i].count -= amount
-            var remaining: int = _items[i].count
+            var entry: Dictionary = _items[i]
+            if entry.count < amount:
+                return false
+
+            entry.count -= amount
+            var remaining: int = entry.count
             if remaining <= 0:
                 _items.remove_at(i)
                 remaining = 0
+            else:
+                _items[i] = entry
             item_removed.emit(item, remaining)
             inventory_changed.emit()
             return true
@@ -71,14 +83,14 @@ func get_item_count(item_id: String) -> int:
 
 
 func get_all_items() -> Array[Dictionary]:
-    return _items
+    return _items.duplicate(true)
 
 
 func get_consumables() -> Array[Dictionary]:
     return _items.filter(
         func(entry: Dictionary) -> bool:
             return entry.item.item_type == ItemData.ItemType.CONSUMABLE
-    )
+    ).duplicate(true)
 
 
 func add_gold(amount: int) -> void:
@@ -368,6 +380,18 @@ Willowbrook (Node2D)
 ├── DialogueBox (CanvasLayer)
 └── InventoryScreen (CanvasLayer)
 ```
+
+## Engineering Contract
+
+- **Global state:** `InventoryManager` owns item stacks and gold as an autoload.
+- **Public surface:** `add_item()`, `remove_item()`, `use_item()`, `get_all_items()`, `get_consumables()`, and inventory/gold signals.
+- **Invariant:** Stack counts never go below zero; removal fails before mutation when the amount is invalid or unavailable.
+- **Failure behavior:** Missing items, insufficient quantities, and non-positive amounts return `false`.
+- **Copy semantics:** List getters return defensive array/dictionary copies; `ItemData` Resources inside entries remain shared definitions.
+
+## Engine Gotcha
+
+Autoload arrays are just normal mutable arrays. Returning the live array would let UI code accidentally mutate inventory internals, so read APIs return copies.
 
 ## What We've Learned
 

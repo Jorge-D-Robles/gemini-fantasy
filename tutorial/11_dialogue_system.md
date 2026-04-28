@@ -619,6 +619,18 @@ This is already handled by our state machine (Module 6). When `start_interaction
 
 The dialogue box's `_unhandled_input` handles the interact/accept buttons for advancing text. Since the player's INTERACT state doesn't consume input events, the dialogue box can receive them normally.
 
+## Engineering Contract
+
+- **Global state:** None; the dialogue box is a UI scene controlled by its caller.
+- **Public surface:** `start_dialogue(lines)`, `dialogue_finished`, and `choice_made`.
+- **Invariant:** Input advances text only when the dialogue panel is visible and choices are not currently owning focus.
+- **Failure behavior:** Empty dialogue arrays close cleanly instead of indexing past the end.
+- **Copy semantics:** DialogueLine resources are read by the UI; transient UI state such as current line index stays inside the dialogue box.
+
+## Engine Gotcha
+
+Use `_unhandled_input()` for dialogue advance so UI buttons and focused choices get first chance to consume events. Otherwise the same accept press can both choose an option and advance the next line.
+
 ## What We've Learned
 
 - **Control nodes** (PanelContainer, MarginContainer, VBoxContainer, Label, RichTextLabel) create responsive UI layouts.

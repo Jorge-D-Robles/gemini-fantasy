@@ -85,10 +85,10 @@ The full workflow for creating a tilemap from scratch:
 
 ```
 Willowbrook (Node2D)
-├── Ground (TileMapLayer)        -- tileset: town_tileset.tres
-├── Detail (TileMapLayer)        -- tileset: town_tileset.tres
-├── Objects (TileMapLayer)       -- tileset: town_tileset.tres
-└── AbovePlayer (TileMapLayer)   -- tileset: town_tileset.tres
+├── Ground (TileMapLayer)        (tileset: town_tileset.tres)
+├── Detail (TileMapLayer)        (tileset: town_tileset.tres)
+├── Objects (TileMapLayer)       (tileset: town_tileset.tres)
+└── AbovePlayer (TileMapLayer)   (tileset: town_tileset.tres)
 ```
 
 ### Tile Painting and Layers

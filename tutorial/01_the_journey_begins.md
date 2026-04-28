@@ -22,7 +22,7 @@ For our purposes (building a 2D JRPG), Godot is an excellent choice for three re
 
 ## Installing Godot
 
-Go to [godotengine.org/download](https://godotengine.org/download) and download the latest **Godot 4.x** release. This tutorial is written for Godot 4.3 or later.
+Go to [godotengine.org/download](https://godotengine.org/download) and download the standard **Godot 4.6.2** release. This series is verified against Godot 4.6.2. Older Godot 4.x releases may work, but editor labels, default settings, and a few APIs can shift between stable branches, so treat 4.6.2 as the baseline unless you are deliberately compatibility-testing another version.
 
 A few notes on the download:
 
@@ -235,6 +235,18 @@ This is critical for pixel art. The default `Linear` filter blurs pixels when sc
 > **Warning:** If your sprites look blurry when you run the game, this setting is almost always the culprit. `Nearest` filtering is the #1 pixel art configuration step.
 
 After changing these settings, run the game again (F5). The window will be larger (1280x720), and if you look closely at the Godot icon, its pixels should be crisp and sharp rather than blurry.
+
+## Engineering Contract
+
+- **Global state:** None yet; this module only creates the project shell.
+- **Public surface:** A Godot project that opens cleanly in the verified editor version.
+- **Invariant:** The project should run an empty or starter scene without import errors before Module 2.
+- **Failure behavior:** Version/import problems are fixed now rather than carried forward.
+- **Copy semantics:** Assets and Resources are still editor-owned; no runtime mutation is introduced.
+
+## Engine Gotcha
+
+Godot minor versions can change editor defaults, import behavior, and generated project metadata. This tutorial series is pinned to the verified baseline from this module; older 4.x versions may work, but they are not guaranteed unless you retest the full path.
 
 ## What We've Learned
 

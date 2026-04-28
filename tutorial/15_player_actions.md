@@ -38,7 +38,8 @@ signal action_chosen(action: String)
 
 func _ready() -> void:
     _attack_btn.pressed.connect(func() -> void: action_chosen.emit("attack"))
-    _magic_btn.pressed.connect(func() -> void: action_chosen.emit("magic"))
+    _magic_btn.disabled = true
+    _magic_btn.tooltip_text = "Magic is a future extension."
     _defend_btn.pressed.connect(func() -> void: action_chosen.emit("defend"))
     _item_btn.pressed.connect(func() -> void: action_chosen.emit("item"))
 
@@ -65,7 +66,6 @@ var command: Dictionary = {
     action = "attack",     # What to do
     battler = battler,     # Who does it
     target = target,       # Who receives it
-    ability = null,        # Optional: which ability (for magic)
     item = null,           # Optional: which item (for item use)
 }
 ```
@@ -184,14 +184,10 @@ func _on_action_chosen(action: String) -> void:
             _battle_menu.hide_menu()
             _target_select.show_targets(battle_manager.get_alive_enemies())
         "defend":
-            battle_manager._state_machine.transition_to("ActionExecute", {
+            battle_manager.transition_to_state("ActionExecute", {
                 battler = _active_battler,
                 action = "defend",
             })
-        "magic":
-            # Magic system not yet implemented, placeholder
-            print("Magic not yet available!")
-            _battle_menu.show_menu()
         "item":
             # Item use in battle (simplified for now)
             var consumables := InventoryManager.get_consumables()
@@ -201,7 +197,7 @@ func _on_action_chosen(action: String) -> void:
             else:
                 # Use first consumable on self (simplified)
                 var item: ItemData = consumables[0].item
-                battle_manager._state_machine.transition_to("ActionExecute", {
+                battle_manager.transition_to_state("ActionExecute", {
                     battler = _active_battler,
                     action = "item",
                     target = _active_battler,
@@ -211,7 +207,7 @@ func _on_action_chosen(action: String) -> void:
 
 func _on_target_selected(target: BattlerData) -> void:
     _target_select.hide_targets()
-    battle_manager._state_machine.transition_to("ActionExecute", {
+    battle_manager.transition_to_state("ActionExecute", {
         battler = _active_battler,
         action = "attack",
         target = target,
@@ -225,7 +221,7 @@ func _on_target_cancelled() -> void:
 
 This wires the complete flow: menu appears → player picks action → target selection if needed → command passed to ActionExecute.
 
-> **Note:** Magic and item selection are simplified placeholders. Magic is disabled until we define AbilityData (a stretch goal). Item use picks the first consumable automatically. In a full game, you'd show an item selection sub-menu.
+> **Note:** Magic is visible in the menu but disabled. We keep the button because most JRPG battle menus reserve space for spells, but `AbilityData` is a future extension, not part of this core tutorial. Item use is simplified for now: it picks the first consumable automatically. In a full game, you'd show an item selection sub-menu.
 
 ## The Damage Formula
 
@@ -318,7 +314,6 @@ func enter(context: Dictionary = {}) -> void:
     var battler: BattlerData = context.get("battler")
     var action: String = context.get("action", "attack")
     var target: BattlerData = context.get("target")
-    var ability = context.get("ability")
     var item = context.get("item")
 
     match action:
@@ -326,15 +321,13 @@ func enter(context: Dictionary = {}) -> void:
             await _execute_attack(battler, target)
         "defend":
             _execute_defend(battler)
-        "magic":
-            await _execute_magic(battler, target, ability)
         "item":
             _execute_item(battler, target, item)
         "enemy_turn":
             await _execute_enemy_turn(battler)
 
     await get_tree().create_timer(0.3).timeout
-    battle_manager._state_machine.transition_to("CheckResult")
+    battle_manager.transition_to_state("CheckResult")
 
 
 func _execute_attack(attacker: BattlerData, target: BattlerData) -> void:
@@ -350,17 +343,6 @@ func _execute_attack(attacker: BattlerData, target: BattlerData) -> void:
 func _execute_defend(battler: BattlerData) -> void:
     battler.defense_boost = battler.current_defense  # Double defense for one turn
     print(battler.character_data.display_name + " defends!")
-
-
-func _execute_magic(caster: BattlerData, target: BattlerData, ability: Resource) -> void:
-    if not ability:
-        return
-    # We'll flesh this out with AbilityData in a later module
-    var damage: int = ability.power - target.get_effective_defense()
-    damage = max(1, damage)
-    var actual := target.take_damage(damage)
-    caster.current_mp -= ability.mp_cost
-    _spawn_damage_number(target, actual)
 
 
 func _execute_item(user: BattlerData, target: BattlerData, item: ItemData) -> void:
@@ -471,7 +453,6 @@ func enter(context: Dictionary = {}) -> void:
     var battler: BattlerData = context.get("battler")
     var action: String = context.get("action", "attack")
     var target: BattlerData = context.get("target")
-    var ability = context.get("ability")
     var item = context.get("item")
 
     match action:
@@ -479,15 +460,13 @@ func enter(context: Dictionary = {}) -> void:
             await _execute_attack(battler, target)
         "defend":
             _execute_defend(battler)
-        "magic":
-            await _execute_magic(battler, target, ability)
         "item":
             _execute_item(battler, target, item)
         "enemy_turn":
             await _execute_enemy_turn(battler)
 
     await get_tree().create_timer(0.3).timeout
-    battle_manager._state_machine.transition_to("CheckResult")
+    battle_manager.transition_to_state("CheckResult")
 
 
 func _execute_attack(attacker: BattlerData, target: BattlerData) -> void:
@@ -503,17 +482,6 @@ func _execute_attack(attacker: BattlerData, target: BattlerData) -> void:
 func _execute_defend(battler: BattlerData) -> void:
     battler.defense_boost = battler.current_defense
     print(battler.character_data.display_name + " defends!")
-
-
-func _execute_magic(caster: BattlerData, target: BattlerData, ability: Resource) -> void:
-    if not ability:
-        push_warning("Magic system not yet implemented. AbilityData required.")
-        return
-    var damage: int = ability.power - target.get_effective_defense()
-    damage = max(1, damage)
-    var actual := target.take_damage(damage)
-    caster.current_mp -= ability.mp_cost
-    _spawn_damage_number(target, actual)
 
 
 func _execute_item(user: BattlerData, target: BattlerData, item: ItemData) -> void:
@@ -573,11 +541,23 @@ func _spawn_damage_number(target: BattlerData, amount: int, is_heal: bool = fals
     tween.chain().tween_callback(label.queue_free)
 ```
 
+## Engineering Contract
+
+- **Global state:** Player actions consume InventoryManager items but battle decisions stay scene-local.
+- **Public surface:** Battle menu emits action strings; target select emits chosen battlers; ActionExecute consumes command dictionaries.
+- **Invariant:** Commands only use implemented fields: `action`, `battler`, `target`, and optional `item`.
+- **Failure behavior:** Magic remains disabled until a future ability system exists.
+- **Copy semantics:** Commands hold references to current runtime battlers; they should be executed immediately, not saved.
+
+## Engine Gotcha
+
+Signals connected in `enter()` must be disconnected in `exit()`. Otherwise returning to PlayerChoice can stack duplicate signal connections and execute one button press multiple times.
+
 ## What We've Learned
 
 - The **battle menu** uses VBoxContainer with Buttons and `grab_focus()` for keyboard navigation.
 - **Target selection** presents enemy names as buttons; cancelling returns to the menu.
-- The **command pattern** represents actions as dictionaries: `{action, battler, target, ability, item}`.
+- The **command pattern** represents actions as dictionaries: `{action, battler, target, item}`.
 - **Stats exist for three reasons:** the simulation needs them, they differentiate characters, and they create player choices. If a stat doesn't serve at least one purpose, remove it.
 - **Damage formula:** `max(1, attack - defense + random_variance)`. Our subtractive formula is simple and transparent. Alternatives include multiplicative (Final Fantasy), ratio-based (Pokemon), and armor-as-percentage formulas, each with different scaling behavior.
 - **Isolate your formulas** in one place. Combat math gets tweaked constantly during balancing; scattering it across files makes tuning painful.

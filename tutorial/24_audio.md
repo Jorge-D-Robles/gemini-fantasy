@@ -250,7 +250,12 @@ Save the script as `res://ui/settings/settings_panel.gd`:
 
 ```gdscript
 extends PanelContainer
-## Volume settings panel. Press Escape to close.
+## Persistent volume settings panel. Press Escape to close.
+
+const SETTINGS_PATH := "user://settings.cfg"
+const SETTINGS_SECTION := "audio"
+const DEFAULT_MUSIC_VOLUME := 0.8
+const DEFAULT_SFX_VOLUME := 0.8
 
 @onready var _music_slider: HSlider = $VBox/MusicSlider
 @onready var _sfx_slider: HSlider = $VBox/SFXSlider
@@ -260,35 +265,75 @@ func _ready() -> void:
     _music_slider.min_value = 0.0
     _music_slider.max_value = 1.0
     _music_slider.step = 0.05
-    _music_slider.value = 0.8
-    _music_slider.value_changed.connect(_on_music_volume_changed)
 
     _sfx_slider.min_value = 0.0
     _sfx_slider.max_value = 1.0
     _sfx_slider.step = 0.05
-    _sfx_slider.value = 0.8
+
+    var settings := _load_settings()
+    var music_volume: float = float(settings.get("music_volume", DEFAULT_MUSIC_VOLUME))
+    var sfx_volume: float = float(settings.get("sfx_volume", DEFAULT_SFX_VOLUME))
+    _music_slider.value = music_volume
+    _sfx_slider.value = sfx_volume
+    _apply_bus_volume("Music", music_volume)
+    _apply_bus_volume("SFX", sfx_volume)
+
+    _music_slider.value_changed.connect(_on_music_volume_changed)
     _sfx_slider.value_changed.connect(_on_sfx_volume_changed)
 
 
 func _on_music_volume_changed(value: float) -> void:
-    var db: float = linear_to_db(value)
-    AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Music"), db)
+    _apply_bus_volume("Music", value)
+    _save_settings()
 
 
 func _on_sfx_volume_changed(value: float) -> void:
-    var db: float = linear_to_db(value)
-    AudioServer.set_bus_volume_db(AudioServer.get_bus_index("SFX"), db)
+    _apply_bus_volume("SFX", value)
+    _save_settings()
 
 
 func _unhandled_input(event: InputEvent) -> void:
     if event.is_action_pressed("ui_cancel"):
         queue_free()
         get_viewport().set_input_as_handled()
+
+
+func _apply_bus_volume(bus_name: String, value: float) -> void:
+    var bus_index: int = AudioServer.get_bus_index(bus_name)
+    if bus_index == -1:
+        return
+    AudioServer.set_bus_volume_db(bus_index, linear_to_db(value))
+
+
+func _load_settings() -> Dictionary:
+    var config := ConfigFile.new()
+    var error := config.load(SETTINGS_PATH)
+    if error != OK:
+        return {}
+    return {
+        music_volume = config.get_value(
+            SETTINGS_SECTION, "music_volume", DEFAULT_MUSIC_VOLUME,
+        ),
+        sfx_volume = config.get_value(
+            SETTINGS_SECTION, "sfx_volume", DEFAULT_SFX_VOLUME,
+        ),
+    }
+
+
+func _save_settings() -> void:
+    var config := ConfigFile.new()
+    config.set_value(SETTINGS_SECTION, "music_volume", _music_slider.value)
+    config.set_value(SETTINGS_SECTION, "sfx_volume", _sfx_slider.value)
+    var error := config.save(SETTINGS_PATH)
+    if error != OK:
+        push_warning("Failed to save audio settings: " + error_string(error))
 ```
 
 `linear_to_db()` converts a 0-1 slider value to decibels. At 0, it returns -INF (silent). At 1, it returns 0 (full volume).
 
-> **Note:** Volume settings are lost when the game restarts. To persist them, save the slider values to `user://settings.json` and load them in `_ready()`. This is left as an exercise; the pattern is the same as Module 22's save system.
+`ConfigFile` writes the slider values to `user://settings.cfg`, Godot's platform-specific writable user-data directory. The settings live outside save slots, so changing volume from the title screen also affects a loaded game.
+
+> **See:** [ConfigFile](https://docs.godotengine.org/en/stable/classes/class_configfile.html), for simple INI-style user settings.
 
 ## Autoload Reference Card (Final)
 
@@ -302,6 +347,18 @@ func _unhandled_input(event: InputEvent) -> void:
 | SaveManager | 22 | Save/load game state to JSON |
 | **MusicManager** | **24** | **BGM crossfading, battle music** |
 
+## Engineering Contract
+
+- **Global state:** MusicManager owns current and previous BGM; SettingsPanel writes audio preferences to `user://settings.cfg`.
+- **Public surface:** `play_music()`, `remember_track()`, `resume_previous_track()`, one-shot SFX helpers, and volume sliders.
+- **Invariant:** Music and SFX buses exist before runtime volume controls target them.
+- **Failure behavior:** Missing audio streams or bus names log/return without crashing gameplay.
+- **Copy semantics:** Audio streams are shared assets; AudioStreamPlayer nodes are short-lived runtime playback owners.
+
+## Engine Gotcha
+
+Audio bus volume is decibels, not slider units. Convert 0.0-1.0 UI values with `linear_to_db()` before calling AudioServer.
+
 ## What We've Learned
 
 - **AudioStreamPlayer** handles non-positional audio (BGM, SFX). **AudioStreamPlayer2D** is for positional audio.
@@ -311,6 +368,7 @@ func _unhandled_input(event: InputEvent) -> void:
 - **`linear_to_db()`** converts slider values (0-1) to decibels for AudioServer.
 - **Remember/resume** pattern handles battle music transitions gracefully.
 - SFX play once and self-destruct via `finished.connect(queue_free)`.
+- **ConfigFile** persists music and SFX volume to `user://settings.cfg` across restarts.
 
 ## What You Should See
 
@@ -319,6 +377,7 @@ func _unhandled_input(event: InputEvent) -> void:
 - Battle music plays during combat, then the overworld track resumes
 - Attack hits, menu navigation, and level-ups have sound effects
 - Volume sliders control music and SFX independently
+- Volume settings persist after closing and reopening the game
 
 ## Next Module
 

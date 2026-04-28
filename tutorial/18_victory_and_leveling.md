@@ -121,8 +121,12 @@ func level_up() -> Dictionary:
         defense = defense_growth + randi_range(0, 1),
         speed = speed_growth,
     }
+    var old_max_hp: int = max_hp
+    var old_max_mp: int = max_mp
     max_hp += gains.hp
     max_mp += gains.mp
+    current_hp = min(current_hp + (max_hp - old_max_hp), max_hp)
+    current_mp = min(current_mp + (max_mp - old_max_mp), max_mp)
     attack += gains.attack
     defense += gains.defense
     speed += gains.speed
@@ -130,6 +134,8 @@ func level_up() -> Dictionary:
 ```
 
 The small random variance (`randi_range(0, 1)` or `(0, 2)`) makes each level-up feel slightly different. HP gets the widest variance because it's the largest number and small fluctuations are less noticeable.
+
+Crystal Saga uses the **gain the delta** rule for HP and MP: if max HP increases by 10, current HP also increases by 10, without exceeding the new max. This feels better than "max increases but current HP stays the same" and is less generous than a full heal on every level-up.
 
 ### Centralizing XP Awards
 
@@ -167,7 +173,7 @@ extends BattleState
 
 
 func enter(_context: Dictionary = {}) -> void:
-    print("--- VICTORY ---")
+    print("VICTORY")
 
     var total_xp: int = 0
     var total_gold: int = 0
@@ -234,7 +240,7 @@ extends BattleState
 
 
 func enter(_context: Dictionary = {}) -> void:
-    print("--- DEFEAT ---")
+    print("DEFEAT")
     print("The party has fallen...")
     battle_manager.battle_lost.emit()
 
@@ -264,6 +270,18 @@ For now, since we don't have a formal PartyManager yet (Module 21), the Characte
 
 > **See:** [Tween](https://docs.godotengine.org/en/stable/classes/class_tween.html). For future enhancements, Tweens can animate the victory screen (stat bars filling, XP counters incrementing).
 
+## Engineering Contract
+
+- **Global state:** Victory writes rewards into PartyManager and InventoryManager through their public APIs.
+- **Public surface:** XP gain, level-up, reward calculation, loot rolls, and post-battle HP/MP sync.
+- **Invariant:** Level-up max HP/MP gains also increase current HP/MP by the same delta, capped at the new max.
+- **Failure behavior:** Dead party members do not receive XP in the base tutorial flow.
+- **Copy semantics:** Battle HP/MP lives on BattlerData until victory syncs it back to CharacterData.
+
+## Engine Gotcha
+
+Resource mutation is now intentional: party CharacterData is runtime state. New Game and load flows must avoid reusing mutated cached Resources when they need pristine base data.
+
 ## What We've Learned
 
 - **XP distribution** divides total XP among alive party members.
@@ -280,14 +298,14 @@ For now, since we don't have a formal PartyManager yet (Module 21), the Characte
 ## What You Should See
 
 After winning a battle:
-- "--- VICTORY ---" appears in the output panel
+- "VICTORY" appears in the output panel
 - XP, gold, and item drops are listed (e.g., "Aiden gained 12 XP!", "Gained 6 gold!")
 - Characters may level up: "Aiden reached level 2!" with stat increases
 - After 2 seconds, the game returns to the overworld at the player's previous position
 - HP/MP carry over from the battle (if you took damage, your HP stays reduced)
 
 After losing a battle:
-- "--- DEFEAT ---" appears in the output panel
+- "DEFEAT" appears in the output panel
 - The game reloads Willowbrook (placeholder for proper Game Over screen in Module 25)
 
 **Concrete example:** If Aiden (level 1, 0 XP) defeats 2 Crystal Slimes (12 XP each), he gains 24 XP total. Since level 1→2 requires only 10 XP, he levels up to level 2 with 14 XP remaining.

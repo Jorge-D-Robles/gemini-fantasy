@@ -61,12 +61,13 @@ func _on_continue() -> void:
     add_child(dialog)
     var slot: int = await dialog.slot_selected
     dialog.queue_free()
-    if slot > 0:
-        SaveManager.load_game(slot)
+    if slot == 0:
+        return
+    SaveManager.load_game(slot)
 
 
 func _on_settings() -> void:
-    # Show the volume settings panel from Module 24
+    # Show the persistent volume settings panel from Module 24
     var settings_scene := preload("res://ui/settings/settings_panel.tscn")
     var panel: PanelContainer = settings_scene.instantiate()
     add_child(panel)
@@ -284,8 +285,9 @@ func _on_retry() -> void:
     add_child(dialog)
     var slot: int = await dialog.slot_selected
     dialog.queue_free()
-    if slot > 0:
-        SaveManager.load_game(slot)
+    if slot == 0:
+        return
+    SaveManager.load_game(slot)
 
 
 func _on_title() -> void:
@@ -300,7 +302,7 @@ extends BattleState
 
 
 func enter(_context: Dictionary = {}) -> void:
-    print("--- DEFEAT ---")
+    print("DEFEAT")
     print("The party has fallen...")
     battle_manager.battle_lost.emit()
 
@@ -471,6 +473,18 @@ There are no dead ends now. Victory rolls through ending and credits back to the
 | SaveManager | 22 | Save/load game state to JSON |
 | MusicManager | 24 | BGM crossfading, battle music |
 | **PauseMenu** | **25** | **Global pause menu (UI autoload)** |
+
+## Engineering Contract
+
+- **Global state:** PauseMenu is a persistent autoload scene; Title/GameOver/Ending are scene flow endpoints.
+- **Public surface:** New Game initialization, Continue/Retry save slot loading, pause open/close, settings access, ending/credits navigation.
+- **Invariant:** Every blocking dialog has a cancellation path, and every game-over/victory route leads to load or title.
+- **Failure behavior:** Slot `0` means cancel and returns without loading; no caller waits forever.
+- **Copy semantics:** New Game loads fresh mutable character data with `ResourceLoader.CACHE_MODE_IGNORE`.
+
+## Engine Gotcha
+
+Paused games still need UI input. Set the pause menu's `process_mode` to `Node.PROCESS_MODE_ALWAYS` before relying on Escape or button callbacks while the tree is paused.
 
 ## What We've Learned
 

@@ -126,7 +126,7 @@ signal opened
 
 @export var item: ItemData
 @export var item_count: int = 1
-@export var chest_id: String = ""  # Unique ID for save/load tracking
+@export var chest_id: String = ""  # Stable ID; Module 22 uses this for save tracking
 
 var is_opened: bool = false
 
@@ -176,6 +176,8 @@ func _on_body_exited(body: Node2D) -> void:
         _player_in_range = false
         _prompt.visible = false
 ```
+
+For this module, `is_opened` is scene-local runtime state. The `chest_id` export is a stable identifier we will use in Module 22 when save/load starts persisting opened chests through `GameManager` world flags.
 
 Place chests in the dungeon using the editor:
 - **Dead End room:** A Potion and an Ether
@@ -347,6 +349,18 @@ Add spawn points (Marker2D nodes as children of Exits, added to the `spawn_point
 > **See:** [StaticBody2D](https://docs.godotengine.org/en/stable/classes/class_staticbody2d.html), used for treasure chests, save crystals, and boss doors (solid, non-moving objects).
 
 > **See:** [Area2D](https://docs.godotengine.org/en/stable/classes/class_area2d.html), used for interaction zones and encounter regions. The `body_entered`/`body_exited` signals detect when the player enters.
+
+## Engineering Contract
+
+- **Global state:** None in this module; save crystal and chest persistence are wired in Module 22.
+- **Public surface:** Dungeon scenes expose encounter zones, boss triggers, save crystals, exits, and stable object IDs.
+- **Invariant:** Treasure chest IDs are stable strings even before save/load uses them.
+- **Failure behavior:** Missing chest items or IDs should warn during testing rather than silently corrupt progression.
+- **Copy semantics:** Scene-local `is_opened` state resets on reload until Module 22 stores it in GameManager flags.
+
+## Engine Gotcha
+
+Area2D triggers do not block movement by themselves. Use StaticBody2D or TileMapLayer collision for walls/objects, and Area2D only for interaction or trigger volumes.
 
 ## What We've Learned
 

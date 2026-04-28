@@ -191,23 +191,32 @@ func _check_encounter() -> void:
         _threshold = randi_range(8, 20)  # Next threshold in 8-20 steps
 
         if randf() < _encounter_rate and not _current_encounters.is_empty():
-            var encounter := _pick_weighted_encounter()
-            encounter_triggered.emit(encounter)
+            var encounter: EncounterData = _pick_weighted_encounter()
+            if encounter:
+                encounter_triggered.emit(encounter)
 
 
 func _pick_weighted_encounter() -> EncounterData:
+    if _current_encounters.is_empty():
+        push_warning("EncounterSystem: no encounters configured.")
+        return null
+
     var total_weight: float = 0.0
     for enc in _current_encounters:
-        total_weight += enc.weight
+        total_weight += max(0.0, enc.weight)
+
+    if total_weight <= 0.0:
+        push_warning("EncounterSystem: encounter weights must be greater than 0.")
+        return null
 
     var roll: float = randf() * total_weight
     var cumulative: float = 0.0
     for enc in _current_encounters:
-        cumulative += enc.weight
+        cumulative += max(0.0, enc.weight)
         if roll <= cumulative:
             return enc
 
-    return _current_encounters[0]
+    return null
 
 
 func enter_zone(encounters: Array[EncounterData], rate: float) -> void:
@@ -309,19 +318,7 @@ func _on_encounter_triggered(encounter: EncounterData) -> void:
     # Convert EnemyData to BattlerData for the battle system
     var enemy_battlers: Array[BattlerData] = []
     for ed in encounter.enemies:
-        var battler := BattlerData.new()
-        var char_data := CharacterData.new()
-        char_data.display_name = ed.display_name
-        char_data.portrait = ed.sprite if ed.sprite else preload("res://icon.svg")
-        char_data.max_hp = ed.max_hp
-        char_data.max_mp = ed.max_mp
-        char_data.attack = ed.attack
-        char_data.defense = ed.defense
-        char_data.speed = ed.speed
-        battler.character_data = char_data
-        battler.is_player_controlled = false
-        battler.enemy_data = ed  # Store for victory rewards (Module 18)
-        enemy_battlers.append(battler)
+        enemy_battlers.append(_enemy_to_battler(ed))
 
     # Build party (temporary, Module 21 adds a proper PartyManager)
     var hero := BattlerData.new()
@@ -330,6 +327,22 @@ func _on_encounter_triggered(encounter: EncounterData) -> void:
 
     # Must use Dictionary format, matches SceneManager.start_battle() from Module 14
     SceneManager.start_battle({party = [hero], enemies = enemy_battlers})
+
+
+func _enemy_to_battler(enemy_data: EnemyData) -> BattlerData:
+    var battler := BattlerData.new()
+    var char_data := CharacterData.new()
+    char_data.display_name = enemy_data.display_name
+    char_data.portrait = enemy_data.sprite if enemy_data.sprite else preload("res://icon.svg")
+    char_data.max_hp = enemy_data.max_hp
+    char_data.max_mp = enemy_data.max_mp
+    char_data.attack = enemy_data.attack
+    char_data.defense = enemy_data.defense
+    char_data.speed = enemy_data.speed
+    battler.character_data = char_data
+    battler.is_player_controlled = false
+    battler.enemy_data = enemy_data
+    return battler
 ```
 
 That `char_data.portrait = ed.sprite` line is the bridge between your enemy data and the battle presentation. `BattlerSprite` already knows how to read `character_data.portrait`, so once you fill in the `sprite` field on each `EnemyData` resource, those visuals now appear in battle automatically.
@@ -414,17 +427,7 @@ func _start_boss_battle() -> void:
     hero.character_data = load("res://data/characters/aiden.tres")
     hero.is_player_controlled = true
 
-    var boss_char := CharacterData.new()
-    boss_char.display_name = boss_data.display_name
-    boss_char.max_hp = boss_data.max_hp
-    boss_char.attack = boss_data.attack
-    boss_char.defense = boss_data.defense
-    boss_char.speed = boss_data.speed
-
-    var boss := BattlerData.new()
-    boss.character_data = boss_char
-    boss.is_player_controlled = false
-    boss.enemy_data = boss_data  # Required for Module 18's victory rewards
+    var boss := _enemy_to_battler(boss_data)
 
     SceneManager.start_battle({
         party = [hero],
@@ -480,7 +483,7 @@ Handle flee in the PlayerChoice state (`player_choice_state.gd`), inside the `_o
             else:
                 print("Couldn't escape!")
                 # Wasted turn, go to next battler
-                battle_manager._state_machine.transition_to("CheckResult")
+                battle_manager.transition_to_state("CheckResult")
 ```
 
 > **JRPG Pattern:** Most JRPGs don't let you flee from boss battles. Add a `can_flee: bool` to your EncounterData and disable the Flee button when it's false.
@@ -488,6 +491,18 @@ Handle flee in the PlayerChoice state (`player_choice_state.gd`), inside the `_o
 > **See:** [Resource](https://docs.godotengine.org/en/stable/classes/class_resource.html). EnemyData and EncounterData both extend Resource. The `@export_group` and `@export_range` annotations organize the Inspector.
 
 > **See:** [Random number generation](https://docs.godotengine.org/en/stable/tutorials/math/random_number_generation.html), covering `randi_range()`, `randf()`, and weighted random selection used throughout the encounter and AI systems.
+
+## Engineering Contract
+
+- **Global state:** Encounter logic starts battles through SceneManager but encounter counters are scene-local.
+- **Public surface:** `EncounterData`, `EnemyData`, enemy-to-battler conversion, encounter zones, and AI action selection.
+- **Invariant:** Encounter pools must contain enemies and have positive total weight before a battle can be rolled.
+- **Failure behavior:** Empty pools or non-positive weights return no encounter and log a warning instead of crashing.
+- **Copy semantics:** EnemyData is static content; BattlerData is the mutable runtime copy used in combat.
+
+## Engine Gotcha
+
+Random encounter systems often fail at boundaries: empty arrays, zero weights, and missing Resources. Guard those cases before calling `randf_range()` or indexing into an encounter pool.
 
 ## What We've Learned
 

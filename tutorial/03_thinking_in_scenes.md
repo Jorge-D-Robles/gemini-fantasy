@@ -32,6 +32,8 @@ A body you control directly with code. It moves where you tell it, and it handle
 
 Use when: You want full control over movement. The character doesn't bounce or get pushed; you decide exactly how it responds to collisions.
 
+For NPCs, choose based on intent. A shopkeeper who never moves can be a `StaticBody2D` with an `Area2D` interaction zone. An NPC who may walk, turn, join the party, or participate in cutscenes should be a `CharacterBody2D`. We use `CharacterBody2D` for actors that might later need movement behavior.
+
 ### RigidBody2D
 
 A body governed by Godot's physics engine. It has mass, friction, and responds to forces. It bounces off walls, gets pushed by other bodies, and is affected by gravity.
@@ -306,6 +308,18 @@ The pattern: **each "thing" gets a folder with its scene and script(s).** As the
 - **Signals** let nodes communicate without tight coupling. `body_entered` on Area2D detects when bodies enter a zone.
 - Signal connections are **automatically cleaned up** when a node is freed.
 - **Instancing** lets you place one scene inside another, keeping internals hidden.
+
+## Engineering Contract
+
+- **New artifact:** reusable `Player` scene and `player.gd`
+- **Public editor surface:** player speed and collision shape
+- **Runtime contract:** movement uses `CharacterBody2D.move_and_slide()` and the player joins the `player` group
+- **Failure behavior:** if no collision shape exists, movement works visually but collision will not block walls
+- **Boundary rule:** levels find the player by group, not by hard-coded scene path
+
+## Engine Gotcha
+
+`CharacterBody2D` does not move automatically when you set `velocity`; you must call `move_and_slide()` during physics processing. For stationary collision, prefer `StaticBody2D` instead of writing a no-op movement body.
 
 ## What You Should See
 

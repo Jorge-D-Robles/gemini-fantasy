@@ -20,8 +20,8 @@ Module 17 populated the dungeon with enemies. EnemyData resources defined stats 
 
 ### Module 15: Player Actions
 
-- Built the **battle menu** (Attack/Magic/Defend/Item) as a PanelContainer with VBoxContainer and Buttons, wired through an `action_chosen` signal.
-- Implemented the **command pattern** using dictionaries (`{action, battler, target, ability, item}`) to keep action execution generic.
+- Built the **battle menu** (Attack/Magic/Defend/Item) as a PanelContainer with VBoxContainer and Buttons. Attack, Defend, and Item emit `action_chosen`; Magic stays disabled for future ability work.
+- Implemented the **command pattern** using dictionaries (`{action, battler, target, item}`) to keep action execution generic.
 - Created **target selection** UI that dynamically spawns buttons for each alive enemy, with cancel support to return to the menu.
 - Defined the **damage formula**: `max(1, attack - effective_defense + randi_range(-2, 2))`, which is simple, transparent, and always deals at least 1 damage.
 - Added **Tween animations** for attacks (slide forward, pause, slide back) and **floating damage numbers** (parallel tweens for rising position and fading opacity).
@@ -57,7 +57,7 @@ Module 17 populated the dungeon with enemies. EnemyData resources defined stats 
 | Node-based state machine | Each state is a Node child with `enter()`/`process()`/`exit()`, managed by a state machine parent | Scales to complex state flows without monolithic `match` blocks | Module 14 |
 | BattlerData | Runtime Resource wrapping CharacterData with battle-specific state (current HP, defense boost) | Separates persistent character data from temporary battle state | Module 14 |
 | Turn queue | Array of alive BattlerData sorted by speed, processed front-to-back each round | Determines action order; speed stat becomes strategically meaningful | Module 14 |
-| Command pattern | Dictionary `{action, battler, target, ability, item}` representing a battle action | Decouples action selection (menu) from action execution (state) | Module 15 |
+| Command pattern | Dictionary `{action, battler, target, item}` representing a battle action | Decouples action selection (menu) from action execution (state) | Module 15 |
 | Damage formula | `max(1, attack - effective_defense + variance)` | Predictable, transparent combat math players can reason about | Module 15 |
 | Tween animation | Procedural animation using `tween_property()`, `tween_interval()`, and `set_parallel()` | Makes combat feel impactful without sprite animation frames | Module 15 |
 | Dungeon design | Room-based layout with corridors, forks, dead ends, and a boss room | Controlled pacing: tension in corridors, relief in open rooms | Module 16 |
@@ -128,7 +128,7 @@ func _process(delta: float) -> void:
         current_state.process(delta)
 ```
 
-States transition by calling `battle_manager._state_machine.transition_to("StateName", context)`. The context dictionary passes data between states (active battler, chosen target, action type).
+States transition by calling the BattleManager facade: `battle_manager.transition_to_state("StateName", context)`. The context dictionary passes data between states (active battler, chosen target, action type), while the root battle script keeps ownership of the private state machine node.
 
 ### Turn Order System
 
@@ -200,26 +200,26 @@ The full scene tree wires the state machine, battler positions, and UI together:
 
 ```
 Battle (Node2D, script: battle_manager.gd)
-+-- Background (ColorRect)
-+-- PartyPositions (Node2D)
-|   +-- PartySlot0 (Marker2D, pos: 240, 60)
-|   +-- PartySlot1 (Marker2D, pos: 240, 120)
-|   +-- PartySlot2 (Marker2D, pos: 240, 180)
-+-- EnemyPositions (Node2D)
-|   +-- EnemySlot0 (Marker2D, pos: 80, 60)
-|   +-- EnemySlot1 (Marker2D, pos: 80, 120)
-|   +-- EnemySlot2 (Marker2D, pos: 80, 180)
-+-- BattleUI (CanvasLayer, layer = 10)
-|   +-- BattleMenu (instance of battle_menu.tscn)
-|   +-- TargetSelect (instance of target_select.tscn)
-+-- StateMachine (BattleStateMachine)
-    +-- Intro (BattleState)
-    +-- TurnStart (BattleState)
-    +-- PlayerChoice (BattleState)
-    +-- ActionExecute (BattleState)
-    +-- CheckResult (BattleState)
-    +-- Victory (BattleState)
-    +-- Defeat (BattleState)
+├── Background (ColorRect)
+├── PartyPositions (Node2D)
+│   ├── PartySlot0 (Marker2D, pos: 240, 60)
+│   ├── PartySlot1 (Marker2D, pos: 240, 120)
+│   └── PartySlot2 (Marker2D, pos: 240, 180)
+├── EnemyPositions (Node2D)
+│   ├── EnemySlot0 (Marker2D, pos: 80, 60)
+│   ├── EnemySlot1 (Marker2D, pos: 80, 120)
+│   └── EnemySlot2 (Marker2D, pos: 80, 180)
+├── BattleUI (CanvasLayer, layer = 10)
+│   ├── BattleMenu (instance of battle_menu.tscn)
+│   └── TargetSelect (instance of target_select.tscn)
+└── StateMachine (BattleStateMachine)
+    ├── Intro (BattleState)
+    ├── TurnStart (BattleState)
+    ├── PlayerChoice (BattleState)
+    ├── ActionExecute (BattleState)
+    ├── CheckResult (BattleState)
+    ├── Victory (BattleState)
+    └── Defeat (BattleState)
 ```
 
 BattleManager is the root script (NOT an autoload). It only exists while a battle is running. In `_ready()`, it passes `self` to every state as `battle_manager`, then waits for `initialize_battle()` to be called with party and enemy data.
@@ -227,17 +227,14 @@ BattleManager is the root script (NOT an autoload). It only exists while a battl
 The complete state flow:
 
 ```
-[INTRO] --> [TURN_START] --> player? --> [PLAYER_CHOICE] --> [ACTION_EXECUTE]
-                                |                                  |
-                                +--> enemy? --> [ACTION_EXECUTE] --+
-                                                                   |
-                                                            [CHECK_RESULT]
-                                                                   |
-                                       +------ all enemies dead ---+----- all party dead -----+
-                                       |                           |                          |
-                                  [VICTORY]                  next battler               [DEFEAT]
-                                                        (or new round if
-                                                         queue is empty)
+Intro -> TurnStart
+TurnStart -> PlayerChoice for player battlers
+TurnStart -> ActionExecute for enemy battlers
+PlayerChoice -> ActionExecute after the player chooses a command
+ActionExecute -> CheckResult
+CheckResult -> Victory if all enemies are defeated
+CheckResult -> Defeat if all party members are defeated
+CheckResult -> TurnStart for the next battler or next round
 ```
 
 ### The Command Pattern
@@ -250,7 +247,6 @@ var command: Dictionary = {
     action = "attack",
     battler = active_battler,
     target = selected_enemy,
-    ability = null,
     item = null,
 }
 
@@ -276,8 +272,6 @@ match action:
         await _execute_attack(battler, target)
     "defend":
         _execute_defend(battler)
-    "magic":
-        await _execute_magic(battler, target, ability)
     "item":
         _execute_item(battler, target, item)
     "enemy_turn":
@@ -302,7 +296,8 @@ signal action_chosen(action: String)
 
 func _ready() -> void:
     _attack_btn.pressed.connect(func() -> void: action_chosen.emit("attack"))
-    _magic_btn.pressed.connect(func() -> void: action_chosen.emit("magic"))
+    _magic_btn.disabled = true
+    _magic_btn.tooltip_text = "Magic is a future extension."
     _defend_btn.pressed.connect(func() -> void: action_chosen.emit("defend"))
     _item_btn.pressed.connect(func() -> void: action_chosen.emit("item"))
 
@@ -394,17 +389,17 @@ Dungeons use the same multi-layer TileMapLayer structure as overworld scenes, bu
 
 ```
 CrystalCavern (Node2D)
-+-- Ground (TileMapLayer)         -- stone floors
-+-- Detail (TileMapLayer)         -- cracks, rubble, small crystals
-+-- YSortGroup (Node2D, y_sort_enabled)
-|   +-- Objects (TileMapLayer)    -- stalagmites, large formations
-|   +-- Player (instance)
-|   +-- TreasureChests
-|   +-- SaveCrystal
-+-- AbovePlayer (TileMapLayer)    -- ceiling overhangs
-+-- Exits (Node2D)                -- exit zones and spawn points
-+-- EncounterZones (Node2D)       -- Area2D regions for random battles
-+-- EncounterSystem (Node)        -- step counter logic
+├── Ground (TileMapLayer)         : stone floors
+├── Detail (TileMapLayer)         : cracks, rubble, small crystals
+├── YSortGroup (Node2D, y_sort_enabled)
+│   ├── Objects (TileMapLayer)    : stalagmites, large formations
+│   ├── Player (instance)
+│   ├── TreasureChests
+│   └── SaveCrystal
+├── AbovePlayer (TileMapLayer)    : ceiling overhangs
+├── Exits (Node2D)                : exit zones and spawn points
+├── EncounterZones (Node2D)       : Area2D regions for random battles
+└── EncounterSystem (Node)        : step counter logic
 ```
 
 Design rules:

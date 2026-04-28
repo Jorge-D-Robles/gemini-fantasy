@@ -23,13 +23,13 @@ The challenge: how do we manage these transitions cleanly? Who handles the fade 
 
 The answer is our first **autoload**.
 
-## Autoloads: Your First Singleton
+## Autoloads: Your First Project Singleton
 
-You've been using autoloads since Module 2; you just didn't know it. `Input`, `Engine`, `Time`, `Performance`, and `AudioServer` are all globally available singletons that Godot provides. When you write `Input.is_action_pressed("ui_right")`, you're calling a method on an autoloaded singleton.
+You've been using Godot-provided global singletons since Module 2. `Input`, `Engine`, `Time`, `Performance`, and `AudioServer` are built into the engine and are globally available by name.
 
-Now we're going to create our own.
+Now we're going to create our own project autoload.
 
-An **autoload** (also called a singleton) is a scene or script that:
+An **autoload** (also called a project singleton) is a scene or script that Godot registers under `/root`:
 1. Is loaded automatically when the game starts
 2. Persists across scene changes (it's never freed)
 3. Is accessible from anywhere by name
@@ -115,7 +115,7 @@ func _place_player_at_spawn() -> void:
 The SceneManager needs visible nodes (a ColorRect for the black overlay, an AnimationPlayer for the fade). Create a scene for it.
 
 1. Create a new scene with `Node` as root. Rename it to `SceneManager`.
-2. Set the root node's **Process → Mode** to **Always** in the Inspector. This ensures the SceneManager continues working even when the game is paused (which we'll use in Module 12).
+2. Set the root node's **Process → Mode** to **Always** in the Inspector. This ensures the SceneManager continues working even when the game is paused (which we'll use for the pause menu in Module 25).
 3. Add a **CanvasLayer** child. Rename it to `TransitionLayer`. Set its **Layer** to `100` in the Inspector (so it draws on top of everything).
 
 In every JRPG, the fade effects and dialogue boxes must render on top of the game world no matter where the camera is or how the scene is structured. In Earthbound, the swirling battle transition overlay covers everything: the map, the enemies, the party. A regular node would be affected by the camera's position and zoom, and could sort incorrectly with other nodes. CanvasLayer creates an entirely separate rendering surface that is immune to camera transforms and always draws at its designated layer number.
@@ -329,6 +329,18 @@ We'll maintain this running table throughout the tutorial, adding each new autol
 | **SceneManager** | 7 | Scene transitions with fade effects |
 
 *Updated in future modules as we add more autoloads.*
+
+## Engineering Contract
+
+- **Global state:** `SceneManager` is a project autoload registered under `/root/SceneManager`.
+- **Public surface:** `change_scene(scene_path, spawn_id)`, transition signals, and spawn-point lookup.
+- **Invariant:** Scene paths and spawn IDs are stable strings shared by exits, maps, and future save/load.
+- **Failure behavior:** Missing scenes or spawn points should log a clear error and fall back safely.
+- **Copy semantics:** Scene changes replace scene instances; persistent data must live outside the outgoing scene.
+
+## Engine Gotcha
+
+`change_scene_to_file()` is deferred. Any code that needs the new scene's nodes must wait for `SceneTree.scene_changed` before looking up the player or spawn points.
 
 ## What We've Learned
 

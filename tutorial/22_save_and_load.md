@@ -26,7 +26,7 @@ We use JSON for saves because:
 - **Human-readable:** you can open a save file in a text editor and debug it
 - **No class coupling:** JSON doesn't care about your Resource class definitions
 - **Universally understood:** every language and tool can read JSON
-- **Simple API:** Godot's `JSON.stringify()` and `JSON.parse_string()` handle everything
+- **Simple API:** Godot's `JSON.stringify()` and `JSON.parse()` handle everything
 
 The alternative (Godot's `ResourceSaver` with `.tres` files) provides type safety but couples your saves to your class hierarchy. If you rename a Resource class, old saves break. JSON is more resilient for a tutorial scope.
 
@@ -151,11 +151,63 @@ func from_save_data(data: Dictionary) -> void:
         if q: _turned_in_quests.append(q)
 ```
 
+### Persistent World Objects
+
+Module 16 introduced `chest_id` on treasure chests. Now we make that ID meaningful. Small one-shot world state can live in `GameManager` flags because flags are already saved and loaded.
+
+Use stable scene keys and object IDs:
+
+```gdscript
+const SCENE_KEY := "crystal_cavern"
+
+
+func _world_flag(object_id: String, state: String) -> String:
+    return GameManager.make_world_flag(SCENE_KEY, object_id, state)
+```
+
+For a chest:
+
+```gdscript
+@export var chest_id: String = ""
+@export var item: ItemData
+@export var amount: int = 1
+
+var _opened: bool = false
+
+
+func _ready() -> void:
+    if chest_id.is_empty():
+        push_warning("TreasureChest needs a stable chest_id for save/load.")
+    _opened = GameManager.has_flag(_world_flag(chest_id, "opened"))
+    _refresh_sprite()
+
+
+func open() -> void:
+    if _opened:
+        return
+
+    _opened = true
+    InventoryManager.add_item(item, amount)
+    GameManager.set_flag(_world_flag(chest_id, "opened"))
+    _refresh_sprite()
+```
+
+Use the same pattern for other one-shot objects:
+
+| Object | Suggested flag |
+|--------|----------------|
+| Opened chest | `world.crystal_cavern.<chest_id>.opened` |
+| Defeated boss trigger | `world.crystal_cavern.crystal_guardian.defeated` |
+| Unlocked boss door | `world.crystal_cavern.boss_door.unlocked` |
+| Removed pickup | `world.whisperwood.pendant_chest.opened` |
+
+> **Engine Gotcha:** String IDs are part of your save format. Renaming a scene key or `chest_id` after players have saves makes the old save look like the object was never opened. For a small tutorial game, stable IDs are enough. Larger games usually add migration code.
+
 ## The SaveManager
 
-Create `res://autoloads/save_manager.gd` and register it as an autoload (**Project → Project Settings → Autoload** → add `save_manager.gd` as `SaveManager`). Unlike the other autoloads, SaveManager has no visible nodes; it's pure logic. We make it an autoload so it can use `await` for scene loading:
+Create `res://autoloads/save_manager.gd` and register it as an autoload (**Project → Project Settings → Autoload** → add `save_manager.gd` as `SaveManager`). Unlike the other autoloads, SaveManager has no visible nodes; it's pure logic. We make it an autoload because save/load needs a stable runtime owner that survives scene changes, coordinates other autoloads, and can restore the scene after `change_scene_to_file()` completes:
 
-> **Note:** Static functions in GDScript cannot use `await` (they have no node context). Since `load_game()` needs to await a scene change, SaveManager must be an autoload instance, not a static utility.
+> **Note:** `await` is a GDScript coroutine feature. The reason SaveManager is an autoload is architectural: it owns persistent save-slot behavior and orchestrates scene changes from a node that is not freed when gameplay scenes are replaced.
 
 ```gdscript
 extends Node
@@ -229,15 +281,21 @@ func load_game(slot: int) -> bool:
     file.close()
 
     # Godot's JSON class works in two steps: json.parse() attempts to parse
-    # the string (returns OK on success), then json.data holds the result
-    # as a Dictionary. Always check the error before using .data.
+    # the string (returns OK on success), then json.data holds the result as
+    # a Variant. A valid JSON root can be an array, number, string, bool, null,
+    # or object, so check that it is a Dictionary before using it as save data.
     var json := JSON.new()
     var error := json.parse(json_string)
     if error != OK:
         push_error("SaveManager: JSON parse error: " + json.get_error_message())
         return false
 
-    var save_data: Dictionary = json.data
+    var parsed: Variant = json.data
+    if not parsed is Dictionary:
+        push_error("SaveManager: save root must be a Dictionary.")
+        return false
+
+    var save_data: Dictionary = parsed
 
     # Restore state to autoloads
     GameManager.from_save_data(save_data.get("game_flags", {}))
@@ -280,7 +338,11 @@ func get_slot_info(slot: int) -> Dictionary:
         return {}
     file.close()
 
-    var data: Dictionary = json.data
+    var parsed: Variant = json.data
+    if not parsed is Dictionary:
+        return {}
+
+    var data: Dictionary = parsed
     return {
         timestamp = data.get("timestamp", ""),
         scene_path = data.get("scene_path", ""),
@@ -299,15 +361,7 @@ func slot_exists(slot: int) -> bool:
 
 ## Wiring the Save Crystal
 
-Update the save crystal from Module 16:
-
-```gdscript
-func _activate() -> void:
-    # Show save slot selection
-    # For simplicity, save to slot 1 directly
-    SaveManager.save_game(1)
-    print("Your progress has been saved!")
-```
+Module 16's save crystal only printed a message. Once SaveManager exists, update that placeholder to open the slot dialog below. A direct `SaveManager.save_game(1)` call is fine as a temporary smoke test while wiring the autoload, but it should not be the final tutorial flow.
 
 ### Save Slot Selection UI
 
@@ -330,7 +384,6 @@ extends PanelContainer
 ## A 3-slot save/load selection dialog.
 
 signal slot_selected(slot: int)
-signal cancelled
 
 @onready var _buttons: Array[Button] = [
     $VBox/Slot1Button,
@@ -342,11 +395,14 @@ signal cancelled
 
 func _ready() -> void:
     for i in range(_buttons.size()):
-        var slot_num: int = i + 1
-        _buttons[i].pressed.connect(func() -> void: slot_selected.emit(slot_num))
-    _cancel_btn.pressed.connect(func() -> void: cancelled.emit())
+        _buttons[i].pressed.connect(_on_slot_pressed.bind(i + 1))
+    _cancel_btn.pressed.connect(func() -> void: slot_selected.emit(0))
     refresh()
     _buttons[0].grab_focus()
+
+
+func _on_slot_pressed(slot: int) -> void:
+    slot_selected.emit(slot)
 
 
 func refresh() -> void:
@@ -368,6 +424,8 @@ func _activate() -> void:
     get_tree().current_scene.add_child(dialog)
     var slot: int = await dialog.slot_selected
     dialog.queue_free()
+    if slot == 0:
+        return
     SaveManager.save_game(slot)
     print("Saved to slot " + str(slot) + "!")
 ```
@@ -380,6 +438,8 @@ func _on_continue() -> void:
     add_child(dialog)
     var slot: int = await dialog.slot_selected
     dialog.queue_free()
+    if slot == 0:
+        return
     SaveManager.load_game(slot)
 ```
 
@@ -392,10 +452,12 @@ if json.parse(json_string) != OK:
     push_error("Corrupt save file: " + json.get_error_message())
     return false
 
-if not save_data is Dictionary:
+var parsed: Variant = json.data
+if not parsed is Dictionary:
     push_error("Save data is not a Dictionary")
     return false
 
+var save_data: Dictionary = parsed
 if not save_data.has("version"):
     push_error("Save data missing version field")
     return false
@@ -426,12 +488,26 @@ Our approach (`to_save_data()` per autoload) is the right call for Crystal Saga'
 
 Another thing to plan for: **save migration**. When you add a new field (say, a `reputation` system), old save files won't have it. Your `from_save_data()` methods should always use `.get("key", default_value)` rather than direct dictionary access. This way, loading an old save that lacks the `reputation` key gracefully falls back to the default instead of crashing.
 
+## Engineering Contract
+
+- **Global state:** SaveManager orchestrates serialization; each autoload owns its own save fragment.
+- **Public surface:** `save_game(slot)`, `load_game(slot)`, `slot_exists(slot)`, `get_slot_info(slot)`, and SaveSlotDialog's `slot_selected`.
+- **Invariant:** Save and load schemas are symmetric, versioned, and validated before restore.
+- **Failure behavior:** Missing/corrupt files, non-Dictionary JSON roots, and slot cancel return cleanly.
+- **Copy semantics:** Save data is plain Dictionaries/Arrays; mutable Resources are restored from paths, with cache bypass where fresh runtime copies matter.
+
+## Engine Gotcha
+
+JSON parsing returns a Variant root. Even valid JSON might be an array or string, so check `parsed is Dictionary` before treating it as a save file.
+
 ## What We've Learned
 
 - **JSON** is the save format: human-readable, no class coupling, simple API.
 - **`to_save_data()` / `from_save_data()`** on each autoload exports/imports state as Dictionaries.
 - **`user://`** is the writable save directory; `FileAccess` handles file I/O.
 - **Save crystals** trigger the save flow; `load_game()` is designed to be reused by UI flows like the title screen's Continue button in Module 25.
+- **Save slot cancellation** returns slot `0`, so callers can `return` cleanly instead of waiting forever on a separate cancel signal.
+- **World-object state** such as opened chests and one-shot bosses can live in saved `GameManager` flags when each object has a stable scene key and object ID.
 - Resources are referenced by **path** in saves (`resource_path`), not by value. For mutable party members, `ResourceLoader.CACHE_MODE_IGNORE` rebuilds a fresh runtime copy from the `.tres` definition before saved state is applied.
 - Always validate JSON before using it. Corrupt saves shouldn't crash the game.
 - Use `.get("key", default)` for future-proof save loading; old saves missing new fields won't crash.
@@ -439,7 +515,7 @@ Another thing to plan for: **save migration**. When you add a new field (say, a 
 ## What You Should See
 
 - Interacting with the save crystal writes a JSON file to `user://saves/`
-- Loading restores the player's position, inventory, quests, party, and flags
+- Loading restores the player's position, inventory, quests, party, flags, and one-shot world-object state stored in `GameManager`
 - The game continues exactly where you left off
 
 ## Next Module

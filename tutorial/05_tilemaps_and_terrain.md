@@ -178,7 +178,7 @@ The Line and Rectangle modes are temporary holds, not separate tool buttons. You
 
 **Randomization:** If you select multiple individual tiles (Shift+click in the palette), the Paint tool randomly picks one of them for each cell you paint. This is useful for ground variation — select three or four grass variants, then paint freely and the ground gets natural-looking variety without you placing each variant by hand.
 
-**Scattering:** Set the Scattering value above 0 in the TileMap toolbar to randomly skip cells while painting. At 0.5, roughly half the cells are left empty. This is useful for sparse decorations on the Detail layer — paint across an area and only some cells get a flower or crack.
+**Scattering:** Set the Scattering value above 0 in the TileMap toolbar to randomly skip cells while painting. Treat this as a rough-in tool only. For Crystal Saga, final decoration should be hand-edited: a few flowers by a path, cracks near old stone, grass tufts where they make visual sense. Do not leave broad percentage-painted decoration in the finished map.
 
 > **See:** [Using TileMaps](https://docs.godotengine.org/en/stable/tutorials/2d/using_tilemaps.html), the official guide covering all painting tools, randomization, scattering, and patterns.
 
@@ -221,7 +221,7 @@ Place buildings as 2x2 or 3x2 clusters of wall/roof tiles. The path runs north-s
 
 2. **Objects layer.** Select the `Objects` layer. Paint buildings as rectangular clusters of wall and roof tiles. Place trees around the edges and between buildings. Add fences, signs, or rocks where they make sense. Use **Ctrl+click** (Picker) to grab tiles from the viewport when you want to reuse something you already placed. If your tile sheet has multi-tile objects (like a 2x2 tree), select all the tiles as a group in the palette and place them together.
 
-3. **Detail layer.** Select the `Detail` layer. This is for the finishing touches: flowers along paths, cracks in stone, grass variations over the base ground, path border tiles that soften the edge between dirt and grass. **Keep it sparse.** A few details per area, not one on every cell. If you have the Scattering feature, set it to 0.3–0.5 and paint loosely across an area.
+3. **Detail layer.** Select the `Detail` layer. This is for the finishing touches: flowers along paths, cracks in stone, grass variations over the base ground, path border tiles that soften the edge between dirt and grass. **Keep it sparse and intentional.** Place a few details where the player's eye should go. If you use Scattering to sketch ideas, immediately hand-edit the result so the final map does not look sprayed on.
 
 4. **AbovePlayer layer.** If you have treetop canopy tiles or roof overhangs, place them on this layer. Anything here draws on top of the player sprite, which creates the illusion of walking under trees or into doorways.
 
@@ -336,6 +336,18 @@ When you're ready, you can:
 - Learn pixel art yourself (Aseprite is the standard tool)
 
 Swapping the art is just changing the tile sheet image and reassigning it in the TileSet. The map layout, collision, and layer structure stay the same.
+
+## Engineering Contract
+
+- **Global state:** None; the map is scene-local content.
+- **Public surface:** Named TileMapLayer nodes (`Ground`, `Detail`, `Objects`, `AbovePlayer`) that later modules can rely on.
+- **Invariant:** Collision belongs on blocking tiles, visual decoration stays sparse and intentional, and player walkable space stays readable.
+- **Failure behavior:** Bad tile coordinates or missing collision are corrected in the TileSet/scene before scripting depends on them.
+- **Copy semantics:** TileSet and atlas resources are shared project assets; scene edits reference them rather than cloning them.
+
+## Engine Gotcha
+
+TileMapLayer is the Godot 4 workflow this series uses. Treat terrain painting and collision as editor-authored data: if a terrain set or collision layer is not configured in the TileSet, script calls cannot infer it for you.
 
 ## What We've Learned
 

@@ -277,6 +277,18 @@ Both approaches are valid. We're using the Area2D approach because it's simpler 
 
 > **See:** [RayCast2D](https://docs.godotengine.org/en/stable/classes/class_raycast2d.html), for the ray-based detection approach.
 
+## Engineering Contract
+
+- **Global state:** None; interaction range and prompts are local to each NPC instance.
+- **Public surface:** NPC scenes expose an interaction signal or method and carry `NPCData`.
+- **Invariant:** Only the player group can trigger interaction prompts and dialogue starts.
+- **Failure behavior:** Missing `NPCData` should disable interaction or show a safe fallback line.
+- **Copy semantics:** NPCData is shared content data; per-NPC runtime flags should not be written into the Resource.
+
+## Engine Gotcha
+
+Area2D overlap signals depend on collision layers and masks. If the prompt never appears, inspect the Area2D and player collision setup before changing dialogue code.
+
 ## What We've Learned
 
 - **Custom input actions** (`interact`) work with both keyboard and gamepad. Define them in Project Settings → Input Map.

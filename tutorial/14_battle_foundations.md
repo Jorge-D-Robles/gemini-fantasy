@@ -289,6 +289,10 @@ func initialize_battle(party_data: Array[BattlerData], enemy_data: Array[Battler
     _state_machine.start("Intro")
 
 
+func transition_to_state(state_name: String, context: Dictionary = {}) -> void:
+    _state_machine.transition_to(state_name, context)
+
+
 func _spawn_battler_sprites(battlers: Array[BattlerData], positions: Node2D) -> void:
     var slots := positions.get_children()
     for i in battlers.size():
@@ -371,7 +375,7 @@ func enter(_context: Dictionary = {}) -> void:
     # In a full game, play a swipe animation or battle start effect
     # For now, just wait briefly and proceed
     await get_tree().create_timer(0.5).timeout
-    battle_manager._state_machine.transition_to("TurnStart")
+    battle_manager.transition_to_state("TurnStart")
 ```
 
 ### TurnStart State
@@ -393,7 +397,7 @@ func _process_next_turn() -> void:
 
     if battler == null:
         # All turns exhausted, start a new round
-        battle_manager._state_machine.transition_to("TurnStart")
+        battle_manager.transition_to_state("TurnStart")
         return
 
     battle_manager.current_battler = battler
@@ -404,9 +408,9 @@ func _process_next_turn() -> void:
     battle_manager.turn_started.emit(battler)
 
     if battler.is_player_controlled:
-        battle_manager._state_machine.transition_to("PlayerChoice", {battler = battler})
+        battle_manager.transition_to_state("PlayerChoice", {battler = battler})
     else:
-        battle_manager._state_machine.transition_to("ActionExecute", {
+        battle_manager.transition_to_state("ActionExecute", {
             battler = battler,
             action = "enemy_turn",
         })
@@ -434,7 +438,7 @@ func enter(context: Dictionary = {}) -> void:
     if targets.is_empty():
         return
 
-    battle_manager._state_machine.transition_to("ActionExecute", {
+    battle_manager.transition_to_state("ActionExecute", {
         battler = _active_battler,
         action = "attack",
         target = targets[0],
@@ -466,7 +470,7 @@ func enter(context: Dictionary = {}) -> void:
     # Brief pause for the action to feel impactful
     await get_tree().create_timer(0.5).timeout
 
-    battle_manager._state_machine.transition_to("CheckResult")
+    battle_manager.transition_to_state("CheckResult")
 
 
 func _execute_attack(attacker: BattlerData, target: BattlerData) -> void:
@@ -501,9 +505,9 @@ extends BattleState
 
 func enter(_context: Dictionary = {}) -> void:
     if not battle_manager.is_enemy_alive():
-        battle_manager._state_machine.transition_to("Victory")
+        battle_manager.transition_to_state("Victory")
     elif not battle_manager.is_party_alive():
-        battle_manager._state_machine.transition_to("Defeat")
+        battle_manager.transition_to_state("Defeat")
     else:
         # More turns to process, go back to TurnStart
         # The TurnStart state will get the next battler from the queue
@@ -515,7 +519,7 @@ func _process_next_in_queue() -> void:
 
     if battler == null:
         # Round over, start a new round
-        battle_manager._state_machine.transition_to("TurnStart")
+        battle_manager.transition_to_state("TurnStart")
         return
 
     battle_manager.current_battler = battler
@@ -523,9 +527,9 @@ func _process_next_in_queue() -> void:
     battle_manager.turn_started.emit(battler)
 
     if battler.is_player_controlled:
-        battle_manager._state_machine.transition_to("PlayerChoice", {battler = battler})
+        battle_manager.transition_to_state("PlayerChoice", {battler = battler})
     else:
-        battle_manager._state_machine.transition_to("ActionExecute", {
+        battle_manager.transition_to_state("ActionExecute", {
             battler = battler,
             action = "enemy_turn",
         })
@@ -714,6 +718,18 @@ The same pattern applies to menus: opening the inventory pushes a new layer on t
 | State Stack | Many (layered) | Game + pause menu, game + dialogue, menu + sub-menu | Modes that overlay other modes |
 
 The rule of thumb: if the previous state should be *destroyed* when you leave it, use a state machine or a scene swap. If it should be *preserved* underneath, use a state stack or overlay UI.
+
+## Engineering Contract
+
+- **Global state:** BattleManager is scene-local, not an autoload.
+- **Public surface:** `initialize_battle()`, `transition_to_state()`, battle result signals, and read-only battle data used by states.
+- **Invariant:** States transition through the BattleManager facade and do not reach into private `_state_machine` ownership.
+- **Failure behavior:** Unknown state names log an error and leave the current state unchanged.
+- **Copy semantics:** `BattlerData` is runtime battle state; persistent CharacterData is synced only at defined battle boundaries.
+
+## Engine Gotcha
+
+Node-based state machines are ordinary scene trees. Child state names are string keys, so renaming a state node without updating transition calls breaks runtime flow.
 
 ## What We've Learned
 

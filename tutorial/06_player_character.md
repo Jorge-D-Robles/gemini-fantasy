@@ -161,6 +161,8 @@ DISABLED:   cutscene, battle transition, or menu, movement disabled
 
 The key insight: **each state is a self-contained behavior.** The IDLE state checks for movement and interact input. The WALK state plays the walk animation and moves. The INTERACT state does nothing; it waits for a signal that dialogue is finished. The DISABLED state is completely inert.
 
+This enum-based state machine is the right size for player movement: one script owns all states, and every state is only a few lines. In Module 14, battle flow gets complex enough that we switch to a node-based state machine, where each state is its own script. Same idea, different scale.
+
 ### Implementation
 
 Replace the entire contents of `res://player/player.gd` with this state machine version:
@@ -370,6 +372,18 @@ The alternative is **grid-based movement**, where the player snaps from one tile
 | Map alignment | Objects can be anywhere | Everything aligns to grid |
 
 Grid-based movement is elegant for tile-heavy games but requires a different architecture (tweening between positions, checking the grid for obstacles before moving). We're using free movement because it's more flexible and natural-feeling for our scope.
+
+## Engineering Contract
+
+- **Global state:** None; player movement lives on the player scene instance.
+- **Public surface:** The player joins the `"player"` group and exposes predictable movement/animation state.
+- **Invariant:** Movement input produces one deterministic velocity per frame, then `move_and_slide()` resolves collisions.
+- **Failure behavior:** Unknown or missing input actions should result in no movement, not script errors.
+- **Copy semantics:** The player scene can be instanced in multiple maps; runtime state belongs to the instance.
+
+## Engine Gotcha
+
+`CharacterBody2D` does not move by assigning `position` directly. Set `velocity`, call `move_and_slide()`, and let Godot resolve collision against the physics world during the physics frame.
 
 ## What We've Learned
 

@@ -185,9 +185,9 @@ match state:
 **Scene composition pattern:**
 
 ```
-Player (CharacterBody2D)       <-- root: handles movement and collision
-├── Sprite2D                   <-- displays the character image
-└── CollisionShape2D           <-- defines the hitbox
+Player (CharacterBody2D)       <- root: handles movement and collision
+├── Sprite2D                   <- displays the character image
+└── CollisionShape2D           <- defines the hitbox
 ```
 
 **Navigating the scene tree in code:**
@@ -236,7 +236,7 @@ func _on_test_zone_body_entered(body: Node2D) -> void:
 
 ### Input Handling
 
-**The Input Map** (Project --> Project Settings --> Input Map) maps named actions to physical keys:
+**The Input Map** (Project -> Project Settings -> Input Map) maps named actions to physical keys:
 
 | Action | Default Key | To Add WASD |
 |--------|------------|-------------|
@@ -244,8 +244,8 @@ func _on_test_zone_body_entered(body: Node2D) -> void:
 | `ui_down` | Arrow Down | Add S |
 | `ui_left` | Arrow Left | Add A |
 | `ui_right` | Arrow Right | Add D |
-| `ui_accept` | Enter, Space | -- |
-| `ui_cancel` | Escape | -- |
+| `ui_accept` | Enter, Space | default |
+| `ui_cancel` | Escape | default |
 
 **Checking input in code:**
 
@@ -325,26 +325,26 @@ These settings were configured in Part I for pixel art rendering:
 
 | Setting | Path in Project Settings | Value | Why |
 |---------|--------------------------|-------|-----|
-| Viewport Width | Display --> Window --> Viewport Width | `640` | Internal rendering resolution |
-| Viewport Height | Display --> Window --> Viewport Height | `360` | Internal rendering resolution |
-| Window Width Override | Display --> Window --> Window Width Override | `1280` | Window size on screen (2x viewport) |
-| Window Height Override | Display --> Window --> Window Height Override | `720` | Window size on screen (2x viewport) |
-| Stretch Mode | Display --> Window --> Stretch --> Mode | `canvas_items` | Scales viewport to fill window |
-| Texture Filter | Rendering --> Textures --> Default Texture Filter | `Nearest` | Keeps pixels sharp instead of blurry |
-| Main Scene | Application --> Run --> Main Scene | `res://main.tscn` | Which scene runs when you press F5 |
+| Viewport Width | Display -> Window -> Viewport Width | `640` | Internal rendering resolution |
+| Viewport Height | Display -> Window -> Viewport Height | `360` | Internal rendering resolution |
+| Window Width Override | Display -> Window -> Window Width Override | `1280` | Window size on screen (2x viewport) |
+| Window Height Override | Display -> Window -> Window Height Override | `720` | Window size on screen (2x viewport) |
+| Stretch Mode | Display -> Window -> Stretch -> Mode | `canvas_items` | Scales viewport to fill window |
+| Texture Filter | Rendering -> Textures -> Default Texture Filter | `Nearest` | Keeps pixels sharp instead of blurry |
+| Main Scene | Application -> Run -> Main Scene | `res://main.tscn` | Which scene runs when you press F5 |
 
 ## Common Mistakes and Fixes
 
 | Mistake | Symptom | Fix |
 |---------|---------|-----|
-| Texture filter left on `Linear` | Sprites look blurry and smudged when the game runs | Project Settings --> Rendering --> Textures --> Default Texture Filter --> set to `Nearest` |
+| Texture filter left on `Linear` | Sprites look blurry and smudged when the game runs | Project Settings -> Rendering -> Textures -> Default Texture Filter -> set to `Nearest` |
 | Accessing `$NodeName` outside `@onready` | Null reference error at startup; the node hasn't entered the tree yet | Use `@onready var sprite: Sprite2D = $Sprite2D` instead of a plain `var` |
 | CollisionShape2D with no shape assigned | Yellow warning triangle on the node; CharacterBody2D cannot detect collisions | Select the CollisionShape2D, click its Shape property in the Inspector, and create a new shape (e.g., RectangleShape2D) |
 | Using `_process()` with `move_and_slide()` | Inconsistent collision detection; objects may clip through walls at low frame rates | Switch to `_physics_process()` for any code that calls `move_and_slide()` |
 | Multiplying `velocity` by `delta` before `move_and_slide()` | Movement is extremely slow (double-applying delta) | Set `velocity` in pixels per second directly; `move_and_slide()` handles delta internally |
 | Not normalizing diagonal input | Diagonal movement is roughly 41% faster than cardinal movement | Call `direction.normalized()` when the direction vector is non-zero |
-| Main scene not set | Pressing F5 shows a dialog asking which scene to run, or nothing happens | Project Settings --> Application --> Run --> Main Scene --> set to `res://main.tscn` |
-| WASD keys don't work | Arrow keys work but WASD does nothing | Open Project Settings --> Input Map, find each `ui_*` action, click `+`, and bind the WASD key |
+| Main scene not set | Pressing F5 shows a dialog asking which scene to run, or nothing happens | Project Settings -> Application -> Run -> Main Scene -> set to `res://main.tscn` |
+| WASD keys don't work | Arrow keys work but WASD does nothing | Open Project Settings -> Input Map, find each `ui_*` action, click `+`, and bind the WASD key |
 
 ## Official Godot Documentation
 

@@ -39,7 +39,7 @@ Module 21 added the remaining progression systems. PartyManager gave us a roster
 | Game flag | A boolean key-value pair in GameManager (`"pendant_found" = true`) | Universal state tracking that every system can read and react to | Module 20 |
 | `flag_changed` signal | Emitted by GameManager when any flag value changes | Enables reactive systems: quests auto-complete, NPCs update dialogue, doors unlock, without polling | Module 20 |
 | QuestData | A Resource class defining a quest's objectives, descriptions, and rewards | Data-driven quest definitions that live in `.tres` files and can be created in the editor | Module 20 |
-| Quest state machine | NOT_STARTED -> ACTIVE -> COMPLETE -> TURNED_IN | Prevents invalid transitions like completing a quest that was never started | Module 20 |
+| Quest state machine | Manager-inferred lifecycle: NOT_STARTED -> ACTIVE -> COMPLETE -> TURNED_IN | Prevents invalid transitions like turning in a quest that was never completed | Module 20 |
 | Objective flags | An array of flag names on QuestData that map 1:1 to objectives | Quests complete automatically when all objective flags are set, no manual checking needed | Module 20 |
 | Reactive dialogue | NPC dialogue functions that branch on flag/quest state | Makes the world feel responsive to the player's actions without complex scripting | Module 20 |
 | PartyManager | An autoload holding the array of CharacterData for current party members | Centralized roster that battle, UI, save, and equipment systems all reference | Module 21 |
@@ -83,6 +83,10 @@ func _on_flag_changed(flag_name: String, value: bool) -> void:
 var all_flags: Dictionary = GameManager.get_all_flags()
 GameManager.load_flags(saved_flags_dictionary)        # direct reset/helper
 GameManager.from_save_data(saved_flags_dictionary)    # Module 22 save/load path
+
+# Stable world-object flags saved through GameManager
+var chest_flag := GameManager.make_world_flag("crystal_cavern", "potion_chest", "opened")
+GameManager.set_flag(chest_flag)
 ```
 
 Register GameManager as an autoload at **Project -> Project Settings -> Autoload -> add `res://autoloads/game_manager.gd` as `GameManager`**.
@@ -124,9 +128,11 @@ if QuestManager.is_quest_active("lost_pendant"):
     pass
 if QuestManager.is_quest_complete("lost_pendant"):
     pass
+if QuestManager.get_quest_state("lost_pendant") == QuestData.QuestState.TURNED_IN:
+    pass
 
 # Turning in a quest (grants rewards automatically)
-QuestManager.turn_in_quest(quest)
+QuestManager.turn_in_quest_by_id("lost_pendant")
 
 # Listing quests
 var active: Array[QuestData] = QuestManager.get_active_quests()
@@ -139,7 +145,7 @@ QuestManager.quest_completed.connect(_on_quest_completed)
 QuestManager.quest_turned_in.connect(_on_quest_turned_in)
 ```
 
-Quest completion is automatic: QuestManager listens for `GameManager.flag_changed` and checks whether all `objective_flags` for each active quest are now set. When they are, it moves the quest to the completed list and emits `quest_completed`.
+Quest completion is automatic: QuestManager listens for `GameManager.flag_changed` and checks whether all `objective_flags` for each active quest are now set. When they are, it moves the quest to the completed list and emits `quest_completed`. Turn-in is a separate guarded transition: `turn_in_quest_by_id()` only grants rewards when the ID is currently in the completed list.
 
 This first quest log stays focused on **active** quests. Completed and turned-in quests are still tracked separately in `QuestManager` for reward handling, save/load, and future UI expansion, but they are not shown in this starter journal.
 
@@ -197,10 +203,15 @@ func _get_fynn_dialogue() -> Array[DialogueLine]:
     if GameManager.has_flag("pendant_returned"):
         return _make_lines("Fynn", ["Thank you again for finding my pendant!"])
     elif GameManager.has_flag("pendant_found"):
-        return _make_lines("Fynn", [
+        var lines := _make_lines("Fynn", [
             "You found it! My pendant! Thank you so much!",
             "Please, take this as a reward.",
         ])
+        if QuestManager.turn_in_quest_by_id("lost_pendant"):
+            var pendant := load("res://data/items/pendant.tres") as ItemData
+            if pendant:
+                InventoryManager.remove_item(pendant)
+        return lines
     elif GameManager.has_flag("talked_to_fynn"):
         return _make_lines("Fynn", ["Any luck finding my pendant in the Whisperwood?"])
     else:
@@ -318,10 +329,11 @@ func equip(item: ItemData) -> ItemData:
             equipped_accessory = item
     return previous
 
-# Full equip flow: equip new, remove from inventory, return old to inventory
+# Full equip flow: remove new item first, equip, then return old item to inventory
 func _equip_item_on_character(character: CharacterData, item: ItemData) -> void:
+    if not InventoryManager.remove_item(item):
+        return
     var previous: ItemData = character.equip(item)
-    InventoryManager.remove_item(item)
     if previous:
         InventoryManager.add_item(previous)
 ```
@@ -409,7 +421,7 @@ SaveManager gathers state from every autoload, serializes it as JSON, and writes
 
 | Autoload | Saved Data |
 |----------|-----------|
-| GameManager | All flags (Dictionary of String -> bool) |
+| GameManager | All flags (Dictionary of String -> bool), including world-object flags such as opened chests and defeated one-shot bosses |
 | InventoryManager | Items array (id, resource path, count) + gold |
 | QuestManager | Active/completed/turned-in quest resource paths |
 | PartyManager | Member paths, levels, XP, all stats, equipment paths |
@@ -424,7 +436,11 @@ SaveManager gathers state from every autoload, serializes it as JSON, and writes
     "timestamp": "2025-03-15T14:30:00",
     "scene_path": "res://scenes/willowbrook/willowbrook.tscn",
     "player_position": {"x": 128.0, "y": 256.0},
-    "game_flags": {"talked_to_elder": true, "pendant_found": true},
+    "game_flags": {
+        "talked_to_elder": true,
+        "pendant_found": true,
+        "world.crystal_cavern.potion_chest.opened": true
+    },
     "inventory": {"gold": 150, "items": [{"item_id": "potion", "item_path": "res://data/items/potion.tres", "count": 3}]},
     "party": {"members": [{"id": "aiden", "path": "res://data/characters/aiden.tres", "level": 5, ...}]},
     "quests": {"active": ["res://data/quests/crystal_resonance.tres"], "completed": [], "turned_in": []}
@@ -496,7 +512,11 @@ func load_game(slot: int) -> bool:
         return false
     file.close()
 
-    var save_data: Dictionary = json.data
+    var parsed: Variant = json.data
+    if not parsed is Dictionary:
+        return false
+
+    var save_data: Dictionary = parsed
 
     # Restore each autoload's state
     GameManager.from_save_data(save_data.get("game_flags", {}))
@@ -522,7 +542,7 @@ func load_game(slot: int) -> bool:
 Each autoload implements a symmetric pair of methods: `to_save_data()` exports state as a plain Dictionary, and `from_save_data()` restores it.
 
 ```gdscript
-# GameManager -- simplest case, flags are already a Dictionary
+# GameManager: simplest case, flags are already a Dictionary
 func to_save_data() -> Dictionary:
     return _flags.duplicate()
 
@@ -531,7 +551,7 @@ func from_save_data(data: Dictionary) -> void:
 ```
 
 ```gdscript
-# InventoryManager -- items are serialized by resource path + count
+# InventoryManager: items are serialized by resource path + count
 func to_save_data() -> Dictionary:
     var items_data: Array[Dictionary] = []
     for entry in _items:
@@ -554,7 +574,7 @@ func from_save_data(data: Dictionary) -> void:
 ```
 
 ```gdscript
-# QuestManager -- quests are serialized as resource path arrays
+# QuestManager: quests are serialized as resource path arrays
 func to_save_data() -> Dictionary:
     return {
         active = _active_quests.map(func(q: QuestData) -> String: return q.resource_path),
@@ -573,7 +593,7 @@ func from_save_data(data: Dictionary) -> void:
 ```
 
 ```gdscript
-# PartyManager -- members are serialized with all mutable stats + equipment paths
+# PartyManager: members are serialized with all mutable stats + equipment paths
 func to_save_data() -> Dictionary:
     var members_data: Array[Dictionary] = []
     for member in members:
@@ -623,7 +643,10 @@ func get_slot_info(slot: int) -> Dictionary:
     if json.parse(file.get_as_text()) != OK:
         return {}
     file.close()
-    var data: Dictionary = json.data
+    var parsed: Variant = json.data
+    if not parsed is Dictionary:
+        return {}
+    var data: Dictionary = parsed
     return {
         timestamp = data.get("timestamp", ""),
         scene_path = data.get("scene_path", ""),
@@ -639,6 +662,8 @@ func _activate() -> void:
     get_tree().current_scene.add_child(dialog)
     var slot: int = await dialog.slot_selected
     dialog.queue_free()
+    if slot == 0:
+        return
     SaveManager.save_game(slot)
 
 # On the title screen
@@ -647,6 +672,8 @@ func _on_continue() -> void:
     add_child(dialog)
     var slot: int = await dialog.slot_selected
     dialog.queue_free()
+    if slot == 0:
+        return
     SaveManager.load_game(slot)
 ```
 
@@ -657,7 +684,7 @@ func _on_continue() -> void:
 | Forgetting to register an autoload in Project Settings | `Identifier "GameManager" not declared in the current scope` error | Open **Project -> Project Settings -> Autoload** and add the script path with the correct name |
 | Checking flags in the wrong order in reactive dialogue | NPC always says the first-meeting line, or skips to the end | Check from most-progressed state to least-progressed: `pendant_returned` before `pendant_found` before `talked_to_fynn` before the `else` |
 | Not setting `process_mode = PROCESS_MODE_ALWAYS` on shop UI | Shop opens but buttons do not respond to input | The shop pauses the game with `get_tree().paused = true`, so the shop node itself must set `process_mode = Node.PROCESS_MODE_ALWAYS` in `_ready()` |
-| Equipping an item without removing it from inventory | Item duplicated: it appears both equipped and in the inventory | Always use the three-step flow: `character.equip(item)`, `InventoryManager.remove_item(item)`, then `InventoryManager.add_item(previous)` if there was a previous item |
+| Equipping an item without removing it from inventory first | Item duplicated: it appears both equipped and in the inventory | First require `InventoryManager.remove_item(item)` to return true, then equip, then return the previous item to inventory |
 | Saving Resource objects directly to JSON instead of their paths | JSON contains nested object data that cannot be parsed back into typed Resources | Save `resource_path` strings. On load, call `load(path) as ResourceType` to get the actual Resource |
 | Modifying `_active_quests` array while iterating over it | Quest completion skips entries or throws errors | Collect newly completed quests into a separate array first, then process them after the iteration (as QuestManager does with `newly_completed`) |
 | Missing `await tree.scene_changed` after `change_scene_to_file()` | Player position restoration fails because the new scene has not loaded yet | `change_scene_to_file()` is deferred. `await tree.scene_changed` waits for the new scene to be fully loaded before restoring position |

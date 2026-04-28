@@ -51,6 +51,10 @@ func clear_flag(flag_name: String) -> void:
     set_flag(flag_name, false)
 
 
+func make_world_flag(scene_key: String, object_id: String, state: String) -> String:
+    return "world.%s.%s.%s" % [scene_key, object_id, state]
+
+
 func get_all_flags() -> Dictionary:
     return _flags.duplicate()
 
@@ -134,7 +138,32 @@ func is_quest_complete(quest_id: String) -> bool:
     return false
 
 
-func turn_in_quest(quest: QuestData) -> void:
+func get_quest_state(quest_id: String) -> QuestData.QuestState:
+    if _is_quest_done(quest_id):
+        return QuestData.QuestState.TURNED_IN
+    if is_quest_complete(quest_id):
+        return QuestData.QuestState.COMPLETE
+    if is_quest_active(quest_id):
+        return QuestData.QuestState.ACTIVE
+    return QuestData.QuestState.NOT_STARTED
+
+
+func turn_in_quest(quest: QuestData) -> bool:
+    if not quest:
+        return false
+    return turn_in_quest_by_id(quest.id)
+
+
+func turn_in_quest_by_id(quest_id: String) -> bool:
+    var quest: QuestData = null
+    for candidate in _completed_quests:
+        if candidate.id == quest_id:
+            quest = candidate
+            break
+
+    if not quest:
+        return false
+
     _completed_quests.erase(quest)
     _turned_in_quests.append(quest)
 
@@ -147,18 +176,19 @@ func turn_in_quest(quest: QuestData) -> void:
         GameManager.set_flag(quest.completion_flag)
 
     quest_turned_in.emit(quest)
+    return true
 
 
 func get_active_quests() -> Array[QuestData]:
-    return _active_quests
+    return _active_quests.duplicate()
 
 
 func get_completed_quests() -> Array[QuestData]:
-    return _completed_quests
+    return _completed_quests.duplicate()
 
 
 func get_turned_in_quests() -> Array[QuestData]:
-    return _turned_in_quests
+    return _turned_in_quests.duplicate()
 
 
 func _on_flag_changed(flag_name: String, _value: bool) -> void:
@@ -226,8 +256,9 @@ Create the `res://data/quests/` folder (right-click `res://data/` → New Folder
    - `id`: "lost_pendant"
    - `title`: "The Lost Pendant"
    - `description`: "Find Fynn's pendant in the Whisperwood."
-   - **Objectives:** "Talk to Wandering Fynn", "Find the pendant in Whisperwood", "Return pendant to Fynn"
-   - **Objective Flags:** "talked_to_fynn", "pendant_found", "pendant_returned"
+   - **Objectives:** "Talk to Wandering Fynn", "Find the pendant in Whisperwood"
+   - **Objective Flags:** "talked_to_fynn", "pendant_found"
+   - `completion_flag`: "pendant_returned"
    - `xp_reward`: 50
    - `gold_reward`: 30
    - **Reward Items:** Click **Add Element** twice and drag `ether.tres` into both slots. In this tutorial, `reward_items` is a plain `Array[ItemData]`, so duplicate entries represent multiple copies.
@@ -282,13 +313,13 @@ func _on_pendant_chest_opened() -> void:
     GameManager.set_flag("pendant_found")
 ```
 
-For Fynn's turn-in, add this to the `pendant_found` dialogue path in `willowbrook.gd`:
+For Fynn's turn-in, add this to the `pendant_found` dialogue path in `willowbrook.gd`. Finding the pendant completes the objective; returning it is the turn-in action:
 ```gdscript
 # After the "You found it!" dialogue finishes:
-GameManager.set_flag("pendant_returned")
-var quest: QuestData = load("res://data/quests/lost_pendant.tres")
-if quest:
-    QuestManager.turn_in_quest(quest)
+if QuestManager.turn_in_quest_by_id("lost_pendant"):
+    var pendant := load("res://data/items/pendant.tres") as ItemData
+    if pendant:
+        InventoryManager.remove_item(pendant)
 ```
 
 ## Reactive Dialogue
@@ -317,10 +348,15 @@ func _get_fynn_dialogue() -> Array[DialogueLine]:
     if GameManager.has_flag("pendant_returned"):
         return _make_lines("Fynn", ["Thank you again for finding my pendant!"])
     elif GameManager.has_flag("pendant_found"):
-        return _make_lines("Fynn", [
+        var lines := _make_lines("Fynn", [
             "You found it! My pendant! Thank you so much!",
             "Please, take this as a reward.",
         ])
+        if QuestManager.turn_in_quest_by_id("lost_pendant"):
+            var pendant := load("res://data/items/pendant.tres") as ItemData
+            if pendant:
+                InventoryManager.remove_item(pendant)
+        return lines
     elif GameManager.has_flag("talked_to_fynn"):
         return _make_lines("Fynn", ["Any luck finding my pendant in the Whisperwood?"])
     else:
@@ -445,6 +481,18 @@ This first quest log keeps the presentation simple: it only lists **active** que
 > **See:** [Singletons (Autoload)](https://docs.godotengine.org/en/stable/tutorials/scripting/singletons_autoload.html). GameManager and QuestManager are both autoloads. This tutorial covers when and why to use the autoload pattern.
 
 > **See:** [Resources](https://docs.godotengine.org/en/stable/tutorials/scripting/resources.html). QuestData extends Resource. This guide covers custom Resources, `@export` properties, and `.tres` file creation.
+
+## Engineering Contract
+
+- **Global state:** GameManager owns flags; QuestManager owns quest lifecycle arrays.
+- **Public surface:** `set_flag()`, `make_world_flag()`, `start_quest()`, `get_quest_state()`, and `turn_in_quest_by_id()`.
+- **Invariant:** Quest completion and quest turn-in are separate states; rewards are granted only from the completed state.
+- **Failure behavior:** Turning in an unknown, active, or already turned-in quest returns `false`.
+- **Copy semantics:** Quest list getters return defensive copies of manager arrays; QuestData Resources remain shared definitions.
+
+## Engine Gotcha
+
+Custom autoloads are not the same thing as engine singletons. `GameManager` and `QuestManager` are project nodes under `/root`, while `Input` and `AudioServer` are engine-provided singletons.
 
 ## What We've Learned
 

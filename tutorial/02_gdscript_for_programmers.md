@@ -10,7 +10,9 @@ A script attached to our sprite that responds to keyboard input and moves around
 
 ## GDScript at a Glance
 
-GDScript is Godot's built-in scripting language. It looks like Python but is a completely separate language, built for game development. If you've written Python, JavaScript, or any dynamically typed language, you'll feel right at home. If you're coming from C#, Java, or C++, the indentation-based syntax might take a few minutes to adjust to, but the concepts are all familiar.
+This module assumes you already know how to program. The goal is not to teach variables, loops, or functions from scratch; it is to give you the GDScript and Godot-specific deltas that matter when you start attaching behavior to nodes.
+
+GDScript is Godot's built-in scripting language. It looks like Python, but it is a separate language with engine-aware features: typed node references, exported Inspector properties, virtual callbacks, signals, Resources, and autoload access.
 
 Here's a quick taste:
 
@@ -28,11 +30,13 @@ func _process(delta: float) -> void:
         print("Game over!")
 ```
 
-Key things to notice:
-- **Indentation** defines code blocks (like Python), not braces.
-- **`extends`** declares what class this script inherits from.
-- **Static typing** is optional but recommended. We use it everywhere in this tutorial. `var speed: float = 200.0` is statically typed. `var speed = 200.0` is dynamically typed and also valid.
-- **Functions starting with `_`** are special: they're callbacks that Godot calls for you.
+The important deltas:
+
+- **One script extends one Godot class.** `extends Sprite2D` means the script is the behavior for a `Sprite2D` node.
+- **Static typing is optional but required in this series.** Use explicit types for public APIs, exports, onready variables, and function signatures.
+- **Virtual callbacks are engine entrypoints.** Godot calls `_ready()`, `_process(delta)`, `_physics_process(delta)`, `_unhandled_input(event)`, and similar methods for you.
+- **Node paths are runtime references.** `$ChildNode` is shorthand for `get_node("ChildNode")`; use `@onready` so the child exists before you cache it.
+- **Editor and runtime are connected.** `@export` makes a variable editable per scene instance in the Inspector.
 
 > **See:** [GDScript reference](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html), the complete language reference covering syntax, types, and features.
 
@@ -103,11 +107,9 @@ There's also **`_physics_process(delta)`**, which is called at a fixed rate (60 
 
 > **See:** [Overridable functions](https://docs.godotengine.org/en/stable/tutorials/scripting/overridable_functions.html), the full list of virtual functions Godot provides, including `_enter_tree()`, `_exit_tree()`, and `_input()`.
 
-## Variables and Types
+## Types and Data Shapes
 
-Static typing matters more in game code than in most software. Games run in real-time; a type error in a web app shows you an error page, but a type error in a game crashes mid-boss-fight and the player loses their progress. Imagine you're building Final Fantasy VI's magic system and you accidentally pass a string where an integer is expected for spell damage. Without static typing, the bug hides until a playtester casts Fire 3 on the final boss and the game crashes. With static typing, the editor underlines the mistake the moment you type it.
-
-GDScript supports both dynamic and static typing. We always use static typing in this tutorial because it catches bugs at write-time rather than runtime, and gives us better autocompletion in the editor.
+GDScript supports dynamic typing, but we use static typing throughout the tutorial because the editor can catch API mismatches while you are wiring scenes together. That matters more than the syntax itself: most Godot bugs in this series come from the wrong node, Resource, or Dictionary shape crossing a boundary.
 
 ### Declaring Variables
 
@@ -126,7 +128,7 @@ var player_name := "Aiden"  # String
 var speed = 200.0  # could be anything
 ```
 
-### Common Types
+### Common Engine Types
 
 | Type | Example | Notes |
 |------|---------|-------|
@@ -135,8 +137,10 @@ var speed = 200.0  # could be anything
 | `bool` | `true`, `false` | |
 | `String` | `"hello"` | Use double quotes |
 | `Vector2` | `Vector2(10, 20)` | 2D position/direction (you'll use this *constantly*) |
-| `Array` | `[1, 2, 3]` | Ordered list |
-| `Dictionary` | `{"hp": 100}` | Key-value pairs |
+| `Array[T]` | `[1, 2, 3]` | Ordered list; use typed arrays when the element type is known |
+| `Dictionary` | `{hp = 100}` | Key-value pairs; useful for command payloads and save data |
+| `NodePath` | `^"Sprite2D"` | Serialized path to a node |
+| `Resource` | `load("res://data/items/potion.tres")` | Data asset loaded from disk |
 
 ### Constants
 
@@ -147,7 +151,7 @@ const PLAYER_NAME: String = "Aiden"
 
 Constants use `UPPER_SNAKE_CASE` and cannot be changed after declaration.
 
-## Functions
+## Functions and Boundaries
 
 ```gdscript
 # A function with parameters and a return type
@@ -165,11 +169,11 @@ func heal(amount: int = 10) -> void:
     health = min(health + amount, max_health)
 ```
 
-Notice the return type annotation (`-> int`, `-> void`). This is part of static typing and helps both you and the editor understand what the function produces.
+Notice the return type annotation (`-> int`, `-> void`). In tutorial code, a function's return type is part of its contract: if `remove_item()` returns `bool`, callers should be able to trust that `false` means nothing changed.
 
-## Control Flow
+## Control Flow Differences
 
-GDScript's control flow is straightforward if you've programmed before:
+The syntax is familiar, but a few details are worth locking in:
 
 ```gdscript
 # If / elif / else
@@ -201,7 +205,7 @@ match direction:
         velocity = Vector2.ZERO  # default case
 ```
 
-The `match` statement routes behavior when a value can be one of several named options, and in game development, this comes up constantly. Think about Pokemon's type effectiveness: when a Water-type move hits, the game checks whether the target is Fire, Grass, Rock, or Electric and responds differently for each. A chain of `if/elif` works but gets unwieldy fast. `match` makes the options explicit and readable. It becomes essential when we build state machines in Module 6.
+The `match` statement routes behavior when a value can be one of several named options. That becomes important when we build state machines in Module 6 and battle command dispatch in Module 15.
 
 > **Note:** GDScript uses `and`, `or`, and `not` instead of `&&`, `||`, and `!`. Both work, but `and`/`or`/`not` are the idiomatic choice and what we'll use throughout.
 
@@ -264,7 +268,7 @@ You can view and edit these in **Project → Project Settings → Input Map**.
 
 > **Note:** The `ui_*` actions only map to arrow keys by default; WASD is **not** included. To add WASD support: open **Project → Project Settings → Input Map**, find `ui_up`, click the **+** button next to it, press **W**, and click **OK**. Repeat for `ui_down` (S), `ui_left` (A), and `ui_right` (D). Now both arrow keys and WASD will work.
 
-> **Note:** `Input` is a globally available singleton, what Godot calls an "autoload." You access it by name from anywhere: `Input.is_action_pressed("ui_up")`. We'll create our own autoloads in Module 7. For now, just know that some objects (like `Input`, `Engine`, `Time`) are always available because Godot provides them globally.
+> **Note:** `Input` is a Godot-provided global singleton. In Module 7, we will create our own project autoload, which is a script or scene Godot registers under `/root` for the lifetime of the game. Both are globally accessible by name, but engine singletons and project autoloads are different mechanisms.
 
 ### Checking Input
 
@@ -442,6 +446,18 @@ Notice two improvements:
 - **`@export`** exposes variables in the Inspector. **`@onready`** caches node references safely.
 - **`$NodeName`** finds child nodes by path.
 - **`print()`** is your basic debugging tool.
+
+## Engineering Contract
+
+- **New artifact:** `res://sprite_2d.gd`
+- **Public editor surface:** exported `speed: float`
+- **Runtime contract:** `_process(delta)` moves the sprite by pixels per second, not pixels per frame
+- **Failure behavior:** bad node paths and type mismatches surface in the editor or Output panel
+- **Boundary rule:** input is read through named actions, not raw key codes
+
+## Engine Gotcha
+
+`@onready` variables are initialized during `_ready()`. Plain member variable initializers run earlier, before child nodes are guaranteed to exist, so do not cache `$ChildNode` references without `@onready`.
 
 ## What You Should See
 

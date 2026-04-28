@@ -2,7 +2,7 @@
 
 ## What We Have
 
-A complete JRPG. Let that sink in. Over 20 modules, you've built:
+A complete tutorial JRPG vertical slice. Let that sink in. Across the series, you've built:
 
 - A tile-based overworld with three connected areas
 - An animated player character with a state machine
@@ -11,7 +11,7 @@ A complete JRPG. Let that sink in. Over 20 modules, you've built:
 - A data-driven architecture using custom Resources
 - An inventory system with consumable items
 - A turn-based battle system with a node-based state machine
-- Player actions: attack, defend, magic, items
+- Player actions: attack, defend, item use, and a disabled Magic slot reserved for a future ability system
 - Enemy AI with three behavior types
 - Random encounters with weighted probability
 - A dungeon with treasure chests, a save crystal, and a boss fight
@@ -26,7 +26,7 @@ A complete JRPG. Let that sink in. Over 20 modules, you've built:
 - A title screen, pause menu, ending, and credits
 - A complete game loop
 
-That's a real game. Not a demo, not a prototype, but a playable JRPG with every major system in place. Everything else is content and polish.
+That's a real tutorial game: a playable JRPG vertical slice with every major system in place. It is not a content-complete commercial RPG yet, but the architecture can support more content and polish.
 
 ## Playtesting Walkthrough
 
@@ -75,7 +75,7 @@ Play through Crystal Saga from start to finish and verify each checkpoint:
 - [ ] Quest log shows correct objective states for active quests
 - [ ] Equipment changes are reflected in battle
 - [ ] Pause menu works during gameplay and stays inactive on title/ending screens
-- [ ] Audio volume controls work during the session (persistence requires the optional settings save extension from Module 24)
+- [ ] Audio volume controls persist across restarts via `user://settings.cfg`
 
 ## Common Bugs and Fixes
 
@@ -277,6 +277,26 @@ Generate cave layouts from room templates:
 - **[Tiled](https://www.mapeditor.org/):** External tilemap editor (free)
 - **[Audacity](https://www.audacityteam.org/):** Audio editing (free)
 
+## Engineering Contract
+
+- **Global state:** This module audits all existing autoload state rather than adding new systems.
+- **Public surface:** Playtest checklist, troubleshooting guide, export steps, and extension roadmap.
+- **Invariant:** The tutorial ships a vertical slice whose implemented systems agree with review modules and save/load contracts.
+- **Failure behavior:** Any broken checkpoint becomes a concrete bug to fix before export.
+- **Copy semantics:** Export packages project resources into a build; runtime user data remains under `user://`.
+
+## Engine Gotcha
+
+Exported builds do not write to `res://`. Save files and settings must use `user://`, and exported behavior should be tested separately from the editor.
+
+## What We've Learned
+
+- A finished tutorial vertical slice is more than isolated features; the title, save/load, audio, ending, and failure flows must all connect.
+- Playtesting should follow the player's actual route through the game, not the order the systems were implemented.
+- Save/load testing includes world-object flags, quest state, inventory, party stats, scene path, player position, and settings that live outside save slots.
+- Performance work starts with simple habits: remove unused `_process()` methods, cache node references, and avoid per-frame tile edits.
+- Exporting turns an editor project into a distributable application, but the build still needs the same gameplay verification as the editor version.
+
 ## What You Should See
 
 After working through this module, your game should pass the full playtesting walkthrough above. Specifically:
@@ -293,14 +313,14 @@ If any of these fail, check the Common Bugs section above and the troubleshootin
 
 ## What You've Accomplished
 
-You started with an empty Godot project and a blinking cursor. Twenty-one modules later, you have:
+You started with an empty Godot project and a blinking cursor. Twenty-six modules later, you have:
 
 - **Thousands of lines of GDScript** across dozens of scripts
 - **8 autoloads** managing global game state and global UI (SceneManager, InventoryManager, GameManager, QuestManager, PartyManager, SaveManager, MusicManager, PauseMenu)
 - **3 game areas** with hand-crafted tilemaps
 - **A complete battle system** with state machines, AI, and animations
 - **5 interlocking systems** (inventory, quests, party, save/load, audio)
-- **A playable game** with a beginning, middle, and end
+- **A complete tutorial JRPG vertical slice** with a beginning, middle, and end
 
 More importantly, you've learned the **patterns** that scale. The state machine pattern works for player movement, battle flow, quest tracking, and dialogue flow. The Resource pattern works for items, characters, enemies, quests, and encounters. The autoload pattern works for scene management, inventory, quests, party, save/load, audio, and pause UI. These patterns repeat everywhere in game development, not just in JRPGs.
 
@@ -308,7 +328,11 @@ More importantly, you've learned the **patterns** that scale. The state machine 
 
 JRPGs are a labor of love. They require patience: building systems, crafting worlds, writing dialogue, balancing combat, and testing everything together. But they're also one of the most rewarding genres to build, because every system connects to every other system, and when they all work together, the result is a game that feels whole.
 
-Crystal Saga is small by commercial standards, but it's architecturally complete. You can expand it in any direction: more story, more areas, more characters, more mechanics. The foundation supports it.
+Crystal Saga is small by commercial standards, but its tutorial architecture is complete enough to expand: more story, more areas, more characters, more mechanics. The foundation supports it.
+
+## Next Module
+
+In **Module 27: Part VI Review and Cheat Sheet**, we'll consolidate the audio, game-flow, polish, export, and final architecture into one reference you can use before extending the project.
 
 The most important thing you can do now is **keep building**. Pick one of the "where to go from here" suggestions that excites you, and implement it. Then another. Each addition teaches you something new, and each one makes the game more yours.
 

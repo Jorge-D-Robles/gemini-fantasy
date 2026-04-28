@@ -44,7 +44,7 @@ func remove_member(character: CharacterData) -> void:
 
 
 func get_members() -> Array[CharacterData]:
-    return members
+    return members.duplicate()
 
 
 func get_member_by_id(id: String) -> CharacterData:
@@ -71,10 +71,19 @@ Register as autoload `PartyManager`.
 
 ### Finishing Quest XP Integration
 
-In Module 20, `QuestData` already had an `xp_reward` field, but `QuestManager.turn_in_quest()` intentionally left it unused because PartyManager did not exist yet. Now that the roster is in place, reopen `res://autoloads/quest_manager.gd` and update the reward section:
+In Module 20, `QuestData` already had an `xp_reward` field, but `QuestManager.turn_in_quest_by_id()` intentionally left it unused because PartyManager did not exist yet. Now that the roster is in place, reopen `res://autoloads/quest_manager.gd` and update the reward section inside `turn_in_quest_by_id()`:
 
 ```gdscript
-func turn_in_quest(quest: QuestData) -> void:
+func turn_in_quest_by_id(quest_id: String) -> bool:
+    var quest: QuestData = null
+    for candidate in _completed_quests:
+        if candidate.id == quest_id:
+            quest = candidate
+            break
+
+    if not quest:
+        return false
+
     _completed_quests.erase(quest)
     _turned_in_quests.append(quest)
 
@@ -88,6 +97,7 @@ func turn_in_quest(quest: QuestData) -> void:
         GameManager.set_flag(quest.completion_flag)
 
     quest_turned_in.emit(quest)
+    return true
 ```
 
 This keeps quest turn-ins on the same leveling path as battle rewards. `PartyManager` owns "who gets XP," while `CharacterData.grant_xp()` still owns the actual leveling math from Module 18.
@@ -265,13 +275,15 @@ When equipping an item, the old item must return to inventory:
 ```gdscript
 # Example: equipping from inventory (add to your equipment UI handler)
 func _equip_item_on_character(character: CharacterData, item: ItemData) -> void:
+    if not InventoryManager.remove_item(item):
+        return
+
     var previous: ItemData = character.equip(item)
-    InventoryManager.remove_item(item)
     if previous:
         InventoryManager.add_item(previous)
 ```
 
-This three-step pattern (equip new, remove from inventory, add old back) prevents item duplication. The `equip()` method returns the old item so you always have a reference to it.
+This three-step pattern (remove new item from inventory, equip it, add the old item back) prevents item duplication. The `equip()` method returns the old item so you always have a reference to it. If `remove_item()` returns `false`, stop before changing equipment.
 
 ### The Modifier Pattern (Looking Ahead)
 
@@ -321,9 +333,9 @@ EquipmentPanel (PanelContainer)
     ├── NameLabel (Label)
     ├── StatsLabel (RichTextLabel)
     └── Slots (VBoxContainer)
-        ├── WeaponButton (Button: "Weapon: ---")
-        ├── ArmorButton (Button: "Armor: ---")
-        └── AccessoryButton (Button: "Accessory: ---")
+        ├── WeaponButton (Button: "Weapon: None")
+        ├── ArmorButton (Button: "Armor: None")
+        └── AccessoryButton (Button: "Accessory: None")
 ```
 
 Save the script as `res://ui/equipment/equipment_panel.gd`:
@@ -387,8 +399,11 @@ func _on_slot_pressed(slot: ItemData.EquipSlot) -> void:
     # Simple approach: equip the first matching item.
     # A full UI would show a selection list with stat comparisons.
     var item: ItemData = equipable[0]
+    if not InventoryManager.remove_item(item):
+        print("Could not equip " + item.display_name + ": item is no longer in inventory.")
+        return
+
     var previous: ItemData = _character.equip(item)
-    InventoryManager.remove_item(item)
     if previous:
         InventoryManager.add_item(previous)
 
@@ -449,7 +464,7 @@ Usage in a shop or equipment UI:
 ```gdscript
 var diff := character.predict_equip(iron_sword)
 # diff = { attack = 5, defense = 0, speed = -1 }
-# Display: ATK +5 (green arrow), DEF -- (no change), SPD -1 (red arrow)
+# Display: ATK +5 (green arrow), DEF no change, SPD -1 (red arrow)
 ```
 
 The key insight is the **temporarily swap, measure, restore** pattern. It reuses your existing `get_effective_*()` methods rather than duplicating the calculation logic. This means if you later add modifier stacking or set bonuses, the prediction stays accurate automatically.
@@ -610,6 +625,18 @@ func _handle_inn(npc: CharacterBody2D) -> void:
 | QuestManager | 20 | Quest tracking, objective checking |
 | **PartyManager** | **21** | **Party roster, recruitment, stats** |
 
+## Engineering Contract
+
+- **Global state:** PartyManager owns the runtime party roster.
+- **Public surface:** `add_member()`, `remove_member()`, `get_members()`, `get_member_by_id()`, equipment APIs, shop open/buy flows.
+- **Invariant:** Equipping consumes the new item before mutating the character, then returns the old item to inventory.
+- **Failure behavior:** Failed inventory removal aborts equip instead of granting free gear.
+- **Copy semantics:** `get_members()` returns a defensive array copy; CharacterData members inside it are live runtime objects.
+
+## Engine Gotcha
+
+Pausing with `get_tree().paused = true` pauses most nodes. Shop and equipment UI that must keep responding while paused need `process_mode = Node.PROCESS_MODE_ALWAYS`.
+
 ## What We've Learned
 
 - **PartyManager** autoload tracks the roster of party members.
@@ -618,7 +645,7 @@ func _handle_inn(npc: CharacterBody2D) -> void:
 - **Equipment** modifies effective stats. `get_effective_attack()` = base + weapon bonus.
 - **PredictStats pattern:** temporarily swap equipment, measure the difference, restore the original. This lets shop and equipment UIs show green/red stat comparison arrows without committing the change.
 - **The modifier pattern** (looking ahead): equipment bonuses, spell buffs, and status effects can all feed into stats through a unified `add`/`mult` modifier system. Not needed for Crystal Saga's scope, but essential for larger RPGs.
-- **Equip/unequip** uses a three-step swap (equip new → remove from inventory → return old) to prevent item duplication.
+- **Equip/unequip** removes the new item from inventory first, then equips it, then returns the old item. If removal fails, equipment does not change.
 - **Shops** use a ShopData resource listing items with prices.
 - **The inn** is a dialogue choice that costs gold and restores HP/MP.
 - All these systems build on previous modules: Resources (Module 9), dialogue (Module 11), inventory (Module 12), flags (Module 20).

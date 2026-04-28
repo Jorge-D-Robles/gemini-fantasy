@@ -4,16 +4,16 @@ This module is a reference companion for Part VI (Modules 24-26) and a capstone 
 
 ## Part VI in Review
 
-Part VI was about finishing the game. We weren't adding mechanics or building systems. We were taking twenty-plus modules of existing work and making it feel complete.
+Part VI was about finishing the tutorial JRPG vertical slice. We weren't adding core mechanics; we were taking twenty-plus modules of existing work and making the result feel playable from title screen to credits.
 
-Module 24 tackled audio, the change that probably does the most for how the game feels. A silent game feels like a tech demo. Add music and sound effects and it starts feeling like a real game. We built a MusicManager autoload with crossfading, set up audio buses for independent volume control, added SFX that play and self-destruct, and wired volume sliders into a settings panel. Module 25 closed the game flow. We built the title screen, the pause menu, the game over screen, the victory ending, and the credits. Every path through the game now leads to a clear next step, either back to the title screen or into the load flow. There are no dead ends.
+Module 24 tackled audio, the change that probably does the most for how the game feels. A silent game feels like a tech demo. Add music and sound effects and it starts feeling like a real game. We built a MusicManager autoload with crossfading, set up audio buses for independent volume control, added SFX that play and self-destruct, and persisted volume sliders to `user://settings.cfg`. Module 25 closed the game flow. We built the title screen, the pause menu, the game over screen, the victory ending, and the credits. Every path through the game now leads to a clear next step, either back to the title screen or into the load flow. There are no dead ends.
 
 Module 26 was the finish line: a full playtesting walkthrough, a troubleshooting guide for the bugs you will encounter, performance advice, export instructions, and a roadmap for where to take Crystal Saga next. That's the finish line.
 
 ### Module 24: Audio (Music and Sound Effects)
 - Built a **MusicManager autoload** with two AudioStreamPlayers for seamless crossfading between tracks
 - Learned the difference between **AudioStreamPlayer** (non-positional: BGM, UI sounds) and **AudioStreamPlayer2D** (positional: footsteps, environmental audio)
-- Set up **audio buses** (Master, Music, SFX) for independent volume control and used `linear_to_db()` to convert slider values to decibels
+- Set up **audio buses** (Master, Music, SFX) for independent volume control, used `linear_to_db()` to convert slider values to decibels, and saved slider values with `ConfigFile`
 - Implemented the **remember/resume pattern** for battle music: save the overworld track before combat, restore it after
 - Created self-destructing SFX players using `finished.connect(queue_free)` for one-shot sounds
 
@@ -42,6 +42,7 @@ Module 26 was the finish line: a full playtesting walkthrough, a troubleshooting
 | `linear_to_db()` | Built-in function converting a 0.0-1.0 range to decibels | Sliders use linear values but AudioServer expects decibels | Module 24 |
 | `process_mode` | Per-node setting controlling whether a node runs while the tree is paused | The pause menu must process input even when everything else is frozen | Module 25 |
 | `get_tree().paused` | Global pause toggle for the scene tree | Stops all gameplay when the pause menu opens | Module 25 |
+| ConfigFile | Simple section/key file saved under `user://settings.cfg` | Lets volume settings persist outside individual save slots | Module 24 |
 | Game Loop | The complete flow from launch to credits and back | Every game needs a way in, a way through, and a way back to the start | Module 25 |
 | Export Templates | Platform-specific build templates Godot uses to create executables | Required to build a standalone application from your project | Module 26 |
 | Export Preset | Configuration specifying platform, output path, and build options | Each target platform (Windows, macOS, Linux) gets its own preset | Module 26 |
@@ -180,10 +181,15 @@ AudioServer.set_bus_mute(bus_index, true)
 
 ### Volume Settings UI
 
-An [HSlider](https://docs.godotengine.org/en/stable/classes/class_hslider.html) from 0.0 to 1.0 converted to decibels via `linear_to_db()`:
+An [HSlider](https://docs.godotengine.org/en/stable/classes/class_hslider.html) from 0.0 to 1.0 converted to decibels via `linear_to_db()`, with the chosen values persisted through [ConfigFile](https://docs.godotengine.org/en/stable/classes/class_configfile.html):
 
 ```gdscript
 extends PanelContainer
+
+const SETTINGS_PATH := "user://settings.cfg"
+const SETTINGS_SECTION := "audio"
+const DEFAULT_MUSIC_VOLUME := 0.8
+const DEFAULT_SFX_VOLUME := 0.8
 
 @onready var _music_slider: HSlider = $VBox/MusicSlider
 @onready var _sfx_slider: HSlider = $VBox/SFXSlider
@@ -193,33 +199,71 @@ func _ready() -> void:
     _music_slider.min_value = 0.0
     _music_slider.max_value = 1.0
     _music_slider.step = 0.05
-    _music_slider.value = 0.8
-    _music_slider.value_changed.connect(_on_music_volume_changed)
 
     _sfx_slider.min_value = 0.0
     _sfx_slider.max_value = 1.0
     _sfx_slider.step = 0.05
-    _sfx_slider.value = 0.8
+
+    var settings := _load_settings()
+    var music_volume: float = float(settings.get("music_volume", DEFAULT_MUSIC_VOLUME))
+    var sfx_volume: float = float(settings.get("sfx_volume", DEFAULT_SFX_VOLUME))
+    _music_slider.value = music_volume
+    _sfx_slider.value = sfx_volume
+    _apply_bus_volume("Music", music_volume)
+    _apply_bus_volume("SFX", sfx_volume)
+
+    _music_slider.value_changed.connect(_on_music_volume_changed)
     _sfx_slider.value_changed.connect(_on_sfx_volume_changed)
 
 
 func _on_music_volume_changed(value: float) -> void:
-    var db: float = linear_to_db(value)
-    AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Music"), db)
+    _apply_bus_volume("Music", value)
+    _save_settings()
 
 
 func _on_sfx_volume_changed(value: float) -> void:
-    var db: float = linear_to_db(value)
-    AudioServer.set_bus_volume_db(AudioServer.get_bus_index("SFX"), db)
+    _apply_bus_volume("SFX", value)
+    _save_settings()
 
 
 func _unhandled_input(event: InputEvent) -> void:
     if event.is_action_pressed("ui_cancel"):
         queue_free()
         get_viewport().set_input_as_handled()
+
+
+func _apply_bus_volume(bus_name: String, value: float) -> void:
+    var bus_index: int = AudioServer.get_bus_index(bus_name)
+    if bus_index == -1:
+        return
+    AudioServer.set_bus_volume_db(bus_index, linear_to_db(value))
+
+
+func _load_settings() -> Dictionary:
+    var config := ConfigFile.new()
+    var error := config.load(SETTINGS_PATH)
+    if error != OK:
+        return {}
+    return {
+        music_volume = config.get_value(
+            SETTINGS_SECTION, "music_volume", DEFAULT_MUSIC_VOLUME,
+        ),
+        sfx_volume = config.get_value(
+            SETTINGS_SECTION, "sfx_volume", DEFAULT_SFX_VOLUME,
+        ),
+    }
+
+
+func _save_settings() -> void:
+    var config := ConfigFile.new()
+    config.set_value(SETTINGS_SECTION, "music_volume", _music_slider.value)
+    config.set_value(SETTINGS_SECTION, "sfx_volume", _sfx_slider.value)
+    var error := config.save(SETTINGS_PATH)
+    if error != OK:
+        push_warning("Failed to save audio settings: " + error_string(error))
 ```
 
-At slider value 0, `linear_to_db()` returns `-INF` (silence). At 1, it returns `0` (full volume). The curve is logarithmic, matching human perception.
+At slider value 0, `linear_to_db()` returns `-INF` (silence). At 1, it returns `0` (full volume). The curve is logarithmic, matching human perception. `user://settings.cfg` is separate from `user://saves/`, so audio preferences persist across restarts and across save slots.
 
 > **See:** [@GlobalScope.linear_to_db()](https://docs.godotengine.org/en/stable/classes/class_@globalscope.html#class-globalscope-method-linear-to-db)
 
@@ -266,8 +310,9 @@ func _on_continue() -> void:
     add_child(dialog)
     var slot: int = await dialog.slot_selected
     dialog.queue_free()
-    if slot > 0:
-        SaveManager.load_game(slot)
+    if slot == 0:
+        return
+    SaveManager.load_game(slot)
 
 
 func _initialize_fresh_state() -> void:
@@ -315,14 +360,15 @@ The complete game loop:
                |                   |
         [Fresh Start]        [Load Save]
                |                   |
-          Willowbrook  <---- Restored Scene
+          Willowbrook  <- Restored Scene
                |
           Whisperwood (explore, pendant quest)
                |
          Crystal Cavern (dungeon, random battles, boss)
                |
-       +-- BOSS FIGHT --+
-       |                 |
+          [Boss Fight]
+               |
+       ┌───────┴────────┐
     Victory           Defeat
        |                 |
     Ending           Game Over
@@ -494,7 +540,7 @@ These eight nodes live at the root of the scene tree for the entire lifetime of 
 |----------|------|--------|----------------|
 | **SceneManager** | `.tscn` | 7 | Fade transitions between scenes, spawn point management |
 | **InventoryManager** | `.gd` | 12 | Item storage, gold, add/remove/use items, `inventory_changed` signal |
-| **GameManager** | `.gd` | 20 | Boolean flags tracking world state (quest progress, doors opened, NPCs talked to) |
+| **GameManager** | `.gd` | 20 | Boolean flags tracking quest progress and persistent world-object state |
 | **QuestManager** | `.gd` | 20 | Quest lifecycle (start, advance, complete, turn in), objective checking |
 | **PartyManager** | `.gd` | 21 | Party roster, member recruitment, stat access, equipment slots |
 | **SaveManager** | `.gd` | 22 | Serialize all autoload state to JSON in `user://`, load it back, slot management |
@@ -511,43 +557,48 @@ Every piece of game content is a [Resource](https://docs.godotengine.org/en/stab
 | `CharacterData` | 9 | HP, MP, ATK, DEF, growth, level, XP, equipment slots |
 | `NPCData` | 9 | Name, dialogue lines, portrait, interaction behavior |
 | `EnemyData` | 17 | Stats, battle sprite, loot table, XP reward, AI behavior type |
-| `AbilityData` | 15 | Name, MP cost, damage formula, target type |
 | `QuestData` | 20 | Title, description, objectives, rewards |
 | `EncounterData` | 17 | Enemy group composition, encounter weight |
+
+`AbilityData` is intentionally not in this implemented-resource table. Module 15 leaves Magic visible but disabled so a future ability system can add spell data, MP costs, elements, and target rules without distracting from the core attack/defend/item battle loop.
 
 ### The Battle System
 
 The battle system is the most architecturally complex part of the game. It uses a **node-based state machine** where each state is a child node of the BattleManager.
 
 ```
-BattleManager (Node)
-├── SetupState       -> Initializes party/enemy display, picks first turn
-├── TurnStartState   -> Determines whose turn it is
-├── PlayerTurnState  -> Shows action menu, waits for player choice
-├── EnemyTurnState   -> Runs AI to pick an action
-├── ActionState      -> Executes the chosen action (damage, heal, defend)
-├── VictoryState     -> Awards XP, gold, loot; checks for final boss
-├── DefeatState      -> Shows Game Over screen
-└── FleeState        -> Ends battle, returns to overworld
+Battle (Node2D, script: battle_manager.gd)
+├── BattleUI (CanvasLayer)
+│   ├── BattleMenu
+│   └── TargetSelect
+└── StateMachine (BattleStateMachine)
+    ├── Intro
+    ├── TurnStart
+    ├── PlayerChoice
+    ├── ActionExecute
+    ├── CheckResult
+    ├── Victory
+    └── Defeat
 ```
 
-State transitions are method calls: `_change_state(next_state)`. Each state has `enter()` and `exit()` methods. The BattleManager also manages the **turn queue**, ordering combatants by speed.
+State transitions go through `BattleManager.transition_to_state(state_name, context)`, which keeps the private `BattleStateMachine` node owned by the battle root. Each state has `enter()`, `process()`, and `exit()` methods. The BattleManager also manages the **turn queue**, ordering combatants by speed.
 
 ### Scene Structure
 
-Each game area follows the same pattern: a root node, a TileMapLayer for the map, entity nodes for the player and NPCs, and zone triggers for exits and encounters.
+Each game area follows the same layered pattern from Module 5: separate TileMapLayer nodes for ground/detail/above-player art, entity nodes for the player and NPCs, and zone triggers for exits and encounters.
 
 ```
-Willowbrook (Node2D)             Whisperwood (Node2D)           CrystalCavern (Node2D)
-├── TileMapLayer                 ├── TileMapLayer               ├── TileMapLayer
-├── Player (CharacterBody2D)     ├── Player                     ├── Player
-├── NPCs/                        ├── PendantChest               ├── TreasureChests/
-│   ├── Shopkeeper               ├── ExitToWillowbrook          ├── SaveCrystal
-│   ├── Innkeeper                └── ExitToCavern               ├── EncounterZones/
-│   ├── Fynn                                                   ├── BossDoor
-│   └── Lira                                                  ├── BossRoom
-├── ExitToWhisperwood                                           └── ExitToWhisperwood
-└── SpawnPoints/
+AreaRoot (Node2D)
+├── Ground (TileMapLayer)
+├── Detail (TileMapLayer)
+├── YSortGroup (Node2D)
+│   ├── Objects (TileMapLayer)
+│   ├── Player (CharacterBody2D)
+│   └── NPCs / chests / save crystals
+├── AbovePlayer (TileMapLayer)
+├── EncounterZones (Node2D)
+├── Transitions (Node2D)
+└── SpawnPoints (Node2D)
 ```
 
 ### UI Layer
@@ -590,12 +641,16 @@ Player enters a Crystal Cavern encounter zone
 
 Player uses save crystal
   -> SaveManager gathers state from all autoloads (Module 22)
-  -> GameManager.get_flags(), InventoryManager.to_save_data(),
+  -> GameManager.to_save_data(), InventoryManager.to_save_data(),
      PartyManager.to_save_data(), QuestManager.to_save_data()
-  -> Writes JSON to user:// (Module 22)
+  -> Writes JSON to user://saves/ (Module 22)
+
+Player changes audio settings
+  -> SettingsPanel updates AudioServer buses (Module 24)
+  -> ConfigFile saves music_volume and sfx_volume to user://settings.cfg
 
 Player defeats final boss
-  -> VictoryState detects boss ID, sets GameManager flag (Module 25)
+  -> VictoryState detects boss ID, sets a GameManager world flag (Module 25)
   -> SceneManager loads Ending scene (Module 25)
   -> Ending auto-advances to Credits (Module 25)
   -> Credits return to TitleScreen (Module 25)
@@ -609,7 +664,7 @@ Three patterns recur throughout the entire architecture. If you internalize thes
 
 2. **Resource for data.** Any piece of content that can be described as a bundle of properties (an item, a character, an enemy, a quest) becomes a custom Resource class with `.tres` instances. This separates data from behavior and makes content easy to author.
 
-3. **State machine for complex flow.** Any system with distinct modes (player movement: idle/walk/interact; battle: setup/turn/action/victory/defeat; quest: inactive/active/complete) becomes a state machine. Enum-based for simple cases, node-based for complex ones.
+3. **State machine for complex flow.** Any system with distinct modes (player movement: idle/walk/interact; battle: intro/turn/player/action/result/victory/defeat; quest: inactive/active/complete/turned-in) becomes a state machine. Enum-based for simple cases, node-based for complex ones.
 
 ## Common Mistakes and Fixes
 
@@ -623,6 +678,8 @@ Three patterns recur throughout the entire architecture. If you internalize thes
 | Music plays over itself when re-entering the same area | Two copies of the same track stacked | Check `track_path == _current_track_path` and return early if already playing |
 | Forgetting to check `is_instance_valid()` during scene transitions | Crash: "Attempting to call on freed instance" | Guard node access with `if is_instance_valid(node):` in callbacks that may fire during or after a transition |
 | SFX player never freed after playing | Orphaned AudioStreamPlayer nodes accumulate in the scene tree | Connect `player.finished` to `player.queue_free` so one-shot sounds clean up after themselves |
+| Save slot Cancel emits no selected slot | Continue, Retry, or save crystal waits forever | Emit `slot_selected(0)` on cancel and have every caller `return` when `slot == 0` |
+| Listing Magic as implemented before an ability system exists | Review docs reference nonexistent `AbilityData` snippets | Keep Magic disabled and list `AbilityData` only as a future extension until the resource and execution path exist |
 
 ## Official Godot Documentation
 
@@ -665,6 +722,7 @@ Three patterns recur throughout the entire architecture. If you internalize thes
 ### Utility
 
 - [@GlobalScope.linear_to_db()](https://docs.godotengine.org/en/stable/classes/class_@globalscope.html#class-globalscope-method-linear-to-db): linear to decibel conversion
+- [ConfigFile](https://docs.godotengine.org/en/stable/classes/class_configfile.html): INI-style settings storage under `user://`
 - [Resource](https://docs.godotengine.org/en/stable/classes/class_resource.html): base class for data objects
 - [ResourceLoader](https://docs.godotengine.org/en/stable/classes/class_resourceloader.html): advanced runtime resource loading, including cache modes
 - [FileAccess](https://docs.godotengine.org/en/stable/classes/class_fileaccess.html): file I/O for save/load
@@ -676,9 +734,25 @@ Three patterns recur throughout the entire architecture. If you internalize thes
 
 ## Where to Go from Here
 
-You have built a complete JRPG: a working game with a title screen, three areas, NPCs, a battle system, quests, saves, audio, and credits. The architecture is modular: autoloads for global state, Resources for data, state machines for complex flow, signals for decoupled communication. These patterns apply outside Crystal Saga and outside Godot. State machines show up in networking code. The Resource pattern is data-driven design. Signals are the Observer pattern. What you learned here is game architecture, not just one engine's API.
+You have built a complete tutorial JRPG vertical slice: a working game with a title screen, three areas, NPCs, a battle system, quests, saves, audio, and credits. The architecture is modular: autoloads for global state, Resources for data, state machines for complex flow, signals for decoupled communication. These patterns apply outside Crystal Saga and outside Godot. State machines show up in networking code. The Resource pattern is data-driven design. Signals are the Observer pattern. What you learned here is game architecture, not just one engine's API.
 
-The best next step is to keep working on this project. Pick one of the extension ideas from Module 26 (status effects, elemental damage, limit breaks, more party members, procedural dungeons) and build it. You already have the save/load serialization pattern, the Resource data layer, and the state machine framework. A status effect system is a new Resource class, a new array on CharacterData, and a new step in the battle turn loop. Elemental damage is a new enum on AbilityData and EnemyData plus a multiplier in the damage formula. Each one teaches you something new while reinforcing what you already know.
+The best next step is to keep working on this project. Pick one of the extension ideas from Module 26 (status effects, elemental damage, limit breaks, more party members, procedural dungeons) and build it. You already have the save/load serialization pattern, the Resource data layer, and the state machine framework. A status effect system is a new Resource class, a new array on CharacterData, and a new step in the battle turn loop. Elemental damage belongs in a future `AbilityData` resource plus enemy weakness/resistance data, then flows through the existing damage formula. Each one teaches you something new while reinforcing what you already know.
+
+## Tutorial Lint Checklist
+
+Before publishing another pass over the series, run:
+
+```bash
+python3 tutorial/tools/check_tutorial.py
+```
+
+Then do the semantic checks the script cannot prove:
+
+- Review modules mirror exact implementation names, state names, public APIs, layered scene structure, and save schema.
+- Every resource in a final architecture table was actually implemented, or is explicitly marked future scope.
+- Every persistent ID introduced in a module is saved later or labeled future save tracking.
+- Every awaitable dialog has a cancellation path that resumes callers.
+- Every save field written by `to_save_data()` is restored by `from_save_data()`.
 
 When you're ready for a new project, try a different genre. A platformer teaches physics and level design, a roguelike teaches procedural generation, a visual novel teaches branching narrative. The fundamentals (scenes, signals, state machines, data-driven design) carry over from everything you built here. When you get stuck: the [official Godot documentation](https://docs.godotengine.org/en/stable/), the [Godot community forums](https://forum.godotengine.org/), [GDQuest](https://www.gdquest.com/) for structured courses, and the [Godot Discord](https://discord.gg/godotengine) for real-time help. The community is active and helpful. Use it.
 
