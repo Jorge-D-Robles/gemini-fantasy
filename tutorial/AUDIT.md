@@ -54,12 +54,18 @@ Top risks:
    abilities as a placeholder while its complete action script still touches
    `ability.power`/`ability.mp_cost`, and Module 27 lists `AbilityData` as an
    implemented resource.
-4. Module 05 recommends editor scattering for sparse decoration, which conflicts
+4. Module 12's inventory removal contract can create impossible item states, and
+   later equipment/shop flows rely on that unsafe contract.
+5. Module 20's pendant turn-in collapses quest completion and turn-in, while
+   `turn_in_quest()` grants rewards without proving the quest was completed.
+6. Module 22 save/load omits persistent world-object state and the save-slot
+   dialog can leave callers awaiting forever on cancel.
+7. Module 05 recommends editor scattering for sparse decoration, which conflicts
    with the project's "intentional and sparse" tilemap rule and can teach a bad
    habit even though Godot itself supports the editor feature.
-5. Module 26 is a content module but lacks the same recap/handoff anatomy used
+8. Module 26 is a content module but lacks the same recap/handoff anatomy used
    elsewhere.
-6. Review modules and a few snippets have style drift: double-dash punctuation,
+9. Review modules and a few snippets have style drift: double-dash punctuation,
    diagram-only shorthand, and occasional summaries that are less precise than
    the modules they review.
 
@@ -72,14 +78,58 @@ Top risks:
 | High | `27_part_vi_review.md:520-534` | Final review summarizes a battle architecture that does not match the system introduced in Modules 14 and 19. | Module 14 builds `Battle (Node2D)` with a `StateMachine` and states such as `Intro`, `TurnStart`, `PlayerChoice`, `ActionExecute`, `CheckResult`, `Victory`, and `Defeat` (`14_battle_foundations.md:162-181`, `14_battle_foundations.md:663-680`). Module 19 repeats that architecture (`19_part_iv_review.md:197-225`). Module 27 instead lists `BattleManager (Node)`, states such as `SetupState`, `PlayerTurnState`, `EnemyTurnState`, and `FleeState`, and a `_change_state()` API that does not match the taught `transition_to()` state machine. | Replace the Module 27 battle summary with the actual node/state names and explicitly note that enemy/player behavior is coordinated through the state machine and battle scene root script. |
 | High | `15_player_actions.md:462-516` | A block labeled as the complete `action_execute_state.gd` still contains unresolved `AbilityData` placeholder logic. | The module says magic is disabled until `AbilityData` exists (`15_player_actions.md:228`), but the complete file calls `_execute_magic()` and reads `ability.power` and `ability.mp_cost` from a parameter typed as `Resource` (`15_player_actions.md:508-516`). That is a copy/paste trap for a full-file listing. | Either remove the magic branch from the complete file until `AbilityData` is implemented, or implement `AbilityData` before Module 15 and type the parameter as `AbilityData`. If kept as design sketch, label it pseudocode instead of "complete". |
 | High | `27_part_vi_review.md:508-515` | Final review lists `AbilityData` as a Module 15 implemented resource, but the series never implements it. | Module 15 says magic is disabled until `AbilityData` exists (`15_player_actions.md:228`), leaves `_execute_magic()` as future work (`15_player_actions.md:355-359`), and warns that magic requires `AbilityData` (`15_player_actions.md:510`). Module 27 presents `AbilityData` as completed in Module 15. | Remove `AbilityData` from the implemented-resource table, move it to future extensions, or add a real ability-data module before the final review. |
+| High | `12_inventory_system.md:45-56`, `12_inventory_system.md:73-80` | `InventoryManager.remove_item()` can report success while removing more items than the player has, and read APIs expose live manager internals. | `remove_item()` subtracts `amount` as soon as an item ID matches, removes the entry when the count goes below zero, emits success, and returns `true`. `get_all_items()` returns `_items` directly, so UI or later systems can mutate the manager's private array. | Make `remove_item()` reject `amount <= 0` and insufficient quantities before mutating. Return defensive copies from read APIs such as `get_all_items()` and document whether Resource references inside entries are intentionally shared. |
+| High | `20_quest_system.md:137-149`, `20_quest_system.md:224-291` | Quest turn-in is not guarded by quest state, and the pendant example collapses completion and turn-in. | `turn_in_quest()` erases the passed quest from `_completed_quests` but grants rewards and appends to `_turned_in_quests` even if that quest was never completed. The Lost Pendant objective flags include `pendant_returned`, then the dialogue sets that same flag immediately before turn-in. | Make turn-in ID-based or add a guard that proves the quest is in `_completed_quests` before rewards. Use `pendant_found` as the completion objective and set `pendant_returned` only as the turn-in/completion flag. |
+| High | `16_crystal_cavern.md:127-165`, `22_save_and_load.md:174-190`, `22_save_and_load.md:243-246` | `chest_id` implies save/load tracking, but opened chests and other world objects are not persisted. | Module 16 exports `chest_id` as "Unique ID for save/load tracking", but the chest only sets local `is_opened`. Module 22 saves autoload state, scene path, and player position, not opened chests, boss trigger state, door unlock state, or removed pickups. | Store simple world-object state in `GameManager` flags or introduce a small `WorldStateManager`. Teach stable IDs and migration limits: renaming scene paths or object IDs can affect old saves. |
+| High | `22_save_and_load.md:332-347`, `22_save_and_load.md:366-383` | Save-slot cancellation can leave callers awaiting forever. | `SaveSlotDialog` defines both `slot_selected` and `cancelled`, but save crystal and Continue handlers only `await dialog.slot_selected`. Pressing Cancel emits `cancelled` and no awaited signal. | Either emit a sentinel slot such as `0` on cancel and have callers return, or teach callers to race/handle both `slot_selected` and `cancelled`. Mirror the fix in Module 25 and Module 27 snippets. |
 | Medium | `27_part_vi_review.md:536-550` | Scene structure summary is too simplified and contradicts the multi-layer TileMapLayer structure taught earlier. | Modules 5, 6, and 16 teach separate ground/detail/object/above-player layers. Module 16's dungeon tree uses multiple `TileMapLayer` nodes and a `YSortGroup` (`16_crystal_cavern.md:53-75`). Module 27 summarizes areas as a single `TileMapLayer`. | Update the final review to show the layered map pattern used throughout: `Ground`, `Detail`, `Objects`/`YSortGroup`, and `AbovePlayer` where needed. |
 | Medium | `05_tilemaps_and_terrain.md:155-181`, `05_tilemaps_and_terrain.md:197-224` | Scattering is presented as a recommended sparse-decoration workflow. | The module correctly explains Godot editor painting features, but the project rule bans percentage/noise-driven decoration and requires intentional sparse placement. The current text says scattering at `0.3-0.5` can produce sparse decoration. | Keep Godot's feature explanation if desired, but change the curriculum recommendation to hand-place a few intentional clusters. If scattering is mentioned, label it as a temporary rough-in tool that must be hand-edited. |
 | Medium | `26_finish_line.md:1-20`, `26_finish_line.md:280-310` | Module 26 does not follow the content-module anatomy used by the rest of the series. | It has "What We Have", "What You Should See", and "What You've Accomplished", but lacks a distinct "What We've Learned" recap and "Next Module" handoff into Module 27. | Add a short recap of game-flow concepts learned and a handoff to `27_part_vi_review.md`. |
 | Medium | `07_scene_transitions.md:118`, `26_finish_line.md:296` | Stale continuity text points to the wrong module/count. | Module 7 says pause behavior will be used in Module 12, but pause menu behavior arrives in Module 25. Module 26 says "Twenty-one modules later" even though it is the 26th module. | Update future references and counts during the remediation pass so the curriculum's self-map remains trustworthy. |
 | Medium | `02_gdscript_for_programmers.md` overall | Audience fit: too much generic programming explanation for the stated audience. | The module is useful for GDScript syntax, but an experienced software engineer does not need extended explanations of variables, conditionals, or loops. | Compress generic CS material into a GDScript syntax delta and spend more space on Godot-specific semantics: node ownership, typed exports, lifecycle timing, signals, and editor/runtime boundaries. |
+| Medium | `17_enemies_and_ai.md:198-210`, `17_enemies_and_ai.md:308-322`, `17_enemies_and_ai.md:412-427` | Enemy conversion is inconsistent between random encounters and the boss path, and weighted encounters lack empty/zero-weight guards. | Random encounter conversion copies `portrait` and `max_mp` from `EnemyData`; boss conversion omits both, so the Crystal Guardian can lose battle art and MP. `_pick_weighted_encounter()` returns `_current_encounters[0]` when no roll matches, which breaks if the array is empty and behaves poorly if all weights are zero. | Factor enemy-to-battler conversion into one helper used by encounters and bosses. Guard empty encounter lists and `total_weight <= 0` with a warning/no encounter path. |
+| Medium | `21_party_and_equipment.md:24-47`, `21_party_and_equipment.md:263-274`, `21_party_and_equipment.md:386-396` | Party/equipment APIs leak mutable state and equip flow mutates equipment before proving inventory removal succeeded. | `PartyManager.get_members()` returns the live `members` array. The equip examples call `character.equip(item)` before `InventoryManager.remove_item(item)`, and ignore the boolean result from removal. If removal fails, the item can be equipped without being consumed from inventory. | Return defensive copies for manager read APIs. In equip flow, remove from inventory first or roll back the equipment change if removal fails. |
+| Medium | `18_victory_and_leveling.md:115-129`, `18_victory_and_leveling.md:184-193` | Level-up HP/MP semantics are not stated, and the current code effectively chooses "max increases, current does not." | `level_up()` increases `max_hp`/`max_mp` but not `current_hp`/`current_mp`; victory then syncs the battle battler's current HP/MP back onto `CharacterData`. That may be intended, but the curriculum never names the rule. | Explicitly choose and document one rule: no heal on level-up, gain only the HP/MP delta, or full heal. For a tutorial JRPG, "gain the delta" is easy to explain and player-friendly. |
+| Medium | `01_the_journey_begins.md:25` | Godot version guidance is too loose for a durable tutorial. | Module 01 says "Godot 4.3 or later". As of 2026-04-28, official stable docs are on the 4.6 branch and Godot announced 4.6.2 on 2026-04-01; the release policy lists 4.3 as end-of-life. | Add a tested-version line, for example "tested with Godot 4.6.2" or the repository's chosen target version. Keep "4.3 or later" only if the whole tutorial is actually compatibility-tested across that range. |
+| Low | `07_scene_transitions.md:26-30` | The tutorial blurs engine-provided singletons with project autoloads. | Module 07 says the reader has been "using autoloads" because `Input`, `Engine`, `Time`, `Performance`, and `AudioServer` are globally available. These are engine-provided singletons; project autoloads are user-registered nodes/scripts under `/root`. | Reword to: "`Input` and `AudioServer` are Godot-provided global singletons. Now we will create our own project autoload, which is a node/script Godot keeps loaded across scene changes." |
 | Low | `04_part_i_review.md:247-248`, `08_part_ii_review.md:88-91`, `13_part_iii_review.md:130-132`, `13_part_iii_review.md:194-197`, `18_victory_and_leveling.md:170`, `18_victory_and_leveling.md:237`, `18_victory_and_leveling.md:283-290`, `19_part_iv_review.md:232`, `21_party_and_equipment.md:452`, `23_part_v_review.md:525-576`, `25_title_screen_and_game_flow.md:303` | Style drift: double-dash or triple-dash punctuation appears in prose tables, diagrams, and debug strings. | These are not engine errors, and many are diagram/comment artifacts, but they are visible drift from the tutorial's polished style. | Replace with arrows, colons, "none", or clearer labels. Ignore Markdown table separators. |
 | Low | Review modules `04`, `08`, `13`, `19`, `23`, `27` | Review modules use centralized official-docs sections rather than the per-concept "See" callouts used in content modules. | This is probably intentional, but automated quality checks could falsely flag them as missing doc grounding. | Either explicitly exempt review modules from per-section callout requirements or add a short "Doc grounding recap" table in each review module. |
 | Low | Several code fences across the series | Code listings are not always labeled as full-file, patch fragment, or pseudocode. | The tutorial mixes full scripts, partial snippets, and diagrams. This is normal pedagogically, but compile-risk can be overstated if a reader copies fragments as complete files. | Add a small label before non-full-file snippets: "Patch this method", "Excerpt", or "Pseudocode". |
+
+## Independent Pro Audit Cross-Check
+
+`pro_audit.md` was read as an independent reviewer report after the first audit
+draft. Its findings were triaged as follows:
+
+Confirmed and already covered:
+
+- Module 27 battle architecture drift.
+- Module 27 `AbilityData` drift.
+- Module 26 missing/overstated finish-line framing.
+- Review-module style drift.
+- Need for stronger engineering-contract language for a senior SWE reader.
+
+Confirmed and promoted into this report:
+
+- Module 12 `remove_item()` insufficient-quantity bug and live internal arrays.
+- Module 20 quest completion versus turn-in semantics.
+- Module 16/22 missing persistent world-object state despite `chest_id`.
+- Module 22 save-slot cancellation path.
+- Module 17 boss conversion parity and encounter-weight guards.
+- Module 21 equipment transaction order and manager defensive copies.
+- Module 18 level-up HP/MP semantics.
+- Module 07 engine singleton versus project autoload wording.
+- Module 01 tested-version pin.
+
+Not promoted as blocking findings:
+
+- Slot-button closure capture risk in Module 22: worth checking during
+  implementation, but the audit did not find enough evidence to mark it as a
+  definite tutorial error. The cancellation path is the confirmed issue.
+- Public battle transition facade: good optional polish for encapsulation, but
+  not a correctness blocker.
+- Moving balance simulation earlier: useful curriculum polish, not required for
+  a coherent first remediation pass.
 
 ## Curriculum Flow Analysis
 
@@ -89,7 +139,7 @@ Top risks:
 | Part II: World and Movement | 05-08 | Good with one tilemap issue | Tilemaps, animated player movement, Y-sorting, scene transitions, and autoload-managed fades build naturally. Module 05 should revise scattering advice. |
 | Part III: Interaction and Data | 09-13 | Strong | Resources -> NPC interaction -> dialogue -> inventory is a clean dependency chain. Module 13 review is useful but has diagram style drift. |
 | Part IV: Battle Loop | 14-19 | Strong | Battle foundations, player commands, dungeon design, enemies/AI, victory/leveling, and review form the strongest architectural arc in the series. State machine rationale is particularly appropriate for the audience. |
-| Part V: Progression Systems | 20-23 | Good with one correctness issue | Quest flags, party/equipment, save/load, and review are the right next layer. Module 22 needs the static/await and JSON-root fixes. |
+| Part V: Progression Systems | 20-23 | Good with several correctness issues | Quest flags, party/equipment, save/load, and review are the right next layer. Modules 20-22 need transaction-state and persistence fixes before implementation. |
 | Part VI: Full Game Flow | 24-27 | Good but review mismatch | Audio, title screen, pause, endings, final polish, and capstone review are appropriate. Module 26 needs a handoff, and Module 27 must match the actual earlier architecture. |
 
 ## Module Coverage Map
@@ -107,17 +157,17 @@ Top risks:
 | 09 Resources and Data | 02-03 | Custom `Resource`, `.tres`, data-driven design | Typed GDScript | Excellent setup for JRPG data tables. |
 | 10 NPCs and Interaction | 03, 07, 09 | Interact input, NPC scene, `Area2D` proximity, NPC data | Collision, signals, resources | Clean bridge from map traversal to social/story systems. |
 | 11 Dialogue System | 10 | Dialogue UI, typewriter text, pages, choices, `DialogueLine` resources | NPC interaction, UI, signals | Strong JRPG fit; supports story delivery without overbuilding. |
-| 12 Inventory System | 09-11 | `InventoryManager` autoload, item tracking, inventory UI, consumable use | Resources, UI, autoloads | Genre framing is strong: inventory as persistent RPG resource management. |
+| 12 Inventory System | 09-11 | `InventoryManager` autoload, item tracking, inventory UI, consumable use | Resources, UI, autoloads | Genre framing is strong, but the item-removal invariant must be fixed before shops/equipment/save rely on it. |
 | 13 Part III Review | 09-12 | Review and consolidation | Resources, NPCs, dialogue, inventory | Good part review; mark snippets/diagrams more clearly. |
 | 14 Battle Foundations | 09-12 | Battle scene, state machine, turn queue, battle transition | Resources, signals, UI | One of the best modules. The state-machine explanation is suited to experienced engineers. |
 | 15 Player Actions | 12, 14 | Battle commands, target selection, damage formula, action commands; magic remains a placeholder | Inventory, battle state machine, UI | Turns automatic battle into player-controlled JRPG combat, but should not be summarized as a completed ability system. |
-| 16 Crystal Cavern | 05-07, 14-15 | Dungeon scene, transitions, save point, encounter zones | Tilemaps, battle transition, NPC/dialogue | Strong JRPG dungeon framing: attrition, save point, boss lead-in. |
-| 17 Enemies and AI | 14-16 | Enemy resources, AI personalities, encounter groups, boss setup | Battle states, dungeon zones, resources | Properly extends data-driven design into combat content and encounter pacing. |
-| 18 Victory and Leveling | 14-17 | Rewards, XP, level-ups, victory/defeat states | Battle state machine, resources | Strong genre fit. Debug strings/style should be polished. |
+| 16 Crystal Cavern | 05-07, 14-15 | Dungeon scene, transitions, save point, encounter zones | Tilemaps, battle transition, NPC/dialogue | Strong JRPG dungeon framing; `chest_id` needs actual persistence or a clear "future save tracking" label. |
+| 17 Enemies and AI | 14-16 | Enemy resources, AI personalities, encounter groups, boss setup | Battle states, dungeon zones, resources | Properly extends data-driven design into combat content; boss conversion and encounter-weight guards need tightening. |
+| 18 Victory and Leveling | 14-17 | Rewards, XP, level-ups, victory/defeat states | Battle state machine, resources | Strong genre fit; explicitly document HP/MP behavior on level-up. |
 | 19 Part IV Review | 14-18 | Review and consolidation | Battle loop, dungeons, rewards | Good conceptual review; diagrams should match exact architecture and style. |
-| 20 Quest Flags | 11-12, 16 | Flags, quest state, conditional dialogue | Dialogue, NPCs, autoload-style managers | Correctly introduces persistent world state before party/save systems. |
-| 21 Party and Equipment | 09-10, 18, 20 | Party member data, equipment, derived stats | Resources, inventory, leveling | Strong JRPG convention coverage. Minor display/style cleanup. |
-| 22 Save and Load | 20-21 | Save slots, JSON, `FileAccess`, scene restore | Quest flags, party, inventory, scene changes | Structurally right module, but needs two correctness fixes in primary code/explanation. |
+| 20 Quest Flags | 11-12, 16 | Flags, quest state, conditional dialogue | Dialogue, NPCs, autoload-style managers | Correctly introduces persistent world state, but turn-in must be guarded by completed state. |
+| 21 Party and Equipment | 09-10, 18, 20 | Party member data, equipment, derived stats | Resources, inventory, leveling | Strong JRPG convention coverage; equip transaction order should respect `remove_item()` failure. |
+| 22 Save and Load | 20-21 | Save slots, JSON, `FileAccess`, scene restore | Quest flags, party, inventory, scene changes | Structurally right module, but needs static/await, JSON-root, cancellation, and world-object persistence fixes. |
 | 23 Part V Review | 20-22 | Review and consolidation | Quest, party, equipment, save/load | Useful checkpoint; comment separators and snippet labels need polish. |
 | 24 Audio and Polish | 01-23 | Audio players, buses, volume, transitions | Scene/autoload structure | Good late-stage polish topic and good use of Godot audio model. |
 | 25 Title Screen and Game Flow | 22-24 | Title flow, new/load game, pause menu, game over/endings | Save/load, scene changes, resources, pause | Strong capstone module. Correctly revisits resource cache and pause process modes. |
@@ -151,6 +201,25 @@ Otherwise they will appear to fail per-section doc-grounding checks even though
 they are designed as consolidation modules.
 
 ## Godot Correctness
+
+### Version Pinning and Stable Docs
+
+External official evidence:
+
+- [Godot 4.6.2 release announcement](https://godotengine.org/article/maintenance-release-godot-4-6-2/):
+  Godot 4.6.2 was announced on 2026-04-01.
+- [Godot stable documentation](https://docs.godotengine.org/en/stable/): the
+  current stable docs identify the 4.6 branch.
+- [Godot release policy](https://docs.godotengine.org/en/stable/about/release_policy.html):
+  the support table lists Godot 4.6 as supported and 4.3 as end-of-life.
+
+Assessment:
+
+- "Godot 4.3 or later" may still be true for API compatibility, but it is too
+  vague for a durable tutorial in 2026.
+- The tutorial should state the exact version used for verification. That gives
+  future readers a stable baseline when editor UI labels, renderer defaults, or
+  import behavior shift.
 
 ### GDScript `await`, Static Functions, and Autoload Rationale
 
@@ -284,6 +353,10 @@ Assessment:
   metadata, schema versioning, and restore semantics.
 - The primary load snippet should validate the parsed root type before assigning
   it to `Dictionary`.
+- Save-slot dialogs must resolve both accept and cancel paths; otherwise an
+  awaited caller can be left suspended.
+- Save data must cover persistent world-object state once the tutorial introduces
+  IDs such as `chest_id`.
 - The module should make custom-type conversion explicit whenever Vector2,
   resource references, or enum-like values cross the JSON boundary.
 
@@ -353,6 +426,10 @@ JRPG improvements:
 - The final review should connect the implemented systems to a "vertical slice"
   checklist: start game, enter town/field, talk to NPC, accept/update quest, enter
   dungeon, fight, gain rewards, save/load, return to title, and reach an ending.
+- The finish-line wording should avoid implying the tutorial has produced a
+  content-complete commercial JRPG. The accurate capstone is a complete tutorial
+  vertical slice: one playable flow that demonstrates the systems a larger JRPG
+  would expand.
 
 ## Audience Fit for an Experienced Software Engineer
 
@@ -374,6 +451,9 @@ Needs tightening:
 - Where an architectural choice is made, state the tradeoff: autoload versus
   scene-local node, resource source data versus runtime instance, scene change
   versus overlay, state stack versus explicit state machine.
+- Add short "engineering contract" boxes for managers and resources: ownership,
+  mutation rules, return-value meaning, failure behavior, and whether returned
+  arrays/dictionaries are defensive copies or live references.
 
 ## Prioritized Remediation Plan
 
@@ -382,14 +462,29 @@ Needs tightening:
 1. Fix Module 22's static/await explanation at `22_save_and_load.md:156-158`.
 2. Fix Module 22's JSON root validation in the primary load snippet at
    `22_save_and_load.md:235-242`.
-3. Fix Module 15's complete `action_execute_state.gd` listing so magic is either
+3. Fix Module 12's inventory contract: insufficient quantities must fail before
+   mutation, and read APIs should not expose live manager internals.
+4. Fix Module 20's quest turn-in contract so rewards require completed state, and
+   separate "found pendant" completion from "returned pendant" turn-in.
+5. Fix Module 22's save-slot cancel handling in all snippets that await a slot
+   selection.
+6. Add persistent world-object state for Module 16/22 objects such as opened
+   chests, unlocked doors, removed pickups, and defeated one-shot bosses.
+7. Fix Module 15's complete `action_execute_state.gd` listing so magic is either
    implemented with a real `AbilityData` type or omitted until a later module.
-4. Remove or relocate Module 27's unsupported `AbilityData` row at
+8. Remove or relocate Module 27's unsupported `AbilityData` row at
    `27_part_vi_review.md:508-515`.
-5. Correct Module 27's battle architecture table at `27_part_vi_review.md:520-534`.
-6. Correct Module 27's scene structure table at `27_part_vi_review.md:536-550`.
-7. Add "What We've Learned" and "Next Module" sections to Module 26.
-8. Sweep visible double-dash/triple-dash style drift in review modules and debug
+9. Correct Module 27's battle architecture table at `27_part_vi_review.md:520-534`.
+10. Correct Module 27's scene structure table at `27_part_vi_review.md:536-550`.
+11. Factor or align Module 17's enemy-to-battler conversion and add empty/zero
+   encounter-weight guards.
+12. Fix Module 21's equipment transaction order and manager defensive-copy
+   behavior.
+13. State Module 18's HP/MP rule on level-up and update code or prose to match.
+14. Pin the tested Godot version in Module 01 and stop relying on "4.3 or later"
+   as the only version guidance.
+15. Add "What We've Learned" and "Next Module" sections to Module 26.
+16. Sweep visible double-dash/triple-dash style drift in review modules and debug
    labels, ignoring Markdown table separators.
 
 ### Structural Fixes
@@ -398,9 +493,11 @@ Needs tightening:
    typed exports, node references, lifecycle, and signal/event semantics.
 2. Add snippet labels throughout the series: full file, patch, excerpt, or
    pseudocode.
-3. Add a dependency graph or "you now have" checklist at the start of each part.
-4. Make review modules mirror exact implemented names and file/node structures.
-5. Add a final vertical-slice checklist in Module 27 that maps every system to a
+3. Add "engineering contract" boxes to stateful managers: inventory, quests,
+   party, save/load, battle transition, and audio.
+4. Add a dependency graph or "you now have" checklist at the start of each part.
+5. Make review modules mirror exact implemented names and file/node structures.
+6. Add a final vertical-slice checklist in Module 27 that maps every system to a
    player-visible JRPG behavior.
 
 ### Optional Polish
@@ -413,6 +510,9 @@ Needs tightening:
    likely to surprise an experienced generalist engineer.
 4. Add a glossary of recurring project terms: source data, runtime state, scene
    owner, autoload, signal, state, save schema, and vertical slice.
+5. Add an earlier lightweight combat/economy balance simulation once the XP,
+   rewards, shops, and equipment data exist. This is useful for curriculum polish
+   but not a blocker for the first remediation pass.
 
 ## Acceptance Check
 
@@ -420,5 +520,7 @@ Needs tightening:
 - High-severity findings include file/line references and concrete fixes.
 - Godot/API criticisms are backed by Godot RAG evidence from official docs.
 - JRPG claims are tied to tutorial content and external genre references.
+- Independent `pro_audit.md` findings were either confirmed and promoted,
+  confirmed as already covered, or explicitly marked as non-blocking.
 - The report separates factual errors, sequencing/continuity issues, audience-fit
   issues, and optional improvements.
