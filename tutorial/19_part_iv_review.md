@@ -145,6 +145,7 @@ func build_turn_queue() -> void:
     for b in enemies:
         if b.is_alive():
             all_battlers.append(b)
+    # sort_custom() is not stable; equal-speed ties may resolve in any order.
     all_battlers.sort_custom(func(a: BattlerData, b: BattlerData) -> bool:
         return a.current_speed > b.current_speed
     )

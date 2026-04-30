@@ -62,12 +62,12 @@ func to_save_data() -> Dictionary:
     return {gold = gold, items = items_data}
 
 func from_save_data(data: Dictionary) -> void:
-    gold = data.get("gold", 0)
+    gold = int(data.get("gold", 0))
     _items.clear()
     for entry in data.get("items", []):
         var item: ItemData = load(entry.item_path) as ItemData
         if item:
-            _items.append({item = item, count = entry.count})
+            _items.append({item = item, count = int(entry.get("count", 1))})
     inventory_changed.emit()
     gold_changed.emit(gold)
 ```
@@ -103,15 +103,15 @@ func from_save_data(data: Dictionary) -> void:
             entry.path, "", ResourceLoader.CACHE_MODE_IGNORE,
         ) as CharacterData
         if character:
-            character.level = entry.get("level", 1)
-            character.current_xp = entry.get("current_xp", 0)
-            character.max_hp = entry.get("max_hp", character.max_hp)
-            character.max_mp = entry.get("max_mp", character.max_mp)
-            character.attack = entry.get("attack", character.attack)
-            character.defense = entry.get("defense", character.defense)
-            character.speed = entry.get("speed", character.speed)
-            character.current_hp = entry.get("current_hp", character.max_hp)
-            character.current_mp = entry.get("current_mp", character.max_mp)
+            character.level = int(entry.get("level", 1))
+            character.current_xp = int(entry.get("current_xp", 0))
+            character.max_hp = int(entry.get("max_hp", character.max_hp))
+            character.max_mp = int(entry.get("max_mp", character.max_mp))
+            character.attack = int(entry.get("attack", character.attack))
+            character.defense = int(entry.get("defense", character.defense))
+            character.speed = int(entry.get("speed", character.speed))
+            character.current_hp = int(entry.get("current_hp", character.max_hp))
+            character.current_mp = int(entry.get("current_mp", character.max_mp))
             var weapon_path: String = entry.get("weapon_path", "")
             if weapon_path:
                 character.equipped_weapon = load(weapon_path) as ItemData
@@ -561,6 +561,8 @@ Call this after parsing and validating the JSON root, before restoring autoload 
 ## Engine Gotcha
 
 JSON parsing returns a Variant root. Even valid JSON might be an array or string, so check `parsed is Dictionary` before treating it as a save file.
+
+The JSON specification has one generic number type. Godot can parse those values back into Variants, but when restoring into typed integer fields such as gold, level, HP, or item counts, cast with `int(...)` at the load boundary.
 
 ## What We've Learned
 

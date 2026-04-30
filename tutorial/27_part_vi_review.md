@@ -156,6 +156,8 @@ func _play_sfx(stream: AudioStream) -> void:
     player.finished.connect(player.queue_free)
 ```
 
+This cleanup relies on non-looping streams. Looping audio never reaches `finished`, so ambience and music should stay on scene-owned players or the MusicManager instead of using the one-shot helper.
+
 **Common SFX to add:** menu cursor, menu select, attack hit, heal, level-up jingle, victory fanfare, door/chest open.
 
 > **See:** [AudioStreamPlayer.finished](https://docs.godotengine.org/en/stable/classes/class_audiostreamplayer.html#signals)

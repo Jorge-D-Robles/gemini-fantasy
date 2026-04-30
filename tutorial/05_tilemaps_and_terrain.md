@@ -349,6 +349,8 @@ Swapping the art is just changing the tile sheet image and reassigning it in the
 
 TileMapLayer is the Godot 4 workflow this series uses. Treat terrain painting and collision as editor-authored data: if a terrain set or collision layer is not configured in the TileSet, script calls cannot infer it for you.
 
+TileMapLayer also serializes cell coordinates as 16-bit signed integers, so keep authored maps within -32768 to 32767 cells on each axis. Crystal Saga's areas are tiny compared with that limit, but it matters if you later build giant streamed worlds.
+
 ## What We've Learned
 
 - **TileMapLayer** nodes render grids of tiles from a **TileSet** resource.

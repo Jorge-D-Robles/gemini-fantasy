@@ -321,6 +321,7 @@ func build_turn_queue() -> void:
     # Sort by speed (highest first). sort_custom() takes an inline function
     # (also called a lambda): func(a, b) -> bool returns true if a should
     # come before b. GDScript supports these for one-off comparisons.
+    # sort_custom() is not stable; equal-speed ties may resolve in any order.
     all_battlers.sort_custom(func(a: BattlerData, b: BattlerData) -> bool:
         return a.current_speed > b.current_speed
     )

@@ -188,6 +188,8 @@ func _play_sfx(stream: AudioStream) -> void:
     player.finished.connect(player.queue_free)
 ```
 
+Use this self-destruct pattern only with non-looping SFX. Godot does not emit `finished` when a stream loops forever, so a looping ambient sound should be owned by a scene node or manager instead.
+
 Common SFX to add:
 - **Menu cursor:** when navigating buttons
 - **Menu select:** when pressing a button

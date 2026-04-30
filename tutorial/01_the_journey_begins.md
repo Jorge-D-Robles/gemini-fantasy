@@ -39,7 +39,7 @@ The Project Manager is where you create, import, and organize your Godot project
 1. Click **Create** (or **New Project** in some versions).
 2. **Project Name:** Type `CrystalSaga`.
 3. **Project Path:** Choose a folder on your computer. Godot will create a subfolder with the project name.
-4. **Renderer:** Select **Compatibility** (also labeled "OpenGL 3" in some versions). This renderer is ideal for 2D pixel art games. It's the simplest, most widely supported option, and gives us the crispest pixel rendering.
+4. **Renderer:** Select **Mobile**. This renderer has fewer high-end features than Forward+, but it is a good fit for a simple 2D game and keeps the project aligned with mobile-friendly performance targets. Pixel-art crispness comes from the texture filtering and stretch settings we configure later, not from the renderer choice alone. If you need to support very old hardware without Vulkan, Direct3D 12, or Metal support, Godot can fall back to the Compatibility renderer.
 5. Click **Create & Edit**.
 
 > **See:** [Creating and importing projects](https://docs.godotengine.org/en/stable/getting_started/step_by_step/creating_and_importing_projects.html), with more details on project creation options.

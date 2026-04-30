@@ -587,12 +587,12 @@ func to_save_data() -> Dictionary:
     return {gold = gold, items = items_data}
 
 func from_save_data(data: Dictionary) -> void:
-    gold = data.get("gold", 0)
+    gold = int(data.get("gold", 0))
     _items.clear()
     for entry in data.get("items", []):
         var item: ItemData = load(entry.item_path) as ItemData
         if item:
-            _items.append({item = item, count = entry.count})
+            _items.append({item = item, count = int(entry.get("count", 1))})
     inventory_changed.emit()
     gold_changed.emit(gold)
 ```
@@ -640,7 +640,7 @@ func to_save_data() -> Dictionary:
     return {members = members_data}
 ```
 
-The pattern principle: Resources are referenced by path, not serialized by value. `ResourceLoader.load(entry.path, "", ResourceLoader.CACHE_MODE_IGNORE) as CharacterData` reloads a fresh `.tres` base definition, then saved values (level, stats, equipment) are applied on top. This keeps save files small, preserves pristine New Game data, and means editing a `.tres` file updates the base values for all future loads.
+The pattern principle: Resources are referenced by path, not serialized by value. `ResourceLoader.load(entry.path, "", ResourceLoader.CACHE_MODE_IGNORE) as CharacterData` reloads a fresh `.tres` base definition, then saved values (level, stats, equipment) are applied on top. This keeps save files small, preserves pristine New Game data, and means editing a `.tres` file updates the base values for all future loads. Since JSON has one generic number type, cast numeric save values back to typed integers at the load boundary.
 
 ### Save Slots
 

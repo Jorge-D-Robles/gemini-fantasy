@@ -12,7 +12,7 @@ Module 3 shifted from "scripts that move things" to "scenes that *are* things." 
 
 ### Module 1: The Journey Begins
 
-- Installed Godot 4.x and created the Crystal Saga project with the Compatibility renderer
+- Installed Godot 4.x and created the Crystal Saga project with the Mobile renderer
 - Learned Godot's core mental model: everything is a **node**, nodes compose into **scenes**, scenes save as `.tscn` files
 - Explored the editor interface: Viewport, Scene dock, Inspector, FileSystem dock, Output panel
 - Created a first scene with a Node2D root and a Sprite2D child, set a texture, positioned it, and saved
