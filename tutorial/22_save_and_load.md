@@ -28,7 +28,7 @@ We use JSON for saves because:
 - **Universally understood:** every language and tool can read JSON
 - **Simple API:** Godot's `JSON.stringify()` and `JSON.parse()` handle everything
 
-The alternative (Godot's `ResourceSaver` with `.tres` files) provides type safety but couples your saves to your class hierarchy. If you rename a Resource class, old saves break. JSON is more resilient for a tutorial scope.
+The alternative (Godot's `ResourceSaver` with `.tres` files) provides type safety but couples your saves to your class hierarchy. If you rename a Resource class, old saves break. JSON is more resilient for a tutorial scope. Also, do not load untrusted `.tres` or `.res` files as user saves; keep player saves as primitive JSON data that you validate before applying.
 
 > **See:** [Saving games](https://docs.godotengine.org/en/stable/tutorials/io/saving_games.html), the official guide covering multiple save approaches.
 
@@ -165,31 +165,80 @@ func _world_flag(object_id: String, state: String) -> String:
     return GameManager.make_world_flag(SCENE_KEY, object_id, state)
 ```
 
-For a chest:
+For a chest, replace the Module 16 script with this complete final version. Keeping the original field names (`item_count`, `is_opened`, `_open()`) avoids a partial-patch mismatch:
 
 ```gdscript
+extends StaticBody2D
+## A treasure chest that persists opened state through GameManager flags.
+
+signal opened
+
+@export var scene_key: String = "crystal_cavern"
 @export var chest_id: String = ""
 @export var item: ItemData
-@export var amount: int = 1
+@export var item_count: int = 1
 
-var _opened: bool = false
+var is_opened: bool = false
+var _player_in_range: bool = false
+
+@onready var _sprite: Sprite2D = $Sprite
+@onready var _prompt: Label = $InteractionPrompt
+@onready var _zone: Area2D = $InteractionZone
 
 
 func _ready() -> void:
+    _zone.body_entered.connect(_on_body_entered)
+    _zone.body_exited.connect(_on_body_exited)
+    _prompt.visible = false
     if chest_id.is_empty():
         push_warning("TreasureChest needs a stable chest_id for save/load.")
-    _opened = GameManager.has_flag(_world_flag(chest_id, "opened"))
+    is_opened = GameManager.has_flag(_world_flag(chest_id, "opened"))
     _refresh_sprite()
 
 
-func open() -> void:
-    if _opened:
+func _unhandled_input(event: InputEvent) -> void:
+    if not _player_in_range or is_opened:
+        return
+    if event.is_action_pressed("interact"):
+        _open()
+        get_viewport().set_input_as_handled()
+
+
+func _open() -> void:
+    if is_opened:
         return
 
-    _opened = true
-    InventoryManager.add_item(item, amount)
+    is_opened = true
     GameManager.set_flag(_world_flag(chest_id, "opened"))
+    if item:
+        InventoryManager.add_item(item, item_count)
+        print("Found: " + item.display_name + " x" + str(item_count))
     _refresh_sprite()
+    opened.emit()
+
+
+func _refresh_sprite() -> void:
+    _prompt.visible = _player_in_range and not is_opened
+    if is_opened:
+        # Swap to your open-chest texture or frame here.
+        # _sprite.frame = 1
+        pass
+
+
+func _world_flag(object_id: String, state: String) -> String:
+    return GameManager.make_world_flag(scene_key, object_id, state)
+
+
+func _on_body_entered(body: Node2D) -> void:
+    if body.is_in_group("player"):
+        _player_in_range = true
+        _refresh_sprite()
+
+
+func _on_body_exited(body: Node2D) -> void:
+    if body.is_in_group("player"):
+        _player_in_range = false
+        _refresh_sprite()
 ```
 
 Use the same pattern for other one-shot objects:
@@ -487,6 +536,19 @@ The advantage: adding a new saveable field means adding one line to the schema, 
 Our approach (`to_save_data()` per autoload) is the right call for Crystal Saga's scope. Each autoload owns its own serialization, which is easy to understand and debug. But if you build a larger RPG with 15+ autoloads and hundreds of saveable fields, consider consolidating into a schema.
 
 Another thing to plan for: **save migration**. When you add a new field (say, a `reputation` system), old save files won't have it. Your `from_save_data()` methods should always use `.get("key", default_value)` rather than direct dictionary access. This way, loading an old save that lacks the `reputation` key gracefully falls back to the default instead of crashing.
+
+Here is a concrete migration hook you can grow later:
+
+```gdscript
+func _migrate_save_data(save_data: Dictionary) -> Dictionary:
+    var version: int = save_data.get("version", 1)
+    if version < 2:
+        save_data["settings"] = save_data.get("settings", {})
+        save_data["version"] = 2
+    return save_data
+```
+
+Call this after parsing and validating the JSON root, before restoring autoload state. For Crystal Saga, the default values are enough; the important habit is that version upgrades happen in one explicit place.
 
 ## Engineering Contract
 

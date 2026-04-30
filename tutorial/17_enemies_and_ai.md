@@ -47,19 +47,19 @@ enum AIType { AGGRESSIVE, CAUTIOUS, BALANCED }
 Create three enemies as `.tres` files in `res://data/enemies/`. Follow the same workflow from Module 9: right-click the folder in the FileSystem dock, choose **New Resource**, search for `EnemyData`, click **Create**, name the file, then fill in the exported fields in the Inspector.
 
 **`cave_bat.tres`**, fast, weak, aggressive
-- display_name: "Cave Bat", ai_type: AGGRESSIVE
+- id: "cave_bat", display_name: "Cave Bat", ai_type: AGGRESSIVE
 - HP: 20, attack: 6, defense: 2, speed: 12
 - XP: 8, gold: 3
 - sprite: assign a small bat image or `res://icon.svg` as a placeholder
 
 **`crystal_slime.tres`**, moderate, balanced
-- display_name: "Crystal Slime", ai_type: BALANCED
+- id: "crystal_slime", display_name: "Crystal Slime", ai_type: BALANCED
 - HP: 35, attack: 8, defense: 5, speed: 4
 - XP: 12, gold: 6, drop: Potion (25%)
 - sprite: assign a slime image or `res://icon.svg`
 
 **`stone_golem.tres`**, tanky, cautious
-- display_name: "Stone Golem", ai_type: CAUTIOUS
+- id: "stone_golem", display_name: "Stone Golem", ai_type: CAUTIOUS
 - HP: 60, attack: 12, defense: 10, speed: 2
 - XP: 25, gold: 15, drop: Ether (20%)
 - sprite: assign a golem image or `res://icon.svg`
@@ -292,11 +292,27 @@ func _on_body_exited(body: Node2D) -> void:
 
 ### Adding enemy_data to BattlerData
 
-Before wiring encounters to battles, we need a way for the victory flow (Module 18) to access enemy rewards. Open `res://resources/battler_data.gd` and add this property:
+Before wiring encounters to battles, we need a way for the victory flow (Module 18) to access enemy rewards and a shared conversion path for both random encounters and scripted bosses. Open `res://resources/battler_data.gd` and add this property plus static factory:
 
 ```gdscript
 # Add to battler_data.gd, stores the EnemyData for reward calculation
 var enemy_data: EnemyData = null
+
+
+static func from_enemy(enemy: EnemyData) -> BattlerData:
+    var battler := BattlerData.new()
+    var char_data := CharacterData.new()
+    char_data.display_name = enemy.display_name
+    char_data.portrait = enemy.sprite if enemy.sprite else preload("res://icon.svg")
+    char_data.max_hp = enemy.max_hp
+    char_data.max_mp = enemy.max_mp
+    char_data.attack = enemy.attack
+    char_data.defense = enemy.defense
+    char_data.speed = enemy.speed
+    battler.character_data = char_data
+    battler.is_player_controlled = false
+    battler.enemy_data = enemy
+    return battler
 ```
 
 ### Connecting Encounters to Battles
@@ -318,7 +334,7 @@ func _on_encounter_triggered(encounter: EncounterData) -> void:
     # Convert EnemyData to BattlerData for the battle system
     var enemy_battlers: Array[BattlerData] = []
     for ed in encounter.enemies:
-        enemy_battlers.append(_enemy_to_battler(ed))
+        enemy_battlers.append(BattlerData.from_enemy(ed))
 
     # Build party (temporary, Module 21 adds a proper PartyManager)
     var hero := BattlerData.new()
@@ -327,25 +343,9 @@ func _on_encounter_triggered(encounter: EncounterData) -> void:
 
     # Must use Dictionary format, matches SceneManager.start_battle() from Module 14
     SceneManager.start_battle({party = [hero], enemies = enemy_battlers})
-
-
-func _enemy_to_battler(enemy_data: EnemyData) -> BattlerData:
-    var battler := BattlerData.new()
-    var char_data := CharacterData.new()
-    char_data.display_name = enemy_data.display_name
-    char_data.portrait = enemy_data.sprite if enemy_data.sprite else preload("res://icon.svg")
-    char_data.max_hp = enemy_data.max_hp
-    char_data.max_mp = enemy_data.max_mp
-    char_data.attack = enemy_data.attack
-    char_data.defense = enemy_data.defense
-    char_data.speed = enemy_data.speed
-    battler.character_data = char_data
-    battler.is_player_controlled = false
-    battler.enemy_data = enemy_data
-    return battler
 ```
 
-That `char_data.portrait = ed.sprite` line is the bridge between your enemy data and the battle presentation. `BattlerSprite` already knows how to read `character_data.portrait`, so once you fill in the `sprite` field on each `EnemyData` resource, those visuals now appear in battle automatically.
+That `char_data.portrait = enemy.sprite` line inside `BattlerData.from_enemy()` is the bridge between your enemy data and the battle presentation. `BattlerSprite` already knows how to read `character_data.portrait`, so once you fill in the `sprite` field on each `EnemyData` resource, those visuals now appear in battle automatically.
 
 ### Using AI in Battle
 
@@ -378,6 +378,7 @@ func _execute_enemy_turn(battler: BattlerData) -> void:
 The Crystal Guardian is a stronger enemy with a pre-battle dialogue.
 
 **`crystal_guardian.tres`** (EnemyData) in `res://data/enemies/`:
+- id: "crystal_guardian"
 - display_name: "Crystal Guardian"
 - ai_type: AGGRESSIVE
 - HP: 200, attack: 15, defense: 8, speed: 6
@@ -427,7 +428,7 @@ func _start_boss_battle() -> void:
     hero.character_data = load("res://data/characters/aiden.tres")
     hero.is_player_controlled = true
 
-    var boss := _enemy_to_battler(boss_data)
+    var boss := BattlerData.from_enemy(boss_data)
 
     SceneManager.start_battle({
         party = [hero],
@@ -469,6 +470,16 @@ Then add a Flee button to `res://ui/battle/battle_menu.tscn` (add a 5th Button n
 _flee_btn.pressed.connect(func() -> void: action_chosen.emit("flee"))
 ```
 
+Before handling flee, add one shared exit helper to `res://systems/battle/battle_manager.gd`. Victory, defeat, flee, and any scripted escape should all preserve current battle HP/MP before leaving:
+
+```gdscript
+func sync_party_to_character_data() -> void:
+    for battler in party:
+        if battler.character_data:
+            battler.character_data.current_hp = battler.current_hp
+            battler.character_data.current_mp = battler.current_mp
+```
+
 Handle flee in the PlayerChoice state (`player_choice_state.gd`), inside the `_on_action_chosen` match block:
 
 ```gdscript
@@ -479,6 +490,7 @@ Handle flee in the PlayerChoice state (`player_choice_state.gd`), inside the `_o
             )
             if success:
                 print("Escaped!")
+                battle_manager.sync_party_to_character_data()
                 SceneManager.return_from_battle()
             else:
                 print("Couldn't escape!")

@@ -263,16 +263,27 @@ Create the `res://data/quests/` folder (right-click `res://data/` → New Folder
    - `gold_reward`: 30
    - **Reward Items:** Click **Add Element** twice and drag `ether.tres` into both slots. In this tutorial, `reward_items` is a plain `Array[ItemData]`, so duplicate entries represent multiple copies.
 
+Keep these quest-facing IDs aligned with the Module 9 registry: Elder Maren is `elder_maren`, Wandering Fynn is `fynn`, the final boss is `crystal_guardian`, and the pendant chest is `pendant_chest`.
+
 ## Setting Quest Flags from Gameplay
 
 The quest objectives rely on flags being set when things happen. Here's where to add flag-setting calls:
 
 **In `res://scenes/willowbrook/willowbrook.gd`** (the elder NPC interaction):
 ```gdscript
-# When the player talks to Elder Maren, set the flag:
-func _on_elder_interacted() -> void:
+# Elder Maren was created in Module 10 with npc_data.id = "elder_maren".
+# Talking to her starts the main quest and sets its first objective flag.
+func _get_elder_dialogue() -> Array[DialogueLine]:
+    if not QuestManager.is_quest_active("crystal_resonance") and not QuestManager.is_quest_complete("crystal_resonance"):
+        var quest: QuestData = load("res://data/quests/crystal_resonance.tres")
+        if quest:
+            QuestManager.start_quest(quest)
     GameManager.set_flag("talked_to_elder")
-    # ... existing dialogue code ...
+    return _make_lines("Elder Maren", [
+        "The crystals have grown restless.",
+        "Their song points beyond Whisperwood, to the old cavern.",
+        "Please, find the source before the resonance breaks.",
+    ])
 ```
 
 **In `res://scenes/whisperwood/whisperwood.gd`** (scene entry):
@@ -291,35 +302,45 @@ func _ready() -> void:
 
 The `boss_defeated` flag is set in Module 25's ending trigger. The `talked_to_fynn` flag is set in the reactive dialogue below.
 
-**Starting the main quest:** Add this to the elder's dialogue handler in `willowbrook.gd`:
-```gdscript
-if not QuestManager.is_quest_active("crystal_resonance"):
-    var quest: QuestData = load("res://data/quests/crystal_resonance.tres")
-    if quest:
-        QuestManager.start_quest(quest)
-```
+If you skipped Elder Maren in Module 10, create the NPC now: instance `npc.tscn` into Willowbrook's `YSortGroup`, name it `ElderMaren`, assign `res://data/npcs/elder_maren.tres`, and verify that resource has `id = "elder_maren"`.
 
 ### The Pendant Pickup
 
 The side quest needs a pendant object in Whisperwood. Use the treasure chest pattern from Module 16 to create a pickup:
 
 1. Create `res://data/items/pendant.tres` (ItemData, type: KEY_ITEM, display_name: "Silver Pendant")
-2. Place a treasure chest instance in the Whisperwood scene near a memorable landmark
-3. Set the chest's `item` export to `pendant.tres` in the Inspector
+2. Place a treasure chest instance in the Whisperwood scene near a memorable landmark:
+
+```
+Whisperwood
+└── YSortGroup
+    └── PendantChest (TreasureChest)
+```
+
+3. Set `PendantChest.scene_key = "whisperwood"`, `PendantChest.chest_id = "pendant_chest"`, and set its `item` export to `pendant.tres` in the Inspector.
 4. In `whisperwood.gd`, connect to the chest's `opened` signal to set the flag:
+
+```gdscript
+@onready var _pendant_chest: StaticBody2D = $YSortGroup/PendantChest
+
+
+func _ready() -> void:
+    GameManager.set_flag("reached_whisperwood")
+    _pendant_chest.opened.connect(_on_pendant_chest_opened)
+```
 
 ```gdscript
 func _on_pendant_chest_opened() -> void:
     GameManager.set_flag("pendant_found")
 ```
 
-For Fynn's turn-in, add this to the `pendant_found` dialogue path in `willowbrook.gd`. Finding the pendant completes the objective; returning it is the turn-in action:
+For Fynn's turn-in, run the reward logic after the "You found it!" dialogue finishes. Finding the pendant completes the objective; returning it is the turn-in action:
 ```gdscript
-# After the "You found it!" dialogue finishes:
-if QuestManager.turn_in_quest_by_id("lost_pendant"):
-    var pendant := load("res://data/items/pendant.tres") as ItemData
-    if pendant:
-        InventoryManager.remove_item(pendant)
+func _on_fynn_turn_in_dialogue_finished() -> void:
+    if QuestManager.turn_in_quest_by_id("lost_pendant"):
+        var pendant := load("res://data/items/pendant.tres") as ItemData
+        if pendant:
+            InventoryManager.remove_item(pendant)
 ```
 
 ## Reactive Dialogue
@@ -334,11 +355,16 @@ Add the following to `res://scenes/willowbrook/willowbrook.gd`. Then update your
 # In _on_npc_interacted(), replace:
 #   _dialogue_box.start_dialogue(npc.npc_data.dialogue)
 # with:
-#   _dialogue_box.start_dialogue(_get_dialogue_for_npc(npc))
+#   var lines := _get_dialogue_for_npc(npc)
+#   _dialogue_box.start_dialogue(lines)
+#   if npc.npc_data.id == "fynn" and GameManager.has_flag("pendant_found") and not GameManager.has_flag("pendant_returned"):
+#       _dialogue_box.dialogue_finished.connect(_on_fynn_turn_in_dialogue_finished, CONNECT_ONE_SHOT)
 
 func _get_dialogue_for_npc(npc: CharacterBody2D) -> Array[DialogueLine]:
     match npc.npc_data.id:
-        "traveler_fynn":
+        "elder_maren":
+            return _get_elder_dialogue()
+        "fynn":
             return _get_fynn_dialogue()
         _:
             return npc.npc_data.dialogue
@@ -348,15 +374,10 @@ func _get_fynn_dialogue() -> Array[DialogueLine]:
     if GameManager.has_flag("pendant_returned"):
         return _make_lines("Fynn", ["Thank you again for finding my pendant!"])
     elif GameManager.has_flag("pendant_found"):
-        var lines := _make_lines("Fynn", [
+        return _make_lines("Fynn", [
             "You found it! My pendant! Thank you so much!",
             "Please, take this as a reward.",
         ])
-        if QuestManager.turn_in_quest_by_id("lost_pendant"):
-            var pendant := load("res://data/items/pendant.tres") as ItemData
-            if pendant:
-                InventoryManager.remove_item(pendant)
-        return lines
     elif GameManager.has_flag("talked_to_fynn"):
         return _make_lines("Fynn", ["Any luck finding my pendant in the Whisperwood?"])
     else:

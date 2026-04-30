@@ -337,8 +337,10 @@ For Crystal Saga, the boss room door could require a "Crystal Key" found in the 
 
 Wire the scene transitions using the same exit zone pattern from Module 7:
 
-1. **Crystal Cavern entrance exit:** Add an Area2D child inside the `Exits` node. Attach `exit_zone.gd` (from `res://scenes/exit_zone.gd` or wherever you saved it in Module 7). Set the exports: `target_scene` = `res://scenes/whisperwood/whisperwood.tscn`, `target_spawn` = `from_cavern`. Add a CollisionShape2D covering the cave entrance.
-2. **Whisperwood south exit:** Open `whisperwood.tscn` and add a new exit zone Area2D. Set `target_scene` = `res://scenes/crystal_cavern/crystal_cavern.tscn`, `target_spawn` = `from_whisperwood`.
+1. **Crystal Cavern entrance exit:** Add an Area2D child inside the `Exits` node. Attach `exit_zone.gd` (from `res://scenes/exit_zone.gd` or wherever you saved it in Module 7). Set the exports: `target_scene` = `res://scenes/whisperwood/whisperwood.tscn`, `target_spawn_point` = `from_cavern`. Add a CollisionShape2D covering the cave entrance.
+2. **Whisperwood south exit:** Open `whisperwood.tscn` and add a new exit zone Area2D. Set `target_scene` = `res://scenes/crystal_cavern/crystal_cavern.tscn`, `target_spawn_point` = `from_whisperwood`.
+
+The export name must match Module 7's `exit_zone.gd`: `target_spawn_point`. Do not create a second shorter spawn field.
 
 Add spawn points (Marker2D nodes as children of Exits, added to the `spawn_points` group):
 - In Crystal Cavern: `from_whisperwood` at the cave entrance, `default` at the same position

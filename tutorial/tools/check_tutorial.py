@@ -19,6 +19,19 @@ STALE_TERMS = (
     "Engine.has_singleton",
     "effect_value",
     "scene_name",
+    "traveler_fynn",
+    "_enemy_to_battler",
+    "SceneTree.scene_changed hallucination",
+)
+
+STALE_REGEXES = (
+    (re.compile(r"\btarget_spawn\b"), "stale exit export name: target_spawn"),
+    (re.compile(r"(?<!queue_)free\("), "use queue_free() for tutorial UI cleanup"),
+    (
+        re.compile(r"scene_file_path\.begins_with\(\"res://scenes/\"\)"),
+        "pause menu must use pause_allowed group, not scene path prefix",
+    ),
+    (re.compile(r"\bcomplete JRPG\b"), "say complete tutorial JRPG vertical slice"),
 )
 
 ABILITY_ALLOWED_CONTEXT = (
@@ -107,6 +120,9 @@ def check_stale_terms(path: Path, text: str, errors: list[str]) -> None:
     for term in STALE_TERMS:
         if term in text:
             errors.append(f"{path.name}: stale term present: {term}")
+    for pattern, message in STALE_REGEXES:
+        if pattern.search(text):
+            errors.append(f"{path.name}: {message}")
 
 
 def check_abilitydata_context(path: Path, lines: list[str], errors: list[str]) -> None:

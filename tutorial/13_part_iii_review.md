@@ -257,6 +257,8 @@ func _unhandled_input(event: InputEvent) -> void:
     if not _panel.visible:
         return
     if _choice_container.visible:
+        if event.is_action_pressed("interact") or event.is_action_pressed("ui_accept"):
+            get_viewport().set_input_as_handled()
         return
     if event.is_action_pressed("interact") or event.is_action_pressed("ui_accept"):
         get_viewport().set_input_as_handled()
@@ -382,9 +384,10 @@ PanelContainer (background)
 const ItemSlotScene := preload("res://ui/inventory/item_slot.tscn")
 
 func _refresh() -> void:
-    # Clear existing slots immediately (free, not queue_free)
     for child in _item_grid.get_children():
-        child.free()
+        child.queue_free()
+
+    await get_tree().process_frame
 
     # Create a slot for each inventory entry
     var items := InventoryManager.get_all_items()
@@ -400,7 +403,7 @@ func _refresh() -> void:
         _item_grid.get_child(0).call_deferred("grab_focus")
 ```
 
-Why `free()` instead of `queue_free()`: when refreshing a list, you want the old children gone immediately so the new children appear in a clean container. `queue_free()` defers removal to the end of the frame, which can cause brief visual glitches where old and new slots overlap.
+Why `queue_free()` plus `await process_frame`: deferred deletion is the safer UI default because it lets Godot finish the current frame before removing nodes. Waiting one frame before adding replacements keeps the refreshed grid clean without relying on immediate deletion.
 
 **Pausing the game while the menu is open:**
 
@@ -489,7 +492,7 @@ The consistent pattern: the object that **knows something happened** emits a sig
 | Not setting `process_mode` to `Always` on the inventory CanvasLayer | Game freezes permanently when the inventory opens (pause locks the menu too) | Select the InventoryScreen root node in the editor, set **Process > Mode** to **Always** |
 | Using `_input()` instead of `_unhandled_input()` for NPC interaction | Interact button fires even when a UI menu is open | Switch to `_unhandled_input()` and call `get_viewport().set_input_as_handled()` |
 | Not killing the previous tween before creating a new one | Text glitches when the player advances dialogue rapidly, causing overlapping animations | Check `if _current_tween and _current_tween.is_valid(): _current_tween.kill()` before `create_tween()` |
-| Using `queue_free()` when refreshing the item grid | Old and new item slots briefly overlap on screen | Use `free()` instead of `queue_free()` when clearing a container before immediately repopulating it |
+| Rebuilding a UI list without waiting a frame after `queue_free()` | Old nodes may still exist until the end of the frame | Call `queue_free()` on old children, then `await get_tree().process_frame` before adding replacements |
 | Forgetting to add the player to the `"player"` group | NPC interaction zone never detects the player; `body_entered` fires but `is_in_group("player")` is false | Select the Player node, go to Node tab > Groups, add `player` |
 
 ## Official Godot Documentation

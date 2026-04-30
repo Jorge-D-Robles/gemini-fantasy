@@ -94,13 +94,18 @@ If the series structure changes, update all three of these together in the same 
 These are the series-level rules maintainers should preserve:
 
 - `CharacterData` runtime fields (`current_xp`, `current_hp`, `current_mp`) are introduced in Module 09 so battle lessons do not depend on future edits.
+- Canonical IDs from Module 09 are stable contracts. In particular, Fynn is `fynn`, Elder Maren is `elder_maren`, and the Crystal Guardian is `crystal_guardian`.
 - Module 14's battle flow is a scene swap plus reconstruction, not an overworld-under-battle state stack.
+- Enemy-to-battler conversion lives on `BattlerData.from_enemy()` so random encounters and scripted bosses cannot drift.
+- The turn queue is speed-sorted at round start, but dead battlers are skipped when popped.
 - Module 20 must remain valid before PartyManager exists. Quest XP integration is explicitly upgraded in Module 21.
 - `get_completed_quests()` and `get_turned_in_quests()` represent different quest states and must stay semantically distinct in tutorial text and review docs.
 - The starter quest log lists active quests only. Completed and turned-in states remain tracked in data/save flow unless the UI is explicitly expanded.
 - If `CharacterData` teaches weapon, armor, and accessory slots, the example equipment UI must expose all three or clearly mark any omission as future work.
+- EquipmentPanel must be reachable through PauseMenu via the `equipment_panels` group.
+- ShopUI is a modal buy/sell screen; `shop_closed` must return player control when opened from an NPC.
 - New Game and save reconstruction must use pristine character definitions, not duplicate a mutated cached runtime resource.
-- PauseMenu must open Inventory and Quest Log through the public APIs taught earlier in Modules 12 and 20.
+- PauseMenu must open Inventory, Equipment, and Quest Log through the public APIs taught earlier in Modules 12, 21, and 20, and it must gate itself with `pause_allowed` instead of a broad scene-path prefix.
 - Game Over is a decision point (load last save or return to title), not an automatic return-to-title path.
 - "What You Should See" sections may only promise features the reader has already built by that point.
 - Review modules must mirror the current main modules, not a previous draft.

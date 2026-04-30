@@ -24,7 +24,8 @@ This file is NOT included in the tutorial website (build.js only picks up files 
 
 ## Input Handling
 
-- [ ] **Dialogue choice bypass guard:** `_unhandled_input()` in dialogue_box.gd must return early when `_choice_container.visible` is true. Without this, the `interact` action skips choice buttons. Affects: module 11 (both incremental and complete code listings).
+- [ ] **Dialogue choice bypass guard:** `_unhandled_input()` in dialogue_box.gd must consume `interact`/`ui_accept` while `_choice_container.visible` is true, then return. Without this, the same accept press can leak to world interaction. Affects: module 11 (both incremental and complete code listings) and module 13 review snippets.
+- [ ] **Dialogue choice emission order:** `_on_choice_pressed()` must clear/advance/close the current line before emitting `choice_made`, so inn/shop follow-up dialogue does not race the old choice UI. Affects: modules 11, 21.
 - [ ] **Save slot dialog, not hardcoded slot 1:** Continue and Retry buttons must use the SaveSlotDialog from module 22, not `SaveManager.load_game(1)`. Affects: module 25 (title screen and game over screen).
 - [ ] **Pause menu uses public screen APIs:** PauseMenu must call `InventoryScreen.open_from_pause()` and `QuestLog.open_from_pause()` (or equivalent public methods), not toggle `visible` directly. Affects: modules 12, 20, 25, 27.
 - [ ] **Pause menu only opens in gameplay scenes:** Escape must not open PauseMenu on title, ending, credits, or game-over screens. Affects: modules 25, 26, 27.
@@ -60,7 +61,11 @@ This file is NOT included in the tutorial website (build.js only picks up files 
 - [ ] **Equipment UI matches the taught slot model:** If Module 21 teaches weapon, armor, and accessory slots on `CharacterData`, the example EquipmentPanel and learner expectations must expose all three slots or explicitly explain any omission.
 - [ ] **Placeholder tile creation:** Module 16 must give concrete steps for creating a placeholder tile PNG (image editor, dimensions, colors), not say "draw directly onto a new atlas."
 - [ ] **DialogueBox/InventoryScreen in Crystal Cavern:** Module 16 must tell the reader to instance these in the CrystalCavern scene.
-- [ ] **Exit zone wiring in Crystal Cavern:** Module 16 must show how to set up exit zones with specific `target_scene` and `target_spawn` values, referencing module 07's pattern.
+- [ ] **Exit zone wiring in Crystal Cavern:** Module 16 must show how to set up exit zones with specific `target_scene` and `target_spawn_point` values, referencing module 07's pattern.
+- [ ] **Canonical NPC IDs:** Fynn's NPC ID must be `fynn` everywhere, and Elder Maren must use `elder_maren`. Stale IDs such as `traveler` or `traveler_fynn` break quest dialogue. Affects: modules 09, 10, 20, 23.
+- [ ] **Crystal Guardian ID:** `crystal_guardian.tres` must explicitly set `id = "crystal_guardian"` or Module 25's ending trigger cannot identify the final boss.
+- [ ] **Equipment panel route:** Module 25 PauseMenu must expose EquipmentPanel through the `equipment_panels` group, not leave equipment as an unreachable backend.
+- [ ] **Pause allowed group:** PauseMenu must use the `pause_allowed` group instead of a broad `res://scenes/` path prefix, so battle scenes cannot be paused accidentally.
 - [ ] **Dialogue pipeline integration:** Module 20 must show how `_get_dialogue_for_npc()` replaces the existing `npc.npc_data.dialogue` lookup in `_on_npc_interacted()`.
 - [ ] **Audio placeholder instructions:** Module 24 must give specific steps for creating silent OGG files for testing, not just mention Audacity generically.
 

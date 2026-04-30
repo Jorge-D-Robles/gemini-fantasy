@@ -8,7 +8,7 @@ Part V connected Crystal Saga's isolated systems into a game with actual progres
 
 Module 20 introduced two foundational concepts: game flags and quests. Game flags gave every system in the project a shared language for tracking what has happened in the world, while the quest system built on top of those flags to create structured objectives with rewards. The trick was a reactive signal (`flag_changed`) that lets quest completion happen automatically when the world state changes, rather than through manual checking. This also made NPCs responsive: Fynn remembers whether you have spoken to him, whether you found his pendant, and whether you already returned it.
 
-Module 21 added the remaining progression systems. PartyManager gave us a roster (and Lira, the first companion), the equipment system made gear meaningful by modifying effective stats, and the shop system let the player spend their hard-earned gold. It also completed the quest XP loop by routing turn-in rewards through the same leveling helper battles already use. Finally, Module 22 closed the loop by persisting every piece of game state to JSON files. The `to_save_data()` / `from_save_data()` pattern gave each autoload a clean serialization boundary, and the save slot UI gave players the classic three-slot experience. With save and load in place, Crystal Saga became a game you can actually put down and come back to.
+Module 21 added the remaining progression systems. PartyManager gave us a roster (and Lira, the first companion), the equipment system made gear meaningful by modifying effective stats, and the shop system let the player buy upgrades or sell extras. It also completed the quest XP loop by routing turn-in rewards through the same leveling helper battles already use. Finally, Module 22 closed the loop by persisting every piece of game state to JSON files. The `to_save_data()` / `from_save_data()` pattern gave each autoload a clean serialization boundary, and the save slot UI gave players the classic three-slot experience. With save and load in place, Crystal Saga became a game you can actually put down and come back to.
 
 ### Module 20: The Quest System and Game Flags
 - Built the **GameManager** autoload: a dictionary of boolean flags (`flag_name -> true/false`) with a `flag_changed` signal that lets any system react when the world state changes.
@@ -22,7 +22,7 @@ Module 21 added the remaining progression systems. PartyManager gave us a roster
 - Implemented **Lira's recruitment** as a flag-gated dialogue sequence: first meeting sets `lira_intro_seen`, second conversation sets `lira_ready_to_join`, and dialogue completion triggers `add_member()` exactly once.
 - Added **party-wide quest XP routing** via `PartyManager.award_xp_to_party()`, so quest rewards and battle rewards both flow through `CharacterData.grant_xp()`.
 - Extended **CharacterData** with equipment slots (weapon, armor, accessory) and `get_effective_*()` methods that add equipment bonuses to base stats, wired directly into battle through BattlerData.
-- Created the **ShopData** Resource and **shop UI**: a CanvasLayer that pauses the game, lists items with prices, validates gold, and handles purchases through InventoryManager.
+- Created the **ShopData** Resource and **shop UI**: a CanvasLayer that pauses the game, lists buy/sell entries with prices, validates gold, and routes transactions through InventoryManager.
 - Added the **innkeeper pattern**: a dialogue choice that costs gold and restores HP/MP for the entire party via PartyManager.
 
 ### Module 22: Save and Load
@@ -203,15 +203,10 @@ func _get_fynn_dialogue() -> Array[DialogueLine]:
     if GameManager.has_flag("pendant_returned"):
         return _make_lines("Fynn", ["Thank you again for finding my pendant!"])
     elif GameManager.has_flag("pendant_found"):
-        var lines := _make_lines("Fynn", [
+        return _make_lines("Fynn", [
             "You found it! My pendant! Thank you so much!",
             "Please, take this as a reward.",
         ])
-        if QuestManager.turn_in_quest_by_id("lost_pendant"):
-            var pendant := load("res://data/items/pendant.tres") as ItemData
-            if pendant:
-                InventoryManager.remove_item(pendant)
-        return lines
     elif GameManager.has_flag("talked_to_fynn"):
         return _make_lines("Fynn", ["Any luck finding my pendant in the Whisperwood?"])
     else:
@@ -225,6 +220,13 @@ func _get_fynn_dialogue() -> Array[DialogueLine]:
             "A pendant, silver with a blue stone.",
             "If you find it, I'd be forever grateful.",
         ])
+
+
+func _on_fynn_turn_in_dialogue_finished() -> void:
+    if QuestManager.turn_in_quest_by_id("lost_pendant"):
+        var pendant := load("res://data/items/pendant.tres") as ItemData
+        if pendant:
+            InventoryManager.remove_item(pendant)
 
 # Helper to create dialogue line arrays
 func _make_lines(speaker: String, texts: Array[String]) -> Array[DialogueLine]:
@@ -351,6 +353,8 @@ func initialize_from_character() -> void:
     current_speed = character_data.get_effective_speed()
 ```
 
+The EquipmentPanel is scene-local UI, but it is opened through the global PauseMenu in Module 25. Each gameplay scene adds its EquipmentPanel instance to the `equipment_panels` group, and the panel exposes `open_from_pause()` so PauseMenu can call the public API instead of toggling visibility directly.
+
 ### Shop System
 
 Shops use a [ShopData](https://docs.godotengine.org/en/stable/classes/class_resource.html) Resource and a [CanvasLayer](https://docs.godotengine.org/en/stable/classes/class_canvaslayer.html)-based UI.
@@ -372,7 +376,7 @@ func _on_npc_interacted(npc: CharacterBody2D) -> void:
     if npc.npc_data.id == "shopkeeper":
         var shop_data: ShopData = load("res://data/shops/willowbrook_shop.tres")
         if shop_data:
-            _shop_ui.open_shop(shop_data)
+            _open_shop(shop_data)
             return
     # ... normal dialogue ...
 ```
@@ -394,9 +398,29 @@ func _buy_item(item: ItemData) -> void:
     if InventoryManager.spend_gold(item.buy_price):
         InventoryManager.add_item(item)
         _refresh()                  # Update gold display and button states
+
+func _sell_item(item: ItemData) -> void:
+    if InventoryManager.remove_item(item):
+        InventoryManager.add_gold(item.sell_price)
+        _refresh()
 ```
 
-The shop UI sets `process_mode = Node.PROCESS_MODE_ALWAYS` so it can receive input while the game is paused. Buttons are disabled when the player cannot afford an item.
+The shop UI sets `process_mode = Node.PROCESS_MODE_ALWAYS` so it can receive input while the game is paused. Buttons are disabled when the player cannot afford an item. Selling uses the same transaction shape in reverse: remove one inventory item, then add `sell_price` gold.
+
+```gdscript
+func _open_shop(shop_data: ShopData) -> void:
+    _shop_ui.open_shop(shop_data)
+    if not _shop_ui.shop_closed.is_connected(_on_shop_closed):
+        _shop_ui.shop_closed.connect(_on_shop_closed, CONNECT_ONE_SHOT)
+
+
+func _on_shop_closed() -> void:
+    var player := get_tree().get_first_node_in_group("player")
+    if player and player.has_method("end_interaction"):
+        player.end_interaction()
+```
+
+Closing a shop is the end of the NPC interaction. Without this signal cleanup, the player can remain stuck in the interaction state after the modal closes.
 
 The innkeeper is a simpler variant that uses dialogue choices instead of a full shop UI:
 

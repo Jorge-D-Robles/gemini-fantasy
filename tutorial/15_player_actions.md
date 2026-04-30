@@ -72,6 +72,20 @@ var command: Dictionary = {
 
 This pattern keeps the action execution generic. The `ActionExecute` state doesn't need to know the details of every possible action; it just reads the command dictionary.
 
+For this tutorial, dictionaries are a low-friction teaching step. They do come with a tradeoff: a typo in `"target"` or `"action"` becomes a runtime bug. In a larger game, graduate this into a typed command object:
+
+```gdscript
+class_name BattleCommand
+extends RefCounted
+
+var action: StringName
+var battler: BattlerData
+var target: BattlerData
+var item: ItemData
+```
+
+That typed object keeps the same command pattern while making the public fields explicit.
+
 ## Target Selection
 
 Target selection is where strategy enters combat. In Earthbound, choosing to focus fire on the Territorial Oak instead of spreading damage across all enemies is often the difference between a clean fight and a party wipe. Without target selection, combat would be "press Attack and watch numbers happen." With it, every attack is a decision.
@@ -348,10 +362,17 @@ func _execute_defend(battler: BattlerData) -> void:
 func _execute_item(user: BattlerData, target: BattlerData, item: ItemData) -> void:
     if not item:
         return
+    var changed := false
     if item.hp_restore > 0:
         var healed := target.heal(item.hp_restore)
+        changed = changed or healed > 0
         _spawn_damage_number(target, healed, true)
-    InventoryManager.remove_item(item)
+    if item.mp_restore > 0:
+        var old_mp := target.current_mp
+        target.current_mp = min(target.current_mp + item.mp_restore, target.character_data.max_mp)
+        changed = changed or target.current_mp != old_mp
+    if changed:
+        InventoryManager.remove_item(item)
 
 
 func _execute_enemy_turn(battler: BattlerData) -> void:
@@ -487,10 +508,17 @@ func _execute_defend(battler: BattlerData) -> void:
 func _execute_item(user: BattlerData, target: BattlerData, item: ItemData) -> void:
     if not item:
         return
+    var changed := false
     if item.hp_restore > 0:
         var healed := target.heal(item.hp_restore)
+        changed = changed or healed > 0
         _spawn_damage_number(target, healed, true)
-    InventoryManager.remove_item(item)
+    if item.mp_restore > 0:
+        var old_mp := target.current_mp
+        target.current_mp = min(target.current_mp + item.mp_restore, target.character_data.max_mp)
+        changed = changed or target.current_mp != old_mp
+    if changed:
+        InventoryManager.remove_item(item)
 
 
 func _execute_enemy_turn(battler: BattlerData) -> void:

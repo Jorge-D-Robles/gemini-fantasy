@@ -430,7 +430,7 @@ func _show_choices(choices: Array[String]) -> void:
 
 
 func _on_choice_pressed(index: int) -> void:
-    choice_made.emit(index)
+    var chosen_index := index
     _choice_container.visible = false
 
     # Clear choices and advance
@@ -442,6 +442,8 @@ func _on_choice_pressed(index: int) -> void:
         _close()
     else:
         _show_current_line()
+
+    choice_made.emit(chosen_index)
 ```
 
 ### The Complete `dialogue_box.gd`
@@ -478,6 +480,8 @@ func _unhandled_input(event: InputEvent) -> void:
     if not _panel.visible:
         return
     if _choice_container.visible:
+        if event.is_action_pressed("interact") or event.is_action_pressed("ui_accept"):
+            get_viewport().set_input_as_handled()
         return  # Let the Button nodes handle input during choices
 
     if event.is_action_pressed("interact") or event.is_action_pressed("ui_accept"):
@@ -572,7 +576,7 @@ func _show_choices(choices: Array[String]) -> void:
 
 
 func _on_choice_pressed(index: int) -> void:
-    choice_made.emit(index)
+    var chosen_index := index
     _choice_container.visible = false
 
     for child in _choice_container.get_children():
@@ -584,6 +588,8 @@ func _on_choice_pressed(index: int) -> void:
     else:
         _show_current_line()
 
+    choice_made.emit(chosen_index)
+
 
 func _close() -> void:
     _panel.visible = false
@@ -592,7 +598,7 @@ func _close() -> void:
     dialogue_finished.emit()
 ```
 
-> **Note:** In this basic implementation, choices don't affect what happens next; the dialogue continues linearly. In Module 20 (Quests), we'll connect choices to game flags that change story outcomes.
+> **Note:** `_on_choice_pressed()` finishes the current dialogue state before emitting `choice_made`. That order lets callers such as inns and shops await the choice and immediately start follow-up dialogue without racing the old choice UI as it clears itself.
 
 > **Note:** `grab_focus()` on the first button enables keyboard/gamepad navigation. Players can use up/down arrows to select and Enter/interact to confirm, no mouse needed. This is critical for JRPGs.
 

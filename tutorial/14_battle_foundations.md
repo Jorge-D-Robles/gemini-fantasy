@@ -329,9 +329,11 @@ func build_turn_queue() -> void:
 
 
 func get_next_battler() -> BattlerData:
-    if turn_queue.is_empty():
-        return null
-    return turn_queue.pop_front()
+    while not turn_queue.is_empty():
+        var battler: BattlerData = turn_queue.pop_front()
+        if battler.is_alive():
+            return battler
+    return null
 
 
 func is_party_alive() -> bool:
@@ -349,6 +351,8 @@ func get_alive_enemies() -> Array[BattlerData]:
 func get_alive_party() -> Array[BattlerData]:
     return party.filter(func(b: BattlerData) -> bool: return b.is_alive())
 ```
+
+The queue is built once at the start of a round, but `get_next_battler()` checks `is_alive()` again when popping. That second check matters: if an enemy is defeated earlier in the same round, its old queued turn is skipped instead of letting it attack after death.
 
 ## Implementing the Battle States
 

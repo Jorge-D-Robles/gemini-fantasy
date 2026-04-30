@@ -152,10 +152,14 @@ func build_turn_queue() -> void:
 
 
 func get_next_battler() -> BattlerData:
-    if turn_queue.is_empty():
-        return null
-    return turn_queue.pop_front()
+    while not turn_queue.is_empty():
+        var battler: BattlerData = turn_queue.pop_front()
+        if battler.is_alive():
+            return battler
+    return null
 ```
+
+The queue is speed-sorted at round start, but liveness is checked again when a battler is popped. That prevents a battler defeated earlier in the same round from acting after death.
 
 BattlerData wraps CharacterData with runtime state. It initializes from the character's base stats at battle start:
 
@@ -174,6 +178,22 @@ var current_defense: int = 0
 var current_speed: int = 0
 var defense_boost: int = 0
 var enemy_data: EnemyData = null  # For reward calculation
+
+
+static func from_enemy(enemy: EnemyData) -> BattlerData:
+    var battler := BattlerData.new()
+    var char_data := CharacterData.new()
+    char_data.display_name = enemy.display_name
+    char_data.portrait = enemy.sprite if enemy.sprite else preload("res://icon.svg")
+    char_data.max_hp = enemy.max_hp
+    char_data.max_mp = enemy.max_mp
+    char_data.attack = enemy.attack
+    char_data.defense = enemy.defense
+    char_data.speed = enemy.speed
+    battler.character_data = char_data
+    battler.is_player_controlled = false
+    battler.enemy_data = enemy
+    return battler
 
 
 func initialize_from_character() -> void:
@@ -509,6 +529,7 @@ enum AIType { AGGRESSIVE, CAUTIOUS, BALANCED }
 
 @export_group("Stats")
 @export var max_hp: int = 30
+@export var max_mp: int = 0
 @export var attack: int = 8
 @export var defense: int = 3
 @export var speed: int = 5

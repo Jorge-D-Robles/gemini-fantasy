@@ -263,10 +263,10 @@ func unequip(slot: ItemData.EquipSlot) -> ItemData:
 We need equipment the player can actually wear. If you created `iron_sword.tres` and `leather_armor.tres` back in Module 9, open them now and verify the equipment-specific fields match the values below. If you don't have them yet, create them now (right-click `res://data/items/` → New Resource → ItemData):
 
 **Iron Sword** (`res://data/items/iron_sword.tres`):
-- `id`: "iron_sword", `display_name`: "Iron Sword", `item_type`: EQUIPMENT, `equip_slot`: WEAPON, `attack_bonus`: 5, `buy_price`: 50, `sell_price`: 25
+- `id`: "iron_sword", `display_name`: "Iron Sword", `item_type`: EQUIPMENT, `equip_slot`: WEAPON, `attack_bonus`: 5, `buy_price`: 100, `sell_price`: 40
 
 **Leather Armor** (`res://data/items/leather_armor.tres`):
-- `id`: "leather_armor", `display_name`: "Leather Armor", `item_type`: EQUIPMENT, `equip_slot`: ARMOR, `defense_bonus`: 4, `buy_price`: 40, `sell_price`: 20
+- `id`: "leather_armor", `display_name`: "Leather Armor", `item_type`: EQUIPMENT, `equip_slot`: ARMOR, `defense_bonus`: 3, `buy_price`: 80, `sell_price`: 30
 
 ### The Complete Equip Flow
 
@@ -379,9 +379,32 @@ When the player clicks a slot button, show equipable items from inventory and al
 
 ```gdscript
 func _ready() -> void:
+    visible = false
+    process_mode = Node.PROCESS_MODE_ALWAYS
     _weapon_button.pressed.connect(_on_slot_pressed.bind(ItemData.EquipSlot.WEAPON))
     _armor_button.pressed.connect(_on_slot_pressed.bind(ItemData.EquipSlot.ARMOR))
     _accessory_button.pressed.connect(_on_slot_pressed.bind(ItemData.EquipSlot.ACCESSORY))
+
+
+func open_from_pause() -> void:
+    var members := PartyManager.get_members()
+    if members.is_empty():
+        return
+    show_character(members[0])
+    visible = true
+    get_tree().paused = true
+    _weapon_button.grab_focus()
+
+
+func close() -> void:
+    visible = false
+    get_tree().paused = false
+
+
+func _unhandled_input(event: InputEvent) -> void:
+    if visible and event.is_action_pressed("ui_cancel"):
+        close()
+        get_viewport().set_input_as_handled()
 
 
 func _on_slot_pressed(slot: ItemData.EquipSlot) -> void:
@@ -414,6 +437,31 @@ func _on_slot_pressed(slot: ItemData.EquipSlot) -> void:
 > **Exercise:** For a more polished experience, replace the "equip first item" logic with a popup list showing all matching items, their stats, and the stat difference compared to the current equipment. The inventory grid pattern from Module 12 works well for this.
 
 We are not creating an accessory item in this module, so the new Accessory button will usually show `(none)` for now. That is expected. The point is to keep the teaching UI aligned with the `CharacterData` slot model you just added.
+
+After creating the scene, instance `equipment_panel.tscn` into each gameplay scene (`Willowbrook`, `Whisperwood`, and `CrystalCavern`) as a direct child of the root, set it hidden by default, and add each instance to the `equipment_panels` group. Module 25's PauseMenu will open it through `open_from_pause()`, the same pattern used for InventoryScreen and QuestLog.
+
+### Out-of-Battle Consumables
+
+Module 12 had a temporary consumable path because the party roster did not exist yet. Now replace that temporary handler with a targeted API that heals a selected party member:
+
+```gdscript
+# Add to InventoryManager after PartyManager exists.
+func use_item_on_member(item: ItemData, member: CharacterData) -> bool:
+    if not item or not member:
+        return false
+    if item.item_type != ItemData.ItemType.CONSUMABLE:
+        return false
+    if item.hp_restore <= 0 and item.mp_restore <= 0:
+        return false
+    if not remove_item(item):
+        return false
+
+    member.current_hp = min(member.current_hp + item.hp_restore, member.max_hp)
+    member.current_mp = min(member.current_mp + item.mp_restore, member.max_mp)
+    return true
+```
+
+For a polished UI, let the player pick the target from `PartyManager.get_members()`. For this tutorial slice, selecting the first party member is acceptable as long as the healing goes through `use_item_on_member()` instead of placeholder print logic.
 
 ### Equipment Comparison: The PredictStats Pattern
 
@@ -498,6 +546,9 @@ ShopUI (CanvasLayer, layer = 15)
 └── Panel (PanelContainer, centered)
     └── Margin (MarginContainer)
         └── VBox (VBoxContainer)
+            ├── ModeTabs (HBoxContainer)
+            │   ├── BuyButton (Button: "Buy")
+            │   └── SellButton (Button: "Sell")
             ├── ItemList (VBoxContainer)
             └── GoldLabel (Label: "Gold: 0")
 ```
@@ -506,12 +557,15 @@ Save the script as `res://ui/shop/shop_ui.gd`:
 
 ```gdscript
 extends CanvasLayer
-## Shop interface for buying items.
+## Shop interface for buying and selling items.
 
 signal shop_closed
 
 var _shop_data: ShopData
+var _mode: String = "buy"
 
+@onready var _buy_button: Button = $Panel/Margin/VBox/ModeTabs/BuyButton
+@onready var _sell_button: Button = $Panel/Margin/VBox/ModeTabs/SellButton
 @onready var _item_list: VBoxContainer = $Panel/Margin/VBox/ItemList
 @onready var _gold_label: Label = $Panel/Margin/VBox/GoldLabel
 
@@ -520,6 +574,8 @@ func _ready() -> void:
     # Must process while paused so the shop can receive input
     process_mode = Node.PROCESS_MODE_ALWAYS
     visible = false
+    _buy_button.pressed.connect(_set_mode.bind("buy"))
+    _sell_button.pressed.connect(_set_mode.bind("sell"))
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -530,6 +586,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func open_shop(shop_data: ShopData) -> void:
     _shop_data = shop_data
+    _mode = "buy"
     visible = true
     get_tree().paused = true
     _refresh()
@@ -548,7 +605,25 @@ func _refresh() -> void:
     await get_tree().process_frame
 
     _gold_label.text = "Gold: " + str(InventoryManager.gold)
+    _buy_button.disabled = _mode == "buy"
+    _sell_button.disabled = _mode == "sell"
 
+    if _mode == "buy":
+        _refresh_buy_list()
+    else:
+        _refresh_sell_list()
+
+    if _item_list.get_child_count() > 0:
+        await get_tree().process_frame
+        _item_list.get_child(0).grab_focus()
+
+
+func _set_mode(mode: String) -> void:
+    _mode = mode
+    _refresh()
+
+
+func _refresh_buy_list() -> void:
     for item in _shop_data.items_for_sale:
         var button := Button.new()
         button.text = item.display_name + " - " + str(item.buy_price) + "g"
@@ -557,15 +632,29 @@ func _refresh() -> void:
         button.pressed.connect(_buy_item.bind(item))
         _item_list.add_child(button)
 
-    if _item_list.get_child_count() > 0:
-        await get_tree().process_frame
-        _item_list.get_child(0).grab_focus()
+
+func _refresh_sell_list() -> void:
+    for entry in InventoryManager.get_all_items():
+        var item: ItemData = entry.item
+        if item.sell_price <= 0:
+            continue
+        var button := Button.new()
+        button.text = item.display_name + " x" + str(entry.count) + " - " + str(item.sell_price) + "g"
+        button.pressed.connect(_sell_item.bind(item))
+        _item_list.add_child(button)
 
 
 func _buy_item(item: ItemData) -> void:
     if InventoryManager.spend_gold(item.buy_price):
         InventoryManager.add_item(item)
         print("Bought " + item.display_name + "!")
+        _refresh()
+
+
+func _sell_item(item: ItemData) -> void:
+    if InventoryManager.remove_item(item):
+        InventoryManager.add_gold(item.sell_price)
+        print("Sold " + item.display_name + "!")
         _refresh()
 ```
 
@@ -578,10 +667,24 @@ func _on_npc_interacted(npc: CharacterBody2D) -> void:
     if npc.npc_data.id == "shopkeeper":
         var shop_data: ShopData = load("res://data/shops/willowbrook_shop.tres")
         if shop_data:
-            _shop_ui.open_shop(shop_data)
+            _open_shop(shop_data)
             return
     # ... normal dialogue handling ...
+
+
+func _open_shop(shop_data: ShopData) -> void:
+    _shop_ui.open_shop(shop_data)
+    if not _shop_ui.shop_closed.is_connected(_on_shop_closed):
+        _shop_ui.shop_closed.connect(_on_shop_closed, CONNECT_ONE_SHOT)
+
+
+func _on_shop_closed() -> void:
+    var player := get_tree().get_first_node_in_group("player")
+    if player and player.has_method("end_interaction"):
+        player.end_interaction()
 ```
+
+Every modal UI opened from an NPC needs this close-signal cleanup path. Dialogue completion, shop close, and later custom menus all have to end the player's `INTERACT` state or the player can remain frozen after the UI disappears.
 
 ### The Innkeeper
 
@@ -612,8 +715,6 @@ func _handle_inn(npc: CharacterBody2D) -> void:
 > **See:** [GUI containers](https://docs.godotengine.org/en/stable/tutorials/ui/gui_containers.html). VBoxContainer and PanelContainer are used for the equipment and shop UIs.
 
 > **See:** [Resources](https://docs.godotengine.org/en/stable/tutorials/scripting/resources.html). ShopData and CharacterData equipment slots both use the Resource pattern.
-
-> **Note:** Selling items is left as an exercise. The pattern mirrors buying: show the player's inventory, select an item, add gold equal to half `buy_price`, remove the item from inventory.
 
 ## Autoload Reference Card (Updated)
 
@@ -655,7 +756,7 @@ Pausing with `get_tree().paused = true` pauses most nodes. Shop and equipment UI
 - Talking to Lira once introduces her, and the second conversation recruits her into the party
 - The equipment panel shows the selected character's stats plus weapon, armor, and accessory slots. The accessory slot will stay `(none)` until you add an accessory item later
 - Equipping a sword increases ATK in the stats display and in battle
-- The shopkeeper opens a buy menu with prices
+- The shopkeeper opens a buy/sell menu with prices and sell values
 - The innkeeper offers rest for 10 gold and heals the party
 - Lira appears in battle as a second party member once she joins
 

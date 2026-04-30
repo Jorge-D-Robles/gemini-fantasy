@@ -172,6 +172,28 @@ Create these `.tres` files in `res://data/items/`:
 - defense_bonus: 3
 - buy_price: 80, sell_price: 30
 
+## Canonical IDs
+
+Stable IDs are part of the game's data contract. Scenes, quests, save files, and dialogue code all compare these strings, so pick an ID once and keep it consistent. As you create data throughout the tutorial, use this registry:
+
+| Category | Resource/File | Canonical ID |
+|----------|---------------|--------------|
+| Item | `potion.tres` | `potion` |
+| Item | `ether.tres` | `ether` |
+| Item | `iron_sword.tres` | `iron_sword` |
+| Item | `leather_armor.tres` | `leather_armor` |
+| Character | `aiden.tres` | `aiden` |
+| NPC | `shopkeeper.tres` | `shopkeeper` |
+| NPC | `innkeeper.tres` | `innkeeper` |
+| NPC | `elder_maren.tres` | `elder_maren` |
+| NPC | `fynn.tres` | `fynn` |
+| Quest | `crystal_resonance.tres` | `crystal_resonance` |
+| Quest | `lost_pendant.tres` | `lost_pendant` |
+| Enemy | `crystal_guardian.tres` | `crystal_guardian` |
+| World object | Pendant chest in Whisperwood | `pendant_chest` |
+
+If a later module asks you to create or update one of these resources, keep the ID exactly as shown. The `.tres` filename and `id` should usually match.
+
 ## `preload()` vs `load()`, and When to Use Each
 
 There are two ways to load resources in code:

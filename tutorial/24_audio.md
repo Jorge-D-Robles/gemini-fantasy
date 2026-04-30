@@ -2,7 +2,7 @@
 
 ## What We Have So Far
 
-A complete, saveable JRPG with exploration, combat, quests, and party management. But it's silent. JRPGs are defined by their music as much as their gameplay. Time to fix that.
+A complete, saveable JRPG vertical slice with exploration, combat, quests, and party management. But it's silent. JRPGs are defined by their music as much as their gameplay. Time to fix that.
 
 ## What We're Building This Module
 
@@ -48,6 +48,7 @@ var _active_player: AudioStreamPlayer
 var _current_track_path: String = ""
 var _previous_track_path: String = ""
 var _crossfade_duration: float = 1.0
+var _crossfade_tween: Tween
 
 
 func _ready() -> void:
@@ -76,6 +77,9 @@ func play_music(track_path: String, crossfade: bool = true) -> void:
 
 
 func _crossfade_to(new_stream: AudioStream) -> void:
+    if _crossfade_tween and _crossfade_tween.is_valid():
+        _crossfade_tween.kill()
+
     var old_player := _active_player
     var new_player := _player_b if _active_player == _player_a else _player_a
 
@@ -83,11 +87,11 @@ func _crossfade_to(new_stream: AudioStream) -> void:
     new_player.volume_db = -40.0
     new_player.play()
 
-    var tween := create_tween()
-    tween.set_parallel(true)
-    tween.tween_property(old_player, "volume_db", -40.0, _crossfade_duration)
-    tween.tween_property(new_player, "volume_db", 0.0, _crossfade_duration)
-    tween.chain().tween_callback(old_player.stop)
+    _crossfade_tween = create_tween()
+    _crossfade_tween.set_parallel(true)
+    _crossfade_tween.tween_property(old_player, "volume_db", -40.0, _crossfade_duration)
+    _crossfade_tween.tween_property(new_player, "volume_db", 0.0, _crossfade_duration)
+    _crossfade_tween.chain().tween_callback(old_player.stop)
 
     _active_player = new_player
 

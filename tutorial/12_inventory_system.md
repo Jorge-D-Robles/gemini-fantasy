@@ -93,6 +93,14 @@ func get_consumables() -> Array[Dictionary]:
     ).duplicate(true)
 
 
+func use_item(item: ItemData) -> bool:
+    if not item or item.item_type != ItemData.ItemType.CONSUMABLE:
+        return false
+    if item.hp_restore <= 0 and item.mp_restore <= 0:
+        return false
+    return remove_item(item)
+
+
 func add_gold(amount: int) -> void:
     gold += amount
     gold_changed.emit(gold)
@@ -265,11 +273,10 @@ func close() -> void:
 
 
 func _refresh() -> void:
-    # free() removes nodes immediately this frame. queue_free() defers removal
-    # to the end of the frame. When repopulating a container, free() prevents
-    # old and new children from briefly coexisting and causing layout flicker.
     for child in _item_grid.get_children():
-        child.free()
+        child.queue_free()
+
+    await get_tree().process_frame
 
     # Create slots for each item
     var items := InventoryManager.get_all_items()
@@ -295,13 +302,13 @@ func _on_slot_activated(item: ItemData) -> void:
 
 
 func _use_consumable(item: ItemData) -> void:
-    # For now, apply directly to a placeholder HP value
-    # In Module 21, this will apply to the selected party member
+    # Temporary Module 12 behavior: no party target exists yet.
+    # Module 21 replaces this with use_item_on_member(item, member).
     if item.hp_restore > 0:
         print("Restored ", item.hp_restore, " HP!")
     if item.mp_restore > 0:
         print("Restored ", item.mp_restore, " MP!")
-    InventoryManager.remove_item(item)
+    InventoryManager.use_item(item)
 
 
 func _update_gold_display() -> void:
@@ -375,7 +382,8 @@ Willowbrook (Node2D)
 │   ├── Player
 │   ├── Shopkeeper (NPC)
 │   ├── Innkeeper (NPC)
-│   └── Traveler (NPC)
+│   ├── ElderMaren (NPC)
+│   └── Fynn (NPC)
 ├── AbovePlayer (TileMapLayer)
 ├── DialogueBox (CanvasLayer)
 └── InventoryScreen (CanvasLayer)

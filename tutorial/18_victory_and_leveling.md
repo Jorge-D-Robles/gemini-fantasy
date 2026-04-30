@@ -193,10 +193,7 @@ func enter(_context: Dictionary = {}) -> void:
         _apply_xp(battler, xp_per_member)
 
     # Sync battle HP/MP back to CharacterData for persistence
-    for battler in battle_manager.party:
-        if battler.character_data:
-            battler.character_data.current_hp = battler.current_hp
-            battler.character_data.current_mp = battler.current_mp
+    battle_manager.sync_party_to_character_data()
 
     # Grant gold
     InventoryManager.add_gold(total_gold)
@@ -242,6 +239,7 @@ extends BattleState
 func enter(_context: Dictionary = {}) -> void:
     print("DEFEAT")
     print("The party has fallen...")
+    battle_manager.sync_party_to_character_data()
     battle_manager.battle_lost.emit()
 
     await get_tree().create_timer(2.0).timeout
@@ -257,9 +255,20 @@ Module 25 replaces this with a proper Game Over screen with options (load save, 
 
 HP carry-over is the hidden engine of dungeon tension. In every classic Final Fantasy, the real challenge isn't any single battle. It's surviving the entire dungeon with limited healing. Each random encounter chips away at your HP and MP, and the question becomes: "Do I use my last Ether now, or save it for the boss?" This resource attrition is what makes save crystals feel like oases and inns feel like home.
 
-After a victorious battle, the party returns to the overworld with their current HP/MP intact. Two things make this work:
+After a victorious battle, the party returns to the overworld with their current HP/MP intact. This works because every battle exit path calls one helper before leaving the battle scene:
 
-1. **HP/MP sync**: the Victory state writes `battler.current_hp` and `battler.current_mp` back to `battler.character_data` (see the sync code above). Without this, the party would return to full HP after every fight.
+```gdscript
+# In BattleManager. Module 17's flee path uses this too.
+func sync_party_to_character_data() -> void:
+    for battler in party:
+        if battler.character_data:
+            battler.character_data.current_hp = battler.current_hp
+            battler.character_data.current_mp = battler.current_mp
+```
+
+Two things make that helper matter:
+
+1. **HP/MP sync**: victory, defeat, flee, and scripted escapes all write `battler.current_hp` and `battler.current_mp` back to `battler.character_data`. Without this, fleeing after taking damage would become a hidden full-heal exploit.
 2. **Resource sharing**: CharacterData resources are shared by reference. When the battle modifies stats via `level_up()`, that change persists across scenes automatically.
 
 For now, since we don't have a formal PartyManager yet (Module 21), the CharacterData resource at `res://data/characters/aiden.tres` is loaded via `load()`, which caches it. All code that loads the same path gets the same object during the current run, which is what lets battle results persist across scenes. In Module 22 and Module 25, we'll start loading **fresh runtime copies** for save/load and New Game so a brand-new run always starts from pristine base data on disk.
@@ -276,7 +285,7 @@ For now, since we don't have a formal PartyManager yet (Module 21), the Characte
 - **Public surface:** XP gain, level-up, reward calculation, loot rolls, and post-battle HP/MP sync.
 - **Invariant:** Level-up max HP/MP gains also increase current HP/MP by the same delta, capped at the new max.
 - **Failure behavior:** Dead party members do not receive XP in the base tutorial flow.
-- **Copy semantics:** Battle HP/MP lives on BattlerData until victory syncs it back to CharacterData.
+- **Copy semantics:** Battle HP/MP lives on BattlerData until a battle exit syncs it back to CharacterData.
 
 ## Engine Gotcha
 
@@ -290,7 +299,7 @@ Resource mutation is now intentional: party CharacterData is runtime state. New 
 - **Stat growth** per level uses base growth rates plus bounded randomness. Variance makes each level-up feel like a micro-event. Different characters should grow differently to feel distinct.
 - **Calculate before apply:** for a polished victory screen, separate `create_level_up()` (returns preview data) from `apply_level_up()` (commits changes). This enables animated stat displays.
 - **Loot drops** use probability (`randf() < drop_chance`) on each defeated enemy.
-- **Victory flow:** calculate rewards → distribute XP → check level ups → grant gold/items → return to overworld.
+- **Victory flow:** calculate rewards → distribute XP → check level ups → sync HP/MP → grant gold/items → return to overworld.
 - **Defeat flow:** display game over → return to title or last save.
 - Character progression is centralized through `CharacterData.grant_xp()`, so battles and later quest rewards can use the same level-up path.
 - Runtime CharacterData changes persist during the current play session because systems share the same active character resources.

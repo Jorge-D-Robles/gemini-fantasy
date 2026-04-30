@@ -120,9 +120,11 @@ The pause menu is accessible from anywhere during gameplay.
 
 Before building the pause menu, set up the groups it needs to find UI nodes across scenes. In **each area scene** (Willowbrook, Whisperwood, Crystal Cavern):
 
-1. Make sure the scene already contains an **InventoryScreen** instance from Module 12 and a **QuestLog** instance from Module 20 as direct children of the scene root.
+1. Make sure the scene already contains an **InventoryScreen** instance from Module 12, a **QuestLog** instance from Module 20, and an **EquipmentPanel** instance from Module 21 as direct children of the scene root.
 2. Select the **InventoryScreen** instance node → open the **Node** dock (next to Inspector) → **Groups** tab → type `inventory_screens` → click **Add**
 3. Select the **QuestLog** instance node → same process → add to group `quest_logs`
+4. Select the **EquipmentPanel** instance node → add it to group `equipment_panels`
+5. Select the scene root (`Willowbrook`, `Whisperwood`, or `CrystalCavern`) → add it to group `pause_allowed`
 
 The pause menu uses `get_first_node_in_group()` to find these nodes regardless of which scene is loaded.
 
@@ -137,6 +139,7 @@ PauseMenu (CanvasLayer, layer = 50, process_mode = ALWAYS)
         └── VBox (VBoxContainer)
             ├── ResumeButton (Button)
             ├── InventoryButton (Button)
+            ├── EquipmentButton (Button)
             ├── QuestLogButton (Button)
             ├── SettingsButton (Button)
             └── QuitButton (Button)
@@ -160,6 +163,7 @@ func _ready() -> void:
     _resume_btn.pressed.connect(close)
     _quit_btn.pressed.connect(_quit_to_title)
     $Background/Panel/VBox/InventoryButton.pressed.connect(_open_inventory)
+    $Background/Panel/VBox/EquipmentButton.pressed.connect(_open_equipment)
     $Background/Panel/VBox/QuestLogButton.pressed.connect(_open_quest_log)
     $Background/Panel/VBox/SettingsButton.pressed.connect(_open_settings)
 
@@ -194,9 +198,7 @@ func close() -> void:
 
 func _can_pause_current_scene() -> bool:
     var current_scene := get_tree().current_scene
-    if not current_scene:
-        return false
-    return current_scene.scene_file_path.begins_with("res://scenes/")
+    return current_scene and current_scene.is_in_group("pause_allowed")
 
 
 func _hide_for_submenu() -> void:
@@ -210,6 +212,14 @@ func _open_inventory() -> void:
     if inv and inv.has_method("open_from_pause"):
         _hide_for_submenu()
         inv.call("open_from_pause")
+
+
+func _open_equipment() -> void:
+    # Use Module 21's public API instead of toggling visibility directly.
+    var equipment := get_tree().get_first_node_in_group("equipment_panels")
+    if equipment and equipment.has_method("open_from_pause"):
+        _hide_for_submenu()
+        equipment.call("open_from_pause")
 
 
 func _open_quest_log() -> void:
@@ -234,7 +244,7 @@ func _quit_to_title() -> void:
 
 > **See:** [Pausing games](https://docs.godotengine.org/en/stable/tutorials/scripting/pausing_games.html). Covers `process_mode` and `get_tree().paused`.
 
-> **Note:** The pause menu's `process_mode = ALWAYS` ensures it receives input even when the tree is paused. The SceneManager also needs `ALWAYS` to handle transitions during pause.
+> **Note:** The pause menu's `process_mode = ALWAYS` ensures it receives input even when the tree is paused. The SceneManager also needs `ALWAYS` to handle transitions during pause. The `pause_allowed` group keeps pause out of battle, title, game over, ending, and credits scenes unless you intentionally add it there.
 
 ## The Game Over Screen
 
@@ -323,12 +333,16 @@ When the Crystal Guardian is defeated, trigger the ending. Open `res://systems/b
 # Check if this was the final boss fight
 var is_boss_fight: bool = false
 for enemy in battle_manager.enemies:
+    if enemy.enemy_data and enemy.enemy_data.id.is_empty():
+        push_warning("EnemyData missing id: " + enemy.enemy_data.resource_path)
     if enemy.enemy_data and enemy.enemy_data.id == "crystal_guardian":
         is_boss_fight = true
         break
 
 if is_boss_fight:
+    battle_manager.sync_party_to_character_data()
     GameManager.set_flag("boss_defeated")
+    GameManager.set_flag("world.crystal_cavern.crystal_guardian.defeated")
     await get_tree().create_timer(2.0).timeout
     SceneManager.change_scene("res://ui/ending/ending.tscn")
     return  # Skip normal victory flow
@@ -455,7 +469,7 @@ func _return_to_title() -> void:
 
 At any time during gameplay:
   Escape → Pause Menu
-    → Resume / Inventory / Quest Log / Settings / Quit to Title
+    → Resume / Inventory / Equipment / Quest Log / Settings / Quit to Title
   Save Crystal → Save Game
 ```
 
@@ -477,7 +491,7 @@ There are no dead ends now. Victory rolls through ending and credits back to the
 ## Engineering Contract
 
 - **Global state:** PauseMenu is a persistent autoload scene; Title/GameOver/Ending are scene flow endpoints.
-- **Public surface:** New Game initialization, Continue/Retry save slot loading, pause open/close, settings access, ending/credits navigation.
+- **Public surface:** New Game initialization, Continue/Retry save slot loading, pause open/close, equipment/inventory/quest/settings access, ending/credits navigation.
 - **Invariant:** Every blocking dialog has a cancellation path, and every game-over/victory route leads to load or title.
 - **Failure behavior:** Slot `0` means cancel and returns without loading; no caller waits forever.
 - **Copy semantics:** New Game loads fresh mutable character data with `ResourceLoader.CACHE_MODE_IGNORE`.
@@ -489,7 +503,7 @@ Paused games still need UI input. Set the pause menu's `process_mode` to `Node.P
 ## What We've Learned
 
 - The **title screen** initializes fresh state from pristine character definitions for New Game or opens the save slot dialog for Continue.
-- The **pause menu** uses `process_mode = ALWAYS`, gates itself to gameplay scenes, and opens Inventory/Quest Log through the public APIs from Modules 12 and 20.
+- The **pause menu** uses `process_mode = ALWAYS`, gates itself to `pause_allowed` gameplay scenes, and opens Inventory, Equipment, and Quest Log through the public APIs from Modules 12, 21, and 20.
 - **Quit to title** changes scene back to the title screen; the next New Game or Continue choice decides what state to load.
 - The **ending** triggers after the boss is defeated, leading to credits then title.
 - **Credits** scroll with a simple Tween on the label's Y position.

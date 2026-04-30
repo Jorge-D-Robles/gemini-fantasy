@@ -28,6 +28,8 @@ A complete tutorial JRPG vertical slice. Let that sink in. Across the series, yo
 
 That's a real tutorial game: a playable JRPG vertical slice with every major system in place. It is not a content-complete commercial RPG yet, but the architecture can support more content and polish.
 
+Intentional exclusions for this slice: Magic/AbilityData remains a future extension, status effects are limited to the Defend-style temporary buff pattern, and the starter quest log shows active quests only. Those are good next steps, not missing prerequisites for this tutorial's title-to-credits flow.
+
 ## Playtesting Walkthrough
 
 Play through Crystal Saga from start to finish and verify each checkpoint:
@@ -42,7 +44,9 @@ Play through Crystal Saga from start to finish and verify each checkpoint:
 - [ ] Town music plays
 - [ ] Walking into NPCs shows interaction prompt
 - [ ] Shopkeeper opens the shop (buy Potions, equipment)
+- [ ] Shopkeeper can buy from and sell to the player
 - [ ] Innkeeper offers rest for 10 gold
+- [ ] Elder Maren starts the Crystal Resonance quest
 - [ ] Fynn mentions his lost pendant (starts quest)
 - [ ] Lira can be recruited after two conversations
 
@@ -74,7 +78,8 @@ Play through Crystal Saga from start to finish and verify each checkpoint:
 - [ ] Save/load preserves all state correctly
 - [ ] Quest log shows correct objective states for active quests
 - [ ] Equipment changes are reflected in battle
-- [ ] Pause menu works during gameplay and stays inactive on title/ending screens
+- [ ] Pause menu opens Inventory, Equipment, Quest Log, and Settings during gameplay
+- [ ] Pause menu stays inactive on battle, title, game over, ending, and credits screens
 - [ ] Audio volume controls persist across restarts via `user://settings.cfg`
 
 ## Common Bugs and Fixes

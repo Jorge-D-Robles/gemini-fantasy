@@ -1,6 +1,6 @@
 # Tutorial: JRPG in Godot 4
 
-A 27-module tutorial series that takes a programmer with zero Godot experience through building a complete JRPG demo called **Crystal Saga**. The tutorial is rendered as a static website via `website/`.
+A 27-module tutorial series that takes a programmer with zero Godot experience through building a complete tutorial JRPG vertical slice called **Crystal Saga**. The tutorial is rendered as a static website via `website/`.
 
 ## Design Principles
 

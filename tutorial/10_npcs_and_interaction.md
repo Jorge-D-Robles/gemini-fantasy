@@ -188,11 +188,11 @@ Each NPC instance in the editor gets an `NPCData` resource assigned through the 
 
 ## Placing NPCs in Willowbrook
 
-Open `willowbrook.tscn` and instance the NPC scene three times:
+Open `willowbrook.tscn` and instance the NPC scene four times:
 
 1. Drag `npc.tscn` into the **YSortGroup** node in the scene tree (or use Instance Child Scene with YSortGroup selected). NPCs must be inside YSortGroup alongside the Player and Objects layer so they sort correctly by Y position.
-2. Rename each instance: `Shopkeeper`, `Innkeeper`, `Traveler`.
-3. Position them in appropriate spots: shopkeeper near a market stall, innkeeper by a house, traveler on the path.
+2. Rename each instance: `Shopkeeper`, `Innkeeper`, `ElderMaren`, `Fynn`.
+3. Position them in appropriate spots: shopkeeper near a market stall, innkeeper by a house, Elder Maren near the village center, Fynn on the path.
 
 **Important:** Add each NPC instance to the `npcs` group (select the NPC → **Node** tab → **Groups** → type `npcs` → click **Add**). The scene script below uses this group to find all NPCs.
 
@@ -210,8 +210,14 @@ For each NPC, create an NPCData `.tres` file in `res://data/npcs/` (create the f
 - facing_direction: Vector2.DOWN
 - dialogue_lines: ["Need a rest? 10 gold for a night.", "You look like you've seen some trouble."]
 
-**`res://data/npcs/traveler.tres`:**
-- id: "traveler"
+**`res://data/npcs/elder_maren.tres`:**
+- id: "elder_maren"
+- display_name: "Elder Maren"
+- facing_direction: Vector2.DOWN
+- dialogue_lines: ["The crystals have grown restless.", "If you are brave, seek the old cavern beyond Whisperwood."]
+
+**`res://data/npcs/fynn.tres`:**
+- id: "fynn"
 - display_name: "Wandering Fynn"
 - facing_direction: Vector2.LEFT
 - dialogue_lines: ["I lost something precious in the Whisperwood...", "A pendant, silver with a blue stone.", "If you find it, I'd be forever grateful."]
@@ -304,7 +310,7 @@ Area2D overlap signals depend on collision layers and masks. If the prompt never
 ## What You Should See
 
 When you press F6 (running Willowbrook):
-- Three NPCs stand in town
+- Four NPCs stand in town
 - Walking near an NPC shows an interaction prompt icon
 - Walking away hides the prompt
 - Pressing the interact key near an NPC:

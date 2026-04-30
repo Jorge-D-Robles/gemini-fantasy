@@ -19,7 +19,7 @@ Module 26 was the finish line: a full playtesting walkthrough, a troubleshooting
 
 ### Module 25: Title Screen and Game Flow
 - Built a **title screen** with New Game (fresh state initialization), Continue (save slot loading), and Settings (volume controls)
-- Created a **pause menu** as an autoload using `process_mode = ALWAYS` and `get_tree().paused`, while delegating inventory and quest log opening to the public APIs from Modules 12 and 20
+- Created a **pause menu** as an autoload using `process_mode = ALWAYS` and `get_tree().paused`, while delegating inventory, equipment, and quest log opening to the public APIs from Modules 12, 21, and 20
 - Implemented **Game Over** and **Victory Ending** screens that replaced placeholder defeat/victory behavior from earlier modules
 - Built **scrolling credits** using a Tween on the label's Y position
 - Completed the **game flow**: victory returns through credits to the title screen, while defeat routes through Game Over with a load-or-title choice
@@ -77,6 +77,9 @@ The MusicManager autoload uses two AudioStreamPlayers (A and B) to crossfade bet
 
 ```gdscript
 # In MusicManager autoload (music_manager.gd):
+var _crossfade_tween: Tween
+
+
 func play_music(track_path: String, crossfade: bool = true) -> void:
     if track_path == _current_track_path:
         return  # Already playing this track
@@ -97,6 +100,9 @@ func play_music(track_path: String, crossfade: bool = true) -> void:
 
 
 func _crossfade_to(new_stream: AudioStream) -> void:
+    if _crossfade_tween and _crossfade_tween.is_valid():
+        _crossfade_tween.kill()
+
     var old_player := _active_player
     var new_player := _player_b if _active_player == _player_a else _player_a
 
@@ -104,11 +110,11 @@ func _crossfade_to(new_stream: AudioStream) -> void:
     new_player.volume_db = -40.0
     new_player.play()
 
-    var tween := create_tween()
-    tween.set_parallel(true)
-    tween.tween_property(old_player, "volume_db", -40.0, _crossfade_duration)
-    tween.tween_property(new_player, "volume_db", 0.0, _crossfade_duration)
-    tween.chain().tween_callback(old_player.stop)
+    _crossfade_tween = create_tween()
+    _crossfade_tween.set_parallel(true)
+    _crossfade_tween.tween_property(old_player, "volume_db", -40.0, _crossfade_duration)
+    _crossfade_tween.tween_property(new_player, "volume_db", 0.0, _crossfade_duration)
+    _crossfade_tween.chain().tween_callback(old_player.stop)
 
     _active_player = new_player
 ```
@@ -379,7 +385,7 @@ The complete game loop:
 
 At any time during gameplay:
   Escape -> Pause Menu
-    -> Resume / Inventory / Quest Log / Settings / Quit to Title
+    -> Resume / Inventory / Equipment / Quest Log / Settings / Quit to Title
   Save Crystal -> Save Game
 ```
 
@@ -407,6 +413,7 @@ func _ready() -> void:
     _resume_btn.pressed.connect(close)
     _quit_btn.pressed.connect(_quit_to_title)
     $Background/Panel/VBox/InventoryButton.pressed.connect(_open_inventory)
+    $Background/Panel/VBox/EquipmentButton.pressed.connect(_open_equipment)
     $Background/Panel/VBox/QuestLogButton.pressed.connect(_open_quest_log)
     $Background/Panel/VBox/SettingsButton.pressed.connect(_open_settings)
 
@@ -441,9 +448,7 @@ func close() -> void:
 
 func _can_pause_current_scene() -> bool:
     var current_scene := get_tree().current_scene
-    if not current_scene:
-        return false
-    return current_scene.scene_file_path.begins_with("res://scenes/")
+    return current_scene and current_scene.is_in_group("pause_allowed")
 
 
 func _hide_for_submenu() -> void:
@@ -456,6 +461,13 @@ func _open_inventory() -> void:
     if inv and inv.has_method("open_from_pause"):
         _hide_for_submenu()
         inv.call("open_from_pause")
+
+
+func _open_equipment() -> void:
+    var equipment := get_tree().get_first_node_in_group("equipment_panels")
+    if equipment and equipment.has_method("open_from_pause"):
+        _hide_for_submenu()
+        equipment.call("open_from_pause")
 
 
 func _open_quest_log() -> void:
@@ -475,7 +487,7 @@ func _quit_to_title() -> void:
     SceneManager.change_scene("res://ui/title_screen/title_screen.tscn")
 ```
 
-The two critical pieces: `process_mode = Node.PROCESS_MODE_ALWAYS` ensures the pause menu still receives input when the tree is paused. `get_tree().paused = true` freezes every other node in the game. The `_can_pause_current_scene()` guard keeps Escape from opening the pause menu on title, ending, game over, or credits screens.
+The two critical pieces: `process_mode = Node.PROCESS_MODE_ALWAYS` ensures the pause menu still receives input when the tree is paused. `get_tree().paused = true` freezes every other node in the game. The `_can_pause_current_scene()` guard uses the `pause_allowed` group so Escape opens the menu only in overworld/dungeon gameplay scenes, not in battle, title, ending, game over, or credits.
 
 > **See:** [Pausing games](https://docs.godotengine.org/en/stable/tutorials/scripting/pausing_games.html) | [SceneTree.paused](https://docs.godotengine.org/en/stable/classes/class_scenetree.html#class-scenetree-property-paused) | [Node.process_mode](https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-property-process-mode)
 
@@ -515,7 +527,7 @@ The `.pck` file holds every resource in your project (scenes, scripts, art, audi
 
 ### Polish Checklist
 
-A reference list of polish items to consider before shipping. None of these are required to have a complete game, but each one makes the experience noticeably better:
+A reference list of polish items to consider before shipping. None of these are required for the tutorial vertical slice, but each one makes the experience noticeably better:
 
 - **Screen shake** on big hits (offset the camera briefly using a Tween)
 - **Damage numbers** that float up and fade out
@@ -610,7 +622,8 @@ UI screens are Control nodes that overlay the game world. Some are scene-local c
 | DialogueBox | 11 | NPC interaction |
 | InventoryScreen | 12 | Pause menu or dedicated button |
 | BattleUI | 14-15 | Entering a battle |
-| ShopUI | 21 | Talking to a shopkeeper |
+| EquipmentPanel | 21 | Pause menu |
+| ShopUI | 21 | Talking to a shopkeeper, buy/sell modal |
 | QuestLog | 20 | Pause menu |
 | SettingsPanel | 24 | Title screen or pause menu |
 | TitleScreen | 25 | Game launch, quit-to-title |
@@ -629,6 +642,7 @@ Player interacts with NPC
   -> Dialogue may start a quest via QuestManager (Module 20)
   -> Dialogue may recruit a party member via PartyManager (Module 21)
   -> Dialogue may open the ShopUI directly (Module 21)
+  -> ShopUI.shop_closed unfreezes the player interaction state
 
 Player enters a Crystal Cavern encounter zone
   -> EncounterSystem rolls for a random battle (Module 17)
@@ -650,7 +664,9 @@ Player changes audio settings
   -> ConfigFile saves music_volume and sfx_volume to user://settings.cfg
 
 Player defeats final boss
-  -> VictoryState detects boss ID, sets a GameManager world flag (Module 25)
+  -> VictoryState detects enemy_data.id == "crystal_guardian"
+  -> Missing enemy IDs push a warning before detection
+  -> VictoryState syncs HP/MP, sets boss_defeated and world boss flags (Module 25)
   -> SceneManager loads Ending scene (Module 25)
   -> Ending auto-advances to Credits (Module 25)
   -> Credits return to TitleScreen (Module 25)
@@ -673,6 +689,8 @@ Three patterns recur throughout the entire architecture. If you internalize thes
 | Registering MusicManager or PauseMenu as `.gd` instead of `.tscn` | Null reference errors on `$PlayerA`, `$Background` | Register the `.tscn` file in Project Settings -> Autoload, not the `.gd` file |
 | Not setting `process_mode = ALWAYS` on the pause menu | Pause menu does not respond to input when the game is paused | Set `process_mode = Node.PROCESS_MODE_ALWAYS` in `_ready()` |
 | Calling `get_tree().paused = true` without unpausing on resume | Game stays frozen after closing the pause menu | Ensure `close()` sets `get_tree().paused = false` |
+| Gating PauseMenu by scene path | Pause opens during battle or other `res://scenes/` screens | Add only gameplay roots to `pause_allowed` and check that group |
+| Leaving EquipmentPanel out of PauseMenu | Gear exists but the player cannot equip it from gameplay | Add EquipmentButton and open the `equipment_panels` group through `open_from_pause()` |
 | Using cached `load()` for a mutable character Resource | New Game carries stats from previous play session | Load a fresh runtime copy with `ResourceLoader.load(path, "", ResourceLoader.CACHE_MODE_IGNORE)` before modifying it |
 | Slider value passed directly to `set_bus_volume_db()` | Volume curve feels wrong (too quiet in the middle) | Convert with `linear_to_db(value)` first; it handles the logarithmic curve |
 | Music plays over itself when re-entering the same area | Two copies of the same track stacked | Check `track_path == _current_track_path` and return early if already playing |
