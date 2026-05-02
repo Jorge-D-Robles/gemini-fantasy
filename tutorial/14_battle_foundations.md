@@ -98,24 +98,38 @@ Save these as `res://systems/battle/battle_state.gd` and `res://systems/battle/b
 > **Spiral:** Compare this to Module 6's enum state machine. The enum approach uses `match` in `_physics_process` to route to different functions. The node approach uses polymorphism: each state is a separate Node, and the machine just calls `enter()`/`process()`/`exit()` on whichever one is current. Same pattern, different scale.
 
 ```mermaid
-stateDiagram-v2
-    [*] --> Intro
+graph TD
+    Intro["Intro\nbrief pause"]
+    Queue["TurnStart\nbuild speed-sorted queue"]
+    Next["Pop next alive battler"]
+    Player{"Player controlled?"}
+    Choice["PlayerChoice\nwait for command"]
+    Enemy["ActionExecute\nenemy_turn"]
+    Execute["ActionExecute\nresolve command"]
+    Result{"Battle over?"}
+    More{"Queue empty?"}
+    Victory["Victory"]
+    Defeat["Defeat"]
 
-    Intro --> TurnStart : after delay
+    Intro --> Queue
+    Queue --> Next
+    Next --> Player
+    Player -->|yes| Choice
+    Player -->|no| Enemy
+    Choice --> Execute
+    Enemy --> Execute
+    Execute --> Result
+    Result -->|all enemies dead| Victory
+    Result -->|all party dead| Defeat
+    Result -->|no| More
+    More -->|no| Next
+    More -->|yes| Queue
 
-    TurnStart --> PlayerChoice : player's turn
-    TurnStart --> ActionExecute : enemy's turn
-
-    PlayerChoice --> ActionExecute : action chosen
-
-    ActionExecute --> CheckResult : action complete
-
-    CheckResult --> Victory : all enemies dead
-    CheckResult --> Defeat : all party dead
-    CheckResult --> TurnStart : queue empty (new round)
-
-    Victory --> [*]
-    Defeat --> [*]
+    style Queue fill:#3498db,color:#fff
+    style Choice fill:#2ecc71,color:#fff
+    style Enemy fill:#e67e22,color:#fff
+    style Victory fill:#2ecc71,color:#fff
+    style Defeat fill:#e74c3c,color:#fff
 ```
 
 ## BattlerData: Who's Fighting

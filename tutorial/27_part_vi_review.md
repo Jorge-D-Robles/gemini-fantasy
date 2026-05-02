@@ -35,19 +35,15 @@ Module 26 was the finish line: a full playtesting walkthrough, a troubleshooting
 
 ```mermaid
 graph TD
-    subgraph "Audio Bus Routing"
-        Master["🔊 Master Bus"]
-        Music["🎵 Music Bus\n(BGM, crossfade)"]
-        SFX["🔔 SFX Bus\n(one-shot effects)"]
-        MgrA["MusicManager\nPlayerA"]
-        MgrB["MusicManager\nPlayerB"]
-        OneShot["Fire-and-forget\nAudioStreamPlayer"]
-    end
+    MusicPlayers["MusicManager\nPlayerA + PlayerB"]
+    Music["Music Bus\nBGM and crossfade"]
+    OneShot["One-shot AudioStreamPlayer"]
+    SFX["SFX Bus\nmenu and battle effects"]
+    Master["Master Bus"]
 
-    MgrA --> Music
-    MgrB --> Music
-    OneShot --> SFX
+    MusicPlayers --> Music
     Music --> Master
+    OneShot --> SFX
     SFX --> Master
 
     style Master fill:#e74c3c,color:#fff
@@ -56,37 +52,44 @@ graph TD
 ```
 
 ```mermaid
-stateDiagram-v2
-    [*] --> TitleScreen
+graph TD
+    Title["Title Screen"]
+    Start{"Start option"}
+    Gameplay["Gameplay\nOverworld and Dungeon"]
+    Pause["Pause Menu\nResume, inventory, equipment,\nquest log, settings"]
+    Encounter["Battle Encounter"]
+    BattleResult{"Battle result"}
+    Boss["Boss Fight"]
+    BossResult{"Boss result"}
+    Ending["Ending"]
+    Credits["Credits"]
+    GameOver["Game Over"]
+    Recover{"Recover?"}
 
-    TitleScreen --> Gameplay : New Game
-    TitleScreen --> Gameplay : Continue (Load)
-    TitleScreen --> Settings
-
-    state Gameplay {
-        [*] --> Overworld
-        Overworld --> Dungeon : Exit Zone
-        Dungeon --> Overworld : Exit Zone
-        Overworld --> Battle : Encounter
-        Dungeon --> Battle : Encounter
-        Battle --> Overworld : Victory
-        Battle --> GameOver : Defeat
-        Dungeon --> BossFight : Boss Room
-        BossFight --> Ending : Boss defeated
-        BossFight --> GameOver : Defeat
-    }
-
-    state Gameplay {
-        Overworld --> PauseMenu : Escape
-        Dungeon --> PauseMenu : Escape
-        PauseMenu --> Overworld : Resume
-        PauseMenu --> Dungeon : Resume
-    }
-
+    Title --> Start
+    Start -->|New Game| Gameplay
+    Start -->|Continue| Gameplay
+    Start -->|Settings| Title
+    Gameplay -->|Escape| Pause
+    Pause -->|Resume| Gameplay
+    Gameplay -->|random encounter| Encounter
+    Encounter --> BattleResult
+    BattleResult -->|Victory| Gameplay
+    BattleResult -->|Defeat| GameOver
+    Gameplay -->|Boss Room| Boss
+    Boss --> BossResult
+    BossResult -->|Boss defeated| Ending
+    BossResult -->|Defeat| GameOver
     Ending --> Credits
-    Credits --> TitleScreen
-    GameOver --> TitleScreen : Quit
-    GameOver --> Gameplay : Load Save
+    Credits --> Title
+    GameOver --> Recover
+    Recover -->|Load Save| Gameplay
+    Recover -->|Quit| Title
+
+    style Title fill:#8e44ad,color:#fff
+    style Encounter fill:#e74c3c,color:#fff
+    style Boss fill:#c0392b,color:#fff
+    style Ending fill:#f39c12,color:#000
 ```
 
 | Concept | What It Is | Why It Matters | First Seen |

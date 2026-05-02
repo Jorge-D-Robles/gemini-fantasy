@@ -137,7 +137,13 @@ def check_abilitydata_context(path: Path, lines: list[str], errors: list[str]) -
 
 
 def check_visible_double_dash(path: Path, lines: list[str], errors: list[str]) -> None:
+    in_fenced_block = False
     for index, line in enumerate(lines, start=1):
+        if line.startswith("```"):
+            in_fenced_block = not in_fenced_block
+            continue
+        if in_fenced_block:
+            continue
         if is_table_separator(line):
             continue
         if "--" in line:

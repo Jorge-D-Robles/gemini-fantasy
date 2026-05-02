@@ -119,33 +119,19 @@ static func _ai_balanced(battler: BattlerData, targets: Array[BattlerData]) -> D
 
 ```mermaid
 graph TD
-    subgraph "🔴 Aggressive"
-        A1["Find weakest\n(lowest HP)"]
-        A2["Attack weakest"]
-        A1 --> A2
-    end
+    Start["Enemy AI type patterns"]
+    Agg["Aggressive\nFind the lowest-HP target\nAttack that target"]
+    Caut["Cautious\nIf HP < 30%: defend\nOtherwise: attack random"]
+    Bal["Balanced\n30% chance: defend\n70% chance: attack random"]
 
-    subgraph "🟡 Cautious"
-        C1{"HP < 30%?"}
-        C2["Defend"]
-        C3["Attack random"]
-        C1 --> |Yes| C2
-        C1 --> |No| C3
-    end
+    Start --> Agg
+    Agg --> Caut
+    Caut --> Bal
 
-    subgraph "🔵 Balanced"
-        B1{"Roll < 0.3?"}
-        B2["Defend"]
-        B3["Attack random"]
-        B1 --> |Yes| B2
-        B1 --> |No| B3
-    end
-
-    style A2 fill:#e74c3c,color:#fff
-    style C2 fill:#f39c12,color:#fff
-    style C3 fill:#f39c12,color:#fff
-    style B2 fill:#3498db,color:#fff
-    style B3 fill:#3498db,color:#fff
+    style Start fill:#2c3e50,color:#fff
+    style Agg fill:#e74c3c,color:#fff
+    style Caut fill:#f39c12,color:#fff
+    style Bal fill:#3498db,color:#fff
 ```
 
 ## The Encounter System

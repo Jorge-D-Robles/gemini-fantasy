@@ -111,22 +111,28 @@ func _place_player_at_spawn() -> void:
 ```
 
 ```mermaid
-sequenceDiagram
-    participant EZ as ExitZone
-    participant SM as SceneManager
-    participant Anim as AnimationPlayer
-    participant Tree as SceneTree
+graph TD
+    Exit["ExitZone calls\nSceneManager.change_scene(path, spawn)"]
+    Lock["_is_transitioning = true"]
+    FadeOut["AnimationPlayer\nplay fade_out"]
+    Swap["SceneTree\nchange_scene_to_file(path)"]
+    Wait["await get_tree().scene_changed"]
+    Spawn["_place_player_at_spawn()"]
+    FadeIn["AnimationPlayer\nplay fade_in"]
+    Unlock["_is_transitioning = false\ntransition_finished emitted"]
 
-    EZ->>SM: change_scene(path, spawn)
-    SM->>SM: _is_transitioning = true
-    SM->>Anim: play("fade_out")
-    Anim-->>SM: animation_finished
-    SM->>Tree: change_scene_to_file(path)
-    Tree-->>SM: scene_changed
-    SM->>SM: _place_player_at_spawn()
-    SM->>Anim: play("fade_in")
-    Anim-->>SM: animation_finished
-    SM->>SM: _is_transitioning = false
+    Exit --> Lock
+    Lock --> FadeOut
+    FadeOut --> Swap
+    Swap --> Wait
+    Wait --> Spawn
+    Spawn --> FadeIn
+    FadeIn --> Unlock
+
+    style Exit fill:#2ecc71,color:#fff
+    style FadeOut fill:#8e44ad,color:#fff
+    style Swap fill:#3498db,color:#fff
+    style FadeIn fill:#8e44ad,color:#fff
 ```
 
 ### Step 2: Create the Scene

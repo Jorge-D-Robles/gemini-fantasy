@@ -40,22 +40,20 @@ Each autoload gets two methods: one to export its state as a Dictionary, one to 
 
 ```mermaid
 graph TD
-    subgraph "Serialization (Save)"
-        direction LR
-        AutoS["Autoload State\n(Variables, Arrays)"] -->|to_save_data| DictS["Dictionary"]
-        DictS -->|JSON.stringify| File["JSON File\nuser://save1.json"]
-    end
+    AutoS["Autoload State\nvariables and arrays"]
+    DictS["Dictionary"]
+    File["JSON File\nuser://save1.json"]
+    DictL["Dictionary"]
+    AutoL["Autoload State\nrestored variables and arrays"]
 
-    subgraph "Deserialization (Load)"
-        direction LR
-        File2["JSON File\nuser://save1.json"] -->|JSON.parse| DictL["Dictionary"]
-        DictL -->|from_save_data| AutoL["Autoload State\n(Variables, Arrays)"]
-    end
+    AutoS -->|to_save_data| DictS
+    DictS -->|JSON.stringify| File
+    File -->|JSON.parse| DictL
+    DictL -->|from_save_data| AutoL
     
     style AutoS fill:#3498db,color:#fff
     style AutoL fill:#3498db,color:#fff
     style File fill:#e67e22,color:#fff
-    style File2 fill:#e67e22,color:#fff
 ```
 
 ### GameManager
@@ -279,30 +277,30 @@ Create `res://autoloads/save_manager.gd` and register it as an autoload (**Proje
 > **Note:** `await` is a GDScript coroutine feature. The reason SaveManager is an autoload is architectural: it owns persistent save-slot behavior and orchestrates scene changes from a node that is not freed when gameplay scenes are replaced.
 
 ```mermaid
-sequenceDiagram
-    participant Crystal as Save Crystal
-    participant SVM as SaveManager
-    participant GM as GameManager
-    participant IM as InventoryManager
-    participant PM as PartyManager
-    participant QM as QuestManager
-    participant File as JSON File
+graph TD
+    Crystal["Save Crystal opens save slot UI"]
+    Save["SaveManager.save_game(slot)"]
+    Gather["Call to_save_data() on\nGameManager, InventoryManager,\nPartyManager, QuestManager"]
+    Write["JSON.stringify()\nwrite to user://saves/"]
+    Load["SaveManager.load_game(slot)"]
+    Read["Read file\nJSON.parse()"]
+    Restore["Call from_save_data() on each manager"]
+    Scene["change_scene_to_file()\nawait scene_changed"]
+    Position["Restore player position"]
 
-    Note over Crystal: SAVE
-    Crystal->>SVM: save_game(slot)
-    SVM->>GM: to_save_data()
-    SVM->>IM: to_save_data()
-    SVM->>PM: to_save_data()
-    SVM->>QM: to_save_data()
-    SVM->>File: JSON.stringify → write
+    Crystal --> Save
+    Save --> Gather
+    Gather --> Write
+    Write -->|"later"| Load
+    Load --> Read
+    Read --> Restore
+    Restore --> Scene
+    Scene --> Position
 
-    Note over Crystal: LOAD
-    SVM->>File: read → JSON.parse
-    SVM->>GM: from_save_data(dict)
-    SVM->>IM: from_save_data(dict)
-    SVM->>PM: from_save_data(dict)
-    SVM->>QM: from_save_data(dict)
-    SVM->>SVM: change_scene + restore position
+    style Save fill:#3498db,color:#fff
+    style Load fill:#8e44ad,color:#fff
+    style Write fill:#e67e22,color:#fff
+    style Position fill:#2ecc71,color:#fff
 ```
 
 ```gdscript

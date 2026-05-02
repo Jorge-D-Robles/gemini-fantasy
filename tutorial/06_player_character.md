@@ -175,19 +175,6 @@ stateDiagram-v2
     IDLE --> DISABLED : set_disabled(true)
     WALK --> DISABLED : set_disabled(true)
     DISABLED --> IDLE : set_disabled(false)
-
-    state IDLE {
-        [*] : Play idle animation
-    }
-    state WALK {
-        [*] : move_and_slide()
-    }
-    state INTERACT {
-        [*] : Frozen, external control
-    }
-    state DISABLED {
-        [*] : Fully inert
-    }
 ```
 
 ### Implementation

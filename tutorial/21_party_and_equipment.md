@@ -742,21 +742,20 @@ func _handle_inn(npc: CharacterBody2D) -> void:
 
 ```mermaid
 graph TD
-    subgraph "Persistent Autoloads under /root"
-        SM["SceneManager\n(Module 7)"]
-        IM["InventoryManager\n(Module 12)"]
-        GM["GameManager\n(Module 20)"]
-        QM["QuestManager\n(Module 20)"]
-        PM["PartyManager\n(Module 21)"]
+    subgraph Root["Persistent autoloads under /root"]
+        direction TB
+        SM["SceneManager\nModule 7"]
+        IM["InventoryManager\nModule 12"]
+        GM["GameManager\nModule 20"]
+        QM["QuestManager\nModule 20"]
+        PM["PartyManager\nModule 21"]
     end
 
-    subgraph "Swapped at Runtime"
-        Scene["Current Gameplay Scene"]
-    end
+    Scene["Current gameplay scene\nswapped at runtime"]
 
-    QM --> |"listens to flag_changed"| GM
-    SM --> |"transitions"| Scene
-    PM --> |"provides roster to"| Scene
+    GM -->|"flag_changed"| QM
+    PM -->|"provides roster to"| Scene
+    SM -->|"transitions"| Scene
 
     style SM fill:#e74c3c,color:#fff
     style IM fill:#e67e22,color:#fff

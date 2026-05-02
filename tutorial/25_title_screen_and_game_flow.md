@@ -478,37 +478,43 @@ There are no dead ends now. Victory rolls through ending and credits back to the
 ```mermaid
 graph TD
     Title["Title Screen"]
-    NG["New Game\n(fresh state)"]
-    Cont["Continue\n(load save)"]
-    WB["Willowbrook"]
-    WW["Whisperwood"]
-    CC["Crystal Cavern"]
+    Choice{"Player chooses"}
+    Fresh["New Game\ninitialize fresh state"]
+    Continue["Continue\nload save slot"]
+    Explore["Gameplay scenes\nWillowbrook → Whisperwood → Crystal Cavern"]
+    Pause["Pause Menu\nResume / Inventory / Equipment / Quest Log / Settings"]
+    Save["Save Crystal\nSave Game"]
     Boss["Boss Fight"]
-    Vic["Victory"]
-    Def["Defeat"]
-    End["Ending"]
-    Cred["Credits"]
-    GO["Game Over"]
+    Outcome{"Boss outcome"}
+    Ending["Ending"]
+    Credits["Credits"]
+    GameOver["Game Over"]
+    Recovery{"Recover?"}
 
-    Title -->|"New Game"| NG --> WB
-    Title -->|"Continue"| Cont --> WB
-
-    WB <-->|transition| WW
-    WW <-->|transition| CC
-    CC -->|boss trigger| Boss
-
-    Boss -->|win| Vic
-    Boss -->|lose| Def
-    Vic --> End --> Cred --> Title
-    Def --> GO
-    GO -->|"Load Save"| Cont
-    GO -->|"Return to Title"| Title
+    Title --> Choice
+    Choice -->|New Game| Fresh
+    Choice -->|Continue| Continue
+    Fresh --> Explore
+    Continue --> Explore
+    Explore --> Pause
+    Pause --> Explore
+    Explore --> Save
+    Save --> Explore
+    Explore --> Boss
+    Boss --> Outcome
+    Outcome -->|win| Ending
+    Ending --> Credits
+    Credits --> Title
+    Outcome -->|lose| GameOver
+    GameOver --> Recovery
+    Recovery -->|Load Save| Continue
+    Recovery -->|Return to Title| Title
 
     style Title fill:#8e44ad,color:#fff
     style Boss fill:#e74c3c,color:#fff
-    style End fill:#f39c12,color:#fff
-    style GO fill:#c0392b,color:#fff
-    style Cred fill:#3498db,color:#fff
+    style Ending fill:#f39c12,color:#fff
+    style GameOver fill:#c0392b,color:#fff
+    style Credits fill:#3498db,color:#fff
 ```
 
 ## Autoload Reference Card (Final)

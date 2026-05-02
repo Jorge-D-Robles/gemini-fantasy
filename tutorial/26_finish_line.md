@@ -30,42 +30,35 @@ That's a real tutorial game: a playable JRPG vertical slice with every major sys
 
 ```mermaid
 graph TD
-    subgraph "Game Flow"
-        Title["🏠 Title Screen"]
-        OW["🌍 Overworld\n(Willowbrook, Whisperwood)"]
-        Dun["🏰 Dungeon\n(Crystal Cavern)"]
-        Battle["⚔️ Battle"]
-        Victory["🎉 Victory\nXP + Loot"]
-        Defeat["💀 Game Over"]
-        End["🏆 Ending + Credits"]
-    end
+    Title["Title Screen"]
+    Explore["Explore Overworld\nWillowbrook and Whisperwood"]
+    Dungeon["Crystal Cavern\nsave crystal, treasure, encounters"]
+    Battle["Battle\nturns, AI, rewards"]
+    Result{"Battle result"}
+    Victory["Victory\nXP, gold, loot"]
+    Defeat["Game Over"]
+    Ending["Ending and Credits"]
+    Systems["Persistent autoloads\nScene, game flags, inventory,\nparty, quests, saves, music, pause"]
 
-    Title --> |"New Game"| OW
-    Title --> |"Continue"| OW
-    OW --> |"Exit Zone"| Dun
-    OW <--> |"SceneManager"| Dun
-    Dun --> |"Encounter"| Battle
-    OW --> |"Encounter"| Battle
-    Battle --> Victory --> OW
-    Battle --> Defeat --> Title
-    Dun --> |"Boss defeated"| End --> Title
-
-    subgraph "Persistent Systems (Autoloads)"
-        SM["SceneManager"]
-        GM["GameManager"]
-        IM["InventoryManager"]
-        PM["PartyManager"]
-        QM["QuestManager"]
-        SVM["SaveManager"]
-        MM["MusicManager"]
-        Pause["PauseMenu"]
-    end
+    Title -->|"New Game / Continue"| Explore
+    Explore -->|"Exit Zone"| Dungeon
+    Dungeon -->|"Random encounter"| Battle
+    Battle --> Result
+    Result -->|win| Victory
+    Victory --> Explore
+    Result -->|lose| Defeat
+    Defeat --> Title
+    Dungeon -->|"Boss defeated"| Ending
+    Ending --> Title
+    Systems -. support .-> Explore
+    Systems -. support .-> Dungeon
+    Systems -. support .-> Battle
 
     style Title fill:#8e44ad,color:#fff
     style Battle fill:#e74c3c,color:#fff
     style Victory fill:#2ecc71,color:#fff
     style Defeat fill:#7f8c8d,color:#fff
-    style End fill:#f39c12,color:#fff
+    style Ending fill:#f39c12,color:#fff
 ```
 
 Intentional exclusions for this slice: Magic/AbilityData remains a future extension, status effects are limited to the Defend-style temporary buff pattern, and the starter quest log shows active quests only. Those are good next steps, not missing prerequisites for this tutorial's title-to-credits flow.

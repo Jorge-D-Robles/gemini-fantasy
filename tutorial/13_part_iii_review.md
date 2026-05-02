@@ -45,7 +45,7 @@ The result is a working game architecture. Resources for data, signals for commu
 ## Key Concepts
 
 ```mermaid
-graph LR
+graph TD
     subgraph "Three-File Pattern"
         Class["Resource Class (.gd)\nDefines shape"]
         Data["Data Instance (.tres)\nHolds values"]
@@ -61,25 +61,37 @@ graph LR
 ```
 
 ```mermaid
-sequenceDiagram
-    participant P as Player
-    participant NPC as NPC (Area2D)
-    participant Scene as Scene Script
-    participant DBox as DialogueBox
-    participant Inv as InventoryManager
+graph TD
+    subgraph "NPC Dialogue Flow"
+        Enter["Player enters InteractionZone"]
+        Press["Player presses interact"]
+        Emit["NPC emits interacted"]
+        Freeze["Scene calls Player.start_interaction()"]
+        Dialogue["DialogueBox.start_dialogue(lines)"]
+        Finish["dialogue_finished"]
+        Unfreeze["Player.end_interaction()"]
+    end
 
-    P->>NPC: enters InteractionZone
-    NPC->>NPC: _player_in_range = true
-    P->>NPC: presses "interact"
-    NPC->>Scene: interacted signal
-    Scene->>P: start_interaction()
-    Scene->>DBox: start_dialogue(lines)
-    DBox-->>Scene: dialogue_finished
-    Scene->>P: end_interaction()
+    subgraph "Inventory Signal Loop"
+        Change["InventoryManager changes item/gold"]
+        Signal["inventory_changed / gold_changed"]
+        Refresh["Inventory UI refreshes slots"]
+    end
 
-    Note over Inv: Separate system
-    Inv-->>Inv: item_added / item_removed
-    Inv-->>Inv: inventory_changed signal → UI refresh
+    Enter --> Press
+    Press --> Emit
+    Emit --> Freeze
+    Freeze --> Dialogue
+    Dialogue --> Finish
+    Finish --> Unfreeze
+
+    Unfreeze -. "separate system" .-> Change
+    Change --> Signal
+    Signal --> Refresh
+
+    style Emit fill:#e74c3c,color:#fff
+    style Dialogue fill:#8e44ad,color:#fff
+    style Signal fill:#f39c12,color:#fff
 ```
 
 | Concept | What It Is | Why It Matters | First Seen |

@@ -87,20 +87,28 @@ var item: ItemData
 That typed object keeps the same command pattern while making the public fields explicit.
 
 ```mermaid
-sequenceDiagram
-    participant Menu as BattleMenu
-    participant PC as PlayerChoice State
-    participant TS as TargetSelect
-    participant AE as ActionExecute State
+graph TD
+    Turn["PlayerChoice state starts"]
+    Menu["BattleMenu.show_menu()"]
+    Action["Player chooses action"]
+    NeedsTarget{"Needs a target?"}
+    Targets["TargetSelect.show_targets()"]
+    Command["Build command dictionary\n{action, battler, target, item}"]
+    Execute["Transition to ActionExecute"]
+    Animate["Resolve action and animate"]
 
-    PC->>Menu: show_menu()
-    Menu->>PC: action_chosen("attack")
-    PC->>Menu: hide_menu()
-    PC->>TS: show_targets(enemies)
-    TS->>PC: target_selected(target)
-    PC->>AE: transition with command dict
-    Note over AE: {action: "attack",<br/>battler: aiden,<br/>target: slime}
-    AE->>AE: Execute + animate
+    Turn --> Menu
+    Menu --> Action
+    Action --> NeedsTarget
+    NeedsTarget -->|yes| Targets
+    NeedsTarget -->|no| Command
+    Targets --> Command
+    Command --> Execute
+    Execute --> Animate
+
+    style Menu fill:#3498db,color:#fff
+    style Command fill:#f39c12,color:#fff
+    style Execute fill:#e74c3c,color:#fff
 ```
 
 ## Target Selection
@@ -283,6 +291,26 @@ This means:
 - **Minimum damage** is always 1 (you always do at least something)
 
 The Defend action increases `defense_boost`, making `get_effective_defense()` return a higher value, reducing incoming damage.
+
+```mermaid
+graph TD
+    Attack["attacker.current_attack"]
+    Defense["target.get_effective_defense()\nbase defense + defense_boost"]
+    Raw["raw = attack - defense"]
+    Variance["add randi_range(-2, 2)"]
+    Floor["max(1, raw + variance)"]
+    Damage["Final damage"]
+
+    Attack --> Raw
+    Defense --> Raw
+    Raw --> Variance
+    Variance --> Floor
+    Floor --> Damage
+
+    style Attack fill:#e74c3c,color:#fff
+    style Defense fill:#3498db,color:#fff
+    style Damage fill:#f39c12,color:#fff
+```
 
 > **JRPG Pattern:** Most JRPGs keep their damage formula visible and understandable. Players should be able to reason about "if I equip this sword (+5 attack), I'll do roughly 5 more damage per hit." Complex formulas with hidden multipliers frustrate players.
 

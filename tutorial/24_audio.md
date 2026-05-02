@@ -113,23 +113,23 @@ func resume_previous_track() -> void:
 ```
 
 ```mermaid
-sequenceDiagram
-    participant MM as MusicManager
-    participant PA as PlayerA
-    participant PB as PlayerB
+graph TD
+    Current["PlayerA\ncurrent town_theme at 0 dB"]
+    Request["MusicManager.play_music(forest_theme)"]
+    Prepare["PlayerB gets new stream\nstarts at -40 dB"]
+    Crossfade["Tween both volumes\nPlayerA to -40 dB\nPlayerB to 0 dB"]
+    Stop["Stop PlayerA"]
+    Swap["PlayerB becomes active player"]
 
-    Note over PA: Playing town_theme at 0 dB
-    MM->>MM: play_music("forest_theme")
-    MM->>PB: stream = forest_theme
-    MM->>PB: volume = -40 dB, play()
+    Current --> Request
+    Request --> Prepare
+    Prepare --> Crossfade
+    Crossfade --> Stop
+    Stop --> Swap
 
-    par Crossfade Tween
-        MM->>PA: tween volume → -40 dB
-        MM->>PB: tween volume → 0 dB
-    end
-
-    PA->>PA: stop()
-    Note over PB: Now active player
+    style Current fill:#3498db,color:#fff
+    style Prepare fill:#8e44ad,color:#fff
+    style Crossfade fill:#f39c12,color:#000
 ```
 
 Create the scene `res://autoloads/music_manager.tscn`:
@@ -236,6 +236,24 @@ Now you have three buses:
 ```
 Master ← Music (BGM)
        ← SFX (sound effects)
+```
+
+```mermaid
+graph TD
+    MusicPlayer["MusicManager\nPlayerA / PlayerB"]
+    SFXPlayer["One-shot\nAudioStreamPlayer"]
+    MusicBus["Music bus\nBGM volume"]
+    SFXBus["SFX bus\nsound effect volume"]
+    Master["Master bus"]
+
+    MusicPlayer --> MusicBus
+    SFXPlayer --> SFXBus
+    MusicBus --> Master
+    SFXBus --> Master
+
+    style MusicBus fill:#3498db,color:#fff
+    style SFXBus fill:#2ecc71,color:#fff
+    style Master fill:#e74c3c,color:#fff
 ```
 
 ### Controlling Volume

@@ -36,15 +36,20 @@ This is exactly how professional 2D games are built, including most of the JRPGs
 > **See:** [Using TileMaps](https://docs.godotengine.org/en/stable/tutorials/2d/using_tilemaps.html), painting tiles, configuring layers, and adding physics to tiles.
 
 ```mermaid
-graph BT
-    G["Ground — grass, paths, water"] --> D["Detail — flowers, cracks"]
-    D --> YS["YSortGroup — objects + player\n(sorted by Y position)"]
-    YS --> AP["AbovePlayer — tree canopy, roofs"]
+graph TD
+    Sheet["Tile sheet image\n(town_tiles.png)"]
+    TileSet["TileSet resource\n(town_tileset.tres)"]
+    Layers["Four TileMapLayer nodes\nGround\nDetail\nObjects\nAbovePlayer"]
+    Map["Willowbrook scene\npainted grid cells"]
 
-    style G fill:#8B4513,color:#fff
-    style D fill:#A0522D,color:#fff
-    style YS fill:#9370DB,color:#fff
-    style AP fill:#4682B4,color:#fff
+    Sheet --> |"sliced into tiles"| TileSet
+    TileSet --> |"shared by every layer"| Layers
+    Layers --> |"placed into"| Map
+
+    style Sheet fill:#95a5a6,color:#fff
+    style TileSet fill:#DAA520,color:#000
+    style Layers fill:#6B8E23,color:#fff
+    style Map fill:#3498db,color:#fff
 ```
 
 ## TileMapLayer, not TileMap
@@ -163,14 +168,22 @@ The layers are drawn in tree order: `Ground` first (bottom), `AbovePlayer` last 
 This layering creates depth. The player walks on the ground, behind trees, and under overhanging roofs, all without any complex rendering tricks.
 
 ```mermaid
-graph BT
-    G["Ground — grass, paths, water"] --> D["Detail — flowers, cracks"]
-    D --> YS["YSortGroup — objects + player\n(sorted by Y position)"]
-    YS --> AP["AbovePlayer — tree canopy, roofs"]
+graph TD
+    G["Ground\nDrawn first: grass, paths, water"]
+    D["Detail\nDrawn after ground: flowers, cracks"]
+    O["Objects\nTrees, rocks, signs"]
+    P["Player target layer\nY-sort arrives in Module 6"]
+    AP["AbovePlayer\nDrawn last: canopy, roof overhangs"]
+
+    G --> D
+    D --> O
+    O --> P
+    P --> AP
 
     style G fill:#8B4513,color:#fff
     style D fill:#A0522D,color:#fff
-    style YS fill:#9370DB,color:#fff
+    style O fill:#6B8E23,color:#fff
+    style P fill:#3498db,color:#fff
     style AP fill:#4682B4,color:#fff
 ```
 

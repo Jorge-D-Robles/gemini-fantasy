@@ -175,6 +175,33 @@ This helper returns a small summary for each level-up so the caller can print me
 
 Now that the data layer is ready, update the Victory battle state (`res://systems/battle/states/victory_state.gd`) to show rewards:
 
+```mermaid
+graph TD
+    Start["Victory state enters"]
+    Sum["Sum enemy XP, gold, and drops"]
+    Split["Split XP across alive party members"]
+    Grant["CharacterData.grant_xp()"]
+    Level{"Enough XP to level up?"}
+    Grow["Apply stat growth\nand report gains"]
+    Sync["Sync battle HP/MP back to CharacterData"]
+    Loot["InventoryManager adds gold and drops"]
+    Return["SceneManager.return_from_battle()"]
+
+    Start --> Sum
+    Sum --> Split
+    Split --> Grant
+    Grant --> Level
+    Level -->|yes| Grow
+    Grow --> Level
+    Level -->|no| Sync
+    Sync --> Loot
+    Loot --> Return
+
+    style Grant fill:#3498db,color:#fff
+    style Grow fill:#2ecc71,color:#fff
+    style Loot fill:#f39c12,color:#fff
+```
+
 ```gdscript
 extends BattleState
 ## Battle won. Calculate and display rewards.

@@ -71,9 +71,11 @@ sequenceDiagram
     Note over N: Added to SceneTree
     E->>N: _ready()
     Note over N: Children ready, @onready set
-    loop Every frame
-        E->>N: _process(delta)
+    loop Fixed physics ticks
         E->>N: _physics_process(delta)
+    end
+    loop Rendered frames
+        E->>N: _process(delta)
     end
     E->>N: _exit_tree()
     Note over N: Removed, signals cleaned up

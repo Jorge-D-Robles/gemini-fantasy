@@ -97,17 +97,23 @@ DialogueBox (CanvasLayer, layer = 10)
 ```
 
 ```mermaid
-stateDiagram-v2
-    [*] --> Hidden
+graph TD
+    DBox["DialogueBox\nCanvasLayer, layer 10"]
+    Panel["PanelContainer\nbottom wide"]
+    Margin["MarginContainer\npadding"]
+    VBox["VBoxContainer"]
+    Speaker["SpeakerLabel\nLabel"]
+    Text["TextLabel\nRichTextLabel"]
 
-    Hidden --> Typing : start_dialogue(lines)
-    Typing --> FullyShown : tween finishes
-    Typing --> FullyShown : press interact (skip)
-    FullyShown --> Typing : press interact (more lines)
-    FullyShown --> ShowChoices : line has choices
-    ShowChoices --> Typing : choice pressed (more lines)
-    ShowChoices --> Hidden : choice pressed (last line)
-    FullyShown --> Hidden : press interact (last line)
+    DBox --> Panel
+    Panel --> Margin
+    Margin --> VBox
+    VBox --> Speaker
+    VBox --> Text
+
+    style DBox fill:#8e44ad,color:#fff
+    style Panel fill:#2c3e50,color:#fff
+    style Text fill:#27ae60,color:#fff
 ```
 
 ### Node Configuration
@@ -160,6 +166,20 @@ Why `visible_ratio` and not `visible_characters`?
 ## The Dialogue Box Script
 
 Create `res://ui/dialogue_box/dialogue_box.gd`:
+
+```mermaid
+stateDiagram-v2
+    [*] --> Hidden
+
+    Hidden --> Typing : start_dialogue(lines)
+    Typing --> FullyShown : tween finishes
+    Typing --> FullyShown : press interact to skip
+    FullyShown --> Typing : press interact for next line
+    FullyShown --> ShowChoices : current line has choices
+    ShowChoices --> Typing : choice has more lines
+    ShowChoices --> Hidden : choice ends dialogue
+    FullyShown --> Hidden : last line acknowledged
+```
 
 ```gdscript
 extends CanvasLayer

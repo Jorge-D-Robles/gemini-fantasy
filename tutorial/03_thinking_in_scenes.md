@@ -54,17 +54,16 @@ Not technically a physics body. It's a **detection zone**. It doesn't block move
 
 ```mermaid
 graph TD
-    subgraph "Physics Bodies"
-        CB["CharacterBody2D\n⬛ Blocks\n🎮 Code-driven"]
-        RB["RigidBody2D\n⬛ Blocks\n🔧 Physics-driven"]
-        SB["StaticBody2D\n⬛ Blocks\n🧱 Never moves"]
-        A2["Area2D\n👁 Detects only\n🚫 No blocking"]
-    end
+    Start["Common 2D physics nodes"]
+    CB["CharacterBody2D\nBlocks and moves by code\nUse for players and NPCs"]
+    RB["RigidBody2D\nBlocks and moves by physics\nUse for boulders and crates"]
+    SB["StaticBody2D\nBlocks and never moves\nUse for walls and barriers"]
+    A2["Area2D\nDetects overlap only\nUse for exits and triggers"]
 
-    CB ---|"use for"| Players["Players, NPCs"]
-    RB ---|"use for"| Objects["Boulders, crates"]
-    SB ---|"use for"| Walls["Walls, barriers"]
-    A2 ---|"use for"| Zones["Exit zones, triggers"]
+    Start --> CB
+    CB --> RB
+    RB --> SB
+    SB --> A2
 
     style CB fill:#3498db,color:#fff
     style RB fill:#e67e22,color:#fff
@@ -277,18 +276,23 @@ This matters when we start changing scenes in Module 7. When we leave a town and
 > **See:** [Instancing with signals](https://docs.godotengine.org/en/stable/tutorials/scripting/instancing_with_signals.html), which connects scene instancing with signal-based communication.
 
 ```mermaid
-sequenceDiagram
-    participant Area as Area2D
-    participant NPC as NPC Script
-    participant Scene as Scene Script
+graph TD
+    Enter["Player enters Area2D"]
+    BodySignal["body_entered signal"]
+    Cache["NPC stores _player_in_range = true"]
+    Press["Player presses interact"]
+    CustomSignal["NPC emits interacted"]
+    SceneHandles["Scene script decides the response"]
 
-    Note over Area: Player enters zone
-    Area->>NPC: body_entered signal
-    NPC->>NPC: _player_in_range = true
-    Note over NPC: Player presses interact
-    NPC->>Scene: interacted signal
-    Scene->>Scene: Handle response
-    Note over Scene: NPC doesn't know<br/>what happens next
+    Enter --> BodySignal
+    BodySignal --> Cache
+    Cache --> Press
+    Press --> CustomSignal
+    CustomSignal --> SceneHandles
+
+    style BodySignal fill:#e67e22,color:#fff
+    style CustomSignal fill:#e74c3c,color:#fff
+    style SceneHandles fill:#3498db,color:#fff
 ```
 
 ## Scene Files: `.tscn` Under the Hood

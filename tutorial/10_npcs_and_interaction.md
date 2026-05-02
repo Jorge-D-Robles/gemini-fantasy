@@ -184,19 +184,32 @@ This is the **separation of concerns** principle. The NPC knows about proximity 
 
 ```mermaid
 graph TD
+    subgraph "NPC Scene"
+        NPC["NPC\n(CharacterBody2D)"]
+        IZ["InteractionZone\n(Area2D)"]
+        Prompt["InteractionPrompt\n(Label)"]
+        NPC --> IZ
+        NPC --> Prompt
+    end
+
     Player["Player (in 'player' group)"]
-    IZ["InteractionZone (Area2D)"]
-    Prompt["Show '!' prompt"]
+    Show["Show prompt"]
+    Hide["Hide prompt"]
     Face["NPC faces player"]
-    Signal["interacted(self) signal"]
+    Signal["Emit interacted(self)"]
     Handler["Scene handles response"]
 
     Player -->|enters zone| IZ
-    IZ -->|body_entered| Prompt
-    Prompt -->|interact pressed| Face
+    IZ -->|body_entered| Show
+    Show --> Prompt
+    Player -->|exits zone| IZ
+    IZ -->|body_exited| Hide
+    Hide --> Prompt
+    Show -->|interact pressed| Face
     Face -->|emit| Signal
     Signal -->|connected in scene| Handler
 
+    style NPC fill:#4a90d9,color:#fff
     style Player fill:#2ecc71,color:#fff
     style Signal fill:#e74c3c,color:#fff
     style Handler fill:#3498db,color:#fff

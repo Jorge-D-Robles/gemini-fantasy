@@ -228,19 +228,7 @@ stateDiagram-v2
     NOT_STARTED --> ACTIVE : start_quest()
     ACTIVE --> COMPLETE : all objective_flags set
     COMPLETE --> TURNED_IN : turn_in_quest()
-
-    state ACTIVE {
-        [*] : Objectives tracked
-        [*] : flag_changed checks progress
-    }
-    state COMPLETE {
-        [*] : All flags met
-        [*] : Awaiting NPC turn-in
-    }
-    state TURNED_IN {
-        [*] : Rewards granted
-        [*] : completion_flag set
-    }
+    TURNED_IN --> [*]
 ```
 
 ## Crystal Saga Quests
@@ -370,6 +358,29 @@ func _on_fynn_turn_in_dialogue_finished() -> void:
 In Chrono Trigger, every NPC in every town updates their dialogue after each major story event. After you rescue Queen Leene, the castle guards stop asking for help and start thanking you. This is what makes the world feel alive; characters acknowledge what you have done. Without reactive dialogue, NPCs are just repeating billboards, and the player never feels like their actions matter.
 
 NPCs should say different things based on quest state and flags. Update NPC dialogue to check flags.
+
+```mermaid
+graph TD
+    Talk["Player talks to Fynn"]
+    Returned{"pendant_returned?"}
+    Found{"pendant_found?"}
+    Met{"talked_to_fynn?"}
+    Thanks["Thanks again dialogue"]
+    TurnIn["Turn-in dialogue\nconnect dialogue_finished once"]
+    Waiting["Any luck finding it?"]
+    First["First meeting dialogue\nset talked_to_fynn\nstart lost_pendant quest"]
+
+    Talk --> Returned
+    Returned -->|yes| Thanks
+    Returned -->|no| Found
+    Found -->|yes| TurnIn
+    Found -->|no| Met
+    Met -->|yes| Waiting
+    Met -->|no| First
+
+    style TurnIn fill:#2ecc71,color:#fff
+    style First fill:#3498db,color:#fff
+```
 
 Add the following to `res://scenes/willowbrook/willowbrook.gd`. Then update your existing `_on_npc_interacted()` handler to call this function instead of reading `npc.npc_data.dialogue` directly:
 

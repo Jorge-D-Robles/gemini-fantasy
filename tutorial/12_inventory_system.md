@@ -121,16 +121,16 @@ Register it as an autoload: **Project → Project Settings → Autoload** → ad
 **Signal-driven updates:** Every change emits a signal (`item_added`, `item_removed`, `inventory_changed`, `gold_changed`). The UI listens to these signals and updates itself. The InventoryManager never touches UI directly.
 
 ```mermaid
-graph LR
+graph TD
     IM["InventoryManager\n(Autoload)"]
     UI["InventoryScreen\n(UI)"]
     Slot["ItemSlot"]
 
-    IM -->|inventory_changed| UI
-    IM -->|gold_changed| UI
-    UI -->|_refresh()| Slot
-    Slot -->|slot_selected| UI
-    UI -->|use_item()| IM
+    IM -->|"inventory_changed"| UI
+    IM -->|"gold_changed"| UI
+    UI -->|"_refresh()"| Slot
+    Slot -->|"slot_selected"| UI
+    UI -->|"use_item()"| IM
 
     style IM fill:#e74c3c,color:#fff
     style UI fill:#3498db,color:#fff
@@ -364,6 +364,25 @@ Every node has a `process_mode` property that controls whether it runs while pau
 > **IMPORTANT:** Select the `InventoryScreen` (CanvasLayer) root node in the editor and set **Process → Mode** to **`Always`** in the Inspector. Without this, the inventory will open but immediately freeze because the paused game prevents it from processing input. The only way to recover would be to force-quit.
 
 The SceneManager should also be `PROCESS_MODE_ALWAYS`. Go back to `scene_manager.tscn` and set its root node's **Process → Mode** to **`Always`** too. It needs to work during transitions regardless of pause state.
+
+```mermaid
+graph TD
+    Pause["get_tree().paused = true"]
+    World["Pausable world nodes\nPlayer, NPCs, encounter timers"]
+    UI["PROCESS_MODE_ALWAYS\nInventoryScreen"]
+    SceneManager["PROCESS_MODE_ALWAYS\nSceneManager"]
+    Resume["Inventory closes\nget_tree().paused = false"]
+
+    Pause --> World
+    Pause --> UI
+    Pause --> SceneManager
+    UI --> Resume
+
+    style World fill:#3498db,color:#fff
+    style UI fill:#e74c3c,color:#fff
+    style SceneManager fill:#8e44ad,color:#fff
+    style Resume fill:#2ecc71,color:#fff
+```
 
 > **See:** [Pausing games](https://docs.godotengine.org/en/stable/tutorials/scripting/pausing_games.html): the official guide to pausing and `process_mode`.
 

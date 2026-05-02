@@ -110,13 +110,17 @@ sequenceDiagram
 
     Engine->>Node: _init()
     Note right of Node: Object created (no tree yet)
+    Engine->>Node: _enter_tree()
+    Note right of Node: Added to SceneTree
     Engine->>Node: _ready()
     Note right of Node: In tree, children ready,<br/>@onready vars valid
-    loop Every Frame
-        Engine->>Node: _process(delta)
-        Note right of Node: Game logic, UI updates
+    loop Fixed physics ticks
         Engine->>Node: _physics_process(delta)
         Note right of Node: Physics, movement
+    end
+    loop Rendered frames
+        Engine->>Node: _process(delta)
+        Note right of Node: Game logic, UI updates
     end
     Engine->>Node: _exit_tree()
     Note right of Node: Removed from tree
@@ -261,19 +265,22 @@ The `$` operator is shorthand for `get_node()`. `$Sprite2D` means "find the chil
 > **Warning:** If you try to access `$Sprite2D` in a plain `var` declaration (outside `@onready`), it will fail because the node tree hasn't been built yet when `var` initializers run. Always use `@onready` for node references.
 
 ```mermaid
-graph LR
+graph TD
     subgraph "Design Time (Inspector)"
         Export["@export var speed = 200\n→ Editable in Inspector"]
     end
-    subgraph "Runtime (_ready)"
+    subgraph "Runtime Setup"
+        Enter["Node enters SceneTree"]
         Onready["@onready var sprite = $Sprite\n→ Cached node reference"]
     end
 
-    Export --> |"Values set before _ready()"| Onready
-    Onready --> |"Node refs valid after _ready()"| GameLoop["_process / _physics_process"]
+    Export --> |"value exists before _ready()"| Enter
+    Enter --> |"children are ready"| Onready
+    Onready --> |"safe to use each tick/frame"| GameLoop["_physics_process / _process"]
 
     style Export fill:#e67e22,color:#fff
     style Onready fill:#3498db,color:#fff
+    style Enter fill:#7b68ee,color:#fff
     style GameLoop fill:#2ecc71,color:#fff
 ```
 

@@ -38,49 +38,47 @@ The result is the skeleton of a real JRPG: two connected areas you can walk betw
 
 ```mermaid
 graph TD
-    subgraph "Willowbrook Scene Structure"
-        WB["Willowbrook (Node2D)"]
-        G["Ground\n(TileMapLayer)"]
-        D["Detail\n(TileMapLayer)"]
-        YS["YSortGroup\n(y_sort_enabled)"]
-        Obj["Objects\n(TileMapLayer)"]
-        P["Player\n(CharacterBody2D)"]
-        AP["AbovePlayer\n(TileMapLayer)"]
-    end
+    WB["Willowbrook\nNode2D"]
+    G["Ground\nTileMapLayer"]
+    D["Detail\nTileMapLayer"]
+    YS["YSortGroup\ny_sort_enabled"]
+    Contents["Y-sorted contents\nObjects TileMapLayer\nPlayer CharacterBody2D"]
+    AP["AbovePlayer\nTileMapLayer"]
 
     WB --> G
-    WB --> D
-    WB --> YS
-    WB --> AP
-    YS --> Obj
-    YS --> P
-
-    G ~~~ D
-    D ~~~ YS
-    YS ~~~ AP
+    G --> D
+    D --> YS
+    YS --> Contents
+    Contents --> AP
 
     style G fill:#4a7c3f,color:#fff
     style D fill:#8b6914,color:#fff
-    style Obj fill:#3498db,color:#fff
-    style P fill:#e74c3c,color:#fff
+    style Contents fill:#3498db,color:#fff
     style AP fill:#8e44ad,color:#fff
     style YS fill:#f39c12,color:#fff
 ```
 
 ```mermaid
-sequenceDiagram
-    participant P as Player
-    participant EZ as ExitZone (Area2D)
-    participant SM as SceneManager (Autoload)
-    participant Anim as AnimationPlayer
+graph TD
+    Player["Player enters ExitZone"]
+    ExitZone["ExitZone validates player group"]
+    Manager["SceneManager.change_scene(path, spawn)"]
+    FadeOut["Fade out"]
+    Swap["change_scene_to_file()"]
+    Spawn["Place player at spawn marker"]
+    FadeIn["Fade in"]
 
-    P->>EZ: body_entered
-    EZ->>SM: change_scene(path, spawn)
-    SM->>Anim: play("fade_out")
-    Anim-->>SM: animation_finished
-    SM->>SM: change_scene_to_file()
-    SM->>SM: _place_player_at_spawn()
-    SM->>Anim: play("fade_in")
+    Player --> ExitZone
+    ExitZone --> Manager
+    Manager --> FadeOut
+    FadeOut --> Swap
+    Swap --> Spawn
+    Spawn --> FadeIn
+
+    style Player fill:#e74c3c,color:#fff
+    style Manager fill:#3498db,color:#fff
+    style FadeOut fill:#8e44ad,color:#fff
+    style FadeIn fill:#8e44ad,color:#fff
 ```
 
 | Concept | What It Is | Why It Matters | First Seen |
