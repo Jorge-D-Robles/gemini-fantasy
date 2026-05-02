@@ -1,46 +1,28 @@
-# Godot 4+ specific ignores
-.godot/
-.nomedia
+.DS_Store
 
-# Godot import cache files (auto-generated, machine-specific)
-*.import
+# Website dependencies and generated output
+website/node_modules/
+website/dist/
 
-# Godot-specific ignores
-.import/
-export.cfg
-export_credentials.cfg
-
-# Imported translations (automatically generated from CSV files)
-*.translation
-
-# Mono-specific ignores
-.mono/
-data_*/
-mono_crash.*.json
-
-# Godot 4.5 UID files (auto-generated script unique IDs)
-*.uid
-
-# Asset files (images, audio, etc.) - too large for version control
-game/assets/**/*.png
-game/assets/**/*.wav
-game/assets/**/*.ogg
-game/assets/**/*.mp3
-game/assets/**/*.gif
-game/assets/**/*.psd
-game/assets/**/*.PNG
-
-# Asset pack bundled readmes
-game/assets/**/*.txt
-
-# Test results
-game/tests/results.xml
-
-# Generated markdown from godot-docs (produced by docs/godot-docs-md/convert.py)
-docs/godot-docs-md/*.md
-!docs/godot-docs-md/README.md
-docs/godot-docs-md/manifest.json
-
-# Worktrees (embedded git repos)
-.claude/worktrees/
+# Local leftovers from the archived Godot game payload.
+# These directories are intentionally absent from main; see deprecated/game-code.
+game/
+demo/
+docs/
+guide/
+assets/
+.agents/
+.claude/
+.gemini/
+.codex/
+.jj/
 .worktrees/
+
+# Logs and local environment
+*.log
+.env
+.env.*
+
+# Editor/system files
+.idea/
+.vscode/
