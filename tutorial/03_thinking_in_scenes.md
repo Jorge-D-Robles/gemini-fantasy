@@ -61,9 +61,9 @@ graph TD
     A2["Area2D\nDetects overlap only\nUse for exits and triggers"]
 
     Start --> CB
-    CB --> RB
-    RB --> SB
-    SB --> A2
+    Start --> RB
+    Start --> SB
+    Start --> A2
 
     style CB fill:#3498db,color:#fff
     style RB fill:#e67e22,color:#fff
