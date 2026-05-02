@@ -162,6 +162,18 @@ The layers are drawn in tree order: `Ground` first (bottom), `AbovePlayer` last 
 
 This layering creates depth. The player walks on the ground, behind trees, and under overhanging roofs, all without any complex rendering tricks.
 
+```mermaid
+graph BT
+    G["Ground — grass, paths, water"] --> D["Detail — flowers, cracks"]
+    D --> YS["YSortGroup — objects + player\n(sorted by Y position)"]
+    YS --> AP["AbovePlayer — tree canopy, roofs"]
+
+    style G fill:#8B4513,color:#fff
+    style D fill:#A0522D,color:#fff
+    style YS fill:#9370DB,color:#fff
+    style AP fill:#4682B4,color:#fff
+```
+
 ## Painting Tiles
 
 Now for the fun part. Select a TileMapLayer node and start painting:

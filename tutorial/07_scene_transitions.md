@@ -192,6 +192,24 @@ await _anim_player.animation_finished  # Pause here until the animation finishes
 
 This makes async sequences (fade out → change scene → fade in) readable as linear code. Without `await`, you'd need callbacks or a state machine just for the transition.
 
+```mermaid
+sequenceDiagram
+    participant Code as Your Script
+    participant Anim as AnimationPlayer
+    
+    Code->>Anim: play("fade_out")
+    Code-->>Code: await animation_finished
+    Note right of Code: Execution pauses here.<br/>Other nodes keep running.
+    
+    loop Every frame
+        Anim->>Anim: update alpha
+    end
+    
+    Anim-->>Code: emit signal "animation_finished"
+    Note right of Code: Execution resumes!
+    Code->>Code: Run next line
+```
+
 `await` can wait for any signal:
 ```gdscript
 await get_tree().create_timer(1.0).timeout  # Wait 1 second

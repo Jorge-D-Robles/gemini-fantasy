@@ -336,6 +336,23 @@ In a top-down 2D game, objects lower on the screen should appear in front of obj
 
 Godot handles this with **Y-sort**. When enabled on a parent node, its children are drawn sorted by their Y position: lower Y values are drawn first (behind), higher Y values are drawn last (in front).
 
+```mermaid
+graph TD
+    subgraph "Y-Sort Rendering Order"
+        direction TB
+        Top["Tree (Y = 100)\nLower Y = Drawn First = Behind"]
+        Mid["Player (Y = 120)\nMiddle Y = Drawn Second = Between"]
+        Bot["Well (Y = 140)\nHigher Y = Drawn Last = In Front"]
+        
+        Top --> Mid
+        Mid --> Bot
+    end
+    
+    style Top fill:#2ecc71,color:#fff
+    style Mid fill:#3498db,color:#fff
+    style Bot fill:#95a5a6,color:#fff
+```
+
 ### Setting Up Y-Sort
 
 In the Willowbrook scene:

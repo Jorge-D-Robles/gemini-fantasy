@@ -38,6 +38,26 @@ Early Pokemon games infamously had save corruption bugs because the save and loa
 
 Each autoload gets two methods: one to export its state as a Dictionary, one to restore it.
 
+```mermaid
+graph TD
+    subgraph "Serialization (Save)"
+        direction LR
+        AutoS["Autoload State\n(Variables, Arrays)"] -->|to_save_data| DictS["Dictionary"]
+        DictS -->|JSON.stringify| File["JSON File\nuser://save1.json"]
+    end
+
+    subgraph "Deserialization (Load)"
+        direction LR
+        File2["JSON File\nuser://save1.json"] -->|JSON.parse| DictL["Dictionary"]
+        DictL -->|from_save_data| AutoL["Autoload State\n(Variables, Arrays)"]
+    end
+    
+    style AutoS fill:#3498db,color:#fff
+    style AutoL fill:#3498db,color:#fff
+    style File fill:#e67e22,color:#fff
+    style File2 fill:#e67e22,color:#fff
+```
+
 ### GameManager
 
 ```gdscript
