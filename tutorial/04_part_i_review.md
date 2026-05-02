@@ -39,18 +39,19 @@ Module 3 shifted from "scripts that move things" to "scenes that *are* things." 
 ```mermaid
 graph TD
     subgraph "Part I Architecture"
+        direction TD
         Project["Godot Project\n(project.godot)"]
         Scene["Scene (.tscn)\nSaved node tree"]
         Node["Node\nAtomic building block"]
         Script["Script (.gd)\nBehavior via callbacks"]
         Tree["SceneTree\nRuntime hierarchy"]
-    end
 
-    Project --> Scene
-    Scene --> Node
-    Node --> Script
-    Scene --> |"instanced into"| Tree
-    Script --> |"_ready, _process,\n_physics_process"| Tree
+        Project --> Scene
+        Scene --> Node
+        Node --> Script
+        Scene --> |"instanced into"| Tree
+        Script --> |"_ready, _process,\n_physics_process"| Tree
+    end
 
     style Project fill:#8e44ad,color:#fff
     style Scene fill:#3498db,color:#fff
