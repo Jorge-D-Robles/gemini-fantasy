@@ -125,8 +125,8 @@ graph TD
     Bal["Balanced\n30% chance: defend\n70% chance: attack random"]
 
     Start --> Agg
-    Agg --> Caut
-    Caut --> Bal
+    Start --> Caut
+    Start --> Bal
 
     style Start fill:#2c3e50,color:#fff
     style Agg fill:#e74c3c,color:#fff
