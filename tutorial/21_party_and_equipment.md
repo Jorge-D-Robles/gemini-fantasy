@@ -302,6 +302,20 @@ Each modifier gets a **unique ID**. This solves the stacking problem: two differ
 
 We won't build this system for Crystal Saga; the simple `get_effective_*()` approach is sufficient. But if you later add status effects (Module 26 roadmap), buff/debuff spells, or set bonuses, the modifier system is the right abstraction. It lets equipment, spells, status effects, and passive abilities all feed into the same stat calculation through one unified mechanism.
 
+```mermaid
+graph LR
+    Base["Base Stats\n(CharacterData .tres)"] --> Eff["Effective Stats"]
+    Equip["Equipment Bonuses\n(weapon.attack_bonus)"] --> Eff
+    Eff --> Battle["BattlerData\ninitialize_from_character()"]
+    Buff["Temp Buffs\n(defense_boost)"] --> Combat["Combat Calculation"]
+    Battle --> Combat
+
+    style Base fill:#3498db,color:#fff
+    style Equip fill:#f39c12,color:#fff
+    style Buff fill:#e74c3c,color:#fff
+    style Combat fill:#2ecc71,color:#fff
+```
+
 ### Battle Integration
 
 Update BattlerData to use effective stats:
@@ -725,6 +739,31 @@ func _handle_inn(npc: CharacterBody2D) -> void:
 | GameManager | 20 | Game flags, world state tracking |
 | QuestManager | 20 | Quest tracking, objective checking |
 | **PartyManager** | **21** | **Party roster, recruitment, stats** |
+
+```mermaid
+graph TD
+    subgraph "Persistent Autoloads under /root"
+        SM["SceneManager\n(Module 7)"]
+        IM["InventoryManager\n(Module 12)"]
+        GM["GameManager\n(Module 20)"]
+        QM["QuestManager\n(Module 20)"]
+        PM["PartyManager\n(Module 21)"]
+    end
+
+    subgraph "Swapped at Runtime"
+        Scene["Current Gameplay Scene"]
+    end
+
+    QM --> |"listens to flag_changed"| GM
+    SM --> |"transitions"| Scene
+    PM --> |"provides roster to"| Scene
+
+    style SM fill:#e74c3c,color:#fff
+    style IM fill:#e67e22,color:#fff
+    style GM fill:#2ecc71,color:#fff
+    style QM fill:#27ae60,color:#fff
+    style PM fill:#3498db,color:#fff
+```
 
 ## Engineering Contract
 

@@ -96,6 +96,20 @@ DialogueBox (CanvasLayer, layer = 10)
             └── TextLabel (RichTextLabel)
 ```
 
+```mermaid
+stateDiagram-v2
+    [*] --> Hidden
+
+    Hidden --> Typing : start_dialogue(lines)
+    Typing --> FullyShown : tween finishes
+    Typing --> FullyShown : press interact (skip)
+    FullyShown --> Typing : press interact (more lines)
+    FullyShown --> ShowChoices : line has choices
+    ShowChoices --> Typing : choice pressed (more lines)
+    ShowChoices --> Hidden : choice pressed (last line)
+    FullyShown --> Hidden : press interact (last line)
+```
+
 ### Node Configuration
 
 **DialogueBox (CanvasLayer)**

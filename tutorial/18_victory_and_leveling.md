@@ -82,6 +82,14 @@ This is `base_xp=10, exponent=2`. Early levels come fast (10 XP for level 2), la
 
 > **Tuning tip:** Print the XP table for your expected level range (1-15 for Crystal Saga) and compare it against enemy XP rewards. If a single battle gives enough XP to level up, your curve is too shallow. If the player needs 50+ fights to level, it's too steep. Aim for 4-8 fights per level in the mid-game.
 
+```mermaid
+xychart-beta
+    title "XP Required per Level (level² × 10)"
+    x-axis "Level" [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    y-axis "XP to Next" 0 --> 1100
+    bar [10, 40, 90, 160, 250, 360, 490, 640, 810, 1000]
+```
+
 ### Stat Growth
 
 When a character levels up, their stats increase based on **growth rates** defined in CharacterData.

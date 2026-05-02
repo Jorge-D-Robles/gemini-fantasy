@@ -182,6 +182,26 @@ The NPC emits `interacted(self)` when the player presses interact. It doesn't kn
 
 This is the **separation of concerns** principle. The NPC knows about proximity detection and facing. The dialogue system knows about displaying text. They communicate through signals.
 
+```mermaid
+graph TD
+    Player["Player (in 'player' group)"]
+    IZ["InteractionZone (Area2D)"]
+    Prompt["Show '!' prompt"]
+    Face["NPC faces player"]
+    Signal["interacted(self) signal"]
+    Handler["Scene handles response"]
+
+    Player -->|enters zone| IZ
+    IZ -->|body_entered| Prompt
+    Prompt -->|interact pressed| Face
+    Face -->|emit| Signal
+    Signal -->|connected in scene| Handler
+
+    style Player fill:#2ecc71,color:#fff
+    style Signal fill:#e74c3c,color:#fff
+    style Handler fill:#3498db,color:#fff
+```
+
 ### `@export var npc_data: NPCData`
 
 Each NPC instance in the editor gets an `NPCData` resource assigned through the Inspector. Different data = different NPC. Same scene, different behavior.

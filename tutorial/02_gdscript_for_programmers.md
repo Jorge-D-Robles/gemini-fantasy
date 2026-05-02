@@ -103,6 +103,25 @@ func _process(delta: float) -> void:
 
 > **See:** [Idle and physics processing](https://docs.godotengine.org/en/stable/tutorials/scripting/idle_and_physics_processing.html), which explains `_process()`, `_physics_process()`, and when to use each.
 
+```mermaid
+sequenceDiagram
+    participant Engine as Godot Engine
+    participant Node as Your Node
+
+    Engine->>Node: _init()
+    Note right of Node: Object created (no tree yet)
+    Engine->>Node: _ready()
+    Note right of Node: In tree, children ready,<br/>@onready vars valid
+    loop Every Frame
+        Engine->>Node: _process(delta)
+        Note right of Node: Game logic, UI updates
+        Engine->>Node: _physics_process(delta)
+        Note right of Node: Physics, movement
+    end
+    Engine->>Node: _exit_tree()
+    Note right of Node: Removed from tree
+```
+
 There's also **`_physics_process(delta)`**, which is called at a fixed rate (60 times per second by default, regardless of frame rate). We'll use this in Module 3 when we add physics-based movement. For now, `_process()` is all we need.
 
 > **See:** [Overridable functions](https://docs.godotengine.org/en/stable/tutorials/scripting/overridable_functions.html), the full list of virtual functions Godot provides, including `_enter_tree()`, `_exit_tree()`, and `_input()`.

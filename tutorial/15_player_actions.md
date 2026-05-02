@@ -86,6 +86,23 @@ var item: ItemData
 
 That typed object keeps the same command pattern while making the public fields explicit.
 
+```mermaid
+sequenceDiagram
+    participant Menu as BattleMenu
+    participant PC as PlayerChoice State
+    participant TS as TargetSelect
+    participant AE as ActionExecute State
+
+    PC->>Menu: show_menu()
+    Menu->>PC: action_chosen("attack")
+    PC->>Menu: hide_menu()
+    PC->>TS: show_targets(enemies)
+    TS->>PC: target_selected(target)
+    PC->>AE: transition with command dict
+    Note over AE: {action: "attack",<br/>battler: aiden,<br/>target: slime}
+    AE->>AE: Execute + animate
+```
+
 ## Target Selection
 
 Target selection is where strategy enters combat. In Earthbound, choosing to focus fire on the Territorial Oak instead of spreading damage across all enemies is often the difference between a clean fight and a party wipe. Without target selection, combat would be "press Attack and watch numbers happen." With it, every attack is a decision.

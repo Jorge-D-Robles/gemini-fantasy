@@ -35,6 +35,18 @@ This is exactly how professional 2D games are built, including most of the JRPGs
 
 > **See:** [Using TileMaps](https://docs.godotengine.org/en/stable/tutorials/2d/using_tilemaps.html), painting tiles, configuring layers, and adding physics to tiles.
 
+```mermaid
+graph BT
+    G["Ground — grass, paths, water"] --> D["Detail — flowers, cracks"]
+    D --> YS["YSortGroup — objects + player\n(sorted by Y position)"]
+    YS --> AP["AbovePlayer — tree canopy, roofs"]
+
+    style G fill:#8B4513,color:#fff
+    style D fill:#A0522D,color:#fff
+    style YS fill:#9370DB,color:#fff
+    style AP fill:#4682B4,color:#fff
+```
+
 ## TileMapLayer, not TileMap
 
 You may see older tutorials reference a node called `TileMap`. That node is **deprecated** as of Godot 4.3. The replacement is `TileMapLayer`, one node per layer, instead of one node with multiple internal layers.

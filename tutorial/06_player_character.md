@@ -163,6 +163,33 @@ The key insight: **each state is a self-contained behavior.** The IDLE state che
 
 This enum-based state machine is the right size for player movement: one script owns all states, and every state is only a few lines. In Module 14, battle flow gets complex enough that we switch to a node-based state machine, where each state is its own script. Same idea, different scale.
 
+```mermaid
+stateDiagram-v2
+    [*] --> IDLE
+
+    IDLE --> WALK : Movement input
+    WALK --> IDLE : No input
+    IDLE --> INTERACT : start_interaction()
+    WALK --> INTERACT : start_interaction()
+    INTERACT --> IDLE : end_interaction()
+    IDLE --> DISABLED : set_disabled(true)
+    WALK --> DISABLED : set_disabled(true)
+    DISABLED --> IDLE : set_disabled(false)
+
+    state IDLE {
+        [*] : Play idle animation
+    }
+    state WALK {
+        [*] : move_and_slide()
+    }
+    state INTERACT {
+        [*] : Frozen, external control
+    }
+    state DISABLED {
+        [*] : Fully inert
+    }
+```
+
 ### Implementation
 
 Replace the entire contents of `res://player/player.gd` with this state machine version:

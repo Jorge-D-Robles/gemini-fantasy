@@ -97,6 +97,27 @@ Save these as `res://systems/battle/battle_state.gd` and `res://systems/battle/b
 
 > **Spiral:** Compare this to Module 6's enum state machine. The enum approach uses `match` in `_physics_process` to route to different functions. The node approach uses polymorphism: each state is a separate Node, and the machine just calls `enter()`/`process()`/`exit()` on whichever one is current. Same pattern, different scale.
 
+```mermaid
+stateDiagram-v2
+    [*] --> Intro
+
+    Intro --> TurnStart : after delay
+
+    TurnStart --> PlayerChoice : player's turn
+    TurnStart --> ActionExecute : enemy's turn
+
+    PlayerChoice --> ActionExecute : action chosen
+
+    ActionExecute --> CheckResult : action complete
+
+    CheckResult --> Victory : all enemies dead
+    CheckResult --> Defeat : all party dead
+    CheckResult --> TurnStart : queue empty (new round)
+
+    Victory --> [*]
+    Defeat --> [*]
+```
+
 ## BattlerData: Who's Fighting
 
 Characters in an RPG exist in two contexts: their permanent identity (name, base stats, level) and their temporary battle state (current HP this fight, a defense buff that wears off next turn). In Final Fantasy, Cloud's base stats live on his character sheet, but when he uses Defend, the temporary defense boost only lasts until his next turn. We need a wrapper that holds both: the permanent data from CharacterData and the temporary state that exists only during one battle.

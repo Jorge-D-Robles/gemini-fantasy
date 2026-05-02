@@ -475,6 +475,42 @@ At any time during gameplay:
 
 There are no dead ends now. Victory rolls through ending and credits back to the title screen, while defeat routes through a Game Over screen that lets the player load a save or return to the title.
 
+```mermaid
+graph TD
+    Title["Title Screen"]
+    NG["New Game\n(fresh state)"]
+    Cont["Continue\n(load save)"]
+    WB["Willowbrook"]
+    WW["Whisperwood"]
+    CC["Crystal Cavern"]
+    Boss["Boss Fight"]
+    Vic["Victory"]
+    Def["Defeat"]
+    End["Ending"]
+    Cred["Credits"]
+    GO["Game Over"]
+
+    Title -->|"New Game"| NG --> WB
+    Title -->|"Continue"| Cont --> WB
+
+    WB <-->|transition| WW
+    WW <-->|transition| CC
+    CC -->|boss trigger| Boss
+
+    Boss -->|win| Vic
+    Boss -->|lose| Def
+    Vic --> End --> Cred --> Title
+    Def --> GO
+    GO -->|"Load Save"| Cont
+    GO -->|"Return to Title"| Title
+
+    style Title fill:#8e44ad,color:#fff
+    style Boss fill:#e74c3c,color:#fff
+    style End fill:#f39c12,color:#fff
+    style GO fill:#c0392b,color:#fff
+    style Cred fill:#3498db,color:#fff
+```
+
 ## Autoload Reference Card (Final)
 
 | Autoload | Module | Purpose |

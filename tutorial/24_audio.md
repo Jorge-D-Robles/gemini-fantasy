@@ -112,6 +112,26 @@ func resume_previous_track() -> void:
         play_music(_previous_track_path)
 ```
 
+```mermaid
+sequenceDiagram
+    participant MM as MusicManager
+    participant PA as PlayerA
+    participant PB as PlayerB
+
+    Note over PA: Playing town_theme at 0 dB
+    MM->>MM: play_music("forest_theme")
+    MM->>PB: stream = forest_theme
+    MM->>PB: volume = -40 dB, play()
+
+    par Crossfade Tween
+        MM->>PA: tween volume → -40 dB
+        MM->>PB: tween volume → 0 dB
+    end
+
+    PA->>PA: stop()
+    Note over PB: Now active player
+```
+
 Create the scene `res://autoloads/music_manager.tscn`:
 
 1. Create a new scene with **Node** as root. Rename it to `MusicManager`.

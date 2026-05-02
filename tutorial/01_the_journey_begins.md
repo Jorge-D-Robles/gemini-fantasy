@@ -104,6 +104,32 @@ Each node does one thing well. Together, they create complex behavior. This is G
 
 > **See:** [Nodes and Scenes](https://docs.godotengine.org/en/stable/getting_started/step_by_step/nodes_and_scenes.html), the official guide to understanding nodes, the scene tree, and how they compose together.
 
+```mermaid
+graph TD
+    subgraph "Everything is a Node"
+        Node["Node (base)"]
+        Node2D["Node2D\n(2D transform)"]
+        Control["Control\n(UI layout)"]
+        Sprite["Sprite2D"]
+        CB2D["CharacterBody2D"]
+        Area["Area2D"]
+        Label["Label"]
+        Panel["PanelContainer"]
+
+        Node --> Node2D
+        Node --> Control
+        Node2D --> Sprite
+        Node2D --> CB2D
+        Node2D --> Area
+        Control --> Label
+        Control --> Panel
+    end
+
+    style Node fill:#4a90d9,color:#fff
+    style Node2D fill:#7b68ee,color:#fff
+    style Control fill:#e67e22,color:#fff
+```
+
 ## Scenes: Reusable Node Trees
 
 When you arrange nodes into a tree and save it, that's a **scene**. A scene is a `.tscn` file on disk that stores the entire tree: every node, every property, every connection.

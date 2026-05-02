@@ -221,6 +221,28 @@ func _is_quest_done(quest_id: String) -> bool:
 
 Notice what `turn_in_quest()` does **not** do yet: it does not award quest XP. That is intentional. Module 20 happens before PartyManager exists, so this version stays self-contained and safe to paste into the project at this point in the series. In Module 21, once the party roster exists, we'll revisit `turn_in_quest()` and route quest XP through the same leveling helper battles already use.
 
+```mermaid
+stateDiagram-v2
+    [*] --> NOT_STARTED
+
+    NOT_STARTED --> ACTIVE : start_quest()
+    ACTIVE --> COMPLETE : all objective_flags set
+    COMPLETE --> TURNED_IN : turn_in_quest()
+
+    state ACTIVE {
+        [*] : Objectives tracked
+        [*] : flag_changed checks progress
+    }
+    state COMPLETE {
+        [*] : All flags met
+        [*] : Awaiting NPC turn-in
+    }
+    state TURNED_IN {
+        [*] : Rewards granted
+        [*] : completion_flag set
+    }
+```
+
 ## Crystal Saga Quests
 
 ### Creating Quest `.tres` Files

@@ -338,6 +338,26 @@ This separation keeps your code clean:
 - **Data instances** change often (tuning balance, adding content)
 - **Consumer scripts** don't care about specific data values (they work with any ItemData, any CharacterData)
 
+```mermaid
+graph LR
+    subgraph "1. Class Definition (.gd)"
+        RC["ItemData\nextends Resource\nclass_name ItemData\n@export var id\n@export var hp_restore"]
+    end
+    subgraph "2. Data Instance (.tres)"
+        DI["potion.tres\nid: potion\nhp_restore: 50\nbuy_price: 25"]
+    end
+    subgraph "3. Consumer Script (.gd)"
+        CS["inventory_manager.gd\nfunc use_item(item):\n  heal(item.hp_restore)"]
+    end
+
+    RC --> |"defines structure"| DI
+    DI --> |"read at runtime"| CS
+
+    style RC fill:#3498db,color:#fff
+    style DI fill:#e67e22,color:#fff
+    style CS fill:#2ecc71,color:#fff
+```
+
 ## Why Resources Over Dictionaries
 
 You might be thinking: "I could just use a Dictionary for all this." You're right, and many tutorials do. But Resources have clear advantages:

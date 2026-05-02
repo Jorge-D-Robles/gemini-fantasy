@@ -76,6 +76,11 @@ renderer.code = function ({ text, lang }) {
   var langLabel = language;
   var highlighted;
 
+  // Mermaid diagrams — pass through raw for client-side rendering
+  if (language === "mermaid") {
+    return '<div class="mermaid">' + text + '</div>\n';
+  }
+
   if (language === "gdscript" || language === "gd") {
     langLabel = "GDScript";
     try {

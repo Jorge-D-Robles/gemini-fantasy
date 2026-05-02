@@ -150,6 +150,23 @@ The weighted selection we're using here has a name: the **oddment table** (also 
 
 The power of this pattern: you can add or remove entries without recalculating the others. If you add a new "Crystal Spider" encounter at weight 0.4, all existing probabilities shift proportionally. No manual rebalancing needed. You'll see this same pattern used for item drops, shop stock, NPC dialogue variety, and AI decision-making in commercial RPGs.
 
+```mermaid
+graph TD
+    Walk["Player walks"] --> Dist{"Moved 16px?"}
+    Dist -->|no| Walk
+    Dist -->|yes| Inc["step_count += 1"]
+    Inc --> Thresh{"step_count >= threshold?"}
+    Thresh -->|no| Walk
+    Thresh -->|yes| Reset["Reset counter\nNew threshold: 8-20"]
+    Reset --> Rate{"randf() < encounter_rate?"}
+    Rate -->|no| Walk
+    Rate -->|yes| Pick["Pick weighted encounter"]
+    Pick --> Battle["Start battle!"]
+
+    style Battle fill:#e74c3c,color:#fff
+    style Pick fill:#f39c12,color:#fff
+```
+
 ### The Step Counter System
 
 Random encounters trigger based on a step counter. Create `res://systems/encounter_system.gd` and attach it to the `EncounterSystem` node in `crystal_cavern.tscn`:

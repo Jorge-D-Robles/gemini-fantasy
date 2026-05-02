@@ -310,6 +310,18 @@
   font-size: 0.8125rem;
 }
 
+/* ─── Mermaid diagrams ─────────────────────────────── */
+
+.prose .mermaid {
+  @apply bg-slate-800/40 border border-slate-700/50 rounded-lg p-6 mb-6 overflow-x-auto;
+  text-align: center;
+}
+
+.prose .mermaid svg {
+  max-width: 100%;
+  height: auto;
+}
+
 /* ─── Sidebar ──────────────────────────────────────── */
 
 .sidebar-part {

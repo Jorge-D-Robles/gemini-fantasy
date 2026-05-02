@@ -110,6 +110,25 @@ func _place_player_at_spawn() -> void:
             return
 ```
 
+```mermaid
+sequenceDiagram
+    participant EZ as ExitZone
+    participant SM as SceneManager
+    participant Anim as AnimationPlayer
+    participant Tree as SceneTree
+
+    EZ->>SM: change_scene(path, spawn)
+    SM->>SM: _is_transitioning = true
+    SM->>Anim: play("fade_out")
+    Anim-->>SM: animation_finished
+    SM->>Tree: change_scene_to_file(path)
+    Tree-->>SM: scene_changed
+    SM->>SM: _place_player_at_spawn()
+    SM->>Anim: play("fade_in")
+    Anim-->>SM: animation_finished
+    SM->>SM: _is_transitioning = false
+```
+
 ### Step 2: Create the Scene
 
 The SceneManager needs visible nodes (a ColorRect for the black overlay, an AnimationPlayer for the fade). Create a scene for it.

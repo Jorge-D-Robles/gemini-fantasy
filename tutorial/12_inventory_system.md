@@ -120,6 +120,23 @@ Register it as an autoload: **Project → Project Settings → Autoload** → ad
 
 **Signal-driven updates:** Every change emits a signal (`item_added`, `item_removed`, `inventory_changed`, `gold_changed`). The UI listens to these signals and updates itself. The InventoryManager never touches UI directly.
 
+```mermaid
+graph LR
+    IM["InventoryManager\n(Autoload)"]
+    UI["InventoryScreen\n(UI)"]
+    Slot["ItemSlot"]
+
+    IM -->|inventory_changed| UI
+    IM -->|gold_changed| UI
+    UI -->|_refresh()| Slot
+    Slot -->|slot_selected| UI
+    UI -->|use_item()| IM
+
+    style IM fill:#e74c3c,color:#fff
+    style UI fill:#3498db,color:#fff
+    style Slot fill:#2ecc71,color:#fff
+```
+
 **ID-based matching:** Items are matched by their `id` string (`item.id == item_id`), not by object reference. This means two different `ItemData` instances with the same `id` are treated as the same item, which is important when loading from saves.
 
 **`remove_item` returns bool:** Callers can check if the removal succeeded. Trying to remove an item the player doesn't have returns `false`.

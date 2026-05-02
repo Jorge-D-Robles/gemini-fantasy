@@ -256,6 +256,21 @@ This matters when we start changing scenes in Module 7. When we leave a town and
 
 > **See:** [Instancing with signals](https://docs.godotengine.org/en/stable/tutorials/scripting/instancing_with_signals.html), which connects scene instancing with signal-based communication.
 
+```mermaid
+sequenceDiagram
+    participant Area as Area2D
+    participant NPC as NPC Script
+    participant Scene as Scene Script
+
+    Note over Area: Player enters zone
+    Area->>NPC: body_entered signal
+    NPC->>NPC: _player_in_range = true
+    Note over NPC: Player presses interact
+    NPC->>Scene: interacted signal
+    Scene->>Scene: Handle response
+    Note over Scene: NPC doesn't know<br/>what happens next
+```
+
 ## Scene Files: `.tscn` Under the Hood
 
 Scene files (`.tscn`) are plain text. You can open one in any text editor. Here's a simplified look at what `player.tscn` might contain:

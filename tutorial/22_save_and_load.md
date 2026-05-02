@@ -258,6 +258,33 @@ Create `res://autoloads/save_manager.gd` and register it as an autoload (**Proje
 
 > **Note:** `await` is a GDScript coroutine feature. The reason SaveManager is an autoload is architectural: it owns persistent save-slot behavior and orchestrates scene changes from a node that is not freed when gameplay scenes are replaced.
 
+```mermaid
+sequenceDiagram
+    participant Crystal as Save Crystal
+    participant SVM as SaveManager
+    participant GM as GameManager
+    participant IM as InventoryManager
+    participant PM as PartyManager
+    participant QM as QuestManager
+    participant File as JSON File
+
+    Note over Crystal: SAVE
+    Crystal->>SVM: save_game(slot)
+    SVM->>GM: to_save_data()
+    SVM->>IM: to_save_data()
+    SVM->>PM: to_save_data()
+    SVM->>QM: to_save_data()
+    SVM->>File: JSON.stringify → write
+
+    Note over Crystal: LOAD
+    SVM->>File: read → JSON.parse
+    SVM->>GM: from_save_data(dict)
+    SVM->>IM: from_save_data(dict)
+    SVM->>PM: from_save_data(dict)
+    SVM->>QM: from_save_data(dict)
+    SVM->>SVM: change_scene + restore position
+```
+
 ```gdscript
 extends Node
 ## Handles saving and loading game state to JSON files.
