@@ -73,6 +73,13 @@ npm run build
 
 GitHub Pages deploys when pushes to `main` change `tutorial/**` or `website/**`. The deployment workflow uses Node 20, runs `npm ci`, runs `npm run build`, and publishes `website/dist/`.
 
+## Question Answering Rules
+
+When the user asks a question about the project, Godot, or the tutorial, you MUST be incredibly thorough:
+- **Use the Godot RAG MCP server** to pull relevant context about Godot 4 architecture, APIs, or best practices before answering.
+- **Read directly from the `tutorial/` files** using tools like `grep_search` or `view_file` to ensure your answer aligns exactly with the curriculum and established conventions.
+- Do not make assumptions or guess the tutorial's contents; always verify by searching the repository first.
+
 ## Agent Configuration
 
 `agents/AGENT_RULES.md` is the single source of truth for Codex, Claude, and Gemini instructions. `CLAUDE.md` and `gemini.md` must remain symlinks to this file.
