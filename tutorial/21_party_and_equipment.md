@@ -303,7 +303,7 @@ Each modifier gets a **unique ID**. This solves the stacking problem: two differ
 We won't build this system for Crystal Saga; the simple `get_effective_*()` approach is sufficient. But if you later add status effects (Module 26 roadmap), buff/debuff spells, or set bonuses, the modifier system is the right abstraction. It lets equipment, spells, status effects, and passive abilities all feed into the same stat calculation through one unified mechanism.
 
 ```mermaid
-graph LR
+graph TD
     Base["Base Stats\n(CharacterData .tres)"] --> Eff["Effective Stats"]
     Equip["Equipment Bonuses\n(weapon.attack_bonus)"] --> Eff
     Eff --> Battle["BattlerData\ninitialize_from_character()"]

@@ -87,7 +87,7 @@ Design the dungeon as connected rooms:
 ```
 
 ```mermaid
-graph LR
+graph TD
     E["🚪 Entrance"]
     MC["Main Corridor\n⚔️ Random encounters"]
     F{"Fork\n(Decision point)"}

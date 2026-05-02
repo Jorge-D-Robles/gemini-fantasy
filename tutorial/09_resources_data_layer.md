@@ -357,7 +357,7 @@ This separation keeps your code clean:
 - **Consumer scripts** don't care about specific data values (they work with any ItemData, any CharacterData)
 
 ```mermaid
-graph LR
+graph TD
     subgraph "1. Class Definition (.gd)"
         RC["ItemData\nextends Resource\nclass_name ItemData\n@export var id\n@export var hp_restore"]
     end
