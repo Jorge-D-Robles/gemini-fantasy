@@ -40,3 +40,7 @@ game/tests/results.xml
 docs/godot-docs-md/*.md
 !docs/godot-docs-md/README.md
 docs/godot-docs-md/manifest.json
+
+# Worktrees (embedded git repos)
+.claude/worktrees/
+.worktrees/
