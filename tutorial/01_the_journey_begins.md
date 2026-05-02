@@ -70,7 +70,7 @@ This is your project's file browser. It shows every file in your project folder:
 
 This is where `print()` output appears, along with errors and warnings. It's your primary debugging tool until we get to breakpoints later.
 
-> **See:** [First look at Godot's interface](https://docs.godotengine.org/en/stable/getting_started/introduction/first_look_at_the_editor_interface.html), the official walkthrough of every panel and dock in the editor.
+> **See:** [First look at Godot's interface](https://docs.godotengine.org/en/stable/getting_started/introduction/first_look_at_the_editor.html), the official walkthrough of every panel and dock in the editor.
 
 ## Nodes: The Building Blocks
 
