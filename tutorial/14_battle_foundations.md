@@ -124,6 +124,29 @@ Characters in an RPG exist in two contexts: their permanent identity (name, base
 
 We need a Resource to represent someone in battle, combining their base stats with runtime battle state.
 
+```mermaid
+graph TD
+    subgraph "BattlerData (runtime, per-battle)"
+        BD["current_hp, current_mp\ncurrent_attack, current_defense\ndefense_boost\nis_player_controlled"]
+    end
+
+    subgraph "CharacterData (persistent, saved)"
+        CD["display_name, level, XP\nmax_hp, max_mp\nattack, defense, speed\nequipped_weapon"]
+    end
+
+    subgraph "EnemyData (data definition)"
+        ED["display_name, ai_type\nmax_hp, attack, defense\nxp_reward, gold_reward"]
+    end
+
+    CD --> |"initialize_from_character()"| BD
+    ED --> |"BattlerData.from_enemy()"| BD
+    BD --> |"sync back on victory"| CD
+
+    style BD fill:#e74c3c,color:#fff
+    style CD fill:#3498db,color:#fff
+    style ED fill:#e67e22,color:#fff
+```
+
 Create `res://resources/battler_data.gd`:
 
 ```gdscript

@@ -34,6 +34,78 @@ Module 21 added the remaining progression systems. PartyManager gave us a roster
 
 ## Key Concepts
 
+```mermaid
+graph TD
+    subgraph "Autoload Infrastructure"
+        GM["GameManager\n🚩 Flags"]
+        QM["QuestManager\n📜 Quests"]
+        PM["PartyManager\n👥 Roster"]
+        IM["InventoryManager\n🎒 Items + Gold"]
+        SM["SceneManager\n🔄 Transitions"]
+        SVM["SaveManager\n💾 Persistence"]
+    end
+
+    GM --> |"flag_changed"| QM
+    QM --> |"quest rewards"| IM
+    QM --> |"quest XP"| PM
+    PM --> |"party data"| SM
+    SVM --> |"to/from_save_data()"| GM
+    SVM --> |"to/from_save_data()"| QM
+    SVM --> |"to/from_save_data()"| PM
+    SVM --> |"to/from_save_data()"| IM
+
+    style GM fill:#e74c3c,color:#fff
+    style QM fill:#9b59b6,color:#fff
+    style PM fill:#3498db,color:#fff
+    style IM fill:#f39c12,color:#fff
+    style SM fill:#2ecc71,color:#fff
+    style SVM fill:#1abc9c,color:#fff
+```
+
+```mermaid
+stateDiagram-v2
+    [*] --> NOT_STARTED
+    NOT_STARTED --> ACTIVE : start_quest()
+    ACTIVE --> COMPLETE : All objective flags set
+    COMPLETE --> TURNED_IN : turn_in_quest()
+    TURNED_IN --> [*]
+
+    state ACTIVE {
+        [*] : Listening for flag_changed
+    }
+    state COMPLETE {
+        [*] : Rewards pending
+    }
+    state TURNED_IN {
+        [*] : Gold, XP, items granted
+    }
+```
+
+```mermaid
+sequenceDiagram
+    participant SC as Save Crystal
+    participant SVM as SaveManager
+    participant GM as GameManager
+    participant IM as InventoryManager
+    participant PM as PartyManager
+    participant QM as QuestManager
+    participant F as FileAccess
+
+    SC->>SVM: save_game(slot)
+    SVM->>GM: to_save_data()
+    SVM->>IM: to_save_data()
+    SVM->>PM: to_save_data()
+    SVM->>QM: to_save_data()
+    SVM->>F: write JSON to user://saves/
+
+    Note over SVM: Loading reverses the flow
+    F->>SVM: read JSON
+    SVM->>GM: from_save_data()
+    SVM->>IM: from_save_data()
+    SVM->>PM: from_save_data()
+    SVM->>QM: from_save_data()
+```
+
 | Concept | What It Is | Why It Matters | First Seen |
 |---------|-----------|----------------|------------|
 | Game flag | A boolean key-value pair in GameManager (`"pendant_found" = true`) | Universal state tracking that every system can read and react to | Module 20 |

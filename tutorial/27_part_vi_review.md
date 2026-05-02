@@ -33,6 +33,62 @@ Module 26 was the finish line: a full playtesting walkthrough, a troubleshooting
 
 ## Key Concepts
 
+```mermaid
+graph TD
+    subgraph "Audio Bus Routing"
+        Master["🔊 Master Bus"]
+        Music["🎵 Music Bus\n(BGM, crossfade)"]
+        SFX["🔔 SFX Bus\n(one-shot effects)"]
+        MgrA["MusicManager\nPlayerA"]
+        MgrB["MusicManager\nPlayerB"]
+        OneShot["Fire-and-forget\nAudioStreamPlayer"]
+    end
+
+    MgrA --> Music
+    MgrB --> Music
+    OneShot --> SFX
+    Music --> Master
+    SFX --> Master
+
+    style Master fill:#e74c3c,color:#fff
+    style Music fill:#3498db,color:#fff
+    style SFX fill:#2ecc71,color:#fff
+```
+
+```mermaid
+stateDiagram-v2
+    [*] --> TitleScreen
+
+    TitleScreen --> Gameplay : New Game
+    TitleScreen --> Gameplay : Continue (Load)
+    TitleScreen --> Settings
+
+    state Gameplay {
+        [*] --> Overworld
+        Overworld --> Dungeon : Exit Zone
+        Dungeon --> Overworld : Exit Zone
+        Overworld --> Battle : Encounter
+        Dungeon --> Battle : Encounter
+        Battle --> Overworld : Victory
+        Battle --> GameOver : Defeat
+        Dungeon --> BossFight : Boss Room
+        BossFight --> Ending : Boss defeated
+        BossFight --> GameOver : Defeat
+    }
+
+    state Gameplay {
+        Overworld --> PauseMenu : Escape
+        Dungeon --> PauseMenu : Escape
+        PauseMenu --> Overworld : Resume
+        PauseMenu --> Dungeon : Resume
+    }
+
+    Ending --> Credits
+    Credits --> TitleScreen
+    GameOver --> TitleScreen : Quit
+    GameOver --> Gameplay : Load Save
+```
+
 | Concept | What It Is | Why It Matters | First Seen |
 |---------|-----------|----------------|------------|
 | AudioStreamPlayer | Node that plays audio without spatial positioning | All BGM, UI sounds, and fanfares use this | Module 24 |

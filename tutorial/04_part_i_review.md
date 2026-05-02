@@ -36,6 +36,48 @@ Module 3 shifted from "scripts that move things" to "scenes that *are* things." 
 
 ## Key Concepts
 
+```mermaid
+graph TD
+    subgraph "Part I Architecture"
+        Project["Godot Project\n(project.godot)"]
+        Scene["Scene (.tscn)\nSaved node tree"]
+        Node["Node\nAtomic building block"]
+        Script["Script (.gd)\nBehavior via callbacks"]
+        Tree["SceneTree\nRuntime hierarchy"]
+    end
+
+    Project --> Scene
+    Scene --> Node
+    Node --> Script
+    Scene --> |"instanced into"| Tree
+    Script --> |"_ready, _process,\n_physics_process"| Tree
+
+    style Project fill:#8e44ad,color:#fff
+    style Scene fill:#3498db,color:#fff
+    style Node fill:#2ecc71,color:#fff
+    style Script fill:#e67e22,color:#fff
+    style Tree fill:#e74c3c,color:#fff
+```
+
+```mermaid
+sequenceDiagram
+    participant E as Engine
+    participant N as Node
+
+    E->>N: _init()
+    Note over N: Constructor, no tree access
+    E->>N: _enter_tree()
+    Note over N: Added to SceneTree
+    E->>N: _ready()
+    Note over N: Children ready, @onready set
+    loop Every frame
+        E->>N: _process(delta)
+        E->>N: _physics_process(delta)
+    end
+    E->>N: _exit_tree()
+    Note over N: Removed, signals cleaned up
+```
+
 | Concept | What It Is | Why It Matters | First Seen |
 |---------|-----------|----------------|------------|
 | Node | The atomic building block of Godot; each type has one job (display image, play audio, handle collision) | Everything in your game is built from nodes | Module 1 |

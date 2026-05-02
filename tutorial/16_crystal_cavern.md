@@ -86,6 +86,29 @@ Design the dungeon as connected rooms:
                                   [Save Crystal]
 ```
 
+```mermaid
+graph LR
+    E["🚪 Entrance"]
+    MC["Main Corridor\n⚔️ Random encounters"]
+    F{"Fork\n(Decision point)"}
+    DE["Dead End\n💎 Treasure chest"]
+    SC["Save Crystal\n💾 Save point"]
+    DC["Deep Cavern\n⚔️ Harder encounters"]
+    BR["🐉 Boss Room"]
+
+    E --> MC --> F
+    F --> |"explore"| DE
+    F --> |"advance"| DC
+    DC --> BR
+    SC -.-> |"adjacent"| DC
+
+    style E fill:#4a7c3f,color:#fff
+    style BR fill:#e74c3c,color:#fff
+    style SC fill:#3498db,color:#fff
+    style DE fill:#f39c12,color:#fff
+    style F fill:#8e44ad,color:#fff
+```
+
 Each "room" is a region of the tilemap. Passages connect them. The fork creates a simple decision: explore the dead end for treasure, or push ahead toward the boss.
 
 ### Design Tips

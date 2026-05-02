@@ -52,6 +52,53 @@ Module 17 populated the dungeon with enemies. EnemyData resources defined stats 
 
 ## Key Concepts
 
+```mermaid
+stateDiagram-v2
+    [*] --> Intro
+    Intro --> TurnStart
+    TurnStart --> PlayerChoice : Player's turn
+    TurnStart --> ActionExecute : Enemy's turn (AI decides)
+    PlayerChoice --> ActionExecute : Command chosen
+    ActionExecute --> CheckResult
+    CheckResult --> Victory : All enemies dead
+    CheckResult --> Defeat : All party dead
+    CheckResult --> TurnStart : Next battler / next round
+    Victory --> [*]
+    Defeat --> [*]
+```
+
+```mermaid
+graph TD
+    subgraph "Combat Round Cycle"
+        BQ["Build Turn Queue\n(sort by speed)"]
+        Pop["Pop next alive battler"]
+        IsP{Player?}
+        Menu["Show Battle Menu\n(Attack/Defend/Item)"]
+        AI["AI chooses action\n(Aggressive/Cautious/Balanced)"]
+        Exec["Execute Command\n{action, battler, target}"]
+        Check{"All enemies\nor party dead?"}
+        More{"Queue empty?"}
+    end
+
+    BQ --> Pop
+    Pop --> IsP
+    IsP --> |Yes| Menu
+    IsP --> |No| AI
+    Menu --> Exec
+    AI --> Exec
+    Exec --> Check
+    Check --> |No| More
+    More --> |No| Pop
+    More --> |Yes| BQ
+    Check --> |Victory| V["Distribute XP, gold, drops"]
+    Check --> |Defeat| D["Game Over"]
+
+    style BQ fill:#3498db,color:#fff
+    style Menu fill:#2ecc71,color:#fff
+    style AI fill:#e74c3c,color:#fff
+    style Exec fill:#f39c12,color:#fff
+```
+
 | Concept | What It Is | Why It Matters | First Seen |
 |---------|-----------|---------------|------------|
 | Node-based state machine | Each state is a Node child with `enter()`/`process()`/`exit()`, managed by a state machine parent | Scales to complex state flows without monolithic `match` blocks | Module 14 |

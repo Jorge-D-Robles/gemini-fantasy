@@ -28,6 +28,46 @@ A complete tutorial JRPG vertical slice. Let that sink in. Across the series, yo
 
 That's a real tutorial game: a playable JRPG vertical slice with every major system in place. It is not a content-complete commercial RPG yet, but the architecture can support more content and polish.
 
+```mermaid
+graph TD
+    subgraph "Game Flow"
+        Title["🏠 Title Screen"]
+        OW["🌍 Overworld\n(Willowbrook, Whisperwood)"]
+        Dun["🏰 Dungeon\n(Crystal Cavern)"]
+        Battle["⚔️ Battle"]
+        Victory["🎉 Victory\nXP + Loot"]
+        Defeat["💀 Game Over"]
+        End["🏆 Ending + Credits"]
+    end
+
+    Title --> |"New Game"| OW
+    Title --> |"Continue"| OW
+    OW --> |"Exit Zone"| Dun
+    OW <--> |"SceneManager"| Dun
+    Dun --> |"Encounter"| Battle
+    OW --> |"Encounter"| Battle
+    Battle --> Victory --> OW
+    Battle --> Defeat --> Title
+    Dun --> |"Boss defeated"| End --> Title
+
+    subgraph "Persistent Systems (Autoloads)"
+        SM["SceneManager"]
+        GM["GameManager"]
+        IM["InventoryManager"]
+        PM["PartyManager"]
+        QM["QuestManager"]
+        SVM["SaveManager"]
+        MM["MusicManager"]
+        Pause["PauseMenu"]
+    end
+
+    style Title fill:#8e44ad,color:#fff
+    style Battle fill:#e74c3c,color:#fff
+    style Victory fill:#2ecc71,color:#fff
+    style Defeat fill:#7f8c8d,color:#fff
+    style End fill:#f39c12,color:#fff
+```
+
 Intentional exclusions for this slice: Magic/AbilityData remains a future extension, status effects are limited to the Defend-style temporary buff pattern, and the starter quest log shows active quests only. Those are good next steps, not missing prerequisites for this tutorial's title-to-credits flow.
 
 ## Playtesting Walkthrough

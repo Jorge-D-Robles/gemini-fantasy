@@ -29,6 +29,24 @@ Resources are **data objects**: they hold information but don't have behavior ti
 - Can be loaded and unloaded at any time
 - Can be created and edited in the Inspector
 
+```mermaid
+graph TD
+    Obj["Object\n(base of everything)"]
+    Node["Node\n🌳 In scene tree\n_ready(), _process()"]
+    Res["Resource\n📦 Data container\nSaved as .tres"]
+    
+    Obj --> Node
+    Obj --> Res
+    
+    Node --> N2D["Node2D, Control,\nCharacterBody2D..."]
+    Res --> Custom["ItemData, CharacterData,\nNPCData, TileSet..."]
+    
+    style Node fill:#3498db,color:#fff
+    style Res fill:#e67e22,color:#fff
+    style N2D fill:#2980b9,color:#fff
+    style Custom fill:#d35400,color:#fff
+```
+
 > **See:** [Resources](https://docs.godotengine.org/en/stable/tutorials/scripting/resources.html), the official guide to Godot's Resource system.
 
 > **See:** [Resource class](https://docs.godotengine.org/en/stable/classes/class_resource.html), the full API reference.

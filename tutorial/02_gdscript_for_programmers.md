@@ -260,6 +260,23 @@ The `$` operator is shorthand for `get_node()`. `$Sprite2D` means "find the chil
 
 > **Warning:** If you try to access `$Sprite2D` in a plain `var` declaration (outside `@onready`), it will fail because the node tree hasn't been built yet when `var` initializers run. Always use `@onready` for node references.
 
+```mermaid
+graph LR
+    subgraph "Design Time (Inspector)"
+        Export["@export var speed = 200\n→ Editable in Inspector"]
+    end
+    subgraph "Runtime (_ready)"
+        Onready["@onready var sprite = $Sprite\n→ Cached node reference"]
+    end
+
+    Export --> |"Values set before _ready()"| Onready
+    Onready --> |"Node refs valid after _ready()"| GameLoop["_process / _physics_process"]
+
+    style Export fill:#e67e22,color:#fff
+    style Onready fill:#3498db,color:#fff
+    style GameLoop fill:#2ecc71,color:#fff
+```
+
 There's also `%UniqueName`, which finds a node by its **unique name** regardless of where it is in the tree. We'll use this later for UI elements that need to be found from anywhere.
 
 ## Input: Making Things Move

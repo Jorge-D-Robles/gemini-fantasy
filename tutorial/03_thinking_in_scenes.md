@@ -52,6 +52,26 @@ Not technically a physics body. It's a **detection zone**. It doesn't block move
 
 > **See:** [Physics introduction](https://docs.godotengine.org/en/stable/tutorials/physics/physics_introduction.html), which covers all body types, collision layers, and physics concepts.
 
+```mermaid
+graph TD
+    subgraph "Physics Bodies"
+        CB["CharacterBody2D\n⬛ Blocks\n🎮 Code-driven"]
+        RB["RigidBody2D\n⬛ Blocks\n🔧 Physics-driven"]
+        SB["StaticBody2D\n⬛ Blocks\n🧱 Never moves"]
+        A2["Area2D\n👁 Detects only\n🚫 No blocking"]
+    end
+
+    CB ---|"use for"| Players["Players, NPCs"]
+    RB ---|"use for"| Objects["Boulders, crates"]
+    SB ---|"use for"| Walls["Walls, barriers"]
+    A2 ---|"use for"| Zones["Exit zones, triggers"]
+
+    style CB fill:#3498db,color:#fff
+    style RB fill:#e67e22,color:#fff
+    style SB fill:#7f8c8d,color:#fff
+    style A2 fill:#2ecc71,color:#fff
+```
+
 For our player character, **CharacterBody2D** is the right choice. It gives us pixel-perfect collision without the unpredictability of a physics simulation. JRPGs need precise, deterministic movement, not bouncy physics.
 
 ## Building the Player Scene

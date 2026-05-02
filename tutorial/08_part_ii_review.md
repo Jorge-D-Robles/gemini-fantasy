@@ -36,6 +36,53 @@ The result is the skeleton of a real JRPG: two connected areas you can walk betw
 
 ## Key Concepts
 
+```mermaid
+graph TD
+    subgraph "Willowbrook Scene Structure"
+        WB["Willowbrook (Node2D)"]
+        G["Ground\n(TileMapLayer)"]
+        D["Detail\n(TileMapLayer)"]
+        YS["YSortGroup\n(y_sort_enabled)"]
+        Obj["Objects\n(TileMapLayer)"]
+        P["Player\n(CharacterBody2D)"]
+        AP["AbovePlayer\n(TileMapLayer)"]
+    end
+
+    WB --> G
+    WB --> D
+    WB --> YS
+    WB --> AP
+    YS --> Obj
+    YS --> P
+
+    G ~~~ D
+    D ~~~ YS
+    YS ~~~ AP
+
+    style G fill:#4a7c3f,color:#fff
+    style D fill:#8b6914,color:#fff
+    style Obj fill:#3498db,color:#fff
+    style P fill:#e74c3c,color:#fff
+    style AP fill:#8e44ad,color:#fff
+    style YS fill:#f39c12,color:#fff
+```
+
+```mermaid
+sequenceDiagram
+    participant P as Player
+    participant EZ as ExitZone (Area2D)
+    participant SM as SceneManager (Autoload)
+    participant Anim as AnimationPlayer
+
+    P->>EZ: body_entered
+    EZ->>SM: change_scene(path, spawn)
+    SM->>Anim: play("fade_out")
+    Anim-->>SM: animation_finished
+    SM->>SM: change_scene_to_file()
+    SM->>SM: _place_player_at_spawn()
+    SM->>Anim: play("fade_in")
+```
+
 | Concept | What It Is | Why It Matters | First Seen |
 |---------|-----------|----------------|------------|
 | TileMapLayer | A node that renders a grid of tiles from a TileSet | Builds entire game worlds from small, reusable tile images | Module 5 |
