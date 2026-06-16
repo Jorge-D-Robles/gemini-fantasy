@@ -65,6 +65,8 @@ func load_flags(data: Dictionary) -> void:
 
 Register as autoload `GameManager`.
 
+`make_world_flag()` builds namespaced flag keys like `world.whisperwood.pendant_chest.opened`. Module 22's save system uses these keys to remember opened chests and similar world objects; the helper is first called there, so it is unused for now.
+
 Flags are used everywhere:
 - NPCs check flags to choose dialogue
 - Doors check flags to decide if they're locked
@@ -102,6 +104,8 @@ enum QuestState { NOT_STARTED, ACTIVE, COMPLETE, TURNED_IN }
 ## QuestManager Autoload
 
 Save as `res://autoloads/quest_manager.gd` and register as autoload `QuestManager` (Project -> Project Settings -> Autoload tab -> add the script path, name it `QuestManager`).
+
+Order matters: GameManager must sit above QuestManager in the Autoload list, because `QuestManager._ready()` connects to `GameManager.flag_changed` and Godot initializes autoloads top to bottom.
 
 ```gdscript
 extends Node
@@ -318,7 +322,7 @@ If you skipped Elder Maren in Module 10, create the NPC now: instance `npc.tscn`
 
 The side quest needs a pendant object in Whisperwood. Use the treasure chest pattern from Module 16 to create a pickup:
 
-1. Create `res://data/items/pendant.tres` (ItemData, type: KEY_ITEM, display_name: "Silver Pendant")
+1. Create `res://data/items/pendant.tres` (ItemData, `id`: "pendant", type: KEY_ITEM, display_name: "Silver Pendant")
 2. Place a treasure chest instance in the Whisperwood scene near a memorable landmark:
 
 ```
@@ -327,7 +331,7 @@ Whisperwood
     └── PendantChest (TreasureChest)
 ```
 
-3. Set `PendantChest.scene_key = "whisperwood"`, `PendantChest.chest_id = "pendant_chest"`, and set its `item` export to `pendant.tres` in the Inspector.
+3. Set `PendantChest.chest_id = "pendant_chest"` and set its `item` export to `pendant.tres` in the Inspector. (Module 22 adds a `scene_key` export to the chest; you will set it to `"whisperwood"` there.)
 4. In `whisperwood.gd`, connect to the chest's `opened` signal to set the flag:
 
 ```gdscript
@@ -393,7 +397,7 @@ Add the following to `res://scenes/willowbrook/willowbrook.gd`. Then update your
 #   if npc.npc_data.id == "fynn" and GameManager.has_flag("pendant_found") and not GameManager.has_flag("pendant_returned"):
 #       _dialogue_box.dialogue_finished.connect(_on_fynn_turn_in_dialogue_finished, CONNECT_ONE_SHOT)
 
-func _get_dialogue_for_npc(npc: CharacterBody2D) -> Array[DialogueLine]:
+func _get_dialogue_for_npc(npc: NPC) -> Array[DialogueLine]:
     match npc.npc_data.id:
         "elder_maren":
             return _get_elder_dialogue()
@@ -514,10 +518,12 @@ func _show_detail(quest: QuestData) -> void:
         var done: bool = false
         if i < quest.objective_flags.size():
             done = GameManager.has_flag(quest.objective_flags[i])
-        var marker: String = "[x]" if done else "[ ]"
+        var marker: String = "✔" if done else "•"
         text += marker + " " + quest.objectives[i] + "\n"
     _detail_label.text = text
 ```
+
+Notice the objective markers use a check mark and a bullet rather than `[x]` and `[ ]`. Because this label has `bbcode_enabled` on, square brackets are parsed as formatting tags, so a literal `[x]` would be swallowed instead of shown. (If you want bracket-style markers, escape the opening bracket with the `[lb]` tag.)
 
 After creating the scene, instance `quest_log.tscn` into each gameplay scene you currently have (`Willowbrook`, `Whisperwood`, and `CrystalCavern`) as a direct child of the scene root, alongside your other UI nodes. Leave it hidden by default. Module 25's PauseMenu will open these scene-local quest logs through `open_from_pause()`, just like it opens the inventory through Module 12's public API.
 

@@ -264,7 +264,7 @@ Item drops turn every battle into a small gamble. In Pokemon, rare wild encounte
 
 ## The Defeat Flow
 
-When the party is wiped:
+When the party is wiped, replace the body of `res://systems/battle/states/defeat_state.gd` (the Module 14 stub) with:
 
 ```gdscript
 extends BattleState
@@ -316,7 +316,7 @@ For now, since we don't have a formal PartyManager yet (Module 21), the Characte
 
 ## Engineering Contract
 
-- **Global state:** Victory writes rewards into PartyManager and InventoryManager through their public APIs.
+- **Global state:** Victory writes XP into each member's CharacterData via `grant_xp()` and gold/items into InventoryManager through their public APIs. (Module 21 routes the same flow through PartyManager.)
 - **Public surface:** XP gain, level-up, reward calculation, loot rolls, and post-battle HP/MP sync.
 - **Invariant:** Level-up max HP/MP gains also increase current HP/MP by the same delta, capped at the new max.
 - **Failure behavior:** Dead party members do not receive XP in the base tutorial flow.

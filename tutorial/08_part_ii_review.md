@@ -326,6 +326,17 @@ func _place_player_at_spawn() -> void:
             if player:
                 player.global_position = marker.global_position
             return
+
+    # If no matching spawn point, fall back to "default"
+    for marker in spawn_markers:
+        if marker.name == "default":
+            var player := get_tree().get_first_node_in_group("player")
+            if player:
+                player.global_position = marker.global_position
+            return
+
+    # Neither the requested spawn nor a "default" exists; warn so it's debuggable
+    push_warning("No spawn point '%s' or 'default' found in scene." % _target_spawn_point)
 ```
 
 **Exit zones** are Area2D nodes with this script:

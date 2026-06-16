@@ -407,7 +407,7 @@ Grid-based movement is elegant for tile-heavy games but requires a different arc
 ## Engineering Contract
 
 - **Global state:** None; player movement lives on the player scene instance.
-- **Public surface:** The player joins the `"player"` group and exposes predictable movement/animation state.
+- **Public surface:** The player exposes predictable movement/animation state through its state machine. The player will be registered in the `"player"` group in Module 7.
 - **Invariant:** Movement input produces one deterministic velocity per frame, then `move_and_slide()` resolves collisions.
 - **Failure behavior:** Unknown or missing input actions should result in no movement, not script errors.
 - **Copy semantics:** The player scene can be instanced in multiple maps; runtime state belongs to the instance.

@@ -70,10 +70,17 @@ func _on_settings() -> void:
     # Show the persistent volume settings panel from Module 24
     var settings_scene := preload("res://ui/settings/settings_panel.tscn")
     var panel: PanelContainer = settings_scene.instantiate()
-    add_child(panel)
-    # Center it on screen
-    panel.set_anchors_preset(Control.PRESET_CENTER)
-    panel.grab_focus()
+
+    # A CenterContainer fills the screen and keeps the panel in its center.
+    var center := CenterContainer.new()
+    center.set_anchors_preset(Control.PRESET_FULL_RECT)
+    add_child(center)
+    center.add_child(panel)
+
+    # Focus the first interactive control so keyboard and gamepad work.
+    # PanelContainer is a container, not focusable, so we focus the slider.
+    # call_deferred makes grab_focus reliable for a freshly added node.
+    panel.get_node("VBox/MusicSlider").grab_focus.call_deferred()
 
 
 func _initialize_fresh_state() -> void:
@@ -234,7 +241,14 @@ func _open_settings() -> void:
     # Show the settings panel from Module 24
     var settings_scene := preload("res://ui/settings/settings_panel.tscn")
     var panel: PanelContainer = settings_scene.instantiate()
-    add_child(panel)
+
+    # Same centering and focus pattern as the title screen's settings.
+    var center := CenterContainer.new()
+    center.set_anchors_preset(Control.PRESET_FULL_RECT)
+    add_child(center)
+    center.add_child(panel)
+
+    panel.get_node("VBox/MusicSlider").grab_focus.call_deferred()
 
 
 func _quit_to_title() -> void:

@@ -87,10 +87,11 @@ func get_all_items() -> Array[Dictionary]:
 
 
 func get_consumables() -> Array[Dictionary]:
-    return _items.filter(
-        func(entry: Dictionary) -> bool:
-            return entry.item.item_type == ItemData.ItemType.CONSUMABLE
-    ).duplicate(true)
+    var result: Array[Dictionary] = []
+    for entry in _items:
+        if entry.item.item_type == ItemData.ItemType.CONSUMABLE:
+            result.append(entry.duplicate(true))
+    return result
 
 
 func use_item(item: ItemData) -> bool:
@@ -230,6 +231,8 @@ func _notification(what: int) -> void:
         slot_selected.emit(item_data)
 ```
 
+Attach this script to the `ItemSlot` (PanelContainer) root node of `item_slot.tscn`.
+
 > **See:** [TextureRect](https://docs.godotengine.org/en/stable/classes/class_texturerect.html): displaying images in UI.
 
 > **See:** [GridContainer](https://docs.godotengine.org/en/stable/classes/class_gridcontainer.html): automatic grid layout for child nodes.
@@ -336,6 +339,8 @@ func _on_gold_changed(_amount: int) -> void:
     _update_gold_display()
 ```
 
+Attach this script to the `InventoryScreen` (CanvasLayer) root node of `inventory_screen.tscn`.
+
 `open()` and `open_from_pause()` intentionally go through the same `_show()` helper. Module 25's PauseMenu will call the public API instead of toggling `visible` directly, so the inventory always refreshes its slots, tracks `_is_open`, and owns the pause state the same way no matter how it was opened.
 
 ## Pausing the Game
@@ -363,7 +368,7 @@ Every node has a `process_mode` property that controls whether it runs while pau
 
 > **IMPORTANT:** Select the `InventoryScreen` (CanvasLayer) root node in the editor and set **Process → Mode** to **`Always`** in the Inspector. Without this, the inventory will open but immediately freeze because the paused game prevents it from processing input. The only way to recover would be to force-quit.
 
-The SceneManager should also be `PROCESS_MODE_ALWAYS`. Go back to `scene_manager.tscn` and set its root node's **Process → Mode** to **`Always`** too. It needs to work during transitions regardless of pause state.
+SceneManager is already `PROCESS_MODE_ALWAYS` from Module 7, which keeps fade transitions working while the inventory pauses the game.
 
 ```mermaid
 graph TD
@@ -469,4 +474,4 @@ When you press F6 (running Willowbrook):
 
 ## Next Module
 
-We have items and NPCs and dialogue. Now it's time for the biggest system in any JRPG: **combat**. In **Module 14: Battle Foundations**, we'll build the battle scene, implement a node-based state machine for battle flow, and create the turn order system. Combat is next.
+We have items and NPCs and dialogue. Next up, **Module 13** reviews everything from Part III with cheat sheets and common mistakes. Then it's time for the biggest system in any JRPG: **combat**. In **Module 14: Battle Foundations**, we'll build the battle scene, implement a node-based state machine for battle flow, and create the turn order system.

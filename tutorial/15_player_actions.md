@@ -53,6 +53,8 @@ func hide_menu() -> void:
     visible = false
 ```
 
+Attach this script to the `BattleMenu` root node of `battle_menu.tscn`.
+
 > **See:** [GUI navigation](https://docs.godotengine.org/en/stable/tutorials/ui/gui_navigation.html): focus navigation between buttons with keyboard/gamepad.
 
 ## The Command Pattern
@@ -163,6 +165,8 @@ TargetSelect (PanelContainer)
 └── MarginContainer
     └── TargetList (VBoxContainer)
 ```
+
+Attach `target_select.gd` to the `TargetSelect` root node of `target_select.tscn`.
 
 ## Integrating the Battle Menu into the Battle Scene
 
@@ -646,7 +650,7 @@ When a battle starts:
 - Selecting Attack shows enemy targets
 - Choosing a target plays a slide animation and shows a damage number
 - Defend doubles defense for one turn
-- Using an Item consumes it from inventory
+- Using a healing item on a wounded ally consumes it from inventory (using it on a full-HP/MP target does nothing and keeps the item)
 - The enemy takes its turn automatically
 - Combat feels responsive and interactive
 

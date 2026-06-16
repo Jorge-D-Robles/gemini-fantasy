@@ -87,7 +87,7 @@ Play through Crystal Saga from start to finish and verify each checkpoint:
 - [ ] Music crossfades when entering the forest
 - [ ] Scene transitions to and from Willowbrook still work
 - [ ] The forest reads clearly as an exploration connector, not a battle arena
-- [ ] The pendant can be found (requires a pickup object in Whisperwood; see Module 16's treasure chest pattern)
+- [ ] The pendant can be found in Whisperwood (the PendantChest you placed in Module 20); returning it to Fynn completes the Lost Pendant quest
 
 ### 4. Crystal Cavern
 - [ ] Dungeon music plays
@@ -207,8 +207,8 @@ Fight enemies → earn gold → buy equipment → fight harder enemies → earn 
 Check this loop by doing the math on paper:
 
 1. **How much gold does the player earn per dungeon run?** Average enemies per run * average gold per enemy. For Crystal Saga: ~8 fights * ~8 gold = ~64 gold per run.
-2. **How much does the best available equipment cost?** Iron Sword = 50 gold, Leather Armor = 40 gold. Total to equip one character = ~90 gold.
-3. **How many runs to afford a full equipment set?** 90 / 64 = ~1.5 dungeon runs. That feels about right; the player can gear up without excessive grinding.
+2. **How much does the best available equipment cost?** Iron Sword = 100 gold, Leather Armor = 80 gold. Total to equip one character = ~180 gold.
+3. **How many runs to afford a full equipment set?** 180 / 64 = ~2.8 dungeon runs. That feels about right; the player can gear up without excessive grinding.
 
 If the answer to #3 is "10+ runs," your economy is too tight. If it's "they can buy everything after one fight," equipment upgrades don't feel meaningful. Aim for 1-3 dungeon runs to afford the next tier of gear.
 

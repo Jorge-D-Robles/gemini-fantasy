@@ -284,7 +284,7 @@ graph TD
     style GameLoop fill:#2ecc71,color:#fff
 ```
 
-There's also `%UniqueName`, which finds a node by its **unique name** regardless of where it is in the tree. We'll use this later for UI elements that need to be found from anywhere.
+There's also `%UniqueName`, which finds a node marked as a **Scene Unique Name** from anywhere within the same scene, without hard-coding its path. We'll use this later for UI elements that need to be found from anywhere in their scene.
 
 ## Input: Making Things Move
 
@@ -392,7 +392,7 @@ func _process(delta: float) -> void:
 Other useful output functions:
 
 ```gdscript
-print("Normal message")              # White text in Output
+print("Normal message")              # Normal message in the Output panel
 push_warning("Something seems off")  # Yellow warning
 push_error("Something broke!")        # Red error (doesn't crash)
 printerr("Also an error")            # Error output

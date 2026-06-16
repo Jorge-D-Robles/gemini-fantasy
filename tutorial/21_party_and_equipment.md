@@ -117,7 +117,18 @@ Lira is a mage: lower HP and attack, higher MP and speed.
 
 ### The Recruitment Scene
 
-In Willowbrook, add a new NPC: Lira. She joins the party after a dialogue exchange, gated by a game flag:
+In Willowbrook, add a new NPC: Lira. Two different resources both named `lira.tres` are involved here, and it helps to keep them straight. The `res://data/characters/lira.tres` you just made is `CharacterData`: her battle stats and growth rates. The overworld NPC the player walks up to needs a separate `NPCData` resource, exactly the way Aiden and Elder Maren each have a `CharacterData` plus an `NPCData` from Module 10.
+
+Create the overworld NPC the same way you created the other Willowbrook NPCs:
+
+1. Right-click `res://data/npcs/` → **New Resource** → search `NPCData` → **Create** → name it `lira.tres`. Set `id` to `"lira"`, `display_name` to `"Lira"`, and assign a `SpriteFrames` so she has an idle animation.
+2. Drag `res://npcs/npc.tscn` into Willowbrook's **YSortGroup** node so she sorts by Y position alongside the player. Rename the instance to `Lira`.
+3. In the Inspector, assign `res://data/npcs/lira.tres` to the instance's `npc_data` export.
+4. Confirm the instance is in the `"npcs"` group (the `npc.tscn` root already joins it, the same group the interaction handler scans).
+
+The `id` on this `NPCData` is what `_on_npc_interacted()` matches against when it decides to run the recruitment branch, so it must read `"lira"` exactly.
+
+She joins the party after a dialogue exchange, gated by a game flag:
 
 ```gdscript
 func _get_lira_dialogue() -> Array[DialogueLine]:
@@ -153,18 +164,32 @@ func _get_lira_dialogue() -> Array[DialogueLine]:
 After the second conversation, trigger recruitment. This code goes in `willowbrook.gd`, which should have `@onready` references for the UI nodes (from Module 11 and this module):
 
 ```gdscript
-@onready var _dialogue_box: Control = $DialogueBox  # From Module 11
+@onready var _dialogue_box: CanvasLayer = $DialogueBox  # From Module 11 (DialogueBox extends CanvasLayer)
 @onready var _shop_ui: CanvasLayer = $ShopUI         # Instance of shop_ui.tscn (add to scene)
 ```
 
-Add the recruitment wiring to the existing interaction handler:
+By this module, Willowbrook talks to several kinds of NPC: shopkeeper, innkeeper, quest-givers like Fynn, and now Lira. Rather than scatter that across separate handlers, consolidate everything into one `_on_npc_interacted()`. Each NPC routes by `npc.npc_data.id`. The parameter is typed `NPC` (the `class_name` you gave the NPC script in Module 10), so `npc.npc_data` resolves without an unsafe-property warning. This single handler replaces the shop and inn fragments shown later in this module; the shop and inn sections below only supply the helper functions it calls.
 
 ```gdscript
-func _on_npc_interacted(npc: CharacterBody2D) -> void:
-    # ... existing dialogue logic ...
+func _on_npc_interacted(npc: NPC) -> void:
+    # Shopkeeper and innkeeper open modal UI instead of plain dialogue.
+    if npc.npc_data.id == "shopkeeper":
+        var shop_data: ShopData = load("res://data/shops/willowbrook_shop.tres")
+        if shop_data:
+            _open_shop(shop_data)
+        return
+    if npc.npc_data.id == "innkeeper":
+        _handle_inn(npc)
+        return
 
-    # Check for Lira recruitment after the second conversation
-    if npc.npc_data.id == "lira" and GameManager.has_flag("lira_ready_to_join") and not GameManager.has_flag("lira_joined"):
+    # Everyone else gets flag-aware dialogue (the Module 20 dispatcher).
+    var lines := _get_dialogue_for_npc(npc)
+    _dialogue_box.start_dialogue(lines)
+
+    # Arm per-NPC one-shot follow-ups that fire when the dialogue closes.
+    if npc.npc_data.id == "fynn" and GameManager.has_flag("pendant_found") and not GameManager.has_flag("pendant_returned"):
+        _dialogue_box.dialogue_finished.connect(_on_fynn_turn_in_dialogue_finished, CONNECT_ONE_SHOT)
+    elif npc.npc_data.id == "lira" and GameManager.has_flag("lira_ready_to_join") and not GameManager.has_flag("lira_joined"):
         _dialogue_box.dialogue_finished.connect(_recruit_lira, CONNECT_ONE_SHOT)
 
 
@@ -174,6 +199,13 @@ func _recruit_lira() -> void:
     if lira:
         PartyManager.add_member(lira)
         print("Lira joined the party!")
+```
+
+For the Lira branch to ever produce her flag-gated lines, `_get_lira_dialogue()` has to be reachable from the Module 20 dispatcher. Add a `"lira"` case to `_get_dialogue_for_npc()` alongside the existing `"elder_maren"` and `"fynn"` cases:
+
+```gdscript
+        "lira":
+            return _get_lira_dialogue()
 ```
 
 Update the battle initialization to use PartyManager instead of a hardcoded hero. In each area scene script that triggers battles (e.g., `crystal_cavern.gd` from Module 17), find the code that creates `var hero := BattlerData.new()` and replace the hero creation + `start_battle` call with:
@@ -477,6 +509,17 @@ func use_item_on_member(item: ItemData, member: CharacterData) -> bool:
 
 For a polished UI, let the player pick the target from `PartyManager.get_members()`. For this tutorial slice, selecting the first party member is acceptable as long as the healing goes through `use_item_on_member()` instead of placeholder print logic.
 
+Now wire it into the inventory screen. Open `_use_consumable()` (the Module 12 placeholder) and replace its `InventoryManager.use_item(item)` line so the heal actually lands on a party member:
+
+```gdscript
+func _use_consumable(item: ItemData) -> void:
+    if PartyManager.get_members().is_empty():
+        return
+    InventoryManager.use_item_on_member(item, PartyManager.get_members()[0])
+```
+
+The empty-party guard keeps the call safe before anyone has joined, and `use_item_on_member()` removes the item only when the heal succeeds.
+
 ### Equipment Comparison: The PredictStats Pattern
 
 Every JRPG shop and equipment screen answers the same question: "would this item make me stronger or weaker?" Showing red/green arrows next to stats is standard UX. The pattern for computing this is called **PredictStats**: calculate what the character's stats *would be* if they equipped a candidate item, without actually equipping it.
@@ -674,18 +717,9 @@ func _sell_item(item: ItemData) -> void:
 
 ### Connecting the Shopkeeper
 
-When the player interacts with the shopkeeper NPC, open the shop instead of regular dialogue:
+The shopkeeper branch in `_on_npc_interacted()` above already routes to `_open_shop()`. Here is that helper plus the close-signal cleanup:
 
 ```gdscript
-func _on_npc_interacted(npc: CharacterBody2D) -> void:
-    if npc.npc_data.id == "shopkeeper":
-        var shop_data: ShopData = load("res://data/shops/willowbrook_shop.tres")
-        if shop_data:
-            _open_shop(shop_data)
-            return
-    # ... normal dialogue handling ...
-
-
 func _open_shop(shop_data: ShopData) -> void:
     _shop_ui.open_shop(shop_data)
     if not _shop_ui.shop_closed.is_connected(_on_shop_closed):
@@ -705,7 +739,7 @@ Every modal UI opened from an NPC needs this close-signal cleanup path. Dialogue
 The innkeeper is simpler, just a dialogue choice that costs gold and heals the party:
 
 ```gdscript
-func _handle_inn(npc: CharacterBody2D) -> void:
+func _handle_inn(npc: NPC) -> void:
     var lines := _make_lines("Old Brennan", [
         "Rest for the night? That'll be 10 gold.",
     ])
@@ -722,6 +756,13 @@ func _handle_inn(npc: CharacterBody2D) -> void:
             _dialogue_box.start_dialogue(_make_lines("Old Brennan", ["Rest well, traveler."]))
         else:
             _dialogue_box.start_dialogue(_make_lines("Old Brennan", ["Seems you're a bit short."]))
+
+    # Release player control once the closing line finishes, the same way the
+    # shop does. Without this the player stays stuck in the INTERACT state.
+    await _dialogue_box.dialogue_finished
+    var player := get_tree().get_first_node_in_group("player")
+    if player and player.has_method("end_interaction"):
+        player.end_interaction()
 ```
 
 > **See:** [Singletons (Autoload)](https://docs.godotengine.org/en/stable/tutorials/scripting/singletons_autoload.html). PartyManager is a new autoload. This guide covers the autoload pattern.

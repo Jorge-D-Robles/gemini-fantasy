@@ -813,7 +813,7 @@ When you press B (our temporary test trigger) in Willowbrook:
 - Output panel shows turn-by-turn combat:
   - "Aiden's turn! (auto-attacking)"
   - "Aiden attacks Slime for 10 damage!"
-  - "Slime attacks Aiden for 5 damage!"
+  - "Slime attacks Aiden for 1 damage!"
 - Combat continues until one side is defeated
 - "Victory!" or "Defeat..." appears in output
 

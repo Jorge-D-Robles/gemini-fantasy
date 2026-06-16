@@ -83,9 +83,10 @@ Create `res://npcs/npc.gd`:
 
 ```gdscript
 extends CharacterBody2D
+class_name NPC
 ## A non-player character that can be interacted with.
 
-signal interacted(npc: CharacterBody2D)
+signal interacted(npc: NPC)
 
 @export var npc_data: NPCData
 
@@ -274,7 +275,7 @@ func _ready() -> void:
         npc.interacted.connect(_on_npc_interacted)
 
 
-func _on_npc_interacted(npc: CharacterBody2D) -> void:
+func _on_npc_interacted(npc: NPC) -> void:
     var player := get_tree().get_first_node_in_group("player")
     if player and player.has_method("start_interaction"):
         player.start_interaction()
@@ -289,6 +290,8 @@ func _on_npc_interacted(npc: CharacterBody2D) -> void:
     if player and player.has_method("end_interaction"):
         player.end_interaction()
 ```
+
+Because the NPC script declares `class_name NPC`, the handler can type its parameter as `npc: NPC` and read `npc.npc_data` directly; without the class name, the parameter would be a plain `CharacterBody2D` and that property access would raise an `UNSAFE_PROPERTY_ACCESS` warning.
 
 This is a temporary placeholder. In Module 11, we'll replace the `print()` calls with a proper dialogue box. But it demonstrates the flow: NPC detects interaction → emits signal → scene script handles it → player enters INTERACT state → interaction completes → player returns to IDLE.
 

@@ -108,6 +108,10 @@ func _place_player_at_spawn() -> void:
             if player:
                 player.global_position = marker.global_position
             return
+
+    # Neither the requested spawn point nor a "default" marker exists.
+    # Log a clear warning so the missing marker is easy to spot.
+    push_warning("SceneManager: no spawn point '%s' and no 'default' in %s; player position unchanged." % [_target_spawn_point, _target_scene_path])
 ```
 
 ```mermaid
@@ -408,4 +412,4 @@ When you press F5:
 
 ## Next Module
 
-We can explore two areas now, but the world feels empty. Before we add NPCs and dialogue, we need to establish our **data architecture**. In **Module 9: Resources, The Data Layer**, we'll learn how to define game data (items, characters, NPC info) as reusable, editor-friendly Resource classes. This is the foundation every system from inventory to combat will build on.
+We can explore two areas now, but the world feels empty. Next up, **Module 8** reviews everything from Part II with cheat sheets and common mistakes. Then, before we add NPCs and dialogue, we need to establish our **data architecture**. In **Module 9: Resources, The Data Layer**, we'll learn how to define game data (items, characters, NPC info) as reusable, editor-friendly Resource classes. This is the foundation every system from inventory to combat will build on.

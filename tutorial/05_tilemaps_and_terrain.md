@@ -333,13 +333,15 @@ In the Camera2D Inspector:
 
 To calculate your map's pixel dimensions: count the tiles you painted horizontally and vertically, then multiply by the tile size. For example, a 40×30 map with 16px tiles is 640×480 pixels. If you're unsure of your exact count, use a generous estimate like `800` × `600`. You can fine-tune later.
 
+Camera limits are per-map, not global. The 640×480 values above fit Willowbrook only; each area you build needs its own limits matching its own size. You can leave every limit at `0` for now (the camera stays free) and set them per area later. We'll revisit limits when we build the second area, Whisperwood, in Module 7.
+
 > **See:** [Camera2D](https://docs.godotengine.org/en/stable/classes/class_camera2d.html), covering all Camera2D properties including limits, zoom, smoothing, and drag margins.
 
 ## Pixel-Perfect Rendering Checklist
 
 If your tiles look blurry, have gaps between them, or shimmer when the camera moves, check these settings:
 
-1. **Project Settings → Rendering → Textures → Default Texture Filter:** `Nearest` (set in Module 1)
+1. **Project Settings → Rendering → Textures → Canvas Textures → Default Texture Filter:** `Nearest` (set in Module 1)
 2. **Project Settings → Display → Window → Stretch → Mode:** `canvas_items`
 3. **Camera2D → Position Smoothing:** Keep the speed moderate (3-8). Very high values can cause sub-pixel jitter.
 4. **Import settings on tile sheet:** Select the PNG in FileSystem, go to the Import tab, ensure **Filter** is `Nearest` (or `Off`). Click **Reimport**.

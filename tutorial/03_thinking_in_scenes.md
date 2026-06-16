@@ -83,7 +83,7 @@ We'll create a proper Player scene that we can reuse throughout the game.
 2. Click **Other Node** in the Scene dock.
 3. Search for `CharacterBody2D` and create it.
 4. Rename it to `Player`.
-5. In the Inspector, find **Motion Mode** and set it to **Floating**. (The default, Grounded, is for side-scrollers. Floating is correct for top-down games because it disables floor/wall/ceiling logic.)
+5. In the Inspector, find **Motion Mode** and set it to **Floating**. (The default, Grounded, is for side-scrollers. Floating is correct for top-down games because there is no floor or ceiling; every collision is treated as a wall, exactly what you want for a body that slides freely in all directions.)
 
 ### Step 2: Add Child Nodes
 
@@ -260,7 +260,7 @@ Run the game and walk into the zone. The output panel prints the player's name. 
 
 > **Note:** This works because both the Player (CharacterBody2D) and the TestZone (Area2D) are on collision layer 1 by default. If `body_entered` doesn't fire, check that both nodes share a collision layer: select the node, expand **Collision** in the Inspector, and verify that at least one **Layer** bit matches the other node's **Mask** bit. All nodes default to layer 1 and mask 1, so this works out of the box. You only need to change layers when you want certain objects to ignore each other (e.g., letting projectiles pass through walls but hit enemies).
 
-Once you've tested the signal, you can delete the `TestZone` node from `main.tscn`. It was just for learning. We won't need it going forward.
+Before you delete the `TestZone`, walking into it prints a message; that confirms the signal fired. Once you've verified it in the **What You Should See** check below, delete the `TestZone` node from `main.tscn`. It was just for learning. We won't need it going forward.
 
 This is the signal pattern we'll use throughout Crystal Saga:
 - Exit zones signal "the player wants to leave" → the SceneManager handles the transition (Module 7)
@@ -352,7 +352,7 @@ The pattern: **each "thing" gets a folder with its scene and script(s).** As the
 
 - **New artifact:** reusable `Player` scene and `player.gd`
 - **Public editor surface:** player speed and collision shape
-- **Runtime contract:** movement uses `CharacterBody2D.move_and_slide()` and the player joins the `player` group
+- **Runtime contract:** movement uses `CharacterBody2D.move_and_slide()`; the player will be registered in the `player` group in Module 7
 - **Failure behavior:** if no collision shape exists, movement works visually but collision will not block walls
 - **Boundary rule:** levels find the player by group, not by hard-coded scene path
 
@@ -369,4 +369,4 @@ When you press F5:
 
 ## Next Module
 
-We have a moving, collision-aware player, but the world is empty. In **Module 5: TileMaps and Terrain**, we'll build the town of Willowbrook using Godot's TileMapLayer system. We'll create a tileset from a sprite sheet, paint a multi-layered map, and give our player actual walls to bump into.
+We have a moving, collision-aware player, but the world is empty. Next, **Module 4** consolidates Part I with a cheat sheet and review of everything from the editor through scenes and signals. Then in **Module 5: TileMaps and Terrain**, we'll build the town of Willowbrook using Godot's TileMapLayer system. We'll create a tileset from a sprite sheet, paint a multi-layered map, and give our player actual walls to bump into.

@@ -245,9 +245,11 @@ func _show_current_line() -> void:
 func _start_typing() -> void:
     _is_typing = true
 
-    # Calculate duration based on text length and speed
+    # Calculate duration based on text length and speed.
+    # Clamp to a small floor so empty or one-character lines still take a
+    # moment to appear instead of flashing in instantly.
     var char_count: int = _text_label.get_total_character_count()
-    var duration: float = char_count / characters_per_second
+    var duration: float = max(char_count / characters_per_second, 0.05)
 
     # Kill any existing tween before creating a new one
     if _current_tween and _current_tween.is_valid():
@@ -338,7 +340,7 @@ func _ready() -> void:
         npc.interacted.connect(_on_npc_interacted)
 
 
-func _on_npc_interacted(npc: CharacterBody2D) -> void:
+func _on_npc_interacted(npc: NPC) -> void:
     var player := get_tree().get_first_node_in_group("player")
     if player and player.has_method("start_interaction"):
         player.start_interaction()
@@ -404,12 +406,32 @@ DialogueBox (CanvasLayer)
                 # Buttons are added dynamically
 ```
 
-Add the following to `dialogue_box.gd`: a new signal, a new `@onready` variable, and **replace** the existing `_show_current_line()` and `_advance()` methods with these updated versions. Also add the new `_show_choices()` and `_on_choice_pressed()` methods:
+Add the following to `dialogue_box.gd`: a new signal, a new `@onready` variable, and **replace** the existing `_unhandled_input()`, `_show_current_line()`, and `_advance()` methods with these updated versions. Also add the new `_show_choices()` and `_on_choice_pressed()` methods:
 
 ```gdscript
 signal choice_made(choice_index: int)
 
 @onready var _choice_container: VBoxContainer = $PanelContainer/MarginContainer/VBoxContainer/ChoiceContainer
+
+
+func _unhandled_input(event: InputEvent) -> void:
+    if not _panel.visible:
+        return
+
+    # When choices are on screen, the focused Button owns the input. Consume
+    # interact/ui_accept here and return so we don't also advance the line.
+    if _choice_container.visible:
+        if event.is_action_pressed("interact") or event.is_action_pressed("ui_accept"):
+            get_viewport().set_input_as_handled()
+        return
+
+    if event.is_action_pressed("interact") or event.is_action_pressed("ui_accept"):
+        get_viewport().set_input_as_handled()
+
+        if _is_typing:
+            _skip_typing()
+        else:
+            _advance()
 
 
 func _show_current_line() -> void:
@@ -479,6 +501,8 @@ func _on_choice_pressed(index: int) -> void:
 
     choice_made.emit(chosen_index)
 ```
+
+> **Note:** The guard at the top of `_unhandled_input()` is what makes choices safe. A focused Button already consumes `ui_accept` itself, so that press never reaches `_unhandled_input()`. A custom `interact` action is different: it is not wired to the focused Button, so without the guard the same press that confirms a choice would also fall through and call `_advance()`. Checking `_choice_container.visible` and returning early stops that double-trigger.
 
 ### The Complete `dialogue_box.gd`
 
@@ -558,7 +582,7 @@ func _start_typing() -> void:
     _is_typing = true
 
     var char_count: int = _text_label.get_total_character_count()
-    var duration: float = char_count / characters_per_second
+    var duration: float = max(char_count / characters_per_second, 0.05)
 
     if _current_tween and _current_tween.is_valid():
         _current_tween.kill()

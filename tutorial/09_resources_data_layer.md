@@ -123,7 +123,7 @@ var my_copy: ItemData = shared_item.duplicate()
 my_copy.hp_restore = 99  # Only affects my_copy, not the original
 ```
 
-At runtime, never modify a Resource you loaded from a `.tres` unless you want the change to be visible everywhere. We'll revisit this pattern in Module 25 when we need a fresh copy of CharacterData for new games.
+At runtime, never modify a Resource you loaded from a `.tres` unless you want the change to be visible everywhere. We'll revisit this pattern starting in Module 22 (and again in Module 25) when we need a fresh copy of CharacterData that bypasses the shared cache.
 
 ## Creating `.tres` Files
 
@@ -200,6 +200,7 @@ Stable IDs are part of the game's data contract. Scenes, quests, save files, and
 | Item | `ether.tres` | `ether` |
 | Item | `iron_sword.tres` | `iron_sword` |
 | Item | `leather_armor.tres` | `leather_armor` |
+| Item (key item) | `pendant.tres` (added in Module 20) | `pendant` |
 | Character | `aiden.tres` | `aiden` |
 | NPC | `shopkeeper.tres` | `shopkeeper` |
 | NPC | `innkeeper.tres` | `innkeeper` |
@@ -409,7 +410,7 @@ func use_item(item: ItemData, target: CharacterData) -> void:
     print("Restored " + str(item.hp_restore) + " HP!")
 ```
 
-The first version requires a new function for every item. The second version works for *any* healing item: Potion (50 HP), Hi-Potion (150 HP), Elixir (full HP). One function, infinite items. The data (`hp_restore`) drives the behavior. Note that `current_hp` is runtime state on `CharacterData`, not part of the `.tres` file. We will start using it heavily in Module 18 when battles begin carrying HP and MP forward between scenes.
+The first version requires a new function for every item. The second version works for *any* healing item: Potion (50 HP), Hi-Potion (150 HP), Elixir (full HP). One function, infinite items. The data (`hp_restore`) drives the behavior. Note that `current_hp` is runtime state on `CharacterData`, not part of the `.tres` file. It is first read in Module 14 to seed battle HP/MP, and carried forward between scenes starting in Module 18.
 
 This pattern scales across your entire RPG. Enemies, abilities, quests, dialogue, shops, encounter tables: all of them should be **data that code acts upon**, not **code that contains data**. When you find yourself writing a `match` statement with dozens of cases for specific item names or enemy types, that's a signal to push the differences into data.
 

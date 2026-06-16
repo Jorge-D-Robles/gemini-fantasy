@@ -147,7 +147,7 @@ Register GameManager as an autoload at **Project -> Project Settings -> Autoload
 
 ### Quest Architecture
 
-Quests are data-driven: a [QuestData](https://docs.godotengine.org/en/stable/classes/class_resource.html) Resource defines what a quest is, and QuestManager tracks its lifecycle.
+Quests are data-driven: a QuestData [Resource](https://docs.godotengine.org/en/stable/classes/class_resource.html) defines what a quest is, and QuestManager tracks its lifecycle.
 
 ```gdscript
 # QuestData Resource (res://resources/quest_data.gd)
@@ -297,7 +297,7 @@ The key pattern: check flags from **most progressed to least progressed** (post-
 
 ### PartyManager
 
-The [PartyManager](https://docs.godotengine.org/en/stable/tutorials/scripting/singletons_autoload.html) autoload manages who is in the party. It starts with the hero and grows through recruitment events.
+The PartyManager [autoload](https://docs.godotengine.org/en/stable/tutorials/scripting/singletons_autoload.html) manages who is in the party. It starts with the hero and grows through recruitment events.
 
 ```gdscript
 # Core API
@@ -314,7 +314,7 @@ PartyManager.party_member_removed.connect(_on_member_removed)
 Recruitment is triggered by dialogue and gated by flags:
 
 ```gdscript
-func _on_npc_interacted(npc: CharacterBody2D) -> void:
+func _on_npc_interacted(npc: NPC) -> void:
     # ... dialogue logic ...
     # After Lira's second conversation:
     if npc.npc_data.id == "lira" and GameManager.has_flag("lira_ready_to_join") \
@@ -327,6 +327,8 @@ func _recruit_lira() -> void:
     if lira:
         PartyManager.add_member(lira)
 ```
+
+Lira needs two separate resources, the same dual-resource split Module 10 used for Aiden and Elder Maren. `res://data/characters/lira.tres` is a CharacterData holding her battle stats and is loaded inside `_recruit_lira()`. The recruitment check `npc.npc_data.id == "lira"` reads a different file: `res://data/npcs/lira.tres`, an NPCData (id `lira`) assigned to a `npc.tscn` instance placed in Willowbrook. Without that overworld NPCData, the gate never matches and Lira can never be recruited. Module 21 walks through creating both.
 
 Building party battler data for combat:
 
@@ -342,7 +344,7 @@ SceneManager.start_battle({party = party_battlers, enemies = enemy_battlers})
 
 ### Equipment System
 
-Equipment is stored directly on [CharacterData](https://docs.godotengine.org/en/stable/classes/class_resource.html) and modifies effective stats.
+Equipment is stored directly on the CharacterData [Resource](https://docs.godotengine.org/en/stable/classes/class_resource.html) and modifies effective stats.
 
 ```gdscript
 # Equipment slots on CharacterData
@@ -411,7 +413,7 @@ The EquipmentPanel is scene-local UI, but it is opened through the global PauseM
 
 ### Shop System
 
-Shops use a [ShopData](https://docs.godotengine.org/en/stable/classes/class_resource.html) Resource and a [CanvasLayer](https://docs.godotengine.org/en/stable/classes/class_canvaslayer.html)-based UI.
+Shops use a ShopData [Resource](https://docs.godotengine.org/en/stable/classes/class_resource.html) and a [CanvasLayer](https://docs.godotengine.org/en/stable/classes/class_canvaslayer.html)-based UI.
 
 ```gdscript
 # ShopData Resource (res://resources/shop_data.gd)
@@ -426,7 +428,7 @@ Create `.tres` files in `res://data/shops/` via the editor: right-click, New Res
 
 ```gdscript
 # Opening the shop from an NPC interaction
-func _on_npc_interacted(npc: CharacterBody2D) -> void:
+func _on_npc_interacted(npc: NPC) -> void:
     if npc.npc_data.id == "shopkeeper":
         var shop_data: ShopData = load("res://data/shops/willowbrook_shop.tres")
         if shop_data:
@@ -479,7 +481,7 @@ Closing a shop is the end of the NPC interaction. Without this signal cleanup, t
 The innkeeper is a simpler variant that uses dialogue choices instead of a full shop UI:
 
 ```gdscript
-func _handle_inn(npc: CharacterBody2D) -> void:
+func _handle_inn(npc: NPC) -> void:
     var lines := _make_lines("Old Brennan", ["Rest for the night? That'll be 10 gold."])
     lines[0].choices = ["Yes (10g)", "No thanks"]
     _dialogue_box.start_dialogue(lines)

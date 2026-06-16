@@ -824,8 +824,8 @@ Resources loaded with `load()` are cached and shared by reference. When the vict
 - [Array.sort_custom()](https://docs.godotengine.org/en/stable/classes/class_array.html#class-array-method-sort-custom): custom sorting with a callable for turn ordering
 - [Array.filter()](https://docs.godotengine.org/en/stable/classes/class_array.html#class-array-method-filter): filtering alive battlers with `is_alive()`
 - [Array.any()](https://docs.godotengine.org/en/stable/classes/class_array.html#class-array-method-any): checking if any battler in a group is alive
-- [@GDScript.max()](https://docs.godotengine.org/en/stable/classes/class_@gdscript.html#class-gdscript-method-max): clamping damage to a minimum of 1
-- [@GDScript.clampf()](https://docs.godotengine.org/en/stable/classes/class_@gdscript.html#class-gdscript-method-clampf): bounding flee probability to 10-90%
+- [@GlobalScope.max()](https://docs.godotengine.org/en/stable/classes/class_@globalscope.html#class-globalscope-method-max): clamping damage to a minimum of 1
+- [@GlobalScope.clampf()](https://docs.godotengine.org/en/stable/classes/class_@globalscope.html#class-globalscope-method-clampf): bounding flee probability to 10-90%
 
 ### Export Annotations
 

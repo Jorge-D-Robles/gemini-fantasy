@@ -19,7 +19,7 @@ Dungeons differ from overworld areas in several ways:
 | Tile palette | Grass, trees, paths, buildings | Cave walls, stone floor, crystals |
 | Layout | Open, organic, free-roaming | Corridors, rooms, controlled flow |
 | Collision | Boundary trees and water | Walls everywhere, tight spaces |
-| Encounters | Occasional (forest only) | Frequent, every few steps |
+| Encounters | None in this slice (overworld is for exploration) | Frequent, every few steps |
 | Items | Shops (buy) | Treasure chests (find) |
 | Save points | Towns (convenient) | Rare (crystals, strategic) |
 | Goal | Exploration and socializing | Challenge and progression |
@@ -164,7 +164,7 @@ func _ready() -> void:
     _zone.body_entered.connect(_on_body_entered)
     _zone.body_exited.connect(_on_body_exited)
     _prompt.visible = false
-    add_to_group("interactables")
+    # add_to_group("interactables")  # Nothing reads this group yet; left for a future query helper
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -212,7 +212,7 @@ Set the `@export var item` in the Inspector by dragging the `.tres` file into th
 
 The save crystal before a boss room is one of the most recognizable design patterns in JRPGs. In every Final Fantasy game, seeing that glowing crystal means two things: "danger is ahead" and "you won't lose your progress." Save points are as much a narrative device as a mechanical one; they build anticipation. The absence of save points in a long corridor creates anxiety; their appearance after a tough fight creates relief.
 
-A classic JRPG save point, a glowing crystal the player interacts with. For now, it just prints "Game saved!". We'll wire it to the actual save system in Module 22.
+A classic JRPG save point, a glowing crystal the player interacts with. For now, it just prints "Your progress has been saved!". We'll wire it to the actual save system in Module 22.
 
 Create `res://entities/interactable/save_crystal.tscn`:
 
@@ -241,7 +241,7 @@ func _ready() -> void:
     _zone.body_entered.connect(_on_body_entered)
     _zone.body_exited.connect(_on_body_exited)
     _prompt.visible = false
-    add_to_group("save_points")
+    # add_to_group("save_points")  # Nothing reads this group yet; left for a future query helper
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -354,7 +354,7 @@ func _on_body_exited(body: Node2D) -> void:
         _interaction_prompt.visible = false
 ```
 
-For Crystal Saga, the boss room door could require a "Crystal Key" found in the treasure room, creating a simple puzzle: explore the dead end before you can face the boss.
+For the Crystal Saga slice, leave `required_item_id` empty so the door opens on interaction. As an optional exercise, you can require a "Crystal Key" found in the treasure room, creating a simple puzzle: explore the dead end before you can face the boss. The shipped build keeps the door unlocked (see Module 26).
 
 ## Connecting the Scenes
 

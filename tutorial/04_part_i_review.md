@@ -398,8 +398,8 @@ Every class, method, and concept referenced in Part I, organized by category. Bo
 ### Getting Started
 
 - [Introduction to Godot](https://docs.godotengine.org/en/stable/getting_started/introduction/introduction_to_godot.html): engine overview and design philosophy
-- [First look at the editor](https://docs.godotengine.org/en/stable/getting_started/introduction/first_look_at_the_editor_interface.html): editor panels and layout
-- [Creating and importing projects](https://docs.godotengine.org/en/stable/getting_started/step_by_step/creating_and_importing_projects.html): project creation and the Project Manager
+- [First look at the editor](https://docs.godotengine.org/en/stable/getting_started/introduction/first_look_at_the_editor.html): editor panels and layout
+- [Creating and importing projects](https://docs.godotengine.org/en/stable/tutorials/editor/project_manager.html): project creation and the Project Manager
 - [Nodes and Scenes](https://docs.godotengine.org/en/stable/getting_started/step_by_step/nodes_and_scenes.html): the core building blocks
 
 ### GDScript

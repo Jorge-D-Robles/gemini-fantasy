@@ -484,7 +484,7 @@ _interaction_zone.body_entered.connect(_on_player_entered)
 _interaction_zone.body_exited.connect(_on_player_exited)
 
 # NPC emits when player presses interact
-signal interacted(npc: CharacterBody2D)
+signal interacted(npc: NPC)
 
 # Scene script connects all NPCs in a group
 for npc in get_tree().get_nodes_in_group("npcs"):

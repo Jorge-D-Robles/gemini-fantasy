@@ -146,7 +146,7 @@ class_name EncounterData
 ## Defines a possible random encounter: which enemies appear as a group.
 
 @export var enemies: Array[EnemyData] = []
-@export_range(0.0, 1.0) var weight: float = 1.0  # Relative probability
+@export_range(0.0, 10.0, 0.1, "or_greater") var weight: float = 1.0  # Relative probability; "or_greater" lets you type values above the slider max
 ```
 
 Create encounter groups as `.tres` files in `res://data/encounters/` (same workflow: right-click folder → New Resource → search `EncounterData` → Create):
@@ -418,7 +418,16 @@ The Crystal Guardian is a stronger enemy with a pre-battle dialogue.
 - HP: 200, attack: 15, defense: 8, speed: 6
 - XP: 100, gold: 50
 
-The boss room trigger starts dialogue, then transitions to battle. Save as `res://entities/interactable/boss_trigger.gd` and attach to an Area2D node in the boss room:
+The boss room trigger starts dialogue, then transitions to battle. First set up the trigger node in `crystal_cavern.tscn`:
+
+1. Add an **Area2D** under the CrystalCavern root and name it **BossTrigger**.
+2. Give it a child **CollisionShape2D** with a RectangleShape2D sized to cover the boss room entrance, so the player walks through it.
+3. Leave the Area2D's **Monitoring** property enabled (the default); without monitoring and a collision shape, `body_entered` never fires.
+4. Attach the script below, then drag `res://data/enemies/crystal_guardian.tres` from the FileSystem dock into the **Boss Data** field of the script's exported properties in the Inspector.
+
+`@export` object properties default to `null` until you assign them, so this last step is what gives the trigger an enemy to spawn.
+
+Save as `res://entities/interactable/boss_trigger.gd`:
 
 ```gdscript
 extends Area2D
@@ -458,6 +467,10 @@ func _start_boss_sequence() -> void:
 
 
 func _start_boss_battle() -> void:
+    if boss_data == null:
+        push_error("BossTrigger: boss_data is not assigned. Drag a crystal_guardian.tres into the Boss Data field.")
+        return
+
     var hero := BattlerData.new()
     hero.character_data = load("res://data/characters/aiden.tres")
     hero.is_player_controlled = true
