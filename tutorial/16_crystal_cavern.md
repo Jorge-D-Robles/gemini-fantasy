@@ -354,7 +354,7 @@ func _on_body_exited(body: Node2D) -> void:
         _interaction_prompt.visible = false
 ```
 
-For the Crystal Saga slice, leave `required_item_id` empty so the door opens on interaction. As an optional exercise, you can require a "Crystal Key" found in the treasure room, creating a simple puzzle: explore the dead end before you can face the boss. The shipped build keeps the door unlocked (see Module 26).
+For the Crystal Saga slice, leave `required_item_id` empty and the door just opens when you interact with it. Want a little puzzle? Make it require a "Crystal Key" hidden in the treasure room, so the player has to explore the dead end before they can face the boss. The shipped build leaves the door unlocked (see Module 26).
 
 ## Connecting the Scenes
 

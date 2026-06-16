@@ -39,7 +39,7 @@ The Project Manager is where you create, import, and organize your Godot project
 1. Click **Create** (or **New Project** in some versions).
 2. **Project Name:** Type `CrystalSaga`.
 3. **Project Path:** Choose a folder on your computer. Godot will create a subfolder with the project name.
-4. **Renderer:** Select **Mobile**. This renderer has fewer high-end features than Forward+, but it is a good fit for a simple 2D game. Pixel-art crispness comes from the texture filtering and stretch settings we configure later, not from the renderer choice alone. One caveat: Mobile and Forward+ cannot export to the web; switch to Compatibility later if you want a browser build. If you need to support very old hardware without Vulkan, Direct3D 12, or Metal support, the Compatibility renderer is also the right fallback.
+4. **Renderer:** Select **Mobile**. This renderer has fewer high-end features than Forward+, but it is a good fit for a simple 2D game. Pixel-art crispness comes from the texture filtering and stretch settings we configure later, not from the renderer choice alone. One thing to know: neither Mobile nor Forward+ can export to the web, so if you ever want a browser build, switch to Compatibility down the line. Compatibility is also your fallback for very old hardware that lacks Vulkan, Direct3D 12, or Metal support.
 5. Click **Create & Edit**.
 
 > **See:** [Creating and importing projects](https://docs.godotengine.org/en/stable/tutorials/editor/project_manager.html), with more details on project creation options.
@@ -219,7 +219,7 @@ Press **F5** (or click the ▶ play button in the top-right corner of the editor
 
 A window appears showing the Godot icon on a gray background. That's your game running. It's not exciting yet, but it's real. Every JRPG you've ever played started as something like this: a single image on a screen.
 
-This first run uses Godot's default window size and texture filtering, so the icon may look soft when scaled. The 1280x720 window and crisp pixel rendering appear after the next section, where we apply the Pixel Art project settings.
+Right now you're seeing Godot's default window size and texture filtering, so the icon might look a little soft. Don't worry about that yet. The 1280x720 window and crisp pixels show up after the next section, once we apply the Pixel Art settings.
 
 Press the **X** on the game window (or press `F8`, or click the stop button in the editor) to close it.
 
@@ -236,7 +236,7 @@ The top-right of the editor has several play buttons:
 | ▶ Run Specific Scene | (none) | Runs a specific scene you choose |
 | ⏹ Stop | F8 (Cmd+. on macOS) | Stops the running game |
 
-These shortcuts are remappable under **Editor → Editor Settings → Shortcuts** if the defaults clash with something on your system.
+If these defaults clash with something else on your system, you can remap them under **Editor → Editor Settings → Shortcuts**.
 
 **F6 (Run Current Scene)** will become your best friend. When you're working on the battle scene, you don't want to play through the title screen and overworld to test it. Just hit F6 to run that scene directly.
 
@@ -247,7 +247,7 @@ Before we move on, we need to configure the project for pixel art, the visual st
 Go to **Project → Project Settings** and make these changes:
 
 ### Display Settings
-In Project Settings, enable the **Advanced Settings** toggle (top-right) so the override and texture-filter settings appear. The width and height overrides live under **Display → Window → Size**.
+First, flip on the **Advanced Settings** toggle in the top-right corner. Without it, Godot hides the override and texture-filter options you're about to need. The width and height overrides live under **Display → Window → Size**.
 
 Under **Display → Window**:
 - **Viewport Width:** `640`

@@ -502,7 +502,7 @@ func _on_choice_pressed(index: int) -> void:
     choice_made.emit(chosen_index)
 ```
 
-> **Note:** The guard at the top of `_unhandled_input()` is what makes choices safe. A focused Button already consumes `ui_accept` itself, so that press never reaches `_unhandled_input()`. A custom `interact` action is different: it is not wired to the focused Button, so without the guard the same press that confirms a choice would also fall through and call `_advance()`. Checking `_choice_container.visible` and returning early stops that double-trigger.
+> **Note:** That guard at the top of `_unhandled_input()` is the trick that keeps choices from misbehaving. A focused Button swallows `ui_accept` on its own, so that press never reaches `_unhandled_input()` and you're fine. But your custom `interact` action isn't wired to the Button, so the same press that confirms a choice would also slip through and call `_advance()`, skipping a line behind your back. Checking `_choice_container.visible` and bailing out early kills that double-trigger.
 
 ### The Complete `dialogue_box.gd`
 

@@ -422,10 +422,10 @@ The boss room trigger starts dialogue, then transitions to battle. First set up 
 
 1. Add an **Area2D** under the CrystalCavern root and name it **BossTrigger**.
 2. Give it a child **CollisionShape2D** with a RectangleShape2D sized to cover the boss room entrance, so the player walks through it.
-3. Leave the Area2D's **Monitoring** property enabled (the default); without monitoring and a collision shape, `body_entered` never fires.
+3. Leave the Area2D's **Monitoring** property on (it's the default). No monitoring or no collision shape means `body_entered` never fires, and the trigger just sits there doing nothing.
 4. Attach the script below, then drag `res://data/enemies/crystal_guardian.tres` from the FileSystem dock into the **Boss Data** field of the script's exported properties in the Inspector.
 
-`@export` object properties default to `null` until you assign them, so this last step is what gives the trigger an enemy to spawn.
+Don't skip that last drag. An `@export` object property starts out as `null`, so until you drop the guardian in, the trigger has no enemy to spawn.
 
 Save as `res://entities/interactable/boss_trigger.gd`:
 

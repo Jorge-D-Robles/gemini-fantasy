@@ -410,7 +410,7 @@ func use_item(item: ItemData, target: CharacterData) -> void:
     print("Restored " + str(item.hp_restore) + " HP!")
 ```
 
-The first version requires a new function for every item. The second version works for *any* healing item: Potion (50 HP), Hi-Potion (150 HP), Elixir (full HP). One function, infinite items. The data (`hp_restore`) drives the behavior. Note that `current_hp` is runtime state on `CharacterData`, not part of the `.tres` file. It is first read in Module 14 to seed battle HP/MP, and carried forward between scenes starting in Module 18.
+The first version requires a new function for every item. The second version works for *any* healing item: Potion (50 HP), Hi-Potion (150 HP), Elixir (full HP). One function, infinite items. The data (`hp_restore`) drives the behavior. Note that `current_hp` is runtime state on `CharacterData`, not part of the `.tres` file. Module 14 first reads it to seed battle HP/MP, and from Module 18 on we carry it forward between scenes.
 
 This pattern scales across your entire RPG. Enemies, abilities, quests, dialogue, shops, encounter tables: all of them should be **data that code acts upon**, not **code that contains data**. When you find yourself writing a `match` statement with dozens of cases for specific item names or enemy types, that's a signal to push the differences into data.
 

@@ -412,4 +412,4 @@ When you press F5:
 
 ## Next Module
 
-We can explore two areas now, but the world feels empty. Next up, **Module 8** reviews everything from Part II with cheat sheets and common mistakes. Then, before we add NPCs and dialogue, we need to establish our **data architecture**. In **Module 9: Resources, The Data Layer**, we'll learn how to define game data (items, characters, NPC info) as reusable, editor-friendly Resource classes. This is the foundation every system from inventory to combat will build on.
+We can explore two areas now, but the world feels empty. First, **Module 8** pulls together everything from Part II with cheat sheets and common mistakes. After that, before we add NPCs and dialogue, we need to establish our **data architecture**. In **Module 9: Resources, The Data Layer**, we'll learn how to define game data (items, characters, NPC info) as reusable, editor-friendly Resource classes. This is the foundation every system from inventory to combat will build on.

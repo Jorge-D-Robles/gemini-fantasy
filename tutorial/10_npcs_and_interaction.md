@@ -291,7 +291,7 @@ func _on_npc_interacted(npc: NPC) -> void:
         player.end_interaction()
 ```
 
-Because the NPC script declares `class_name NPC`, the handler can type its parameter as `npc: NPC` and read `npc.npc_data` directly; without the class name, the parameter would be a plain `CharacterBody2D` and that property access would raise an `UNSAFE_PROPERTY_ACCESS` warning.
+That `class_name NPC` line is doing real work here. Because the NPC script declares it, you can type the handler's parameter as `npc: NPC` and reach for `npc.npc_data` straight away. Drop the class name and the parameter falls back to a plain `CharacterBody2D`, which knows nothing about `npc_data`, so Godot flags the property access with an `UNSAFE_PROPERTY_ACCESS` warning.
 
 This is a temporary placeholder. In Module 11, we'll replace the `print()` calls with a proper dialogue box. But it demonstrates the flow: NPC detects interaction → emits signal → scene script handles it → player enters INTERACT state → interaction completes → player returns to IDLE.
 

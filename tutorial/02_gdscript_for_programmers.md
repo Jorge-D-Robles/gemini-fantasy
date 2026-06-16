@@ -284,7 +284,7 @@ graph TD
     style GameLoop fill:#2ecc71,color:#fff
 ```
 
-There's also `%UniqueName`, which finds a node marked as a **Scene Unique Name** from anywhere within the same scene, without hard-coding its path. We'll use this later for UI elements that need to be found from anywhere in their scene.
+There's also `%UniqueName`. Mark a node as a **Scene Unique Name** and you can grab it from anywhere in that scene without spelling out its path. We'll lean on this later for UI elements you need to reach from all over.
 
 ## Input: Making Things Move
 

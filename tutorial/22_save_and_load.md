@@ -259,7 +259,7 @@ func _on_body_exited(body: Node2D) -> void:
         _refresh_sprite()
 ```
 
-Behavior matches the Module 16 chest, with one deliberate omission: there is no `add_to_group("interactables")` call. That registration was already commented out in Module 16 because nothing in Crystal Saga reads the group, so leaving it out here keeps the two versions consistent.
+This is the same chest from Module 16, with one thing left out on purpose: no `add_to_group("interactables")` call. We commented that line out back in Module 16 too, since nothing in Crystal Saga actually reads the group. No point adding it back now.
 
 Use the same pattern for other one-shot objects:
 
@@ -270,7 +270,7 @@ Use the same pattern for other one-shot objects:
 | Unlocked boss door | `world.crystal_cavern.boss_door.unlocked` |
 | Removed pickup | `world.whisperwood.pendant_chest.opened` |
 
-The new `scene_key` export defaults to `"crystal_cavern"`, which is correct for chests in the cavern. The pendant chest lives in Whisperwood, so it needs a different key. In Whisperwood, select the PendantChest you placed in Module 20 and set its `scene_key` to `"whisperwood"`. Its opened flag then becomes `world.whisperwood.pendant_chest.opened`, matching the persistence table above. Without this, the Whisperwood chest would write `world.crystal_cavern.pendant_chest.opened` and the pendant pickup state would be mis-keyed.
+The new `scene_key` export defaults to `"crystal_cavern"`, which is fine for chests down in the cavern. But the pendant chest lives in Whisperwood, so it needs its own key. Open Whisperwood, select the PendantChest you placed in Module 20, and set its `scene_key` to `"whisperwood"`. Now its opened flag is `world.whisperwood.pendant_chest.opened`, which lines up with the table above. Skip this step and the chest writes `world.crystal_cavern.pendant_chest.opened` instead, and the pendant pickup ends up under the wrong key.
 
 > **Engine Gotcha:** String IDs are part of your save format. Renaming a scene key or `chest_id` after players have saves makes the old save look like the object was never opened. For a small tutorial game, stable IDs are enough. Larger games usually add migration code.
 
@@ -633,4 +633,4 @@ The JSON specification has one generic number type. Godot can parse those values
 
 ## Next Module
 
-The game is fully playable and saveable. Next, **Module 23** consolidates Part V with a review and cheat sheet covering quests, party, equipment, and saving. After that, in **Module 24: Audio**, we'll add background music, sound effects, and a volume settings system, bringing sound to Crystal Saga.
+The game is fully playable and saveable. **Module 23** is a breather: a Part V review and cheat sheet pulling together quests, party, equipment, and saving. Then in **Module 24: Audio**, we'll add background music, sound effects, and a volume settings system, bringing sound to Crystal Saga.

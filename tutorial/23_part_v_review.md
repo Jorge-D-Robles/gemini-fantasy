@@ -328,7 +328,7 @@ func _recruit_lira() -> void:
         PartyManager.add_member(lira)
 ```
 
-Lira needs two separate resources, the same dual-resource split Module 10 used for Aiden and Elder Maren. `res://data/characters/lira.tres` is a CharacterData holding her battle stats and is loaded inside `_recruit_lira()`. The recruitment check `npc.npc_data.id == "lira"` reads a different file: `res://data/npcs/lira.tres`, an NPCData (id `lira`) assigned to a `npc.tscn` instance placed in Willowbrook. Without that overworld NPCData, the gate never matches and Lira can never be recruited. Module 21 walks through creating both.
+Lira takes two resources, the same split you did for Aiden and Elder Maren back in Module 10. One is `res://data/characters/lira.tres`, a CharacterData with her battle stats, and that's the file `_recruit_lira()` loads. The other is `res://data/npcs/lira.tres`, an NPCData (id `lira`) you attach to a `npc.tscn` instance standing in Willowbrook. That's the one the check `npc.npc_data.id == "lira"` actually reads. Skip the overworld NPCData and the gate never fires, so Lira never joins you. Module 21 builds both.
 
 Building party battler data for combat:
 

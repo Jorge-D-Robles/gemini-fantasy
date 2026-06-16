@@ -117,7 +117,7 @@ Lira is a mage: lower HP and attack, higher MP and speed.
 
 ### The Recruitment Scene
 
-In Willowbrook, add a new NPC: Lira. Two different resources both named `lira.tres` are involved here, and it helps to keep them straight. The `res://data/characters/lira.tres` you just made is `CharacterData`: her battle stats and growth rates. The overworld NPC the player walks up to needs a separate `NPCData` resource, exactly the way Aiden and Elder Maren each have a `CharacterData` plus an `NPCData` from Module 10.
+In Willowbrook, add a new NPC: Lira. Heads up, you'll end up with two files both named `lira.tres`, so let's keep them straight. The `res://data/characters/lira.tres` you just made is `CharacterData`: her battle stats and growth rates. The overworld Lira the player walks up to needs a separate `NPCData` resource, just like Aiden and Elder Maren each got a `CharacterData` plus an `NPCData` back in Module 10.
 
 Create the overworld NPC the same way you created the other Willowbrook NPCs:
 
@@ -126,7 +126,7 @@ Create the overworld NPC the same way you created the other Willowbrook NPCs:
 3. In the Inspector, assign `res://data/npcs/lira.tres` to the instance's `npc_data` export.
 4. Confirm the instance is in the `"npcs"` group (the `npc.tscn` root already joins it, the same group the interaction handler scans).
 
-The `id` on this `NPCData` is what `_on_npc_interacted()` matches against when it decides to run the recruitment branch, so it must read `"lira"` exactly.
+`_on_npc_interacted()` matches on the `id` of this `NPCData` to decide whether to run the recruitment branch, so it has to read `"lira"` exactly.
 
 She joins the party after a dialogue exchange, gated by a game flag:
 
@@ -168,7 +168,7 @@ After the second conversation, trigger recruitment. This code goes in `willowbro
 @onready var _shop_ui: CanvasLayer = $ShopUI         # Instance of shop_ui.tscn (add to scene)
 ```
 
-By this module, Willowbrook talks to several kinds of NPC: shopkeeper, innkeeper, quest-givers like Fynn, and now Lira. Rather than scatter that across separate handlers, consolidate everything into one `_on_npc_interacted()`. Each NPC routes by `npc.npc_data.id`. The parameter is typed `NPC` (the `class_name` you gave the NPC script in Module 10), so `npc.npc_data` resolves without an unsafe-property warning. This single handler replaces the shop and inn fragments shown later in this module; the shop and inn sections below only supply the helper functions it calls.
+Willowbrook has gotten busy. The shopkeeper, the innkeeper, Fynn, and now Lira all want something different when the player presses interact. Instead of a tangle of separate handlers, send everyone through one `_on_npc_interacted()` and branch on `npc.npc_data.id`. The parameter is typed `NPC`, the `class_name` you gave the NPC script in Module 10, so `npc.npc_data` resolves cleanly with no unsafe-property warning. This one handler is the real thing; the shop and inn snippets later in the module just fill in the helper functions it calls.
 
 ```gdscript
 func _on_npc_interacted(npc: NPC) -> void:
@@ -201,7 +201,7 @@ func _recruit_lira() -> void:
         print("Lira joined the party!")
 ```
 
-For the Lira branch to ever produce her flag-gated lines, `_get_lira_dialogue()` has to be reachable from the Module 20 dispatcher. Add a `"lira"` case to `_get_dialogue_for_npc()` alongside the existing `"elder_maren"` and `"fynn"` cases:
+None of Lira's flag-gated lines will ever show up unless the Module 20 dispatcher can reach `_get_lira_dialogue()`. Add a `"lira"` case to `_get_dialogue_for_npc()` next to the existing `"elder_maren"` and `"fynn"` cases:
 
 ```gdscript
         "lira":
@@ -518,7 +518,7 @@ func _use_consumable(item: ItemData) -> void:
     InventoryManager.use_item_on_member(item, PartyManager.get_members()[0])
 ```
 
-The empty-party guard keeps the call safe before anyone has joined, and `use_item_on_member()` removes the item only when the heal succeeds.
+The empty-party guard bails out before anyone has joined, so the call is safe, and `use_item_on_member()` only consumes the item when the heal actually goes through.
 
 ### Equipment Comparison: The PredictStats Pattern
 

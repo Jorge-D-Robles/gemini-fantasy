@@ -368,7 +368,7 @@ Every node has a `process_mode` property that controls whether it runs while pau
 
 > **IMPORTANT:** Select the `InventoryScreen` (CanvasLayer) root node in the editor and set **Process → Mode** to **`Always`** in the Inspector. Without this, the inventory will open but immediately freeze because the paused game prevents it from processing input. The only way to recover would be to force-quit.
 
-SceneManager is already `PROCESS_MODE_ALWAYS` from Module 7, which keeps fade transitions working while the inventory pauses the game.
+You already set SceneManager to `PROCESS_MODE_ALWAYS` back in Module 7, so its fade transitions still run even while the inventory has the game paused. Nothing to do here.
 
 ```mermaid
 graph TD
@@ -474,4 +474,4 @@ When you press F6 (running Willowbrook):
 
 ## Next Module
 
-We have items and NPCs and dialogue. Next up, **Module 13** reviews everything from Part III with cheat sheets and common mistakes. Then it's time for the biggest system in any JRPG: **combat**. In **Module 14: Battle Foundations**, we'll build the battle scene, implement a node-based state machine for battle flow, and create the turn order system.
+We have items and NPCs and dialogue. First, **Module 13** takes a breath and reviews everything from Part III with cheat sheets and the mistakes people usually trip on. Then we get to the biggest system in any JRPG: **combat**. In **Module 14: Battle Foundations**, you'll build the battle scene, wire up a node-based state machine for battle flow, and create the turn order system.

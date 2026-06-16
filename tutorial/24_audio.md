@@ -112,7 +112,7 @@ func resume_previous_track() -> void:
         play_music(_previous_track_path)
 ```
 
-This code sets both players to the `Music` bus. We create the Music and SFX buses later in this module under "Setting Up Buses"; until they exist, Godot routes these players to the `Master` bus automatically, so nothing breaks if you run before adding them.
+Both players point at the `Music` bus, which we don't build until "Setting Up Buses" later in this module. Don't worry about running before then: if the bus doesn't exist yet, Godot quietly falls back to the `Master` bus, so nothing breaks.
 
 ```mermaid
 graph TD
@@ -154,7 +154,7 @@ MusicManager (Node)
 
 You'll need audio files to test with. If you don't have music/SFX yet:
 - **Free music:** [Kenney](https://kenney.nl/assets?q=audio) has free audio packs, or search [opengameart.org](https://opengameart.org) for "JRPG music." The [Kenney Music Jingles pack](https://kenney.nl/assets/music-jingles) has short loops that work well for testing.
-- **Placeholder (no downloads needed):** If you have Audacity (free at audacityteam.org), create silence files: File > New, then Generate > Silence (30 seconds), then File > Export Audio > OGG format. Save six copies as `town_theme.ogg`, `forest_theme.ogg`, `dungeon_theme.ogg`, `battle_theme.ogg`, `title_theme.ogg`, and `ending_theme.ogg`. The last two are played by Module 25's title screen and ending, so create them now while you are here. This lets you test crossfading and battle music transitions without real audio.
+- **Placeholder (no downloads needed):** If you have Audacity (free at audacityteam.org), create silence files: File > New, then Generate > Silence (30 seconds), then File > Export Audio > OGG format. Save six copies as `town_theme.ogg`, `forest_theme.ogg`, `dungeon_theme.ogg`, `battle_theme.ogg`, `title_theme.ogg`, and `ending_theme.ogg`. The last two are for Module 25's title screen and ending, so make them now while you have Audacity open. This lets you test crossfading and battle music transitions without real audio.
 - Create folders `res://audio/music/` and `res://audio/sfx/` and place your files there.
 - **Looping:** Select a music `.ogg` file in the FileSystem dock, go to the **Import** tab, and check **Loop** to make it repeat. Click **Reimport**.
 
@@ -196,7 +196,7 @@ Play any battle in Chrono Trigger with the volume off, then play it again with s
 
 SFX are simpler: play once, no crossfading. You can either add AudioStreamPlayer nodes to scenes or create a simple SFX utility:
 
-`preload()` reads its file when the script is parsed, so the files must exist before you run, or the script fails to compile. Create two placeholders now: in Audacity, choose Generate > Silence (about half a second), then File > Export Audio and pick WAV format. Save them as `res://audio/sfx/attack_hit.wav` and `res://audio/sfx/menu_cursor.wav`. Swap in real effects later; the filenames stay the same.
+`preload()` grabs the file the moment Godot reads the script, so if the file isn't there yet, the script won't even compile. Make the placeholders first. In Audacity, choose Generate > Silence (about half a second), then File > Export Audio and pick WAV format. Save them as `res://audio/sfx/attack_hit.wav` and `res://audio/sfx/menu_cursor.wav`. Drop in real effects later; keep the same filenames.
 
 ```gdscript
 # Simple approach: preload and play in the script that needs it
@@ -395,7 +395,7 @@ func _save_settings() -> void:
 | SaveManager | 22 | Save/load game state to JSON |
 | **MusicManager** | **24** | **BGM crossfading, battle music** |
 
-One autoload remains: PauseMenu arrives in Module 25, which completes the list.
+Just one autoload left to go: PauseMenu shows up in Module 25 and finishes the list.
 
 ## Engineering Contract
 

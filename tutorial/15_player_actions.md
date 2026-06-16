@@ -650,7 +650,7 @@ When a battle starts:
 - Selecting Attack shows enemy targets
 - Choosing a target plays a slide animation and shows a damage number
 - Defend doubles defense for one turn
-- Using a healing item on a wounded ally consumes it from inventory (using it on a full-HP/MP target does nothing and keeps the item)
+- Healing a wounded ally with an item spends it from your inventory; use one on someone already at full HP/MP and nothing happens, so you keep it
 - The enemy takes its turn automatically
 - Combat feels responsive and interactive
 

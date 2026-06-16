@@ -333,7 +333,7 @@ In the Camera2D Inspector:
 
 To calculate your map's pixel dimensions: count the tiles you painted horizontally and vertically, then multiply by the tile size. For example, a 40×30 map with 16px tiles is 640×480 pixels. If you're unsure of your exact count, use a generous estimate like `800` × `600`. You can fine-tune later.
 
-Camera limits are per-map, not global. The 640×480 values above fit Willowbrook only; each area you build needs its own limits matching its own size. You can leave every limit at `0` for now (the camera stays free) and set them per area later. We'll revisit limits when we build the second area, Whisperwood, in Module 7.
+One thing to watch: these limits belong to this map, not the whole game. The 640×480 values only fit Willowbrook, so every new area you build will want its own numbers to match its own size. If you'd rather not fuss with this yet, leave every limit at `0` and the camera roams free; you can dial them in per area down the road. We'll come back to limits when we build the second area, Whisperwood, in Module 7.
 
 > **See:** [Camera2D](https://docs.godotengine.org/en/stable/classes/class_camera2d.html), covering all Camera2D properties including limits, zoom, smoothing, and drag margins.
 

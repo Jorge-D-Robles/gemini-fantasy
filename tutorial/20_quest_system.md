@@ -65,7 +65,7 @@ func load_flags(data: Dictionary) -> void:
 
 Register as autoload `GameManager`.
 
-`make_world_flag()` builds namespaced flag keys like `world.whisperwood.pendant_chest.opened`. Module 22's save system uses these keys to remember opened chests and similar world objects; the helper is first called there, so it is unused for now.
+`make_world_flag()` builds namespaced flag keys like `world.whisperwood.pendant_chest.opened`. You won't call it yet. Module 22's save system uses these keys to remember which chests and other world objects the player has already touched, and that's where the helper first gets used.
 
 Flags are used everywhere:
 - NPCs check flags to choose dialogue
@@ -105,7 +105,7 @@ enum QuestState { NOT_STARTED, ACTIVE, COMPLETE, TURNED_IN }
 
 Save as `res://autoloads/quest_manager.gd` and register as autoload `QuestManager` (Project -> Project Settings -> Autoload tab -> add the script path, name it `QuestManager`).
 
-Order matters: GameManager must sit above QuestManager in the Autoload list, because `QuestManager._ready()` connects to `GameManager.flag_changed` and Godot initializes autoloads top to bottom.
+Order matters here. Godot starts autoloads top to bottom, and `QuestManager._ready()` connects to `GameManager.flag_changed`, so GameManager has to come first in the list. Put it above QuestManager.
 
 ```gdscript
 extends Node
@@ -523,7 +523,7 @@ func _show_detail(quest: QuestData) -> void:
     _detail_label.text = text
 ```
 
-Notice the objective markers use a check mark and a bullet rather than `[x]` and `[ ]`. Because this label has `bbcode_enabled` on, square brackets are parsed as formatting tags, so a literal `[x]` would be swallowed instead of shown. (If you want bracket-style markers, escape the opening bracket with the `[lb]` tag.)
+Why a check mark and a bullet instead of the obvious `[x]` and `[ ]`? This label has `bbcode_enabled` turned on, which means square brackets get read as formatting tags. Type `[x]` and Godot treats it as a tag, then quietly drops it. If you really want bracket markers, escape the opening bracket with the `[lb]` tag.
 
 After creating the scene, instance `quest_log.tscn` into each gameplay scene you currently have (`Willowbrook`, `Whisperwood`, and `CrystalCavern`) as a direct child of the scene root, alongside your other UI nodes. Leave it hidden by default. Module 25's PauseMenu will open these scene-local quest logs through `open_from_pause()`, just like it opens the inventory through Module 12's public API.
 
